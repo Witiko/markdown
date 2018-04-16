@@ -9393,6 +9393,9 @@ function M.reader.new(writer, options)
         opt_string[#opt_string+1] = k .. "=" .. tostring(v)
       end
     end
+    if options.hybrid then
+        input = string.gsub(input,"%%[^\n]*\n?","")
+    end
     table.sort(opt_string)
     local salt = table.concat(opt_string, ",") .. "," .. metadata.version
 %    \end{macrocode}
