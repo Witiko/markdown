@@ -4859,7 +4859,7 @@ defaultOptions.finalizeCache = false
 %
 :    true
 
-     :  Enable the pandoc footnote syntax extension:
+     :  Enable the Pandoc footnote syntax extension:
 
         ``` md
         Here is a footnote reference,[^1] and another.[^longnote]
@@ -4883,7 +4883,7 @@ defaultOptions.finalizeCache = false
 
 :    false
 
-     :    Disable the pandoc footnote syntax extension.
+     :    Disable the Pandoc footnote syntax extension.
 
 % \end{markdown}
 % \iffalse
@@ -5836,7 +5836,7 @@ defaultOptions.hybrid = false
 %
 :    true
 
-     :  Enable the pandoc inline footnote syntax extension:
+     :  Enable the Pandoc inline footnote syntax extension:
 
         ``` md
         Here is an inline note.^[Inlines notes are easier to
@@ -5846,7 +5846,7 @@ defaultOptions.hybrid = false
 
 :    false
 
-     :  Disable the pandoc inline footnote syntax extension.
+     :  Disable the Pandoc inline footnote syntax extension.
 
 % \end{markdown}
 % \iffalse
@@ -18751,18 +18751,6 @@ function M.writer.new(options)
 % \par
 % \begin{markdown}
 %
-% Define \luamdef{writer->note} as a function that will transform an
-% input footnote `s` to the output format.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  function self.note(s)
-    return {"\\markdownRendererFootnote{",s,"}"}
-  end
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
 % Define \luamdef{writer->get_state} as a function that returns the current
 % state of the writer, where the state of a writer are its mutable member
 % variables.
@@ -19205,28 +19193,6 @@ parsers.optionaltitle
 % \par
 % \begin{markdown}
 %
-%#### Parsers Used for iA\,Writer Content Blocks
-%
-% \end{markdown}
-%  \begin{macrocode}
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-%#### Parsers Used for Footnotes
-%
-% \end{markdown}
-%  \begin{macrocode}
-local function strip_first_char(s)
-  return s:sub(2)
-end
-
-parsers.RawNoteRef = #(parsers.lbracket * parsers.circumflex)
-                   * parsers.tag / strip_first_char
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
 %#### Parsers Used for HTML
 %
 % \end{markdown}
@@ -19499,13 +19465,13 @@ function M.reader.new(writer, options, extensions)
 % \begin{markdown}
 %
 %#### Top-Level Helper Functions
-% Define \luamdef{normalize_tag} as a function that normalizes a markdown
-% reference tag by lowercasing it, and by collapsing any adjacent whitespace
-% characters.
+% Define \luamdef{reader->normalize_tag} as a function that normalizes a
+% markdown reference tag by lowercasing it, and by collapsing any adjacent
+% whitespace characters.
 %
 % \end{markdown}
 %  \begin{macrocode}
-  local function normalize_tag(tag)
+  function self.normalize_tag(tag)
     return string.lower(
       gsub(util.rope_to_string(tag), "[ \n\r\t]+", " "))
   end
@@ -19701,37 +19667,6 @@ function M.reader.new(writer, options, extensions)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  local rawnotes = {}
-
-  -- like indirect_link
-  local function lookup_note(ref)
-    return writer.defer_call(function()
-      local found = rawnotes[normalize_tag(ref)]
-      if found then
-        return writer.note(
-          self.parser_functions.parse_blocks_nested(found))
-      else
-        return {"[",
-          self.parser_functions.parse_inlines("^" .. ref), "]"}
-      end
-    end)
-  end
-
-  local function register_note(ref,rawnote)
-    rawnotes[normalize_tag(ref)] = rawnote
-    return ""
-  end
-
-  parsers.NoteRef    = parsers.RawNoteRef / lookup_note
-
-
-  parsers.NoteBlock  = parsers.leader * parsers.RawNoteRef * parsers.colon
-                     * parsers.spnl * parsers.indented_blocks(parsers.chunk)
-                     / register_note
-
-  parsers.InlineNote = parsers.circumflex
-                     * (parsers.tag / self.parser_functions.parse_inlines_no_inline_note)
-                     / writer.note
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -19745,7 +19680,7 @@ function M.reader.new(writer, options, extensions)
 
   -- add a reference to the list
   local function register_link(tag,url,title)
-      references[normalize_tag(tag)] = { url = url, title = title }
+      references[self.normalize_tag(tag)] = { url = url, title = title }
       return ""
   end
 
@@ -19767,7 +19702,7 @@ function M.reader.new(writer, options, extensions)
       if sps then
         tagpart = {sps, tagpart}
       end
-      local r = references[normalize_tag(tag)]
+      local r = references[self.normalize_tag(tag)]
       if r then
         return r
       else
@@ -20098,7 +20033,6 @@ function M.reader.new(writer, options, extensions)
 % \end{markdown}
 %  \begin{macrocode}
   parsers.Blank        = parsers.blankline / ""
-                       + parsers.NoteBlock
                        + parsers.Reference
                        + (parsers.tightblocksep / "\n")
 %    \end{macrocode}
@@ -20279,8 +20213,8 @@ function M.reader.new(writer, options, extensions)
       UlOrStarLine          = parsers.UlOrStarLine,
       Strong                = parsers.Strong,
       Emph                  = parsers.Emph,
-      InlineNote            = parsers.InlineNote,
-      NoteRef               = parsers.NoteRef,
+      InlineNote            = parsers.fail,
+      NoteRef               = parsers.fail,
       Citations             = parsers.fail,
       Link                  = parsers.Link,
       Image                 = parsers.Image,
@@ -20313,18 +20247,10 @@ function M.reader.new(writer, options, extensions)
     self.syntax.Code = parsers.fail
   end
 
-  if not options.footnotes then
-    self.syntax.NoteRef = parsers.fail
-  end
-
   if not options.html then
     self.syntax.DisplayHtml = parsers.fail
     self.syntax.InlineHtml = parsers.fail
     self.syntax.HtmlEntity  = parsers.fail
-  end
-
-  if not options.inlineFootnotes then
-    self.syntax.InlineNote = parsers.fail
   end
 
   if options.preserveTabs then
@@ -21054,6 +20980,92 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Footnotes
+%
+% The \luamdef{extensions.footnotes} function implements the Pandoc footnote
+% and inline footnote syntax extensions. When the `footnote` parameter is
+% `true`, the Pandoc footnote syntax extension will be enabled.  When the
+% `inline_footnotes` parameter is `true`, the Pandoc inline footnote syntax
+% extension will be enabled.
+%
+% \end{markdown}
+%  \begin{macrocode}
+M.extensions.footnotes = function(footnotes, inline_footnotes)
+  assert(footnotes or inline_footnotes)
+  return {
+    extend_writer = function(self)
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define \luamdef{writer->note} as a function that will transform an
+% input footnote `s` to the output format.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      function self.note(s)
+        return {"\\markdownRendererFootnote{",s,"}"}
+      end
+    end, extend_reader = function(self)
+      local parsers = self.parsers
+      local syntax = self.syntax
+      local writer = self.writer
+
+      if footnotes then
+        local function strip_first_char(s)
+          return s:sub(2)
+        end
+
+        local RawNoteRef
+                      = #(parsers.lbracket * parsers.circumflex)
+                      * parsers.tag / strip_first_char
+
+        local rawnotes = {}
+
+        -- like indirect_link
+        local function lookup_note(ref)
+          return writer.defer_call(function()
+            local found = rawnotes[self.normalize_tag(ref)]
+            if found then
+              return writer.note(
+                self.parser_functions.parse_blocks_nested(found))
+            else
+              return {"[",
+                self.parser_functions.parse_inlines("^" .. ref), "]"}
+            end
+          end)
+        end
+
+        local function register_note(ref,rawnote)
+          rawnotes[self.normalize_tag(ref)] = rawnote
+          return ""
+        end
+
+        local NoteRef = RawNoteRef / lookup_note
+
+        local NoteBlock
+                    = parsers.leader * RawNoteRef * parsers.colon
+                    * parsers.spnl * parsers.indented_blocks(parsers.chunk)
+                    / register_note
+
+        parsers.Blank = NoteBlock + parsers.Blank
+        syntax.Blank = parsers.Blank
+
+        syntax.NoteRef = NoteRef
+      end
+      if inline_footnotes then
+        local InlineNote
+                    = parsers.circumflex
+                    * (parsers.tag / self.parser_functions.parse_inlines_no_inline_note)
+                    / writer.note
+        syntax.InlineNote = InlineNote
+      end
+    end
+  }
+end
+%    \end{macrocode}
+% \begin{markdown}
+%
 %#### YAML Metadata
 %
 % The \luamdef{extensions.jekyll_data} function implements the Pandoc
@@ -21423,6 +21435,12 @@ function M.new(options)
     fenced_code_extension = M.extensions.fenced_code(
       options.blankBeforeCodeFence)
     table.insert(extensions, fenced_code_extension)
+  end
+
+  if options.footnotes or options.inlineFootnotes then
+    footnotes_extension = M.extensions.footnotes(
+      options.footnotes, options.inlineFootnotes)
+    table.insert(extensions, footnotes_extension)
   end
 
   if options.jekyllData then
