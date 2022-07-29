@@ -1182,8 +1182,21 @@ local md5 = require("md5")
 %</latex-themes-witiko-dot,latex-themes-witiko-graphicx-http,latex-themes-witiko-tilde>
 % \fi
 % \begin{markdown}
-% a \TeX{} engine that extends \Hologo{eTeX}, and all the plain \TeX{}
-% prerequisites (see Section <#sec:texprerequisites>):
+% a \TeX{} engine that extends \Hologo{eTeX}, all the plain \TeX{}
+% prerequisites (see Section <#sec:texprerequisites>), and the following
+% \Hologo{LaTeX2e} packages:
+%
+% \pkg{xparse}
+%
+%:    A package that allows the definition of \LaTeX{} environments with
+%     optional arguments.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\RequirePackage{xparse}
+%    \end{macrocode}
+% \par
+% \begin{markdown}
 %
 % The following packages are soft prerequisites. They are only used to provide
 % default token renderer prototypes (see sections
@@ -14548,18 +14561,11 @@ pdflatex --shell-escape document.tex
 % The interface exposes the \envmdef{markdown} and \envmdef{markdown*}
 % \LaTeX{} environments, and redefines the \mref{markdownInput} command.
 %
-% The \envmref{markdown} and \envmref{markdown*} \LaTeX{} environments are used to
-% typeset markdown document fragments. The starred version of the
-% \envmref{markdown} environment accepts \LaTeX{} interface options (see
-% Section <#sec:latexoptions>) as its only argument. These options will
-% only influence this markdown document fragment.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\newenvironment{markdown}\relax\relax
-\newenvironment{markdown*}[1]\relax\relax
-%    \end{macrocode}
-% \markdownBegin
+% The \envmref{markdown} \LaTeX{} environment is used to typeset markdown
+% document fragments. The environment accepts an optional argument with
+% \LaTeX{} interface options (see Section <#sec:latexoptions>). The deprecated
+% \envmref{markdown*} \LaTeX{} environment has the same semantics as the
+% \envmref{markdown} environment, but the argument is mandatory.
 %
 % You may prepend your own code to the \mref{markdown} macro and append your own
 % code to the \mref{endmarkdown} macro to produce special effects before and after
@@ -14572,12 +14578,13 @@ pdflatex --shell-escape document.tex
 %
 % The following example \LaTeX{} code showcases the usage of the
 % \envmref{markdown} and \envmref{markdown*} environments:
+%
 % ``` tex
 % \documentclass{article}            \documentclass{article}
 % \usepackage{markdown}              \usepackage{markdown}
 % \begin{document}                   \begin{document}
 % \% ...                              \% ...
-% \begin{markdown}                   \begin{markdown*}{smartEllipses}
+% \begin{markdown}[smartEllipses]    \begin{markdown*}{smartEllipses}
 % _Hello_ **world** ...              _Hello_ **world** ...
 % \end{markdown}                     \end{markdown*}
 % \% ...                              \% ...
@@ -22660,14 +22667,30 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\renewenvironment{markdown}{%
-  \markdownReadAndConvert@markdown{}}{%
-  \markdownEnd}%
-\renewenvironment{markdown*}[1]{%
-  \markdownSetup{#1}%
-  \markdownReadAndConvert@markdown*}{%
-  \markdownEnd}%
-\begingroup
+\ExplSyntaxOn
+\NewDocumentEnvironment
+  { markdown }
+  { o }
+  {
+    \IfNoValueF
+      { #1 }
+      { \markdownSetup { #1 } }
+    \markdownReadAndConvert@markdown { }
+  }
+  {
+    \markdownEnd
+  }
+\NewDocumentEnvironment
+  { markdown* }
+  { m }
+  {
+    \markdownSetup { #1 }
+    \markdownReadAndConvert@markdown *
+  }
+  {
+    \markdownEnd
+  }
+\ExplSyntaxOff
 %    \end{macrocode}
 % \begin{markdown}
 % Locally swap the category code of the backslash symbol with the pipe symbol,
@@ -22677,6 +22700,7 @@ end
 % `markdownReadAndConvert` macro have the category code *other*.
 % \end{markdown}
 %  \begin{macrocode}
+\begingroup
   \catcode`\|=0\catcode`\<=1\catcode`\>=2%
   \catcode`\\=12|catcode`|{=12|catcode`|}=12%
   |gdef|markdownReadAndConvert@markdown#1<%
