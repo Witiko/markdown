@@ -2611,10 +2611,10 @@ A paragraph.
 > A quote.
 \end{markdown}
 
-\begin{markdown*}{blankBeforeBlockquote}
+\begin{markdown}[blankBeforeBlockquote]
 A paragraph.
 > Not a quote.
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -2849,12 +2849,12 @@ A code fence.
 ```
 \end{markdown}
 
-\begin{markdown*}{blankBeforeCodeFence}
+\begin{markdown}[blankBeforeCodeFence]
 A paragraph.
 ```
 Not a code fence.
 ```
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ````````
@@ -3087,11 +3087,11 @@ A heading.
 ==========
 \end{markdown}
 
-\begin{markdown*}{blankBeforeHeading}
+\begin{markdown}[blankBeforeHeading]
 A paragraph.
 Not a heading.
 ==============
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -3313,11 +3313,11 @@ following content:
 > block quote.
 \end{markdown}
 
-\begin{markdown*}{breakableBlockquotes}
+\begin{markdown}[breakableBlockquotes]
 > A block quote.
 
 > Another block quote.
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -3438,9 +3438,9 @@ following content:
 The TeXbook [@knuth:tex, p. 123 and 130] is good.
 \end{markdown}
 
-\begin{markdown*}{citationNbsps = false}
+\begin{markdown}[citationNbsps = false]
 The TeXbook [@knuth:tex, p. 123 and 130] is good.
-\end{markdown*}
+\end{markdown}
 
 \bibliographystyle{plain}
 \bibliography{document.bib}
@@ -3733,10 +3733,10 @@ following content:
 ``This is no longer a code span.''
 \end{markdown}
 
-\begin{markdown*}{codeSpans=false}
+\begin{markdown}[codeSpans=false]
 ``This is a quote.''
 ``This is another quote.''
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -5109,12 +5109,12 @@ All mimsy were the borogoves,
 And the mome raths outgrabe.
 \end{markdown}
 
-\begin{markdown*}{hardLineBreaks}
+\begin{markdown}[hardLineBreaks]
 'Twas brillig, and the slithy toves
 Did gyre and gimble in the wabe;
 All mimsy were the borogoves,
 And the mome raths outgrabe.
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -5199,11 +5199,11 @@ following content:
 . Parish
 \end{markdown}
 
-\begin{markdown*}{hashEnumerators}
+\begin{markdown}[hashEnumerators]
 . Bird
 . McHale
 . Parish
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -5515,14 +5515,14 @@ _There is no <!-- comment --> support._
 _There is no <? HTML instruction ?> support._
 \end{markdown}
 
-\begin{markdown*}{html}
+\begin{markdown}[html]
 <div>
 *There is block tag support.*
 </div>
 *There is <inline tag="tag"></inline> support.*
 _There is <!-- comment --> support._
 _There is <? HTML instruction ?> support._
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -5747,9 +5747,9 @@ following content:
 $\sqrt{-1}$ *equals* $i$.
 \end{markdown}
 
-\begin{markdown*}{hybrid}
+\begin{markdown}[hybrid]
 $\sqrt{-1}$ *equals* $i$.
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -6821,9 +6821,9 @@ following content:
 These are just three regular dots ...
 \end{markdown}
 
-\begin{markdown*}{smartEllipses}
+\begin{markdown}[smartEllipses]
 ... and this is a victorian ellipsis.
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -6930,14 +6930,14 @@ The following list respects the numbers specified in the markup:
 5. fifth item
 \end{markdown}
 
-\begin{markdown*}{startNumber=false}
+\begin{markdown}[startNumber=false]
 The following list does not respect the numbers specified in the
 markup:
 
 3. third item
 4. fourth item
 5. fifth item
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -7551,13 +7551,13 @@ The following list is loose:
   - third item
 \end{markdown}
 
-\begin{markdown*}{tightLists=false}
+\begin{markdown}[tightLists=false]
 The following list is now also loose:
 
   - first item
   - second item
   - third item
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -7684,9 +7684,9 @@ following content:
 This is _emphasized text_ and this is a math subscript: $m\_n$.
 \end{markdown}
 
-\begin{markdown*}{underscores=false}
+\begin{markdown}[underscores=false]
 This is *emphasized text* and this is a math subscript: $m_n$.
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -9741,9 +9741,9 @@ following content:
 $\sqrt{-1}$ *equals* $i$
 \end{markdown}
 
-\begin{markdown*}{hybrid}
+\begin{markdown}[hybrid]
 $\sqrt{-1}$ *equals* $i$
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -10567,7 +10567,7 @@ This is a tight list
 - the first item
 - the second item
 - the third item
-\end{markdown*}
+\end{markdown}
 
 \begin{markdown*}{
   renderers = {
@@ -10588,7 +10588,7 @@ This is a loose list
 - This is the second item
 
 - This is the third item
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -11026,7 +11026,7 @@ This is a tight list
 1. item
 2. item
 3. item
-\end{markdown*}
+\end{markdown}
 
 \begin{markdown*}{
   renderers = {
@@ -11058,7 +11058,7 @@ This is a loose list
 2. item
 
 3. item
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -11586,7 +11586,7 @@ Milk
 :   white cold drink
 :   nutrient-rich
 :   produced on an industrial scale
-\end{markdown*}
+\end{markdown}
 
 \begin{markdown*}{
   renderers = {
@@ -11625,7 +11625,7 @@ Milk
 :   nutrient-rich
 
 :   produced on an industrial scale
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -14077,7 +14077,7 @@ following content:
   },
 }
 ~
-\end{markdown*}
+\end{markdown}
 \end{document}
 ```````
 Next, invoke LuaTeX from the terminal:
@@ -14492,9 +14492,9 @@ following content:
 $\sqrt{-1}$ *equals* $i$
 \end{markdown}
 
-\begin{markdown*}{hybrid}
+\begin{markdown}[hybrid]
 $\sqrt{-1}$ *equals* $i$
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -15258,14 +15258,14 @@ The following ordered list will be preceded by arabic numerals:
 2. aithnayn
 
 \end{markdown}
-\begin{markdown*}{snippet=romanNumerals}
+\begin{markdown}[snippet=romanNumerals]
 
 The following ordered list will be preceded by roman numerals:
 
 3. tres
 4. quattuor
 
-\end{markdown*}
+\end{markdown}
 
 ```````
 

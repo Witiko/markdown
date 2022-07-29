@@ -28,13 +28,13 @@
   tableCaptions,
   taskLists,
 ]{markdown}
-\begin{markdown*}{hybrid}
+\begin{markdown}[hybrid]
 ---
 title:  An Example *Markdown* Document
 author: Vít Novotný
 date:   \today
 ---
-\end{markdown*}
+\end{markdown}
 \begin{document}
 % Typeset the document `example.md` by letting the Markdown package handle
 % the conversion internally.
@@ -51,7 +51,7 @@ date:   \today
 Here are some non-ASCII characters: *ěščřžýáíé*.
 \end{markdown}
 
-\begin{markdown*}{html, hybrid}
+\begin{markdown}[html, hybrid]
 Here is some <b>HTML code</b> mixed *with Markdown*. In \TeX, the HTML code
 will be silently ignored, whereas in \TeX 4ht, the HTML code will be passed
 through to the output:
@@ -68,5 +68,5 @@ through to the output:
     <td>10</td>
   </tr>
 </table>
-\end{markdown*}
+\end{markdown}
 \end{document}
