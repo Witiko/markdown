@@ -9,6 +9,12 @@ bar
 ~~~ foo
 bar
 ~~~
+
+The following fenced code block is escaped:
+
+\~\~\~ foo
+bar
+\~\~\~
 >>>
 documentBegin
 codeSpan: fencedCode
@@ -20,5 +26,19 @@ tilde
 tilde
 tilde
 tilde
+tilde
+interblockSeparator
+interblockSeparator
+backslash
+tilde
+backslash
+tilde
+backslash
+tilde
+backslash
+tilde
+backslash
+tilde
+backslash
 tilde
 documentEnd

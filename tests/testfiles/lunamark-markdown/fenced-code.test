@@ -12,6 +12,12 @@ bar
 ~~~ foo
 bar
 ~~~
+
+The following fenced code block is escaped:
+
+\~\~\~ foo
+bar
+\~\~\~
 >>>
 documentBegin
 codeSpan: fencedCode
@@ -26,4 +32,12 @@ BEGIN fencedCode
 - src: ./_markdown_test/37b51d194a7513e45b56f6524f2d51f2.verbatim
 - infostring: foo
 END fencedCode
+interblockSeparator
+interblockSeparator
+tilde
+tilde
+tilde
+tilde
+tilde
+tilde
 documentEnd
