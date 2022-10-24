@@ -14,7 +14,7 @@ Development:
   - Rename the `footnotes` and `inlineFootnotes` options to `notes` and
     `inlineNotes`.
   - Rename the `HorizontalRule` rule to `ThematicBreak` and increment
-    `grammar_version` to `2`. This change is no backwards-compatible with the
+    `grammar_version` to `2`. This change is not backwards-compatible with the
     `grammar_version` of `1`.
 
 Fixes:
