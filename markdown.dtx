@@ -20997,8 +20997,8 @@ local function captures_geq_length(_,i,a,b)
   return #a >= #b and i
 end
 
-parsers.infostring     = (parsers.linechar - (parsers.backtick
-                       + parsers.space^1 * (parsers.newline + parsers.eof)))^0
+parsers.infostring   = (parsers.linechar - (parsers.backtick
+                     + parsers.space^1 * (parsers.newline + parsers.eof)))^0
 
 local fenceindent
 parsers.fencehead    = function(char)
@@ -21267,6 +21267,16 @@ parsers.urlchar      = parsers.anyescaped - parsers.newline - parsers.more
 %
 % \end{markdown}
 %  \begin{macrocode}
+parsers.TildeFencedCode
+       = parsers.fencehead(parsers.tilde)
+       * Cs(parsers.fencedline(parsers.tilde)^0)
+       * parsers.fencetail(parsers.tilde)
+
+parsers.BacktickFencedCode
+       = parsers.fencehead(parsers.backtick)
+       * Cs(parsers.fencedline(parsers.backtick)^0)
+       * parsers.fencetail(parsers.backtick)
+
 parsers.lineof = function(c)
     return (parsers.leader * (P(c) * parsers.optionalspace)^3
            * (parsers.newline * parsers.blankline^1
@@ -22940,61 +22950,8 @@ M.extensions.fenced_code = function(blank_before_code_fence)
       local parsers = self.parsers
       local writer = self.writer
 
-      local function captures_geq_length(_,i,a,b)
-        return #a >= #b and i
-      end
-
-      local infostring   = (parsers.linechar - (parsers.backtick
-                         + parsers.space^1 * (parsers.newline + parsers.eof)))^0
-
-      local fenceindent
-      local fencehead    = function(char)
-        return             C(parsers.nonindentspace) / function(s) fenceindent = #s end
-                         * Cg(char^3, "fencelength")
-                         * parsers.optionalspace * C(infostring)
-                         * parsers.optionalspace * (parsers.newline + parsers.eof)
-      end
-
-      local fencetail    = function(char)
-        return             parsers.nonindentspace
-                         * Cmt(C(char^3) * Cb("fencelength"), captures_geq_length)
-                         * parsers.optionalspace * (parsers.newline + parsers.eof)
-                         + parsers.eof
-      end
-
-      local fencedline   = function(char)
-        return             C(parsers.line - fencetail(char))
-                         / function(s)
-                             local i = 1
-                             local remaining = fenceindent
-                             while true do
-                               local c = s:sub(i, i)
-                               if c == " " and remaining > 0 then
-                                 remaining = remaining - 1
-                                 i = i + 1
-                               elseif c == "\t" and remaining > 3 then
-                                 remaining = remaining - 4
-                                 i = i + 1
-                               else
-                                 break
-                               end
-                             end
-                             return s:sub(i)
-                           end
-      end
-
-      local TildeFencedCode
-             = fencehead(parsers.tilde)
-             * Cs(fencedline(parsers.tilde)^0)
-             * fencetail(parsers.tilde)
-
-      local BacktickFencedCode
-             = fencehead(parsers.backtick)
-             * Cs(fencedline(parsers.backtick)^0)
-             * fencetail(parsers.backtick)
-
-      local FencedCode = (TildeFencedCode
-                           + BacktickFencedCode)
+      local FencedCode = (parsers.TildeFencedCode
+                           + parsers.BacktickFencedCode)
                          / function(infostring, code)
                              return writer.fencedCode(writer.string(infostring),
                                                       self.expandtabs(code))
@@ -23007,8 +22964,8 @@ M.extensions.fenced_code = function(blank_before_code_fence)
       if blank_before_code_fence then
         fencestart = parsers.fail
       else
-        fencestart = fencehead(parsers.backtick)
-                   + fencehead(parsers.tilde)
+        fencestart = parsers.fencehead(parsers.backtick)
+                   + parsers.fencehead(parsers.tilde)
       end
 
       local EndlineExceptions = parsers.EndlineExceptions + fencestart
