@@ -20909,6 +20909,20 @@ parsers.attribute_value        = ( (parsers.dquote / "")
                                + ( parsers.anyescaped - parsers.dquote - parsers.rbrace
                                  - parsers.space)^0
 
+parsers.attribute = (parsers.dash * Cc(".unnumbered"))
+                  + C((parsers.hash + parsers.period)
+                     * parsers.attribute_key)
+                  + Cs( parsers.attribute_key
+                      * parsers.optionalspace * parsers.equal * parsers.optionalspace
+                      * parsers.attribute_value)
+parsers.attributes = parsers.lbrace
+                   * parsers.optionalspace
+                   * parsers.attribute
+                   * (parsers.spacechar^1
+                     * parsers.attribute)^0
+                   * parsers.optionalspace
+                   * parsers.rbrace
+
 -- block followed by 0 or more optionally
 -- indented blocks with first line indented.
 parsers.indented_blocks = function(bl)
@@ -21266,20 +21280,6 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-parsers.heading_attribute = (parsers.dash * Cc(".unnumbered"))
-                          + C((parsers.hash + parsers.period)
-                             * parsers.attribute_key)
-                          + Cs( parsers.attribute_key
-                              * parsers.optionalspace * parsers.equal * parsers.optionalspace
-                              * parsers.attribute_value)
-parsers.heading_attributes = parsers.lbrace
-                           * parsers.optionalspace
-                           * parsers.heading_attribute
-                           * (parsers.spacechar^1
-                             * parsers.heading_attribute)^0
-                           * parsers.optionalspace
-                           * parsers.rbrace
-
 -- parse Atx heading start and return level
 parsers.heading_start = #parsers.hash * C(parsers.hash^-6)
                       * -parsers.hash / length
@@ -23132,8 +23132,8 @@ M.extensions.header_attributes = function()
                        * (C(((parsers.linechar
                              - ((parsers.hash^1
                                 * parsers.optionalspace
-                                * parsers.heading_attributes^-1
-                                + parsers.heading_attributes)
+                                * parsers.attributes^-1
+                                + parsers.attributes)
                                * parsers.optionalspace
                                * parsers.newline))
                             * (parsers.linechar
@@ -23143,8 +23143,8 @@ M.extensions.header_attributes = function()
                        * Cg(Ct(parsers.newline
                               + (parsers.hash^1
                                 * parsers.optionalspace
-                                * parsers.heading_attributes^-1
-                                + parsers.heading_attributes)
+                                * parsers.attributes^-1
+                                + parsers.attributes)
                               * parsers.optionalspace
                               * parsers.newline), "attributes")
                        * Cb("level")
@@ -23153,14 +23153,14 @@ M.extensions.header_attributes = function()
 
       local SetextHeading = #(parsers.line * S("=-"))
                           * (C(((parsers.linechar
-                                - (parsers.heading_attributes
+                                - (parsers.attributes
                                   * parsers.optionalspace
                                   * parsers.newline))
                                * (parsers.linechar
                                  - parsers.lbrace)^0)^1)
                               / self.parser_functions.parse_inlines)
                           * Cg(Ct(parsers.newline
-                                 + (parsers.heading_attributes
+                                 + (parsers.attributes
                                    * parsers.optionalspace
                                    * parsers.newline)), "attributes")
                           * parsers.heading_level
