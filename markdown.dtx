@@ -22940,7 +22940,7 @@ M.extensions.fenced_code = function(blank_before_code_fence)
 %
 % \end{markdown}
 %  \begin{macrocode}
-      function self.fencedCode(i, s)
+      function self.fencedCode(s, i)
         if not self.is_writing then return "" end
         s = string.gsub(s, '[\r\n%s]*$', '')
         local name = util.cache(options.cacheDir, s, nil, nil, ".verbatim")
@@ -22953,8 +22953,9 @@ M.extensions.fenced_code = function(blank_before_code_fence)
       local FencedCode = (parsers.TildeFencedCode
                            + parsers.BacktickFencedCode)
                          / function(infostring, code)
-                             return writer.fencedCode(writer.string(infostring),
-                                                      self.expandtabs(code))
+                             local expanded_code = self.expandtabs(code)
+                             return writer.fencedCode(expanded_code,
+                                                      writer.string(infostring))
                            end
 
       self.insert_pattern("Block after Verbatim",
@@ -23477,7 +23478,7 @@ M.extensions.raw_attribute = function()
 %
 % \end{markdown}
 %  \begin{macrocode}
-        function self.rawBlock(attr, s)
+        function self.rawBlock(s, attr)
           if not self.is_writing then return "" end
           s = string.gsub(s, '[\r\n%s]*$', '')
           local name = util.cache(options.cacheDir, s, nil, nil, ".verbatim")
@@ -23499,13 +23500,14 @@ M.extensions.raw_attribute = function()
         local RawBlock = (parsers.TildeFencedCode
                            + parsers.BacktickFencedCode)
                          / function(infostring, code)
+                             local expanded_code = self.expandtabs(code)
                              local attr = lpeg.match(raw_attribute, infostring)
                              if attr then
-                               return writer.rawBlock(writer.string(attr),
-                                                      self.expandtabs(code))
+                               return writer.rawBlock(expanded_code,
+                                                      writer.string(attr))
                              else
-                               return writer.fencedCode(writer.string(infostring),
-                                                        self.expandtabs(code))
+                               return writer.fencedCode(expanded_code,
+                                                        writer.string(infostring))
                              end
                            end
 
