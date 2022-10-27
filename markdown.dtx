@@ -23127,49 +23127,49 @@ M.extensions.header_attributes = function()
       local parsers = self.parsers
       local writer = self.writer
 
-      parsers.AtxHeading = Cg(parsers.heading_start, "level")
-                         * parsers.optionalspace
-                         * (C(((parsers.linechar
-                               - ((parsers.hash^1
-                                  * parsers.optionalspace
-                                  * parsers.heading_attributes^-1
-                                  + parsers.heading_attributes)
-                                 * parsers.optionalspace
-                                 * parsers.newline))
-                              * (parsers.linechar
-                                - parsers.hash
-                                - parsers.lbrace)^0)^1)
-                             / self.parser_functions.parse_inlines)
-                         * Cg(Ct(parsers.newline
-                                + (parsers.hash^1
-                                  * parsers.optionalspace
-                                  * parsers.heading_attributes^-1
-                                  + parsers.heading_attributes)
+      local AtxHeading = Cg(parsers.heading_start, "level")
+                       * parsers.optionalspace
+                       * (C(((parsers.linechar
+                             - ((parsers.hash^1
                                 * parsers.optionalspace
-                                * parsers.newline), "attributes")
-                         * Cb("level")
-                         * Cb("attributes")
-                         / writer.heading
+                                * parsers.heading_attributes^-1
+                                + parsers.heading_attributes)
+                               * parsers.optionalspace
+                               * parsers.newline))
+                            * (parsers.linechar
+                              - parsers.hash
+                              - parsers.lbrace)^0)^1)
+                           / self.parser_functions.parse_inlines)
+                       * Cg(Ct(parsers.newline
+                              + (parsers.hash^1
+                                * parsers.optionalspace
+                                * parsers.heading_attributes^-1
+                                + parsers.heading_attributes)
+                              * parsers.optionalspace
+                              * parsers.newline), "attributes")
+                       * Cb("level")
+                       * Cb("attributes")
+                       / writer.heading
 
-      parsers.SetextHeading = #(parsers.line * S("=-"))
-                            * (C(((parsers.linechar
-                                  - (parsers.heading_attributes
-                                    * parsers.optionalspace
-                                    * parsers.newline))
-                                 * (parsers.linechar
-                                   - parsers.lbrace)^0)^1)
-                                / self.parser_functions.parse_inlines)
-                            * Cg(Ct(parsers.newline
-                                   + (parsers.heading_attributes
-                                     * parsers.optionalspace
-                                     * parsers.newline)), "attributes")
-                            * parsers.heading_level
-                            * Cb("attributes")
-                            * parsers.optionalspace
-                            * parsers.newline
-                            / writer.heading
+      local SetextHeading = #(parsers.line * S("=-"))
+                          * (C(((parsers.linechar
+                                - (parsers.heading_attributes
+                                  * parsers.optionalspace
+                                  * parsers.newline))
+                               * (parsers.linechar
+                                 - parsers.lbrace)^0)^1)
+                              / self.parser_functions.parse_inlines)
+                          * Cg(Ct(parsers.newline
+                                 + (parsers.heading_attributes
+                                   * parsers.optionalspace
+                                   * parsers.newline)), "attributes")
+                          * parsers.heading_level
+                          * Cb("attributes")
+                          * parsers.optionalspace
+                          * parsers.newline
+                          / writer.heading
 
-      local Heading = parsers.AtxHeading + parsers.SetextHeading
+      local Heading = AtxHeading + SetextHeading
       self.update_rule("Heading", Heading)
     end
   }
