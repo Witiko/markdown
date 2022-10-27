@@ -23470,8 +23470,8 @@ M.extensions.raw_attribute = function()
       -- luacheck: push ignore raw_attribute
       local raw_attribute = parsers.lbrace
                           * parsers.optionalspace
-                          * C(parsers.equal
-                             * parsers.attribute_key)
+                          * parsers.equal
+                          * C(parsers.attribute_key)
                           * parsers.optionalspace
                           * parsers.rbrace
       -- luacheck: pop
