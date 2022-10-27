@@ -23497,6 +23497,26 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Raw Attributes
+%
+% The \luamdef{extensions.raw_attribute} function implements the Pandoc
+% raw attributes syntax extension.
+%
+% \end{markdown}
+%  \begin{macrocode}
+M.extensions.raw_attribute = function()
+  return {
+    name = "built-in raw_attribute syntax extension",
+    extend_writer = function()
+      -- TODO
+    end, extend_reader = function()
+      -- TODO
+    end
+  }
+end
+%    \end{macrocode}
+% \begin{markdown}
+%
 %#### Strike-Through
 %
 % The \luamdef{extensions.strike_through} function implements the Pandoc
