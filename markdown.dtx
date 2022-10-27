@@ -22944,7 +22944,8 @@ M.extensions.fenced_code = function(blank_before_code_fence)
         if not self.is_writing then return "" end
         s = string.gsub(s, '[\r\n%s]*$', '')
         local name = util.cache(options.cacheDir, s, nil, nil, ".verbatim")
-        return {"\\markdownRendererInputFencedCode{",name,"}{",i,"}"}
+        return {"\\markdownRendererInputFencedCode{",
+                name,"}{",self.string(i),"}"}
       end
     end, extend_reader = function(self)
       local parsers = self.parsers
@@ -22955,7 +22956,7 @@ M.extensions.fenced_code = function(blank_before_code_fence)
                          / function(infostring, code)
                              local expanded_code = self.expandtabs(code)
                              return writer.fencedCode(expanded_code,
-                                                      writer.string(infostring))
+                                                      infostring)
                            end
 
       self.insert_pattern("Block after Verbatim",
@@ -23497,7 +23498,8 @@ M.extensions.raw_attribute = function()
           if not self.is_writing then return "" end
           s = string.gsub(s, '[\r\n%s]*$', '')
           local name = util.cache(options.cacheDir, s, nil, nil, ".verbatim")
-          return {"\\markdownRendererInputRawBlock{",name,"}{",attr,"}"}
+          return {"\\markdownRendererInputRawBlock{",
+                  name,"}{", self.string(attr),"}"}
         end
       end
     end, extend_reader = function(self)
@@ -23525,11 +23527,10 @@ M.extensions.raw_attribute = function()
                              local expanded_code = self.expandtabs(code)
                              local attr = lpeg.match(raw_attribute, infostring)
                              if attr then
-                               return writer.rawBlock(expanded_code,
-                                                      writer.string(attr))
+                               return writer.rawBlock(expanded_code, attr)
                              else
                                return writer.fencedCode(expanded_code,
-                                                        writer.string(infostring))
+                                                        infostring)
                              end
                            end
 
