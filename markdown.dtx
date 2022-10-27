@@ -17600,6 +17600,21 @@ end
 % \par
 % \begin{markdown}
 %
+% The \luamdef{util.cache_verbatim} method strips whitespaces from the
+% end of `string` and calls \luamref{util.cache} with `dir`, `string`,
+% no salt or transformations, and the `.verbatim` suffix.
+%
+% \end{markdown}
+%  \begin{macrocode}
+function util.cache_verbatim(dir, string)
+  string = string:gsub('[\r\n%s]*$', '')
+  local name = util.cache(dir, string, nil, nil, ".verbatim")
+  return name
+end
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
 % The \luamdef{util.table_copy} method creates a shallow copy of a table `t`
 % and its metatable.
 %
@@ -20501,8 +20516,7 @@ function M.writer.new(options)
 %  \begin{macrocode}
   function self.verbatim(s)
     if not self.is_writing then return "" end
-    s = string.gsub(s, '[\r\n%s]*$', '')
-    local name = util.cache(options.cacheDir, s, nil, nil, ".verbatim")
+    local name = util.cache_verbatim(options.cacheDir, s)
     return {"\\markdownRendererInputVerbatim{",name,"}"}
   end
 %    \end{macrocode}
@@ -22955,8 +22969,7 @@ M.extensions.fenced_code = function(blank_before_code_fence)
 %  \begin{macrocode}
       function self.fencedCode(s, i)
         if not self.is_writing then return "" end
-        s = string.gsub(s, '[\r\n%s]*$', '')
-        local name = util.cache(options.cacheDir, s, nil, nil, ".verbatim")
+        local name = util.cache_verbatim(options.cacheDir, s)
         return {"\\markdownRendererInputFencedCode{",
                 name,"}{",self.string(i),"}"}
       end
@@ -23493,8 +23506,7 @@ M.extensions.raw_attribute = function()
 %  \begin{macrocode}
       function self.rawInline(s, attr)
         if not self.is_writing then return "" end
-        s = string.gsub(s, '[\r\n%s]*$', '')
-        local name = util.cache(options.cacheDir, s, nil, nil, ".verbatim")
+        local name = util.cache_verbatim(options.cacheDir, s)
         return {"\\markdownRendererInputRawInline{",
                 name,"}{", self.string(attr),"}"}
       end
@@ -23511,8 +23523,7 @@ M.extensions.raw_attribute = function()
 %  \begin{macrocode}
         function self.rawBlock(s, attr)
           if not self.is_writing then return "" end
-          s = string.gsub(s, '[\r\n%s]*$', '')
-          local name = util.cache(options.cacheDir, s, nil, nil, ".verbatim")
+          local name = util.cache_verbatim(options.cacheDir, s)
           return {"\\markdownRendererInputRawBlock{",
                   name,"}{", self.string(attr),"}"}
         end
