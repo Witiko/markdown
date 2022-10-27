@@ -23464,17 +23464,54 @@ end
 M.extensions.raw_attribute = function()
   return {
     name = "built-in raw_attribute syntax extension",
-    extend_writer = function()
-      -- TODO
-    end, extend_reader = function()
-      -- luacheck: push ignore raw_attribute
+    extend_writer = function(self)
+      local options = self.options
+
+      if options.fencedCode then
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define \luamdef{writer->rawBlock} as a function that will transform an
+% input raw block `s` with the raw attribute `i` to the output format.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        function self.rawBlock(attr, s)
+          if not self.is_writing then return "" end
+          s = string.gsub(s, '[\r\n%s]*$', '')
+          local name = util.cache(options.cacheDir, s, nil, nil, ".verbatim")
+          return {"\\markdownRendererInputRawBlock{",name,"}{",attr,"}"}
+        end
+      end
+    end, extend_reader = function(self)
+      local options = self.options
+      local writer = self.writer
+
       local raw_attribute = parsers.lbrace
                           * parsers.optionalspace
                           * parsers.equal
                           * C(parsers.attribute_key)
                           * parsers.optionalspace
                           * parsers.rbrace
-      -- luacheck: pop
+
+      if options.fencedCode then
+        local RawBlock = (parsers.TildeFencedCode
+                           + parsers.BacktickFencedCode)
+                         / function(infostring, code)
+                             local attr = lpeg.match(raw_attribute, infostring)
+                             if attr then
+                               return writer.rawBlock(writer.string(attr),
+                                                      self.expandtabs(code))
+                             else
+                               return writer.fencedCode(writer.string(infostring),
+                                                        self.expandtabs(code))
+                             end
+                           end
+
+        self.insert_pattern("Block after Verbatim",
+                            RawBlock, "RawBlock")
+      end
     end
   }
 end
