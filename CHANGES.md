@@ -16,6 +16,8 @@ Development:
   - Rename the `HorizontalRule` rule to `ThematicBreak` and increment
     `grammar_version` to `2`. This change is not backwards-compatible with the
     `grammar_version` of `1`.
+- Add `\markdownEscape` macro that inputs a TeX document in the middle of a
+  markdown document fragment. (1478f7b)
 
 Fixes:
 
