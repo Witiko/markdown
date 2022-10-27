@@ -21474,8 +21474,8 @@ function M.reader.new(writer, options)
 % \end{markdown}
 %  \begin{macrocode}
       if toplevel and (options.texComments or options.hybrid) then
-          str = lpeg.match(Ct(parsers.commented_line^1), str)
-          str = util.rope_to_string(str)
+        str = lpeg.match(Ct(parsers.commented_line^1), str)
+        str = util.rope_to_string(str)
       end
       local res = lpeg.match(grammar(), str)
       if res == nil then
