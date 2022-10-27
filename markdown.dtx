@@ -23479,9 +23479,11 @@ M.extensions.raw_attribute = function()
 % \end{markdown}
 %  \begin{macrocode}
       function self.rawInline(s, attr)
+        if not self.is_writing then return "" end
+        s = string.gsub(s, '[\r\n%s]*$', '')
+        local name = util.cache(options.cacheDir, s, nil, nil, ".verbatim")
         return {"\\markdownRendererInputRawInline{",
-                self.escape_minimal(s),"}{",
-                self.string(attr),"}"}
+                name,"}{", self.string(attr),"}"}
       end
 
       if options.fencedCode then
