@@ -23500,7 +23500,7 @@ end
 %#### Raw Attributes
 %
 % The \luamdef{extensions.raw_attribute} function implements the Pandoc
-% raw attributes syntax extension.
+% raw attribute syntax extension.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -23510,7 +23510,14 @@ M.extensions.raw_attribute = function()
     extend_writer = function()
       -- TODO
     end, extend_reader = function()
-      -- TODO
+      -- luacheck: push ignore raw_attribute
+      local raw_attribute = parsers.lbrace
+                          * parsers.optionalspace
+                          * C(parsers.equal
+                             * parsers.attribute_key)
+                          * parsers.optionalspace
+                          * parsers.rbrace
+      -- luacheck: pop
     end
   }
 end
