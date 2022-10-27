@@ -23908,6 +23908,11 @@ function M.new(options)
     table.insert(extensions, pipe_tables_extension)
   end
 
+  if options.rawAttribute then
+    local raw_attribute_extension = M.extensions.raw_attribute()
+    table.insert(extensions, raw_attribute_extension)
+  end
+
   if options.strikeThrough then
     local strike_through_extension = M.extensions.strike_through()
     table.insert(extensions, strike_through_extension)
