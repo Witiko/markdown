@@ -8955,8 +8955,8 @@ pdftex --shell-escape document.tex
 %
 %### Typesetting Markdown {#textypesetting}
 %
-% The interface exposes the \mdef{markdownBegin}, \mdef{markdownEnd}, and
-% \mdef{markdownInput} macros.
+% The interface exposes the \mdef{markdownBegin}, \mdef{markdownEnd},
+% \mdef{markdownInput}, and \mdef{markdownEscape} macros.
 %
 % The \mref{markdownBegin} macro marks the beginning of a markdown document
 % fragment and the \mref{markdownEnd} macro marks its end.
@@ -9014,9 +9014,9 @@ pdftex --shell-escape document.tex
 % \bye
 % ```````
 %
-% The \mref{markdownInput} macro accepts a single parameter containing the
-% filename of a markdown document and expands to the result of the conversion
-% of the input markdown document to plain \TeX{}.
+% The \mref{markdownInput} macro accepts a single parameter with the filename
+% of a markdown document and expands to the result of the conversion of the
+% input markdown document to plain \TeX{}.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -9036,6 +9036,19 @@ pdftex --shell-escape document.tex
 % \markdownInput{hello.md}
 % \bye
 % ```````
+%
+% The \mref{markdownEscape} macro accepts a single parameter with the filename
+% of a \TeX{} document and executes the \TeX{} document in the middle of a
+% markdown document fragment. Unlike the `\input` built-in of \TeX,
+% \mref{markdownEscape} guarantees that the standard catcode regime of your
+% \TeX{} format will be used.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\let\markdownEscape\relax
+%    \end{macrocode}
+% \par
+% \begin{markdown}
 %
 %### Options {#texoptions}
 %
@@ -25206,6 +25219,22 @@ end
   }%
 |endgroup
 %    \end{macrocode}
+% \par
+% \begin{markdown}
+% The \mref{markdownEscape} macro resets the category codes of the percent sign
+% and the hash sign back to comment and parameter, respectively, before using
+% the `\input` built-in of \TeX{} to execute a \TeX{} document in the middle of
+% a markdown document fragment.
+% \end{markdown}
+%  \begin{macrocode}
+\gdef\markdownEscape#1{%
+  \catcode`\%=14\relax
+  \catcode`\#=6\relax
+  \input #1\relax
+  \catcode`\%=12\relax
+  \catcode`\#=12\relax
+}%
+%    \end{macrocode}
 % \iffalse
 %</tex>
 %<*latex>
@@ -25940,11 +25969,7 @@ end
       \end{table}%
     }{%
       \ifthenelse{\equal{#1}{tex}}{%
-        \catcode`\%=14\relax
-        \catcode`\#=6\relax
-        \input #3\relax
-        \catcode`\%=12\relax
-        \catcode`\#=12\relax
+        \markdownEscape{#3}%
       }{%
         \markdownInput{#3}%
       }%
