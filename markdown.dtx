@@ -23468,6 +23468,21 @@ M.extensions.raw_attribute = function()
     extend_writer = function(self)
       local options = self.options
 
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define \luamdef{writer->rawInline} as a function that will transform an
+% input inlined raw span `s` with the raw attribute `i` to the output format.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      function self.rawInline(s, attr)
+        return {"\\markdownRendererInputRawInline{",
+                self.escape_minimal(s),"}{",
+                self.string(attr),"}"}
+      end
+
       if options.fencedCode then
 %    \end{macrocode}
 % \par
@@ -23495,6 +23510,13 @@ M.extensions.raw_attribute = function()
                           * C(parsers.attribute_key)
                           * parsers.optionalspace
                           * parsers.rbrace
+
+      local RawInline = parsers.inticks
+                      * raw_attribute
+                      / writer.rawInline
+
+      self.insert_pattern("Inline before Code",
+                          RawInline, "RawInline")
 
       if options.fencedCode then
         local RawBlock = (parsers.TildeFencedCode
