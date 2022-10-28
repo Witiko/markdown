@@ -1220,7 +1220,7 @@ local md5 = require("md5")
 %
 %:    A package that provides a concise syntax for the inspection of macro
 %     values. It is used in the `witiko/dot` \LaTeX{} theme (see Section
-%     <#sec:latexthemes>), and to provide default token renderer prototypes.
+%     <#sec:latexthemes>).
 %
 % \pkg{fancyvrb}
 %
@@ -26118,7 +26118,7 @@ end
     dlEndTight = {\markdownRendererDlEnd}}}
 }
 \ExplSyntaxOff
-\RequirePackage{amsmath,ifthen}
+\RequirePackage{amsmath}
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -26175,25 +26175,33 @@ end
     \else
       \texttt{#1}%
     \fi
+  }}}
+\ExplSyntaxOn
+\markdownSetup{
+  rendererPrototypes = {
+    contentBlock = {
+      \str_case:nnF
+        { #1 }
+        {
+          { csv }
+            {
+              \begin{table}
+                \begin{center}
+                  \csvautotabular{#3}
+                \end{center}
+                \tl_if_empty:nF
+                  { #4 }
+                  { \caption{#4} }
+              \end{table}
+            }
+          { tex } { \markdownEscape{#3} }
+        }
+        { \markdownInput{#3} }
+    },
   },
-  contentBlock = {%
-    \ifthenelse{\equal{#1}{csv}}{%
-      \begin{table}%
-        \begin{center}%
-          \csvautotabular{#3}%
-        \end{center}
-        \ifx\empty#4\empty\else
-          \caption{#4}%
-        \fi
-      \end{table}%
-    }{%
-      \ifthenelse{\equal{#1}{tex}}{%
-        \markdownEscape{#3}%
-      }{%
-        \markdownInput{#3}%
-      }%
-    }%
-  },
+}
+\ExplSyntaxOff
+\markdownSetup{rendererPrototypes={
   image = {%
     \begin{figure}%
       \begin{center}%
