@@ -27253,6 +27253,34 @@ end
   \ifnum\markdownConTeXtColumnCounter<\markdownConTeXtColumnTotal\relax\else
     \expandafter\gobbleoneargument
   \fi\markdownConTeXtRenderTableCell}
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+%#### Raw Attribute Renderer Prototypes
+%
+% In the raw block and inline raw span renderer prototypes, execute the content
+% with TeX when the raw attribute is `tex` or `context`, display the content as
+% markdown when the raw attribute is `md`, and ignore the content otherwise.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\cs_gset:Npn
+  \markdownRendererRawInlinePrototype#1#2
+  {
+    \str_case:nnF
+      { #2 }
+      {
+        { tex     } { \markdownEscape{#1} }
+        { context } { \markdownEscape{#1} }
+        { md      } { \markdownInput{#1}  }
+      }
+  }
+\cs_gset_eq:NN
+  \markdownRendererRawBlockPrototype
+  \markdownRendererRawInlinePrototype
+\ExplSyntaxOff
 \stopmodule\protect
 %    \end{macrocode}
 % \iffalse
