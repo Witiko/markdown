@@ -15573,6 +15573,123 @@ following text:
   \g_@@_renderer_arities_prop
   { subscript }
   { 1 }
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
+#### Raw Content Renderers
+The \mdef{markdownRendererInputRawInline} macro represents an inlined raw span.
+The macro receives two arguments: the filename of a file contaning the inlined
+raw span contents and the raw attribute that designates the format of the
+inlined raw span. This macro will only be produced, when the \Opt{rawAttribute}
+option is enabled.
+
+% \end{markdown}
+%
+% \iffalse
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererInputRawInline{%
+  \markdownRendererInputRawInlinePrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { inputRawInline }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { inputRawInline }
+  { 2 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
+The \mdef{markdownRendererInputRawBlock} macro represents a raw block. The
+macro receives two arguments: the filename of a file contaning the raw block
+and the raw attribute that designates the format of the raw block. This macro
+will only be produced, when the \Opt{rawAttribute} and \Opt{fencedCode} options
+are enabled.
+
+% \end{markdown}
+%
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+~~~~~~~~ tex
+\documentclass{article}
+\usepackage[rawAttribute, fencedCode]{markdown}
+\usepackage{expl3}
+\ExplSyntaxOn
+\cs_new:Nn
+  \display_raw_content:nn
+  {
+    % If the raw attribute is TeX, execute the content as a TeX document.
+    \str_if_eq:nnTF
+      { #2 }
+      { tex }
+      { \markdownEscape { #1 } }
+      % Otherwise, ignore the content.
+      { }
+  }
+\markdownSetup{
+  renderers = {
+    rawInline = { \display_raw_content:nn { #1 } { #2 } },
+    rawBlock  = { \display_raw_content:nn { #1 } { #2 } }
+  },
+}
+\ExplSyntaxOff
+\begin{document}
+\begin{markdown}
+`$H_2 O$`{=tex} is a liquid.
+
+``` {=html}
+<p>Here is some HTML content that will be ignored.</p>
+```````````
+\end{markdown}
+\end{document}
+~~~~~~~~~~~
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> H~2~O is a liquid.
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererInputRawBlock{%
+  \markdownRendererInputRawBlockPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { inputRawBlock }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { inputRawBlock }
+  { 2 }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par
