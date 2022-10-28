@@ -26923,6 +26923,34 @@ end
 % \par
 % \begin{markdown}
 %
+%#### Raw Attribute Renderer Prototypes
+%
+% In the raw block and inline raw span renderer prototypes, execute the content
+% with TeX when the raw attribute is `tex` or `latex`, display the content as
+% markdown when the raw attribute is `md`, and ignore the content otherwise.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\cs_gset:Npn
+  \markdownRendererRawInlinePrototype#1#2
+  {
+    \str_case:nnF
+      { #2 }
+      {
+        { tex   } { \markdownEscape{#1} }
+        { latex } { \markdownEscape{#1} }
+        { md    } { \markdownInput{#1}  }
+      }
+  }
+\cs_gset_eq:NN
+  \markdownRendererRawBlockPrototype
+  \markdownRendererRawInlinePrototype
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
 %### Miscellanea
 % When buffering user input, we should disable the bytes with the high bit set,
 % since these are made active by the \pkg{inputenc} package. We will do this by
