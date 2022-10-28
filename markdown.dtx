@@ -6812,6 +6812,97 @@ defaultOptions.preserveTabs = false
 %</lua,lua-cli>
 %<*manual-options>
 
+#### Option `rawAttribute`
+
+`rawAttribute` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{rawAttribute}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Enable the Pandoc raw attribute syntax extension:
+
+        ``` md
+        `$H_2 O$`{=tex} is a liquid.
+        ```
+
+        To enable raw blocks, the \Opt{fencedCode} option must also be enabled:
+
+        ~~~~~~~~ md
+        Here is a mathematical formula:
+        ``` {=tex}
+        \[distance[i] =
+            \begin{dcases}
+                a & b \\
+                c & d
+            \end{dcases}
+        \]
+        ```
+        ~~~~~~~~~~~
+
+        The \Opt{rawAttribute} option is a good alternative to the \Opt{hybrid}
+        option. Unlike the \Opt{hybrid} option, which affects the entire
+        document, the \Opt{rawAttribute} option allows you to isolate the parts
+        of your documents that use TeX:
+
+:    false
+
+     :  Disable the Pandoc raw attribute syntax extension.
+
+% \end{markdown}
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+~~~~~~~~ tex
+\documentclass{article}
+\usepackage[rawAttribute, fencedCode]{markdown}
+\usepackage{expl3}
+\begin{document}
+\begin{markdown}
+`$H_2 O$`{=tex} is a liquid.
+
+``` {=html}
+<p>Here is some HTML content that will be ignored.</p>
+```````````
+\end{markdown}
+\end{document}
+~~~~~~~~~~~
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> H~2~O is a liquid.
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { rawAttribute }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.rawAttribute = true
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
 #### Option `relativeReferences`
 
 `relativeReferences` (default value: `false`)
