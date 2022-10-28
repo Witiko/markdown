@@ -26843,7 +26843,6 @@ end
     \addto@hook\markdownLaTeXTable{#1\\}%
     \expandafter\@gobble
   \fi\markdownLaTeXRenderTableCell}
-\fi
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -26947,6 +26946,7 @@ end
   \markdownRendererRawBlockPrototype
   \markdownRendererRawInlinePrototype
 \ExplSyntaxOff
+\fi % Closes `\markdownIfOption{Plain}{\iffalse}{iftrue}`
 %    \end{macrocode}
 % \par
 % \begin{markdown}
