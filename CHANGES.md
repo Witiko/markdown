@@ -23,6 +23,8 @@ Fixes:
 
 - Fix missing support for forward slashes in
   `\markdownSetup{jekyllDataRenderers = {...}}` keys. (#199, #200)
+- Fix `plain` LaTeX option not preventing changes to renderer prototypes.
+  (013abbb)
 
 Contributed Software:
 
