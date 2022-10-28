@@ -10677,8 +10677,8 @@ following text, where the middot (`·`) denotes a non-breaking space:
 % \begin{markdown}
 
 #### Code Span Renderer
-The \mdef{markdownRendererCodeSpan} macro represents inlined code span in the
-input text. It receives a single argument that corresponds to the inlined
+The \mdef{markdownRendererCodeSpan} macro represents inline code span in the
+input text. It receives a single argument that corresponds to the inline
 code span.
 
 % \end{markdown}
@@ -15675,10 +15675,10 @@ following text:
 % \begin{markdown}
 
 #### Raw Content Renderers
-The \mdef{markdownRendererInputRawInline} macro represents an inlined raw span.
-The macro receives two arguments: the filename of a file contaning the inlined
+The \mdef{markdownRendererInputRawInline} macro represents an inline raw span.
+The macro receives two arguments: the filename of a file contaning the inline
 raw span contents and the raw attribute that designates the format of the
-inlined raw span. This macro will only be produced, when the \Opt{rawAttribute}
+inline raw span. This macro will only be produced, when the \Opt{rawAttribute}
 option is enabled.
 
 % \end{markdown}
@@ -20473,7 +20473,7 @@ function M.writer.new(options)
 % \begin{markdown}
 %
 % Define \luamdef{writer->code} as a function that will transform an input
-% inlined code span `s` to the output format.
+% inline code span `s` to the output format.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -23708,7 +23708,7 @@ M.extensions.raw_attribute = function()
 % \begin{markdown}
 %
 % Define \luamdef{writer->rawInline} as a function that will transform an
-% input inlined raw span `s` with the raw attribute `i` to the output format.
+% input inline raw span `s` with the raw attribute `i` to the output format.
 %
 % \end{markdown}
 %  \begin{macrocode}
