@@ -24515,6 +24515,33 @@ end
 % \par
 % \begin{markdown}
 %
+%#### Raw Attribute Renderer Prototypes
+%
+% In the raw block and inline raw span renderer prototypes, execute the content
+% with TeX when the raw attribute is `tex`, display the content as markdown when
+% the raw attribute is `md`, and ignore the content otherwise.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\cs_gset:Npn
+  \markdownRendererRawInlinePrototype#1#2
+  {
+    \str_case:nnF
+      { #2 }
+      {
+        { tex } { \markdownEscape{#1} }
+        { md  } { \markdownInput{#1}  }
+      }
+  }
+\cs_gset_eq:NN
+  \markdownRendererRawBlockPrototype
+  \markdownRendererRawInlinePrototype
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
 %#### YAML Metadata Renderer Prototypes {#expl3yamlmetadataimplementation}
 %
 % To keep track of the current type of structure we inhabit when we are
