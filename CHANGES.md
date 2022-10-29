@@ -18,6 +18,7 @@ Development:
     `grammar_version` of `1`.
 - Add `\markdownEscape` macro that inputs a TeX document in the middle of a
   markdown document fragment. (1478f7b)
+- Add support for raw attributes. (#173, #202)
 
 Fixes:
 
