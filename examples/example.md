@@ -152,16 +152,22 @@ Here is a note reference[^1] and another.[^longnote]
 Here is an inline note.^[Inlines notes are easier to
 write, since you don't have to pick an identifier and
 move down to type the note.]
-  
+
 [^1]: Here is the note.
 
 [^longnote]: Here's one with multiple blocks.
-  
+
     Subsequent paragraphs are indented to show that they
 belong to the previous note.
-  
+
         Some code
 
     The whole paragraph can be indented, or just the first
     line.  In this way, multi-paragraph notes work like
     multi-paragraph list items.
+
+This is raw `\TeX`{=tex} code:
+
+``` {=tex}
+$$ x^n + y^n = z^n $$
+```
