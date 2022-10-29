@@ -24,7 +24,8 @@ Fixes:
 
 Contributed Software:
 
-- Update `contributions/pandoc-to-markdown`. (contributed by @drehak, 3d5b8e5)
+- Update `contributions/pandoc-to-markdown`.
+  (contributed by @drehak, 3d5b8e5, d3073bc)
 
 Deprecation:
 
