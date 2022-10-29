@@ -1,6 +1,6 @@
 <<<
 This test ensures that the Lua `fencedCode` option is disabled by default. The
-following fenced code block should resolve to a code spans.
+following fenced code block should resolve to code spans.
 
 ``` foo
 bar

@@ -16,6 +16,7 @@ LUACLI_OPTIONS=\
   inlineNotes=true \
   notes=true \
   pipeTables=true \
+  rawAttribute=true \
   smartEllipses=true \
   strikeThrough=true \
   subscripts=true \

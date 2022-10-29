@@ -1,0 +1,36 @@
+\def\markdownOptionFencedCode{true}
+<<<
+This test ensures that the Lua `fencedCode` option correctly propagates through
+the plain TeX interface and that the `rawAttribute` option is disabled by
+default.
+
+The following fenced code block should resolve to a fenced code block:
+
+```{=openxml}
+<w:p>
+  <w:r>
+    <w:br w:type="page"/>
+  </w:r>
+</w:p>
+```
+
+The following inline raw span should be recognized as a code span followed by
+braced text:
+
+This is `<a>html</a>`{=html}
+>>>
+documentBegin
+codeSpan: fencedCode
+codeSpan: rawAttribute
+interblockSeparator
+interblockSeparator
+BEGIN fencedCode
+- src: ./_markdown_test/b43c6cb44864821760ccce3596fbc5e2.verbatim
+- infostring: (leftBrace)=openxml(rightBrace)
+END fencedCode
+interblockSeparator
+interblockSeparator
+codeSpan: <a>html</a>
+leftBrace
+rightBrace
+documentEnd

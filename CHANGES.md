@@ -16,11 +16,16 @@ Development:
   - Rename the `HorizontalRule` rule to `ThematicBreak` and increment
     `grammar_version` to `2`. This change is not backwards-compatible with the
     `grammar_version` of `1`.
+- Add `\markdownEscape` macro that inputs a TeX document in the middle of a
+  markdown document fragment. (1478f7b)
+- Add support for raw attributes. (#173, #202)
 
 Fixes:
 
 - Fix missing support for forward slashes in
   `\markdownSetup{jekyllDataRenderers = {...}}` keys. (#199, #200)
+- Fix `plain` LaTeX option not preventing changes to renderer prototypes.
+  (013abbb)
 
 Contributed Software:
 

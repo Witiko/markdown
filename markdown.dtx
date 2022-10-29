@@ -1220,7 +1220,7 @@ local md5 = require("md5")
 %
 %:    A package that provides a concise syntax for the inspection of macro
 %     values. It is used in the `witiko/dot` \LaTeX{} theme (see Section
-%     <#sec:latexthemes>), and to provide default token renderer prototypes.
+%     <#sec:latexthemes>).
 %
 % \pkg{fancyvrb}
 %
@@ -6812,6 +6812,97 @@ defaultOptions.preserveTabs = false
 %</lua,lua-cli>
 %<*manual-options>
 
+#### Option `rawAttribute`
+
+`rawAttribute` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{rawAttribute}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Enable the Pandoc raw attribute syntax extension:
+
+        ``` md
+        `$H_2 O$`{=tex} is a liquid.
+        ```
+
+        To enable raw blocks, the \Opt{fencedCode} option must also be enabled:
+
+        ~~~~~~~~ md
+        Here is a mathematical formula:
+        ``` {=tex}
+        \[distance[i] =
+            \begin{dcases}
+                a & b \\
+                c & d
+            \end{dcases}
+        \]
+        ```
+        ~~~~~~~~~~~
+
+        The \Opt{rawAttribute} option is a good alternative to the \Opt{hybrid}
+        option. Unlike the \Opt{hybrid} option, which affects the entire
+        document, the \Opt{rawAttribute} option allows you to isolate the parts
+        of your documents that use TeX:
+
+:    false
+
+     :  Disable the Pandoc raw attribute syntax extension.
+
+% \end{markdown}
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+~~~~~~~~ tex
+\documentclass{article}
+\usepackage[rawAttribute, fencedCode]{markdown}
+\usepackage{expl3}
+\begin{document}
+\begin{markdown}
+`$H_2 O$`{=tex} is a liquid.
+
+``` {=html}
+<p>Here is some HTML content that will be ignored.</p>
+```````````
+\end{markdown}
+\end{document}
+~~~~~~~~~~~
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> H~2~O is a liquid.
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { rawAttribute }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.rawAttribute = true
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
 #### Option `relativeReferences`
 
 `relativeReferences` (default value: `false`)
@@ -8955,8 +9046,8 @@ pdftex --shell-escape document.tex
 %
 %### Typesetting Markdown {#textypesetting}
 %
-% The interface exposes the \mdef{markdownBegin}, \mdef{markdownEnd}, and
-% \mdef{markdownInput} macros.
+% The interface exposes the \mdef{markdownBegin}, \mdef{markdownEnd},
+% \mdef{markdownInput}, and \mdef{markdownEscape} macros.
 %
 % The \mref{markdownBegin} macro marks the beginning of a markdown document
 % fragment and the \mref{markdownEnd} macro marks its end.
@@ -9014,9 +9105,9 @@ pdftex --shell-escape document.tex
 % \bye
 % ```````
 %
-% The \mref{markdownInput} macro accepts a single parameter containing the
-% filename of a markdown document and expands to the result of the conversion
-% of the input markdown document to plain \TeX{}.
+% The \mref{markdownInput} macro accepts a single parameter with the filename
+% of a markdown document and expands to the result of the conversion of the
+% input markdown document to plain \TeX{}.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -9036,6 +9127,19 @@ pdftex --shell-escape document.tex
 % \markdownInput{hello.md}
 % \bye
 % ```````
+%
+% The \mref{markdownEscape} macro accepts a single parameter with the filename
+% of a \TeX{} document and executes the \TeX{} document in the middle of a
+% markdown document fragment. Unlike the `\input` built-in of \TeX,
+% \mref{markdownEscape} guarantees that the standard catcode regime of your
+% \TeX{} format will be used.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\let\markdownEscape\relax
+%    \end{macrocode}
+% \par
+% \begin{markdown}
 %
 %### Options {#texoptions}
 %
@@ -10573,8 +10677,8 @@ following text, where the middot (`·`) denotes a non-breaking space:
 % \begin{markdown}
 
 #### Code Span Renderer
-The \mdef{markdownRendererCodeSpan} macro represents inlined code span in the
-input text. It receives a single argument that corresponds to the inlined
+The \mdef{markdownRendererCodeSpan} macro represents inline code span in the
+input text. It receives a single argument that corresponds to the inline
 code span.
 
 % \end{markdown}
@@ -15493,7 +15597,7 @@ luatex document.tex
 A PDF document named `document.pdf` should be produced and contain the
 following text:
 
-> H (2 moles) and O is liquid.
+> H (2 moles) and O is a liquid.
 
 ##### \LaTeX{} Example {.unnumbered}
 
@@ -15520,7 +15624,7 @@ lualatex document.tex
 A PDF document named `document.pdf` should be produced and contain the
 following text:
 
-> H (2 moles) and O is liquid.
+> H (2 moles) and O is a liquid.
 
 ##### \Hologo{ConTeXt} Example {.unnumbered}
 
@@ -15543,7 +15647,7 @@ context document.tex
 A PDF document named `document.pdf` should be produced and contain the
 following text:
 
-> H (2 moles) and O is liquid.
+> H (2 moles) and O is a liquid.
 
 %</manual-tokens>
 %<*tex>
@@ -15560,6 +15664,123 @@ following text:
   \g_@@_renderer_arities_prop
   { subscript }
   { 1 }
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
+#### Raw Content Renderers
+The \mdef{markdownRendererInputRawInline} macro represents an inline raw span.
+The macro receives two arguments: the filename of a file contaning the inline
+raw span contents and the raw attribute that designates the format of the
+inline raw span. This macro will only be produced, when the \Opt{rawAttribute}
+option is enabled.
+
+% \end{markdown}
+%
+% \iffalse
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererInputRawInline{%
+  \markdownRendererInputRawInlinePrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { inputRawInline }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { inputRawInline }
+  { 2 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
+The \mdef{markdownRendererInputRawBlock} macro represents a raw block. The
+macro receives two arguments: the filename of a file contaning the raw block
+and the raw attribute that designates the format of the raw block. This macro
+will only be produced, when the \Opt{rawAttribute} and \Opt{fencedCode} options
+are enabled.
+
+% \end{markdown}
+%
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+~~~~~~~~ tex
+\documentclass{article}
+\usepackage[rawAttribute, fencedCode]{markdown}
+\usepackage{expl3}
+\ExplSyntaxOn
+\cs_new:Nn
+  \display_raw_content:nn
+  {
+    % If the raw attribute is TeX, execute the content as a TeX document.
+    \str_if_eq:nnTF
+      { #2 }
+      { tex }
+      { \markdownEscape { #1 } }
+      % Otherwise, ignore the content.
+      { }
+  }
+\markdownSetup{
+  renderers = {
+    rawInline = { \display_raw_content:nn { #1 } { #2 } },
+    rawBlock  = { \display_raw_content:nn { #1 } { #2 } }
+  },
+}
+\ExplSyntaxOff
+\begin{document}
+\begin{markdown}
+`$H_2 O$`{=tex} is a liquid.
+
+``` {=html}
+<p>Here is some HTML content that will be ignored.</p>
+```````````
+\end{markdown}
+\end{document}
+~~~~~~~~~~~
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> H~2~O is a liquid.
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererInputRawBlock{%
+  \markdownRendererInputRawBlockPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { inputRawBlock }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { inputRawBlock }
+  { 2 }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par
@@ -17581,6 +17802,21 @@ function util.cache(dir, string, salt, transform, suffix)
     assert(file:write(result))
     assert(file:close())
   end
+  return name
+end
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% The \luamdef{util.cache_verbatim} method strips whitespaces from the
+% end of `string` and calls \luamref{util.cache} with `dir`, `string`,
+% no salt or transformations, and the `.verbatim` suffix.
+%
+% \end{markdown}
+%  \begin{macrocode}
+function util.cache_verbatim(dir, string)
+  string = string:gsub('[\r\n%s]*$', '')
+  local name = util.cache(dir, string, nil, nil, ".verbatim")
   return name
 end
 %    \end{macrocode}
@@ -20237,7 +20473,7 @@ function M.writer.new(options)
 % \begin{markdown}
 %
 % Define \luamdef{writer->code} as a function that will transform an input
-% inlined code span `s` to the output format.
+% inline code span `s` to the output format.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -20488,8 +20724,7 @@ function M.writer.new(options)
 %  \begin{macrocode}
   function self.verbatim(s)
     if not self.is_writing then return "" end
-    s = string.gsub(s, '[\r\n%s]*$', '')
-    local name = util.cache(options.cacheDir, s, nil, nil, ".verbatim")
+    local name = util.cache_verbatim(options.cacheDir, s)
     return {"\\markdownRendererInputVerbatim{",name,"}"}
   end
 %    \end{macrocode}
@@ -20909,6 +21144,20 @@ parsers.attribute_value        = ( (parsers.dquote / "")
                                + ( parsers.anyescaped - parsers.dquote - parsers.rbrace
                                  - parsers.space)^0
 
+parsers.attribute = (parsers.dash * Cc(".unnumbered"))
+                  + C((parsers.hash + parsers.period)
+                     * parsers.attribute_key)
+                  + Cs( parsers.attribute_key
+                      * parsers.optionalspace * parsers.equal * parsers.optionalspace
+                      * parsers.attribute_value)
+parsers.attributes = parsers.lbrace
+                   * parsers.optionalspace
+                   * parsers.attribute
+                   * (parsers.spacechar^1
+                     * parsers.attribute)^0
+                   * parsers.optionalspace
+                   * parsers.rbrace
+
 -- block followed by 0 or more optionally
 -- indented blocks with first line indented.
 parsers.indented_blocks = function(bl)
@@ -20983,8 +21232,8 @@ local function captures_geq_length(_,i,a,b)
   return #a >= #b and i
 end
 
-parsers.infostring     = (parsers.linechar - (parsers.backtick
-                       + parsers.space^1 * (parsers.newline + parsers.eof)))^0
+parsers.infostring   = (parsers.linechar - (parsers.backtick
+                     + parsers.space^1 * (parsers.newline + parsers.eof)))^0
 
 local fenceindent
 parsers.fencehead    = function(char)
@@ -21253,6 +21502,16 @@ parsers.urlchar      = parsers.anyescaped - parsers.newline - parsers.more
 %
 % \end{markdown}
 %  \begin{macrocode}
+parsers.TildeFencedCode
+       = parsers.fencehead(parsers.tilde)
+       * Cs(parsers.fencedline(parsers.tilde)^0)
+       * parsers.fencetail(parsers.tilde)
+
+parsers.BacktickFencedCode
+       = parsers.fencehead(parsers.backtick)
+       * Cs(parsers.fencedline(parsers.backtick)^0)
+       * parsers.fencetail(parsers.backtick)
+
 parsers.lineof = function(c)
     return (parsers.leader * (P(c) * parsers.optionalspace)^3
            * (parsers.newline * parsers.blankline^1
@@ -21266,26 +21525,12 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-parsers.heading_attribute = (parsers.dash * Cc(".unnumbered"))
-                          + C((parsers.hash + parsers.period)
-                             * parsers.attribute_key)
-                          + Cs( parsers.attribute_key
-                              * parsers.optionalspace * parsers.equal * parsers.optionalspace
-                              * parsers.attribute_value)
-parsers.HeadingAttributes = parsers.lbrace
-                          * parsers.optionalspace
-                          * parsers.heading_attribute
-                          * (parsers.spacechar^1
-                            * parsers.heading_attribute)^0
-                          * parsers.optionalspace
-                          * parsers.rbrace
-
 -- parse Atx heading start and return level
-parsers.HeadingStart = #parsers.hash * C(parsers.hash^-6)
-                     * -parsers.hash / length
+parsers.heading_start = #parsers.hash * C(parsers.hash^-6)
+                      * -parsers.hash / length
 
 -- parse setext header ending and return level
-parsers.HeadingLevel = parsers.equal^1 * Cc(1) + parsers.dash^1 * Cc(2)
+parsers.heading_level = parsers.equal^1 * Cc(1) + parsers.dash^1 * Cc(2)
 
 local function strip_atx_end(s)
   return s:gsub("[#%s]*\n$","")
@@ -21464,8 +21709,8 @@ function M.reader.new(writer, options)
 % \end{markdown}
 %  \begin{macrocode}
       if toplevel and (options.texComments or options.hybrid) then
-          str = lpeg.match(Ct(parsers.commented_line^1), str)
-          str = util.rope_to_string(str)
+        str = lpeg.match(Ct(parsers.commented_line^1), str)
+        str = util.rope_to_string(str)
       end
       local res = lpeg.match(grammar(), str)
       if res == nil then
@@ -21940,7 +22185,7 @@ function M.reader.new(writer, options)
 % \end{markdown}
 %  \begin{macrocode}
   -- parse atx header
-  parsers.AtxHeading = Cg(parsers.HeadingStart,"level")
+  parsers.AtxHeading = Cg(parsers.heading_start, "level")
                      * parsers.optionalspace
                      * (C(parsers.line)
                        / strip_atx_end
@@ -21952,7 +22197,7 @@ function M.reader.new(writer, options)
                         * Ct(parsers.linechar^1
                             / self.parser_functions.parse_inlines)
                         * parsers.newline
-                        * parsers.HeadingLevel
+                        * parsers.heading_level
                         * parsers.optionalspace
                         * parsers.newline
                         / writer.heading
@@ -22930,74 +23175,22 @@ M.extensions.fenced_code = function(blank_before_code_fence)
 %
 % \end{markdown}
 %  \begin{macrocode}
-      function self.fencedCode(i, s)
+      function self.fencedCode(s, i)
         if not self.is_writing then return "" end
-        s = string.gsub(s, '[\r\n%s]*$', '')
-        local name = util.cache(options.cacheDir, s, nil, nil, ".verbatim")
-        return {"\\markdownRendererInputFencedCode{",name,"}{",i,"}"}
+        local name = util.cache_verbatim(options.cacheDir, s)
+        return {"\\markdownRendererInputFencedCode{",
+                name,"}{",self.string(i),"}"}
       end
     end, extend_reader = function(self)
       local parsers = self.parsers
       local writer = self.writer
 
-      local function captures_geq_length(_,i,a,b)
-        return #a >= #b and i
-      end
-
-      local infostring   = (parsers.linechar - (parsers.backtick
-                         + parsers.space^1 * (parsers.newline + parsers.eof)))^0
-
-      local fenceindent
-      local fencehead    = function(char)
-        return             C(parsers.nonindentspace) / function(s) fenceindent = #s end
-                         * Cg(char^3, "fencelength")
-                         * parsers.optionalspace * C(infostring)
-                         * parsers.optionalspace * (parsers.newline + parsers.eof)
-      end
-
-      local fencetail    = function(char)
-        return             parsers.nonindentspace
-                         * Cmt(C(char^3) * Cb("fencelength"), captures_geq_length)
-                         * parsers.optionalspace * (parsers.newline + parsers.eof)
-                         + parsers.eof
-      end
-
-      local fencedline   = function(char)
-        return             C(parsers.line - fencetail(char))
-                         / function(s)
-                             local i = 1
-                             local remaining = fenceindent
-                             while true do
-                               local c = s:sub(i, i)
-                               if c == " " and remaining > 0 then
-                                 remaining = remaining - 1
-                                 i = i + 1
-                               elseif c == "\t" and remaining > 3 then
-                                 remaining = remaining - 4
-                                 i = i + 1
-                               else
-                                 break
-                               end
-                             end
-                             return s:sub(i)
-                           end
-      end
-
-      local TildeFencedCode
-             = fencehead(parsers.tilde)
-             * Cs(fencedline(parsers.tilde)^0)
-             * fencetail(parsers.tilde)
-
-      local BacktickFencedCode
-             = fencehead(parsers.backtick)
-             * Cs(fencedline(parsers.backtick)^0)
-             * fencetail(parsers.backtick)
-
-      local FencedCode = (TildeFencedCode
-                           + BacktickFencedCode)
+      local FencedCode = (parsers.TildeFencedCode
+                           + parsers.BacktickFencedCode)
                          / function(infostring, code)
-                             return writer.fencedCode(writer.string(infostring),
-                                                      self.expandtabs(code))
+                             local expanded_code = self.expandtabs(code)
+                             return writer.fencedCode(expanded_code,
+                                                      infostring)
                            end
 
       self.insert_pattern("Block after Verbatim",
@@ -23007,8 +23200,8 @@ M.extensions.fenced_code = function(blank_before_code_fence)
       if blank_before_code_fence then
         fencestart = parsers.fail
       else
-        fencestart = fencehead(parsers.backtick)
-                   + fencehead(parsers.tilde)
+        fencestart = parsers.fencehead(parsers.backtick)
+                   + parsers.fencehead(parsers.tilde)
       end
 
       local EndlineExceptions = parsers.EndlineExceptions + fencestart
@@ -23127,49 +23320,49 @@ M.extensions.header_attributes = function()
       local parsers = self.parsers
       local writer = self.writer
 
-      parsers.AtxHeading = Cg(parsers.HeadingStart,"level")
-                         * parsers.optionalspace
-                         * (C(((parsers.linechar
-                               - ((parsers.hash^1
-                                  * parsers.optionalspace
-                                  * parsers.HeadingAttributes^-1
-                                  + parsers.HeadingAttributes)
-                                 * parsers.optionalspace
-                                 * parsers.newline))
-                              * (parsers.linechar
-                                - parsers.hash
-                                - parsers.lbrace)^0)^1)
-                             / self.parser_functions.parse_inlines)
-                         * Cg(Ct(parsers.newline
-                                + (parsers.hash^1
-                                  * parsers.optionalspace
-                                  * parsers.HeadingAttributes^-1
-                                  + parsers.HeadingAttributes)
+      local AtxHeading = Cg(parsers.heading_start, "level")
+                       * parsers.optionalspace
+                       * (C(((parsers.linechar
+                             - ((parsers.hash^1
                                 * parsers.optionalspace
-                                * parsers.newline), "attributes")
-                         * Cb("level")
-                         * Cb("attributes")
-                         / writer.heading
+                                * parsers.attributes^-1
+                                + parsers.attributes)
+                               * parsers.optionalspace
+                               * parsers.newline))
+                            * (parsers.linechar
+                              - parsers.hash
+                              - parsers.lbrace)^0)^1)
+                           / self.parser_functions.parse_inlines)
+                       * Cg(Ct(parsers.newline
+                              + (parsers.hash^1
+                                * parsers.optionalspace
+                                * parsers.attributes^-1
+                                + parsers.attributes)
+                              * parsers.optionalspace
+                              * parsers.newline), "attributes")
+                       * Cb("level")
+                       * Cb("attributes")
+                       / writer.heading
 
-      parsers.SetextHeading = #(parsers.line * S("=-"))
-                            * (C(((parsers.linechar
-                                  - (parsers.HeadingAttributes
-                                    * parsers.optionalspace
-                                    * parsers.newline))
-                                 * (parsers.linechar
-                                   - parsers.lbrace)^0)^1)
-                                / self.parser_functions.parse_inlines)
-                            * Cg(Ct(parsers.newline
-                                   + (parsers.HeadingAttributes
-                                     * parsers.optionalspace
-                                     * parsers.newline)), "attributes")
-                            * parsers.HeadingLevel
-                            * Cb("attributes")
-                            * parsers.optionalspace
-                            * parsers.newline
-                            / writer.heading
+      local SetextHeading = #(parsers.line * S("=-"))
+                          * (C(((parsers.linechar
+                                - (parsers.attributes
+                                  * parsers.optionalspace
+                                  * parsers.newline))
+                               * (parsers.linechar
+                                 - parsers.lbrace)^0)^1)
+                              / self.parser_functions.parse_inlines)
+                          * Cg(Ct(parsers.newline
+                                 + (parsers.attributes
+                                   * parsers.optionalspace
+                                   * parsers.newline)), "attributes")
+                          * parsers.heading_level
+                          * Cb("attributes")
+                          * parsers.optionalspace
+                          * parsers.newline
+                          / writer.heading
 
-      local Heading = parsers.AtxHeading + parsers.SetextHeading
+      local Heading = AtxHeading + SetextHeading
       self.update_rule("Heading", Heading)
     end
   }
@@ -23491,6 +23684,93 @@ M.extensions.pipe_tables = function(table_captions)
 
       self.insert_pattern("Block after Blockquote",
                           PipeTable, "PipeTable")
+    end
+  }
+end
+%    \end{macrocode}
+% \begin{markdown}
+%
+%#### Raw Attributes
+%
+% The \luamdef{extensions.raw_attribute} function implements the Pandoc
+% raw attribute syntax extension.
+%
+% \end{markdown}
+%  \begin{macrocode}
+M.extensions.raw_attribute = function()
+  return {
+    name = "built-in raw_attribute syntax extension",
+    extend_writer = function(self)
+      local options = self.options
+
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define \luamdef{writer->rawInline} as a function that will transform an
+% input inline raw span `s` with the raw attribute `i` to the output format.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      function self.rawInline(s, attr)
+        if not self.is_writing then return "" end
+        local name = util.cache_verbatim(options.cacheDir, s)
+        return {"\\markdownRendererInputRawInline{",
+                name,"}{", self.string(attr),"}"}
+      end
+
+      if options.fencedCode then
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define \luamdef{writer->rawBlock} as a function that will transform an
+% input raw block `s` with the raw attribute `i` to the output format.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        function self.rawBlock(s, attr)
+          if not self.is_writing then return "" end
+          local name = util.cache_verbatim(options.cacheDir, s)
+          return {"\\markdownRendererInputRawBlock{",
+                  name,"}{", self.string(attr),"}"}
+        end
+      end
+    end, extend_reader = function(self)
+      local options = self.options
+      local writer = self.writer
+
+      local raw_attribute = parsers.lbrace
+                          * parsers.optionalspace
+                          * parsers.equal
+                          * C(parsers.attribute_key)
+                          * parsers.optionalspace
+                          * parsers.rbrace
+
+      local RawInline = parsers.inticks
+                      * raw_attribute
+                      / writer.rawInline
+
+      self.insert_pattern("Inline before Code",
+                          RawInline, "RawInline")
+
+      if options.fencedCode then
+        local RawBlock = (parsers.TildeFencedCode
+                           + parsers.BacktickFencedCode)
+                         / function(infostring, code)
+                             local expanded_code = self.expandtabs(code)
+                             local attr = lpeg.match(raw_attribute, infostring)
+                             if attr then
+                               return writer.rawBlock(expanded_code, attr)
+                             else
+                               return writer.fencedCode(expanded_code,
+                                                        infostring)
+                             end
+                           end
+
+        self.insert_pattern("Block after Verbatim",
+                            RawBlock, "RawBlock")
+      end
     end
   }
 end
@@ -23887,6 +24167,11 @@ function M.new(options)
     table.insert(extensions, pipe_tables_extension)
   end
 
+  if options.rawAttribute then
+    local raw_attribute_extension = M.extensions.raw_attribute()
+    table.insert(extensions, raw_attribute_extension)
+  end
+
   if options.strikeThrough then
     local strike_through_extension = M.extensions.strike_through()
     table.insert(extensions, strike_through_extension)
@@ -24226,6 +24511,33 @@ end
 \def\markdownRendererStrikeThroughPrototype#1{#1}%
 \def\markdownRendererSuperscriptPrototype#1{#1}%
 \def\markdownRendererSubscriptPrototype#1{#1}%
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+%#### Raw Attribute Renderer Prototypes
+%
+% In the raw block and inline raw span renderer prototypes, execute the content
+% with TeX when the raw attribute is `tex`, display the content as markdown when
+% the raw attribute is `md`, and ignore the content otherwise.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\cs_gset:Npn
+  \markdownRendererInputRawInlinePrototype#1#2
+  {
+    \str_case:nn
+      { #2 }
+      {
+        { tex } { \markdownEscape{#1} }
+        { md  } { \markdownInput{#1}  }
+      }
+  }
+\cs_gset_eq:NN
+  \markdownRendererInputRawBlockPrototype
+  \markdownRendererInputRawInlinePrototype
+\ExplSyntaxOff
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -25153,6 +25465,22 @@ end
   }%
 |endgroup
 %    \end{macrocode}
+% \par
+% \begin{markdown}
+% The \mref{markdownEscape} macro resets the category codes of the percent sign
+% and the hash sign back to comment and parameter, respectively, before using
+% the `\input` built-in of \TeX{} to execute a \TeX{} document in the middle of
+% a markdown document fragment.
+% \end{markdown}
+%  \begin{macrocode}
+\gdef\markdownEscape#1{%
+  \catcode`\%=14\relax
+  \catcode`\#=6\relax
+  \input #1\relax
+  \catcode`\%=12\relax
+  \catcode`\#=12\relax
+}%
+%    \end{macrocode}
 % \iffalse
 %</tex>
 %<*latex>
@@ -25817,7 +26145,7 @@ end
     dlEndTight = {\markdownRendererDlEnd}}}
 }
 \ExplSyntaxOff
-\RequirePackage{amsmath,ifthen}
+\RequirePackage{amsmath}
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -25874,29 +26202,33 @@ end
     \else
       \texttt{#1}%
     \fi
+  }}}
+\ExplSyntaxOn
+\markdownSetup{
+  rendererPrototypes = {
+    contentBlock = {
+      \str_case:nnF
+        { #1 }
+        {
+          { csv }
+            {
+              \begin{table}
+                \begin{center}
+                  \csvautotabular{#3}
+                \end{center}
+                \tl_if_empty:nF
+                  { #4 }
+                  { \caption{#4} }
+              \end{table}
+            }
+          { tex } { \markdownEscape{#3} }
+        }
+        { \markdownInput{#3} }
+    },
   },
-  contentBlock = {%
-    \ifthenelse{\equal{#1}{csv}}{%
-      \begin{table}%
-        \begin{center}%
-          \csvautotabular{#3}%
-        \end{center}
-        \ifx\empty#4\empty\else
-          \caption{#4}%
-        \fi
-      \end{table}%
-    }{%
-      \ifthenelse{\equal{#1}{tex}}{%
-        \catcode`\%=14\relax
-        \catcode`\#=6\relax
-        \input #3\relax
-        \catcode`\%=12\relax
-        \catcode`\#=12\relax
-      }{%
-        \markdownInput{#3}%
-      }%
-    }%
-  },
+}
+\ExplSyntaxOff
+\markdownSetup{rendererPrototypes={
   image = {%
     \begin{figure}%
       \begin{center}%
@@ -26511,7 +26843,6 @@ end
     \addto@hook\markdownLaTeXTable{#1\\}%
     \expandafter\@gobble
   \fi\markdownLaTeXRenderTableCell}
-\fi
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -26587,6 +26918,35 @@ end
     }
   }
 }{}
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+%#### Raw Attribute Renderer Prototypes
+%
+% In the raw block and inline raw span renderer prototypes, execute the content
+% with TeX when the raw attribute is `tex` or `latex`, display the content as
+% markdown when the raw attribute is `md`, and ignore the content otherwise.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\cs_gset:Npn
+  \markdownRendererInputRawInlinePrototype#1#2
+  {
+    \str_case:nn
+      { #2 }
+      {
+        { tex   } { \markdownEscape{#1} }
+        { latex } { \markdownEscape{#1} }
+        { md    } { \markdownInput{#1}  }
+      }
+  }
+\cs_gset_eq:NN
+  \markdownRendererInputRawBlockPrototype
+  \markdownRendererInputRawInlinePrototype
+\ExplSyntaxOff
+\fi % Closes `\markdownIfOption{Plain}{\iffalse}{iftrue}`
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -26921,6 +27281,34 @@ end
   \ifnum\markdownConTeXtColumnCounter<\markdownConTeXtColumnTotal\relax\else
     \expandafter\gobbleoneargument
   \fi\markdownConTeXtRenderTableCell}
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+%#### Raw Attribute Renderer Prototypes
+%
+% In the raw block and inline raw span renderer prototypes, execute the content
+% with TeX when the raw attribute is `tex` or `context`, display the content as
+% markdown when the raw attribute is `md`, and ignore the content otherwise.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\cs_gset:Npn
+  \markdownRendererInputRawInlinePrototype#1#2
+  {
+    \str_case:nn
+      { #2 }
+      {
+        { tex     } { \markdownEscape{#1} }
+        { context } { \markdownEscape{#1} }
+        { md      } { \markdownInput{#1}  }
+      }
+  }
+\cs_gset_eq:NN
+  \markdownRendererInputRawBlockPrototype
+  \markdownRendererInputRawInlinePrototype
+\ExplSyntaxOff
 \stopmodule\protect
 %    \end{macrocode}
 % \iffalse

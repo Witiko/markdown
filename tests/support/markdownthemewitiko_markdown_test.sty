@@ -254,5 +254,15 @@
       \TYPE{superscript:           #1}},
     subscript = {%
       \TYPE{subscript:             #1}},
+    inputRawInline = {%
+      \TYPE{BEGIN rawInline}%
+      \TYPE{- src:                 #1}%
+      \TYPE{- raw attribute:       #2}%
+      \TYPE{END rawInline}},
+    inputRawBlock = {%
+      \TYPE{BEGIN rawBlock}%
+      \TYPE{- src:                 #1}%
+      \TYPE{- raw attribute:       #2}%
+      \TYPE{END rawBlock}},
   }%
 }%
