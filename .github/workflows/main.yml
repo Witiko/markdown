@@ -44,6 +44,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+      - name: Install additional packages
+        run: |
+          set -ex
+          sudo apt -qy update
+          sudo apt -qy install --no-install-recommends git latexmk lua-check make texlive-xetex
+      - name: Extract user manual
+        run: make markdown.md
       - name: Run MarkdownLint
         uses: nosborn/github-action-markdown-cli@v2.0.0
         with:
