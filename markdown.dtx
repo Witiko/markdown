@@ -977,15 +977,15 @@ make base
 ``````
 This should produce the following files:
 
- * `markdown.lua`, the Lua module,
- * `libraries/markdown-tinyyaml.lua`, an external library for reading \acro{yaml},
- * `markdown-cli.lua`, the Lua command-line interface,
- * `markdown.tex`, the plain \TeX{} macro package,
- * `markdown.sty`, the \LaTeX{} package,
- * `markdownthemewitiko_dot.sty`, the `witiko/dot` \LaTeX{} theme,
- * `markdownthemewitiko_graphicx_http.sty`, the `witiko/graphicx/http` \LaTeX{} theme,
- * `markdownthemewitiko_tilde.sty`, the `witiko/tilde` \LaTeX{} theme, and
- * `t-markdown.tex`, the \Hologo{ConTeXt} module.
+* `markdown.lua`, the Lua module,
+* `libraries/markdown-tinyyaml.lua`, an external library for reading \acro{yaml},
+* `markdown-cli.lua`, the Lua command-line interface,
+* `markdown.tex`, the plain \TeX{} macro package,
+* `markdown.sty`, the \LaTeX{} package,
+* `markdownthemewitiko_dot.sty`, the `witiko/dot` \LaTeX{} theme,
+* `markdownthemewitiko_graphicx_http.sty`, the `witiko/graphicx/http` \LaTeX{} theme,
+* `markdownthemewitiko_tilde.sty`, the `witiko/tilde` \LaTeX{} theme, and
+* `t-markdown.tex`, the \Hologo{ConTeXt} module.
 
 ### Local Installation
 
@@ -993,15 +993,15 @@ To perform a local installation, place the above files into your \TeX{}
 directory structure. This is generally where the individual files should be
 placed:
 
- * `⟨TEXMF⟩/tex/luatex/markdown/markdown.lua`
- * `⟨TEXMF⟩/tex/luatex/markdown/markdown-tinyyaml.lua`
- * `⟨TEXMF⟩/scripts/markdown/markdown-cli.lua`
- * `⟨TEXMF⟩/tex/generic/markdown/markdown.tex`
- * `⟨TEXMF⟩/tex/latex/markdown/markdown.sty`
- * `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_dot.sty`
- * `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_graphicx_http.sty`
- * `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_tilde.sty`
- * `⟨TEXMF⟩/tex/context/third/markdown/t-markdown.tex`
+* `⟨TEXMF⟩/tex/luatex/markdown/markdown.lua`
+* `⟨TEXMF⟩/tex/luatex/markdown/markdown-tinyyaml.lua`
+* `⟨TEXMF⟩/scripts/markdown/markdown-cli.lua`
+* `⟨TEXMF⟩/tex/generic/markdown/markdown.tex`
+* `⟨TEXMF⟩/tex/latex/markdown/markdown.sty`
+* `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_dot.sty`
+* `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_graphicx_http.sty`
+* `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_tilde.sty`
+* `⟨TEXMF⟩/tex/context/third/markdown/t-markdown.tex`
 
 where `⟨TEXMF⟩` corresponds to a root of your \TeX{} distribution, such as
 `/usr/share/texmf` and `~/texmf` on UN\*X systems or
@@ -8500,25 +8500,25 @@ following content:
 \begin{markdown}
 The following list is tight:
 
-  - first item
-  - second item
-  - third item
+- first item
+- second item
+- third item
 
 The following list is loose:
 
-  - first item
-  - second item that spans
+- first item
+- second item that spans
 
-    multiple paragraphs
-  - third item
+  multiple paragraphs
+- third item
 \end{markdown}
 
 \begin{markdown*}{tightLists=false}
 The following list is now also loose:
 
-  - first item
-  - second item
-  - third item
+- first item
+- second item
+- third item
 \end{markdown*}
 
 \end{document}
@@ -8532,25 +8532,25 @@ following text:
 
 > The following list is tight:
 > 
->   - first item
->   - second item
->   - third item
+> - first item
+> - second item
+> - third item
 > 
 > The following list is loose:
 > 
->   - first item
->   - second item that spans
+> - first item
+> - second item that spans
 > 
->     multiple paragraphs
->   - third item
+>   multiple paragraphs
+> - third item
 > 
 > The following list is now also loose:
 > 
->   - first item
+> - first item
 >
->   - second item
+> - second item
 >
->   - third item
+> - third item
 
 %</manual-options>
 %<*tex>
