@@ -1,8 +1,17 @@
+MD001: false
+MD003: false
+MD012: false
 MD013: false
 MD018: false
+MD022: false
+MD024: false
+MD026: false
+MD028: false
 MD029: false
-MD033:
-  allowed_elements:
-    - img
+MD031: false
+MD033: false
+MD035: false
+MD038: false
+MD040: false
 MD041: false
 MD046: false

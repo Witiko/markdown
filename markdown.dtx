@@ -977,15 +977,15 @@ make base
 ``````
 This should produce the following files:
 
- * `markdown.lua`, the Lua module,
- * `libraries/markdown-tinyyaml.lua`, an external library for reading \acro{yaml},
- * `markdown-cli.lua`, the Lua command-line interface,
- * `markdown.tex`, the plain \TeX{} macro package,
- * `markdown.sty`, the \LaTeX{} package,
- * `markdownthemewitiko_dot.sty`, the `witiko/dot` \LaTeX{} theme,
- * `markdownthemewitiko_graphicx_http.sty`, the `witiko/graphicx/http` \LaTeX{} theme,
- * `markdownthemewitiko_tilde.sty`, the `witiko/tilde` \LaTeX{} theme, and
- * `t-markdown.tex`, the \Hologo{ConTeXt} module.
+* `markdown.lua`, the Lua module,
+* `libraries/markdown-tinyyaml.lua`, an external library for reading \acro{yaml},
+* `markdown-cli.lua`, the Lua command-line interface,
+* `markdown.tex`, the plain \TeX{} macro package,
+* `markdown.sty`, the \LaTeX{} package,
+* `markdownthemewitiko_dot.sty`, the `witiko/dot` \LaTeX{} theme,
+* `markdownthemewitiko_graphicx_http.sty`, the `witiko/graphicx/http` \LaTeX{} theme,
+* `markdownthemewitiko_tilde.sty`, the `witiko/tilde` \LaTeX{} theme, and
+* `t-markdown.tex`, the \Hologo{ConTeXt} module.
 
 ### Local Installation
 
@@ -993,15 +993,15 @@ To perform a local installation, place the above files into your \TeX{}
 directory structure. This is generally where the individual files should be
 placed:
 
- * `⟨TEXMF⟩/tex/luatex/markdown/markdown.lua`
- * `⟨TEXMF⟩/tex/luatex/markdown/markdown-tinyyaml.lua`
- * `⟨TEXMF⟩/scripts/markdown/markdown-cli.lua`
- * `⟨TEXMF⟩/tex/generic/markdown/markdown.tex`
- * `⟨TEXMF⟩/tex/latex/markdown/markdown.sty`
- * `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_dot.sty`
- * `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_graphicx_http.sty`
- * `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_tilde.sty`
- * `⟨TEXMF⟩/tex/context/third/markdown/t-markdown.tex`
+* `⟨TEXMF⟩/tex/luatex/markdown/markdown.lua`
+* `⟨TEXMF⟩/tex/luatex/markdown/markdown-tinyyaml.lua`
+* `⟨TEXMF⟩/scripts/markdown/markdown-cli.lua`
+* `⟨TEXMF⟩/tex/generic/markdown/markdown.tex`
+* `⟨TEXMF⟩/tex/latex/markdown/markdown.sty`
+* `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_dot.sty`
+* `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_graphicx_http.sty`
+* `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_tilde.sty`
+* `⟨TEXMF⟩/tex/context/third/markdown/t-markdown.tex`
 
 where `⟨TEXMF⟩` corresponds to a root of your \TeX{} distribution, such as
 `/usr/share/texmf` and `~/texmf` on UN\*X systems or
@@ -3787,7 +3787,7 @@ following text, where the middot (`·`) denotes a non-breaking space:
 >
 > ### References
 > [1] Donald·Ervin Knuth. _The TeXbook, volume A of Computers and typesetting._
->     Addison-Wesley, 1984.
+> Addison-Wesley, 1984.
 
 %</manual-options>
 %<*tex>
@@ -3888,7 +3888,7 @@ following text:
 >
 > ### References
 > [1] Donald Ervin Knuth. _The \TeX{}book, volume A of Computers and typesetting._
->     Addison-Wesley, 1984.
+> Addison-Wesley, 1984.
 
 %</manual-options>
 %<*tex>
@@ -5144,11 +5144,11 @@ lualatex --shell-escape document.tex
 A PDF document named `document.pdf` should be produced and contain the
 following text:
 
-> ~~~ js
+> ``` js
 > if (a > 3) {
 >     moveShip(5 * gravity, DOWN);
 > }
-> ~~~~~~
+> ```
 > 
 > ``` html
 > <pre>
@@ -5199,11 +5199,11 @@ context document.tex
 A PDF document named `document.pdf` should be produced and contain the
 following text:
 
-> ~~~ js
+> ``` js
 > if (a > 3) {
 >     moveShip(5 * gravity, DOWN);
 > }
-> ~~~~~~
+> ```
 > 
 > ``` html
 > <pre>
@@ -8147,7 +8147,7 @@ following content:
 |  123  |  123 |   123   |   123  |
 |    1  |    1 |     1   |     1  |
 
-  : Demonstration of pipe table syntax.
+: Demonstration of pipe table syntax.
 \end{markdown}
 \end{document}
 ```````
@@ -8164,7 +8164,7 @@ following text:
 > |  123  |  123 |   123   |   123  |
 > |    1  |    1 |     1   |     1  |
 > 
->   : Demonstration of pipe table syntax.
+> : Demonstration of pipe table syntax.
 
 ##### \Hologo{ConTeXt} Example {.unnumbered}
 
@@ -8185,7 +8185,7 @@ following content:
 |  123  |  123 |   123   |   123  |
 |    1  |    1 |     1   |     1  |
 
-  : Demonstration of pipe table syntax.
+: Demonstration of pipe table syntax.
 \stopmarkdown
 \stoptext
 ````````
@@ -8202,7 +8202,7 @@ following text:
 > |  123  |  123 |   123   |   123  |
 > |    1  |    1 |     1   |     1  |
 > 
->   : Demonstration of pipe table syntax.
+> : Demonstration of pipe table syntax.
 
 %</manual-options>
 %<*tex>
@@ -8500,25 +8500,25 @@ following content:
 \begin{markdown}
 The following list is tight:
 
-  - first item
-  - second item
-  - third item
+- first item
+- second item
+- third item
 
 The following list is loose:
 
-  - first item
-  - second item that spans
+- first item
+- second item that spans
 
-    multiple paragraphs
-  - third item
+  multiple paragraphs
+- third item
 \end{markdown}
 
 \begin{markdown*}{tightLists=false}
 The following list is now also loose:
 
-  - first item
-  - second item
-  - third item
+- first item
+- second item
+- third item
 \end{markdown*}
 
 \end{document}
@@ -8532,25 +8532,25 @@ following text:
 
 > The following list is tight:
 > 
->   - first item
->   - second item
->   - third item
+> - first item
+> - second item
+> - third item
 > 
 > The following list is loose:
 > 
->   - first item
->   - second item that spans
+> - first item
+> - second item that spans
 > 
->     multiple paragraphs
->   - third item
+>   multiple paragraphs
+> - third item
 > 
 > The following list is now also loose:
 > 
->   - first item
+> - first item
 >
->   - second item
+> - second item
 >
->   - third item
+> - third item
 
 %</manual-options>
 %<*tex>
@@ -10413,7 +10413,7 @@ following text:
 >
 > ### References
 > [1] Donald Ervin Knuth. _The TeXbook, volume A of Computers and typesetting._
->     Addison-Wesley, 1984.
+> Addison-Wesley, 1984.
 
 %</manual-tokens>
 %<*tex>
@@ -11007,7 +11007,7 @@ Bourne or Bourne again shell as the default shell of the current user. It also
 assumes that the `md5sum`, `wget`, and `convert` binaries are installed and
 that the \TeX{} engine has shell access.
 
-> ![](https://tug.org/tugboat/noword.jpg "The Communications of the TeX Users Group")
+> ![TUGboat](https://tug.org/tugboat/noword.jpg "The Communications of the TeX Users Group")
 
 %</manual-tokens>
 %<*tex>
@@ -16916,7 +16916,7 @@ A PDF document named `document.pdf` should be produced and contain the
 following image:
 
 > ![img](https://github.com/witiko/markdown/raw/main/markdown.png
->        "The banner of the Markdown package")
+> "The banner of the Markdown package")
 
 %</manual-options>
 %<*latex-themes-witiko-graphicx-http>

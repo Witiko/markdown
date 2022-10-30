@@ -27,6 +27,10 @@ Fixes:
 - Fix `plain` LaTeX option not preventing changes to renderer prototypes.
   (013abbb)
 
+Continuous Integration:
+
+- Check user manual with MarkdownLint. (#203)
+
 Contributed Software:
 
 - Update `contributions/pandoc-to-markdown`.
