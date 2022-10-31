@@ -23,7 +23,7 @@ LUACLI_OPTIONS=\
   superscripts=true \
   tableCaptions=true \
   taskLists=true
-OUTPUT=context-mkii.pdf context-mkiv.pdf latex-pdftex.pdf \
+OUTPUT=latex-pdftex.pdf \
   latex-luatex.pdf latex-xetex.pdf latex-tex4ht.html latex-tex4ht.css
 
 # This is the default pseudo-target.
