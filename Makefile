@@ -13,8 +13,8 @@ CTANARCHIVE=markdown.ctan.zip
 DISTARCHIVE=markdown.zip
 ARCHIVES=$(TDSARCHIVE) $(CTANARCHIVE) $(DISTARCHIVE)
 EXAMPLES_RESOURCES=examples/example.md examples/scientists.csv
-EXAMPLES_SOURCES=examples/latex.tex
-EXAMPLES=\
+EXAMPLES_SOURCES=examples/context-mkiv.tex examples/latex.tex
+EXAMPLES=examples/context-mkiv.pdf \
   examples/latex-pdftex.pdf examples/latex-luatex.pdf examples/latex-xetex.pdf \
   examples/latex-tex4ht.html examples/latex-tex4ht.css
 TESTS=tests/test.sh tests/support/*.tex tests/templates/*/*.tex.m4 \
@@ -170,7 +170,7 @@ $(TDSARCHIVE): $(DTXARCHIVE) $(INSTALLER) $(INSTALLABLES) $(DOCUMENTATION) $(EXA
 	mkdir -p doc/generic/markdown doc/latex/markdown/examples \
 	  doc/context/third/markdown/examples
 	cp $(DOCUMENTATION) doc/generic/markdown/
-	cp $(EXAMPLES_RESOURCES) \
+	cp examples/context-mkiv.tex $(EXAMPLES_RESOURCES) \
 	  doc/context/third/markdown/examples/
 	cp examples/latex.tex $(EXAMPLES_RESOURCES) doc/latex/markdown/examples/
 	@# Installing the sources.
