@@ -23153,6 +23153,207 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Fancy Lists
+%
+% The \luamdef{extensions.fancy_lists} function implements the Pandoc fancy
+% list extension.
+%
+% \end{markdown}
+%  \begin{macrocode}
+M.extensions.fancy_lists = function()
+  return {
+    name = "built-in fancy_lists syntax extension",
+    extend_writer = function(self)
+      local options = self.options
+
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define \luamdef{writer->fancylist} as a function that will transform an
+% input ordered list to the output format, where:
+%
+%- `items` is an array of the list items,
+%- `tight` specifies, whether the list is tight or not,
+%- `startnum` is the number of the first list item,
+%- `numstyle` is the style of the list item labels from among the following:
+%    - `Decimal` -- decimal arabic numbers,
+%    - `LowerRoman` -- lower roman numbers,
+%    - `UpperRoman` -- upper roman numbers,
+%    - `LowerAlpha` -- lower ASCII alphabetic characters, and
+%    - `UpperAlpha` -- upper ASCII alphabetic characters, and
+%- `numdelim` is the style of delimiters between list item labels and
+%  texts from among the following:
+%    - `Default` -- default style,
+%    - `OneParen` -- parentheses, and
+%    - `Period` -- periods.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      function self.fancylist(items,tight,startnum,numstyle,numdelim)
+        if not self.is_writing then return "" end
+        local buffer = {}
+        local num = startnum
+        for _,item in ipairs(items) do
+          buffer[#buffer + 1] = self.fancyitem(item,num)
+          if num ~= nil then
+            num = num + 1
+          end
+        end
+        local contents = util.intersperse(buffer,"\n")
+        if tight and options.tightLists then
+          return {"\\markdownRendererFancyOlBeginTight{",
+                  numstyle,"}{",numdelim,"}",contents,
+                  "\n\\markdownRendererFancyOlEndTight "}
+        else
+          return {"\\markdownRendererFancyOlBegin{",
+                  numstyle,"}{",numdelim,"}",contents,
+                  "\n\\markdownRendererFancyOlEnd "}
+        end
+      end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Define \luamdef{writer->fancyitem} as a function that will transform an
+% input fancy ordered list item to the output format, where `s` is the text of
+% the list item. If the optional parameter `num` is present, it is the number
+% of the list item.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      function self.fancyitem(s,num)
+        if num ~= nil then
+          return {"\\markdownRendererFancyOlItemWithNumber{",num,"}",s,
+                  "\\markdownRendererFancyOlItemEnd "}
+        else
+          return {"\\markdownRendererFancyOlItem ",s,"\\markdownRendererFancyOlItemEnd "}
+        end
+      end
+    end, extend_reader = function(self)
+      local parsers = self.parsers
+      local options = self.options
+      local writer = self.writer
+
+      local label = parsers.dig + parsers.letter
+      local numdelim = parsers.period + parsers.rparent
+      local enumerator = C(label^3 * numdelim) * #parsers.spacing
+                       + C(label^2 * numdelim) * #parsers.spacing
+                                         * (parsers.tab + parsers.space^1)
+                       + C(label * numdelim) * #parsers.spacing
+                                       * (parsers.tab + parsers.space^-2)
+                       + parsers.space * C(label^2 * numdelim)
+                                       * #parsers.spacing
+                       + parsers.space * C(label * numdelim)
+                                       * #parsers.spacing
+                                       * (parsers.tab + parsers.space^-1)
+                       + parsers.space * parsers.space * C(label^1
+                                       * numdelim) * #parsers.spacing
+      local starter = parsers.bullet + enumerator
+
+      local NestedList = Cs((parsers.optionallyindentedline
+                            - starter)^1)
+                       / function(a) return "\001"..a end
+
+      local ListBlockLine  = parsers.optionallyindentedline
+                           - parsers.blankline - (parsers.indent^-1
+                                                 * starter)
+
+      local ListBlock = parsers.line * ListBlockLine^0
+
+      local ListContinuationBlock = parsers.blanklines * (parsers.indent / "")
+                                  * ListBlock
+
+      local TightListItem = function(starter)
+          return -parsers.ThematicBreak
+                 * (Cs(starter / "" * parsers.tickbox^-1 * ListBlock * NestedList^-1)
+                   / self.parser_functions.parse_blocks_nested)
+                 * -(parsers.blanklines * parsers.indent)
+      end
+
+      local LooseListItem = function(starter)
+          return -parsers.ThematicBreak
+                 * Cs( starter / "" * parsers.tickbox^-1 * ListBlock * Cc("\n")
+                   * (NestedList + ListContinuationBlock^0)
+                   * (parsers.blanklines / "\n\n")
+                   ) / self.parser_functions.parse_blocks_nested
+      end
+
+      local function roman2number(roman)
+        local romans = { ["L"] = 50, ["X"] = 10, ["V"] = 5, ["I"] = 1 }
+        local numeral = 0
+
+        local i = 1
+        local len = string.len(roman)
+        while i < len do
+          local z1, z2 = romans[ string.sub(roman, i, i) ], romans[ string.sub(roman, i+1, i+1) ]
+          if z1 < z2 then
+              numeral = numeral + (z2 - z1)
+              i = i + 2
+          else
+              numeral = numeral + z1
+              i = i + 1
+          end
+        end
+        if i <= len then numeral = numeral + romans[ string.sub(roman,i,i) ] end
+        return numeral
+      end
+
+      local function sniffstyle(itemprefix)
+        local numstr, delimend = itemprefix:match("^([A-Za-z0-9]*)([.)]*)")
+        local numdelim
+        if delimend == ")" then
+          numdelim = "OneParen"
+        elseif delimend == "." then
+          numdelim = "Period"
+        else
+          numdelim = "Default"
+        end
+        numstr = numstr or itemprefix
+
+        local num
+        num = numstr:match("^([IVXL]+)")
+        if num then
+          return roman2number(num), "UpperRoman", numdelim
+        end
+        num = numstr:match("^([ivxl]+)")
+        if num then
+          return roman2number(string.upper(num)), "LowerRoman", numdelim
+        end
+        num = numstr:match("^([A-Z])")
+        if num then
+          return string.byte(num) - string.byte("A") + 1, "UpperAlpha", numdelim
+        end
+        num = numstr:match("^([a-z])")
+        if num then
+          return string.byte(num) - string.byte("a") + 1, "LowerAlpha", numdelim
+        end
+        return math.floor(tonumber(numstr) or 1), "Decimal", numdelim
+      end
+
+      local function fancylist(items,tight,start)
+        local startnum, numstyle, numdelim = sniffstyle(start)
+        return writer.fancylist(items,tight,
+                                options.startNumber and startnum,
+                                numstyle or "Decimal",
+                                numdelim or "Default")
+      end
+
+      local FancyList = Cg(enumerator, "listtype") *
+                      ( Ct(TightListItem(Cb("listtype"))
+                          * TightListItem(enumerator)^0)
+                      * Cc(true) * parsers.skipblanklines * -enumerator
+                      + Ct(LooseListItem(Cb("listtype"))
+                          * LooseListItem(enumerator)^0)
+                      * Cc(false) * parsers.skipblanklines
+                      ) * Cb("listtype") / fancylist
+
+      self.update_rule("OrderedList", FancyList)
+    end
+  }
+end
+%    \end{macrocode}
+% \begin{markdown}
+%
 %#### Fenced Code
 %
 % The \luamdef{extensions.fenced_code} function implements the commonmark
@@ -23211,6 +23412,71 @@ M.extensions.fenced_code = function(blank_before_code_fence)
       self.update_rule("EndlineExceptions", EndlineExceptions)
 
       self.add_special_character("~")
+    end
+  }
+end
+%    \end{macrocode}
+% \begin{markdown}
+%
+%#### Header Attributes
+%
+% The \luamdef{extensions.header_attributes} function implements a syntax
+% extension that enables the assignment of HTML attributes to headings.
+%
+% \end{markdown}
+%  \begin{macrocode}
+M.extensions.header_attributes = function()
+  return {
+    name = "built-in header_attributes syntax extension",
+    extend_writer = function()
+    end, extend_reader = function(self)
+      local parsers = self.parsers
+      local writer = self.writer
+
+      local AtxHeading = Cg(parsers.heading_start, "level")
+                       * parsers.optionalspace
+                       * (C(((parsers.linechar
+                             - ((parsers.hash^1
+                                * parsers.optionalspace
+                                * parsers.attributes^-1
+                                + parsers.attributes)
+                               * parsers.optionalspace
+                               * parsers.newline))
+                            * (parsers.linechar
+                              - parsers.hash
+                              - parsers.lbrace)^0)^1)
+                           / self.parser_functions.parse_inlines)
+                       * Cg(Ct(parsers.newline
+                              + (parsers.hash^1
+                                * parsers.optionalspace
+                                * parsers.attributes^-1
+                                + parsers.attributes)
+                              * parsers.optionalspace
+                              * parsers.newline), "attributes")
+                       * Cb("level")
+                       * Cb("attributes")
+                       / writer.heading
+
+      local SetextHeading = #(parsers.line * S("=-"))
+                          * (C(((parsers.linechar
+                                - (parsers.attributes
+                                  * parsers.optionalspace
+                                  * parsers.newline))
+                               * (parsers.linechar
+                                 - parsers.lbrace)^0)^1)
+                              / self.parser_functions.parse_inlines)
+                          * Cg(Ct(parsers.newline
+                                 + (parsers.attributes
+                                   * parsers.optionalspace
+                                   * parsers.newline)), "attributes")
+                          * parsers.heading_level
+                          * Cb("attributes")
+                          * parsers.optionalspace
+                          * parsers.newline
+                          / writer.heading
+
+      local Heading = AtxHeading + SetextHeading
+      self.update_rule("Heading", Heading)
     end
   }
 end
@@ -23302,228 +23568,6 @@ M.extensions.notes = function(notes, inline_notes)
       end
 
       self.add_special_character("^")
-    end
-  }
-end
-%    \end{macrocode}
-% \begin{markdown}
-%
-%#### Header Attributes
-%
-% The \luamdef{extensions.header_attributes} function implements a syntax
-% extension that enables the assignment of HTML attributes to headings.
-%
-% \end{markdown}
-%  \begin{macrocode}
-M.extensions.header_attributes = function()
-  return {
-    name = "built-in header_attributes syntax extension",
-    extend_writer = function()
-    end, extend_reader = function(self)
-      local parsers = self.parsers
-      local writer = self.writer
-
-      local AtxHeading = Cg(parsers.heading_start, "level")
-                       * parsers.optionalspace
-                       * (C(((parsers.linechar
-                             - ((parsers.hash^1
-                                * parsers.optionalspace
-                                * parsers.attributes^-1
-                                + parsers.attributes)
-                               * parsers.optionalspace
-                               * parsers.newline))
-                            * (parsers.linechar
-                              - parsers.hash
-                              - parsers.lbrace)^0)^1)
-                           / self.parser_functions.parse_inlines)
-                       * Cg(Ct(parsers.newline
-                              + (parsers.hash^1
-                                * parsers.optionalspace
-                                * parsers.attributes^-1
-                                + parsers.attributes)
-                              * parsers.optionalspace
-                              * parsers.newline), "attributes")
-                       * Cb("level")
-                       * Cb("attributes")
-                       / writer.heading
-
-      local SetextHeading = #(parsers.line * S("=-"))
-                          * (C(((parsers.linechar
-                                - (parsers.attributes
-                                  * parsers.optionalspace
-                                  * parsers.newline))
-                               * (parsers.linechar
-                                 - parsers.lbrace)^0)^1)
-                              / self.parser_functions.parse_inlines)
-                          * Cg(Ct(parsers.newline
-                                 + (parsers.attributes
-                                   * parsers.optionalspace
-                                   * parsers.newline)), "attributes")
-                          * parsers.heading_level
-                          * Cb("attributes")
-                          * parsers.optionalspace
-                          * parsers.newline
-                          / writer.heading
-
-      local Heading = AtxHeading + SetextHeading
-      self.update_rule("Heading", Heading)
-    end
-  }
-end
-%    \end{macrocode}
-% \begin{markdown}
-%
-%#### YAML Metadata
-%
-% The \luamdef{extensions.jekyll_data} function implements the Pandoc
-% `yaml_metadata_block` syntax extension for entering metadata in \acro{yaml}.
-% When the `expect_jekyll_data` parameter is `true`, then a markdown document
-% may begin directly with \acro{yaml} metadata and may contain nothing but
-% \acro{yaml} metadata
-%
-% \end{markdown}
-%  \begin{macrocode}
-M.extensions.jekyll_data = function(expect_jekyll_data)
-  return {
-    name = "built-in jekyll_data syntax extension",
-    extend_writer = function(self)
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% Define \luamdef{writer->jekyllData} as a function that will transform an
-% input \acro{yaml} table `d` to the output format. The table is the value for
-% the key `p` in the parent table; if `p` is nil, then the table has no parent.
-% All scalar keys and values encountered in the table will be cast to a string
-% following \acro{yaml} serialization rules. String values will also be
-% transformed using the function `t`.
-%
-% \end{markdown}
-%  \begin{macrocode}
-      function self.jekyllData(d, t, p)
-        if not self.is_writing then return "" end
-
-        local buf = {}
-
-        local keys = {}
-        for k, _ in pairs(d) do
-          table.insert(keys, k)
-        end
-        table.sort(keys)
-
-        if not p then
-          table.insert(buf, "\\markdownRendererJekyllDataBegin")
-        end
-
-        if #d > 0 then
-            table.insert(buf, "\\markdownRendererJekyllDataSequenceBegin{")
-            table.insert(buf, self.uri(p or "null"))
-            table.insert(buf, "}{")
-            table.insert(buf, #keys)
-            table.insert(buf, "}")
-        else
-            table.insert(buf, "\\markdownRendererJekyllDataMappingBegin{")
-            table.insert(buf, self.uri(p or "null"))
-            table.insert(buf, "}{")
-            table.insert(buf, #keys)
-            table.insert(buf, "}")
-        end
-
-        for _, k in ipairs(keys) do
-          local v = d[k]
-          local typ = type(v)
-          k = tostring(k or "null")
-          if typ == "table" and next(v) ~= nil then
-            table.insert(
-              buf,
-              self.jekyllData(v, t, k)
-            )
-          else
-            k = self.uri(k)
-            v = tostring(v)
-            if typ == "boolean" then
-              table.insert(buf, "\\markdownRendererJekyllDataBoolean{")
-              table.insert(buf, k)
-              table.insert(buf, "}{")
-              table.insert(buf, v)
-              table.insert(buf, "}")
-            elseif typ == "number" then
-              table.insert(buf, "\\markdownRendererJekyllDataNumber{")
-              table.insert(buf, k)
-              table.insert(buf, "}{")
-              table.insert(buf, v)
-              table.insert(buf, "}")
-            elseif typ == "string" then
-              table.insert(buf, "\\markdownRendererJekyllDataString{")
-              table.insert(buf, k)
-              table.insert(buf, "}{")
-              table.insert(buf, t(v))
-              table.insert(buf, "}")
-            elseif typ == "table" then
-              table.insert(buf, "\\markdownRendererJekyllDataEmpty{")
-              table.insert(buf, k)
-              table.insert(buf, "}")
-            else
-              error(format("Unexpected type %s for value of " ..
-                           "YAML key %s", typ, k))
-            end
-          end
-        end
-
-        if #d > 0 then
-          table.insert(buf, "\\markdownRendererJekyllDataSequenceEnd")
-        else
-          table.insert(buf, "\\markdownRendererJekyllDataMappingEnd")
-        end
-
-        if not p then
-          table.insert(buf, "\\markdownRendererJekyllDataEnd")
-        end
-
-        return buf
-      end
-    end, extend_reader = function(self)
-      local parsers = self.parsers
-      local writer = self.writer
-
-      local JekyllData
-                    = Cmt( C((parsers.line - P("---") - P("..."))^0)
-                         , function(s, i, text) -- luacheck: ignore s i
-                             local data
-                             local ran_ok, _ = pcall(function()
-                               local tinyyaml = require("markdown-tinyyaml")
-                               data = tinyyaml.parse(text, {timestamps=false})
-                             end)
-                             if ran_ok and data ~= nil then
-                               return true, writer.jekyllData(data, function(s)
-                                 return self.parser_functions.parse_blocks_nested(s)
-                               end, nil)
-                             else
-                               return false
-                             end
-                           end
-                         )
-
-      local UnexpectedJekyllData
-                    = P("---")
-                    * parsers.blankline / 0
-                    * #(-parsers.blankline)  -- if followed by blank, it's thematic break
-                    * JekyllData
-                    * (P("---") + P("..."))
-
-      local ExpectedJekyllData
-                    = ( P("---")
-                      * parsers.blankline / 0
-                      * #(-parsers.blankline)  -- if followed by blank, it's thematic break
-                      )^-1
-                    * JekyllData
-                    * (P("---") + P("..."))^-1
-
-      self.insert_pattern("Block before Blockquote",
-                          UnexpectedJekyllData, "UnexpectedJekyllData")
-      if expect_jekyll_data then
-        self.update_rule("ExpectedJekyllData", ExpectedJekyllData)
-      end
     end
   }
 end
@@ -23822,47 +23866,6 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-%#### Superscripts
-%
-% The \luamdef{extensions.superscripts} function implements the Pandoc
-% superscript syntax extension.
-%
-% \end{markdown}
-%  \begin{macrocode}
-M.extensions.superscripts = function()
-  return {
-    name = "built-in superscripts syntax extension",
-    extend_writer = function(self)
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% Define \luamdef{writer->superscript} as a function that will transform
-% a superscript span `s` of input text to the output format.
-%
-% \end{markdown}
-%  \begin{macrocode}
-      function self.superscript(s)
-        return {"\\markdownRendererSuperscript{",s,"}"}
-      end
-    end, extend_reader = function(self)
-      local parsers = self.parsers
-      local writer = self.writer
-
-      local Superscript = (
-        parsers.between(parsers.Str, parsers.circumflex, parsers.circumflex)
-      ) / writer.superscript
-
-      self.insert_pattern("Inline after Emph",
-                          Superscript, "Superscript")
-
-      self.add_special_character("^")
-    end
-  }
-end
-%    \end{macrocode}
-% \begin{markdown}
-%
 %#### Subscripts
 %
 % The \luamdef{extensions.subscripts} function implements the Pandoc
@@ -23904,201 +23907,198 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-%#### Fancy Lists
+%#### Superscripts
 %
-% The \luamdef{extensions.fancy_lists} function implements the Pandoc fancy
-% list extension.
+% The \luamdef{extensions.superscripts} function implements the Pandoc
+% superscript syntax extension.
 %
 % \end{markdown}
 %  \begin{macrocode}
-M.extensions.fancy_lists = function()
+M.extensions.superscripts = function()
   return {
-    name = "built-in fancy_lists syntax extension",
+    name = "built-in superscripts syntax extension",
     extend_writer = function(self)
-      local options = self.options
-
 %    \end{macrocode}
 % \par
 % \begin{markdown}
 %
-% Define \luamdef{writer->fancylist} as a function that will transform an
-% input ordered list to the output format, where:
-%
-%- `items` is an array of the list items,
-%- `tight` specifies, whether the list is tight or not,
-%- `startnum` is the number of the first list item,
-%- `numstyle` is the style of the list item labels from among the following:
-%    - `Decimal` -- decimal arabic numbers,
-%    - `LowerRoman` -- lower roman numbers,
-%    - `UpperRoman` -- upper roman numbers,
-%    - `LowerAlpha` -- lower ASCII alphabetic characters, and
-%    - `UpperAlpha` -- upper ASCII alphabetic characters, and
-%- `numdelim` is the style of delimiters between list item labels and
-%  texts from among the following:
-%    - `Default` -- default style,
-%    - `OneParen` -- parentheses, and
-%    - `Period` -- periods.
+% Define \luamdef{writer->superscript} as a function that will transform
+% a superscript span `s` of input text to the output format.
 %
 % \end{markdown}
 %  \begin{macrocode}
-      function self.fancylist(items,tight,startnum,numstyle,numdelim)
-        if not self.is_writing then return "" end
-        local buffer = {}
-        local num = startnum
-        for _,item in ipairs(items) do
-          buffer[#buffer + 1] = self.fancyitem(item,num)
-          if num ~= nil then
-            num = num + 1
-          end
-        end
-        local contents = util.intersperse(buffer,"\n")
-        if tight and options.tightLists then
-          return {"\\markdownRendererFancyOlBeginTight{",
-                  numstyle,"}{",numdelim,"}",contents,
-                  "\n\\markdownRendererFancyOlEndTight "}
-        else
-          return {"\\markdownRendererFancyOlBegin{",
-                  numstyle,"}{",numdelim,"}",contents,
-                  "\n\\markdownRendererFancyOlEnd "}
-        end
-      end
-%    \end{macrocode}
-% \begin{markdown}
-%
-% Define \luamdef{writer->fancyitem} as a function that will transform an
-% input fancy ordered list item to the output format, where `s` is the text of
-% the list item. If the optional parameter `num` is present, it is the number
-% of the list item.
-%
-% \end{markdown}
-%  \begin{macrocode}
-      function self.fancyitem(s,num)
-        if num ~= nil then
-          return {"\\markdownRendererFancyOlItemWithNumber{",num,"}",s,
-                  "\\markdownRendererFancyOlItemEnd "}
-        else
-          return {"\\markdownRendererFancyOlItem ",s,"\\markdownRendererFancyOlItemEnd "}
-        end
+      function self.superscript(s)
+        return {"\\markdownRendererSuperscript{",s,"}"}
       end
     end, extend_reader = function(self)
       local parsers = self.parsers
-      local options = self.options
       local writer = self.writer
 
-      local label = parsers.dig + parsers.letter
-      local numdelim = parsers.period + parsers.rparent
-      local enumerator = C(label^3 * numdelim) * #parsers.spacing
-                       + C(label^2 * numdelim) * #parsers.spacing
-                                         * (parsers.tab + parsers.space^1)
-                       + C(label * numdelim) * #parsers.spacing
-                                       * (parsers.tab + parsers.space^-2)
-                       + parsers.space * C(label^2 * numdelim)
-                                       * #parsers.spacing
-                       + parsers.space * C(label * numdelim)
-                                       * #parsers.spacing
-                                       * (parsers.tab + parsers.space^-1)
-                       + parsers.space * parsers.space * C(label^1
-                                       * numdelim) * #parsers.spacing
-      local starter = parsers.bullet + enumerator
+      local Superscript = (
+        parsers.between(parsers.Str, parsers.circumflex, parsers.circumflex)
+      ) / writer.superscript
 
-      local NestedList = Cs((parsers.optionallyindentedline
-                            - starter)^1)
-                       / function(a) return "\001"..a end
+      self.insert_pattern("Inline after Emph",
+                          Superscript, "Superscript")
 
-      local ListBlockLine  = parsers.optionallyindentedline
-                           - parsers.blankline - (parsers.indent^-1
-                                                 * starter)
+      self.add_special_character("^")
+    end
+  }
+end
+%    \end{macrocode}
+% \begin{markdown}
+%
+%#### YAML Metadata
+%
+% The \luamdef{extensions.jekyll_data} function implements the Pandoc
+% `yaml_metadata_block` syntax extension for entering metadata in \acro{yaml}.
+% When the `expect_jekyll_data` parameter is `true`, then a markdown document
+% may begin directly with \acro{yaml} metadata and may contain nothing but
+% \acro{yaml} metadata
+%
+% \end{markdown}
+%  \begin{macrocode}
+M.extensions.jekyll_data = function(expect_jekyll_data)
+  return {
+    name = "built-in jekyll_data syntax extension",
+    extend_writer = function(self)
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define \luamdef{writer->jekyllData} as a function that will transform an
+% input \acro{yaml} table `d` to the output format. The table is the value for
+% the key `p` in the parent table; if `p` is nil, then the table has no parent.
+% All scalar keys and values encountered in the table will be cast to a string
+% following \acro{yaml} serialization rules. String values will also be
+% transformed using the function `t`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      function self.jekyllData(d, t, p)
+        if not self.is_writing then return "" end
 
-      local ListBlock = parsers.line * ListBlockLine^0
+        local buf = {}
 
-      local ListContinuationBlock = parsers.blanklines * (parsers.indent / "")
-                                  * ListBlock
+        local keys = {}
+        for k, _ in pairs(d) do
+          table.insert(keys, k)
+        end
+        table.sort(keys)
 
-      local TightListItem = function(starter)
-          return -parsers.ThematicBreak
-                 * (Cs(starter / "" * parsers.tickbox^-1 * ListBlock * NestedList^-1)
-                   / self.parser_functions.parse_blocks_nested)
-                 * -(parsers.blanklines * parsers.indent)
-      end
+        if not p then
+          table.insert(buf, "\\markdownRendererJekyllDataBegin")
+        end
 
-      local LooseListItem = function(starter)
-          return -parsers.ThematicBreak
-                 * Cs( starter / "" * parsers.tickbox^-1 * ListBlock * Cc("\n")
-                   * (NestedList + ListContinuationBlock^0)
-                   * (parsers.blanklines / "\n\n")
-                   ) / self.parser_functions.parse_blocks_nested
-      end
+        if #d > 0 then
+            table.insert(buf, "\\markdownRendererJekyllDataSequenceBegin{")
+            table.insert(buf, self.uri(p or "null"))
+            table.insert(buf, "}{")
+            table.insert(buf, #keys)
+            table.insert(buf, "}")
+        else
+            table.insert(buf, "\\markdownRendererJekyllDataMappingBegin{")
+            table.insert(buf, self.uri(p or "null"))
+            table.insert(buf, "}{")
+            table.insert(buf, #keys)
+            table.insert(buf, "}")
+        end
 
-      local function roman2number(roman)
-        local romans = { ["L"] = 50, ["X"] = 10, ["V"] = 5, ["I"] = 1 }
-        local numeral = 0
-
-        local i = 1
-        local len = string.len(roman)
-        while i < len do
-          local z1, z2 = romans[ string.sub(roman, i, i) ], romans[ string.sub(roman, i+1, i+1) ]
-          if z1 < z2 then
-              numeral = numeral + (z2 - z1)
-              i = i + 2
+        for _, k in ipairs(keys) do
+          local v = d[k]
+          local typ = type(v)
+          k = tostring(k or "null")
+          if typ == "table" and next(v) ~= nil then
+            table.insert(
+              buf,
+              self.jekyllData(v, t, k)
+            )
           else
-              numeral = numeral + z1
-              i = i + 1
+            k = self.uri(k)
+            v = tostring(v)
+            if typ == "boolean" then
+              table.insert(buf, "\\markdownRendererJekyllDataBoolean{")
+              table.insert(buf, k)
+              table.insert(buf, "}{")
+              table.insert(buf, v)
+              table.insert(buf, "}")
+            elseif typ == "number" then
+              table.insert(buf, "\\markdownRendererJekyllDataNumber{")
+              table.insert(buf, k)
+              table.insert(buf, "}{")
+              table.insert(buf, v)
+              table.insert(buf, "}")
+            elseif typ == "string" then
+              table.insert(buf, "\\markdownRendererJekyllDataString{")
+              table.insert(buf, k)
+              table.insert(buf, "}{")
+              table.insert(buf, t(v))
+              table.insert(buf, "}")
+            elseif typ == "table" then
+              table.insert(buf, "\\markdownRendererJekyllDataEmpty{")
+              table.insert(buf, k)
+              table.insert(buf, "}")
+            else
+              error(format("Unexpected type %s for value of " ..
+                           "YAML key %s", typ, k))
+            end
           end
         end
-        if i <= len then numeral = numeral + romans[ string.sub(roman,i,i) ] end
-        return numeral
-      end
 
-      local function sniffstyle(itemprefix)
-        local numstr, delimend = itemprefix:match("^([A-Za-z0-9]*)([.)]*)")
-        local numdelim
-        if delimend == ")" then
-          numdelim = "OneParen"
-        elseif delimend == "." then
-          numdelim = "Period"
+        if #d > 0 then
+          table.insert(buf, "\\markdownRendererJekyllDataSequenceEnd")
         else
-          numdelim = "Default"
+          table.insert(buf, "\\markdownRendererJekyllDataMappingEnd")
         end
-        numstr = numstr or itemprefix
 
-        local num
-        num = numstr:match("^([IVXL]+)")
-        if num then
-          return roman2number(num), "UpperRoman", numdelim
+        if not p then
+          table.insert(buf, "\\markdownRendererJekyllDataEnd")
         end
-        num = numstr:match("^([ivxl]+)")
-        if num then
-          return roman2number(string.upper(num)), "LowerRoman", numdelim
-        end
-        num = numstr:match("^([A-Z])")
-        if num then
-          return string.byte(num) - string.byte("A") + 1, "UpperAlpha", numdelim
-        end
-        num = numstr:match("^([a-z])")
-        if num then
-          return string.byte(num) - string.byte("a") + 1, "LowerAlpha", numdelim
-        end
-        return math.floor(tonumber(numstr) or 1), "Decimal", numdelim
+
+        return buf
       end
+    end, extend_reader = function(self)
+      local parsers = self.parsers
+      local writer = self.writer
 
-      local function fancylist(items,tight,start)
-        local startnum, numstyle, numdelim = sniffstyle(start)
-        return writer.fancylist(items,tight,
-                                options.startNumber and startnum,
-                                numstyle or "Decimal",
-                                numdelim or "Default")
+      local JekyllData
+                    = Cmt( C((parsers.line - P("---") - P("..."))^0)
+                         , function(s, i, text) -- luacheck: ignore s i
+                             local data
+                             local ran_ok, _ = pcall(function()
+                               local tinyyaml = require("markdown-tinyyaml")
+                               data = tinyyaml.parse(text, {timestamps=false})
+                             end)
+                             if ran_ok and data ~= nil then
+                               return true, writer.jekyllData(data, function(s)
+                                 return self.parser_functions.parse_blocks_nested(s)
+                               end, nil)
+                             else
+                               return false
+                             end
+                           end
+                         )
+
+      local UnexpectedJekyllData
+                    = P("---")
+                    * parsers.blankline / 0
+                    * #(-parsers.blankline)  -- if followed by blank, it's thematic break
+                    * JekyllData
+                    * (P("---") + P("..."))
+
+      local ExpectedJekyllData
+                    = ( P("---")
+                      * parsers.blankline / 0
+                      * #(-parsers.blankline)  -- if followed by blank, it's thematic break
+                      )^-1
+                    * JekyllData
+                    * (P("---") + P("..."))^-1
+
+      self.insert_pattern("Block before Blockquote",
+                          UnexpectedJekyllData, "UnexpectedJekyllData")
+      if expect_jekyll_data then
+        self.update_rule("ExpectedJekyllData", ExpectedJekyllData)
       end
-
-      local FancyList = Cg(enumerator, "listtype") *
-                      ( Ct(TightListItem(Cb("listtype"))
-                          * TightListItem(enumerator)^0)
-                      * Cc(true) * parsers.skipblanklines * -enumerator
-                      + Ct(LooseListItem(Cb("listtype"))
-                          * LooseListItem(enumerator)^0)
-                      * Cc(false) * parsers.skipblanklines
-                      ) * Cb("listtype") / fancylist
-
-      self.update_rule("OrderedList", FancyList)
     end
   }
 end
