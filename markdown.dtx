@@ -4694,6 +4694,130 @@ defaultOptions.eagerCache = true
 %</lua,lua-cli>
 %<*manual-options>
 
+#### Option `expectJekyllData`
+
+`expectJekyllData` (default value: `false`)
+
+% \fi
+% \markdownBegin
+%
+% \Optitem[false]{expectJekyllData}{\opt{true}, \opt{false}}
+%
+:    false
+
+     :  When the \Opt{jekyllData} option is enabled, then a markdown document
+        may begin with \acro{yaml} metadata if and only if the metadata begin
+        with the end-of-directives marker (`---`) and they end with either the
+        end-of-directives or the end-of-document marker (`...`):
+
+        ~~~~~ latex
+        \documentclass{article}
+        \usepackage[jekyllData]{markdown}
+        \begin{document}
+        \begin{markdown}
+        ---
+        - this
+        - is
+        - YAML
+        ...
+        - followed
+        - by
+        - Markdown
+        \end{markdown}
+        \begin{markdown}
+        - this
+        - is
+        - Markdown
+        \end{markdown}
+        \end{document}
+        ~~~~~~~~~~~
+
+:    true
+
+     :  When the \Opt{jekyllData} option is enabled, then a markdown document may
+        begin directly with \acro{yaml} metadata and may contain nothing but
+        \acro{yaml} metadata.
+
+        ~~~~~ latex
+        \documentclass{article}
+        \usepackage[jekyllData, expectJekyllData]{markdown}
+        \begin{document}
+        \begin{markdown}
+        - this
+        - is
+        - YAML
+        ...
+        - followed
+        - by
+        - Markdown
+        \end{markdown}
+        \begin{markdown}
+        - this
+        - is
+        - YAML
+        \end{markdown}
+        \end{document}
+        ~~~~~~~~~~~
+
+% \markdownEnd
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `jane-doe.yml` with the
+following content:
+``` yaml
+name: Jane Doe
+age:  99
+```
+Using a text editor, create also a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[jekyllData]{markdown}
+\markdownSetup{
+  jekyllDataRenderers = {
+    name = {\gdef\name{#1}},
+    code = {\gdef\age{#1}},
+  },
+  renderers = {
+    jekyllDataEnd = {\name{} is \age{} years old.},
+  }
+}
+\begin{document}
+\markdownInput[expectJekyllData]{jane-doe.yml}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> Jane Doe is 99 years old.
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { expectJekyllData }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.expectJekyllData = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
 #### Option `extensions`
 
 `extensions` (default value: `{}`)
@@ -4839,130 +4963,6 @@ following text:
 % \fi
 %  \begin{macrocode}
 defaultOptions.extensions = {}
-%    \end{macrocode}
-% \par
-% \iffalse
-%</lua,lua-cli>
-%<*manual-options>
-
-#### Option `expectJekyllData`
-
-`expectJekyllData` (default value: `false`)
-
-% \fi
-% \markdownBegin
-%
-% \Optitem[false]{expectJekyllData}{\opt{true}, \opt{false}}
-%
-:    false
-
-     :  When the \Opt{jekyllData} option is enabled, then a markdown document
-        may begin with \acro{yaml} metadata if and only if the metadata begin
-        with the end-of-directives marker (`---`) and they end with either the
-        end-of-directives or the end-of-document marker (`...`):
-
-        ~~~~~ latex
-        \documentclass{article}
-        \usepackage[jekyllData]{markdown}
-        \begin{document}
-        \begin{markdown}
-        ---
-        - this
-        - is
-        - YAML
-        ...
-        - followed
-        - by
-        - Markdown
-        \end{markdown}
-        \begin{markdown}
-        - this
-        - is
-        - Markdown
-        \end{markdown}
-        \end{document}
-        ~~~~~~~~~~~
-
-:    true
-
-     :  When the \Opt{jekyllData} option is enabled, then a markdown document may
-        begin directly with \acro{yaml} metadata and may contain nothing but
-        \acro{yaml} metadata.
-
-        ~~~~~ latex
-        \documentclass{article}
-        \usepackage[jekyllData, expectJekyllData]{markdown}
-        \begin{document}
-        \begin{markdown}
-        - this
-        - is
-        - YAML
-        ...
-        - followed
-        - by
-        - Markdown
-        \end{markdown}
-        \begin{markdown}
-        - this
-        - is
-        - YAML
-        \end{markdown}
-        \end{document}
-        ~~~~~~~~~~~
-
-% \markdownEnd
-% \iffalse
-
-##### \LaTeX{} Example {.unnumbered}
-
-Using a text editor, create a text document named `jane-doe.yml` with the
-following content:
-``` yaml
-name: Jane Doe
-age:  99
-```
-Using a text editor, create also a text document named `document.tex` with the
-following content:
-``` tex
-\documentclass{article}
-\usepackage[jekyllData]{markdown}
-\markdownSetup{
-  jekyllDataRenderers = {
-    name = {\gdef\name{#1}},
-    code = {\gdef\age{#1}},
-  },
-  renderers = {
-    jekyllDataEnd = {\name{} is \age{} years old.},
-  }
-}
-\begin{document}
-\markdownInput[expectJekyllData]{jane-doe.yml}
-\end{document}
-```````
-Next, invoke LuaTeX from the terminal:
-``` sh
-lualatex document.tex
-``````
-A PDF document named `document.pdf` should be produced and contain the
-following text:
-
-> Jane Doe is 99 years old.
-
-%</manual-options>
-%<*tex>
-% \fi
-%  \begin{macrocode}
-\@@_add_lua_option:nnn
-  { expectJekyllData }
-  { boolean }
-  { false }
-%    \end{macrocode}
-% \iffalse
-%</tex>
-%<*lua,lua-cli>
-% \fi
-%  \begin{macrocode}
-defaultOptions.expectJekyllData = false
 %    \end{macrocode}
 % \par
 % \iffalse
@@ -5395,186 +5395,6 @@ the markdown document from “Hello *world*!” to “Hi *world*!” was not ref
 % \fi
 %  \begin{macrocode}
 defaultOptions.finalizeCache = false
-%    \end{macrocode}
-% \par
-% \iffalse
-%</lua,lua-cli>
-%<*manual-options>
-
-#### Option `notes`
-
-`notes` (default value: `false`)
-
-% \fi
-% \begin{markdown}
-%
-% \Optitem[false]{notes}{\opt{true}, \opt{false}}
-%
-:    true
-
-     :  Enable the Pandoc note syntax extension:
-
-        ``` md
-        Here is a note reference,[^1] and another.[^longnote]
-
-        [^1]: Here is the note.
-
-        [^longnote]: Here's one with multiple blocks.
-
-            Subsequent paragraphs are indented to show that they
-        belong to the previous note.
-
-                { some.code }
-
-            The whole paragraph can be indented, or just the
-            first line.  In this way, multi-paragraph notes
-            work like multi-paragraph list items.
-
-        This paragraph won't be part of the note, because it
-        isn't indented.
-        ``````
-
-:    false
-
-     :    Disable the Pandoc note syntax extension.
-
-% \end{markdown}
-% \iffalse
-
-##### \LaTeX{} Example {.unnumbered}
-
-Using a text editor, create a text document named `document.tex` with the
-following content:
-``` tex
-\documentclass{article}
-\usepackage[notes]{markdown}
-\begin{document}
-\begin{markdown}
-Here is a note reference,[^1] and another.[^longnote]
-
-[^1]: Here is the note.
-
-[^longnote]: Here's one with multiple blocks.
-
-    Subsequent paragraphs are indented to show that they
-belong to the previous note.
-
-        { some.code }
-
-    The whole paragraph can be indented, or just the
-    first line.  In this way, multi-paragraph notes
-    work like multi-paragraph list items.
-
-This paragraph won't be part of the note, because it
-isn't indented.
-\end{markdown}
-\end{document}
-```````
-Next, invoke LuaTeX from the terminal:
-``` sh
-lualatex document.tex
-``````
-A PDF document named `document.pdf` should be produced and contain the
-following text:
-
-> Here is a note reference,[^1] and another.[^longnote]
-> 
-> [^1]: Here is the note.
-> 
-> [^longnote]: Here's one with multiple blocks.
-> 
->     Subsequent paragraphs are indented to show that they
-> belong to the previous note.
-> 
->         { some.code }
-> 
->     The whole paragraph can be indented, or just the
->     first line.  In this way, multi-paragraph notes
->     work like multi-paragraph list items.
-> 
-> This paragraph won't be part of the note, because it
-> isn't indented.
-
-##### \Hologo{ConTeXt} Example {.unnumbered}
-
-Using a text editor, create a text document named `document.tex` with the
-following content:
-``` tex
-\usemodule[t][markdown]
-\setupmarkdown[notes = yes]
-\starttext
-\startmarkdown
-Here is a note reference,[^1] and another.[^longnote]
-
-[^1]: Here is the note.
-
-[^longnote]: Here's one with multiple blocks.
-
-    Subsequent paragraphs are indented to show that they
-belong to the previous note.
-
-        { some.code }
-
-    The whole paragraph can be indented, or just the
-    first line.  In this way, multi-paragraph notes
-    work like multi-paragraph list items.
-
-This paragraph won't be part of the note, because it
-isn't indented.
-\stopmarkdown
-\stoptext
-````````
-Next, invoke LuaTeX from the terminal:
-``` sh
-context document.tex
-`````
-A PDF document named `document.pdf` should be produced and contain the
-following text:
-
-> Here is a note reference,[^1] and another.[^longnote]
-> 
-> [^1]: Here is the note.
-> 
-> [^longnote]: Here's one with multiple blocks.
-> 
->     Subsequent paragraphs are indented to show that they
-> belong to the previous note.
-> 
->         { some.code }
-> 
->     The whole paragraph can be indented, or just the
->     first line.  In this way, multi-paragraph notes
->     work like multi-paragraph list items.
-> 
-> This paragraph won't be part of the note, because it
-> isn't indented.
-
-%</manual-options>
-%<*tex>
-% \fi
-% \begin{markdown}
-%
-% The footnotes option has been deprecated and will be removed in
-% Markdown 3.0.0.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\@@_add_lua_option:nnn
-  { footnotes }
-  { boolean }
-  { false }
-\@@_add_lua_option:nnn
-  { notes }
-  { boolean }
-  { false }
-%    \end{macrocode}
-% \iffalse
-%</tex>
-%<*lua,lua-cli>
-% \fi
-%  \begin{macrocode}
-defaultOptions.footnotes = false
-defaultOptions.notes = false
 %    \end{macrocode}
 % \par
 % \iffalse
@@ -6657,6 +6477,186 @@ following text:
 % \fi
 %  \begin{macrocode}
 defaultOptions.jekyllData = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
+#### Option `notes`
+
+`notes` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{notes}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Enable the Pandoc note syntax extension:
+
+        ``` md
+        Here is a note reference,[^1] and another.[^longnote]
+
+        [^1]: Here is the note.
+
+        [^longnote]: Here's one with multiple blocks.
+
+            Subsequent paragraphs are indented to show that they
+        belong to the previous note.
+
+                { some.code }
+
+            The whole paragraph can be indented, or just the
+            first line.  In this way, multi-paragraph notes
+            work like multi-paragraph list items.
+
+        This paragraph won't be part of the note, because it
+        isn't indented.
+        ``````
+
+:    false
+
+     :    Disable the Pandoc note syntax extension.
+
+% \end{markdown}
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[notes]{markdown}
+\begin{document}
+\begin{markdown}
+Here is a note reference,[^1] and another.[^longnote]
+
+[^1]: Here is the note.
+
+[^longnote]: Here's one with multiple blocks.
+
+    Subsequent paragraphs are indented to show that they
+belong to the previous note.
+
+        { some.code }
+
+    The whole paragraph can be indented, or just the
+    first line.  In this way, multi-paragraph notes
+    work like multi-paragraph list items.
+
+This paragraph won't be part of the note, because it
+isn't indented.
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> Here is a note reference,[^1] and another.[^longnote]
+> 
+> [^1]: Here is the note.
+> 
+> [^longnote]: Here's one with multiple blocks.
+> 
+>     Subsequent paragraphs are indented to show that they
+> belong to the previous note.
+> 
+>         { some.code }
+> 
+>     The whole paragraph can be indented, or just the
+>     first line.  In this way, multi-paragraph notes
+>     work like multi-paragraph list items.
+> 
+> This paragraph won't be part of the note, because it
+> isn't indented.
+
+##### \Hologo{ConTeXt} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\usemodule[t][markdown]
+\setupmarkdown[notes = yes]
+\starttext
+\startmarkdown
+Here is a note reference,[^1] and another.[^longnote]
+
+[^1]: Here is the note.
+
+[^longnote]: Here's one with multiple blocks.
+
+    Subsequent paragraphs are indented to show that they
+belong to the previous note.
+
+        { some.code }
+
+    The whole paragraph can be indented, or just the
+    first line.  In this way, multi-paragraph notes
+    work like multi-paragraph list items.
+
+This paragraph won't be part of the note, because it
+isn't indented.
+\stopmarkdown
+\stoptext
+````````
+Next, invoke LuaTeX from the terminal:
+``` sh
+context document.tex
+`````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> Here is a note reference,[^1] and another.[^longnote]
+> 
+> [^1]: Here is the note.
+> 
+> [^longnote]: Here's one with multiple blocks.
+> 
+>     Subsequent paragraphs are indented to show that they
+> belong to the previous note.
+> 
+>         { some.code }
+> 
+>     The whole paragraph can be indented, or just the
+>     first line.  In this way, multi-paragraph notes
+>     work like multi-paragraph list items.
+> 
+> This paragraph won't be part of the note, because it
+> isn't indented.
+
+%</manual-options>
+%<*tex>
+% \fi
+% \begin{markdown}
+%
+% The footnotes option has been deprecated and will be removed in
+% Markdown 3.0.0.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { footnotes }
+  { boolean }
+  { false }
+\@@_add_lua_option:nnn
+  { notes }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.footnotes = false
+defaultOptions.notes = false
 %    \end{macrocode}
 % \par
 % \iffalse
