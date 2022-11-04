@@ -1,5 +1,11 @@
 # Changes
 
+## 2.19.0
+
+Refactoring:
+
+- Sort Lua options, token renderers, and built-in syntax extensions. (#208)
+
 ## 2.18.0 (2022-10-30)
 
 Development:
