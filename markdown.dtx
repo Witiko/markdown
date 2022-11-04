@@ -22681,6 +22681,27 @@ M.extensions = {}
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Bracketed Spans
+%
+% The \luamdef{extensions.bracketed_spans} function implements a syntax
+% extension that enables the division of content into inline extents.
+% The beginnings and ends of extents are aligned to inline elements.
+% Extents are hierarchical in that they may be nested but cannot partially
+% overlap.
+%
+% \end{markdown}
+%  \begin{macrocode}
+M.extensions.bracketed_spans = function()
+  return {
+    name = "built-in bracketed_spans syntax extension",
+    extend_writer = function()
+    end, extend_reader = function()
+    end
+  }
+end
+%    \end{macrocode}
+% \begin{markdown}
+%
 %#### Citations
 %
 % The \luamdef{extensions.citations} function implements the Pandoc citation
@@ -23412,6 +23433,27 @@ M.extensions.fenced_code = function(blank_before_code_fence)
       self.update_rule("EndlineExceptions", EndlineExceptions)
 
       self.add_special_character("~")
+    end
+  }
+end
+%    \end{macrocode}
+% \begin{markdown}
+%
+%#### Fenced Divs
+%
+% The \luamdef{extensions.fenced_divs} function implements a syntax
+% extension that enables the division of content into block-level extents.
+% The beginnings and ends of extents are aligned to block-level elements.
+% Extents are hierarchical in that they may be nested but cannot partially
+% overlap.
+%
+% \end{markdown}
+%  \begin{macrocode}
+M.extensions.fenced_divs = function()
+  return {
+    name = "built-in fenced_divs syntax extension",
+    extend_writer = function()
+    end, extend_reader = function()
     end
   }
 end
