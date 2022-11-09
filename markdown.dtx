@@ -22694,8 +22694,31 @@ M.extensions = {}
 M.extensions.bracketed_spans = function()
   return {
     name = "built-in bracketed_spans syntax extension",
-    extend_writer = function()
-    end, extend_reader = function()
+    extend_writer = function(self)
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define \luamdef{writer->span} as a function that will transform an input
+% bracketed span `s` with attributes `attr` to the output format.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      function self.span(s, attr)
+        return {"\\markdownRendererBracketedSpan{",s,"}{",attr,"}"}
+      end
+    end, extend_reader = function(self)
+      local parsers = self.parsers
+      local writer = self.writer
+
+      local Span = parsers.between(parsers.Inline,
+                                   parsers.lbracket,
+                                   parsers.rbracket)
+                 * Ct(parsers.attributes)
+                 / writer.span
+
+      self.insert_pattern("Inline after Emph",
+                          Span, "Span")
     end
   }
 end
