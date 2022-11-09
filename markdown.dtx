@@ -22691,11 +22691,8 @@ M.extensions = {}
 %
 %#### Bracketed Spans
 %
-% The \luamdef{extensions.bracketed_spans} function implements a syntax
-% extension that enables the division of content into inline extents.
-% The beginnings and ends of extents are aligned to inline elements.
-% Extents are hierarchical in that they may be nested but cannot partially
-% overlap.
+% The \luamdef{extensions.bracketed_spans} function implements the Pandoc
+% bracketed spans syntax extension.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -23472,13 +23469,10 @@ end
 %
 %#### Fenced Divs
 %
-% The \luamdef{extensions.fenced_divs} function implements a syntax
-% extension that enables the division of content into block-level extents.
-% The beginnings and ends of extents are aligned to block-level elements.
-% Extents are hierarchical in that they may be nested but cannot partially
-% overlap. When the `blank_before_div_fence`parameter is `true`, the syntax
-% extension requires a blank line between a paragraph and the following fenced
-% code block.
+% The \luamdef{extensions.fenced_divs} function implements the Pandoc fenced
+% divs syntax extension. When the `blank_before_div_fence`parameter is `true`,
+% the syntax extension requires a blank line between a paragraph and the
+% following fenced code block.
 %
 % \end{markdown}
 %  \begin{macrocode}
