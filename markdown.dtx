@@ -21246,6 +21246,14 @@ parsers.fencehead    = function(char)
                      * parsers.optionalspace * (parsers.newline + parsers.eof)
 end
 
+parsers.fencehead_with_attributes
+                     = function(char)
+  return               C(parsers.nonindentspace) / function(s) fenceindent = #s end
+                     * Cg(char^3, "fencelength")
+                     * parsers.optionalspace * Ct(parsers.attributes)
+                     * parsers.optionalspace * (parsers.newline + parsers.eof)
+end
+
 parsers.fencetail    = function(char)
   return               parsers.nonindentspace
                      * Cmt(C(char^3) * Cb("fencelength"), captures_geq_length)
@@ -23468,15 +23476,55 @@ end
 % extension that enables the division of content into block-level extents.
 % The beginnings and ends of extents are aligned to block-level elements.
 % Extents are hierarchical in that they may be nested but cannot partially
-% overlap.
+% overlap. When the `blank_before_div_fence`parameter is `true`, the syntax
+% extension requires a blank line between a paragraph and the following fenced
+% code block.
 %
 % \end{markdown}
 %  \begin{macrocode}
-M.extensions.fenced_divs = function()
+M.extensions.fenced_divs = function(blank_before_div_fence)
   return {
     name = "built-in fenced_divs syntax extension",
-    extend_writer = function()
-    end, extend_reader = function()
+    extend_writer = function(self)
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define \luamdef{writer->div} as a function that will transform an input
+% fenced div with content `c` and with attributes `attr` to the output format.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      function self.div(c, attr)
+        return {"\\markdownRendererFencedDiv{",c,"}{",attr,"}"}
+      end
+    end, extend_reader = function(self)
+      local parsers = self.parsers
+      local parse_blocks = self.parser_functions.parse_blocks
+      local writer = self.writer
+
+      local FencedDiv = parsers.fencehead_with_attributes(parsers.colon)
+                      * Cs(parsers.fencedline(parsers.colon)^0)
+                      * parsers.fencetail(parsers.colon)
+                      / function(attr, s)
+                        local content = parse_blocks(s)
+                        return writer.div(content, attr)
+                      end
+
+      self.insert_pattern("Block after Verbatim",
+                          FencedDiv, "FencedDiv")
+
+      local fencestart
+      if blank_before_div_fence then
+        fencestart = parsers.fail
+      else
+        fencestart = parsers.fencehead_with_attributes(parsers.colon)
+      end
+
+      local EndlineExceptions = parsers.EndlineExceptions + fencestart
+      self.update_rule("EndlineExceptions", EndlineExceptions)
+
+      self.add_special_character(":")
     end
   }
 end
