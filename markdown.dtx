@@ -23055,9 +23055,9 @@ end
 %
 %#### Definition Lists
 %
-% The \luamdef{extensions.definition_lists} function implements the definition
-% list syntax extension. If the `tight_lists` parameter is `true`, tight lists
-% will produce special right item renderers.
+% The \luamdef{extensions.definition_lists} function implements the Pandoc
+% definition list syntax extension. If the `tight_lists` parameter is `true`,
+% tight lists will produce special right item renderers.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -23156,7 +23156,7 @@ end
 %#### Fancy Lists
 %
 % The \luamdef{extensions.fancy_lists} function implements the Pandoc fancy
-% list extension.
+% list syntax extension.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -23420,8 +23420,8 @@ end
 %
 %#### Header Attributes
 %
-% The \luamdef{extensions.header_attributes} function implements a syntax
-% extension that enables the assignment of HTML attributes to headings.
+% The \luamdef{extensions.header_attributes} function implements the Pandoc
+% header attributes syntax extension.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -23577,7 +23577,7 @@ end
 %#### Pipe Tables
 %
 % The \luamdef{extensions.pipe_table} function implements the \acro{PHP}
-% Markdown table syntax extension (affectionately known as pipe tables). When
+% Markdown table syntax extension (also known as pipe tables in Pandoc). When
 % the `table_captions` parameter is `true`, the function also implements the
 % Pandoc `table_captions` syntax extension for table captions.
 %
@@ -23951,10 +23951,9 @@ end
 %#### YAML Metadata
 %
 % The \luamdef{extensions.jekyll_data} function implements the Pandoc
-% `yaml_metadata_block` syntax extension for entering metadata in \acro{yaml}.
-% When the `expect_jekyll_data` parameter is `true`, then a markdown document
-% may begin directly with \acro{yaml} metadata and may contain nothing but
-% \acro{yaml} metadata
+% `yaml_metadata_block` syntax extension. When the `expect_jekyll_data`
+% parameter is `true`, then a markdown document may begin directly with
+% \acro{yaml} metadata and may contain nothing but \acro{yaml} metadata.
 %
 % \end{markdown}
 %  \begin{macrocode}
