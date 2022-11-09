@@ -20774,7 +20774,7 @@ function M.writer.new(options)
 % \begin{markdown}
 %
 % Define \luamdef{writer->heading} as a function that will transform an
-% input heading `s` at level `level` with identifiers `identifiers` to the
+% input heading `s` at level `level` with attributes `attributes` to the
 % output format.
 %
 % \end{markdown}
@@ -23407,8 +23407,8 @@ end
 %
 % The \luamdef{extensions.fenced_code} function implements the commonmark
 % fenced code block syntax extension. When the `blank_before_code_fence`
-% parameter is `true`, the syntax extension requires between a paragraph and
-% the following fenced code block.
+% parameter is `true`, the syntax extension requires a blank line between a
+% paragraph and the following fenced code block.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -23439,12 +23439,12 @@ M.extensions.fenced_code = function(blank_before_code_fence)
       local writer = self.writer
 
       local FencedCode = (parsers.TildeFencedCode
-                           + parsers.BacktickFencedCode)
-                         / function(infostring, code)
-                             local expanded_code = self.expandtabs(code)
-                             return writer.fencedCode(expanded_code,
-                                                      infostring)
-                           end
+                         + parsers.BacktickFencedCode)
+                       / function(infostring, code)
+                           local expanded_code = self.expandtabs(code)
+                           return writer.fencedCode(expanded_code,
+                                                    infostring)
+                         end
 
       self.insert_pattern("Block after Verbatim",
                           FencedCode, "FencedCode")
@@ -23862,7 +23862,7 @@ M.extensions.raw_attribute = function()
 % \begin{markdown}
 %
 % Define \luamdef{writer->rawInline} as a function that will transform an
-% input inline raw span `s` with the raw attribute `i` to the output format.
+% input inline raw span `s` with the raw attribute `attr` to the output format.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -23879,7 +23879,7 @@ M.extensions.raw_attribute = function()
 % \begin{markdown}
 %
 % Define \luamdef{writer->rawBlock} as a function that will transform an
-% input raw block `s` with the raw attribute `i` to the output format.
+% input raw block `s` with the raw attribute `attr` to the output format.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -23910,17 +23910,17 @@ M.extensions.raw_attribute = function()
 
       if options.fencedCode then
         local RawBlock = (parsers.TildeFencedCode
-                           + parsers.BacktickFencedCode)
-                         / function(infostring, code)
-                             local expanded_code = self.expandtabs(code)
-                             local attr = lpeg.match(raw_attribute, infostring)
-                             if attr then
-                               return writer.rawBlock(expanded_code, attr)
-                             else
-                               return writer.fencedCode(expanded_code,
-                                                        infostring)
-                             end
+                         + parsers.BacktickFencedCode)
+                       / function(infostring, code)
+                           local expanded_code = self.expandtabs(code)
+                           local attr = lpeg.match(raw_attribute, infostring)
+                           if attr then
+                             return writer.rawBlock(expanded_code, attr)
+                           else
+                             return writer.fencedCode(expanded_code,
+                                                      infostring)
                            end
+                         end
 
         self.insert_pattern("Block after Verbatim",
                             RawBlock, "RawBlock")
