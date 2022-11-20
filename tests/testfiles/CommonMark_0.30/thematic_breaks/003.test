@@ -1,3 +1,11 @@
+%   ---RESULT--- "example": 45,
+%   
+%   <p>===</p>
+%   
+%   ---\RESULT---
+
 <<<
 ===
 >>>
+documentBegin
+documentEnd

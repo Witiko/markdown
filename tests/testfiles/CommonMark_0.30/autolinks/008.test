@@ -1,3 +1,16 @@
+%   ---RESULT--- "example": 600,
+%   
+%   <p><a href="localhost:5001/foo">localhost:5001/foo</a></p>
+%   
+%   ---\RESULT---
+
 <<<
 <localhost:5001/foo>
 >>>
+documentBegin
+BEGIN link
+- label: localhost:5001/foo
+- URI: localhost:5001/foo
+- title: 
+END link
+documentEnd

@@ -1,6 +1,17 @@
+%   ---RESULT--- "example": 173,
+%   
+%   <style
+%     type="text/css">
+%   
+%   foo
+%   
+%   ---\RESULT---
+
 <<<
 <style
   type="text/css">
 
 foo
 >>>
+documentBegin
+documentEnd

@@ -1,3 +1,15 @@
+%   ---RESULT--- "example": 172,
+%   
+%   <style
+%     type="text/css">
+%   h1 {color:red;}
+%   
+%   p {color:blue;}
+%   </style>
+%   <p>okay</p>
+%   
+%   ---\RESULT---
+
 <<<
 <style
   type="text/css">
@@ -7,3 +19,5 @@ p {color:blue;}
 </style>
 okay
 >>>
+documentBegin
+documentEnd

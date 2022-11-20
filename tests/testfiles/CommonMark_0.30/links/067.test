@@ -1,5 +1,15 @@
+%   ---RESULT--- "example": 547,
+%   
+%   <p>[[[foo]]]</p>
+%   <p>[[[foo]]]: /url</p>
+%   
+%   ---\RESULT---
+
 <<<
 [[[foo]]]
 
 [[[foo]]]: /url
 >>>
+documentBegin
+interblockSeparator
+documentEnd

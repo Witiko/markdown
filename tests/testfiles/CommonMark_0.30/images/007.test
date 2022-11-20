@@ -1,3 +1,16 @@
+%   ---RESULT--- "example": 577,
+%   
+%   <p><img src="train.jpg" alt="foo" /></p>
+%   
+%   ---\RESULT---
+
 <<<
 ![foo](train.jpg)
 >>>
+documentBegin
+BEGIN image
+- label: foo
+- URI: train.jpg
+- title: 
+END image
+documentEnd

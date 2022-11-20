@@ -1,3 +1,11 @@
+%   ---RESULT--- "example": 387,
+%   
+%   <p>пристаням__стремятся__</p>
+%   
+%   ---\RESULT---
+
 <<<
 пристаням__стремятся__
 >>>
+documentBegin
+documentEnd

@@ -1,4 +1,13 @@
+%   ---RESULT--- "example": 165,
+%   
+%   </ins>
+%   *bar*
+%   
+%   ---\RESULT---
+
 <<<
 </ins>
 *bar*
 >>>
+documentBegin
+documentEnd

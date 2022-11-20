@@ -1,3 +1,16 @@
+%   ---RESULT--- "example": 598,
+%   
+%   <p><a href="made-up-scheme://foo,bar">made-up-scheme://foo,bar</a></p>
+%   
+%   ---\RESULT---
+
 <<<
 <made-up-scheme://foo,bar>
 >>>
+documentBegin
+BEGIN link
+- label: made-up-scheme://foo,bar
+- URI: made-up-scheme://foo,bar
+- title: 
+END link
+documentEnd

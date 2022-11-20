@@ -1,3 +1,11 @@
+%   ---RESULT--- "example": 26,
+%   
+%   <p># Ӓ Ϡ �</p>
+%   
+%   ---\RESULT---
+
 <<<
 &#35; &#1234; &#992; &#0;
 >>>
+documentBegin
+documentEnd

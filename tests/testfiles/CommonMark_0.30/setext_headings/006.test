@@ -1,3 +1,14 @@
+%   ---RESULT--- "example": 85,
+%   
+%   <pre><code>Foo
+%   ---
+%   
+%   Foo
+%   </code></pre>
+%   <hr />
+%   
+%   ---\RESULT---
+
 <<<
     Foo
     ---
@@ -5,3 +16,11 @@
     Foo
 ---
 >>>
+documentBegin
+BEGIN fencedCode
+- src: 7c70100fa57cd4db2689abfddfb3dacd.verbatim
+- infostring: 
+END fencedCode
+interblockSeparator
+thematicBreak
+documentEnd

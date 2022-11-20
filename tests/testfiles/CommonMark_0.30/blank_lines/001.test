@@ -1,3 +1,10 @@
+%   ---RESULT--- "example": 227,
+%   
+%   <p>aaa</p>
+%   <h1>aaa</h1>
+%   
+%   ---\RESULT---
+
 <<<
   
 
@@ -8,3 +15,7 @@ aaa
 
   
 >>>
+documentBegin
+interblockSeparator
+headingOne: aaa
+documentEnd

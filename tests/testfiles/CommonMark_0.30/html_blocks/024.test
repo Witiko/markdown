@@ -1,3 +1,15 @@
+%   ---RESULT--- "example": 171,
+%   
+%   <textarea>
+%   
+%   *foo*
+%   
+%   _bar_
+%   
+%   </textarea>
+%   
+%   ---\RESULT---
+
 <<<
 <textarea>
 
@@ -7,3 +19,5 @@ _bar_
 
 </textarea>
 >>>
+documentBegin
+documentEnd

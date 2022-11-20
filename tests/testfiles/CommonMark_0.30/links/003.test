@@ -1,3 +1,16 @@
+%   ---RESULT--- "example": 483,
+%   
+%   <p><a href="./target.md"></a></p>
+%   
+%   ---\RESULT---
+
 <<<
 [](./target.md)
 >>>
+documentBegin
+BEGIN link
+- label: 
+- URI: ./target.md
+- title: 
+END link
+documentEnd

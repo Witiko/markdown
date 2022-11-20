@@ -1,3 +1,15 @@
+%   ---RESULT--- "example": 324,
+%   
+%   <ol>
+%   <li>
+%   <pre><code>foo
+%   </code></pre>
+%   <p>bar</p>
+%   </li>
+%   </ol>
+%   
+%   ---\RESULT---
+
 <<<
 1. ```
    foo
@@ -5,3 +17,14 @@
 
    bar
 >>>
+documentBegin
+olBeginTight
+ulItem
+BEGIN fencedCode
+- src: acbd18db4cc2f85cedef654fccc4a4d8.verbatim
+- infostring: 
+END fencedCode
+interblockSeparator
+ulItemEnd
+olEndTight
+documentEnd

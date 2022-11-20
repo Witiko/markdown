@@ -1,4 +1,31 @@
+%   ---RESULT--- "example": 235,
+%   
+%   <blockquote>
+%   <ul>
+%   <li>foo</li>
+%   </ul>
+%   </blockquote>
+%   <ul>
+%   <li>bar</li>
+%   </ul>
+%   
+%   ---\RESULT---
+
 <<<
 > - foo
 - bar
 >>>
+documentBegin
+blockQuoteBegin
+ulBeginTight
+ulItem
+ulItemEnd
+ulEndTight
+blockQuoteEnd
+interblockSeparator
+ulBeginTight
+interblockSeparator
+ulItem
+ulItemEnd
+ulEndTight
+documentEnd

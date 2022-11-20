@@ -1,5 +1,15 @@
+%   ---RESULT--- "example": 189,
+%   
+%   <div>
+%   *Emphasized* text.
+%   </div>
+%   
+%   ---\RESULT---
+
 <<<
 <div>
 *Emphasized* text.
 </div>
 >>>
+documentBegin
+documentEnd

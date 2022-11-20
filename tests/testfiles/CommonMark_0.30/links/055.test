@@ -1,5 +1,13 @@
+%   ---RESULT--- "example": 535,
+%   
+%   <p>[foo <bar attr="][ref]"></p>
+%   
+%   ---\RESULT---
+
 <<<
 [foo <bar attr="][ref]">
 
 [ref]: /uri
 >>>
+documentBegin
+documentEnd

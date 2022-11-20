@@ -1,5 +1,18 @@
+%   ---RESULT--- "example": 194,
+%   
+%   <p><a href="my_(url)" title="title (with parens)">Foo*bar]</a></p>
+%   
+%   ---\RESULT---
+
 <<<
 [Foo*bar\]]:my_(url) 'title (with parens)'
 
 [Foo*bar\]]
 >>>
+documentBegin
+BEGIN link
+- label: Foo*bar]
+- URI: my_(url)
+- title: title (with parens)
+END link
+documentEnd

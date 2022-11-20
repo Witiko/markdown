@@ -1,5 +1,15 @@
+%   ---RESULT--- "example": 160,
+%   
+%   <table><tr><td>
+%   foo
+%   </td></tr></table>
+%   
+%   ---\RESULT---
+
 <<<
 <table><tr><td>
 foo
 </td></tr></table>
 >>>
+documentBegin
+documentEnd

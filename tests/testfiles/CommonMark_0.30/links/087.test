@@ -1,5 +1,18 @@
+%   ---RESULT--- "example": 567,
+%   
+%   <p><a href="/url1">foo</a>(not a link)</p>
+%   
+%   ---\RESULT---
+
 <<<
 [foo](not a link)
 
 [foo]: /url1
 >>>
+documentBegin
+BEGIN link
+- label: foo
+- URI: /url1
+- title: 
+END link
+documentEnd

@@ -1,3 +1,16 @@
+%   ---RESULT--- "example": 580,
+%   
+%   <p><img src="/url" alt="" /></p>
+%   
+%   ---\RESULT---
+
 <<<
 ![](/url)
 >>>
+documentBegin
+BEGIN image
+- label: 
+- URI: /url
+- title: 
+END image
+documentEnd

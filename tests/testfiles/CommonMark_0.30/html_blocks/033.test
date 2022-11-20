@@ -1,3 +1,14 @@
+%   ---RESULT--- "example": 180,
+%   
+%   <?php
+%   
+%     echo '>';
+%   
+%   ?>
+%   <p>okay</p>
+%   
+%   ---\RESULT---
+
 <<<
 <?php
 
@@ -6,3 +17,5 @@
 ?>
 okay
 >>>
+documentBegin
+documentEnd

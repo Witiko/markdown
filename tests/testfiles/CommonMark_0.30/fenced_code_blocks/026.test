@@ -1,4 +1,16 @@
+%   ---RESULT--- "example": 144,
+%   
+%   <pre><code class="language-;"></code></pre>
+%   
+%   ---\RESULT---
+
 <<<
 ````;
 ````
 >>>
+documentBegin
+BEGIN fencedCode
+- src: d41d8cd98f00b204e9800998ecf8427e.verbatim
+- infostring: ;
+END fencedCode
+documentEnd

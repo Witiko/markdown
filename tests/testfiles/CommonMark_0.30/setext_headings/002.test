@@ -1,5 +1,15 @@
+%   ---RESULT--- "example": 81,
+%   
+%   <h1>Foo <em>bar
+%   baz</em></h1>
+%   
+%   ---\RESULT---
+
 <<<
 Foo *bar
 baz*
 ====
 >>>
+documentBegin
+headingOne: Foo (emphasis: barbaz)
+documentEnd

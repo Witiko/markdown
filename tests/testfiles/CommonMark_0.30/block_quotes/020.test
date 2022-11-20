@@ -1,4 +1,17 @@
+%   ---RESULT--- "example": 247,
+%   
+%   <blockquote>
+%   <p>bar
+%   baz</p>
+%   </blockquote>
+%   
+%   ---\RESULT---
+
 <<<
 > bar
 baz
 >>>
+documentBegin
+blockQuoteBegin
+blockQuoteEnd
+documentEnd

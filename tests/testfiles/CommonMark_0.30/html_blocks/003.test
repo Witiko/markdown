@@ -1,5 +1,15 @@
+%   ---RESULT--- "example": 150,
+%   
+%    <div>
+%     *hello*
+%            <foo><a>
+%   
+%   ---\RESULT---
+
 <<<
  <div>
   *hello*
          <foo><a>
 >>>
+documentBegin
+documentEnd

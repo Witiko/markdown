@@ -1,3 +1,19 @@
+%   ---RESULT--- "example": 286,
+%   
+%   <ol>
+%   <li>
+%   <p>A paragraph
+%   with two lines.</p>
+%   <pre><code>indented code
+%   </code></pre>
+%   <blockquote>
+%   <p>A block quote.</p>
+%   </blockquote>
+%   </li>
+%   </ol>
+%   
+%   ---\RESULT---
+
 <<<
  1.  A paragraph
      with two lines.
@@ -6,3 +22,19 @@
 
      > A block quote.
 >>>
+documentBegin
+olBeginTight
+ulItem
+interblockSeparator
+interblockSeparator
+BEGIN fencedCode
+- src: bf995e3b2610078e871b00000c1fb65f.verbatim
+- infostring: 
+END fencedCode
+interblockSeparator
+blockQuoteBegin
+interblockSeparator
+blockQuoteEnd
+ulItemEnd
+olEndTight
+documentEnd

@@ -1,3 +1,11 @@
+%   ---RESULT--- "example": 371,
+%   
+%   <p>_(_foo)</p>
+%   
+%   ---\RESULT---
+
 <<<
 _(_foo)
 >>>
+documentBegin
+documentEnd

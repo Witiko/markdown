@@ -1,3 +1,16 @@
+%   ---RESULT--- "example": 111,
+%   
+%   <pre><code>chunk1
+%   
+%   chunk2
+%   
+%   
+%   
+%   chunk3
+%   </code></pre>
+%   
+%   ---\RESULT---
+
 <<<
     chunk1
 
@@ -7,3 +20,9 @@
  
     chunk3
 >>>
+documentBegin
+BEGIN fencedCode
+- src: 2aca0a9378723b1bed59975523ed50cd.verbatim
+- infostring: 
+END fencedCode
+documentEnd

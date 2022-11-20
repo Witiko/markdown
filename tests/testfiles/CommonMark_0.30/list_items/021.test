@@ -1,3 +1,17 @@
+%   ---RESULT--- "example": 273,
+%   
+%   <ol>
+%   <li>
+%   <pre><code>indented code
+%   </code></pre>
+%   <p>paragraph</p>
+%   <pre><code>more code
+%   </code></pre>
+%   </li>
+%   </ol>
+%   
+%   ---\RESULT---
+
 <<<
 1.     indented code
 
@@ -5,3 +19,20 @@
 
        more code
 >>>
+documentBegin
+olBeginTight
+ulItem
+BEGIN fencedCode
+- src: bf995e3b2610078e871b00000c1fb65f.verbatim
+- infostring: 
+END fencedCode
+interblockSeparator
+interblockSeparator
+interblockSeparator
+BEGIN fencedCode
+- src: edf19530665eedd599d1228679ec3a65.verbatim
+- infostring: 
+END fencedCode
+ulItemEnd
+olEndTight
+documentEnd

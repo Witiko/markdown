@@ -1,3 +1,11 @@
+%   ---RESULT--- "example": 266,
+%   
+%   <p>1234567890. not ok</p>
+%   
+%   ---\RESULT---
+
 <<<
 1234567890. not ok
 >>>
+documentBegin
+documentEnd

@@ -1,3 +1,33 @@
+%   ---RESULT--- "example": 299,
+%   
+%   <ol>
+%   <li>
+%   <ul>
+%   <li>
+%   <ol start="2">
+%   <li>foo</li>
+%   </ol>
+%   </li>
+%   </ul>
+%   </li>
+%   </ol>
+%   
+%   ---\RESULT---
+
 <<<
 1. - 2. foo
 >>>
+documentBegin
+olBeginTight
+ulItem
+ulBeginTight
+ulItem
+olBeginTight
+ulItem
+ulItemEnd
+olEndTight
+ulItemEnd
+ulEndTight
+ulItemEnd
+olEndTight
+documentEnd

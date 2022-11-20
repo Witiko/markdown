@@ -1,4 +1,18 @@
+%   ---RESULT--- "example": 3,
+%   
+%   <pre><code>a	a
+%   ὐ	a
+%   </code></pre>
+%   
+%   ---\RESULT---
+
 <<<
     a	a
     ὐ	a
 >>>
+documentBegin
+BEGIN fencedCode
+- src: 6df1b1b65295a88592bba31b998cb207.verbatim
+- infostring: 
+END fencedCode
+documentEnd

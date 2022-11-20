@@ -1,3 +1,11 @@
+%   ---RESULT--- "example": 188,
+%   
+%   <div>
+%   <p><em>Emphasized</em> text.</p>
+%   </div>
+%   
+%   ---\RESULT---
+
 <<<
 <div>
 
@@ -5,3 +13,6 @@
 
 </div>
 >>>
+documentBegin
+emphasis: Emphasized
+documentEnd

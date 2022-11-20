@@ -1,6 +1,33 @@
+%   ---RESULT--- "example": 325,
+%   
+%   <ul>
+%   <li>
+%   <p>foo</p>
+%   <ul>
+%   <li>bar</li>
+%   </ul>
+%   <p>baz</p>
+%   </li>
+%   </ul>
+%   
+%   ---\RESULT---
+
 <<<
 * foo
   * bar
 
   baz
 >>>
+documentBegin
+ulBeginTight
+ulItem
+interblockSeparator
+ulBeginTight
+interblockSeparator
+ulItem
+ulItemEnd
+ulEndTight
+interblockSeparator
+ulItemEnd
+ulEndTight
+documentEnd

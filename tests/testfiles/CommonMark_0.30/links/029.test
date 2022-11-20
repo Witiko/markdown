@@ -1,4 +1,17 @@
+%   ---RESULT--- "example": 509,
+%   
+%   <p><a href="/uri" title="title">link</a></p>
+%   
+%   ---\RESULT---
+
 <<<
 [link](   /uri
   "title"  )
 >>>
+documentBegin
+BEGIN link
+- label: link
+- URI: /uri
+- title: title
+END link
+documentEnd

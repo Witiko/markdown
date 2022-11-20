@@ -1,5 +1,15 @@
+%   ---RESULT--- "example": 261,
+%   
+%   <p>-one</p>
+%   <p>2.two</p>
+%   
+%   ---\RESULT---
+
 <<<
 -one
 
 2.two
 >>>
+documentBegin
+interblockSeparator
+documentEnd

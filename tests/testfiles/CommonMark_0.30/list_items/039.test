@@ -1,4 +1,19 @@
+%   ---RESULT--- "example": 291,
+%   
+%   <ol>
+%   <li>A paragraph
+%   with two lines.</li>
+%   </ol>
+%   
+%   ---\RESULT---
+
 <<<
   1.  A paragraph
     with two lines.
 >>>
+documentBegin
+olBeginTight
+ulItem
+ulItemEnd
+olEndTight
+documentEnd

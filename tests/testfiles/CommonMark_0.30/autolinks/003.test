@@ -1,3 +1,16 @@
+%   ---RESULT--- "example": 595,
+%   
+%   <p><a href="irc://foo.bar:2233/baz">irc://foo.bar:2233/baz</a></p>
+%   
+%   ---\RESULT---
+
 <<<
 <irc://foo.bar:2233/baz>
 >>>
+documentBegin
+BEGIN link
+- label: irc://foo.bar:2233/baz
+- URI: irc://foo.bar:2233/baz
+- title: 
+END link
+documentEnd

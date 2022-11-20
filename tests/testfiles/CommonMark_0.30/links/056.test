@@ -1,5 +1,14 @@
+%   ---RESULT--- "example": 536,
+%   
+%   <p>[foo<code>][ref]</code></p>
+%   
+%   ---\RESULT---
+
 <<<
 [foo`][ref]`
 
 [ref]: /uri
 >>>
+documentBegin
+codeSpan: ][ref]
+documentEnd

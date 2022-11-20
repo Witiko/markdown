@@ -1,5 +1,29 @@
+%   ---RESULT--- "example": 270,
+%   
+%   <ul>
+%   <li>
+%   <p>foo</p>
+%   <pre><code>bar
+%   </code></pre>
+%   </li>
+%   </ul>
+%   
+%   ---\RESULT---
+
 <<<
 - foo
 
       bar
 >>>
+documentBegin
+ulBeginTight
+ulItem
+interblockSeparator
+interblockSeparator
+BEGIN fencedCode
+- src: 37b51d194a7513e45b56f6524f2d51f2.verbatim
+- infostring: 
+END fencedCode
+ulItemEnd
+ulEndTight
+documentEnd

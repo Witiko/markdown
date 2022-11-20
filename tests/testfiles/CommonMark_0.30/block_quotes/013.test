@@ -1,5 +1,16 @@
+%   ---RESULT--- "example": 240,
+%   
+%   <blockquote>
+%   </blockquote>
+%   
+%   ---\RESULT---
+
 <<<
 >
 >  
 > 
 >>>
+documentBegin
+blockQuoteBegin
+blockQuoteEnd
+documentEnd

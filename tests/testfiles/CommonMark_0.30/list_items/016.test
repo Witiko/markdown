@@ -1,3 +1,17 @@
+%   ---RESULT--- "example": 268,
+%   
+%   <ol start="3">
+%   <li>ok</li>
+%   </ol>
+%   
+%   ---\RESULT---
+
 <<<
 003. ok
 >>>
+documentBegin
+olBeginTight
+ulItem
+ulItemEnd
+olEndTight
+documentEnd

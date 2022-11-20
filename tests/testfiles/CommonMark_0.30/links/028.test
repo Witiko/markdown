@@ -1,3 +1,16 @@
+%   ---RESULT--- "example": 508,
+%   
+%   <p><a href="/url" title="title &quot;and&quot; title">link</a></p>
+%   
+%   ---\RESULT---
+
 <<<
 [link](/url 'title "and" title')
 >>>
+documentBegin
+BEGIN link
+- label: link
+- URI: /url
+- title: title &quot;and&quot; title
+END link
+documentEnd

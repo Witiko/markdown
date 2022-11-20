@@ -1,3 +1,11 @@
+%   ---RESULT--- "example": 63,
+%   
+%   <p>####### foo</p>
+%   
+%   ---\RESULT---
+
 <<<
 ####### foo
 >>>
+documentBegin
+documentEnd

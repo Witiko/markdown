@@ -1,4 +1,18 @@
+%   ---RESULT--- "example": 614,
+%   
+%   <p><a  /><b2
+%   data="foo" ></p>
+%   
+%   ---\RESULT---
+
 <<<
 <a  /><b2
 data="foo" >
 >>>
+documentBegin
+BEGIN link
+- label: 
+- URI: 
+- title: 
+END link
+documentEnd

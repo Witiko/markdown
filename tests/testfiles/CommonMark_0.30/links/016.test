@@ -1,3 +1,11 @@
+%   ---RESULT--- "example": 496,
+%   
+%   <p>[link](foo(and(bar))</p>
+%   
+%   ---\RESULT---
+
 <<<
 [link](foo(and(bar))
 >>>
+documentBegin
+documentEnd

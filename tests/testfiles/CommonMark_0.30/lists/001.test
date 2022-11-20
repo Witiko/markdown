@@ -1,5 +1,32 @@
+%   ---RESULT--- "example": 301,
+%   
+%   <ul>
+%   <li>foo</li>
+%   <li>bar</li>
+%   </ul>
+%   <ul>
+%   <li>baz</li>
+%   </ul>
+%   
+%   ---\RESULT---
+
 <<<
 - foo
 - bar
 + baz
 >>>
+documentBegin
+ulBeginTight
+ulItem
+ulItemEnd
+interblockSeparator
+ulItem
+ulItemEnd
+ulEndTight
+interblockSeparator
+ulBeginTight
+interblockSeparator
+ulItem
+ulItemEnd
+ulEndTight
+documentEnd

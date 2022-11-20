@@ -1,3 +1,13 @@
+%   ---RESULT--- "example": 196,
+%   
+%   <p><a href="/url" title="
+%   title
+%   line1
+%   line2
+%   ">foo</a></p>
+%   
+%   ---\RESULT---
+
 <<<
 [foo]: /url '
 title
@@ -7,3 +17,14 @@ line2
 
 [foo]
 >>>
+documentBegin
+BEGIN link
+- label: foo
+- URI: /url
+- title: 
+title
+line1
+line2
+
+END link
+documentEnd

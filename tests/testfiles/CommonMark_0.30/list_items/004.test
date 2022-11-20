@@ -1,5 +1,23 @@
+%   ---RESULT--- "example": 256,
+%   
+%   <ul>
+%   <li>
+%   <p>one</p>
+%   <p>two</p>
+%   </li>
+%   </ul>
+%   
+%   ---\RESULT---
+
 <<<
 - one
 
   two
 >>>
+documentBegin
+ulBeginTight
+ulItem
+interblockSeparator
+ulItemEnd
+ulEndTight
+documentEnd

@@ -1,3 +1,16 @@
+%   ---RESULT--- "example": 22,
+%   
+%   <p><a href="/bar*" title="ti*tle">foo</a></p>
+%   
+%   ---\RESULT---
+
 <<<
 [foo](/bar\* "ti\*tle")
 >>>
+documentBegin
+BEGIN link
+- label: foo
+- URI: /bar*
+- title: ti*tle
+END link
+documentEnd

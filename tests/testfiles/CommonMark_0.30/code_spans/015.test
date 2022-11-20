@@ -1,3 +1,12 @@
+%   ---RESULT--- "example": 342,
+%   
+%   <p>[not a <code>link](/foo</code>)</p>
+%   
+%   ---\RESULT---
+
 <<<
 [not a `link](/foo`)
 >>>
+documentBegin
+codeSpan: link](/foo
+documentEnd

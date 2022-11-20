@@ -1,3 +1,11 @@
+%   ---RESULT--- "example": 492,
+%   
+%   <p>[link](&lt;foo&gt;)</p>
+%   
+%   ---\RESULT---
+
 <<<
 [link](<foo\>)
 >>>
+documentBegin
+documentEnd

@@ -1,3 +1,11 @@
+%   ---RESULT--- "example": 627,
+%   
+%   <p>foo <?php echo $a; ?></p>
+%   
+%   ---\RESULT---
+
 <<<
 foo <?php echo $a; ?>
 >>>
+documentBegin
+documentEnd

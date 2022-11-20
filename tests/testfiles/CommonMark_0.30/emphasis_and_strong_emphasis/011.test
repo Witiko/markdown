@@ -1,3 +1,11 @@
+%   ---RESULT--- "example": 360,
+%   
+%   <p>5_6_78</p>
+%   
+%   ---\RESULT---
+
 <<<
 5_6_78
 >>>
+documentBegin
+documentEnd

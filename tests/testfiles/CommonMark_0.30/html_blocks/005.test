@@ -1,3 +1,11 @@
+%   ---RESULT--- "example": 152,
+%   
+%   <DIV CLASS="foo">
+%   <p><em>Markdown</em></p>
+%   </DIV>
+%   
+%   ---\RESULT---
+
 <<<
 <DIV CLASS="foo">
 
@@ -5,3 +13,6 @@
 
 </DIV>
 >>>
+documentBegin
+emphasis: Markdown
+documentEnd

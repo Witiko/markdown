@@ -1,3 +1,16 @@
+%   ---RESULT--- "example": 31,
+%   
+%   <a href="&ouml;&ouml;.html">
+%   
+%   ---\RESULT---
+
 <<<
 <a href="&ouml;&ouml;.html">
 >>>
+documentBegin
+BEGIN link
+- label: 
+- URI: &ouml;&ouml;.html
+- title: 
+END link
+documentEnd

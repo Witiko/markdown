@@ -1,3 +1,16 @@
+%   ---RESULT--- "example": 191,
+%   
+%   <table>
+%     <tr>
+%   <pre><code>&lt;td&gt;
+%     Hi
+%   &lt;/td&gt;
+%   </code></pre>
+%     </tr>
+%   </table>
+%   
+%   ---\RESULT---
+
 <<<
 <table>
 
@@ -11,3 +24,5 @@
 
 </table>
 >>>
+documentBegin
+documentEnd

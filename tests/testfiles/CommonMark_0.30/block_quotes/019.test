@@ -1,5 +1,27 @@
+%   ---RESULT--- "example": 246,
+%   
+%   <blockquote>
+%   <p>aaa</p>
+%   </blockquote>
+%   <hr />
+%   <blockquote>
+%   <p>bbb</p>
+%   </blockquote>
+%   
+%   ---\RESULT---
+
 <<<
 > aaa
 ***
 > bbb
 >>>
+documentBegin
+blockQuoteBegin
+blockQuoteEnd
+interblockSeparator
+thematicBreak
+interblockSeparator
+blockQuoteBegin
+interblockSeparator
+blockQuoteEnd
+documentEnd

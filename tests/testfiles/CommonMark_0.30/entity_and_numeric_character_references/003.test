@@ -1,3 +1,11 @@
+%   ---RESULT--- "example": 27,
+%   
+%   <p>&quot; ആ ಫ</p>
+%   
+%   ---\RESULT---
+
 <<<
 &#X22; &#XD06; &#xcab;
 >>>
+documentBegin
+documentEnd

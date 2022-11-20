@@ -1,5 +1,15 @@
+%   ---RESULT--- "example": 163,
+%   
+%   <Warning>
+%   *bar*
+%   </Warning>
+%   
+%   ---\RESULT---
+
 <<<
 <Warning>
 *bar*
 </Warning>
 >>>
+documentBegin
+documentEnd

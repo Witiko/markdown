@@ -1,5 +1,18 @@
+%   ---RESULT--- "example": 530,
+%   
+%   <p><a href="/uri"><img src="moon.jpg" alt="moon" /></a></p>
+%   
+%   ---\RESULT---
+
 <<<
 [![moon](moon.jpg)][ref]
 
 [ref]: /uri
 >>>
+documentBegin
+BEGIN link
+- label: (BEGIN image)(- label: moon)(- URI: moon.jpg)(- title: )(END image)
+- URI: /uri
+- title: 
+END link
+documentEnd

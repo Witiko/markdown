@@ -1,6 +1,17 @@
+%   ---RESULT--- "example": 213,
+%   
+%   <p>Foo
+%   [bar]: /baz</p>
+%   <p>[bar]</p>
+%   
+%   ---\RESULT---
+
 <<<
 Foo
 [bar]: /baz
 
 [bar]
 >>>
+documentBegin
+interblockSeparator
+documentEnd

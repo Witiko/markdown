@@ -1,3 +1,9 @@
+%   ---RESULT--- "example": 335,
+%   
+%   <p><code>foo bar   baz</code></p>
+%   
+%   ---\RESULT---
+
 <<<
 ``
 foo
@@ -5,3 +11,6 @@ bar
 baz
 ``
 >>>
+documentBegin
+codeSpan: foo bar   baz
+documentEnd

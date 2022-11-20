@@ -1,5 +1,27 @@
+%   ---RESULT--- "example": 283,
+%   
+%   <ol>
+%   <li>foo</li>
+%   <li></li>
+%   <li>bar</li>
+%   </ol>
+%   
+%   ---\RESULT---
+
 <<<
 1. foo
 2.
 3. bar
 >>>
+documentBegin
+olBeginTight
+ulItem
+ulItemEnd
+interblockSeparator
+ulItem
+ulItemEnd
+interblockSeparator
+ulItem
+ulItemEnd
+olEndTight
+documentEnd

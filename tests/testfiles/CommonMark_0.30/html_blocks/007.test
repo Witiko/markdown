@@ -1,5 +1,15 @@
+%   ---RESULT--- "example": 154,
+%   
+%   <div id="foo" class="bar
+%     baz">
+%   </div>
+%   
+%   ---\RESULT---
+
 <<<
 <div id="foo" class="bar
   baz">
 </div>
 >>>
+documentBegin
+documentEnd

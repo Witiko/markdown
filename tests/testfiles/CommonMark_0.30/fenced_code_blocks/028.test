@@ -1,5 +1,18 @@
+%   ---RESULT--- "example": 146,
+%   
+%   <pre><code class="language-aa">foo
+%   </code></pre>
+%   
+%   ---\RESULT---
+
 <<<
 ~~~ aa ``` ~~~
 foo
 ~~~
 >>>
+documentBegin
+BEGIN fencedCode
+- src: acbd18db4cc2f85cedef654fccc4a4d8.verbatim
+- infostring: aa
+END fencedCode
+documentEnd

@@ -1,6 +1,22 @@
+%   ---RESULT--- "example": 110,
+%   
+%   <pre><code>&lt;a/&gt;
+%   *hi*
+%   
+%   - one
+%   </code></pre>
+%   
+%   ---\RESULT---
+
 <<<
     <a/>
     *hi*
 
     - one
 >>>
+documentBegin
+BEGIN fencedCode
+- src: 67f8e352e5bd9c96663de8d2956e6f56.verbatim
+- infostring: 
+END fencedCode
+documentEnd

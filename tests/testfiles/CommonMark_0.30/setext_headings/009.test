@@ -1,3 +1,12 @@
+%   ---RESULT--- "example": 88,
+%   
+%   <p>Foo
+%   = =</p>
+%   <p>Foo</p>
+%   <hr />
+%   
+%   ---\RESULT---
+
 <<<
 Foo
 = =
@@ -5,3 +14,8 @@ Foo
 Foo
 --- -
 >>>
+documentBegin
+interblockSeparator
+interblockSeparator
+thematicBreak
+documentEnd

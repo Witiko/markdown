@@ -1,4 +1,29 @@
+%   ---RESULT--- "example": 292,
+%   
+%   <blockquote>
+%   <ol>
+%   <li>
+%   <blockquote>
+%   <p>Blockquote
+%   continued here.</p>
+%   </blockquote>
+%   </li>
+%   </ol>
+%   </blockquote>
+%   
+%   ---\RESULT---
+
 <<<
 > 1. > Blockquote
 continued here.
 >>>
+documentBegin
+blockQuoteBegin
+olBeginTight
+ulItem
+blockQuoteBegin
+blockQuoteEnd
+ulItemEnd
+olEndTight
+blockQuoteEnd
+documentEnd

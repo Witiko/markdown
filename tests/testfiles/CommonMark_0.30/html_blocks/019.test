@@ -1,5 +1,15 @@
+%   ---RESULT--- "example": 166,
+%   
+%   <del>
+%   *foo*
+%   </del>
+%   
+%   ---\RESULT---
+
 <<<
 <del>
 *foo*
 </del>
 >>>
+documentBegin
+documentEnd

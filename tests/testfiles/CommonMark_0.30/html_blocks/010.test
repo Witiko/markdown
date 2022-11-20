@@ -1,4 +1,13 @@
+%   ---RESULT--- "example": 157,
+%   
+%   <div class
+%   foo
+%   
+%   ---\RESULT---
+
 <<<
 <div class
 foo
 >>>
+documentBegin
+documentEnd

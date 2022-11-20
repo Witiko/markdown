@@ -1,4 +1,13 @@
+%   ---RESULT--- "example": 649,
+%   
+%   <p>foo
+%   baz</p>
+%   
+%   ---\RESULT---
+
 <<<
 foo 
  baz
 >>>
+documentBegin
+documentEnd

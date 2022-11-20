@@ -1,5 +1,20 @@
+%   ---RESULT--- "example": 211,
+%   
+%   <pre><code>[foo]: /url &quot;title&quot;
+%   </code></pre>
+%   <p>[foo]</p>
+%   
+%   ---\RESULT---
+
 <<<
     [foo]: /url "title"
 
 [foo]
 >>>
+documentBegin
+BEGIN fencedCode
+- src: bfc2fd7150fb8c937dc4ed2ba022c695.verbatim
+- infostring: 
+END fencedCode
+interblockSeparator
+documentEnd

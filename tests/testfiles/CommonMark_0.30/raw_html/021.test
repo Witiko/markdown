@@ -1,3 +1,11 @@
+%   ---RESULT--- "example": 632,
+%   
+%   <p>&lt;a href=&quot;&quot;&quot;&gt;</p>
+%   
+%   ---\RESULT---
+
 <<<
 <a href="\"">
 >>>
+documentBegin
+documentEnd

@@ -1,5 +1,35 @@
+%   ---RESULT--- "example": 9,
+%   
+%   <ul>
+%   <li>foo
+%   <ul>
+%   <li>bar
+%   <ul>
+%   <li>baz</li>
+%   </ul>
+%   </li>
+%   </ul>
+%   </li>
+%   </ul>
+%   
+%   ---\RESULT---
+
 <<<
  - foo
    - bar
 	 - baz
 >>>
+documentBegin
+ulBeginTight
+ulItem
+ulBeginTight
+ulItem
+ulBeginTight
+ulItem
+ulItemEnd
+ulEndTight
+ulItemEnd
+ulEndTight
+ulItemEnd
+ulEndTight
+documentEnd

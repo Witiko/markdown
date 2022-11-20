@@ -1,4 +1,16 @@
+%   ---RESULT--- "example": 334,
+%   
+%   <p><code> </code>
+%   <code>  </code></p>
+%   
+%   ---\RESULT---
+
 <<<
 ` `
 `  `
 >>>
+documentBegin
+codeSpan:  
+interblockSeparator
+codeSpan:   
+documentEnd

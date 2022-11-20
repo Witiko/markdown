@@ -1,4 +1,14 @@
+%   ---RESULT--- "example": 176,
+%   
+%   <style>p{color:red;}</style>
+%   <p><em>foo</em></p>
+%   
+%   ---\RESULT---
+
 <<<
 <style>p{color:red;}</style>
 *foo*
 >>>
+documentBegin
+emphasis: foo
+documentEnd

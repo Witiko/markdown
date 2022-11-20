@@ -1,6 +1,17 @@
+%   ---RESULT--- "example": 155,
+%   
+%   <div>
+%   *foo*
+%   <p><em>bar</em></p>
+%   
+%   ---\RESULT---
+
 <<<
 <div>
 *foo*
 
 *bar*
 >>>
+documentBegin
+emphasis: bar
+documentEnd

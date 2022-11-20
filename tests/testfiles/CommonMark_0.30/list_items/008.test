@@ -1,5 +1,29 @@
+%   ---RESULT--- "example": 260,
+%   
+%   <blockquote>
+%   <blockquote>
+%   <ul>
+%   <li>one</li>
+%   </ul>
+%   <p>two</p>
+%   </blockquote>
+%   </blockquote>
+%   
+%   ---\RESULT---
+
 <<<
 >>- one
 >>
   >  > two
 >>>
+documentBegin
+blockQuoteBegin
+blockQuoteBegin
+ulBeginTight
+ulItem
+ulItemEnd
+ulEndTight
+interblockSeparator
+blockQuoteEnd
+blockQuoteEnd
+documentEnd

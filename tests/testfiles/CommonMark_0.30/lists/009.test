@@ -1,3 +1,20 @@
+%   ---RESULT--- "example": 309,
+%   
+%   <ul>
+%   <li>
+%   <p>foo</p>
+%   <p>notcode</p>
+%   </li>
+%   <li>
+%   <p>foo</p>
+%   </li>
+%   </ul>
+%   <!-- -->
+%   <pre><code>code
+%   </code></pre>
+%   
+%   ---\RESULT---
+
 <<<
 -   foo
 
@@ -9,3 +26,20 @@
 
     code
 >>>
+documentBegin
+ulBeginTight
+ulItem
+interblockSeparator
+ulItemEnd
+interblockSeparator
+ulItem
+interblockSeparator
+ulItemEnd
+ulEndTight
+interblockSeparator
+interblockSeparator
+BEGIN fencedCode
+- src: c13367945d5d4c91047b3b50234aa7ab.verbatim
+- infostring: 
+END fencedCode
+documentEnd

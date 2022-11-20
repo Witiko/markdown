@@ -1,3 +1,16 @@
+%   ---RESULT--- "example": 612,
+%   
+%   <p><a><bab><c2c></p>
+%   
+%   ---\RESULT---
+
 <<<
 <a><bab><c2c>
 >>>
+documentBegin
+BEGIN link
+- label: 
+- URI: 
+- title: 
+END link
+documentEnd

@@ -1,3 +1,24 @@
+%   ---RESULT--- "example": 7,
+%   
+%   <ul>
+%   <li>
+%   <pre><code>  foo
+%   </code></pre>
+%   </li>
+%   </ul>
+%   
+%   ---\RESULT---
+
 <<<
 -		foo
 >>>
+documentBegin
+ulBeginTight
+ulItem
+BEGIN fencedCode
+- src: 8f258c63c0e290338dc5f8d2f05855d3.verbatim
+- infostring: 
+END fencedCode
+ulItemEnd
+ulEndTight
+documentEnd

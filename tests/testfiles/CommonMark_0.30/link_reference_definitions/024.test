@@ -1,6 +1,23 @@
+%   ---RESULT--- "example": 215,
+%   
+%   <h1>bar</h1>
+%   <p><a href="/url">foo</a></p>
+%   
+%   ---\RESULT---
+
 <<<
 [foo]: /url
 bar
 ===
 [foo]
 >>>
+documentBegin
+headingOne: bar
+interblockSeparator
+interblockSeparator
+BEGIN link
+- label: foo
+- URI: /url
+- title: 
+END link
+documentEnd

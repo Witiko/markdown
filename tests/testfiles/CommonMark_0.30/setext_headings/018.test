@@ -1,4 +1,12 @@
+%   ---RESULT--- "example": 97,
+%   
+%   <p>====</p>
+%   
+%   ---\RESULT---
+
 <<<
 
 ====
 >>>
+documentBegin
+documentEnd

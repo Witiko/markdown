@@ -1,3 +1,19 @@
+%   ---RESULT--- "example": 263,
+%   
+%   <ol>
+%   <li>
+%   <p>foo</p>
+%   <pre><code>bar
+%   </code></pre>
+%   <p>baz</p>
+%   <blockquote>
+%   <p>bam</p>
+%   </blockquote>
+%   </li>
+%   </ol>
+%   
+%   ---\RESULT---
+
 <<<
 1.  foo
 
@@ -9,3 +25,20 @@
 
     > bam
 >>>
+documentBegin
+olBeginTight
+ulItem
+interblockSeparator
+interblockSeparator
+BEGIN fencedCode
+- src: 37b51d194a7513e45b56f6524f2d51f2.verbatim
+- infostring: 
+END fencedCode
+interblockSeparator
+interblockSeparator
+blockQuoteBegin
+interblockSeparator
+blockQuoteEnd
+ulItemEnd
+olEndTight
+documentEnd

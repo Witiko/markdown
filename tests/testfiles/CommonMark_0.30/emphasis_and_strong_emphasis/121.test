@@ -1,3 +1,12 @@
+%   ---RESULT--- "example": 470,
+%   
+%   <p>**foo <strong>bar baz</strong></p>
+%   
+%   ---\RESULT---
+
 <<<
 **foo **bar baz**
 >>>
+documentBegin
+strongEmphasis: bar baz
+documentEnd

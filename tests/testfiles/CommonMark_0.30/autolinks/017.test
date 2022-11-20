@@ -1,3 +1,11 @@
+%   ---RESULT--- "example": 609,
+%   
+%   <p>&lt;foo.bar.baz&gt;</p>
+%   
+%   ---\RESULT---
+
 <<<
 <foo.bar.baz>
 >>>
+documentBegin
+documentEnd

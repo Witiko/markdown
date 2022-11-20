@@ -1,3 +1,11 @@
+%   ---RESULT--- "example": 167,
+%   
+%   <del>
+%   <p><em>foo</em></p>
+%   </del>
+%   
+%   ---\RESULT---
+
 <<<
 <del>
 
@@ -5,3 +13,6 @@
 
 </del>
 >>>
+documentBegin
+emphasis: foo
+documentEnd

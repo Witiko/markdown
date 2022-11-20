@@ -1,4 +1,13 @@
+%   ---RESULT--- "example": 624,
+%   
+%   <p>foo <!-- this is a
+%   comment - with hyphen --></p>
+%   
+%   ---\RESULT---
+
 <<<
 foo <!-- this is a
 comment - with hyphen -->
 >>>
+documentBegin
+documentEnd

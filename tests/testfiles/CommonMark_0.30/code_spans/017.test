@@ -1,3 +1,16 @@
+%   ---RESULT--- "example": 344,
+%   
+%   <p><a href="`">`</p>
+%   
+%   ---\RESULT---
+
 <<<
 <a href="`">`
 >>>
+documentBegin
+BEGIN link
+- label: `
+- URI: `
+- title: 
+END link
+documentEnd

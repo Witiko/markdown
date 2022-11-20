@@ -1,5 +1,15 @@
+%   ---RESULT--- "example": 46,
+%   
+%   <p>--
+%   **
+%   __</p>
+%   
+%   ---\RESULT---
+
 <<<
 --
 **
 __
 >>>
+documentBegin
+documentEnd

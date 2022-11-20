@@ -1,3 +1,12 @@
+%   ---RESULT--- "example": 285,
+%   
+%   <p>foo
+%   *</p>
+%   <p>foo
+%   1.</p>
+%   
+%   ---\RESULT---
+
 <<<
 foo
 *
@@ -5,3 +14,6 @@ foo
 foo
 1.
 >>>
+documentBegin
+interblockSeparator
+documentEnd

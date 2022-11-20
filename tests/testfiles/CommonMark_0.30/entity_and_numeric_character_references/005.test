@@ -1,3 +1,11 @@
+%   ---RESULT--- "example": 29,
+%   
+%   <p>&amp;copy</p>
+%   
+%   ---\RESULT---
+
 <<<
 &copy
 >>>
+documentBegin
+documentEnd

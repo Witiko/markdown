@@ -1,5 +1,20 @@
+%   ---RESULT--- "example": 47,
+%   
+%   <hr />
+%   <hr />
+%   <hr />
+%   
+%   ---\RESULT---
+
 <<<
  ***
   ***
    ***
 >>>
+documentBegin
+thematicBreak
+interblockSeparator
+thematicBreak
+interblockSeparator
+thematicBreak
+documentEnd

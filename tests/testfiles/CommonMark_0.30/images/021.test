@@ -1,5 +1,13 @@
+%   ---RESULT--- "example": 591,
+%   
+%   <p>![foo]</p>
+%   
+%   ---\RESULT---
+
 <<<
 !\[foo]
 
 [foo]: /url "title"
 >>>
+documentBegin
+documentEnd

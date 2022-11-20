@@ -1,3 +1,24 @@
+%   ---RESULT--- "example": 326,
+%   
+%   <ul>
+%   <li>
+%   <p>a</p>
+%   <ul>
+%   <li>b</li>
+%   <li>c</li>
+%   </ul>
+%   </li>
+%   <li>
+%   <p>d</p>
+%   <ul>
+%   <li>e</li>
+%   <li>f</li>
+%   </ul>
+%   </li>
+%   </ul>
+%   
+%   ---\RESULT---
+
 <<<
 - a
   - b
@@ -7,3 +28,31 @@
   - e
   - f
 >>>
+documentBegin
+ulBeginTight
+ulItem
+interblockSeparator
+ulBeginTight
+interblockSeparator
+ulItem
+ulItemEnd
+interblockSeparator
+ulItem
+ulItemEnd
+ulEndTight
+ulItemEnd
+interblockSeparator
+ulItem
+interblockSeparator
+interblockSeparator
+ulBeginTight
+interblockSeparator
+ulItem
+ulItemEnd
+interblockSeparator
+ulItem
+ulItemEnd
+ulEndTight
+ulItemEnd
+ulEndTight
+documentEnd

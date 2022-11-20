@@ -1,3 +1,15 @@
+%   ---RESULT--- "example": 115,
+%   
+%   <h1>Heading</h1>
+%   <pre><code>foo
+%   </code></pre>
+%   <h2>Heading</h2>
+%   <pre><code>foo
+%   </code></pre>
+%   <hr />
+%   
+%   ---\RESULT---
+
 <<<
 # Heading
     foo
@@ -6,3 +18,22 @@ Heading
     foo
 ----
 >>>
+documentBegin
+headingOne: Heading
+interblockSeparator
+interblockSeparator
+BEGIN fencedCode
+- src: acbd18db4cc2f85cedef654fccc4a4d8.verbatim
+- infostring: 
+END fencedCode
+interblockSeparator
+headingTwo: Heading
+interblockSeparator
+interblockSeparator
+BEGIN fencedCode
+- src: acbd18db4cc2f85cedef654fccc4a4d8.verbatim
+- infostring: 
+END fencedCode
+interblockSeparator
+thematicBreak
+documentEnd

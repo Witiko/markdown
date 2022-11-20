@@ -1,5 +1,15 @@
+%   ---RESULT--- "example": 223,
+%   
+%   <p>aaa
+%   bbb
+%   ccc</p>
+%   
+%   ---\RESULT---
+
 <<<
 aaa
              bbb
                                        ccc
 >>>
+documentBegin
+documentEnd

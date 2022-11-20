@@ -1,3 +1,12 @@
+%   ---RESULT--- "example": 220,
+%   
+%   <p>aaa
+%   bbb</p>
+%   <p>ccc
+%   ddd</p>
+%   
+%   ---\RESULT---
+
 <<<
 aaa
 bbb
@@ -5,3 +14,6 @@ bbb
 ccc
 ddd
 >>>
+documentBegin
+interblockSeparator
+documentEnd

@@ -1,3 +1,11 @@
+%   ---RESULT--- "example": 41,
+%   
+%   <p>[a](url &quot;tit&quot;)</p>
+%   
+%   ---\RESULT---
+
 <<<
 [a](url &quot;tit&quot;)
 >>>
+documentBegin
+documentEnd

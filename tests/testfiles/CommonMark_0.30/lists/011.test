@@ -1,3 +1,19 @@
+%   ---RESULT--- "example": 311,
+%   
+%   <ol>
+%   <li>
+%   <p>a</p>
+%   </li>
+%   <li>
+%   <p>b</p>
+%   </li>
+%   <li>
+%   <p>c</p>
+%   </li>
+%   </ol>
+%   
+%   ---\RESULT---
+
 <<<
 1. a
 
@@ -5,3 +21,17 @@
 
    3. c
 >>>
+documentBegin
+olBeginTight
+ulItem
+ulItemEnd
+interblockSeparator
+ulItem
+interblockSeparator
+ulItemEnd
+interblockSeparator
+ulItem
+interblockSeparator
+ulItemEnd
+olEndTight
+documentEnd

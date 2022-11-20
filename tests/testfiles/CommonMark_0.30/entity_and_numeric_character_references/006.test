@@ -1,3 +1,11 @@
+%   ---RESULT--- "example": 30,
+%   
+%   <p>&amp;MadeUpEntity;</p>
+%   
+%   ---\RESULT---
+
 <<<
 &MadeUpEntity;
 >>>
+documentBegin
+documentEnd

@@ -1,3 +1,15 @@
+%   ---RESULT--- "example": 169,
+%   
+%   <pre language="haskell"><code>
+%   import Text.HTML.TagSoup
+%   
+%   main :: IO ()
+%   main = print $ parseTags tags
+%   </code></pre>
+%   <p>okay</p>
+%   
+%   ---\RESULT---
+
 <<<
 <pre language="haskell"><code>
 import Text.HTML.TagSoup
@@ -7,3 +19,10 @@ main = print $ parseTags tags
 </code></pre>
 okay
 >>>
+documentBegin
+BEGIN fencedCode
+- src: cd99514d2e5d65914a38ad82c4c5a03b.verbatim
+- infostring: 
+END fencedCode
+interblockSeparator
+documentEnd

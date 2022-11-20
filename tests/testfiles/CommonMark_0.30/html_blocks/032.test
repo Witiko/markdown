@@ -1,3 +1,13 @@
+%   ---RESULT--- "example": 179,
+%   
+%   <!-- Foo
+%   
+%   bar
+%      baz -->
+%   <p>okay</p>
+%   
+%   ---\RESULT---
+
 <<<
 <!-- Foo
 
@@ -5,3 +15,5 @@ bar
    baz -->
 okay
 >>>
+documentBegin
+documentEnd

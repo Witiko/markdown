@@ -1,3 +1,12 @@
+%   ---RESULT--- "example": 10,
+%   
+%   <h1>Foo</h1>
+%   
+%   ---\RESULT---
+
 <<<
 #	Foo
 >>>
+documentBegin
+headingOne: Foo
+documentEnd

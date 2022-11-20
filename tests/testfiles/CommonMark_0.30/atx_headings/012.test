@@ -1,3 +1,12 @@
+%   ---RESULT--- "example": 73,
+%   
+%   <h3>foo</h3>
+%   
+%   ---\RESULT---
+
 <<<
 ### foo ###     
 >>>
+documentBegin
+headingThree: foo
+documentEnd

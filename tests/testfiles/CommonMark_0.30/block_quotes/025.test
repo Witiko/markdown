@@ -1,5 +1,29 @@
+%   ---RESULT--- "example": 252,
+%   
+%   <blockquote>
+%   <pre><code>code
+%   </code></pre>
+%   </blockquote>
+%   <blockquote>
+%   <p>not code</p>
+%   </blockquote>
+%   
+%   ---\RESULT---
+
 <<<
 >     code
 
 >    not code
 >>>
+documentBegin
+blockQuoteBegin
+BEGIN fencedCode
+- src: c13367945d5d4c91047b3b50234aa7ab.verbatim
+- infostring: 
+END fencedCode
+blockQuoteEnd
+interblockSeparator
+blockQuoteBegin
+interblockSeparator
+blockQuoteEnd
+documentEnd

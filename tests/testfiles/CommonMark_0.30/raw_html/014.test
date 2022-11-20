@@ -1,3 +1,11 @@
+%   ---RESULT--- "example": 625,
+%   
+%   <p>foo &lt;!-- not a comment -- two hyphens --&gt;</p>
+%   
+%   ---\RESULT---
+
 <<<
 foo <!-- not a comment -- two hyphens -->
 >>>
+documentBegin
+documentEnd

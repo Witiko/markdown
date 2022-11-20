@@ -1,4 +1,13 @@
+%   ---RESULT--- "example": 156,
+%   
+%   <div id="foo"
+%   *hi*
+%   
+%   ---\RESULT---
+
 <<<
 <div id="foo"
 *hi*
 >>>
+documentBegin
+documentEnd

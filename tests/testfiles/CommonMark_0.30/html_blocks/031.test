@@ -1,5 +1,15 @@
+%   ---RESULT--- "example": 178,
+%   
+%   <script>
+%   foo
+%   </script>1. *bar*
+%   
+%   ---\RESULT---
+
 <<<
 <script>
 foo
 </script>1. *bar*
 >>>
+documentBegin
+documentEnd

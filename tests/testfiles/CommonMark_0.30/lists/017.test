@@ -1,3 +1,19 @@
+%   ---RESULT--- "example": 317,
+%   
+%   <ul>
+%   <li>
+%   <p>a</p>
+%   </li>
+%   <li>
+%   <p>b</p>
+%   </li>
+%   <li>
+%   <p>d</p>
+%   </li>
+%   </ul>
+%   
+%   ---\RESULT---
+
 <<<
 - a
 - b
@@ -5,3 +21,17 @@
   [ref]: /url
 - d
 >>>
+documentBegin
+ulBeginTight
+ulItem
+ulItemEnd
+interblockSeparator
+ulItem
+interblockSeparator
+ulItemEnd
+interblockSeparator
+ulItem
+interblockSeparator
+ulItemEnd
+ulEndTight
+documentEnd

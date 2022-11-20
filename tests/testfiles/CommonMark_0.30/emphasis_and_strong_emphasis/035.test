@@ -1,3 +1,11 @@
+%   ---RESULT--- "example": 384,
+%   
+%   <p>a__&quot;foo&quot;__</p>
+%   
+%   ---\RESULT---
+
 <<<
 a__"foo"__
 >>>
+documentBegin
+documentEnd

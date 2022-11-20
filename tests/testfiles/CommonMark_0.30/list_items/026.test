@@ -1,3 +1,19 @@
+%   ---RESULT--- "example": 278,
+%   
+%   <ul>
+%   <li>foo</li>
+%   <li>
+%   <pre><code>bar
+%   </code></pre>
+%   </li>
+%   <li>
+%   <pre><code>baz
+%   </code></pre>
+%   </li>
+%   </ul>
+%   
+%   ---\RESULT---
+
 <<<
 -
   foo
@@ -8,3 +24,27 @@
 -
       baz
 >>>
+documentBegin
+ulBeginTight
+ulItem
+ulItemEnd
+interblockSeparator
+ulItem
+interblockSeparator
+interblockSeparator
+BEGIN fencedCode
+- src: 37b51d194a7513e45b56f6524f2d51f2.verbatim
+- infostring: 
+END fencedCode
+ulItemEnd
+interblockSeparator
+ulItem
+interblockSeparator
+interblockSeparator
+BEGIN fencedCode
+- src: 73feffa4b7f6bb68e44cf984c85f6e88.verbatim
+- infostring: 
+END fencedCode
+ulItemEnd
+ulEndTight
+documentEnd

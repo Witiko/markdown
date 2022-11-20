@@ -1,6 +1,17 @@
+%   ---RESULT--- "example": 161,
+%   
+%   <div></div>
+%   ``` c
+%   int x = 33;
+%   ```
+%   
+%   ---\RESULT---
+
 <<<
 <div></div>
 ``` c
 int x = 33;
 ```
 >>>
+documentBegin
+documentEnd

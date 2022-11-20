@@ -1,5 +1,15 @@
+%   ---RESULT--- "example": 25,
+%   
+%   <p>  &amp; © Æ Ď
+%   ¾ ℋ ⅆ
+%   ∲ ≧̸</p>
+%   
+%   ---\RESULT---
+
 <<<
 &nbsp; &amp; &copy; &AElig; &Dcaron;
 &frac34; &HilbertSpace; &DifferentialD;
 &ClockwiseContourIntegral; &ngE;
 >>>
+documentBegin
+documentEnd

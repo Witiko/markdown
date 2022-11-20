@@ -1,5 +1,15 @@
+%   ---RESULT--- "example": 493,
+%   
+%   <p>[a](&lt;b)c
+%   [a](&lt;b)c&gt;
+%   [a](<b>c)</p>
+%   
+%   ---\RESULT---
+
 <<<
 [a](<b)c
 [a](<b)c>
 [a](<b>c)
 >>>
+documentBegin
+documentEnd

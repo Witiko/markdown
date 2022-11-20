@@ -1,3 +1,15 @@
+%   ---RESULT--- "example": 289,
+%   
+%   <pre><code>1.  A paragraph
+%       with two lines.
+%   
+%           indented code
+%   
+%       &gt; A block quote.
+%   </code></pre>
+%   
+%   ---\RESULT---
+
 <<<
     1.  A paragraph
         with two lines.
@@ -6,3 +18,9 @@
 
         > A block quote.
 >>>
+documentBegin
+BEGIN fencedCode
+- src: 318d96c3ecb961cfabf99188a17cf0fc.verbatim
+- infostring: 
+END fencedCode
+documentEnd

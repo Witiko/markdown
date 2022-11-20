@@ -1,3 +1,13 @@
+%   ---RESULT--- "example": 272,
+%   
+%   <pre><code>indented code
+%   </code></pre>
+%   <p>paragraph</p>
+%   <pre><code>more code
+%   </code></pre>
+%   
+%   ---\RESULT---
+
 <<<
     indented code
 
@@ -5,3 +15,16 @@ paragraph
 
     more code
 >>>
+documentBegin
+BEGIN fencedCode
+- src: bf995e3b2610078e871b00000c1fb65f.verbatim
+- infostring: 
+END fencedCode
+interblockSeparator
+interblockSeparator
+interblockSeparator
+BEGIN fencedCode
+- src: edf19530665eedd599d1228679ec3a65.verbatim
+- infostring: 
+END fencedCode
+documentEnd

@@ -1,3 +1,11 @@
+%   ---RESULT--- "example": 629,
+%   
+%   <p>foo <![CDATA[>&<]]></p>
+%   
+%   ---\RESULT---
+
 <<<
 foo <![CDATA[>&<]]>
 >>>
+documentBegin
+documentEnd

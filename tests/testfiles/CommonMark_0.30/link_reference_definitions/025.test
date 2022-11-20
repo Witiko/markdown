@@ -1,5 +1,19 @@
+%   ---RESULT--- "example": 216,
+%   
+%   <p>===
+%   <a href="/url">foo</a></p>
+%   
+%   ---\RESULT---
+
 <<<
 [foo]: /url
 ===
 [foo]
 >>>
+documentBegin
+BEGIN link
+- label: foo
+- URI: /url
+- title: 
+END link
+documentEnd

@@ -1,5 +1,15 @@
+%   ---RESULT--- "example": 164,
+%   
+%   <i class="foo">
+%   *bar*
+%   </i>
+%   
+%   ---\RESULT---
+
 <<<
 <i class="foo">
 *bar*
 </i>
 >>>
+documentBegin
+documentEnd

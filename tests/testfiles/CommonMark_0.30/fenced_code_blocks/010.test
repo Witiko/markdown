@@ -1,6 +1,25 @@
+%   ---RESULT--- "example": 128,
+%   
+%   <blockquote>
+%   <pre><code>aaa
+%   </code></pre>
+%   </blockquote>
+%   <p>bbb</p>
+%   
+%   ---\RESULT---
+
 <<<
 > ```
 > aaa
 
 bbb
 >>>
+documentBegin
+blockQuoteBegin
+BEGIN fencedCode
+- src: 47bce5c74f589f4867dbd57e9ca9f808.verbatim
+- infostring: 
+END fencedCode
+blockQuoteEnd
+interblockSeparator
+documentEnd

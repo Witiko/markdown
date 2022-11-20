@@ -1,4 +1,26 @@
+%   ---RESULT--- "example": 323,
+%   
+%   <ul>
+%   <li>a
+%   <ul>
+%   <li>b</li>
+%   </ul>
+%   </li>
+%   </ul>
+%   
+%   ---\RESULT---
+
 <<<
 - a
   - b
 >>>
+documentBegin
+ulBeginTight
+ulItem
+ulBeginTight
+ulItem
+ulItemEnd
+ulEndTight
+ulItemEnd
+ulEndTight
+documentEnd
