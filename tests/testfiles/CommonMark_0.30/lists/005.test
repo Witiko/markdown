@@ -15,7 +15,7 @@ documentBegin
 interblockSeparator
 olBeginTight
 interblockSeparator
-ulItem
-ulItemEnd
+olItemWithNumber: 1
+olItemEnd
 olEndTight
 documentEnd

@@ -9,8 +9,8 @@
 >>>
 documentBegin
 BEGIN link
-- label: http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean
-- URI: http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean
+- label: http://foo.bar.baz/test?q=hello(ampersand)id=22(ampersand)boolean
+- URI: http://foo.bar.baz/test?q=hello(ampersand)id=22(ampersand)boolean
 - title: 
 END link
 documentEnd

@@ -8,5 +8,5 @@
 _a `_`_
 >>>
 documentBegin
-emphasis: a (codeSpan: _)
+emphasis: a (codeSpan: (underscore))
 documentEnd

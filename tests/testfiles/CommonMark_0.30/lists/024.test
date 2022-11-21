@@ -10,6 +10,7 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionFencedCode{true}
 <<<
 1. ```
    foo
@@ -19,12 +20,12 @@
 >>>
 documentBegin
 olBeginTight
-ulItem
+olItemWithNumber: 1
 BEGIN fencedCode
 - src: acbd18db4cc2f85cedef654fccc4a4d8.verbatim
 - infostring: 
 END fencedCode
 interblockSeparator
-ulItemEnd
+olItemEnd
 olEndTight
 documentEnd

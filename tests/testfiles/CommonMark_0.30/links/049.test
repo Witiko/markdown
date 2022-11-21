@@ -11,7 +11,7 @@
 >>>
 documentBegin
 BEGIN link
-- label: link (emphasis: foo (strongEmphasis: bar) (interblockSeparator)(codeSpan: #))
+- label: link (emphasis: foo (strongEmphasis: bar) (codeSpan: (hash)))
 - URI: /uri
 - title: 
 END link

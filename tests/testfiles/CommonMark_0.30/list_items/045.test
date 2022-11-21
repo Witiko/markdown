@@ -15,12 +15,11 @@
 >>>
 documentBegin
 olBeginTight
-ulItem
-ulItemEnd
+olItemWithNumber: 10
+olItemEnd
 olEndTight
 interblockSeparator
 ulBeginTight
-interblockSeparator
 ulItem
 ulItemEnd
 ulEndTight

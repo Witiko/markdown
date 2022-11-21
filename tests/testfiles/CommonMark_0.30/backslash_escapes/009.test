@@ -9,7 +9,7 @@
 >>>
 documentBegin
 BEGIN link
-- label: http://example.com?find=\*
+- label: http://example.com?find=(backslash)*
 - URI: http://example.com?find=%5C*
 - title: 
 END link

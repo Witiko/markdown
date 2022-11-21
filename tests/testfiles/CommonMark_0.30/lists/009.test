@@ -15,6 +15,7 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionHtml{true}
 <<<
 -   foo
 
@@ -31,15 +32,11 @@ ulBeginTight
 ulItem
 interblockSeparator
 ulItemEnd
-interblockSeparator
 ulItem
-interblockSeparator
 ulItemEnd
 ulEndTight
 interblockSeparator
+inlineHtmlComment:  
 interblockSeparator
-BEGIN fencedCode
-- src: c13367945d5d4c91047b3b50234aa7ab.verbatim
-- infostring: 
-END fencedCode
+inputVerbatim: ./_markdown_test/c13367945d5d4c91047b3b50234aa7ab.verbatim
 documentEnd

@@ -6,10 +6,12 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionHtml{true}
 <<<
 <script>
 foo
 </script>1. *bar*
 >>>
 documentBegin
+inputBlockHtmlElement: ./_markdown_test/d45637b2c8a75cfdedab999cd0cfdc33.verbatim
 documentEnd

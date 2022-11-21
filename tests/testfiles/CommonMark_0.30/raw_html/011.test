@@ -4,8 +4,11 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionHtml{true}
 <<<
 </a></foo >
 >>>
 documentBegin
+inlineHtmlTag: </a>
+inlineHtmlTag: </foo >
 documentEnd

@@ -8,6 +8,7 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionHtml{true}
 <<<
 <!-- Foo
 
@@ -16,4 +17,7 @@ bar
 okay
 >>>
 documentBegin
+blockHtmlCommentBegin
+blockHtmlCommentEnd
+interblockSeparator
 documentEnd

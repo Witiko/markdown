@@ -23,15 +23,11 @@
 >>>
 documentBegin
 olBeginTight
-ulItem
-ulItemEnd
-interblockSeparator
-ulItem
-interblockSeparator
-ulItemEnd
-interblockSeparator
-ulItem
-interblockSeparator
-ulItemEnd
+olItemWithNumber: 1
+olItemEnd
+olItemWithNumber: 2
+olItemEnd
+olItemWithNumber: 3
+olItemEnd
 olEndTight
 documentEnd

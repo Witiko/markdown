@@ -12,8 +12,8 @@
     with two lines.
 >>>
 documentBegin
-olBeginTight
-ulItem
-ulItemEnd
-olEndTight
+olBegin
+olItemWithNumber: 1
+olItemEnd
+olEnd
 documentEnd

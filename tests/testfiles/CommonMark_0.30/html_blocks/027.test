@@ -8,6 +8,7 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionHtml{true}
 <<<
 > <div>
 > foo
@@ -16,6 +17,7 @@ bar
 >>>
 documentBegin
 blockQuoteBegin
+inputBlockHtmlElement: ./_markdown_test/eca02752831602136ee5f7cfbff6b91d.verbatim
 blockQuoteEnd
 interblockSeparator
 documentEnd

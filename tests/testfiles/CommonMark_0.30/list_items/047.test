@@ -19,15 +19,15 @@
 >>>
 documentBegin
 olBeginTight
-ulItem
+olItemWithNumber: 1
 ulBeginTight
 ulItem
 olBeginTight
-ulItem
-ulItemEnd
+olItemWithNumber: 2
+olItemEnd
 olEndTight
 ulItemEnd
 ulEndTight
-ulItemEnd
+olItemEnd
 olEndTight
 documentEnd

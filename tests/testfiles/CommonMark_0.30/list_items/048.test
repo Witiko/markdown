@@ -22,9 +22,7 @@ ulBeginTight
 ulItem
 headingOne: Foo
 ulItemEnd
-interblockSeparator
 ulItem
-interblockSeparator
 headingTwo: Bar
 ulItemEnd
 ulEndTight

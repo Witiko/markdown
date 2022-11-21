@@ -5,9 +5,11 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionHtml{true}
 <<<
 </div>
 *foo*
 >>>
 documentBegin
+inputBlockHtmlElement: ./_markdown_test/0a3a0b592b9c285e050805307cee87c2.verbatim
 documentEnd

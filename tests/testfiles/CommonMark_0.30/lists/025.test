@@ -21,9 +21,7 @@
 documentBegin
 ulBeginTight
 ulItem
-interblockSeparator
 ulBeginTight
-interblockSeparator
 ulItem
 ulItemEnd
 ulEndTight

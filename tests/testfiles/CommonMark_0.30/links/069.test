@@ -11,7 +11,7 @@
 >>>
 documentBegin
 BEGIN link
-- label: bar\
+- label: bar(backslash)
 - URI: /uri
 - title: 
 END link

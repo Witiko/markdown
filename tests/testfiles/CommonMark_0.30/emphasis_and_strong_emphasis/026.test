@@ -8,5 +8,5 @@
 _foo_bar_baz_
 >>>
 documentBegin
-emphasis: foo_bar_baz
+emphasis: foo(underscore)bar(underscore)baz
 documentEnd

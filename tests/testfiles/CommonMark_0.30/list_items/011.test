@@ -14,6 +14,7 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionFencedCode{true}
 <<<
 1.  foo
 
@@ -27,8 +28,7 @@
 >>>
 documentBegin
 olBeginTight
-ulItem
-interblockSeparator
+olItemWithNumber: 1
 interblockSeparator
 BEGIN fencedCode
 - src: 37b51d194a7513e45b56f6524f2d51f2.verbatim
@@ -37,8 +37,7 @@ END fencedCode
 interblockSeparator
 interblockSeparator
 blockQuoteBegin
-interblockSeparator
 blockQuoteEnd
-ulItemEnd
+olItemEnd
 olEndTight
 documentEnd

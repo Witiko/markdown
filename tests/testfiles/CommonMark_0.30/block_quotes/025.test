@@ -10,6 +10,7 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionBreakableBlockquotes{true}
 <<<
 >     code
 
@@ -17,13 +18,9 @@
 >>>
 documentBegin
 blockQuoteBegin
-BEGIN fencedCode
-- src: c13367945d5d4c91047b3b50234aa7ab.verbatim
-- infostring: 
-END fencedCode
+inputVerbatim: ./_markdown_test/c13367945d5d4c91047b3b50234aa7ab.verbatim
 blockQuoteEnd
 interblockSeparator
 blockQuoteBegin
-interblockSeparator
 blockQuoteEnd
 documentEnd

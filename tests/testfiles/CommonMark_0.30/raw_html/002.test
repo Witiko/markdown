@@ -4,13 +4,11 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionHtml{true}
 <<<
 <a/><b2/>
 >>>
 documentBegin
-BEGIN link
-- label: 
-- URI: 
-- title: 
-END link
+inlineHtmlTag: <a/>
+inlineHtmlTag: <b2/>
 documentEnd

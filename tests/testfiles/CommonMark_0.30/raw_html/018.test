@@ -4,8 +4,10 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionHtml{true}
 <<<
 foo <![CDATA[>&<]]>
 >>>
 documentBegin
+inlineHtmlTag: <![CDATA[>&<]]>
 documentEnd

@@ -4,8 +4,10 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionHtml{true}
 <<<
 Foo <responsive-image src="foo.jpg" />
 >>>
 documentBegin
+inlineHtmlTag: <responsive-image src="foo.jpg" />
 documentEnd

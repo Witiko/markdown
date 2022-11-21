@@ -4,9 +4,10 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionHtml{true}
 <<<
 <del>*foo*</del>
 >>>
 documentBegin
-emphasis: foo
+inlineHtmlTag: <del>*foo*</del>
 documentEnd

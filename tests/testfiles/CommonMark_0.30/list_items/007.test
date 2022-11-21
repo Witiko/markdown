@@ -22,9 +22,9 @@ documentBegin
 blockQuoteBegin
 blockQuoteBegin
 olBeginTight
-ulItem
+olItemWithNumber: 1
 interblockSeparator
-ulItemEnd
+olItemEnd
 olEndTight
 blockQuoteEnd
 blockQuoteEnd

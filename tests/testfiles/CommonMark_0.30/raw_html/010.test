@@ -4,6 +4,7 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionHtml{true}
 <<<
 <a href='bar'title=title>
 >>>

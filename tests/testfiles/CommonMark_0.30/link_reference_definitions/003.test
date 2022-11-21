@@ -12,7 +12,7 @@
 documentBegin
 BEGIN link
 - label: Foo*bar]
-- URI: my_(url)
+- URI: my(underscore)(url)
 - title: title (with parens)
 END link
 documentEnd

@@ -8,5 +8,5 @@
 `<http://foo.bar.`baz>`
 >>>
 documentBegin
-codeSpan: &lt;http://foo.bar.
+codeSpan: <http://foo.bar.
 documentEnd

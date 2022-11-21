@@ -11,7 +11,7 @@
 >>>
 documentBegin
 olBeginTight
-ulItem
-ulItemEnd
+olItemWithNumber: 3
+olItemEnd
 olEndTight
 documentEnd

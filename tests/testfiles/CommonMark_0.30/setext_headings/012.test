@@ -20,6 +20,6 @@ documentBegin
 headingTwo: `Foo
 interblockSeparator
 interblockSeparator
-headingTwo: &lt;a title=&quot;a lot
+headingTwo: <a title="a lot
 interblockSeparator
 documentEnd

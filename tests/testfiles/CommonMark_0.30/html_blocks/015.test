@@ -6,15 +6,12 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionHtml{true}
 <<<
 <a href="foo">
 *bar*
 </a>
 >>>
 documentBegin
-BEGIN link
-- label: *bar*
-- URI: foo
-- title: 
-END link
+inputBlockHtmlElement: ./_markdown_test/80cb299274a91fd2edfed2bfe359aa0b.verbatim
 documentEnd

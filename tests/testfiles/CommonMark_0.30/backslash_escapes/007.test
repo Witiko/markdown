@@ -9,8 +9,5 @@
     \[\]
 >>>
 documentBegin
-BEGIN fencedCode
-- src: 3a0b27bc60aabda3104e01abcf205d6b.verbatim
-- infostring: 
-END fencedCode
+inputVerbatim: ./_markdown_test/3a0b27bc60aabda3104e01abcf205d6b.verbatim
 documentEnd

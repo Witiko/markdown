@@ -9,4 +9,5 @@ __foo___
 >>>
 documentBegin
 strongEmphasis: foo
+underscore
 documentEnd

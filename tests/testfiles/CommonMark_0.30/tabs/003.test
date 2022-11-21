@@ -11,8 +11,5 @@
     ὐ	a
 >>>
 documentBegin
-BEGIN fencedCode
-- src: 6df1b1b65295a88592bba31b998cb207.verbatim
-- infostring: 
-END fencedCode
+inputVerbatim: ./_markdown_test/6df1b1b65295a88592bba31b998cb207.verbatim
 documentEnd

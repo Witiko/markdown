@@ -8,5 +8,5 @@
 __foo__bar__baz__
 >>>
 documentBegin
-strongEmphasis: foo__bar__baz
+strongEmphasis: foo(underscore)(underscore)bar(underscore)(underscore)baz
 documentEnd

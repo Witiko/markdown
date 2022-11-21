@@ -17,10 +17,7 @@
 ---
 >>>
 documentBegin
-BEGIN fencedCode
-- src: 7c70100fa57cd4db2689abfddfb3dacd.verbatim
-- infostring: 
-END fencedCode
+inputVerbatim: ./_markdown_test/7c70100fa57cd4db2689abfddfb3dacd.verbatim
 interblockSeparator
 thematicBreak
 documentEnd

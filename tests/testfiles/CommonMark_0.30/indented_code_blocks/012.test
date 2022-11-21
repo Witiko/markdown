@@ -9,8 +9,5 @@
     foo  
 >>>
 documentBegin
-BEGIN fencedCode
-- src: e8d2133b16be538460e59776bb34676a.verbatim
-- infostring: 
-END fencedCode
+inputVerbatim: ./_markdown_test/e8d2133b16be538460e59776bb34676a.verbatim
 documentEnd

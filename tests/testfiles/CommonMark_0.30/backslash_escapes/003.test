@@ -24,4 +24,6 @@
 \&ouml; not a character entity
 >>>
 documentBegin
+hash
+ampersand
 documentEnd

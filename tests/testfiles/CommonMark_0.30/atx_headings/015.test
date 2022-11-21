@@ -12,9 +12,9 @@
 # foo \#
 >>>
 documentBegin
-headingThree: foo ###
+headingThree: foo (hash)(hash)(hash)
 interblockSeparator
-headingTwo: foo ###
+headingTwo: foo (hash)(hash)(hash)
 interblockSeparator
-headingOne: foo #
+headingOne: foo (hash)
 documentEnd

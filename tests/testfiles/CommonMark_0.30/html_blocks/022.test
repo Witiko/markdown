@@ -10,6 +10,7 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionHtml{true}
 <<<
 <pre language="haskell"><code>
 import Text.HTML.TagSoup
@@ -20,9 +21,6 @@ main = print $ parseTags tags
 okay
 >>>
 documentBegin
-BEGIN fencedCode
-- src: cd99514d2e5d65914a38ad82c4c5a03b.verbatim
-- infostring: 
-END fencedCode
+inputBlockHtmlElement: ./_markdown_test/83889e8427e2b847ebe0b01d91a34fbf.verbatim
 interblockSeparator
 documentEnd

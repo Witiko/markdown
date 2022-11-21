@@ -21,10 +21,6 @@ documentBegin
 BEGIN link
 - label: foo
 - URI: /url
-- title: 
-title
-line1
-line2
-
+- title: title line1 line2
 END link
 documentEnd

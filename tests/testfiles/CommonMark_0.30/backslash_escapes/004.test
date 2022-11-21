@@ -8,5 +8,6 @@
 \\*emphasis*
 >>>
 documentBegin
+backslash
 emphasis: emphasis
 documentEnd

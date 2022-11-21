@@ -5,6 +5,7 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionFencedCode{true}
 <<<
 ~~~ aa ``` ~~~
 foo

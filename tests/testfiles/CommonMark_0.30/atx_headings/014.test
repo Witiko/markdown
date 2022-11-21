@@ -8,5 +8,5 @@
 # foo#
 >>>
 documentBegin
-headingOne: foo#
+headingOne: foo(hash)
 documentEnd

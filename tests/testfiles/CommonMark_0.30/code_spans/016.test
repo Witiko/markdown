@@ -8,5 +8,5 @@
 `<a href="`">`
 >>>
 documentBegin
-codeSpan: &lt;a href=&quot;
+codeSpan: <a href=";
 documentEnd

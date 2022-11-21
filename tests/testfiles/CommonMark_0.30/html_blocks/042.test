@@ -6,10 +6,12 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionHtml{true}
 <<<
 <div>
 *Emphasized* text.
 </div>
 >>>
 documentBegin
+inputBlockHtmlElement: ./_markdown_test/91f8b1237720b3ef8e10cb31fdca3641.verbatim
 documentEnd

@@ -17,16 +17,14 @@
 >>>
 documentBegin
 olBeginTight
-ulItem
-ulItemEnd
-interblockSeparator
-ulItem
-ulItemEnd
+olItemWithNumber: 1
+olItemEnd
+olItemWithNumber: 2
+olItemEnd
 olEndTight
 interblockSeparator
 olBeginTight
-interblockSeparator
-ulItem
-ulItemEnd
+olItemWithNumber: 3
+olItemEnd
 olEndTight
 documentEnd

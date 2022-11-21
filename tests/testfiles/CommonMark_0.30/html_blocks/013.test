@@ -6,10 +6,12 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionHtml{true}
 <<<
 <table><tr><td>
 foo
 </td></tr></table>
 >>>
 documentBegin
+inputBlockHtmlElement: ./_markdown_test/f3bd5ed4fc4a218fe39dedb3ad4331dd.verbatim
 documentEnd

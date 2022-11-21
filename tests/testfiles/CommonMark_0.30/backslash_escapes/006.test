@@ -8,5 +8,5 @@
 `` \[\` ``
 >>>
 documentBegin
-codeSpan: \[\`
+codeSpan: (backslash)[(backslash)`
 documentEnd

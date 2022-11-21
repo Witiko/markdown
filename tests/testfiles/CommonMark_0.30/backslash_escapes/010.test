@@ -10,7 +10,7 @@
 documentBegin
 BEGIN link
 - label: 
-- URI: /bar\/)
+- URI: /bar(backslash)/)
 - title: 
 END link
 documentEnd

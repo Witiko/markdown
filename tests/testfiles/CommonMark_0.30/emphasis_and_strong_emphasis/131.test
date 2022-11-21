@@ -9,8 +9,8 @@ __a<http://foo.bar/?q=__>
 >>>
 documentBegin
 BEGIN link
-- label: http://foo.bar/?q=__
-- URI: http://foo.bar/?q=__
+- label: http://foo.bar/?q=(underscore)(underscore)
+- URI: http://foo.bar/?q=(underscore)(underscore)
 - title: 
 END link
 documentEnd

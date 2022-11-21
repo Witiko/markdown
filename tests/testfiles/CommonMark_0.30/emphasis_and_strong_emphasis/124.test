@@ -8,8 +8,9 @@
 _foo [bar_](/url)
 >>>
 documentBegin
+underscore
 BEGIN link
-- label: bar_
+- label: bar(underscore)
 - URI: /url
 - title: 
 END link

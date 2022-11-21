@@ -8,5 +8,5 @@
 `foo\`bar`
 >>>
 documentBegin
-codeSpan: foo\
+codeSpan: foo(backslash)
 documentEnd

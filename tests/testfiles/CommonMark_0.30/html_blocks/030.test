@@ -5,10 +5,14 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionHtml{true}
 <<<
 <!-- foo -->*bar*
 *baz*
 >>>
 documentBegin
+blockHtmlCommentBegin
+blockHtmlCommentEnd
+interblockSeparator
 emphasis: baz
 documentEnd

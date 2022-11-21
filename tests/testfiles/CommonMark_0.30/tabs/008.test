@@ -11,8 +11,5 @@
 	bar
 >>>
 documentBegin
-BEGIN fencedCode
-- src: 3858f62230ac3c915f300c664312c63f.verbatim
-- infostring: 
-END fencedCode
+inputVerbatim: ./_markdown_test/3858f62230ac3c915f300c664312c63f.verbatim
 documentEnd

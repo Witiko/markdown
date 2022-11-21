@@ -8,6 +8,7 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionFencedCode{true}
 <<<
 > ```
 foo
@@ -20,7 +21,6 @@ BEGIN fencedCode
 - infostring: 
 END fencedCode
 blockQuoteEnd
-interblockSeparator
 interblockSeparator
 interblockSeparator
 BEGIN fencedCode

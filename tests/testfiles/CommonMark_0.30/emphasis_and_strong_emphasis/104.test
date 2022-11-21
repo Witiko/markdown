@@ -8,5 +8,6 @@
 __foo_
 >>>
 documentBegin
+underscore
 emphasis: foo
 documentEnd

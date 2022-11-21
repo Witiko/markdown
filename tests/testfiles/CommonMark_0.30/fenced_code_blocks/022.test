@@ -7,6 +7,7 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionFencedCode{true}
 <<<
 foo
 ```
@@ -15,7 +16,6 @@ bar
 baz
 >>>
 documentBegin
-interblockSeparator
 interblockSeparator
 BEGIN fencedCode
 - src: 37b51d194a7513e45b56f6524f2d51f2.verbatim

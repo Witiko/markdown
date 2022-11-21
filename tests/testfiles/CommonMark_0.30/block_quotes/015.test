@@ -9,6 +9,7 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionBreakableBlockquotes{true}
 <<<
 > foo
 
@@ -19,6 +20,5 @@ blockQuoteBegin
 blockQuoteEnd
 interblockSeparator
 blockQuoteBegin
-interblockSeparator
 blockQuoteEnd
 documentEnd

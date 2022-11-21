@@ -10,7 +10,7 @@
 documentBegin
 BEGIN link
 - label: http://example.com/?search=](uri)
-- URI: http://example.com/?search=%5D(uri)
+- URI: http://example.com/?search=(percentSign)5D(uri)
 - title: 
 END link
 documentEnd

@@ -4,13 +4,10 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionHtml{true}
 <<<
 foo <a href="&ouml;">
 >>>
 documentBegin
-BEGIN link
-- label: 
-- URI: &ouml;
-- title: 
-END link
+inlineHtmlTag: <a href="&ouml;">
 documentEnd

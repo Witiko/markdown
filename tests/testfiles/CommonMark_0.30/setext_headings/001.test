@@ -15,5 +15,5 @@ Foo *bar*
 documentBegin
 headingOne: Foo (emphasis: bar)
 interblockSeparator
-headingTwo: Foo (interblockSeparator)(emphasis: bar)
+headingTwo: Foo (emphasis: bar)
 documentEnd

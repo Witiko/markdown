@@ -21,8 +21,5 @@
     chunk3
 >>>
 documentBegin
-BEGIN fencedCode
-- src: 2aca0a9378723b1bed59975523ed50cd.verbatim
-- infostring: 
-END fencedCode
+inputVerbatim: ./_markdown_test/2aca0a9378723b1bed59975523ed50cd.verbatim
 documentEnd

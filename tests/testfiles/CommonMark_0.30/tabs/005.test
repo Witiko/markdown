@@ -19,11 +19,7 @@ documentBegin
 ulBeginTight
 ulItem
 interblockSeparator
-interblockSeparator
-BEGIN fencedCode
-- src: e5d16c973faf1d458c867e719c7a1e52.verbatim
-- infostring: 
-END fencedCode
+inputVerbatim: ./_markdown_test/e5d16c973faf1d458c867e719c7a1e52.verbatim
 ulItemEnd
 ulEndTight
 documentEnd

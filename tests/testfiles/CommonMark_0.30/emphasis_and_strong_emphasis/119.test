@@ -8,5 +8,6 @@
 *foo _bar* baz_
 >>>
 documentBegin
-emphasis: foo _bar
+emphasis: foo (underscore)bar
+underscore
 documentEnd

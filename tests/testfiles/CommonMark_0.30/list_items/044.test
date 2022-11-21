@@ -16,11 +16,11 @@
 >>>
 documentBegin
 olBeginTight
-ulItem
+olItemWithNumber: 10
 ulBeginTight
 ulItem
 ulItemEnd
 ulEndTight
-ulItemEnd
+olItemEnd
 olEndTight
 documentEnd

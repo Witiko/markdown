@@ -19,9 +19,5 @@ ulItem
 ulItemEnd
 ulEndTight
 interblockSeparator
-interblockSeparator
-BEGIN fencedCode
-- src: d4061f7c59bbc7cd9f706c698c9ccbe6.verbatim
-- infostring: 
-END fencedCode
+inputVerbatim: ./_markdown_test/d4061f7c59bbc7cd9f706c698c9ccbe6.verbatim
 documentEnd

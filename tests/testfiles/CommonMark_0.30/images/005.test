@@ -13,6 +13,6 @@ documentBegin
 BEGIN image
 - label: foo bar
 - URI: train.jpg
-- title: train &amp; tracks
+- title: train (ampersand) tracks
 END image
 documentEnd

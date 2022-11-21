@@ -6,15 +6,11 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionHtml{true}
 <<<
 Foo
 <a href="bar">
 baz
 >>>
 documentBegin
-BEGIN link
-- label: baz
-- URI: bar
-- title: 
-END link
 documentEnd

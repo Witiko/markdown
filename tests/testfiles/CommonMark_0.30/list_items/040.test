@@ -20,10 +20,10 @@ continued here.
 documentBegin
 blockQuoteBegin
 olBeginTight
-ulItem
+olItemWithNumber: 1
 blockQuoteBegin
 blockQuoteEnd
-ulItemEnd
+olItemEnd
 olEndTight
 blockQuoteEnd
 documentEnd

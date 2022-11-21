@@ -5,14 +5,12 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionHtml{true}
 <<<
 <a  /><b2
 data="foo" >
 >>>
 documentBegin
-BEGIN link
-- label: 
-- URI: 
-- title: 
-END link
+inlineHtmlTag: <a  />
+inlineHtmlTag: <b2 data="foo" >
 documentEnd

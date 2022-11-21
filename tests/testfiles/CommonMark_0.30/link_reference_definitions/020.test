@@ -12,9 +12,6 @@
 [foo]
 >>>
 documentBegin
-BEGIN fencedCode
-- src: bfc2fd7150fb8c937dc4ed2ba022c695.verbatim
-- infostring: 
-END fencedCode
+inputVerbatim: ./_markdown_test/bfc2fd7150fb8c937dc4ed2ba022c695.verbatim
 interblockSeparator
 documentEnd

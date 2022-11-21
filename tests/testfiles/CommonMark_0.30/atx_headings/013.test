@@ -8,5 +8,5 @@
 ### foo ### b
 >>>
 documentBegin
-headingThree: foo ### b
+headingThree: foo (hash)(hash)(hash) b
 documentEnd

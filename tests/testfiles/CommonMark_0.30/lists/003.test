@@ -16,10 +16,8 @@ Foo
 documentBegin
 interblockSeparator
 ulBeginTight
-interblockSeparator
 ulItem
 ulItemEnd
-interblockSeparator
 ulItem
 ulItemEnd
 ulEndTight

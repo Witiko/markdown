@@ -16,6 +16,7 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionHtml{true}
 <<<
 <![CDATA[
 function matchwo(a,b)
@@ -32,4 +33,6 @@ function matchwo(a,b)
 okay
 >>>
 documentBegin
+inputBlockHtmlElement: ./_markdown_test/d0556f47a7761d40abd0dd3c5446a360.verbatim
+interblockSeparator
 documentEnd

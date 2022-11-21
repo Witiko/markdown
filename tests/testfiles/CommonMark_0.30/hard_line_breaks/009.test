@@ -9,5 +9,5 @@
 span`
 >>>
 documentBegin
-codeSpan: code\ span
+codeSpan: code(backslash) span
 documentEnd

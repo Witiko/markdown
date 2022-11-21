@@ -22,17 +22,11 @@
 >>>
 documentBegin
 olBeginTight
-ulItem
-ulItemEnd
-interblockSeparator
-ulItem
-interblockSeparator
-ulItemEnd
+olItemWithNumber: 1
+olItemEnd
+olItemWithNumber: 1
+olItemEnd
 olEndTight
 interblockSeparator
-interblockSeparator
-BEGIN fencedCode
-- src: b186aef91563af99a525ef47eea07d9e.verbatim
-- infostring: 
-END fencedCode
+inputVerbatim: ./_markdown_test/b186aef91563af99a525ef47eea07d9e.verbatim
 documentEnd

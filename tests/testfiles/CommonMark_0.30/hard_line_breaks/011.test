@@ -12,8 +12,7 @@ bar">
 documentBegin
 BEGIN link
 - label: 
-- URI: foo\
-bar
+- URI: foo(backslash) bar
 - title: 
 END link
 documentEnd

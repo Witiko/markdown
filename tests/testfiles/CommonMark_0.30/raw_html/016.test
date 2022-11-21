@@ -4,8 +4,10 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionHtml{true}
 <<<
 foo <?php echo $a; ?>
 >>>
 documentBegin
+inlineHtmlTag: <?php echo $a; ?>
 documentEnd

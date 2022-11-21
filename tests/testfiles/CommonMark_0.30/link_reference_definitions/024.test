@@ -14,7 +14,6 @@ bar
 documentBegin
 headingOne: bar
 interblockSeparator
-interblockSeparator
 BEGIN link
 - label: foo
 - URI: /url

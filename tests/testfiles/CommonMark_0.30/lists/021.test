@@ -13,6 +13,7 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionFencedCode{true}
 <<<
 - a
   > b
@@ -27,13 +28,11 @@ ulItem
 blockQuoteBegin
 blockQuoteEnd
 interblockSeparator
-interblockSeparator
 BEGIN fencedCode
 - src: 4a8a08f09d37b73795649038408b5f33.verbatim
 - infostring: 
 END fencedCode
 ulItemEnd
-interblockSeparator
 ulItem
 ulItemEnd
 ulEndTight

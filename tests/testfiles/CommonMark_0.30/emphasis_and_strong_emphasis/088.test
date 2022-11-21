@@ -8,5 +8,5 @@
 foo *_*
 >>>
 documentBegin
-emphasis: _
+emphasis: (underscore)
 documentEnd

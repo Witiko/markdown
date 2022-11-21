@@ -8,5 +8,5 @@
 **foo "*bar*" foo**
 >>>
 documentBegin
-strongEmphasis: foo &quot;(emphasis: bar)&quot; foo
+strongEmphasis: foo "(emphasis: bar)" foo
 documentEnd

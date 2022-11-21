@@ -26,14 +26,10 @@ documentBegin
 ulBeginTight
 ulItem
 ulItemEnd
-interblockSeparator
 ulItem
-interblockSeparator
 interblockSeparator
 ulItemEnd
-interblockSeparator
 ulItem
-interblockSeparator
 ulItemEnd
 ulEndTight
 documentEnd

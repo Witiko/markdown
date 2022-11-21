@@ -11,8 +11,5 @@
       indented code block
 >>>
 documentBegin
-BEGIN fencedCode
-- src: e45a214ee8bb785ede1fecdad90b008d.verbatim
-- infostring: 
-END fencedCode
+inputVerbatim: ./_markdown_test/e45a214ee8bb785ede1fecdad90b008d.verbatim
 documentEnd

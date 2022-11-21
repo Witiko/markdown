@@ -6,14 +6,15 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionHtml{true}
 <<<
   <!-- foo -->
 
     <!-- foo -->
 >>>
 documentBegin
-BEGIN fencedCode
-- src: 6a1a91b64ee4325ea792b903e389dfee.verbatim
-- infostring: 
-END fencedCode
+blockHtmlCommentBegin
+blockHtmlCommentEnd
+interblockSeparator
+inputVerbatim: ./_markdown_test/6a1a91b64ee4325ea792b903e389dfee.verbatim
 documentEnd

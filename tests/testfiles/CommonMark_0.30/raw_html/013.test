@@ -5,9 +5,11 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionHtml{true}
 <<<
 foo <!-- this is a
 comment - with hyphen -->
 >>>
 documentBegin
+inlineHtmlComment: this is a comment - with hyphen
 documentEnd

@@ -12,7 +12,7 @@
 documentBegin
 BEGIN link
 - label: foo
-- URI: /url%5Cbar*baz
-- title: foo&quot;bar\baz
+- URI: /url(percentSign)5Cbar*baz
+- title: foo"bar(backslash)baz
 END link
 documentEnd

@@ -13,8 +13,5 @@
     > baz
 >>>
 documentBegin
-BEGIN fencedCode
-- src: 187826f5d94c6cd3af62363df03055d1.verbatim
-- infostring: 
-END fencedCode
+inputVerbatim: ./_markdown_test/187826f5d94c6cd3af62363df03055d1.verbatim
 documentEnd

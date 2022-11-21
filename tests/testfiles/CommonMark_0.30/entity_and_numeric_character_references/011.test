@@ -8,5 +8,5 @@
 `f&ouml;&ouml;`
 >>>
 documentBegin
-codeSpan: f&amp;ouml;&amp;ouml;
+codeSpan: f(ampersand)ouml;(ampersand)ouml;
 documentEnd

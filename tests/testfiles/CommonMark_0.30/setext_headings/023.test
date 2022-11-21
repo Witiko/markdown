@@ -9,5 +9,5 @@
 ------
 >>>
 documentBegin
-headingTwo: &gt; foo
+headingTwo: > foo
 documentEnd

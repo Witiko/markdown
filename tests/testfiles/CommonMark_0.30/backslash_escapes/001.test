@@ -8,4 +8,15 @@
 \!\"\#\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\\\]\^\_\`\{\|\}\~
 >>>
 documentBegin
+hash
+dollarSign
+percentSign
+ampersand
+backslash
+circumflex
+underscore
+leftBrace
+pipe
+rightBrace
+tilde
 documentEnd

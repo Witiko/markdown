@@ -12,6 +12,7 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionHtml{true}
 <<<
 - foo
 - bar
@@ -25,16 +26,15 @@ documentBegin
 ulBeginTight
 ulItem
 ulItemEnd
-interblockSeparator
 ulItem
 ulItemEnd
 ulEndTight
 interblockSeparator
-ulBeginTight
+inlineHtmlComment:  
 interblockSeparator
+ulBeginTight
 ulItem
 ulItemEnd
-interblockSeparator
 ulItem
 ulItemEnd
 ulEndTight

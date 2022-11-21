@@ -16,21 +16,19 @@
 documentBegin
 BEGIN link
 - label: link
-- URI: #fragment
+- URI: (hash)fragment
 - title: 
 END link
 interblockSeparator
-interblockSeparator
 BEGIN link
 - label: link
-- URI: http://example.com#fragment
+- URI: http://example.com(hash)fragment
 - title: 
 END link
 interblockSeparator
-interblockSeparator
 BEGIN link
 - label: link
-- URI: http://example.com?foo=3#frag
+- URI: http://example.com?foo=3(hash)frag
 - title: 
 END link
 documentEnd

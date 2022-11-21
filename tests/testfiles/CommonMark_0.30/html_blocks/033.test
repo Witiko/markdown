@@ -9,6 +9,7 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionHtml{true}
 <<<
 <?php
 
@@ -18,4 +19,6 @@
 okay
 >>>
 documentBegin
+inputBlockHtmlElement: ./_markdown_test/08cc067346b74531aab299eab5e63222.verbatim
+interblockSeparator
 documentEnd

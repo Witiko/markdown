@@ -6,10 +6,12 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionHtml{true}
 <<<
  <div>
   *hello*
          <foo><a>
 >>>
 documentBegin
+inputBlockHtmlElement: ./_markdown_test/bf1014cd7005a11f9377943f8d62a68b.verbatim
 documentEnd
