@@ -23,7 +23,7 @@
 - d
 >>>
 documentBegin
-ulBeginTight
+ulBegin
 ulItem
 ulItemEnd
 ulItem
@@ -31,5 +31,5 @@ interblockSeparator
 ulItemEnd
 ulItem
 ulItemEnd
-ulEndTight
+ulEnd
 documentEnd

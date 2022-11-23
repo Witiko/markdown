@@ -30,10 +30,11 @@ ulBeginTight
 ulItem
 ulBeginTight
 ulItem
-ulBeginTight
+ulBegin
 ulItem
+interblockSeparator
 ulItemEnd
-ulEndTight
+ulEnd
 ulItemEnd
 ulEndTight
 ulItemEnd

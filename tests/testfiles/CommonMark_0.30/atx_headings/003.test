@@ -12,5 +12,6 @@
 >>>
 documentBegin
 hash
+interblockSeparator
 hash
 documentEnd

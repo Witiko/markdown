@@ -9,7 +9,7 @@
 >>>
 documentBegin
 BEGIN link
-- label: http://example.com/\[\
+- label: http://example.com/(backslash)[(backslash)
 - URI: http://example.com/(percentSign)5C(percentSign)5B(percentSign)5C
 - title: 
 END link

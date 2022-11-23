@@ -27,7 +27,7 @@
     > bam
 >>>
 documentBegin
-olBeginTight
+olBegin
 olItemWithNumber: 1
 interblockSeparator
 BEGIN fencedCode
@@ -39,5 +39,5 @@ interblockSeparator
 blockQuoteBegin
 blockQuoteEnd
 olItemEnd
-olEndTight
+olEnd
 documentEnd

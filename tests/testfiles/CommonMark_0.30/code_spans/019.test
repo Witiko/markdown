@@ -10,7 +10,7 @@
 documentBegin
 BEGIN link
 - label: http://foo.bar.`baz
-- URI: http://foo.bar.(percentSing)60baz
+- URI: http://foo.bar.(percentSign)60baz
 - title: 
 END link
 documentEnd

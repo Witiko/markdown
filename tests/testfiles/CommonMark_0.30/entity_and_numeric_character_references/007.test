@@ -10,7 +10,7 @@
 documentBegin
 BEGIN link
 - label: 
-- URI: &ouml;&ouml;.html
+- URI: öö.html
 - title: 
 END link
 documentEnd

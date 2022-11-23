@@ -29,7 +29,7 @@
   - f
 >>>
 documentBegin
-ulBeginTight
+ulBegin
 ulItem
 interblockSeparator
 ulBeginTight
@@ -48,5 +48,5 @@ ulItem
 ulItemEnd
 ulEndTight
 ulItemEnd
-ulEndTight
+ulEnd
 documentEnd

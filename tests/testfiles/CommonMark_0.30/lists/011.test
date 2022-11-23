@@ -22,12 +22,12 @@
    3. c
 >>>
 documentBegin
-olBeginTight
+olBegin
 olItemWithNumber: 1
 olItemEnd
 olItemWithNumber: 2
 olItemEnd
 olItemWithNumber: 3
 olItemEnd
-olEndTight
+olEnd
 documentEnd

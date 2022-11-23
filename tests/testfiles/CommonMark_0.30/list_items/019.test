@@ -16,10 +16,10 @@
            bar
 >>>
 documentBegin
-olBeginTight
+olBegin
 olItemWithNumber: 10
 interblockSeparator
 inputVerbatim: ./_markdown_test/37b51d194a7513e45b56f6524f2d51f2.verbatim
 olItemEnd
-olEndTight
+olEnd
 documentEnd

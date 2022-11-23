@@ -11,6 +11,6 @@ documentBegin
 BEGIN link
 - label: link
 - URI: /url
-- title: title &quot;and&quot; title
+- title: title "and" title
 END link
 documentEnd

@@ -19,12 +19,12 @@
 * c
 >>>
 documentBegin
-ulBeginTight
+ulBegin
 ulItem
 ulItemEnd
 ulItem
 ulItemEnd
 ulItem
 ulItemEnd
-ulEndTight
+ulEnd
 documentEnd

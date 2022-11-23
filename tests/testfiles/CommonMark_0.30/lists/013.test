@@ -21,12 +21,12 @@
     3. c
 >>>
 documentBegin
-olBeginTight
+olBegin
 olItemWithNumber: 1
 olItemEnd
 olItemWithNumber: 1
 olItemEnd
-olEndTight
+olEnd
 interblockSeparator
 inputVerbatim: ./_markdown_test/b186aef91563af99a525ef47eea07d9e.verbatim
 documentEnd

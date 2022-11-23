@@ -22,10 +22,10 @@
       baz
 >>>
 documentBegin
-ulBeginTight
+ulBegin
 ulItem
 interblockSeparator
 inputVerbatim: ./_markdown_test/c3c23db5285662ef7172373df0003206.verbatim
 ulItemEnd
-ulEndTight
+ulEnd
 documentEnd

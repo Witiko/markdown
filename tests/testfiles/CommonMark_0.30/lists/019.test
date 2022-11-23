@@ -22,15 +22,15 @@
 - d
 >>>
 documentBegin
-ulBeginTight
+ulBegin
 ulItem
-ulBeginTight
+ulBegin
 ulItem
 interblockSeparator
 ulItemEnd
-ulEndTight
+ulEnd
 ulItemEnd
 ulItem
 ulItemEnd
-ulEndTight
+ulEnd
 documentEnd

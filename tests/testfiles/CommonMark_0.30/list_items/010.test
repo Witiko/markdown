@@ -16,9 +16,9 @@
   bar
 >>>
 documentBegin
-ulBeginTight
+ulBegin
 ulItem
 interblockSeparator
 ulItemEnd
-ulEndTight
+ulEnd
 documentEnd

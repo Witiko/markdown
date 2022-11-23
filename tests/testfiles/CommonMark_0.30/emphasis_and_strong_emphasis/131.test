@@ -8,6 +8,8 @@
 __a<http://foo.bar/?q=__>
 >>>
 documentBegin
+underscore
+underscore
 BEGIN link
 - label: http://foo.bar/?q=(underscore)(underscore)
 - URI: http://foo.bar/?q=(underscore)(underscore)

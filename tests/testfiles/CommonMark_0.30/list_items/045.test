@@ -9,15 +9,19 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionFancyLists{true}
 <<<
 10) foo
    - bar
 >>>
 documentBegin
-olBeginTight
-olItemWithNumber: 10
-olItemEnd
-olEndTight
+BEGIN fancyOlBeginTight
+- numstyle: Decimal
+- numdelim: OneParen
+END fancyOlBeginTight
+fancyOlItemWithNumber: 10
+fancyOlItemEnd
+fancyOlEndTight
 interblockSeparator
 ulBeginTight
 ulItem

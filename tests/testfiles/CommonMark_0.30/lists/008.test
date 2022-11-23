@@ -30,7 +30,8 @@ ulItem
 ulItemEnd
 ulEndTight
 interblockSeparator
-inlineHtmlComment:  
+blockHtmlCommentBegin
+blockHtmlCommentEnd
 interblockSeparator
 ulBeginTight
 ulItem

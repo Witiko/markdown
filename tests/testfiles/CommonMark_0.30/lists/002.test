@@ -10,6 +10,7 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionFancyLists{true}
 <<<
 1. foo
 2. bar
