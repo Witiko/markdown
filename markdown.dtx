@@ -20762,6 +20762,36 @@ function M.writer.new(options)
 % \par
 % \begin{markdown}
 %
+% Define \luamdef{writer->attributes} as a function that will transform
+% input attributes `attr` to the output format.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  function self.attributes(attr)
+    local buf = {}
+
+    table.sort(attr)
+    local key, value
+    for i = 1, #attr do
+      if attr[i]:sub(1, 1) == "#" then
+        table.insert(buf, {"\\markdownRendererAttributeIdentifier{",
+                           attr[i]:sub(2), "}"})
+      elseif attr[i]:sub(1, 1) == "." then
+        table.insert(buf, {"\\markdownRendererAttributeClassName{",
+                           attr[i]:sub(2), "}"})
+      else
+        key, value = attr[i]:match("([^= ]+)%s*=%s*(.*)")
+        table.insert(buf, {"\\markdownRendererAttributeKeyValue{",
+                           key, "}{", value, "}"})
+      end
+    end
+
+    return buf
+  end
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
 % Define \luamdef{writer->active\_attributes} as a stack of attributes
 % of the headings that are currently active. The
 % \luamref{writer->active\_headings} member variable is mutable.
@@ -20856,21 +20886,7 @@ function M.writer.new(options)
     end
 
     if self.is_writing then
-      table.sort(attributes)
-      local key, value
-      for i = 1, #attributes do
-        if attributes[i]:sub(1, 1) == "#" then
-          table.insert(buf, {"\\markdownRendererAttributeIdentifier{",
-                             attributes[i]:sub(2), "}"})
-        elseif attributes[i]:sub(1, 1) == "." then
-          table.insert(buf, {"\\markdownRendererAttributeClassName{",
-                             attributes[i]:sub(2), "}"})
-        else
-          key, value = attributes[i]:match("([^= ]+)%s*=%s*(.*)")
-          table.insert(buf, {"\\markdownRendererAttributeKeyValue{",
-                             key, "}{", value, "}"})
-        end
-      end
+      table.insert(buf, self.attributes(attributes))
     end
 
     local cmd
@@ -22710,7 +22726,10 @@ M.extensions.bracketed_spans = function()
 % \end{markdown}
 %  \begin{macrocode}
       function self.span(s, attr)
-        return {"\\markdownRendererBracketedSpan{",s,"}{",attr,"}"}
+        return {"\\markdownRendererBracketedSpanAttributeContextBegin",
+                self.attributes(attr),
+                "\\markdownRendererBracketedSpan{",s,"}",
+                "\\markdownRendererBracketedSpanAttributeContextEnd{}"}
       end
     end, extend_reader = function(self)
       local parsers = self.parsers
@@ -23490,7 +23509,10 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
 % \end{markdown}
 %  \begin{macrocode}
       function self.div(c, attr)
-        return {"\\markdownRendererFencedDiv{",c,"}{",attr,"}"}
+        return {"\\markdownRendererFencedDivAttributeContextBegin",
+                self.attributes(attr),
+                "\\markdownRendererFencedDiv{",c,"}",
+                "\\markdownRendererFencedDivAttributeContextEnd"}
       end
     end, extend_reader = function(self)
       local parsers = self.parsers
