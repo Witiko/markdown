@@ -9,5 +9,5 @@
 foo <?php echo $a; ?>
 >>>
 documentBegin
-inlineHtmlTag: <?php echo $a; ?>
+inlineHtmlTag: <?php echo (dollarSign)a; ?>
 documentEnd

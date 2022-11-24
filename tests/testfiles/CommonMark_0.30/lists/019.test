@@ -22,7 +22,7 @@
 - d
 >>>
 documentBegin
-ulBegin
+ulBeginTight
 ulItem
 ulBegin
 ulItem
@@ -32,5 +32,5 @@ ulEnd
 ulItemEnd
 ulItem
 ulItemEnd
-ulEnd
+ulEndTight
 documentEnd

@@ -4,6 +4,7 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionHtml{true}
 <<<
 [foo](/f&ouml;&ouml; "f&ouml;&ouml;")
 >>>

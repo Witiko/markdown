@@ -16,10 +16,10 @@
 		bar
 >>>
 documentBegin
-ulBeginTight
+ulBegin
 ulItem
 interblockSeparator
 inputVerbatim: ./_markdown_test/e5d16c973faf1d458c867e719c7a1e52.verbatim
 ulItemEnd
-ulEndTight
+ulEnd
 documentEnd

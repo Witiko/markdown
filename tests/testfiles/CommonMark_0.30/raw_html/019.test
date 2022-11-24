@@ -9,5 +9,5 @@
 foo <a href="&ouml;">
 >>>
 documentBegin
-inlineHtmlTag: <a href="&ouml;">
+inlineHtmlTag: <a href="ö">
 documentEnd

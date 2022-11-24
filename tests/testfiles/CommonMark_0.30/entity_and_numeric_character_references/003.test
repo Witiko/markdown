@@ -4,6 +4,7 @@
 %   
 %   ---\RESULT---
 
+\def\markdownOptionHtml{true}
 <<<
 &#X22; &#XD06; &#xcab;
 >>>

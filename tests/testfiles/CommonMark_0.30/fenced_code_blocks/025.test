@@ -18,6 +18,6 @@ end
 documentBegin
 BEGIN fencedCode
 - src: edf2027ec75ea43c94b2fccf75db6909.verbatim
-- infostring: ruby
+- infostring: ruby startline=3 $%@#$
 END fencedCode
 documentEnd

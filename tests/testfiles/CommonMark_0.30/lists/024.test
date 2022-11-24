@@ -19,7 +19,7 @@
    bar
 >>>
 documentBegin
-olBeginTight
+olBegin
 olItemWithNumber: 1
 BEGIN fencedCode
 - src: acbd18db4cc2f85cedef654fccc4a4d8.verbatim
@@ -27,5 +27,5 @@ BEGIN fencedCode
 END fencedCode
 interblockSeparator
 olItemEnd
-olEndTight
+olEnd
 documentEnd

@@ -21,11 +21,11 @@
 documentBegin
 blockQuoteBegin
 blockQuoteBegin
-olBeginTight
+olBegin
 olItemWithNumber: 1
 interblockSeparator
 olItemEnd
-olEndTight
+olEnd
 blockQuoteEnd
 blockQuoteEnd
 documentEnd

@@ -17,7 +17,7 @@
     - bar
 >>>
 documentBegin
-olBeginTight
+olBegin
 ulItem
 interblockSeparator
 ulBeginTight
@@ -25,5 +25,5 @@ ulItem
 ulItemEnd
 ulEndTight
 ulItemEnd
-olEndTight
+olEnd
 documentEnd

@@ -11,5 +11,5 @@
 _boolean zoop:33=zoop:33 />
 >>>
 documentBegin
-inlineHtmlTag: <a foo="bar" bam = 'baz <em>"</em>'_boolean zoop:33=zoop:33 />
+inlineHtmlTag: <a foo="bar" bam = 'baz <em>"</em>'(underscore)boolean zoop:33=zoop:33 />
 documentEnd

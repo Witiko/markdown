@@ -19,7 +19,7 @@
   baz
 >>>
 documentBegin
-ulBeginTight
+ulBegin
 ulItem
 ulBeginTight
 ulItem
@@ -27,5 +27,5 @@ ulItemEnd
 ulEndTight
 interblockSeparator
 ulItemEnd
-ulEndTight
+ulEnd
 documentEnd
