@@ -149,6 +149,12 @@ Info strings for backtick code blocks cannot contain backticks:
 ``` aa ```
 foo
 
+Info strings for tilde code blocks can contain backticks and tildes:
+
+~~~ aa ``` ~~~
+foo
+~~~
+
 Closing code fences cannot have info strings:
 
 ```
@@ -302,6 +308,12 @@ END fencedCode
 interblockSeparator
 interblockSeparator
 codeSpan: aa
+interblockSeparator
+interblockSeparator
+BEGIN fencedCode
+- src: ./_markdown_test/acbd18db4cc2f85cedef654fccc4a4d8.verbatim
+- infostring: aa
+END fencedCode
 interblockSeparator
 interblockSeparator
 BEGIN fencedCode
