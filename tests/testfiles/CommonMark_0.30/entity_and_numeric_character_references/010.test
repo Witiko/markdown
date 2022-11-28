@@ -14,7 +14,7 @@ foo
 >>>
 documentBegin
 BEGIN fencedCode
-- src: acbd18db4cc2f85cedef654fccc4a4d8.verbatim
+- src: ./_markdown_test/acbd18db4cc2f85cedef654fccc4a4d8.verbatim
 - infostring: föö
 END fencedCode
 documentEnd

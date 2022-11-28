@@ -13,4 +13,5 @@ Foo
 baz
 >>>
 documentBegin
+inlineHtmlTag: <a href="bar">
 documentEnd

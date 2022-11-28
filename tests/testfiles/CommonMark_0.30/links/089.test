@@ -16,7 +16,6 @@ BEGIN link
 - URI: /url2
 - title: 
 END link
-interblockSeparator
 BEGIN link
 - label: baz
 - URI: /url1

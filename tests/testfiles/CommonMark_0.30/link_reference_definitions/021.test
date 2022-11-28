@@ -16,7 +16,7 @@
 >>>
 documentBegin
 BEGIN fencedCode
-- src: f8cf8952bb008c52acda57a307e2d70f.verbatim
+- src: ./_markdown_test/f8cf8952bb008c52acda57a307e2d70f.verbatim
 - infostring: 
 END fencedCode
 interblockSeparator

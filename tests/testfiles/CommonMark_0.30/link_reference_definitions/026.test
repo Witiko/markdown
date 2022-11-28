@@ -22,13 +22,11 @@ BEGIN link
 - URI: /foo-url
 - title: foo
 END link
-interblockSeparator
 BEGIN link
 - label: bar
 - URI: /bar-url
 - title: bar
 END link
-interblockSeparator
 BEGIN link
 - label: baz
 - URI: /baz-url

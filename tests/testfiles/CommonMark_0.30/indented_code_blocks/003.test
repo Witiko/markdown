@@ -18,12 +18,12 @@
 >>>
 documentBegin
 olBegin
-ulItem
+olItemWithNumber: 1
 interblockSeparator
 ulBeginTight
 ulItem
 ulItemEnd
 ulEndTight
-ulItemEnd
+olItemEnd
 olEnd
 documentEnd

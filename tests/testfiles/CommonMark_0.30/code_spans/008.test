@@ -12,5 +12,5 @@ baz
 ``
 >>>
 documentBegin
-codeSpan: foo bar   baz
+codeSpan:  foo bar   baz
 documentEnd

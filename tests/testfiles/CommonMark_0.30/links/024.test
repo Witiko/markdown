@@ -17,13 +17,11 @@ BEGIN link
 - URI: /url
 - title: title
 END link
-interblockSeparator
 BEGIN link
 - label: link
 - URI: /url
 - title: title
 END link
-interblockSeparator
 BEGIN link
 - label: link
 - URI: /url

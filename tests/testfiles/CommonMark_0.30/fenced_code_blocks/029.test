@@ -13,7 +13,7 @@
 >>>
 documentBegin
 BEGIN fencedCode
-- src: f96ff4720dbda08e72c9662ba9c2603e.verbatim
+- src: ./_markdown_test/f96ff4720dbda08e72c9662ba9c2603e.verbatim
 - infostring: 
 END fencedCode
 documentEnd

@@ -17,7 +17,7 @@ end
 >>>
 documentBegin
 BEGIN fencedCode
-- src: edf2027ec75ea43c94b2fccf75db6909.verbatim
+- src: ./_markdown_test/bec320a1e3b741ba35aaee15586aa06d.verbatim
 - infostring: ruby
 END fencedCode
 documentEnd

@@ -31,7 +31,7 @@ ulItem
 ulItemEnd
 ulItem
 BEGIN fencedCode
-- src: 37b51d194a7513e45b56f6524f2d51f2.verbatim
+- src: ./_markdown_test/37b51d194a7513e45b56f6524f2d51f2.verbatim
 - infostring: 
 END fencedCode
 ulItemEnd
