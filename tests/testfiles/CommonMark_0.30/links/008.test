@@ -10,7 +10,7 @@
 documentBegin
 BEGIN link
 - label: link
-- URI: /my(percentSign)20uri
+- URI: /my%20uri
 - title: 
 END link
 documentEnd

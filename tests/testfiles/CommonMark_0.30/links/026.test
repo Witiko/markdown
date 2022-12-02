@@ -10,7 +10,7 @@
 documentBegin
 BEGIN link
 - label: link
-- URI: /url(percentSign)C2(percentSign)A0(percentSign)22title(percentSign)22
+- URI: /url%C2%A0%22title%22
 - title: 
 END link
 documentEnd

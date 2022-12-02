@@ -13,7 +13,7 @@
 documentBegin
 BEGIN link
 - label: foo
-- URI: /f(percentSign)C3(percentSign)B6(percentSign)C3(percentSign)B6
+- URI: /f%C3%B6%C3%B6
 - title: föö
 END link
 documentEnd

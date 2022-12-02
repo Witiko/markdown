@@ -12,7 +12,7 @@
 documentBegin
 BEGIN link
 - label: αγω
-- URI: /(percentSign)CF(percentSign)86(percentSign)CE(percentSign)BF(percentSign)CF(percentSign)85
+- URI: /%CF%86%CE%BF%CF%85
 - title: 
 END link
 documentEnd
