@@ -312,7 +312,7 @@ interblockSeparator
 interblockSeparator
 BEGIN fencedCode
 - src: ./_markdown_test/acbd18db4cc2f85cedef654fccc4a4d8.verbatim
-- infostring: aa
+- infostring: aa ``` (tilde)(tilde)(tilde)
 END fencedCode
 interblockSeparator
 interblockSeparator
