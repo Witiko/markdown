@@ -1,16 +1,17 @@
 %   ---RESULT--- "example": 225,
 %   
-%   <pre><code>aaa
+%   <pre><code>*aaa*
 %   </code></pre>
-%   <p>bbb</p>
+%   <p><em>bbb</em></p>
 %   
 %   ---\RESULT---
 
 <<<
-    aaa
-bbb
+    *aaa*
+*bbb*
 >>>
 documentBegin
-inputVerbatim: ./_markdown_test/47bce5c74f589f4867dbd57e9ca9f808.verbatim
+inputVerbatim: ./_markdown_test/b0c8f0811c40c47c6c172fc9882daaf9.verbatim
+emphasis: bbb
 interblockSeparator
 documentEnd
