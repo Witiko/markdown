@@ -21231,14 +21231,14 @@ end
 
 parsers.tilde_infostring
                      = C((parsers.linechar
-                        - ((parsers.spacechar + parsers.backtick + parsers.tilde)^1
-                          * parsers.newline))^0)
-                     * (parsers.spacechar + parsers.backtick + parsers.tilde)^0
+                        - (parsers.spacechar^1 * parsers.newline))^0)
+                     * parsers.optionalspace
                      * (parsers.newline + parsers.eof)
 
 parsers.backtick_infostring
-                     = C((parsers.linechar - (parsers.backtick
-                        + parsers.spacechar^1 * parsers.newline))^0)
+                     = C((parsers.linechar
+                        - (parsers.backtick
+                          + parsers.spacechar^1 * parsers.newline))^0)
                      * parsers.optionalspace
                      * (parsers.newline + parsers.eof)
 
