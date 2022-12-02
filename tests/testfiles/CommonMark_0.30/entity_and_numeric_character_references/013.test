@@ -1,15 +1,16 @@
 %   ---RESULT--- "example": 37,
 %   
-%   <p>*foo*
+%   <p><em>*foo*</em>
 %   <em>foo</em></p>
 %   
 %   ---\RESULT---
 
 \def\markdownOptionHtml{true}
 <<<
-&#42;foo&#42;
+_&#42;foo&#42;_
 *foo*
 >>>
 documentBegin
+emphasis: *foo*
 emphasis: foo
 documentEnd

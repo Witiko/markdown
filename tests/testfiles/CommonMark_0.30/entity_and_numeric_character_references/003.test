@@ -1,12 +1,13 @@
 %   ---RESULT--- "example": 27,
 %   
-%   <p>&quot; ആ ಫ</p>
+%   <p><em>&quot; ആ ಫ</em></p>
 %   
 %   ---\RESULT---
 
 \def\markdownOptionHtml{true}
 <<<
-&#X22; &#XD06; &#xcab;
+*&#X22; &#XD06; &#xcab;*
 >>>
 documentBegin
+emohasis: " ആ ಫ
 documentEnd
