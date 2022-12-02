@@ -23,6 +23,7 @@ documentBegin
 inputBlockHtmlElement: ./_markdown_test/5a8e413f9b0ef97790d0c9da301a6149.verbatim
 interblockSeparator
 emphasis: world
+inlineHtmlTag: </pre>
 interblockSeparator
-inputBlockHtmlElement: ./_markdown_test/f7abfe4b874900a6fd9eca04220ac70b.verbatim
+inputBlockHtmlElement: ./_markdown_test/3cf13bd6294e965d41514d92b4a04186.verbatim
 documentEnd

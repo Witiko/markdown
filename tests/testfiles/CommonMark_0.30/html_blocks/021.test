@@ -9,5 +9,7 @@
 <del>*foo*</del>
 >>>
 documentBegin
-inlineHtmlTag: <del>(emphasis: foo)</del>
+inlineHtmlTag: <del>
+emphasis: foo
+inlineHtmlTag: </del>
 documentEnd
