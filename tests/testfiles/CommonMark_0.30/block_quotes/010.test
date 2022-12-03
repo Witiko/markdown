@@ -3,7 +3,7 @@
 %   <blockquote>
 %   <pre><code></code></pre>
 %   </blockquote>
-%   <p>foo</p>
+%   <p><em>foo</em></p>
 %   <pre><code></code></pre>
 %   
 %   ---\RESULT---
@@ -11,7 +11,7 @@
 \def\markdownOptionFencedCode{true}
 <<<
 > ```
-foo
+*foo*
 ```
 >>>
 documentBegin
@@ -22,6 +22,7 @@ BEGIN fencedCode
 END fencedCode
 blockQuoteEnd
 interblockSeparator
+emphasis: foo
 interblockSeparator
 BEGIN fencedCode
 - src: ./_markdown_test/d41d8cd98f00b204e9800998ecf8427e.verbatim

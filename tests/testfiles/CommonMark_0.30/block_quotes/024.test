@@ -3,9 +3,9 @@
 %   <blockquote>
 %   <blockquote>
 %   <blockquote>
-%   <p>foo
-%   bar
-%   baz</p>
+%   <p><em>foo</em>
+%   <em>bar</em>
+%   <em>baz</em></p>
 %   </blockquote>
 %   </blockquote>
 %   </blockquote>
@@ -13,14 +13,17 @@
 %   ---\RESULT---
 
 <<<
->>> foo
-> bar
->>baz
+>>> *foo*
+> *bar*
+>>*baz*
 >>>
 documentBegin
 blockQuoteBegin
 blockQuoteBegin
 blockQuoteBegin
+emphasis: foo
+emphasis: bar
+emphasis: baz
 blockQuoteEnd
 blockQuoteEnd
 blockQuoteEnd

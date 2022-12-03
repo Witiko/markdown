@@ -1,26 +1,28 @@
 %   ---RESULT--- "example": 246,
 %   
 %   <blockquote>
-%   <p>aaa</p>
+%   <p><em>aaa</em></p>
 %   </blockquote>
 %   <hr />
 %   <blockquote>
-%   <p>bbb</p>
+%   <p><em>bbb</em></p>
 %   </blockquote>
 %   
 %   ---\RESULT---
 
 <<<
-> aaa
+> *aaa*
 ***
-> bbb
+> *bbb*
 >>>
 documentBegin
 blockQuoteBegin
+emphasis: aaa
 blockQuoteEnd
 interblockSeparator
 thematicBreak
 interblockSeparator
 blockQuoteBegin
+emphasis: bbb
 blockQuoteEnd
 documentEnd

@@ -2,29 +2,31 @@
 %   
 %   <blockquote>
 %   <ul>
-%   <li>foo</li>
+%   <li><em>foo</em></li>
 %   </ul>
 %   </blockquote>
 %   <ul>
-%   <li>bar</li>
+%   <li><em>bar</em></li>
 %   </ul>
 %   
 %   ---\RESULT---
 
 <<<
-> - foo
-- bar
+> - *foo*
+- *bar*
 >>>
 documentBegin
 blockQuoteBegin
 ulBeginTight
 ulItem
+emphasis: foo
 ulItemEnd
 ulEndTight
 blockQuoteEnd
 interblockSeparator
 ulBeginTight
 ulItem
+emphasis: bar
 ulItemEnd
 ulEndTight
 documentEnd
