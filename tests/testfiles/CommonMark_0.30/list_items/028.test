@@ -3,14 +3,14 @@
 %   <ul>
 %   <li></li>
 %   </ul>
-%   <p>foo</p>
+%   <p><em>foo</em></p>
 %   
 %   ---\RESULT---
 
 <<<
 -
 
-  foo
+  _foo_
 >>>
 documentBegin
 ulBeginTight
@@ -18,4 +18,5 @@ ulItem
 ulItemEnd
 ulEndTight
 interblockSeparator
+emphasis: foo
 documentEnd

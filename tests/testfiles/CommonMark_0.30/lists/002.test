@@ -10,7 +10,6 @@
 %   
 %   ---\RESULT---
 
-\def\markdownOptionFancyLists{true}
 <<<
 1. foo
 2. bar
@@ -24,11 +23,8 @@ olItemWithNumber: 2
 olItemEnd
 olEndTight
 interblockSeparator
-BEGIN fancyOlBeginTight
-- numstyle: Decimal
-- numdelim: OneParen
-END fancyOlBeginTight
-fancyOlItemWithNumber: 3
-fancyOlItemEnd
-fancyOlEndTight
+olBeginTight
+olItemWithNumber: 3
+olItemEnd
+olEndTight
 documentEnd

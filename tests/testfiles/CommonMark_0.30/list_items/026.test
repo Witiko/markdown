@@ -1,13 +1,13 @@
 %   ---RESULT--- "example": 278,
 %   
 %   <ul>
-%   <li>foo</li>
+%   <li><em>foo</em></li>
 %   <li>
-%   <pre><code>bar
+%   <pre><code>_bar_
 %   </code></pre>
 %   </li>
 %   <li>
-%   <pre><code>baz
+%   <pre><code>_baz_
 %   </code></pre>
 %   </li>
 %   </ul>
@@ -16,26 +16,27 @@
 
 <<<
 -
-  foo
+  _foo_
 -
   ```
-  bar
+  _bar_
   ```
 -
-      baz
+      _baz_
 >>>
 documentBegin
 ulBeginTight
 ulItem
+emphasis: foo
 ulItemEnd
 ulItem
 BEGIN fencedCode
-- src: ./_markdown_test/37b51d194a7513e45b56f6524f2d51f2.verbatim
+- src: ./_markdown_test/68747b2f234e41a44d20fba8df214e7b.verbatim
 - infostring: 
 END fencedCode
 ulItemEnd
 ulItem
-inputVerbatim: ./_markdown_test/73feffa4b7f6bb68e44cf984c85f6e88.verbatim
+inputVerbatim: ./_markdown_test/dd4ffdae91dd888b881283fc83d59ca8.verbatim
 ulItemEnd
 ulEndTight
 documentEnd

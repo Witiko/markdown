@@ -1,11 +1,12 @@
 %   ---RESULT--- "example": 266,
 %   
-%   <p>1234567890. not ok</p>
+%   <p>1234567890. <em>not ok</em></p>
 %   
 %   ---\RESULT---
 
 <<<
-1234567890. not ok
+1234567890. _not ok_
 >>>
 documentBegin
+emphasis: not ok
 documentEnd

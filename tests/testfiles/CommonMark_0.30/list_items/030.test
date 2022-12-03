@@ -1,25 +1,27 @@
 %   ---RESULT--- "example": 282,
 %   
 %   <ul>
-%   <li>foo</li>
+%   <li><em>foo</em></li>
 %   <li></li>
-%   <li>bar</li>
+%   <li><em>bar</em></li>
 %   </ul>
 %   
 %   ---\RESULT---
 
 <<<
-- foo
+- _foo_
 -   
-- bar
+- _bar_
 >>>
 documentBegin
 ulBeginTight
 ulItem
+emphasis: foo
 ulItemEnd
 ulItem
 ulItemEnd
 ulItem
+emphasis: bar
 ulItemEnd
 ulEndTight
 documentEnd

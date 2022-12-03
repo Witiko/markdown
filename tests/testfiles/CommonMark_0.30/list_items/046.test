@@ -3,7 +3,7 @@
 %   <ul>
 %   <li>
 %   <ul>
-%   <li>foo</li>
+%   <li><em>foo</em></li>
 %   </ul>
 %   </li>
 %   </ul>
@@ -11,13 +11,14 @@
 %   ---\RESULT---
 
 <<<
-- - foo
+- - _foo_
 >>>
 documentBegin
 ulBeginTight
 ulItem
 ulBeginTight
 ulItem
+emphasis: foo
 ulItemEnd
 ulEndTight
 ulItemEnd

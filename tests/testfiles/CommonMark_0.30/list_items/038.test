@@ -2,8 +2,8 @@
 %   
 %   <ol>
 %   <li>
-%   <p>A paragraph
-%   with two lines.</p>
+%   <p><em>A paragraph
+%   with two lines.</em></p>
 %   <pre><code>indented code
 %   </code></pre>
 %   <blockquote>
@@ -15,8 +15,8 @@
 %   ---\RESULT---
 
 <<<
-  1.  A paragraph
-with two lines.
+  1.  _A paragraph
+with two lines._
 
           indented code
 
@@ -25,6 +25,7 @@ with two lines.
 documentBegin
 olBegin
 olItemWithNumber: 1
+emphasis: A paragraph with two lines.
 interblockSeparator
 inputVerbatim: ./_markdown_test/bf995e3b2610078e871b00000c1fb65f.verbatim
 interblockSeparator

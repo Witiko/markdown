@@ -6,7 +6,7 @@
 %   </li>
 %   <li>
 %   <h2>Bar</h2>
-%   baz</li>
+%   <em>baz</em></li>
 %   </ul>
 %   
 %   ---\RESULT---
@@ -15,7 +15,7 @@
 - # Foo
 - Bar
   ---
-  baz
+  _baz_
 >>>
 documentBegin
 ulBeginTight
@@ -24,6 +24,7 @@ headingOne: Foo
 ulItemEnd
 ulItem
 headingTwo: Bar
+emphasis: baz
 ulItemEnd
 ulEndTight
 documentEnd

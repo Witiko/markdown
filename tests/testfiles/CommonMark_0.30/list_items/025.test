@@ -2,22 +2,24 @@
 %   
 %   <ul>
 %   <li>
-%   <p>foo</p>
-%   <p>bar</p>
+%   <p><em>foo</em></p>
+%   <p><em>bar</em></p>
 %   </li>
 %   </ul>
 %   
 %   ---\RESULT---
 
 <<<
--  foo
+-  _foo_
 
-   bar
+   _bar_
 >>>
 documentBegin
 ulBegin
 ulItem
+emphasis: foo
 interblockSeparator
+emphasis: bar
 ulItemEnd
 ulEnd
 documentEnd

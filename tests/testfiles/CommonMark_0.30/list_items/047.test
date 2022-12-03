@@ -5,7 +5,7 @@
 %   <ul>
 %   <li>
 %   <ol start="2">
-%   <li>foo</li>
+%   <li><em>foo</em></li>
 %   </ol>
 %   </li>
 %   </ul>
@@ -15,7 +15,7 @@
 %   ---\RESULT---
 
 <<<
-1. - 2. foo
+1. - 2. _foo_
 >>>
 documentBegin
 olBeginTight
@@ -24,6 +24,7 @@ ulBeginTight
 ulItem
 olBeginTight
 olItemWithNumber: 2
+emphasis: foo
 olItemEnd
 olEndTight
 ulItemEnd
