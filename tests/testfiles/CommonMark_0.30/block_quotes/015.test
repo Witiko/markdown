@@ -9,7 +9,6 @@
 %   
 %   ---\RESULT---
 
-\def\markdownOptionBreakableBlockquotes{true}
 <<<
 > *foo*
 

@@ -6,7 +6,6 @@
 %   
 %   ---\RESULT---
 
-\def\markdownOptionHtml{true}
 <<<
 *&nbsp; &amp; &copy; &AElig; &Dcaron;*
 *&frac34; &HilbertSpace; &DifferentialD;*

@@ -4,7 +4,6 @@
 %   
 %   ---\RESULT---
 
-\def\markdownOptionHtml{true}
 <<<
 [link](foo%20b&auml;)
 >>>

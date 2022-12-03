@@ -16,7 +16,6 @@
 %   
 %   ---\RESULT---
 
-\def\markdownOptionHtml{true}
 <<<
 <![CDATA[
 function matchwo(a,b)

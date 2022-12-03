@@ -4,7 +4,6 @@
 %   
 %   ---\RESULT---
 
-\def\markdownOptionHtml{true}
 <<<
 *&#35; &#1234; &#992; &#0;*
 >>>

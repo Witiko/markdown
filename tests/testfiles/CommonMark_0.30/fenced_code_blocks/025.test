@@ -7,7 +7,6 @@
 %   
 %   ---\RESULT---
 
-\def\markdownOptionFencedCode{true}
 <<<
 ~~~~    ruby startline=3 $%@#$
 def foo(x)

@@ -5,7 +5,6 @@
 %   
 %   ---\RESULT---
 
-\def\markdownOptionHtml{true}
 <<<
 _&#42;foo&#42;_
 *foo*

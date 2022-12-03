@@ -13,7 +13,6 @@
 %   
 %   ---\RESULT---
 
-\def\markdownOptionFencedCode{true}
 <<<
 - a
   > b

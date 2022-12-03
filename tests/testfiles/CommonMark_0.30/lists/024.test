@@ -10,7 +10,6 @@
 %   
 %   ---\RESULT---
 
-\def\markdownOptionFencedCode{true}
 <<<
 1. ```
    foo

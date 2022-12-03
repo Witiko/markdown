@@ -4,7 +4,6 @@
 %   
 %   ---\RESULT---
 
-\def\markdownOptionHtml{true}
 <<<
 <del>*foo*</del>
 >>>
