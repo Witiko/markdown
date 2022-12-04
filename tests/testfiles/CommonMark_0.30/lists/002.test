@@ -1,30 +1,33 @@
 %   ---RESULT--- "example": 302,
 %   
 %   <ol>
-%   <li>foo</li>
-%   <li>bar</li>
+%   <li><em>foo</em></li>
+%   <li><em>bar</em></li>
 %   </ol>
 %   <ol start="3">
-%   <li>baz</li>
+%   <li><em>baz</em></li>
 %   </ol>
 %   
 %   ---\RESULT---
 
 <<<
-1. foo
-2. bar
-3) baz
+1. _foo_
+2. _bar_
+3) _baz_
 >>>
 documentBegin
 olBeginTight
 olItemWithNumber: 1
+emphasis: foo
 olItemEnd
 olItemWithNumber: 2
+emphasis: bar
 olItemEnd
 olEndTight
 interblockSeparator
 olBeginTight
 olItemWithNumber: 3
+emphasis: baz
 olItemEnd
 olEndTight
 documentEnd

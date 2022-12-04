@@ -2,33 +2,36 @@
 %   
 %   <ul>
 %   <li>
-%   <p>foo</p>
+%   <p><em>foo</em></p>
 %   </li>
 %   <li>
-%   <p>bar</p>
+%   <p><em>bar</em></p>
 %   </li>
 %   <li>
-%   <p>baz</p>
+%   <p><em>baz</em></p>
 %   </li>
 %   </ul>
 %   
 %   ---\RESULT---
 
 <<<
-- foo
+- _foo_
 
-- bar
+- _bar_
 
 
-- baz
+- _baz_
 >>>
 documentBegin
 ulBegin
 ulItem
+emphasis: foo
 ulItemEnd
 ulItem
+emphasis: bar
 ulItemEnd
 ulItem
+emphasis: baz
 ulItemEnd
 ulEnd
 documentEnd

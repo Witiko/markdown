@@ -2,31 +2,33 @@
 %   
 %   <ol>
 %   <li>
-%   <p>a</p>
+%   <p><em>a</em></p>
 %   </li>
 %   <li>
-%   <p>b</p>
+%   <p><em>b</em></p>
 %   </li>
 %   </ol>
-%   <pre><code>3. c
+%   <pre><code>3. _c_
 %   </code></pre>
 %   
 %   ---\RESULT---
 
 <<<
-1. a
+1. _a_
 
-  2. b
+  2. _b_
 
-    3. c
+    3. _c_
 >>>
 documentBegin
 olBegin
 olItemWithNumber: 1
+emphasis: a
 olItemEnd
 olItemWithNumber: 2
+emphasis: b
 olItemEnd
 olEnd
 interblockSeparator
-inputVerbatim: ./_markdown_test/b186aef91563af99a525ef47eea07d9e.verbatim
+inputVerbatim: ./_markdown_test/9b5fa609c661c8387cf7669ea3dd7bd4.verbatim
 documentEnd
