@@ -1,12 +1,12 @@
 %   ---RESULT--- "example": 333,
 %   
-%   <p><code> b </code></p>
+%   <p><code> b </code></p>
 %   
 %   ---\RESULT---
 
 <<<
-` b `
+` b `
 >>>
 documentBegin
-codeSpan:  b 
+codeSpan:  b 
 documentEnd
