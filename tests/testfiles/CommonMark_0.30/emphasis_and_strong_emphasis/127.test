@@ -10,9 +10,5 @@ __<a href="__">
 documentBegin
 underscore
 underscore
-BEGIN link
-- label: 
-- URI: __
-- title: 
-END link
+inlineHtmlTag: <a href="(underscore)(underscore)">
 documentEnd

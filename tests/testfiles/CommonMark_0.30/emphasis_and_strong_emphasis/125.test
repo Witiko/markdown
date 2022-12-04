@@ -8,9 +8,5 @@
 *<img src="foo" title="*"/>
 >>>
 documentBegin
-BEGIN image
-- label: 
-- URI: foo
-- title: *
-END image
+inlineHtmlTag: <img src="foo" title="*"/>
 documentEnd

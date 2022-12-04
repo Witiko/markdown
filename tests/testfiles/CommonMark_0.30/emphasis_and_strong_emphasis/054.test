@@ -8,5 +8,5 @@
 *foo [bar](/url)*
 >>>
 documentBegin
-emphasis: foo (BEGIN link)(- label: bar)(- URI: /url)(- title: )(END link)
+emphasis: foo (inlineHtmlTag: <a href="/url">)bar(inlineHtmlTag: </a>)
 documentEnd
