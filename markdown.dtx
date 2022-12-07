@@ -23575,14 +23575,14 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
       end
 
       local FencedDiv = fenced_div_begin * increment_div_level(1)
-                      * parsers.blanklines
+                      * parsers.skipblanklines
                       * Ct( (V("Block") - fenced_div_end)^-1
                           * ( parsers.blanklines
                             / function()
                                 return writer.interblocksep
                               end
                             * (V("Block") - fenced_div_end))^0)
-                      * parsers.blanklines
+                      * parsers.skipblanklines
                       * fenced_div_end * increment_div_level(-1)
                       / function (infostring, div)
                           local attr = lpeg.match(Ct(parsers.attributes), infostring)
