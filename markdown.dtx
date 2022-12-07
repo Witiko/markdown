@@ -21034,7 +21034,8 @@ parsers.doubletildes           = P("~~")
 parsers.fourspaces             = P("    ")
 
 parsers.any                    = P(1)
-parsers.fail                   = parsers.any - 1
+parsers.succeed                = P(true)
+parsers.fail                   = P(false)
 
 parsers.escapable              = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
 parsers.anyescaped             = parsers.backslash / "" * parsers.escapable
@@ -22327,12 +22328,12 @@ function M.reader.new(writer, options)
     local syntax =
       { "Blocks",
 
-        Blocks                = ( V("ExpectedJekyllData")
-                                * (V("Blank")^0 / writer.interblocksep)
-                                )^-1
+        Blocks                = V("InitializeState")
+                              * ( V("ExpectedJekyllData")
+                                * (V("Blank")^0 / writer.interblocksep))^-1
                               * V("Blank")^0
                               * V("Block")^-1
-                              * (V("Blank")^0 / writer.interblocksep
+                              * ( V("Blank")^0 / writer.interblocksep
                                 * V("Block"))^0
                               * V("Blank")^0 * parsers.eof,
 
@@ -22371,6 +22372,7 @@ function M.reader.new(writer, options)
         Smart                 = parsers.Smart,
         Symbol                = parsers.Symbol,
         SpecialChar           = parsers.fail,
+        InitializeState       = parsers.succeed,
       }
 %    \end{macrocode}
 % \par
@@ -22413,6 +22415,19 @@ function M.reader.new(writer, options)
     self.add_special_character("<")
     self.add_special_character("!")
     self.add_special_character("\\")
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Add method \luamdef{reader->initialize_named_group} that defines named groups
+% with a default capture value.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    self.initialize_named_group = function(name, value)
+      syntax.InitializeState = syntax.InitializeState
+                             * Cg(Ct("") / value, name)
+    end
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -22583,7 +22598,10 @@ function M.reader.new(writer, options)
 
     local inlines_t = util.table_copy(syntax)
     inlines_t[1] = "Inlines"
-    inlines_t.Inlines = parsers.Inline^0 * (parsers.spacing^0 * parsers.eof / "")
+    inlines_t.Inlines = V("InitializeState")
+                      * parsers.Inline^0
+                      * ( parsers.spacing^0
+                        * parsers.eof / "")
     parsers.inlines = Ct(inlines_t)
 
     local inlines_no_link_t = util.table_copy(inlines_t)
@@ -23489,7 +23507,7 @@ end
 %#### Fenced Divs
 %
 % The \luamdef{extensions.fenced_divs} function implements the Pandoc fenced
-% divs syntax extension. When the `blank_before_div_fence`parameter is `true`,
+% divs syntax extension. When the `blank_before_div_fence` parameter is `true`,
 % the syntax extension requires a blank line between a paragraph and the
 % following fenced code block.
 %
@@ -23516,31 +23534,86 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
       end
     end, extend_reader = function(self)
       local parsers = self.parsers
-      local parse_blocks = self.parser_functions.parse_blocks
       local writer = self.writer
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define basic patterns for matching the opening and the closing tag of a div.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      local fenced_div_begin = parsers.nonindentspace
+                             * parsers.colon^3
+                             * parsers.optionalspace
+                             * Ct(parsers.attributes)
+                             * parsers.optionalspace
+                             * (parsers.newline + parsers.eof)
 
-      local FencedDiv = parsers.fencehead_with_attributes(parsers.colon)
-                      * Cs(parsers.fencedline(parsers.colon)^0)
-                      * parsers.fencetail(parsers.colon)
-                      / function(attr, s)
-                        local content = parse_blocks(s)
-                        return writer.div(content, attr)
-                      end
+      local fenced_div_end = parsers.nonindentspace
+                           * parsers.colon^3
+                           * parsers.optionalspace
+                           * (parsers.newline + parsers.eof)
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Initialize a named group named `div_level` for tracking how deep we are
+% nested in divs.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      self.initialize_named_group("div_level", "0")
+
+      local function increment_div_level(increment)
+        local function update_div_level(s, i, current_level) -- luacheck: ignore s i
+          current_level = tonumber(current_level)
+          local next_level = tostring(current_level + increment)
+          return true, next_level
+        end
+
+        return Cg( Cmt(Cb("div_level"), update_div_level)
+                 , "div_level")
+      end
+
+      local FencedDiv = fenced_div_begin * increment_div_level(1)
+                      * parsers.blanklines
+                      * Ct( (V("Block") - fenced_div_end)^-1
+                          * ( parsers.blanklines
+                            / function()
+                                return writer.interblocksep
+                              end
+                            * (V("Block") - fenced_div_end))^0)
+                      * parsers.blanklines
+                      * fenced_div_end * increment_div_level(-1)
+                      / function (attr, div) return div, attr end
+                      / writer.div
 
       self.insert_pattern("Block after Verbatim",
                           FencedDiv, "FencedDiv")
 
-      local fencestart
-      if blank_before_div_fence then
-        fencestart = parsers.fail
-      else
-        fencestart = parsers.fencehead_with_attributes(parsers.colon)
-      end
-
-      local EndlineExceptions = parsers.EndlineExceptions + fencestart
-      self.update_rule("EndlineExceptions", EndlineExceptions)
-
       self.add_special_character(":")
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% If the `blank_before_div_fence` parameter is `false`, we will have the
+% closing div at the beginning of a line break the current paragraph if
+% we are currently nested in a div.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      if not blank_before_div_fence then
+        local function check_div_level(s, i, current_level) -- luacheck: ignore s i
+          current_level = tonumber(current_level)
+          return current_level > 0
+        end
+
+        local is_inside_div = Cmt(Cb("div_level"), check_div_level)
+        local fencestart = is_inside_div * fenced_div_end
+        local EndlineExceptions = parsers.EndlineExceptions + fencestart
+        self.update_rule("EndlineExceptions", EndlineExceptions)
+      end
     end
   }
 end
