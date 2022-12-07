@@ -10,6 +10,6 @@
  *bbb*
 >>>
 documentBegin
-emohasis: aaa
-emohasis: bbb
+emphasis: aaa
+emphasis: bbb
 documentEnd

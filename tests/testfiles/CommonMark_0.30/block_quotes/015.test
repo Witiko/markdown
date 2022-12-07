@@ -20,6 +20,6 @@ emphasis: foo
 blockQuoteEnd
 interblockSeparator
 blockQuoteBegin
-emohasis: bar
+emphasis: bar
 blockQuoteEnd
 documentEnd
