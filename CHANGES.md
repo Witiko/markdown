@@ -6,6 +6,12 @@ Refactoring:
 
 - Sort Lua options, token renderers, and built-in syntax extensions. (#208)
 
+Fixes:
+
+- Fix incorrect category codes in plain TeX renderer prototype definitions.
+  (f156f05)
+- Allow backticks in tilde code block infostrings. (#214, #219, #221)
+
 ## 2.18.0 (2022-10-30)
 
 Development:

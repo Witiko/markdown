@@ -5703,12 +5703,6 @@ defaultOptions.hashEnumerators = false
          ===================
          ``````
 
-         These HTML attributes have currently no effect other than enabling
-%        content slicing, see the \Opt{slice} option.
-%        \iffalse
-         [content slicing](#slice).
-%        \fi
-
 :    false
 
      :   Disable the assignment of HTML attributes to headings.
@@ -7132,7 +7126,7 @@ defaultOptions.shiftHeadings = 0
 %</lua,lua-cli>
 %<*manual-options>
 
-#### Option `slice` {#slice}
+#### Option `slice`
 
 `slice` (default value: `^ $`)
 
@@ -16226,6 +16220,7 @@ following text:
           }
       }
   }
+\ExplSyntaxOff
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -20405,7 +20400,6 @@ function M.writer.new(options)
    self.escaped_uri_chars = {
      ["{"] = "\\markdownRendererLeftBrace{}",
      ["}"] = "\\markdownRendererRightBrace{}",
-     ["%"] = "\\markdownRendererPercentSign{}",
      ["\\"] = "\\markdownRendererBackslash{}",
    }
    self.escaped_minimal_strings = {
@@ -21252,15 +21246,24 @@ local function captures_geq_length(_,i,a,b)
   return #a >= #b and i
 end
 
-parsers.infostring   = (parsers.linechar - (parsers.backtick
-                     + parsers.space^1 * (parsers.newline + parsers.eof)))^0
+parsers.tilde_infostring
+                     = C((parsers.linechar
+                        - (parsers.spacechar^1 * parsers.newline))^0)
+                     * parsers.optionalspace
+                     * (parsers.newline + parsers.eof)
+
+parsers.backtick_infostring
+                     = C((parsers.linechar
+                        - (parsers.backtick
+                          + parsers.spacechar^1 * parsers.newline))^0)
+                     * parsers.optionalspace
+                     * (parsers.newline + parsers.eof)
 
 local fenceindent
-parsers.fencehead    = function(char)
+parsers.fencehead    = function(char, infostring)
   return               C(parsers.nonindentspace) / function(s) fenceindent = #s end
                      * Cg(char^3, "fencelength")
-                     * parsers.optionalspace * C(parsers.infostring)
-                     * parsers.optionalspace * (parsers.newline + parsers.eof)
+                     * parsers.optionalspace * infostring
 end
 
 parsers.fencehead_with_attributes
@@ -21531,12 +21534,14 @@ parsers.urlchar      = parsers.anyescaped - parsers.newline - parsers.more
 % \end{markdown}
 %  \begin{macrocode}
 parsers.TildeFencedCode
-       = parsers.fencehead(parsers.tilde)
+       = parsers.fencehead(parsers.tilde,
+                           parsers.tilde_infostring)
        * Cs(parsers.fencedline(parsers.tilde)^0)
        * parsers.fencetail(parsers.tilde)
 
 parsers.BacktickFencedCode
-       = parsers.fencehead(parsers.backtick)
+       = parsers.fencehead(parsers.backtick,
+                           parsers.backtick_infostring)
        * Cs(parsers.fencedline(parsers.backtick)^0)
        * parsers.fencetail(parsers.backtick)
 
@@ -21828,14 +21833,6 @@ function M.reader.new(writer, options)
     parsers.blockquote_body = parsers.blockquote_body
                             * (parsers.blankline^0 / "")
   end
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-%#### Parsers Used for Notes (local)
-%
-% \end{markdown}
-%  \begin{macrocode}
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -23490,8 +23487,10 @@ M.extensions.fenced_code = function(blank_before_code_fence)
       if blank_before_code_fence then
         fencestart = parsers.fail
       else
-        fencestart = parsers.fencehead(parsers.backtick)
-                   + parsers.fencehead(parsers.tilde)
+        fencestart = parsers.fencehead(parsers.backtick,
+                                       parsers.backtick_infostring)
+                   + parsers.fencehead(parsers.tilde,
+                                       parsers.tilde_infostring)
       end
 
       local EndlineExceptions = parsers.EndlineExceptions + fencestart
