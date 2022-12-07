@@ -21246,8 +21246,7 @@ local function captures_geq_length(_,i,a,b)
   return #a >= #b and i
 end
 
-parsers.tilde_infostring
-                     = C((parsers.linechar
+parsers.infostring   = C((parsers.linechar
                         - (parsers.spacechar^1 * parsers.newline))^0)
                      * parsers.optionalspace
                      * (parsers.newline + parsers.eof)
@@ -21535,7 +21534,7 @@ parsers.urlchar      = parsers.anyescaped - parsers.newline - parsers.more
 %  \begin{macrocode}
 parsers.TildeFencedCode
        = parsers.fencehead(parsers.tilde,
-                           parsers.tilde_infostring)
+                           parsers.infostring)
        * Cs(parsers.fencedline(parsers.tilde)^0)
        * parsers.fencetail(parsers.tilde)
 
@@ -23490,7 +23489,7 @@ M.extensions.fenced_code = function(blank_before_code_fence)
         fencestart = parsers.fencehead(parsers.backtick,
                                        parsers.backtick_infostring)
                    + parsers.fencehead(parsers.tilde,
-                                       parsers.tilde_infostring)
+                                       parsers.infostring)
       end
 
       local EndlineExceptions = parsers.EndlineExceptions + fencestart
@@ -23545,7 +23544,7 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
       local fenced_div_begin = parsers.nonindentspace
                              * parsers.colon^3
                              * parsers.optionalspace
-                             * Ct(parsers.attributes)
+                             * C(parsers.infostring)
                              * parsers.optionalspace
                              * (parsers.newline + parsers.eof)
 
@@ -23585,7 +23584,13 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
                             * (V("Block") - fenced_div_end))^0)
                       * parsers.blanklines
                       * fenced_div_end * increment_div_level(-1)
-                      / function (attr, div) return div, attr end
+                      / function (infostring, div)
+                          local attr = lpeg.match(Ct(parsers.attributes), infostring)
+                          if attr == nil then
+                            attr = {"." .. infostring}
+                          end
+                          return div, attr
+                        end
                       / writer.div
 
       self.insert_pattern("Block after Verbatim",
