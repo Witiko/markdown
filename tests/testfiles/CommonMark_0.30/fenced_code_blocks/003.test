@@ -4,12 +4,11 @@
 %   
 %   ---\RESULT---
 
-\def\markdownOptionFencedCode{true}
 <<<
 ``
 foo
 ``
 >>>
 documentBegin
-codeSpan:  foo
+codeSpan: foo
 documentEnd

@@ -2,22 +2,24 @@
 %   
 %   <ul>
 %   <li>
-%   <p>one</p>
-%   <p>two</p>
+%   <p><em>one</em></p>
+%   <p><em>two</em></p>
 %   </li>
 %   </ul>
 %   
 %   ---\RESULT---
 
 <<<
-- one
+- _one_
 
-  two
+  _two_
 >>>
 documentBegin
 ulBegin
 ulItem
+emphasis: one
 interblockSeparator
+emphasis: two
 ulItemEnd
 ulEnd
 documentEnd

@@ -6,7 +6,6 @@
 %   
 %   ---\RESULT---
 
-\def\markdownOptionHtml{true}
 <<<
 <a href="foo">
 *bar*

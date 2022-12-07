@@ -4,8 +4,8 @@
 %   <blockquote>
 %   <ol>
 %   <li>
-%   <p>one</p>
-%   <p>two</p>
+%   <p><em>one</em></p>
+%   <p><em>two</em></p>
 %   </li>
 %   </ol>
 %   </blockquote>
@@ -14,16 +14,18 @@
 %   ---\RESULT---
 
 <<<
-   > > 1.  one
+   > > 1.  _one_
 >>
->>     two
+>>     _two_
 >>>
 documentBegin
 blockQuoteBegin
 blockQuoteBegin
 olBegin
 olItemWithNumber: 1
+emphasis: one
 interblockSeparator
+emphasis: two
 olItemEnd
 olEnd
 blockQuoteEnd

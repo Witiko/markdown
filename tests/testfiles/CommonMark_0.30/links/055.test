@@ -10,4 +10,5 @@
 [ref]: /uri
 >>>
 documentBegin
+inlineHtmlTag: <bar attr="][ref]">
 documentEnd

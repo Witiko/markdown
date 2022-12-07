@@ -2,42 +2,44 @@
 %   
 %   <ul>
 %   <li>
-%   <p>foo</p>
-%   <p>notcode</p>
+%   <p><em>foo</em></p>
+%   <p><em>notcode</em></p>
 %   </li>
 %   <li>
-%   <p>foo</p>
+%   <p><em>foo</em></p>
 %   </li>
 %   </ul>
 %   <!-- -->
-%   <pre><code>code
+%   <pre><code>_code_
 %   </code></pre>
 %   
 %   ---\RESULT---
 
-\def\markdownOptionHtml{true}
 <<<
--   foo
+-   _foo_
 
-    notcode
+    _notcode_
 
--   foo
+-   _foo_
 
 <!-- -->
 
-    code
+    _code_
 >>>
 documentBegin
 ulBegin
 ulItem
+emphasis: foo
 interblockSeparator
+emphasis: notcode
 ulItemEnd
 ulItem
+emphasis: foo
 ulItemEnd
 ulEnd
 interblockSeparator
 blockHtmlCommentBegin
 blockHtmlCommentEnd
 interblockSeparator
-inputVerbatim: ./_markdown_test/c13367945d5d4c91047b3b50234aa7ab.verbatim
+inputVerbatim: ./_markdown_test/57e85d2f0dcbe302e18311cb70501905.verbatim
 documentEnd

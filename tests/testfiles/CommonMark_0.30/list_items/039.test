@@ -1,19 +1,20 @@
 %   ---RESULT--- "example": 291,
 %   
 %   <ol>
-%   <li>A paragraph
-%   with two lines.</li>
+%   <li><em>A paragraph
+%   with two lines.</em></li>
 %   </ol>
 %   
 %   ---\RESULT---
 
 <<<
-  1.  A paragraph
-    with two lines.
+  1.  _A paragraph
+    with two lines._
 >>>
 documentBegin
 olBeginTight
 olItemWithNumber: 1
+emphasis: A paragraph with two lines.
 olItemEnd
 olEndTight
 documentEnd

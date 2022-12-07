@@ -4,7 +4,6 @@
 %   
 %   ---\RESULT---
 
-\def\markdownOptionHtml{true}
 <<<
 Foo <responsive-image src="foo.jpg" />
 >>>

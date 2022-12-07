@@ -1,13 +1,15 @@
 %   ---RESULT--- "example": 222,
 %   
-%   <p>aaa
-%   bbb</p>
+%   <p><em>aaa</em>
+%   <em>bbb</em></p>
 %   
 %   ---\RESULT---
 
 <<<
-  aaa
- bbb
+  *aaa*
+ *bbb*
 >>>
 documentBegin
+emohasis: aaa
+emohasis: bbb
 documentEnd

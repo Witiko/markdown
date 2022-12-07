@@ -11,7 +11,7 @@
 >>>
 documentBegin
 BEGIN image
-- label: foo bar
+- label: (emphasis: foo) bar
 - URI: /url
 - title: title
 END image

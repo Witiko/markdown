@@ -4,14 +4,13 @@
 %   
 %   ---\RESULT---
 
-\def\markdownOptionHtml{true}
 <<<
 [link](foo%20b&auml;)
 >>>
 documentBegin
 BEGIN link
 - label: link
-- URI: foo(percentSign)20b(percentSign)C3(percentSign)A4
+- URI: foo%20b%C3%A4
 - title: 
 END link
 documentEnd

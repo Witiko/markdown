@@ -1,26 +1,21 @@
 %   ---RESULT--- "example": 28,
 %   
-%   <p>&amp;nbsp &amp;x; &amp;#; &amp;#x;
-%   &amp;#87654321;
-%   &amp;#abcdef0;
-%   &amp;ThisIsNotDefined; &amp;hi?;</p>
+%   <p><em>&amp;nbsp &amp;x; &amp;#; &amp;#x;</em>
+%   <em>&amp;#87654321;</em>
+%   <em>&amp;#abcdef0;</em>
+%   <em>&amp;ThisIsNotDefined; &amp;hi?;</em></p>
 %   
 %   ---\RESULT---
 
-\def\markdownOptionHtml{true}
 <<<
-&nbsp &x; &#; &#x;
-&#87654321;
-&#abcdef0;
-&ThisIsNotDefined; &hi?;
+*&nbsp &x; &#; &#x;*
+*&#87654321;*
+*&#abcdef0;*
+*&ThisIsNotDefined; &hi?;*
 >>>
 documentBegin
-ampersand
-ampersand
-ampersand
-ampersand
-ampersand
-ampersand
-ampersand
-ampersand
+emphasis: (ampersand)nbsp (ampersand)x; (ampersand)(hash); (ampersand)(hash)x;
+emphasis: (ampersand)(hash)87654321;
+emphasis: (ampersand)(hash)abcdef0;
+emphasis: (ampersand)ThisIsNotDefined; (ampersand)hi?;
 documentEnd

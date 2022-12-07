@@ -6,7 +6,6 @@
 %   
 %   ---\RESULT---
 
-\def\markdownOptionHtml{true}
 <<<
   <div>
 
@@ -15,5 +14,5 @@
 documentBegin
 inputBlockHtmlElement: ./_markdown_test/32125540a649ecc646413c37c588775d.verbatim
 interblockSeparator
-inputVerbatim: ./_markdown_test/dc6dce4a544fdca2df29d5ac0ea9906b.verbatim
+inputVerbatim: ./_markdown_test/32125540a649ecc646413c37c588775d.verbatim
 documentEnd

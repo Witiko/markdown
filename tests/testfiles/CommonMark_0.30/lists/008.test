@@ -1,32 +1,33 @@
 %   ---RESULT--- "example": 308,
 %   
 %   <ul>
-%   <li>foo</li>
-%   <li>bar</li>
+%   <li><em>foo</em></li>
+%   <li><em>bar</em></li>
 %   </ul>
 %   <!-- -->
 %   <ul>
-%   <li>baz</li>
-%   <li>bim</li>
+%   <li><em>baz</em></li>
+%   <li><em>bim</em></li>
 %   </ul>
 %   
 %   ---\RESULT---
 
-\def\markdownOptionHtml{true}
 <<<
-- foo
-- bar
+- _foo_
+- _bar_
 
 <!-- -->
 
-- baz
-- bim
+- _baz_
+- _bim_
 >>>
 documentBegin
 ulBeginTight
 ulItem
+emphasis: foo
 ulItemEnd
 ulItem
+emphasis: bar
 ulItemEnd
 ulEndTight
 interblockSeparator
@@ -35,8 +36,10 @@ blockHtmlCommentEnd
 interblockSeparator
 ulBeginTight
 ulItem
+emphasis: baz
 ulItemEnd
 ulItem
+emphasis: bim
 ulItemEnd
 ulEndTight
 documentEnd

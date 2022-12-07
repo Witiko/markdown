@@ -1,13 +1,13 @@
 %   ---RESULT--- "example": 294,
 %   
 %   <ul>
-%   <li>foo
+%   <li><em>foo</em>
 %   <ul>
-%   <li>bar
+%   <li><em>bar</em>
 %   <ul>
-%   <li>baz
+%   <li><em>baz</em>
 %   <ul>
-%   <li>boo</li>
+%   <li><em>boo</em></li>
 %   </ul>
 %   </li>
 %   </ul>
@@ -19,20 +19,24 @@
 %   ---\RESULT---
 
 <<<
-- foo
-  - bar
-    - baz
-      - boo
+- _foo_
+  - _bar_
+    - _baz_
+      - _boo_
 >>>
 documentBegin
 ulBeginTight
 ulItem
+emphasis: foo
 ulBeginTight
 ulItem
+emphasis: bar
 ulBeginTight
 ulItem
+emphasis: baz
 ulBeginTight
 ulItem
+emphasis: boo
 ulItemEnd
 ulEndTight
 ulItemEnd

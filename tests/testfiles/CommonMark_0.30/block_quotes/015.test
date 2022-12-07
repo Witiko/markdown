@@ -1,24 +1,25 @@
 %   ---RESULT--- "example": 242,
 %   
 %   <blockquote>
-%   <p>foo</p>
+%   <p><em>foo</em></p>
 %   </blockquote>
 %   <blockquote>
-%   <p>bar</p>
+%   <p><em>bar</em></p>
 %   </blockquote>
 %   
 %   ---\RESULT---
 
-\def\markdownOptionBreakableBlockquotes{true}
 <<<
-> foo
+> *foo*
 
-> bar
+> *bar*
 >>>
 documentBegin
 blockQuoteBegin
+emphasis: foo
 blockQuoteEnd
 interblockSeparator
 blockQuoteBegin
+emohasis: bar
 blockQuoteEnd
 documentEnd

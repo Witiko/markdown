@@ -8,4 +8,5 @@
 [foo <bar attr="](baz)">
 >>>
 documentBegin
+inlineHtmlTag: <bar attr="](baz)">
 documentEnd

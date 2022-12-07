@@ -5,8 +5,6 @@
 %   
 %   ---\RESULT---
 
-\def\markdownOptionFencedCode{true}
-\def\markdownOptionHtml{true}
 <<<
 ``` f&ouml;&ouml;
 foo

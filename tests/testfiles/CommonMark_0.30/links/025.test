@@ -4,7 +4,6 @@
 %   
 %   ---\RESULT---
 
-\def\markdownOptionHtml{true}
 <<<
 [link](/url "title \"&quot;")
 >>>

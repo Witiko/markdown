@@ -9,7 +9,7 @@
 >>>
 documentBegin
 BEGIN image
-- label: foo bar
+- label: foo (BEGIN link)(- label: bar)(- URI: /url)(- title: )(END link)
 - URI: /url2
 - title: 
 END image

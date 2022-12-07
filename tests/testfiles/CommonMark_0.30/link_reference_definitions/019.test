@@ -5,8 +5,9 @@
 %   ---\RESULT---
 
 <<<
-[foo]: /url
-"title" ok
+[foo]: /*url*
+"title" *ok*
 >>>
 documentBegin
+emphasis: ok
 documentEnd

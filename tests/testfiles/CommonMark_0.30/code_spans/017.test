@@ -8,9 +8,5 @@
 <a href="`">`
 >>>
 documentBegin
-BEGIN link
-- label: `
-- URI: `
-- title: 
-END link
+inlineHtmlTag: <a href="`">
 documentEnd

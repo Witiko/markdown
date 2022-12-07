@@ -1,18 +1,18 @@
 %   ---RESULT--- "example": 25,
 %   
-%   <p>  &amp; © Æ Ď
-%   ¾ ℋ ⅆ
-%   ∲ ≧̸</p>
+%   <p><em>  &amp; © Æ Ď</em>
+%   <em>¾ ℋ ⅆ</em>
+%   <em>∲ ≧̸<</em>/p>
 %   
 %   ---\RESULT---
 
-\def\markdownOptionHtml{true}
 <<<
-&nbsp; &amp; &copy; &AElig; &Dcaron;
-&frac34; &HilbertSpace; &DifferentialD;
-&ClockwiseContourIntegral; &ngE;
+*&nbsp; &amp; &copy; &AElig; &Dcaron;*
+*&frac34; &HilbertSpace; &DifferentialD;*
+*&ClockwiseContourIntegral; &ngE;*
 >>>
 documentBegin
-nbsp
-ampersand
+emphasis: (nbsp) (ampersand) © Æ Ď
+emphasis: ¾ ℋ ⅆ
+emphasis: ∲ ≧̸
 documentEnd

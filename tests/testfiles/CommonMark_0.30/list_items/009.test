@@ -1,15 +1,17 @@
 %   ---RESULT--- "example": 261,
 %   
-%   <p>-one</p>
-%   <p>2.two</p>
+%   <p>-<em>one</em></p>
+%   <p>2.<em>two</em></p>
 %   
 %   ---\RESULT---
 
 <<<
--one
+-_one_
 
-2.two
+2._two_
 >>>
 documentBegin
+emphasis: one
 interblockSeparator
+emphasis: two
 documentEnd

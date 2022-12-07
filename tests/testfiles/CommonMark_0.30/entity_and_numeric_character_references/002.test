@@ -1,13 +1,12 @@
 %   ---RESULT--- "example": 26,
 %   
-%   <p># Ӓ Ϡ �</p>
+%   <p><em># Ӓ Ϡ �</em></p>
 %   
 %   ---\RESULT---
 
-\def\markdownOptionHtml{true}
 <<<
-&#35; &#1234; &#992; &#0;
+*&#35; &#1234; &#992; &#0;*
 >>>
 documentBegin
-hash
+emphasis: (hash) Ӓ Ϡ �
 documentEnd

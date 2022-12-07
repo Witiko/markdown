@@ -8,9 +8,5 @@
 <a href="/bar\/)">
 >>>
 documentBegin
-BEGIN link
-- label: 
-- URI: /bar(backslash)/)
-- title: 
-END link
+inlineHtmlTag: <a href="/bar(backslash)/)">
 documentEnd

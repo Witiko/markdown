@@ -4,10 +4,9 @@
 %   
 %   ---\RESULT---
 
-\def\markdownOptionHtml{true}
 <<<
 foo <a href="&ouml;">
 >>>
 documentBegin
-inlineHtmlTag: <a href="ö">
+inlineHtmlTag: <a href="(ampersand)ouml;">
 documentEnd

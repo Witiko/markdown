@@ -1,39 +1,41 @@
 %   ---RESULT--- "example": 321,
 %   
 %   <ul>
-%   <li>a
+%   <li><em>a</em>
 %   <blockquote>
-%   <p>b</p>
+%   <p><em>b</em></p>
 %   </blockquote>
-%   <pre><code>c
+%   <pre><code>_c_
 %   </code></pre>
 %   </li>
-%   <li>d</li>
+%   <li><em>d</em></li>
 %   </ul>
 %   
 %   ---\RESULT---
 
-\def\markdownOptionFencedCode{true}
 <<<
-- a
-  > b
+- _a_
+  > _b_
   ```
-  c
+  _c_
   ```
-- d
+- _d_
 >>>
 documentBegin
 ulBeginTight
 ulItem
+emphasis: a
 blockQuoteBegin
+emphasis: b
 blockQuoteEnd
 interblockSeparator
 BEGIN fencedCode
-- src: ./_markdown_test/4a8a08f09d37b73795649038408b5f33.verbatim
+- src: ./_markdown_test/627c418cd3ebbc37d157dfe5ce0d1983.verbatim
 - infostring: 
 END fencedCode
 ulItemEnd
 ulItem
+emphasis: d
 ulItemEnd
 ulEndTight
 documentEnd

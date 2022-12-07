@@ -2,32 +2,35 @@
 %   
 %   <ul>
 %   <li>
-%   <p>a</p>
+%   <p><em>a</em></p>
 %   </li>
 %   <li>
-%   <p>b</p>
+%   <p><em>b</em></p>
 %   </li>
 %   <li>
-%   <p>d</p>
+%   <p><em>d</em></p>
 %   </li>
 %   </ul>
 %   
 %   ---\RESULT---
 
 <<<
-- a
-- b
+- _a_
+- _b_
 
   [ref]: /url
-- d
+- _d_
 >>>
 documentBegin
 ulBegin
 ulItem
+emphasis: a
 ulItemEnd
 ulItem
+emphasis: b
 ulItemEnd
 ulItem
+emphasis: d
 ulItemEnd
 ulEnd
 documentEnd

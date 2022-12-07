@@ -7,7 +7,6 @@
 %   
 %   ---\RESULT---
 
-\def\markdownOptionHtml{true}
 <<<
 < a><
 foo><bar/ >

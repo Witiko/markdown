@@ -1,19 +1,21 @@
 %   ---RESULT--- "example": 285,
 %   
-%   <p>foo
+%   <p><em>foo</em>
 %   *</p>
-%   <p>foo
+%   <p><em>foo</em>
 %   1.</p>
 %   
 %   ---\RESULT---
 
 <<<
-foo
+_foo_
 *
 
-foo
+_foo_
 1.
 >>>
 documentBegin
+emphasis: foo
 interblockSeparator
+emphasis: foo
 documentEnd

@@ -1,16 +1,18 @@
 %   ---RESULT--- "example": 221,
 %   
-%   <p>aaa</p>
-%   <p>bbb</p>
+%   <p><em>aaa</em></p>
+%   <p><em>bbb</em></p>
 %   
 %   ---\RESULT---
 
 <<<
-aaa
+*aaa*
 
 
-bbb
+*bbb*
 >>>
 documentBegin
+emphasis: aaa
 interblockSeparator
+emphasis: bbb
 documentEnd

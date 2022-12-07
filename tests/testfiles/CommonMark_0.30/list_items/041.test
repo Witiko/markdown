@@ -4,8 +4,8 @@
 %   <ol>
 %   <li>
 %   <blockquote>
-%   <p>Blockquote
-%   continued here.</p>
+%   <p><em>Blockquote
+%   continued here.</em></p>
 %   </blockquote>
 %   </li>
 %   </ol>
@@ -14,14 +14,15 @@
 %   ---\RESULT---
 
 <<<
-> 1. > Blockquote
-> continued here.
+> 1. > _Blockquote
+> continued here._
 >>>
 documentBegin
 blockQuoteBegin
 olBeginTight
 olItemWithNumber: 1
 blockQuoteBegin
+emphasis: Blockquote continued here.
 blockQuoteEnd
 olItemEnd
 olEndTight

@@ -2,17 +2,17 @@
 %   
 %   <ul>
 %   <li>
-%   <p>a</p>
+%   <p><em>a</em></p>
 %   <ul>
-%   <li>b</li>
-%   <li>c</li>
+%   <li><em>b</em></li>
+%   <li><em>c</em></li>
 %   </ul>
 %   </li>
 %   <li>
-%   <p>d</p>
+%   <p><em>d</em></p>
 %   <ul>
-%   <li>e</li>
-%   <li>f</li>
+%   <li><em>e</em></li>
+%   <li><em>f</em></li>
 %   </ul>
 %   </li>
 %   </ul>
@@ -20,31 +20,37 @@
 %   ---\RESULT---
 
 <<<
-- a
-  - b
-  - c
+- _a_
+  - _b_
+  - _c_
 
-- d
-  - e
-  - f
+- _d_
+  - _e_
+  - _f_
 >>>
 documentBegin
 ulBegin
 ulItem
+emphasis: a
 interblockSeparator
 ulBeginTight
 ulItem
+emphasis: b
 ulItemEnd
 ulItem
+emphasis: c
 ulItemEnd
 ulEndTight
 ulItemEnd
 ulItem
+emphasis: d
 interblockSeparator
 ulBeginTight
 ulItem
+emphasis: e
 ulItemEnd
 ulItem
+emphasis: f
 ulItemEnd
 ulEndTight
 ulItemEnd

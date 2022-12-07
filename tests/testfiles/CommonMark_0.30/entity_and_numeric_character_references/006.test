@@ -1,13 +1,12 @@
 %   ---RESULT--- "example": 30,
 %   
-%   <p>&amp;MadeUpEntity;</p>
+%   <p><em>&amp;MadeUpEntity;</em></p>
 %   
 %   ---\RESULT---
 
-\def\markdownOptionHtml{true}
 <<<
-&MadeUpEntity;
+*&MadeUpEntity;*
 >>>
 documentBegin
-ampersand
+emphasis: (ampersand)MadeUpEntity;
 documentEnd

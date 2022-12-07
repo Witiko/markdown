@@ -1,15 +1,15 @@
 %   ---RESULT--- "example": 138,
 %   
 %   <p><code> </code>
-%   aaa</p>
+%   <em>aaa</em></p>
 %   
 %   ---\RESULT---
 
-\def\markdownOptionFencedCode{true}
 <<<
 ``` ```
-aaa
+*aaa*
 >>>
 documentBegin
 codeSpan:  
+emphasis: aaa
 documentEnd

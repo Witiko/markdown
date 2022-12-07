@@ -6,7 +6,6 @@
 %   
 %   ---\RESULT---
 
-\def\markdownOptionHtml{true}
 <<<
 <div id="foo" class="bar
   baz">

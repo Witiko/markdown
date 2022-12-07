@@ -14,7 +14,7 @@
 documentBegin
 BEGIN link
 - label: Foo bar
-- URI: my(percentSign)20url
+- URI: my%20url
 - title: title
 END link
 documentEnd

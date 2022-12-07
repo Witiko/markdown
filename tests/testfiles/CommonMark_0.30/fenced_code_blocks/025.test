@@ -7,7 +7,6 @@
 %   
 %   ---\RESULT---
 
-\def\markdownOptionFencedCode{true}
 <<<
 ~~~~    ruby startline=3 $%@#$
 def foo(x)
@@ -18,6 +17,6 @@ end
 documentBegin
 BEGIN fencedCode
 - src: ./_markdown_test/bec320a1e3b741ba35aaee15586aa06d.verbatim
-- infostring: ruby startline=3 (dollarSign)(percentSign)@(hash)(dollarSign)
+- infostring: ruby startline=3 $%@#$
 END fencedCode
 documentEnd

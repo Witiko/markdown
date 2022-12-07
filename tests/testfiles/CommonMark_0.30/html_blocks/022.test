@@ -10,7 +10,6 @@
 %   
 %   ---\RESULT---
 
-\def\markdownOptionHtml{true}
 <<<
 <pre language="haskell"><code>
 import Text.HTML.TagSoup

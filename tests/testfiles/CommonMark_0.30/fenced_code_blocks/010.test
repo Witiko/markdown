@@ -8,7 +8,6 @@
 %   
 %   ---\RESULT---
 
-\def\markdownOptionFencedCode{true}
 <<<
 > ```
 > aaa

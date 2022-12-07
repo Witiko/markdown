@@ -2,30 +2,30 @@
 %   
 %   <ol>
 %   <li>
-%   <pre><code>foo
+%   <pre><code>_foo_
 %   </code></pre>
-%   <p>bar</p>
+%   <p><em>bar</em></p>
 %   </li>
 %   </ol>
 %   
 %   ---\RESULT---
 
-\def\markdownOptionFencedCode{true}
 <<<
 1. ```
-   foo
+   _foo_
    ```
 
-   bar
+   _bar_
 >>>
 documentBegin
 olBegin
 olItemWithNumber: 1
 BEGIN fencedCode
-- src: ./_markdown_test/acbd18db4cc2f85cedef654fccc4a4d8.verbatim
+- src: ./_markdown_test/543bbf7878c5aca988a5ea83b1554394.verbatim
 - infostring: 
 END fencedCode
 interblockSeparator
+emphasis: bar
 olItemEnd
 olEnd
 documentEnd

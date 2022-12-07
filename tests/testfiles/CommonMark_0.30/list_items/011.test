@@ -2,41 +2,43 @@
 %   
 %   <ol>
 %   <li>
-%   <p>foo</p>
-%   <pre><code>bar
+%   <p><em>foo</em></p>
+%   <pre><code>_bar_
 %   </code></pre>
-%   <p>baz</p>
+%   <p><em>baz</em></p>
 %   <blockquote>
-%   <p>bam</p>
+%   <p><em>bam</em></p>
 %   </blockquote>
 %   </li>
 %   </ol>
 %   
 %   ---\RESULT---
 
-\def\markdownOptionFencedCode{true}
 <<<
-1.  foo
+1.  _foo_
 
     ```
-    bar
+    _bar_
     ```
 
-    baz
+    _baz_
 
-    > bam
+    > _bam_
 >>>
 documentBegin
 olBegin
 olItemWithNumber: 1
+emphasis: foo
 interblockSeparator
 BEGIN fencedCode
-- src: ./_markdown_test/37b51d194a7513e45b56f6524f2d51f2.verbatim
+- src: ./_markdown_test/68747b2f234e41a44d20fba8df214e7b.verbatim
 - infostring: 
 END fencedCode
 interblockSeparator
+emphasis: baz
 interblockSeparator
 blockQuoteBegin
+emphasis: bam
 blockQuoteEnd
 olItemEnd
 olEnd

@@ -1,31 +1,36 @@
 %   ---RESULT--- "example": 312,
 %   
 %   <ul>
-%   <li>a</li>
-%   <li>b</li>
-%   <li>c</li>
-%   <li>d
-%   - e</li>
+%   <li><em>a</em></li>
+%   <li><em>b</em></li>
+%   <li><em>c</em></li>
+%   <li><em>d</em>
+%   - <em>e</em></li>
 %   </ul>
 %   
 %   ---\RESULT---
 
 <<<
-- a
- - b
-  - c
-   - d
-    - e
+- _a_
+ - _b_
+  - _c_
+   - _d_
+    - _e_
 >>>
 documentBegin
 ulBeginTight
 ulItem
+emphasis: a
 ulItemEnd
 ulItem
+emphasis: b
 ulItemEnd
 ulItem
+emphasis: c
 ulItemEnd
 ulItem
+emphasis: d
+emphasis: e
 ulItemEnd
 ulEndTight
 documentEnd

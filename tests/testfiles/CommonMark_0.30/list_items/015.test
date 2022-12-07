@@ -1,17 +1,18 @@
 %   ---RESULT--- "example": 267,
 %   
 %   <ol start="0">
-%   <li>ok</li>
+%   <li><em>ok</em></li>
 %   </ol>
 %   
 %   ---\RESULT---
 
 <<<
-0. ok
+0. _ok_
 >>>
 documentBegin
 olBeginTight
 olItemWithNumber: 0
+emphasis: ok
 olItemEnd
 olEndTight
 documentEnd

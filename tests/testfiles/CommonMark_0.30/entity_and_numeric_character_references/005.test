@@ -1,13 +1,12 @@
 %   ---RESULT--- "example": 29,
 %   
-%   <p>&amp;copy</p>
+%   <p><em>&amp;copy</em></p>
 %   
 %   ---\RESULT---
 
-\def\markdownOptionHtml{true}
 <<<
-&copy
+*&copy*
 >>>
 documentBegin
-ampersand
+emphasis: (ampersand)copy
 documentEnd
