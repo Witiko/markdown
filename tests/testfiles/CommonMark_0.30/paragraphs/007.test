@@ -12,6 +12,6 @@
 >>>
 documentBegin
 inputVerbatim: ./_markdown_test/b0c8f0811c40c47c6c172fc9882daaf9.verbatim
-emphasis: bbb
 interblockSeparator
+emphasis: bbb
 documentEnd

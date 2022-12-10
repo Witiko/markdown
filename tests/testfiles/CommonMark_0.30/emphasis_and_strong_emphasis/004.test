@@ -1,11 +1,11 @@
 %   ---RESULT--- "example": 353,
 %   
-%   <p>* a *</p>
+%   <p>* a *</p>
 %   
 %   ---\RESULT---
 
 <<<
-* a *
+* a *
 >>>
 documentBegin
 documentEnd
