@@ -11,5 +11,5 @@ _foo
 baz_
 >>>
 documentBegin
-emphasis: foo(lineBreak)bar
+emphasis: foo(lineBreak)baz
 documentEnd

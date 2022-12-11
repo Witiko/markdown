@@ -7,7 +7,7 @@
 %   ---\RESULT---
 
 <<<
-foo
+    foo
 *bar*
 >>>
 documentBegin
