@@ -12,4 +12,5 @@
 [a](<b>c)
 >>>
 documentBegin
+inlineHtmlTag: <b>
 documentEnd
