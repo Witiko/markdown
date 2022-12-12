@@ -1,0 +1,13 @@
+%   ---RESULT--- "example": 490,
+%   
+%   <p>[link](<foo
+%   bar>)</p>
+%   
+%   ---\RESULT---
+
+<<<
+[link](<foo
+bar>)
+>>>
+documentBegin
+documentEnd

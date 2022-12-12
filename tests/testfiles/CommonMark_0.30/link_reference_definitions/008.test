@@ -1,0 +1,15 @@
+%   ---RESULT--- "example": 199,
+%   
+%   <p>[foo]:</p>
+%   <p>[foo]</p>
+%   
+%   ---\RESULT---
+
+<<<
+[foo]:
+
+[foo]
+>>>
+documentBegin
+interblockSeparator
+documentEnd

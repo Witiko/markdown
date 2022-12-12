@@ -1,0 +1,11 @@
+%   ---RESULT--- "example": 619,
+%   
+%   <p>&lt;a href=&quot;hi'&gt; &lt;a href=hi'&gt;</p>
+%   
+%   ---\RESULT---
+
+<<<
+<a href="hi'> <a href=hi'>
+>>>
+documentBegin
+documentEnd

@@ -1,0 +1,16 @@
+%   ---RESULT--- "example": 602,
+%   
+%   <p><a href="http://example.com/%5C%5B%5C">http://example.com/\[\</a></p>
+%   
+%   ---\RESULT---
+
+<<<
+<http://example.com/\[\>
+>>>
+documentBegin
+BEGIN link
+- label: http://example.com/(backslash)[(backslash)
+- URI: http://example.com/%5C%5B%5C
+- title: 
+END link
+documentEnd

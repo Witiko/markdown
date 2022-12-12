@@ -1,0 +1,14 @@
+%   ---RESULT--- "example": 476,
+%   
+%   <p>__<a href="__"></p>
+%   
+%   ---\RESULT---
+
+<<<
+__<a href="__">
+>>>
+documentBegin
+underscore
+underscore
+inlineHtmlTag: <a href="(underscore)(underscore)">
+documentEnd

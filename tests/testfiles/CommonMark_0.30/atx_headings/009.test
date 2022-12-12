@@ -1,0 +1,14 @@
+%   ---RESULT--- "example": 70,
+%   
+%   <p>foo
+%   # bar</p>
+%   
+%   ---\RESULT---
+
+<<<
+foo
+    # bar
+>>>
+documentBegin
+hash
+documentEnd

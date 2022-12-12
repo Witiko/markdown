@@ -1,0 +1,25 @@
+%   ---RESULT--- "example": 111,
+%   
+%   <pre><code>chunk1
+%   
+%   chunk2
+%   
+%   
+%   
+%   chunk3
+%   </code></pre>
+%   
+%   ---\RESULT---
+
+<<<
+    chunk1
+
+    chunk2
+  
+ 
+ 
+    chunk3
+>>>
+documentBegin
+inputVerbatim: ./_markdown_test/b1f96ba94076c15fe0578704cf5270ad.verbatim
+documentEnd

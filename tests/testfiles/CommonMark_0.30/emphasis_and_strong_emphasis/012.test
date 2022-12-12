@@ -1,0 +1,13 @@
+%   ---RESULT--- "example": 361,
+%   
+%   <p>пристаням_стремятся_</p>
+%   
+%   ---\RESULT---
+
+<<<
+пристаням_стремятся_
+>>>
+documentBegin
+underscore
+underscore
+documentEnd

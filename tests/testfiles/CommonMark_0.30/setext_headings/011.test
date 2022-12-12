@@ -1,0 +1,13 @@
+%   ---RESULT--- "example": 90,
+%   
+%   <h2>Foo\</h2>
+%   
+%   ---\RESULT---
+
+<<<
+Foo\
+----
+>>>
+documentBegin
+headingTwo: Foo(backslash)
+documentEnd

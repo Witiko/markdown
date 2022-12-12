@@ -1,0 +1,12 @@
+%   ---RESULT--- "example": 629,
+%   
+%   <p>foo <![CDATA[>&<]]></p>
+%   
+%   ---\RESULT---
+
+<<<
+foo <![CDATA[>&<]]>
+>>>
+documentBegin
+inlineHtmlTag: <![CDATA[>(ampersand)<]]>
+documentEnd

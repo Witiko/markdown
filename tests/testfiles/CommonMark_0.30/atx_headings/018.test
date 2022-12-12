@@ -1,0 +1,20 @@
+%   ---RESULT--- "example": 79,
+%   
+%   <h2></h2>
+%   <h1></h1>
+%   <h3></h3>
+%   
+%   ---\RESULT---
+
+<<<
+## 
+#
+### ###
+>>>
+documentBegin
+headingTwo: 
+interblockSeparator
+headingOne: 
+interblockSeparator
+headingThree: 
+documentEnd

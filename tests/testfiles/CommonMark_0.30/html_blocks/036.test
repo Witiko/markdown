@@ -1,0 +1,19 @@
+%   ---RESULT--- "example": 183,
+%   
+%     <!-- foo -->
+%   <pre><code>&lt;!-- foo --&gt;
+%   </code></pre>
+%   
+%   ---\RESULT---
+
+<<<
+  <!-- foo -->
+
+    <!-- foo -->
+>>>
+documentBegin
+blockHtmlCommentBegin
+blockHtmlCommentEnd
+interblockSeparator
+inputVerbatim: ./_markdown_test/0bd4d7739263f98a4f1bf580ac0bf3c1.verbatim
+documentEnd

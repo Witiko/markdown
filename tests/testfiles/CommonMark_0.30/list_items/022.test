@@ -1,0 +1,31 @@
+%   ---RESULT--- "example": 274,
+%   
+%   <ol>
+%   <li>
+%   <pre><code> indented code
+%   </code></pre>
+%   <p>paragraph</p>
+%   <pre><code>more code
+%   </code></pre>
+%   </li>
+%   </ol>
+%   
+%   ---\RESULT---
+
+<<<
+1.      indented code
+
+   paragraph
+
+       more code
+>>>
+documentBegin
+olBegin
+olItemWithNumber: 1
+inputVerbatim: ./_markdown_test/96e8a7951e7fe1e15c0472418229b7fc.verbatim
+interblockSeparator
+interblockSeparator
+inputVerbatim: ./_markdown_test/edf19530665eedd599d1228679ec3a65.verbatim
+olItemEnd
+olEnd
+documentEnd

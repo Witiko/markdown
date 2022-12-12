@@ -1,0 +1,14 @@
+%   ---RESULT--- "example": 636,
+%   
+%   <p>foo<br />
+%   bar</p>
+%   
+%   ---\RESULT---
+
+<<<
+foo  
+     bar
+>>>
+documentBegin
+lineBreak
+documentEnd

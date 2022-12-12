@@ -1,0 +1,17 @@
+%   ---RESULT--- "example": 261,
+%   
+%   <p>-<em>one</em></p>
+%   <p>2.<em>two</em></p>
+%   
+%   ---\RESULT---
+
+<<<
+-_one_
+
+2._two_
+>>>
+documentBegin
+emphasis: one
+interblockSeparator
+emphasis: two
+documentEnd

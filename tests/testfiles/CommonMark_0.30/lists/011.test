@@ -1,0 +1,36 @@
+%   ---RESULT--- "example": 311,
+%   
+%   <ol>
+%   <li>
+%   <p><em>a</em></p>
+%   </li>
+%   <li>
+%   <p><em>b</em></p>
+%   </li>
+%   <li>
+%   <p><em>c</em></p>
+%   </li>
+%   </ol>
+%   
+%   ---\RESULT---
+
+<<<
+1. _a_
+
+  2. _b_
+
+   3. _c_
+>>>
+documentBegin
+olBegin
+olItemWithNumber: 1
+emphasis: a
+olItemEnd
+olItemWithNumber: 2
+emphasis: b
+olItemEnd
+olItemWithNumber: 3
+emphasis: c
+olItemEnd
+olEnd
+documentEnd

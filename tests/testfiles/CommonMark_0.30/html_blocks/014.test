@@ -1,0 +1,18 @@
+%   ---RESULT--- "example": 161,
+%   
+%   <div></div>
+%   ``` c
+%   int x = 33;
+%   ```
+%   
+%   ---\RESULT---
+
+<<<
+<div></div>
+``` c
+int x = 33;
+```
+>>>
+documentBegin
+inputBlockHtmlElement: ./_markdown_test/9991376ef916f734b2c3ba85b9b2a248.verbatim
+documentEnd

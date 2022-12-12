@@ -1,0 +1,15 @@
+%   ---RESULT--- "example": 649,
+%   
+%   <p>foo
+%   baz</p>
+%   
+%   ---\RESULT---
+
+\def\markdownOptionHardLineBreaks{true}
+<<<
+_foo 
+ baz_
+>>>
+documentBegin
+emphasis: foo(lineBreak)baz
+documentEnd

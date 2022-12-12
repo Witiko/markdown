@@ -1,0 +1,25 @@
+%   ---RESULT--- "example": 84,
+%   
+%   <h2>Foo</h2>
+%   <h2>Foo</h2>
+%   <h1>Foo</h1>
+%   
+%   ---\RESULT---
+
+<<<
+   Foo
+---
+
+  Foo
+-----
+
+  Foo
+  ===
+>>>
+documentBegin
+headingTwo: Foo
+interblockSeparator
+headingTwo: Foo
+interblockSeparator
+headingOne: Foo
+documentEnd

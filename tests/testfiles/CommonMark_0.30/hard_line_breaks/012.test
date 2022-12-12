@@ -1,0 +1,12 @@
+%   ---RESULT--- "example": 644,
+%   
+%   <p>foo\</p>
+%   
+%   ---\RESULT---
+
+<<<
+foo\
+>>>
+documentBegin
+backslash
+documentEnd

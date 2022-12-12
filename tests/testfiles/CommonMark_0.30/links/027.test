@@ -1,0 +1,11 @@
+%   ---RESULT--- "example": 507,
+%   
+%   <p>[link](/url &quot;title &quot;and&quot; title&quot;)</p>
+%   
+%   ---\RESULT---
+
+<<<
+[link](/url "title "and" title")
+>>>
+documentBegin
+documentEnd

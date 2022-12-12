@@ -1,0 +1,37 @@
+%   ---RESULT--- "example": 182,
+%   
+%   <![CDATA[
+%   function matchwo(a,b)
+%   {
+%     if (a < b && a < 0) then {
+%       return 1;
+%   
+%     } else {
+%   
+%       return 0;
+%     }
+%   }
+%   ]]>
+%   <p>okay</p>
+%   
+%   ---\RESULT---
+
+<<<
+<![CDATA[
+function matchwo(a,b)
+{
+  if (a < b && a < 0) then {
+    return 1;
+
+  } else {
+
+    return 0;
+  }
+}
+]]>
+okay
+>>>
+documentBegin
+inputBlockHtmlElement: ./_markdown_test/d0556f47a7761d40abd0dd3c5446a360.verbatim
+interblockSeparator
+documentEnd

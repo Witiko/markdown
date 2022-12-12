@@ -1,0 +1,12 @@
+%   ---RESULT--- "example": 21,
+%   
+%   <a href="/bar\/)">
+%   
+%   ---\RESULT---
+
+<<<
+<a href="/bar\/)">
+>>>
+documentBegin
+inlineHtmlTag: <a href="/bar(backslash)/)">
+documentEnd

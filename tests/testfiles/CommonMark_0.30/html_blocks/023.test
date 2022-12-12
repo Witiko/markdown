@@ -1,0 +1,23 @@
+%   ---RESULT--- "example": 170,
+%   
+%   <script type="text/javascript">
+%   // JavaScript example
+%   
+%   document.getElementById("demo").innerHTML = "Hello JavaScript!";
+%   </script>
+%   <p>okay</p>
+%   
+%   ---\RESULT---
+
+<<<
+<script type="text/javascript">
+// JavaScript example
+
+document.getElementById("demo").innerHTML = "Hello JavaScript!";
+</script>
+okay
+>>>
+documentBegin
+inputBlockHtmlElement: ./_markdown_test/8698f4addb2bfe888d4ff0faa0de92fb.verbatim
+interblockSeparator
+documentEnd

@@ -1,0 +1,15 @@
+%   ---RESULT--- "example": 95,
+%   
+%   <h2>Foo
+%   Bar</h2>
+%   
+%   ---\RESULT---
+
+<<<
+Foo
+Bar
+---
+>>>
+documentBegin
+headingTwo: Foo Bar
+documentEnd

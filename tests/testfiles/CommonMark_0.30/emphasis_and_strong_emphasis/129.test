@@ -1,0 +1,12 @@
+%   ---RESULT--- "example": 478,
+%   
+%   <p><em>a <code>_</code></em></p>
+%   
+%   ---\RESULT---
+
+<<<
+_a `_`_
+>>>
+documentBegin
+emphasis: a (codeSpan: (underscore))
+documentEnd

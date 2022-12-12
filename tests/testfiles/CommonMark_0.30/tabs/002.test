@@ -1,0 +1,13 @@
+%   ---RESULT--- "example": 2,
+%   
+%   <pre><code>foo	baz		bim
+%   </code></pre>
+%   
+%   ---\RESULT---
+
+<<<
+  	foo	baz		bim
+>>>
+documentBegin
+inputVerbatim: ./_markdown_test/69ea260f4809aa90880b8df4d674c362.verbatim
+documentEnd

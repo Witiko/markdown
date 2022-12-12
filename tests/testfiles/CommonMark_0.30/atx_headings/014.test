@@ -1,0 +1,12 @@
+%   ---RESULT--- "example": 75,
+%   
+%   <h1>foo#</h1>
+%   
+%   ---\RESULT---
+
+<<<
+# foo#
+>>>
+documentBegin
+headingOne: foo(hash)
+documentEnd

@@ -1,0 +1,21 @@
+%   ---RESULT--- "example": 42,
+%   
+%   <ul>
+%   <li>`one</li>
+%   <li>two`</li>
+%   </ul>
+%   
+%   ---\RESULT---
+
+<<<
+- `one
+- two`
+>>>
+documentBegin
+ulBeginTight
+ulItem
+ulItemEnd
+ulItem
+ulItemEnd
+ulEndTight
+documentEnd

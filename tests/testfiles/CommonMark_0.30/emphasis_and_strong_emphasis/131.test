@@ -1,0 +1,18 @@
+%   ---RESULT--- "example": 480,
+%   
+%   <p>__a<a href="http://foo.bar/?q=__">http://foo.bar/?q=__</a></p>
+%   
+%   ---\RESULT---
+
+<<<
+__a<http://foo.bar/?q=__>
+>>>
+documentBegin
+underscore
+underscore
+BEGIN link
+- label: http://foo.bar/?q=(underscore)(underscore)
+- URI: http://foo.bar/?q=__
+- title: 
+END link
+documentEnd

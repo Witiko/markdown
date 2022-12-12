@@ -1,0 +1,18 @@
+%   ---RESULT--- "example": 223,
+%   
+%   <p><em>aaa</em>
+%   <em>bbb</em>
+%   <em>ccc</em></p>
+%   
+%   ---\RESULT---
+
+<<<
+*aaa*
+             *bbb*
+                                       *ccc*
+>>>
+documentBegin
+emphasis: aaa
+emphasis: bbb
+emphasis: ccc
+documentEnd
