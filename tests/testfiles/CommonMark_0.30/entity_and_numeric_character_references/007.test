@@ -1,0 +1,12 @@
+%   ---RESULT--- "example": 31,
+%   
+%   <a href="&ouml;&ouml;.html">
+%   
+%   ---\RESULT---
+
+<<<
+<a href="&ouml;&ouml;.html">
+>>>
+documentBegin
+inlineHtmlTag: <a href="(ampersand)ouml;(ampersand)ouml;.html">
+documentEnd
