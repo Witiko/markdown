@@ -1,0 +1,24 @@
+%   ---RESULT--- "example": 171,
+%   
+%   <textarea>
+%   
+%   *foo*
+%   
+%   _bar_
+%   
+%   </textarea>
+%   
+%   ---\RESULT---
+
+<<<
+<textarea>
+
+*foo*
+
+_bar_
+
+</textarea>
+>>>
+documentBegin
+inputBlockHtmlElement: ./_markdown_test/ce1481883d73c79685d49fe56582c08b.verbatim
+documentEnd

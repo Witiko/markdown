@@ -1,0 +1,23 @@
+%   ---RESULT--- "example": 4,
+%   
+%   <ul>
+%   <li>
+%   <p>foo</p>
+%   <p>bar</p>
+%   </li>
+%   </ul>
+%   
+%   ---\RESULT---
+
+<<<
+  - foo
+
+	bar
+>>>
+documentBegin
+ulBegin
+ulItem
+interblockSeparator
+ulItemEnd
+ulEnd
+documentEnd

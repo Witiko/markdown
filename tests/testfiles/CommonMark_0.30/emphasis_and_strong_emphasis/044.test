@@ -1,0 +1,14 @@
+%   ---RESULT--- "example": 393,
+%   
+%   <p><strong>Gomphocarpus (<em>Gomphocarpus physocarpus</em>, syn.
+%   <em>Asclepias physocarpa</em>)</strong></p>
+%   
+%   ---\RESULT---
+
+<<<
+**Gomphocarpus (*Gomphocarpus physocarpus*, syn.
+*Asclepias physocarpa*)**
+>>>
+documentBegin
+strongEmphasis: Gomphocarpus ((emphasis: Gomphocarpus physocarpus), syn. (emphasis: Asclepias physocarpa))
+documentEnd

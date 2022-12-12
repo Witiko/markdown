@@ -1,0 +1,15 @@
+%   ---RESULT--- "example": 589,
+%   
+%   <p>![[foo]]</p>
+%   <p>[[foo]]: /url &quot;title&quot;</p>
+%   
+%   ---\RESULT---
+
+<<<
+![[foo]]
+
+[[foo]]: /url "title"
+>>>
+documentBegin
+interblockSeparator
+documentEnd

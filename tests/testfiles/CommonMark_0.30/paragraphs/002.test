@@ -1,0 +1,23 @@
+%   ---RESULT--- "example": 220,
+%   
+%   <p><em>aaa
+%   bbb</em></p>
+%   <p><em>ccc
+%   ddd</em></p>
+%   
+%   ---\RESULT---
+
+<<<
+*aaa*
+*bbb*
+
+*ccc*
+*ddd*
+>>>
+documentBegin
+emphasis: aaa
+emphasis: bbb
+interblockSeparator
+emphasis: ccc
+emphasis: ddd
+documentEnd

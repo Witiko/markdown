@@ -1,0 +1,22 @@
+%   ---RESULT--- "example": 152,
+%   
+%   <DIV CLASS="foo">
+%   <p><em>Markdown</em></p>
+%   </DIV>
+%   
+%   ---\RESULT---
+
+<<<
+<DIV CLASS="foo">
+
+*Markdown*
+
+</DIV>
+>>>
+documentBegin
+inputBlockHtmlElement: ./_markdown_test/153f0f74866f457bd1531d964cc934a6.verbatim
+interblockSeparator
+emphasis: Markdown
+interblockSeparator
+inputBlockHtmlElement: ./_markdown_test/af0c41d3e6909eae31d92ec3cd4498a5.verbatim
+documentEnd

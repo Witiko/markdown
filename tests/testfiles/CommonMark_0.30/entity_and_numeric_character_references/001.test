@@ -1,0 +1,18 @@
+%   ---RESULT--- "example": 25,
+%   
+%   <p><em>  &amp; © Æ Ď</em>
+%   <em>¾ ℋ ⅆ</em>
+%   <em>∲ ≧̸<</em>/p>
+%   
+%   ---\RESULT---
+
+<<<
+*&nbsp; &amp; &copy; &AElig; &Dcaron;*
+*&frac34; &HilbertSpace; &DifferentialD;*
+*&ClockwiseContourIntegral; &ngE;*
+>>>
+documentBegin
+emphasis: (nbsp) (ampersand) © Æ Ď
+emphasis: ¾ ℋ ⅆ
+emphasis: ∲ ≧̸
+documentEnd

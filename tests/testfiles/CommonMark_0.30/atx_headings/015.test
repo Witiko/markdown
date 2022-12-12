@@ -1,0 +1,20 @@
+%   ---RESULT--- "example": 76,
+%   
+%   <h3>foo ###</h3>
+%   <h2>foo ###</h2>
+%   <h1>foo #</h1>
+%   
+%   ---\RESULT---
+
+<<<
+### foo \###
+## foo #\##
+# foo \#
+>>>
+documentBegin
+headingThree: foo (hash)(hash)(hash)
+interblockSeparator
+headingTwo: foo (hash)(hash)(hash)
+interblockSeparator
+headingOne: foo (hash)
+documentEnd

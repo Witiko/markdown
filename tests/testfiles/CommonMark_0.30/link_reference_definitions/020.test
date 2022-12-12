@@ -1,0 +1,17 @@
+%   ---RESULT--- "example": 211,
+%   
+%   <pre><code>[foo]: /url &quot;title&quot;
+%   </code></pre>
+%   <p>[foo]</p>
+%   
+%   ---\RESULT---
+
+<<<
+    [foo]: /url "title"
+
+[foo]
+>>>
+documentBegin
+inputVerbatim: ./_markdown_test/4cc6fdeae1297843fc2a220a6aa4bfcf.verbatim
+interblockSeparator
+documentEnd

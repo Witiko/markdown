@@ -1,0 +1,16 @@
+%   ---RESULT--- "example": 176,
+%   
+%   <style>p{color:red;}</style>
+%   <p><em>foo</em></p>
+%   
+%   ---\RESULT---
+
+<<<
+<style>p{color:red;}</style>
+*foo*
+>>>
+documentBegin
+inputBlockHtmlElement: ./_markdown_test/4d76715587a9156205320c1e87caf447.verbatim
+interblockSeparator
+emphasis: foo
+documentEnd

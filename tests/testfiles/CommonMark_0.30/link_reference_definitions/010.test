@@ -1,0 +1,15 @@
+%   ---RESULT--- "example": 201,
+%   
+%   <p>[foo]: <bar>(baz)</p>
+%   <p>[foo]</p>
+%   
+%   ---\RESULT---
+
+<<<
+[foo]: <bar>(baz)
+
+[foo]
+>>>
+documentBegin
+interblockSeparator
+documentEnd

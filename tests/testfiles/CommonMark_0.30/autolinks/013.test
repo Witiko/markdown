@@ -1,0 +1,11 @@
+%   ---RESULT--- "example": 605,
+%   
+%   <p>&lt;foo+@bar.example.com&gt;</p>
+%   
+%   ---\RESULT---
+
+<<<
+<foo\+@bar.example.com>
+>>>
+documentBegin
+documentEnd

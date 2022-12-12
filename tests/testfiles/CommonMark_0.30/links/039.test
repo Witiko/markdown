@@ -1,0 +1,16 @@
+%   ---RESULT--- "example": 519,
+%   
+%   <p><img src="uri3" alt="[foo](uri2)" /></p>
+%   
+%   ---\RESULT---
+
+<<<
+![[[foo](uri1)](uri2)](uri3)
+>>>
+documentBegin
+BEGIN image
+- label: [foo](uri2)
+- URI: uri3
+- title: 
+END image
+documentEnd

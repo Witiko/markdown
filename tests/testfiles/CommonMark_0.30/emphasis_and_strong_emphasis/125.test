@@ -1,0 +1,12 @@
+%   ---RESULT--- "example": 474,
+%   
+%   <p>*<img src="foo" title="*"/></p>
+%   
+%   ---\RESULT---
+
+<<<
+*<img src="foo" title="*"/>
+>>>
+documentBegin
+inlineHtmlTag: <img src="foo" title="*"/>
+documentEnd

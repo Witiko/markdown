@@ -1,0 +1,21 @@
+%   ---RESULT--- "example": 94,
+%   
+%   <ul>
+%   <li>Foo</li>
+%   </ul>
+%   <hr />
+%   
+%   ---\RESULT---
+
+<<<
+- Foo
+---
+>>>
+documentBegin
+ulBeginTight
+ulItem
+ulItemEnd
+ulEndTight
+interblockSeparator
+thematicBreak
+documentEnd

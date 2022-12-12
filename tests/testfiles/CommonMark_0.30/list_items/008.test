@@ -1,0 +1,31 @@
+%   ---RESULT--- "example": 260,
+%   
+%   <blockquote>
+%   <blockquote>
+%   <ul>
+%   <li><em>one</em></li>
+%   </ul>
+%   <p><em>two</em></p>
+%   </blockquote>
+%   </blockquote>
+%   
+%   ---\RESULT---
+
+<<<
+>>- _one_
+>>
+  >  > _two_
+>>>
+documentBegin
+blockQuoteBegin
+blockQuoteBegin
+ulBeginTight
+ulItem
+emphasis: one
+ulItemEnd
+ulEndTight
+interblockSeparator
+emphasis: two
+blockQuoteEnd
+blockQuoteEnd
+documentEnd

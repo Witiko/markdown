@@ -1,0 +1,23 @@
+%   ---RESULT--- "example": 85,
+%   
+%   <pre><code>Foo
+%   ---
+%   
+%   Foo
+%   </code></pre>
+%   <hr />
+%   
+%   ---\RESULT---
+
+<<<
+    Foo
+    ---
+
+    Foo
+---
+>>>
+documentBegin
+inputVerbatim: ./_markdown_test/5407a4668f8bd845ac30ec29307320fb.verbatim
+interblockSeparator
+thematicBreak
+documentEnd

@@ -1,0 +1,11 @@
+%   ---RESULT--- "example": 512,
+%   
+%   <p>[link] bar](/uri)</p>
+%   
+%   ---\RESULT---
+
+<<<
+[link] bar](/uri)
+>>>
+documentBegin
+documentEnd

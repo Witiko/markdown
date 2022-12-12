@@ -1,0 +1,15 @@
+%   ---RESULT--- "example": 399,
+%   
+%   <p>__foo__bar</p>
+%   
+%   ---\RESULT---
+
+<<<
+__foo__bar
+>>>
+documentBegin
+underscore
+underscore
+underscore
+underscore
+documentEnd

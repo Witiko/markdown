@@ -1,0 +1,28 @@
+%   ---RESULT--- "example": 297,
+%   
+%   <ol start="10">
+%   <li><em>foo</em></li>
+%   </ol>
+%   <ul>
+%   <li><em>bar</em></li>
+%   </ul>
+%   
+%   ---\RESULT---
+
+<<<
+10) _foo_
+   - _bar_
+>>>
+documentBegin
+olBeginTight
+olItemWithNumber: 10
+emphasis: foo
+olItemEnd
+olEndTight
+interblockSeparator
+ulBeginTight
+ulItem
+emphasis: bar
+ulItemEnd
+ulEndTight
+documentEnd

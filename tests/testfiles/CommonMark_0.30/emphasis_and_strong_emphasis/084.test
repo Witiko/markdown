@@ -1,0 +1,13 @@
+%   ---RESULT--- "example": 433,
+%   
+%   <p>__ is not an empty emphasis</p>
+%   
+%   ---\RESULT---
+
+<<<
+__ is not an empty emphasis
+>>>
+documentBegin
+underscore
+underscore
+documentEnd

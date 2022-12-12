@@ -1,0 +1,12 @@
+%   ---RESULT--- "example": 650,
+%   
+%   <p>hello $.;'there</p>
+%   
+%   ---\RESULT---
+
+<<<
+hello $.;'there
+>>>
+documentBegin
+dollarSign
+documentEnd

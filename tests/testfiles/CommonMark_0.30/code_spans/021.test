@@ -1,0 +1,11 @@
+%   ---RESULT--- "example": 348,
+%   
+%   <p>`foo</p>
+%   
+%   ---\RESULT---
+
+<<<
+`foo
+>>>
+documentBegin
+documentEnd

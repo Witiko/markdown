@@ -1,0 +1,12 @@
+%   ---RESULT--- "example": 628,
+%   
+%   <p>foo <!ELEMENT br EMPTY></p>
+%   
+%   ---\RESULT---
+
+<<<
+foo <!ELEMENT br EMPTY>
+>>>
+documentBegin
+inlineHtmlTag: <!ELEMENT br EMPTY>
+documentEnd

@@ -1,0 +1,12 @@
+%   ---RESULT--- "example": 52,
+%   
+%   <hr />
+%   
+%   ---\RESULT---
+
+<<<
+ **  * ** * ** * **
+>>>
+documentBegin
+thematicBreak
+documentEnd

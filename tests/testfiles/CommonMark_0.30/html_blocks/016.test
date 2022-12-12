@@ -1,0 +1,16 @@
+%   ---RESULT--- "example": 163,
+%   
+%   <Warning>
+%   *bar*
+%   </Warning>
+%   
+%   ---\RESULT---
+
+<<<
+<Warning>
+*bar*
+</Warning>
+>>>
+documentBegin
+inputBlockHtmlElement: ./_markdown_test/0d75dd260dced5433ce33ba40fdaf904.verbatim
+documentEnd

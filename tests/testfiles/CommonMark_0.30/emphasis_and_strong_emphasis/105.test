@@ -1,0 +1,13 @@
+%   ---RESULT--- "example": 454,
+%   
+%   <p><em>foo</em>_</p>
+%   
+%   ---\RESULT---
+
+<<<
+_foo__
+>>>
+documentBegin
+emphasis: foo
+underscore
+documentEnd

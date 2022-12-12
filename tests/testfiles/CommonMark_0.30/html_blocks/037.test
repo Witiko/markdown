@@ -1,0 +1,18 @@
+%   ---RESULT--- "example": 184,
+%   
+%     <div>
+%   <pre><code>&lt;div&gt;
+%   </code></pre>
+%   
+%   ---\RESULT---
+
+<<<
+  <div>
+
+    <div>
+>>>
+documentBegin
+inputBlockHtmlElement: ./_markdown_test/32125540a649ecc646413c37c588775d.verbatim
+interblockSeparator
+inputVerbatim: ./_markdown_test/32125540a649ecc646413c37c588775d.verbatim
+documentEnd

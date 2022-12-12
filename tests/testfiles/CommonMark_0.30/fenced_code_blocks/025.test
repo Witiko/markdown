@@ -1,0 +1,22 @@
+%   ---RESULT--- "example": 143,
+%   
+%   <pre><code class="language-ruby">def foo(x)
+%     return 3
+%   end
+%   </code></pre>
+%   
+%   ---\RESULT---
+
+<<<
+~~~~    ruby startline=3 $%@#$
+def foo(x)
+  return 3
+end
+~~~~~~~
+>>>
+documentBegin
+BEGIN fencedCode
+- src: ./_markdown_test/bec320a1e3b741ba35aaee15586aa06d.verbatim
+- infostring: ruby startline=3 $%@#$
+END fencedCode
+documentEnd

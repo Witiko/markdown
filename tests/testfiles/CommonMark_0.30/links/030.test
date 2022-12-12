@@ -1,0 +1,11 @@
+%   ---RESULT--- "example": 510,
+%   
+%   <p>[link] (/uri)</p>
+%   
+%   ---\RESULT---
+
+<<<
+[link] (/uri)
+>>>
+documentBegin
+documentEnd

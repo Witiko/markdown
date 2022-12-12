@@ -1,0 +1,28 @@
+%   ---RESULT--- "example": 148,
+%   
+%   <table><tr><td>
+%   <pre>
+%   **Hello**,
+%   <p><em>world</em>.
+%   </pre></p>
+%   </td></tr></table>
+%   
+%   ---\RESULT---
+
+<<<
+<table><tr><td>
+<pre>
+**Hello**,
+
+_world_.
+</pre>
+</td></tr></table>
+>>>
+documentBegin
+inputBlockHtmlElement: ./_markdown_test/5a8e413f9b0ef97790d0c9da301a6149.verbatim
+interblockSeparator
+emphasis: world
+inlineHtmlTag: </pre>
+interblockSeparator
+inputBlockHtmlElement: ./_markdown_test/3cf13bd6294e965d41514d92b4a04186.verbatim
+documentEnd

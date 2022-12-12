@@ -1,0 +1,19 @@
+%   ---RESULT--- "example": 551,
+%   
+%   <p>[
+%   ]</p>
+%   <p>[
+%   ]: /uri</p>
+%   
+%   ---\RESULT---
+
+<<<
+[
+ ]
+
+[
+ ]: /uri
+>>>
+documentBegin
+interblockSeparator
+documentEnd

@@ -1,0 +1,18 @@
+%   ---RESULT--- "example": 13,
+%   
+%   <p>\	\A\a\ \3\φ\«</p>
+%   
+%   ---\RESULT---
+
+<<<
+\	\A\a\ \3\φ\«
+>>>
+documentBegin
+backslash
+backslash
+backslash
+backslash
+backslash
+backslash
+backslash
+documentEnd

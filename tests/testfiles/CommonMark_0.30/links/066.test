@@ -1,0 +1,15 @@
+%   ---RESULT--- "example": 546,
+%   
+%   <p>[foo][ref[bar]]</p>
+%   <p>[ref[bar]]: /uri</p>
+%   
+%   ---\RESULT---
+
+<<<
+[foo][ref[bar]]
+
+[ref[bar]]: /uri
+>>>
+documentBegin
+interblockSeparator
+documentEnd

@@ -1,0 +1,12 @@
+%   ---RESULT--- "example": 475,
+%   
+%   <p>**<a href="**"></p>
+%   
+%   ---\RESULT---
+
+<<<
+**<a href="**">
+>>>
+documentBegin
+inlineHtmlTag: <a href="**">
+documentEnd

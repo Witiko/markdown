@@ -1,0 +1,12 @@
+%   ---RESULT--- "example": 66,
+%   
+%   <h1>foo <em>bar</em> *baz*</h1>
+%   
+%   ---\RESULT---
+
+<<<
+# foo *bar* \*baz\*
+>>>
+documentBegin
+headingOne: foo (emphasis: bar) *baz*
+documentEnd

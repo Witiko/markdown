@@ -1,0 +1,12 @@
+%   ---RESULT--- "example": 401,
+%   
+%   <p><strong>foo__bar__baz</strong></p>
+%   
+%   ---\RESULT---
+
+<<<
+__foo__bar__baz__
+>>>
+documentBegin
+strongEmphasis: foo(underscore)(underscore)bar(underscore)(underscore)baz
+documentEnd

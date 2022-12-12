@@ -1,0 +1,12 @@
+%   ---RESULT--- "example": 344,
+%   
+%   <p><a href="`">`</p>
+%   
+%   ---\RESULT---
+
+<<<
+<a href="`">`
+>>>
+documentBegin
+inlineHtmlTag: <a href="`">
+documentEnd
