@@ -11828,6 +11828,126 @@ corresponds to the emphasized span of text.
 %
 % \begin{markdown}
 
+#### Fenced Div Context Renderers
+The following macros are only produced, when the \Opt{fencedDiv} option is
+enabled.
+
+The \mdef{markdownRendererFencedDivAttributeContextBegin} and
+\mdef{markdownRendererFencedDivAttributeContextEnd} macros represent the beginning
+and the end of a div in which the attributes of the div apply. The macros
+receive no arguments.
+
+% \end{markdown}
+%
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[fencedDiv]{markdown}
+\markdownSetup{
+  renderers = {
+    fencedDivAttributeContextBegin = {%
+      \par
+      \emph{(The beginning of a fenced div attribute context)}
+      \par
+    },
+    fencedDivAttributeContextEnd = {%
+      \par
+      \emph{(The end of a fenced div attribute context)}
+      \par
+    },
+  },
+}
+\begin{document}
+\begin{markdown}
+
+::: {key=value}
+
+foo
+
+:::: {#identifier}
+
+bar
+
+::::
+
+:::
+
+::: {.class_name}
+
+baz
+
+:::
+
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> *(The beginning of a fenced div attribute context)*
+>
+> foo
+>
+> *(The beginning of a fenced div attribute context)*
+>
+> bar
+>
+> *(The end of a fenced div attribute context)*
+>
+> *(The end of a fenced div attribute context)*
+>
+> *(The beginning of a fenced div attribute context)*
+>
+> baz
+>
+> *(The end of a fenced div attribute context)*
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererFencedDivAttributeContextBegin{%
+  \markdownRendererFencedDivAttributeContextBeginPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { fencedDivAttributeContextBegin }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { fencedDivAttributeContextBegin }
+  { 0 }
+\ExplSyntaxOff
+\def\markdownRendererFencedDivAttributeContextEnd{%
+  \markdownRendererFencedDivAttributeContextEndPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { fencedDivAttributeContextEnd }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { fencedDivAttributeContextEnd }
+  { 0 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
 #### Header Attribute Context Renderers
 The following macros are only produced, when the \Opt{headerAttributes} option
 is enabled.
@@ -11855,7 +11975,7 @@ following content:
       \emph{(The beginning of a header attribute context)}
       \par
     },
-    headerAttributeContextBegin = {%
+    headerAttributeContextEnd = {%
       \par
       \emph{(The end of a header attribute context)}
       \par
