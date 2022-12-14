@@ -10000,6 +10000,86 @@ following text:
 %
 % \begin{markdown}
 
+#### Bracketed Spans Context Renderers
+The following macros are only produced, when the \Opt{bracketedSpans} option is
+enabled.
+
+The \mdef{markdownRendererBracketedSpanAttributeContextBegin} and
+\mdef{markdownRendererBracketedSpanAttributeContextEnd} macros represent the
+beginning and the end of an inline bracketed span in which the attributes of
+the span apply. The macros receive no arguments.
+
+% \end{markdown}
+%
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[bracketedSpans]{markdown}
+\markdownSetup{
+  renderers = {
+    fencedDivAttributeContextBegin = {(},
+    fencedDivAttributeContextEnd = {)},
+  },
+}
+\begin{document}
+\begin{markdown}
+
+[foo [bar]{#identifier}]{key=value} [baz]{.class_name}
+
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> (foo (bar)) (baz)
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererFracketedSpanAttributeContextBegin{%
+  \markdownRendererFracketedSpanAttributeContextBeginPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { fracketedSpanAttributeContextBegin }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { fracketedSpanAttributeContextBegin }
+  { 0 }
+\ExplSyntaxOff
+\def\markdownRendererFracketedSpanAttributeContextEnd{%
+  \markdownRendererFracketedSpanAttributeContextEndPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { fracketedSpanAttributeContextEnd }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { fracketedSpanAttributeContextEnd }
+  { 0 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
 #### Bullet List Renderers
 The \mdef{markdownRendererUlBegin} macro represents the beginning of a
 bulleted list that contains an item with several paragraphs of text (the
