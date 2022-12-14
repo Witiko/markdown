@@ -5317,6 +5317,83 @@ defaultOptions.fencedCode = false
 %</lua,lua-cli>
 %<*manual-options>
 
+#### Option `fencedDivs`
+
+`fencedDivs` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{fencedDivs}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Enable the Pandoc fenced divs extension:
+
+        ``` md
+        ::::: {#special .sidebar}
+        Here is a paragraph.
+
+        And another.
+        :::::
+        ``````
+
+:    false
+
+     :  Disable the Pandoc fenced divs extension:
+
+% \end{markdown}
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+```` tex
+\documentclass{article}
+\usepackage[fencedDivs]{markdown}
+\begin{document}
+\begin{markdown}{slice=special}
+Here is a regular paragraph.
+
+::::: {#special}
+Here is a special paragraph.
+:::::
+
+And here is another regular paragraph.
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex --shell-escape document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> Here is a special paragraph.
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { fencedDivs }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.fencedDivs = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
 #### Option `finalizeCache`
 
 `finalizeCache` (default value: `false`)
