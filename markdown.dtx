@@ -3572,6 +3572,100 @@ defaultOptions.blankBeforeHeading = false
 %</lua,lua-cli>
 %<*manual-options>
 
+#### Option `bracketedSpans`
+
+`bracketedSpans` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{bracketedSpans}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Enable the Pandoc bracketed spans extension:
+
+        ``` md
+        [This is *some text*]{.class key="val"}
+        ``````
+
+:    false
+
+     :  Disable the Pandoc bracketed spans extension:
+
+% \end{markdown}
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+```` tex
+\documentclass{article}
+\usepackage[bracketedSpans]{markdown}
+\usepackage{expl3}
+\ExplSyntaxOn
+\markdownSetup{
+  renderers = {
+    fencedDivAttributeContextBegin = {
+      \group_begin:
+      \color_group_begin:
+      \markdownSetup{
+        renderers = {
+          attributeKeyValue = {
+            \str_if_eq:nnT
+              { #1 }
+              { color }
+              {
+                 \color_select:n { #2 }
+              }
+          },
+        },
+      }
+    },
+    fencedDivAttributeContextEnd = {
+      \color_group_end:
+      \group_end:
+    },
+  },
+}
+\ExplSyntaxOff
+\begin{document}
+\begin{markdown}
+Here is some [colored text]{color=red}.
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex --shell-escape document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> Here is some [colored text]{color=red}.
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { bracketedSpans }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.bracketedSpans = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
 #### Option `breakableBlockquotes`
 
 `breakableBlockquotes` (default value: `false`)
