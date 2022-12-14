@@ -24791,6 +24791,11 @@ function M.new(options)
 %  \begin{macrocode}
   local extensions = {}
 
+  if options.bracketedSpans then
+    local bracketed_spans_extension = M.extensions.bracketed_spans()
+    table.insert(extensions, bracketed_spans_extension)
+  end
+
   if options.contentBlocks then
     local content_blocks_extension = M.extensions.content_blocks(
       options.contentBlocksLanguageMap)
