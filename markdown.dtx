@@ -24809,6 +24809,12 @@ function M.new(options)
     table.insert(extensions, fenced_code_extension)
   end
 
+  if options.fencedDivs then
+    local fenced_div_extension = M.extensions.fenced_divs(
+      options.blankBeforeDivFence)
+    table.insert(extensions, fenced_div_extension)
+  end
+
   if options.headerAttributes then
     local header_attributes_extension = M.extensions.header_attributes()
     table.insert(extensions, header_attributes_extension)
