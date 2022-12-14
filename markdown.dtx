@@ -3048,7 +3048,7 @@ following content:
   convert = markdown.new({fencedCode = true})
   input = "A paragraph."   .. newline ..
           "```"            .. newline ..
-          "A code fence."  .. newline ..
+          "A fenced code." .. newline ..
           "```"            .. newline
   tex.sprint(convert(input))
 
@@ -3056,7 +3056,7 @@ following content:
     fencedCode = true, blankBeforeCodeFence = true})
   input = "A paragraph."       .. newline ..
           "```"                .. newline ..
-          "Not a code fence."  .. newline ..
+          "Not a fenced code." .. newline ..
           "```"                .. newline
   tex.sprint(convert(input)) }
 \bye
@@ -3071,10 +3071,10 @@ following text:
 > A paragraph.
 >
 > ```
-> A code fence.
+> A fenced code.
 > ```
 >
-> A paragraph. ``` Not a code fence. ```
+> A paragraph. ``` Not a fenced code. ```
 
 ##### Lua CLI Example {.unnumbered}
 
@@ -3129,7 +3129,7 @@ following content:
 \markdownBegin
 A paragraph.
 ```
-A code fence.
+A fenced code.
 ```
 \markdownEnd
 
@@ -3137,7 +3137,7 @@ A code fence.
 \markdownBegin
 A paragraph.
 ```
-Not a code fence.
+Not a fenced code.
 ```
 \markdownEnd
 
@@ -3153,10 +3153,10 @@ following text:
 > A paragraph.
 >
 > ```
-> A code fence.
+> A fenced code.
 > ```
 >
-> A paragraph. ``` Not a code fence. ```
+> A paragraph. ``` Not a fenced code. ```
 
 ##### \LaTeX{} Example {.unnumbered}
 
@@ -3170,14 +3170,14 @@ following content:
 \begin{markdown}
 A paragraph.
 ```
-A code fence.
+A fenced code.
 ```
 \end{markdown}
 
 \begin{markdown*}{blankBeforeCodeFence}
 A paragraph.
 ```
-Not a code fence.
+Not a fenced code.
 ```
 \end{markdown*}
 
@@ -3193,10 +3193,10 @@ following text:
 > A paragraph.
 >
 > ```
-> A code fence.
+> A fenced code.
 > ```
 >
-> A paragraph. ``` Not a code fence. ```
+> A paragraph. ``` Not a fenced code. ```
 
 ##### \Hologo{ConTeXt} Example {.unnumbered}
 
@@ -3210,7 +3210,7 @@ following content:
 \startmarkdown
 A paragraph.
 ```
-A code fence.
+A fenced code.
 ```
 \stopmarkdown
 
@@ -3218,7 +3218,7 @@ A code fence.
 \startmarkdown
 A paragraph.
 ```
-Not a code fence.
+Not a fenced code.
 ```
 \stopmarkdown
 
@@ -3234,10 +3234,10 @@ following text:
 > A paragraph.
 >
 > ```
-> A code fence.
+> A fenced code.
 > ```
 >
-> A paragraph. ``` Not a code fence. ```
+> A paragraph. ``` Not a fenced code. ```
 
 %</manual-options>
 %<*tex>
@@ -3254,6 +3254,86 @@ following text:
 % \fi
 %  \begin{macrocode}
 defaultOptions.blankBeforeCodeFence = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
+#### Option `blankBeforeDivFence`
+
+`blankBeforeDivFence` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{blankBeforeDivFence}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Require a blank line between a paragraph and the following fenced div.
+
+     false
+
+     :  Do not require a blank line between a paragraph and the following
+        fenced div.
+
+% \end{markdown}
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+```` tex
+\documentclass{article}
+\usepackage[fencedDivs]{markdown}
+\begin{document}
+
+\begin{markdown}
+A paragraph.
+::: {.identifier}
+A fenced div.
+:::
+\end{markdown}
+
+\begin{markdown*}{blankBeforeDivFence}
+A paragraph.
+```
+Not a fenced div.
+```
+\end{markdown*}
+
+\end{document}
+````````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> A paragraph.
+>
+> A fenced div.
+>
+> A paragraph. ::: {.identifier} Not a fenced div. :::
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { blankBeforeDivFence }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.blankBeforeDivFence = false
 %    \end{macrocode}
 % \par
 % \iffalse
