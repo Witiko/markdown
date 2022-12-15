@@ -11,5 +11,6 @@
 [foo]
 >>>
 documentBegin
+inlineHtmlTag: <bar>
 interblockSeparator
 documentEnd

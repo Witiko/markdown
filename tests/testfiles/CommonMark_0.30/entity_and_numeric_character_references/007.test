@@ -8,5 +8,5 @@
 <a href="&ouml;&ouml;.html">
 >>>
 documentBegin
-inlineHtmlTag: <a href="(ampersand)ouml;(ampersand)ouml;.html">
+inputBlockHtmlElement: ./_markdown_test/d8f6d69d2a4bcc859d2552baf88fd6c9.verbatim
 documentEnd

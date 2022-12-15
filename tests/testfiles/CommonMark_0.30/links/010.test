@@ -10,4 +10,5 @@
 bar>)
 >>>
 documentBegin
+inlineHtmlTag: <foo bar>
 documentEnd
