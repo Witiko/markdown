@@ -21697,7 +21697,8 @@ local function captures_geq_length(_,i,a,b)
   return #a >= #b and i
 end
 
-parsers.infostring   = C((parsers.linechar
+parsers.tilde_infostring
+                     = C((parsers.linechar
                         - (parsers.spacechar^1 * parsers.newline))^0)
                      * parsers.optionalspace
                      * (parsers.newline + parsers.eof)
@@ -21985,7 +21986,7 @@ parsers.urlchar      = parsers.anyescaped - parsers.newline - parsers.more
 %  \begin{macrocode}
 parsers.TildeFencedCode
        = parsers.fencehead(parsers.tilde,
-                           parsers.infostring)
+                           parsers.tilde_infostring)
        * Cs(parsers.fencedline(parsers.tilde)^0)
        * parsers.fencetail(parsers.tilde)
 
@@ -23940,7 +23941,7 @@ M.extensions.fenced_code = function(blank_before_code_fence)
         fencestart = parsers.fencehead(parsers.backtick,
                                        parsers.backtick_infostring)
                    + parsers.fencehead(parsers.tilde,
-                                       parsers.infostring)
+                                       parsers.tilde_infostring)
       end
 
       local EndlineExceptions = parsers.EndlineExceptions + fencestart
@@ -23992,10 +23993,17 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
 %
 % \end{markdown}
 %  \begin{macrocode}
+      local fenced_div_infostring
+                             = C((parsers.linechar
+                                - ( parsers.spacechar^1
+                                  * parsers.colon^1))^1)
+
       local fenced_div_begin = parsers.nonindentspace
                              * parsers.colon^3
                              * parsers.optionalspace
-                             * C(parsers.infostring)
+                             * fenced_div_infostring
+                             * ( parsers.spacechar^1
+                               * parsers.colon^1)^0
                              * parsers.optionalspace
                              * (parsers.newline + parsers.eof)
 
