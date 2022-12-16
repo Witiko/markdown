@@ -5765,7 +5765,7 @@ following content:
 \input lmfonts
 \directlua{
   local markdown = require("markdown")
-  local convert = markdown.new()
+  local convert = markdown.new({html = false})
   local newline = [[^^J^^J]]
   local input =
     "<div>*There is no block tag support.*</div>"        .. newline ..
@@ -5776,7 +5776,7 @@ following content:
 \par
 \directlua{
   local markdown = require("markdown")
-  local convert = markdown.new({html = true})
+  local convert = markdown.new()
   local input =
     "<div>*There is block tag support.*</div>"        .. newline ..
     "*There is <inline tag="tag"></inline> support.*" .. newline ..
@@ -5823,8 +5823,8 @@ _Is there <? HTML instruction ?> support?_
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ -- content.md optionfalse.tex
-texlua ⟨CLI pathname⟩ html=true -- content.md optiontrue.tex
+texlua ⟨CLI pathname⟩ html=false -- content.md optionfalse.tex
+texlua ⟨CLI pathname⟩ -- content.md optiontrue.tex
 luatex document.tex
 ```````
 where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
@@ -5851,6 +5851,7 @@ following content:
 \input markdown
 \input lmfonts
 
+\def\markdownOptionHtml{false}
 \markdownBegin
 <div>
 *There is no block tag support.*
@@ -5895,23 +5896,23 @@ following content:
 \usepackage{markdown}
 \begin{document}
 
-\begin{markdown}
+\begin{markdown*}{html = false}
 <div>
 *There is no block tag support.*
 </div>
 *There is no <inline tag="tag"></inline> support.*
 _There is no <!-- comment --> support._
 _There is no <? HTML instruction ?> support._
-\end{markdown}
+\end{markdown*}
 
-\begin{markdown*}{html}
+\begin{markdown}
 <div>
 *There is block tag support.*
 </div>
 *There is <inline tag="tag"></inline> support.*
 _There is <!-- comment --> support._
 _There is <? HTML instruction ?> support._
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -5937,6 +5938,7 @@ following content:
 \usemodule[t][markdown]
 \starttext
 
+\setupmarkdown[html = no]
 \startmarkdown
 <div>
 *There is no block tag support.*
