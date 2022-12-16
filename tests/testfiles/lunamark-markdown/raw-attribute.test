@@ -1,8 +1,8 @@
-\def\markdownOptionFencedCode{true}
 \def\markdownOptionRawAttribute{true}
 <<<
-This test ensures that the Lua `fencedCode` and `rawAttribute` options
-correctly propagate through the plain TeX interface.
+This test ensures that the Lua `fencedCode` option is enabled by default and
+that the Lua `rawAttribute` option correctly propagate through the plain TeX
+interface.
 
 The following raw blocks should be recognized as such:
 

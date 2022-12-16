@@ -1,4 +1,3 @@
-\def\markdownOptionFencedCode{true}
 \def\markdownOptionBlankBeforeCodeFence{true}
 <<<
 This test ensures that the Lua `fencedCode` and `blankBeforeCodeFence` options

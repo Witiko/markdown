@@ -1,9 +1,7 @@
-\def\markdownOptionFencedCode{true}
+\def\markdownOptionFencedCode{false}
 <<<
 This test ensures that the Lua `fencedCode` option correctly propagates through
 the plain TeX interface.
-
-The following fenced code blocks should be recognized as such.
 
 ``` foo
 bar
@@ -16,14 +14,12 @@ bar
 documentBegin
 codeSpan: fencedCode
 interblockSeparator
+codeSpan: foo bar 
 interblockSeparator
-BEGIN fencedCode
-- src: ./_markdown_test/37b51d194a7513e45b56f6524f2d51f2.verbatim
-- infostring: foo
-END fencedCode
-interblockSeparator
-BEGIN fencedCode
-- src: ./_markdown_test/37b51d194a7513e45b56f6524f2d51f2.verbatim
-- infostring: foo
-END fencedCode
+tilde
+tilde
+tilde
+tilde
+tilde
+tilde
 documentEnd
