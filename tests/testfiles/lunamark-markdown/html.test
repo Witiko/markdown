@@ -1,4 +1,4 @@
-\def\markdownOptionHtml{true}
+\def\markdownOptionHtml{false}
 <<<
 This test ensures that the Lua `html` option correctly propagates through
 the plain TeX interface.
@@ -34,24 +34,10 @@ Unrecognized character entities are ignored: &nonsense;
 documentBegin
 codeSpan: html
 interblockSeparator
-inputBlockHtmlElement: ./_markdown_test/db2433856814aefaa62794558a22a63c.verbatim
-interblockSeparator
-emphasis: There is (inlineHtmlTag: <inline tag="value">)(inlineHtmlTag: </inline>) support.(inlineHtmlTag: <br/>)
-emphasis: There is (inlineHtmlComment: (emphasis: comment)) support.
-emphasis: There is support.
-interblockSeparator
-blockHtmlCommentBegin
-emphasis: block comment
-interblockSeparator
-olBeginTight
-olItemWithNumber: 1
-olItemEnd
-olItemWithNumber: 2
-olItemEnd
-olItemWithNumber: 3
-olItemEnd
-olEndTight
-blockHtmlCommentEnd
+emphasis: There is no block tag support.
+emphasis: There is <inline tag="value"></inline> support.<br/>
+emphasis: There is no <!-- comment --> support.
+emphasis: There is no <? HTML instruction ?> support.
 interblockSeparator
 interblockSeparator
 ulBeginTight
@@ -59,19 +45,21 @@ ulItem
 pipe
 ulItemEnd
 ulItem
-pipe
+ampersand
 ulItemEnd
 ulItem
-pipe
+ampersand
 ulItemEnd
 ulItem
-pipe
+ampersand
 ulItemEnd
 ulItem
-pipe
+ampersand
+hash
 ulItemEnd
 ulItem
-pipe
+ampersand
+hash
 ulItemEnd
 ulEndTight
 interblockSeparator
