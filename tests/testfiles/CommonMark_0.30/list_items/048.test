@@ -24,6 +24,7 @@ headingOne: Foo
 ulItemEnd
 ulItem
 headingTwo: Bar
+interblockSeparator
 emphasis: baz
 ulItemEnd
 ulEndTight

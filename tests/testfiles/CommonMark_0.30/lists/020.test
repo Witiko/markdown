@@ -21,6 +21,7 @@ documentBegin
 ulBeginTight
 ulItem
 emphasis: a
+interblockSeparator
 blockQuoteBegin
 emphasis: b
 blockQuoteEnd

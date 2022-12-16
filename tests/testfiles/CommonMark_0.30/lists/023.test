@@ -18,6 +18,7 @@ documentBegin
 ulBeginTight
 ulItem
 emphasis: a
+interblockSeparator
 ulBeginTight
 ulItem
 emphasis: b

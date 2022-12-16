@@ -18,6 +18,7 @@ documentBegin
 olBeginTight
 olItemWithNumber: 10
 emphasis: foo
+interblockSeparator
 ulBeginTight
 ulItem
 emphasis: bar
