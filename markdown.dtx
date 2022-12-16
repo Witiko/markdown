@@ -3494,12 +3494,12 @@ defaultOptions.blankBeforeHeading = false
 
 #### Option `breakableBlockquotes`
 
-`breakableBlockquotes` (default value: `false`)
+`breakableBlockquotes` (default value: `true`)
 
 % \fi
 % \begin{markdown}
 %
-% \Optitem[false]{breakableBlockquotes}{\opt{true}, \opt{false}}
+% \Optitem[true]{breakableBlockquotes}{\opt{true}, \opt{false}}
 %
 :    true
 
@@ -3702,14 +3702,14 @@ following text:
 \@@_add_lua_option:nnn
   { breakableBlockquotes }
   { boolean }
-  { false }
+  { true }
 %    \end{macrocode}
 % \iffalse
 %</tex>
 %<*lua,lua-cli>
 % \fi
 %  \begin{macrocode}
-defaultOptions.breakableBlockquotes = false
+defaultOptions.breakableBlockquotes = true
 %    \end{macrocode}
 % \par
 % \iffalse
