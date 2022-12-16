@@ -1,5 +1,5 @@
 <<<
-This test ensures that the Lua `html` option is disabled by default.
+This test ensures that the Lua `html` option is enabled by default.
 
 <div>
 *There is no block tag support.*
@@ -22,10 +22,24 @@ Unrecognized character entities are ignored: &nonsense;
 documentBegin
 codeSpan: html
 interblockSeparator
-emphasis: There is no block tag support.
-emphasis: There is <inline tag="value"></inline> support.<br/>
-emphasis: There is no <!-- comment --> support.
-emphasis: There is no <? HTML instruction ?> support.
+inputBlockHtmlElement: ./_markdown_test/db2433856814aefaa62794558a22a63c.verbatim
+interblockSeparator
+emphasis: There is (inlineHtmlTag: <inline tag="value">)(inlineHtmlTag: </inline>) support.(inlineHtmlTag: <br/>)
+emphasis: There is (inlineHtmlComment: (emphasis: comment)) support.
+emphasis: There is support.
+interblockSeparator
+blockHtmlCommentBegin
+emphasis: block comment
+interblockSeparator
+olBeginTight
+olItemWithNumber: 1
+olItemEnd
+olItemWithNumber: 2
+olItemEnd
+olItemWithNumber: 3
+olItemEnd
+olEndTight
+blockHtmlCommentEnd
 interblockSeparator
 interblockSeparator
 ulBeginTight
@@ -33,21 +47,19 @@ ulItem
 pipe
 ulItemEnd
 ulItem
-ampersand
+pipe
 ulItemEnd
 ulItem
-ampersand
+pipe
 ulItemEnd
 ulItem
-ampersand
+pipe
 ulItemEnd
 ulItem
-ampersand
-hash
+pipe
 ulItemEnd
 ulItem
-ampersand
-hash
+pipe
 ulItemEnd
 ulEndTight
 interblockSeparator

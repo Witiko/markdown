@@ -3,7 +3,6 @@
 \def\markdownOptionNotes{true}
 \def\markdownOptionInlineNotes{true}
 \def\markdownOptionSmartEllipses{true}
-\def\markdownOptionFencedCode{true}
 \def\markdownOptionContentBlocks{true}
 \def\markdownOptionHeaderAttributes{true}
 \def\markdownOptionHeaderAttributes{true}

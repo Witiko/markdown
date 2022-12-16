@@ -3494,12 +3494,12 @@ defaultOptions.blankBeforeHeading = false
 
 #### Option `breakableBlockquotes`
 
-`breakableBlockquotes` (default value: `false`)
+`breakableBlockquotes` (default value: `true`)
 
 % \fi
 % \begin{markdown}
 %
-% \Optitem[false]{breakableBlockquotes}{\opt{true}, \opt{false}}
+% \Optitem[true]{breakableBlockquotes}{\opt{true}, \opt{false}}
 %
 :    true
 
@@ -3525,12 +3525,12 @@ following content:
   local newline = [[^^J^^J]]
   local convert, input
 
-  convert = markdown.new()
+  convert = markdown.new(breakableBlockquotes = false)
   input = "> A single"     .. newline .. newline ..
           "> block quote." .. newline
   tex.sprint(convert(input))
 
-  convert = markdown.new({breakableBlockquotes = true})
+  convert = markdown.new()
   input = "> A block quote."       .. newline .. newline ..
           "> Another block quote." .. newline
   tex.sprint(convert(input)) }
@@ -3569,8 +3569,8 @@ following content:
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ -- content.md optionfalse.tex
-texlua ⟨CLI pathname⟩ breakableBlockquotes=true  -- content.md optiontrue.tex
+texlua ⟨CLI pathname⟩ breakableBlockquotes=false -- content.md optionfalse.tex
+texlua ⟨CLI pathname⟩  -- content.md optiontrue.tex
 luatex document.tex
 ```````
 where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
@@ -3595,6 +3595,7 @@ following content:
 ``` tex
 \input markdown
 
+\def\markdownOptionBreakableBlockquotes{false}
 \markdownBegin
 > A single
 
@@ -3632,17 +3633,17 @@ following content:
 \usepackage{markdown}
 \begin{document}
 
-\begin{markdown}
+\begin{markdown*}{breakableBlockquotes = false}
 > A single
 
 > block quote.
-\end{markdown}
+\end{markdown*}
 
-\begin{markdown*}{breakableBlockquotes}
+\begin{markdown}
 > A block quote.
 
 > Another block quote.
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -3667,6 +3668,7 @@ following content:
 \usemodule[t][markdown]
 \starttext
 
+\setupmarkdown[breakableBlockquotes = no]
 \startmarkdown
 > A single
 
@@ -3702,14 +3704,14 @@ following text:
 \@@_add_lua_option:nnn
   { breakableBlockquotes }
   { boolean }
-  { false }
+  { true }
 %    \end{macrocode}
 % \iffalse
 %</tex>
 %<*lua,lua-cli>
 % \fi
 %  \begin{macrocode}
-defaultOptions.breakableBlockquotes = false
+defaultOptions.breakableBlockquotes = true
 %    \end{macrocode}
 % \par
 % \iffalse
@@ -5071,12 +5073,12 @@ defaultOptions.fancyLists = false
 
 #### Option `fencedCode`
 
-`fencedCode` (default value: `false`)
+`fencedCode` (default value: `true`)
 
 % \fi
 % \begin{markdown}
 %
-% \Optitem[false]{fencedCode}{\opt{true}, \opt{false}}
+% \Optitem[true]{fencedCode}{\opt{true}, \opt{false}}
 %
 :    true
 
@@ -5115,7 +5117,7 @@ following content:
 ```` tex
 \documentclass{article}
 \usepackage{minted}
-\usepackage[fencedCode]{markdown}
+\usepackage{markdown}
 \begin{document}
 \begin{markdown}
 ~~~ js
@@ -5149,7 +5151,7 @@ following text:
 >     moveShip(5 * gravity, DOWN);
 > }
 > ```
-> 
+>
 > ``` html
 > <pre>
 >   <code>
@@ -5167,7 +5169,6 @@ Using a text editor, create a text document named `document.tex` with the
 following content:
 ```` tex
 \usemodule[t][markdown]
-\setupmarkdown[fencedCode = yes]
 \definetyping [js]
 \definetyping [html]
 \setuptyping  [html] [option=XML]
@@ -5204,7 +5205,7 @@ following text:
 >     moveShip(5 * gravity, DOWN);
 > }
 > ```
-> 
+>
 > ``` html
 > <pre>
 >   <code>
@@ -5223,14 +5224,14 @@ following text:
 \@@_add_lua_option:nnn
   { fencedCode }
   { boolean }
-  { false }
+  { true }
 %    \end{macrocode}
 % \iffalse
 %</tex>
 %<*lua,lua-cli>
 % \fi
 %  \begin{macrocode}
-defaultOptions.fencedCode = false
+defaultOptions.fencedCode = true
 %    \end{macrocode}
 % \par
 % \iffalse
@@ -5732,12 +5733,12 @@ defaultOptions.headerAttributes = false
 
 #### Option `html`
 
-`html` (default value: `false`)
+`html` (default value: `true`)
 
 % \fi
 % \begin{markdown}
 %
-% \Optitem[false]{html}{\opt{true}, \opt{false}}
+% \Optitem[true]{html}{\opt{true}, \opt{false}}
 %
 :    true
 
@@ -5764,7 +5765,7 @@ following content:
 \input lmfonts
 \directlua{
   local markdown = require("markdown")
-  local convert = markdown.new()
+  local convert = markdown.new({html = false})
   local newline = [[^^J^^J]]
   local input =
     "<div>*There is no block tag support.*</div>"        .. newline ..
@@ -5775,7 +5776,7 @@ following content:
 \par
 \directlua{
   local markdown = require("markdown")
-  local convert = markdown.new({html = true})
+  local convert = markdown.new()
   local input =
     "<div>*There is block tag support.*</div>"        .. newline ..
     "*There is <inline tag="tag"></inline> support.*" .. newline ..
@@ -5822,8 +5823,8 @@ _Is there <? HTML instruction ?> support?_
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ -- content.md optionfalse.tex
-texlua ⟨CLI pathname⟩ html=true -- content.md optiontrue.tex
+texlua ⟨CLI pathname⟩ html=false -- content.md optionfalse.tex
+texlua ⟨CLI pathname⟩ -- content.md optiontrue.tex
 luatex document.tex
 ```````
 where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
@@ -5850,6 +5851,7 @@ following content:
 \input markdown
 \input lmfonts
 
+\def\markdownOptionHtml{false}
 \markdownBegin
 <div>
 *There is no block tag support.*
@@ -5894,23 +5896,23 @@ following content:
 \usepackage{markdown}
 \begin{document}
 
-\begin{markdown}
+\begin{markdown*}{html = false}
 <div>
 *There is no block tag support.*
 </div>
 *There is no <inline tag="tag"></inline> support.*
 _There is no <!-- comment --> support._
 _There is no <? HTML instruction ?> support._
-\end{markdown}
+\end{markdown*}
 
-\begin{markdown*}{html}
+\begin{markdown}
 <div>
 *There is block tag support.*
 </div>
 *There is <inline tag="tag"></inline> support.*
 _There is <!-- comment --> support._
 _There is <? HTML instruction ?> support._
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -5936,6 +5938,7 @@ following content:
 \usemodule[t][markdown]
 \starttext
 
+\setupmarkdown[html = no]
 \startmarkdown
 <div>
 *There is no block tag support.*
@@ -5978,14 +5981,14 @@ following text:
 \@@_add_lua_option:nnn
   { html }
   { boolean }
-  { false }
+  { true }
 %    \end{macrocode}
 % \iffalse
 %</tex>
 %<*lua,lua-cli>
 % \fi
 %  \begin{macrocode}
-defaultOptions.html = false
+defaultOptions.html = true
 %    \end{macrocode}
 % \par
 % \iffalse
