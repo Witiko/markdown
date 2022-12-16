@@ -5071,12 +5071,12 @@ defaultOptions.fancyLists = false
 
 #### Option `fencedCode`
 
-`fencedCode` (default value: `false`)
+`fencedCode` (default value: `true`)
 
 % \fi
 % \begin{markdown}
 %
-% \Optitem[false]{fencedCode}{\opt{true}, \opt{false}}
+% \Optitem[true]{fencedCode}{\opt{true}, \opt{false}}
 %
 :    true
 
@@ -5223,14 +5223,14 @@ following text:
 \@@_add_lua_option:nnn
   { fencedCode }
   { boolean }
-  { false }
+  { true }
 %    \end{macrocode}
 % \iffalse
 %</tex>
 %<*lua,lua-cli>
 % \fi
 %  \begin{macrocode}
-defaultOptions.fencedCode = false
+defaultOptions.fencedCode = true
 %    \end{macrocode}
 % \par
 % \iffalse
