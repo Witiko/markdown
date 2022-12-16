@@ -3525,12 +3525,12 @@ following content:
   local newline = [[^^J^^J]]
   local convert, input
 
-  convert = markdown.new()
+  convert = markdown.new(breakableBlockquotes = false)
   input = "> A single"     .. newline .. newline ..
           "> block quote." .. newline
   tex.sprint(convert(input))
 
-  convert = markdown.new({breakableBlockquotes = true})
+  convert = markdown.new()
   input = "> A block quote."       .. newline .. newline ..
           "> Another block quote." .. newline
   tex.sprint(convert(input)) }
@@ -3569,8 +3569,8 @@ following content:
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ -- content.md optionfalse.tex
-texlua ⟨CLI pathname⟩ breakableBlockquotes=true  -- content.md optiontrue.tex
+texlua ⟨CLI pathname⟩ breakableBlockquotes=false -- content.md optionfalse.tex
+texlua ⟨CLI pathname⟩  -- content.md optiontrue.tex
 luatex document.tex
 ```````
 where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
@@ -3595,6 +3595,7 @@ following content:
 ``` tex
 \input markdown
 
+\def\markdownOptionBreakableBlockquotes{false}
 \markdownBegin
 > A single
 
@@ -3632,17 +3633,17 @@ following content:
 \usepackage{markdown}
 \begin{document}
 
-\begin{markdown}
+\begin{markdown*}{breakableBlockquotes = false}
 > A single
 
 > block quote.
-\end{markdown}
+\end{markdown*}
 
-\begin{markdown*}{breakableBlockquotes}
+\begin{markdown}
 > A block quote.
 
 > Another block quote.
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -3667,6 +3668,7 @@ following content:
 \usemodule[t][markdown]
 \starttext
 
+\setupmarkdown[breakableBlockquotes = no]
 \startmarkdown
 > A single
 
