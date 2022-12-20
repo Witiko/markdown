@@ -1,0 +1,220 @@
+\def\markdownOptionFencedDivs{true}
+\def\markdownOptionFencedCode{true}
+<<<
+:::
+This is not a div
+:::
+
+ ::: {.myclass lang=fr}
+Some better div
+  :::
+
+:::: {.level1}
+Fenced divs can be nested
+
+::::: {.level2-more-colons}
+This is a nested div
+:::::
+
+::: {.level2-fewer-colons}
+This is also a nested div that contains
+
+several paragraphs of text
+:::
+
+:::: {.level2-same-number-of-colons}
+This is another nested div
+
+::::: {.level3}
+with another nested div inside
+:::::
+::::
+::::
+
+::: Warning ::::::
+This is a warning.
+
+::: Danger
+This is a warning within a warning.
+:::
+::::::::::::::::::
+
+::: {.some-classname}
+::: {#some-id}
+::: {lang=some}
+Divs can be nested directly inside one another without surrounding text.
+:::
+:::
+:::
+
+::: {.level1}
+This is the beginning of a div
+
+> This is a blockquote
+>
+> ::: {.level2-inside-blockquote}
+> This is a div inside a blockquote
+> :::
+
+:::
+
+::: {#some-identifier}
+This is the beginning of a div
+
+> This is a blockquote that contains three colons:
+> :::
+
+This is the end of a div
+:::
+
+Here are some extra colons that will be shown as just text:
+
+::::
+
+::: {.not-a-div}
+here is a code span `
+:::
+` that contains three colons
+
+::: {.some-classname}
+This is a div with a fenced code inside
+
+```
+:::
+```
+:::
+
+::: {.cit custom-style=raggedleft}
+I am a _fenced_ div
+:::
+
+::: {.cit custom-style=raggedleft}
+
+I am a _fenced_ div
+
+:::
+
+::: {.some-classname}
+This is not a div
+```
+:::
+```
+
+::: {.some-classname}
+This is not a div
+>>>
+documentBegin
+interblockSeparator
+fencedDivAttributeContextBegin
+attributeClassName: myclass
+BEGIN attributeKeyValue
+- key: lang
+- value: fr
+END attributeKeyValue
+fencedDivAttributeContextEnd
+interblockSeparator
+fencedDivAttributeContextBegin
+attributeClassName: level1
+interblockSeparator
+fencedDivAttributeContextBegin
+attributeClassName: level2-more-colons
+fencedDivAttributeContextEnd
+interblockSeparator
+fencedDivAttributeContextBegin
+attributeClassName: level2-fewer-colons
+interblockSeparator
+fencedDivAttributeContextEnd
+interblockSeparator
+fencedDivAttributeContextBegin
+attributeClassName: level2-same-number-of-colons
+interblockSeparator
+fencedDivAttributeContextBegin
+attributeClassName: level3
+fencedDivAttributeContextEnd
+fencedDivAttributeContextEnd
+fencedDivAttributeContextEnd
+interblockSeparator
+fencedDivAttributeContextBegin
+attributeClassName: Warning
+interblockSeparator
+fencedDivAttributeContextBegin
+attributeClassName: Danger
+fencedDivAttributeContextEnd
+fencedDivAttributeContextEnd
+interblockSeparator
+fencedDivAttributeContextBegin
+attributeClassName: some-classname
+fencedDivAttributeContextBegin
+attributeIdentifier: some-id
+fencedDivAttributeContextBegin
+BEGIN attributeKeyValue
+- key: lang
+- value: some
+END attributeKeyValue
+fencedDivAttributeContextEnd
+fencedDivAttributeContextEnd
+fencedDivAttributeContextEnd
+interblockSeparator
+fencedDivAttributeContextBegin
+attributeClassName: level1
+interblockSeparator
+blockQuoteBegin
+interblockSeparator
+fencedDivAttributeContextBegin
+attributeClassName: level2-inside-blockquote
+fencedDivAttributeContextEnd
+blockQuoteEnd
+fencedDivAttributeContextEnd
+interblockSeparator
+fencedDivAttributeContextBegin
+attributeIdentifier: some-identifier
+interblockSeparator
+blockQuoteBegin
+blockQuoteEnd
+interblockSeparator
+fencedDivAttributeContextEnd
+interblockSeparator
+interblockSeparator
+interblockSeparator
+leftBrace
+rightBrace
+codeSpan:  ::: 
+interblockSeparator
+fencedDivAttributeContextBegin
+attributeClassName: some-classname
+interblockSeparator
+BEGIN fencedCode
+- src: ./_markdown_test/e441fcf4a7686817fe868bf38a5c2c07.verbatim
+- infostring: 
+END fencedCode
+fencedDivAttributeContextEnd
+interblockSeparator
+fencedDivAttributeContextBegin
+attributeClassName: cit
+BEGIN attributeKeyValue
+- key: custom-style
+- value: raggedleft
+END attributeKeyValue
+emphasis: fenced
+fencedDivAttributeContextEnd
+interblockSeparator
+fencedDivAttributeContextBegin
+attributeClassName: cit
+BEGIN attributeKeyValue
+- key: custom-style
+- value: raggedleft
+END attributeKeyValue
+emphasis: fenced
+fencedDivAttributeContextEnd
+interblockSeparator
+leftBrace
+rightBrace
+interblockSeparator
+BEGIN fencedCode
+- src: ./_markdown_test/e441fcf4a7686817fe868bf38a5c2c07.verbatim
+- infostring: 
+END fencedCode
+interblockSeparator
+leftBrace
+rightBrace
+documentEnd
