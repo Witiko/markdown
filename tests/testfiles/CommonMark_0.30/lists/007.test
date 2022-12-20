@@ -29,9 +29,11 @@ documentBegin
 ulBeginTight
 ulItem
 emphasis: foo
+interblockSeparator
 ulBeginTight
 ulItem
 emphasis: bar
+interblockSeparator
 ulBegin
 ulItem
 emphasis: baz

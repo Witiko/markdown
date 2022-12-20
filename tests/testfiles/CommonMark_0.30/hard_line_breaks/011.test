@@ -10,9 +10,5 @@
 bar">
 >>>
 documentBegin
-BEGIN link
-- label: 
-- URI: foo(backslash) bar
-- title: 
-END link
+inlineHtmlTag: <a href="foo(backslash) bar">
 documentEnd

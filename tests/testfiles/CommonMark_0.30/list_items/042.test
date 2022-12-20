@@ -28,12 +28,15 @@ documentBegin
 ulBeginTight
 ulItem
 emphasis: foo
+interblockSeparator
 ulBeginTight
 ulItem
 emphasis: bar
+interblockSeparator
 ulBeginTight
 ulItem
 emphasis: baz
+interblockSeparator
 ulBeginTight
 ulItem
 emphasis: boo
