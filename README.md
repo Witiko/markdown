@@ -188,11 +188,12 @@ For further information, consult one of the following:
     - [Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX][tb131],
     - [Markdown 2.15.0: What's New?][tb133], and
     - [Markdown 2.17.1: What's New, What's Next?][tb135].
-5. Journal articles of me and my students published by [CSTUG][] (in Czech and Slovak):
+5. Journal articles of me and my students published by [CSTUG Bulletin][csbul] (in Czech and Slovak):
     - [Rendering Markdown inside TeX Documents][10.5300/2016-1-4/78],
     - [Markdown 2.8.1: Boldly Unto the Throne of Lightweight Markup in TeX][10.5300/2020-1-2/48],
-    - [Markdown 2.10.0: LaTeX Themes & Snippets][10.5300/2021-1-4/76], and
-    - [Direct Typesetting of Various Document Formats in TeX Using the Pandoc Utility][10.5300/2021-1-4/83].
+    - [Markdown 2.10.0: LaTeX Themes & Snippets][10.5300/2021-1-4/76],
+    - [Direct Typesetting of Various Document Formats in TeX Using the Pandoc Utility][10.5300/2021-1-4/83], and
+    - [High-Level Languages for TeX][10.5300/2022-1-4/35].
 6. Talks by me and my students:
     - [Five Years of Markdown in LaTeX: What, Why, How, and Whereto][pv212-fall2020] (in Czech), and
     - [Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX][tb131-video] ([slides][tb131-slides]).
@@ -218,10 +219,11 @@ For further information, consult one of the following:
  [tb134-example]: https://tug.org/tug2022/assets/pdf/Tereza_Vrabcová-TUG2022-example.pdf  "A Gentle Introduction to Markdown for Writers"
  [tb134-video]:   https://youtu.be/cqbKgjAlNjo?t=2h10m35s                                 "A Gentle Introduction to Markdown for Writers"
 
- [10.5300/2016-1-4/78]: https://bulletin.cstug.cz/pdf/2016-1-4.pdf#page=80 "Rendering Markdown inside TeX Documents"
- [10.5300/2020-1-2/48]: https://bulletin.cstug.cz/pdf/2020-1-2.pdf#page=50 "Markdown 2.8.1: Boldly Unto the Throne of Lightweight Markup in TeX"
- [10.5300/2021-1-4/76]: https://bulletin.cstug.cz/pdf/2021-1-4.pdf#page=78 "Markdown 2.10.0: LaTeX Themes & Snippets"
- [10.5300/2021-1-4/83]: https://bulletin.cstug.cz/pdf/2021-1-4.pdf#page=85 "Direct Typesetting of Various Document Formats in TeX Using the Pandoc Utility"
+ [10.5300/2016-1-4/78]: https://www.doi.org/10.5300/2016-1-4/78 "Rendering Markdown inside TeX Documents"
+ [10.5300/2020-1-2/48]: https://www.doi.org/10.5300/2020-1-2/48 "Markdown 2.8.1: Boldly Unto the Throne of Lightweight Markup in TeX"
+ [10.5300/2021-1-4/76]: https://www.doi.org/10.5300/2021-1-4/76 "Markdown 2.10.0: LaTeX Themes & Snippets"
+ [10.5300/2021-1-4/83]: https://www.doi.org/10.5300/2021-1-4/83 "Direct Typesetting of Various Document Formats in TeX Using the Pandoc Utility"
+ [10.5300/2022-1-4/35]: https://www.doi.org/10.5300/2022-1-4/35 "High-Level Languages for TeX"
 
  [pv212-fall2020]: https://is.muni.cz/elearning/warp?qurl=%2Fel%2Ffi%2Fpodzim2020%2FPV212%2Findex.qwarp;prejit=5595952
 
@@ -229,7 +231,7 @@ For further information, consult one of the following:
  [liantze]:  http://liantze.penguinattack.org/                                           "Rants from the Lab"
  [overleaf]: https://www.overleaf.com/                                                   "Overleaf: Real-time Collaborative Writing and Publishing Tools with Integrated PDF Preview"
  [tugboat]:  https://www.tug.org/tugboat/                                                "TUGboat - Communications of the TeX Users Group"
- [cstug]:    https://www.cstug.cz/                                                       "Československé sdružení uživatelů TeXu"
+ [csbul]:    https://bulletin.cstug.cz/                                                  "Zpravodaj Československého sdružení uživatelů TeXu"
 
  [manual-latest]:     https://witiko.github.io/markdown                                  "Markdown Package User Manual"
  [manual-tex-live]:   https://mirrors.ctan.org/macros/generic/markdown/markdown.html     "Markdown Package User Manual"
