@@ -10299,26 +10299,26 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererFracketedSpanAttributeContextBegin{%
-  \markdownRendererFracketedSpanAttributeContextBeginPrototype}%
+\def\markdownRendererBracketedSpanAttributeContextBegin{%
+  \markdownRendererBracketedSpanAttributeContextBeginPrototype}%
 \ExplSyntaxOn
 \seq_gput_right:Nn
   \g_@@_renderers_seq
-  { fracketedSpanAttributeContextBegin }
+  { bracketedSpanAttributeContextBegin }
 \prop_gput:Nnn
   \g_@@_renderer_arities_prop
-  { fracketedSpanAttributeContextBegin }
+  { bracketedSpanAttributeContextBegin }
   { 0 }
 \ExplSyntaxOff
-\def\markdownRendererFracketedSpanAttributeContextEnd{%
-  \markdownRendererFracketedSpanAttributeContextEndPrototype}%
+\def\markdownRendererBracketedSpanAttributeContextEnd{%
+  \markdownRendererBracketedSpanAttributeContextEndPrototype}%
 \ExplSyntaxOn
 \seq_gput_right:Nn
   \g_@@_renderers_seq
-  { fracketedSpanAttributeContextEnd }
+  { bracketedSpanAttributeContextEnd }
 \prop_gput:Nnn
   \g_@@_renderer_arities_prop
-  { fracketedSpanAttributeContextEnd }
+  { bracketedSpanAttributeContextEnd }
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
