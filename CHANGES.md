@@ -2,15 +2,19 @@
 
 ## 2.19.0
 
-Refactoring:
+Development:
 
-- Sort Lua options, token renderers, and built-in syntax extensions. (#208)
+- Add support for fenced divs and bracketed spans. (#207)
 
 Fixes:
 
 - Fix incorrect category codes in plain TeX renderer prototype definitions.
   (f156f05)
 - Allow backticks in tilde code block infostrings. (#214, #219, #221)
+
+Refactoring:
+
+- Sort Lua options, token renderers, and built-in syntax extensions. (#208)
 
 Documentation:
 

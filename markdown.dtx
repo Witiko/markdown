@@ -3047,7 +3047,7 @@ following content:
   convert = markdown.new({fencedCode = true})
   input = "A paragraph."   .. newline ..
           "```"            .. newline ..
-          "A code fence."  .. newline ..
+          "A fenced code." .. newline ..
           "```"            .. newline
   tex.sprint(convert(input))
 
@@ -3055,7 +3055,7 @@ following content:
     fencedCode = true, blankBeforeCodeFence = true})
   input = "A paragraph."       .. newline ..
           "```"                .. newline ..
-          "Not a code fence."  .. newline ..
+          "Not a fenced code." .. newline ..
           "```"                .. newline
   tex.sprint(convert(input)) }
 \bye
@@ -3070,10 +3070,10 @@ following text:
 > A paragraph.
 >
 > ```
-> A code fence.
+> A fenced code.
 > ```
 >
-> A paragraph. ``` Not a code fence. ```
+> A paragraph. ``` Not a fenced code. ```
 
 ##### Lua CLI Example {.unnumbered}
 
@@ -3128,7 +3128,7 @@ following content:
 \markdownBegin
 A paragraph.
 ```
-A code fence.
+A fenced code.
 ```
 \markdownEnd
 
@@ -3136,7 +3136,7 @@ A code fence.
 \markdownBegin
 A paragraph.
 ```
-Not a code fence.
+Not a fenced code.
 ```
 \markdownEnd
 
@@ -3152,10 +3152,10 @@ following text:
 > A paragraph.
 >
 > ```
-> A code fence.
+> A fenced code.
 > ```
 >
-> A paragraph. ``` Not a code fence. ```
+> A paragraph. ``` Not a fenced code. ```
 
 ##### \LaTeX{} Example {.unnumbered}
 
@@ -3169,14 +3169,14 @@ following content:
 \begin{markdown}
 A paragraph.
 ```
-A code fence.
+A fenced code.
 ```
 \end{markdown}
 
 \begin{markdown*}{blankBeforeCodeFence}
 A paragraph.
 ```
-Not a code fence.
+Not a fenced code.
 ```
 \end{markdown*}
 
@@ -3192,10 +3192,10 @@ following text:
 > A paragraph.
 >
 > ```
-> A code fence.
+> A fenced code.
 > ```
 >
-> A paragraph. ``` Not a code fence. ```
+> A paragraph. ``` Not a fenced code. ```
 
 ##### \Hologo{ConTeXt} Example {.unnumbered}
 
@@ -3209,7 +3209,7 @@ following content:
 \startmarkdown
 A paragraph.
 ```
-A code fence.
+A fenced code.
 ```
 \stopmarkdown
 
@@ -3217,7 +3217,7 @@ A code fence.
 \startmarkdown
 A paragraph.
 ```
-Not a code fence.
+Not a fenced code.
 ```
 \stopmarkdown
 
@@ -3233,10 +3233,10 @@ following text:
 > A paragraph.
 >
 > ```
-> A code fence.
+> A fenced code.
 > ```
 >
-> A paragraph. ``` Not a code fence. ```
+> A paragraph. ``` Not a fenced code. ```
 
 %</manual-options>
 %<*tex>
@@ -3253,6 +3253,85 @@ following text:
 % \fi
 %  \begin{macrocode}
 defaultOptions.blankBeforeCodeFence = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
+#### Option `blankBeforeDivFence`
+
+`blankBeforeDivFence` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{blankBeforeDivFence}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Require a blank line before the closing fence of a fenced div.
+
+     false
+
+     :  Do not require a blank line before the closing fence of a fenced div.
+
+% \end{markdown}
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+```` tex
+\documentclass{article}
+\usepackage[fencedDivs]{markdown}
+\begin{document}
+
+\begin{markdown}
+A paragraph.
+::: {.identifier}
+A fenced div.
+:::
+\end{markdown}
+
+\begin{markdown*}{blankBeforeDivFence}
+A paragraph.
+```
+Not a fenced div.
+```
+\end{markdown*}
+
+\end{document}
+````````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> A paragraph.
+>
+> A fenced div.
+>
+> A paragraph. ::: {.identifier} Not a fenced div. :::
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { blankBeforeDivFence }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.blankBeforeDivFence = false
 %    \end{macrocode}
 % \par
 % \iffalse
@@ -3485,6 +3564,100 @@ following text:
 % \fi
 %  \begin{macrocode}
 defaultOptions.blankBeforeHeading = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
+#### Option `bracketedSpans`
+
+`bracketedSpans` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{bracketedSpans}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Enable the Pandoc bracketed spans extension:
+
+        ``` md
+        [This is *some text*]{.class key="val"}
+        ``````
+
+:    false
+
+     :  Disable the Pandoc bracketed spans extension:
+
+% \end{markdown}
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+```` tex
+\documentclass{article}
+\usepackage[bracketedSpans]{markdown}
+\usepackage{expl3}
+\ExplSyntaxOn
+\markdownSetup{
+  renderers = {
+    bracketedSpanAttributeContextBegin = {
+      \group_begin:
+      \color_group_begin:
+      \markdownSetup{
+        renderers = {
+          attributeKeyValue = {
+            \str_if_eq:nnT
+              { #1 }
+              { color }
+              {
+                 \color_select:n { #2 }
+              }
+          },
+        },
+      }
+    },
+    bracketedSpanAttributeContextEnd = {
+      \color_group_end:
+      \group_end:
+    },
+  },
+}
+\ExplSyntaxOff
+\begin{document}
+\begin{markdown}
+Here is some [colored text]{color=red}.
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex --shell-escape document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> Here is some [colored text]{color=red}.
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { bracketedSpans }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.bracketedSpans = false
 %    \end{macrocode}
 % \par
 % \iffalse
@@ -5230,6 +5403,83 @@ following text:
 % \fi
 %  \begin{macrocode}
 defaultOptions.fencedCode = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
+#### Option `fencedDivs`
+
+`fencedDivs` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{fencedDivs}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Enable the Pandoc fenced divs extension:
+
+        ``` md
+        ::::: {#special .sidebar}
+        Here is a paragraph.
+
+        And another.
+        :::::
+        ``````
+
+:    false
+
+     :  Disable the Pandoc fenced divs extension:
+
+% \end{markdown}
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+```` tex
+\documentclass{article}
+\usepackage[fencedDivs]{markdown}
+\begin{document}
+\begin{markdown}{slice=special}
+Here is a regular paragraph.
+
+::::: {#special}
+Here is a special paragraph.
+:::::
+
+And here is another regular paragraph.
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex --shell-escape document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> Here is a special paragraph.
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { fencedDivs }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.fencedDivs = false
 %    \end{macrocode}
 % \par
 % \iffalse
@@ -9999,6 +10249,86 @@ following text:
 %
 % \begin{markdown}
 
+#### Bracketed Spans Context Renderers
+The following macros are only produced, when the \Opt{bracketedSpans} option is
+enabled.
+
+The \mdef{markdownRendererBracketedSpanAttributeContextBegin} and
+\mdef{markdownRendererBracketedSpanAttributeContextEnd} macros represent the
+beginning and the end of an inline bracketed span in which the attributes of
+the span apply. The macros receive no arguments.
+
+% \end{markdown}
+%
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[bracketedSpans]{markdown}
+\markdownSetup{
+  renderers = {
+    fencedDivAttributeContextBegin = {(},
+    fencedDivAttributeContextEnd = {)},
+  },
+}
+\begin{document}
+\begin{markdown}
+
+[foo [bar]{#identifier}]{key=value} [baz]{.class_name}
+
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> (foo (bar)) (baz)
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererBracketedSpanAttributeContextBegin{%
+  \markdownRendererBracketedSpanAttributeContextBeginPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { bracketedSpanAttributeContextBegin }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { bracketedSpanAttributeContextBegin }
+  { 0 }
+\ExplSyntaxOff
+\def\markdownRendererBracketedSpanAttributeContextEnd{%
+  \markdownRendererBracketedSpanAttributeContextEndPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { bracketedSpanAttributeContextEnd }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { bracketedSpanAttributeContextEnd }
+  { 0 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
 #### Bullet List Renderers
 The \mdef{markdownRendererUlBegin} macro represents the beginning of a
 bulleted list that contains an item with several paragraphs of text (the
@@ -11827,6 +12157,126 @@ corresponds to the emphasized span of text.
 %
 % \begin{markdown}
 
+#### Fenced Div Context Renderers
+The following macros are only produced, when the \Opt{fencedDiv} option is
+enabled.
+
+The \mdef{markdownRendererFencedDivAttributeContextBegin} and
+\mdef{markdownRendererFencedDivAttributeContextEnd} macros represent the beginning
+and the end of a div in which the attributes of the div apply. The macros
+receive no arguments.
+
+% \end{markdown}
+%
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[fencedDiv]{markdown}
+\markdownSetup{
+  renderers = {
+    fencedDivAttributeContextBegin = {%
+      \par
+      \emph{(The beginning of a fenced div attribute context)}
+      \par
+    },
+    fencedDivAttributeContextEnd = {%
+      \par
+      \emph{(The end of a fenced div attribute context)}
+      \par
+    },
+  },
+}
+\begin{document}
+\begin{markdown}
+
+::: {key=value}
+
+foo
+
+:::: {#identifier}
+
+bar
+
+::::
+
+:::
+
+::: {.class_name}
+
+baz
+
+:::
+
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> *(The beginning of a fenced div attribute context)*
+>
+> foo
+>
+> *(The beginning of a fenced div attribute context)*
+>
+> bar
+>
+> *(The end of a fenced div attribute context)*
+>
+> *(The end of a fenced div attribute context)*
+>
+> *(The beginning of a fenced div attribute context)*
+>
+> baz
+>
+> *(The end of a fenced div attribute context)*
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererFencedDivAttributeContextBegin{%
+  \markdownRendererFencedDivAttributeContextBeginPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { fencedDivAttributeContextBegin }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { fencedDivAttributeContextBegin }
+  { 0 }
+\ExplSyntaxOff
+\def\markdownRendererFencedDivAttributeContextEnd{%
+  \markdownRendererFencedDivAttributeContextEndPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { fencedDivAttributeContextEnd }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { fencedDivAttributeContextEnd }
+  { 0 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
 #### Header Attribute Context Renderers
 The following macros are only produced, when the \Opt{headerAttributes} option
 is enabled.
@@ -11854,7 +12304,7 @@ following content:
       \emph{(The beginning of a header attribute context)}
       \par
     },
-    headerAttributeContextBegin = {%
+    headerAttributeContextEnd = {%
       \par
       \emph{(The end of a header attribute context)}
       \par
@@ -20755,6 +21205,36 @@ function M.writer.new(options)
 % \par
 % \begin{markdown}
 %
+% Define \luamdef{writer->attributes} as a function that will transform
+% input attributes `attr` to the output format.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  function self.attributes(attr)
+    local buf = {}
+
+    table.sort(attr)
+    local key, value
+    for i = 1, #attr do
+      if attr[i]:sub(1, 1) == "#" then
+        table.insert(buf, {"\\markdownRendererAttributeIdentifier{",
+                           attr[i]:sub(2), "}"})
+      elseif attr[i]:sub(1, 1) == "." then
+        table.insert(buf, {"\\markdownRendererAttributeClassName{",
+                           attr[i]:sub(2), "}"})
+      else
+        key, value = attr[i]:match("([^= ]+)%s*=%s*(.*)")
+        table.insert(buf, {"\\markdownRendererAttributeKeyValue{",
+                           key, "}{", value, "}"})
+      end
+    end
+
+    return buf
+  end
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
 % Define \luamdef{writer->active\_attributes} as a stack of attributes
 % of the headings that are currently active. The
 % \luamdef{writer->active\_headings} member variable is mutable.
@@ -20849,21 +21329,7 @@ function M.writer.new(options)
     end
 
     if self.is_writing then
-      table.sort(attributes)
-      local key, value
-      for i = 1, #attributes do
-        if attributes[i]:sub(1, 1) == "#" then
-          table.insert(buf, {"\\markdownRendererAttributeIdentifier{",
-                             attributes[i]:sub(2), "}"})
-        elseif attributes[i]:sub(1, 1) == "." then
-          table.insert(buf, {"\\markdownRendererAttributeClassName{",
-                             attributes[i]:sub(2), "}"})
-        else
-          key, value = attributes[i]:match("([^= ]+)%s*=%s*(.*)")
-          table.insert(buf, {"\\markdownRendererAttributeKeyValue{",
-                             key, "}{", value, "}"})
-        end
-      end
+      table.insert(buf, self.attributes(attributes))
     end
 
     local cmd
@@ -21011,7 +21477,8 @@ parsers.doubletildes           = P("~~")
 parsers.fourspaces             = P("    ")
 
 parsers.any                    = P(1)
-parsers.fail                   = parsers.any - 1
+parsers.succeed                = P(true)
+parsers.fail                   = P(false)
 
 parsers.escapable              = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
 parsers.anyescaped             = parsers.backslash / "" * parsers.escapable
@@ -21246,6 +21713,14 @@ parsers.fencehead    = function(char, infostring)
   return               C(parsers.nonindentspace) / function(s) fenceindent = #s end
                      * Cg(char^3, "fencelength")
                      * parsers.optionalspace * infostring
+end
+
+parsers.fencehead_with_attributes
+                     = function(char)
+  return               C(parsers.nonindentspace) / function(s) fenceindent = #s end
+                     * Cg(char^3, "fencelength")
+                     * parsers.optionalspace * Ct(parsers.attributes)
+                     * parsers.optionalspace * (parsers.newline + parsers.eof)
 end
 
 parsers.fencetail    = function(char)
@@ -22299,12 +22774,12 @@ function M.reader.new(writer, options)
     local syntax =
       { "Blocks",
 
-        Blocks                = ( V("ExpectedJekyllData")
-                                * (V("Blank")^0 / writer.interblocksep)
-                                )^-1
+        Blocks                = V("InitializeState")
+                              * ( V("ExpectedJekyllData")
+                                * (V("Blank")^0 / writer.interblocksep))^-1
                               * V("Blank")^0
                               * V("Block")^-1
-                              * (V("Blank")^0 / writer.interblocksep
+                              * ( V("Blank")^0 / writer.interblocksep
                                 * V("Block"))^0
                               * V("Blank")^0 * parsers.eof,
 
@@ -22343,23 +22818,37 @@ function M.reader.new(writer, options)
         Smart                 = parsers.Smart,
         Symbol                = parsers.Symbol,
         SpecialChar           = parsers.fail,
+        InitializeState       = parsers.succeed,
       }
 %    \end{macrocode}
 % \par
 % \begin{markdown}
 %
-% Define \luamdef{reader->update_rule} as a function that receives two
-% arguments: a left-hand side terminal symbol and a \acro{peg} pattern.
-% The function (re)defines \luamref{walkable_syntax}`[`left-hand side terminal
-% symbol`]` to be equal to pattern.
+% Define \luamref{reader->update_rule} as a function that receives two
+% arguments: a left-hand side terminal symbol and a function that accepts
+% the current \acro{peg} pattern in \luamref{walkable_syntax}`[`left-hand side
+% terminal symbol`]` if defined or `nil` otherwise and returns a
+% \acro{peg} pattern that will (re)define \luamref{walkable_syntax}`[`left-hand
+% side terminal symbol`]`.
 %
 % \end{markdown}
 %  \begin{macrocode}
-    self.update_rule = function(rule_name, pattern)
+    self.update_rule = function(rule_name, get_pattern)
       assert(current_extension_name ~= nil)
       assert(syntax[rule_name] ~= nil,
         [[Rule ]] .. rule_name .. [[ -> ... does not exist in markdown grammar]])
-      local accountable_pattern = { pattern, current_extension_name, rule_name }
+      local previous_pattern
+      local extension_name
+      if walkable_syntax[rule_name] then
+        local previous_accountable_pattern = walkable_syntax[rule_name][1]
+        previous_pattern = previous_accountable_pattern[1]
+        extension_name = previous_accountable_pattern[2] .. ", " .. current_extension_name
+      else
+        previous_pattern = nil
+        extension_name = current_extension_name
+      end
+      local pattern = get_pattern(previous_pattern)
+      local accountable_pattern = { pattern, extension_name, rule_name }
       walkable_syntax[rule_name] = { accountable_pattern }
     end
 %    \end{macrocode}
@@ -22385,6 +22874,19 @@ function M.reader.new(writer, options)
     self.add_special_character("<")
     self.add_special_character("!")
     self.add_special_character("\\")
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Add method \luamdef{reader->initialize_named_group} that defines named groups
+% with a default capture value.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    self.initialize_named_group = function(name, value)
+      syntax.InitializeState = syntax.InitializeState
+                             * Cg(Ct("") / value, name)
+    end
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -22555,7 +23057,10 @@ function M.reader.new(writer, options)
 
     local inlines_t = util.table_copy(syntax)
     inlines_t[1] = "Inlines"
-    inlines_t.Inlines = parsers.Inline^0 * (parsers.spacing^0 * parsers.eof / "")
+    inlines_t.Inlines = V("InitializeState")
+                      * parsers.Inline^0
+                      * ( parsers.spacing^0
+                        * parsers.eof / "")
     parsers.inlines = Ct(inlines_t)
 
     local inlines_no_link_t = util.table_copy(inlines_t)
@@ -22674,6 +23179,50 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 M.extensions = {}
+%    \end{macrocode}
+% \begin{markdown}
+%
+%#### Bracketed Spans
+%
+% The \luamdef{extensions.bracketed_spans} function implements the Pandoc
+% bracketed spans syntax extension.
+%
+% \end{markdown}
+%  \begin{macrocode}
+M.extensions.bracketed_spans = function()
+  return {
+    name = "built-in bracketed_spans syntax extension",
+    extend_writer = function(self)
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define \luamdef{writer->span} as a function that will transform an input
+% bracketed span `s` with attributes `attr` to the output format.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      function self.span(s, attr)
+        return {"\\markdownRendererBracketedSpanAttributeContextBegin",
+                self.attributes(attr),
+                s,
+                "\\markdownRendererBracketedSpanAttributeContextEnd{}"}
+      end
+    end, extend_reader = function(self)
+      local parsers = self.parsers
+      local writer = self.writer
+
+      local Span = parsers.between(parsers.Inline,
+                                   parsers.lbracket,
+                                   parsers.rbracket)
+                 * Ct(parsers.attributes)
+                 / writer.span
+
+      self.insert_pattern("Inline after Emph",
+                          Span, "Span")
+    end
+  }
+end
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -23343,7 +23892,7 @@ M.extensions.fancy_lists = function()
                       * Cc(false) * parsers.skipblanklines
                       ) * Cb("listtype") / fancylist
 
-      self.update_rule("OrderedList", FancyList)
+      self.update_rule("OrderedList", function() return FancyList end)
     end
   }
 end
@@ -23406,10 +23955,147 @@ M.extensions.fenced_code = function(blank_before_code_fence)
                                        parsers.tilde_infostring)
       end
 
-      local EndlineExceptions = parsers.EndlineExceptions + fencestart
-      self.update_rule("EndlineExceptions", EndlineExceptions)
+      self.update_rule("EndlineExceptions", function(previous_pattern)
+        if previous_pattern == nil then
+          previous_pattern = parsers.EndlineExceptions
+        end
+        return previous_pattern + fencestart
+      end)
 
       self.add_special_character("~")
+    end
+  }
+end
+%    \end{macrocode}
+% \begin{markdown}
+%
+%#### Fenced Divs
+%
+% The \luamdef{extensions.fenced_divs} function implements the Pandoc fenced
+% divs syntax extension. When the `blank_before_div_fence` parameter is `true`,
+% the syntax extension requires a blank line between a paragraph and the
+% following fenced code block.
+%
+% \end{markdown}
+%  \begin{macrocode}
+M.extensions.fenced_divs = function(blank_before_div_fence)
+  return {
+    name = "built-in fenced_divs syntax extension",
+    extend_writer = function(self)
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define \luamdef{writer->div} as a function that will transform an input
+% fenced div with content `c` and with attributes `attr` to the output format.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      function self.div(c, attr)
+        return {"\\markdownRendererFencedDivAttributeContextBegin",
+                self.attributes(attr),
+                c,
+                "\\markdownRendererFencedDivAttributeContextEnd"}
+      end
+    end, extend_reader = function(self)
+      local parsers = self.parsers
+      local writer = self.writer
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define basic patterns for matching the opening and the closing tag of a div.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      local fenced_div_infostring
+                             = C((parsers.linechar
+                                - ( parsers.spacechar^1
+                                  * parsers.colon^1))^1)
+
+      local fenced_div_begin = parsers.nonindentspace
+                             * parsers.colon^3
+                             * parsers.optionalspace
+                             * fenced_div_infostring
+                             * ( parsers.spacechar^1
+                               * parsers.colon^1)^0
+                             * parsers.optionalspace
+                             * (parsers.newline + parsers.eof)
+
+      local fenced_div_end = parsers.nonindentspace
+                           * parsers.colon^3
+                           * parsers.optionalspace
+                           * (parsers.newline + parsers.eof)
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Initialize a named group named `div_level` for tracking how deep we are
+% nested in divs.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      self.initialize_named_group("div_level", "0")
+
+      local function increment_div_level(increment)
+        local function update_div_level(s, i, current_level) -- luacheck: ignore s i
+          current_level = tonumber(current_level)
+          local next_level = tostring(current_level + increment)
+          return true, next_level
+        end
+
+        return Cg( Cmt(Cb("div_level"), update_div_level)
+                 , "div_level")
+      end
+
+      local FencedDiv = fenced_div_begin * increment_div_level(1)
+                      * parsers.skipblanklines
+                      * Ct( (V("Block") - fenced_div_end)^-1
+                          * ( parsers.blanklines
+                            / function()
+                                return writer.interblocksep
+                              end
+                            * (V("Block") - fenced_div_end))^0)
+                      * parsers.skipblanklines
+                      * fenced_div_end * increment_div_level(-1)
+                      / function (infostring, div)
+                          local attr = lpeg.match(Ct(parsers.attributes), infostring)
+                          if attr == nil then
+                            attr = {"." .. infostring}
+                          end
+                          return div, attr
+                        end
+                      / writer.div
+
+      self.insert_pattern("Block after Verbatim",
+                          FencedDiv, "FencedDiv")
+
+      self.add_special_character(":")
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% If the `blank_before_div_fence` parameter is `false`, we will have the
+% closing div at the beginning of a line break the current paragraph if
+% we are currently nested in a div.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      if not blank_before_div_fence then
+        local function check_div_level(s, i, current_level) -- luacheck: ignore s i
+          current_level = tonumber(current_level)
+          return current_level > 0
+        end
+
+        local is_inside_div = Cmt(Cb("div_level"), check_div_level)
+        local fencestart = is_inside_div * fenced_div_end
+        self.update_rule("EndlineExceptions", function(previous_pattern)
+          if previous_pattern == nil then
+            previous_pattern = parsers.EndlineExceptions
+          end
+          return previous_pattern + fencestart
+        end)
+      end
     end
   }
 end
@@ -23474,7 +24160,7 @@ M.extensions.header_attributes = function()
                           / writer.heading
 
       local Heading = AtxHeading + SetextHeading
-      self.update_rule("Heading", Heading)
+      self.update_rule("Heading", function() return Heading end)
     end
   }
 end
@@ -23559,7 +24245,7 @@ M.extensions.notes = function(notes, inline_notes)
                     / register_note
 
         local Blank = NoteBlock + parsers.Blank
-        self.update_rule("Blank", Blank)
+        self.update_rule("Blank", function() return Blank end)
 
         self.insert_pattern("Inline after Emph",
                             NoteRef, "NoteRef")
@@ -24094,7 +24780,7 @@ M.extensions.jekyll_data = function(expect_jekyll_data)
       self.insert_pattern("Block before Blockquote",
                           UnexpectedJekyllData, "UnexpectedJekyllData")
       if expect_jekyll_data then
-        self.update_rule("ExpectedJekyllData", ExpectedJekyllData)
+        self.update_rule("ExpectedJekyllData", function() return ExpectedJekyllData end)
       end
     end
   }
@@ -24132,6 +24818,11 @@ function M.new(options)
 %  \begin{macrocode}
   local extensions = {}
 
+  if options.bracketedSpans then
+    local bracketed_spans_extension = M.extensions.bracketed_spans()
+    table.insert(extensions, bracketed_spans_extension)
+  end
+
   if options.contentBlocks then
     local content_blocks_extension = M.extensions.content_blocks(
       options.contentBlocksLanguageMap)
@@ -24148,6 +24839,12 @@ function M.new(options)
     local fenced_code_extension = M.extensions.fenced_code(
       options.blankBeforeCodeFence)
     table.insert(extensions, fenced_code_extension)
+  end
+
+  if options.fencedDivs then
+    local fenced_div_extension = M.extensions.fenced_divs(
+      options.blankBeforeDivFence)
+    table.insert(extensions, fenced_div_extension)
   end
 
   if options.headerAttributes then
