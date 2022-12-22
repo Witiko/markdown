@@ -1,6 +1,6 @@
 % \iffalse
 %<*driver>
-\documentclass[nohyperref]{ltxdockit}
+\documentclass{ltxdockit}
 \usepackage[american]{babel}
 \usepackage{amsmath,btxdockit,doc,fancyvrb,graphicx,hologo,microtype,minted}
 
@@ -1145,11 +1145,11 @@ local md5 = require("md5")
 %
 %:    A library that provides access to the filesystem via \acro{os}-specific
 %     syscalls. It is used by the plain \TeX{} code to create the cache
-%     directory specified by the \mref{markdownOptionCacheDir} macro before
-%     interfacing with the \pkg{Lunamark} library. \pkg{Lua File System} is
-%     included in all releases of Lua\TeX{} (\TeX Live${}\geq{}2008$).
+%     directory specified by the \Opt{cacheDir} option before interfacing with
+%     the \pkg{Lunamark} library. \pkg{Lua File System} is included in all
+%     releases of Lua\TeX{} (\TeX Live${}\geq{}2008$).
 %
-%     The plain \TeX{} code makes use of the \luamref{isdir} method that was added
+%     The plain \TeX{} code makes use of the `isdir` method that was added
 %     to the \pkg{Lua File System} library by the Lua\TeX{} engine
 %     developers~[@luatex21, Section 4.2.4].
 %
@@ -1159,7 +1159,7 @@ local md5 = require("md5")
 % Unless you convert markdown documents to \TeX{} manually using the Lua
 % command-line interface (see Section <#sec:lua-cli-interface>), the plain
 % \TeX{} part of the package will require that either the Lua\TeX{}
-% \mref{directlua} primitive or the shell access file stream 18 is available in
+% `\directlua` primitive or the shell access file stream 18 is available in
 % your \TeX{} engine. If only the shell access file stream is available in your
 % \TeX{} engine (as is the case with \hologo{pdfTeX} and \Hologo{XeTeX}) or if
 % you enforce the use of shell using the \mref{markdownMode} macro, then unless
@@ -1202,18 +1202,17 @@ local md5 = require("md5")
 %
 % \pkg{url}
 %
-%:    A package that provides the \mref{url} macro for the typesetting of
-%     links.
+%:    A package that provides the `\url` macro for the typesetting of links.
 %
 % \pkg{graphicx}
 %
-%:    A package that provides the \mref{includegraphics} macro for the typesetting
+%:    A package that provides the `\includegraphics` macro for the typesetting
 %     of images.
 %
 % \pkg{paralist}
 %
-%:    A package that provides the \envmref{compactitem}, \envmref{compactenum}, and
-%     \envmref{compactdesc} macros for the typesetting of tight bulleted lists,
+%:    A package that provides the `compactitem`, `compactenum`, and
+%     `compactdesc` macros for the typesetting of tight bulleted lists,
 %     ordered lists, and definition lists.
 %
 % \pkg{ifthen}
@@ -1224,18 +1223,18 @@ local md5 = require("md5")
 %
 % \pkg{fancyvrb}
 %
-%:    A package that provides the \mref{VerbatimInput} macros for the verbatim
+%:    A package that provides the `\VerbatimInput` macros for the verbatim
 %     inclusion of files containing code.
 %
 % \pkg{csvsimple}
 %
-%:    A package that provides the \mref{csvautotabular} macro for typesetting
+%:    A package that provides the `\csvautotabular` macro for typesetting
 %     \acro{csv} files in the default renderer prototypes for iA\,Writer
 %     content blocks.
 %
 % \pkg{gobble}
 %
-%:    A package that provides the \mref{\@gobblethree} \TeX{} command that
+%:    A package that provides the `\@gobblethree` \TeX{} command that
 %     is used in the default renderer prototype for citations. The package
 %     is included in \TeX Live${}\geq{}2016$.
 %
@@ -1680,7 +1679,7 @@ local walkable_syntax = {
 % \luamref{reader->insert_pattern} with `"Inline after Emph"` (or `"Inline
 % before Link"`) and `pattern` as the arguments.
 %
-% The \luamdef{reader->add_special_character} method adds a new character with
+% The \luamref{reader->add_special_character} method adds a new character with
 % special meaning to the grammar of markdown. The method receives the character
 % as its only argument.
 %
@@ -2569,7 +2568,7 @@ defaultOptions.debugExtensionsFileName = "debug-extensions.json"
 
      The frozen cache makes it possible to later typeset a plain \TeX{}
      document that contains markdown documents without invoking Lua using
-     the \mref{markdownOptionFrozenCache} plain \TeX{} option. As a result, the
+     the \Opt{frozenCache} plain \TeX{} option. As a result, the
      plain \TeX{} document becomes more portable, but further changes in the
      order and the content of markdown documents will not be reflected.
 
@@ -5252,7 +5251,7 @@ defaultOptions.fencedCode = false
 
      The frozen cache makes it possible to later typeset a plain \TeX{}
      document that contains markdown documents without invoking Lua using
-     the \mref{markdownOptionFrozenCache} plain \TeX{} option. As a result, the
+     the \Opt{frozenCache} plain \TeX{} option. As a result, the
      plain \TeX{} document becomes more portable, but further changes in the
      order and the content of markdown documents will not be reflected.
 
@@ -9036,7 +9035,7 @@ pdftex --shell-escape document.tex
 % \input markdown
 % ```````
 % \noindent It is expected that the special plain \TeX{} characters have the
-% expected category codes, when \mref{input}ting the file.
+% expected category codes, when `\input`ting the file.
 %
 %### Typesetting Markdown {#textypesetting}
 %
@@ -9202,7 +9201,7 @@ following code in your plain \TeX{} document:
 %#### Finalizing and Freezing the Cache
 % The \mdef{markdownOptionFinalizeCache} option corresponds to the Lua
 % interface \Opt{finalizeCache} option, which creates an output file
-% \mref{markdownOptionFrozenCacheFileName} (frozen cache) that contains a mapping
+% \Opt{frozenCacheFileName} (frozen cache) that contains a mapping
 % between an enumeration of the markdown documents in the plain \TeX{} document
 % and their auxiliary files cached in the \Opt{cacheDir} directory.
 %
@@ -9215,7 +9214,7 @@ following code in your plain \TeX{} document:
 % \fi
 %
 The \mdef{markdownOptionFrozenCache} option uses the mapping previously
-% created by the \mref{markdownOptionFinalizeCache} option,
+% created by the \Opt{finalizeCache} option,
 % \iffalse
 created by the Lua interface \Opt{finalizeCache} option,
 % \fi
@@ -9249,12 +9248,12 @@ options is as follows:
 
 1. Remove the \Opt{cacheDir} cache directory with stale auxiliary cache
    files.
-% 2. Enable the \mref{markdownOptionFinalizeCache} option.
+% 2. Enable the \Opt{finalizeCache} option.
 % \iffalse
 2. Enable the \Opt{finalizeCache} option.
 % \fi
 3. Typeset the plain \TeX{} document to populate and finalize the cache.
-4. Enable the \mref{markdownOptionFrozenCache} option.
+4. Enable the \Opt{frozenCache} option.
 5. Publish the source code of the plain \TeX{} document and the
    \Opt{cacheDir} directory.
 
@@ -9273,13 +9272,13 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 %
 % The \mdef{markdownOptionHelperScriptFileName} macro sets the filename of the
 % helper Lua script file that is created during the conversion from markdown to
-% plain \TeX{} in \TeX{} engines without the \mref{directlua} primitive. It
-% defaults to \mref{jobname}`.markdown.lua`, where \mref{jobname} is the base name
+% plain \TeX{} in \TeX{} engines without the `\directlua` primitive. It
+% defaults to `\jobname.markdown.lua`, where `\jobname` is the base name
 % of the document being typeset.
 %
 % The expansion of this macro must not contain quotation marks (`"`) or
 % backslash symbols (`\`). Mind that \TeX{} engines tend to
-% put quotation marks around \mref{jobname}, when it contains spaces.
+% put quotation marks around `\jobname`, when it contains spaces.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -9291,10 +9290,10 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 % \par
 % \begin{markdown}
 %
-% The \mref{markdownOptionHelperScriptFileName} macro has been deprecated and
+% The \Opt{helperScriptFileName} macro has been deprecated and
 % will be removed in Markdown 3.0.0. To control the filename of the helper Lua
-% script file, use the \mref{g_luabridge_helper_script_filename_str} macro
-% from the \pkg{lt3luabridge} package.
+% script file, use the `\g_luabridge_helper_script_filename_str` macro from the
+% \pkg{lt3luabridge} package.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -9308,8 +9307,8 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 %
 % The \mdef{markdownOptionInputTempFileName} macro sets the filename of the
 % temporary input file that is created during the buffering of markdown text
-% from a \TeX{} source. It defaults to \mref{jobname}`.markdown.in`. The same
-% limitations as in the case of the \mref{markdownOptionHelperScriptFileName}
+% from a \TeX{} source. It defaults to `\jobname.markdown.in`. The same
+% limitations as in the case of the \Opt{helperScriptFileName}
 % macro apply here.
 %
 % \end{markdown}
@@ -9325,8 +9324,8 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 % The \mdef{markdownOptionOutputTempFileName} macro sets the filename of the
 % temporary output file that is created during the conversion from markdown to
 % plain \TeX{} in \mref{markdownMode} other than `2` It defaults to
-% \mref{jobname}`.markdown.out`. The same limitations apply here as in the case
-% of the \mref{markdownOptionHelperScriptFileName} macro.
+% `\jobname.markdown.out`. The same limitations apply here as in the case
+% of the \Opt{helperScriptFileName} macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -9338,7 +9337,7 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 % \par
 % \begin{markdown}
 %
-% The \mref{markdownOptionOutputTempFileName} macro has been deprecated and
+% The \Opt{outputTempFileName} macro has been deprecated and
 % will be removed in Markdown 3.0.0.
 %
 % \end{markdown}
@@ -9354,8 +9353,8 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 % The \mdef{markdownOptionErrorTempFileName} macro sets the filename of the
 % temporary output file that is created when a Lua error is encountered during
 % the conversion from markdown to plain \TeX{} in \mref{markdownMode} other than
-% `2`. It defaults to \mref{jobname}`.markdown.err`. The same limitations
-% apply here as in the case of the \mref{markdownOptionHelperScriptFileName}
+% `2`. It defaults to `\jobname.markdown.err`. The same limitations
+% apply here as in the case of the \Opt{helperScriptFileName}
 % macro.
 %
 % \end{markdown}
@@ -9368,10 +9367,10 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 % \par
 % \begin{markdown}
 %
-% The \mref{markdownOptionErrorTempFileName} macro has been deprecated and
+% The \Opt{errorTempFileName} macro has been deprecated and
 % will be removed in Markdown 3.0.0. To control the filename of the temporary
-% file for Lua errors, use the \mref{g_luabridge_error_output_filename_str}
-% macro from the \pkg{lt3luabridge} package.
+% file for Lua errors, use the `\g_luabridge_error_output_filename_str` macro
+% from the \pkg{lt3luabridge} package.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -9392,7 +9391,7 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 % your \TeX{} engine for the package to function correctly. We need this macro
 % to make the Lua implementation aware where it should store the helper files.
 % The same limitations apply here as in the case of the
-% \mref{markdownOptionHelperScriptFileName} macro.
+% \Opt{helperScriptFileName} macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -9413,7 +9412,7 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 %
 % For the macros that correspond to the non-boolean options recognized by the
 % Lua interface, the same limitations apply here in the case of the
-% \mref{markdownOptionHelperScriptFileName} macro.
+% \Opt{helperScriptFileName} macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -16053,8 +16052,8 @@ following text:
 %    \end{macrocode}
 % \begin{markdown}
 %
-% The \mdef{markdownRendererFootnote} and
-% \mdef{markdownRendererFootnotePrototype} macros have been deprecated
+% The \mref{markdownRendererFootnote} and
+% \mref{markdownRendererFootnotePrototype} macros have been deprecated
 % and will be removed in Markdown 3.0.0.
 %
 % \end{markdown}
@@ -16064,8 +16063,8 @@ following text:
 %    \end{macrocode}
 % \begin{markdown}
 %
-% The \mdef{markdownRendererHorizontalRule} and
-% \mdef{markdownRendererHorizontalRulePrototype} macros have been deprecated
+% The \mref{markdownRendererHorizontalRule} and
+% \mref{markdownRendererHorizontalRulePrototype} macros have been deprecated
 % and will be removed in Markdown 3.0.0.
 %
 % \end{markdown}
@@ -16178,7 +16177,7 @@ following text:
 % as follows:
 %
 % - `0` – Shell escape via the 18 output file stream
-% - `1` – Shell escape via the Lua \luamref{os.execute} method
+% - `1` – Shell escape via the Lua `os.execute` method
 % - `2` – Direct Lua access
 % - `3` – The \pkg{lt3luabridge} Lua package
 %
@@ -16305,8 +16304,8 @@ pdflatex --shell-escape document.tex
 % Section <#sec:texinterface>).
 %
 % The \LaTeX{} implementation redefines the plain \TeX{} logging macros (see
-% Section <#sec:texinterfacelogging>) to use the \LaTeX{} \mref{PackageInfo},
-% \mref{PackageWarning}, and \mref{PackageError} macros.
+% Section <#sec:texinterfacelogging>) to use the \LaTeX{} `\PackageInfo`,
+% `\PackageWarning`, and `\PackageError` macros.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -16325,7 +16324,7 @@ pdflatex --shell-escape document.tex
 % \end{Verbatim}
 % \begin{markdown}
 % where \meta{options} are the \LaTeX{} interface options (see Section
-% <#sec:latexoptions>). Note that \meta{options} inside the \mref{usepackage}
+% <#sec:latexoptions>). Note that \meta{options} inside the `\usepackage`
 % macro may not set the `markdownRenderers` (see Section
 % <#sec:latexrenderers>) and `markdownRendererPrototypes` (see Section
 % <#sec:latexrendererprototypes>) keys. This limitation is due to the way
@@ -16352,8 +16351,8 @@ pdflatex --shell-escape document.tex
 %    \end{macrocode}
 % \markdownBegin
 %
-% You may prepend your own code to the \mref{markdown} macro and append your own
-% code to the \mref{endmarkdown} macro to produce special effects before and after
+% You may prepend your own code to the \mdef{markdown} macro and append your own
+% code to the \mdef{endmarkdown} macro to produce special effects before and after
 % the \envmref{markdown} \LaTeX{} environment (and likewise for the starred
 % version).
 %
@@ -16595,7 +16594,7 @@ without low-level programming.
 % *name* is *qualified* and contains no underscores, and a value is qualified
 % if and only if it contains at least one forward slash. Themes are inspired by
 % the Beamer \LaTeX{} package, which provides similar functionality with its
-% \mref{usetheme} macro [@tantau21, Section 15.1].
+% `\usetheme` macro [@tantau21, Section 15.1].
 %
 % Theme names must be qualified to minimize naming conflicts between different
 % themes intended for a single \LaTeX{} document class or for a single \LaTeX{}
@@ -16613,7 +16612,7 @@ without low-level programming.
 % package named `markdownthemewitiko_beamer_MU.sty`.
 %
 % If the \LaTeX{} option with key `theme` is (repeatedly) specified in the
-% \mref{usepackage} macro, the loading of the theme(s) will be postponed in
+% `\usepackage` macro, the loading of the theme(s) will be postponed in
 % first-in-first-out order until after the Markdown \LaTeX{} package has been
 % loaded. Otherwise, the theme(s) will be loaded immediately. For example,
 % there is a theme named `witiko/dot`, which typesets fenced code blocks with
@@ -16794,7 +16793,7 @@ Example themes provided with the Markdown package include:
 %    ```
      The theme requires a Unix-like operating system with GNU Diffutils and
      Graphviz installed. The theme also requires shell access unless the
-     \mref{markdownOptionFrozenCache} plain \TeX{} option is enabled.
+     \Opt{frozenCache} plain \TeX{} option is enabled.
 
 % \markdownEnd
 % \iffalse
@@ -16887,7 +16886,7 @@ conference article:
      The theme requires the \pkg{catchfile} \LaTeX{} package and a Unix-like
      operating system with GNU Coreutils `md5sum` and either GNU Wget or cURL
      installed. The theme also requires shell access unless the
-     \mref{markdownOptionFrozenCache} plain \TeX{} option is enabled.
+     \Opt{frozenCache} plain \TeX{} option is enabled.
 
 % \markdownEnd
 % \iffalse
@@ -17229,7 +17228,7 @@ The following ordered list will be preceded by roman numerals:
 % \par
 % \begin{markdown}
 %
-% The \mref{markdownOptionFinalizeCache} and \mref{markdownOptionFrozenCache} plain
+% The \Opt{finalizeCache} and \Opt{frozenCache} plain
 % \TeX{} options are exposed through \LaTeX{} options with keys `finalizeCache`
 % and `frozenCache`.
 %
@@ -17261,8 +17260,8 @@ The following ordered list will be preceded by roman numerals:
 % \begin{markdown}
 %
 % The following example \LaTeX{} code showcases a possible configuration of
-% plain \TeX{} interface options \mref{markdownOptionHybrid},
-% \mref{markdownOptionSmartEllipses}, and \mref{markdownOptionCacheDir}.
+% plain \TeX{} interface options \Opt{hybrid}, \Opt{smartEllipses}, and
+% \Opt{cacheDir}.
 % ``` tex
 % \markdownSetup{
 %   hybrid,
@@ -17409,7 +17408,7 @@ The following ordered list will be preceded by roman numerals:
 % \begin{markdown}
 %
 % The following example \LaTeX{} code showcases a possible configuration of the
-% \mref{markdownRendererImagePrototype} and \mref{markdownRendererCodeSpanPrototype}
+% `\markdownRendererImagePrototype` and `\markdownRendererCodeSpanPrototype`
 % markdown token renderer prototypes.
 % ``` tex
 % \markdownSetup{
@@ -17496,7 +17495,7 @@ texexec --passon=--shell-escape document.tex
 %
 % The \Hologo{ConTeXt} implementation redefines the plain \TeX{} logging macros
 % (see Section <#sec:texinterfacelogging>) to use the \Hologo{ConTeXt}
-% \mref{writestatus} macro.
+% `\writestatus` macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -17515,7 +17514,7 @@ texexec --passon=--shell-escape document.tex
 % \usemodule[t][markdown]
 % ```````
 % \noindent It is expected that the special plain \TeX{} characters have the
-% expected category codes, when \mref{input}ting the file.
+% expected category codes, when `\input`ting the file.
 %
 %### Typesetting Markdown
 % The interface exposes the \mdef{startmarkdown} and \mdef{stopmarkdown} macro
@@ -20758,7 +20757,7 @@ function M.writer.new(options)
 %
 % Define \luamdef{writer->active\_attributes} as a stack of attributes
 % of the headings that are currently active. The
-% \luamref{writer->active\_headings} member variable is mutable.
+% \luamdef{writer->active\_headings} member variable is mutable.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -21586,7 +21585,7 @@ function M.reader.new(writer, options)
 % \begin{markdown}
 %
 % Create a \luamdef{reader->parsers} hash table that stores \acro{peg} patterns
-% that depend on the received `options`. Make \luamdef{reader->parsers} inherit
+% that depend on the received `options`. Make \luamref{reader->parsers} inherit
 % from the global \luamref{parsers} table.
 %
 % \end{markdown}
@@ -22220,7 +22219,7 @@ function M.reader.new(writer, options)
 % \begin{markdown}
 %
 % Create a local writable copy of the global read-only
-% \luamdef{walkable_syntax} hash table. This table can be used by user-defined
+% \luamref{walkable_syntax} hash table. This table can be used by user-defined
 % syntax extensions to insert new \acro{peg} patterns into existing rules
 % of the \acro{peg} grammar of markdown using
 % the \luamref{reader->insert_pattern} method. Furthermore, built-in syntax
@@ -22349,7 +22348,7 @@ function M.reader.new(writer, options)
 % \par
 % \begin{markdown}
 %
-% Define \luamref{reader->update_rule} as a function that receives two
+% Define \luamdef{reader->update_rule} as a function that receives two
 % arguments: a left-hand side terminal symbol and a \acro{peg} pattern.
 % The function (re)defines \luamref{walkable_syntax}`[`left-hand side terminal
 % symbol`]` to be equal to pattern.
@@ -22665,7 +22664,7 @@ end
 %
 %### Built-In Syntax Extensions {#luabuiltinextensions}
 %
-% Create \luamdef{extensions} hash table that contains built-in syntax
+% Create \luamref{extensions} hash table that contains built-in syntax
 % extensions. Syntax extensions are functions that produce objects with two
 % methods: `extend_writer` and `extend_reader`. The `extend_writer` object
 % takes a \luamref{writer} object as the only parameter and mutates it.
@@ -22726,7 +22725,7 @@ M.extensions.citations = function(citation_nbsps)
 % \begin{markdown}
 %
 % Define \luamdef{writer->citation} as a function that will transform an input
-% citation name `c` to the output format. If \luamref{writer->hybrid} is `true`,
+% citation name `c` to the output format. If option \Opt{hybrid} is enabled,
 % use the \luamref{writer->escape_minimal} function. Otherwise, use the
 % \luamref{escape_citation} function.
 %
@@ -24871,14 +24870,14 @@ end
 %
 % The \mdef{markdownPrepare} macro contains the Lua code that is executed prior
 % to any conversion from markdown to plain \TeX{}. It exposes the
-% \luamref{convert} function for the use by any further Lua code.
+% `convert` function for the use by any further Lua code.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \def\markdownPrepare{%
 %    \end{macrocode}
 % \begin{markdown}
-% First, ensure that the \mref{markdownOptionCacheDir} directory exists.
+% First, ensure that the \Opt{cacheDir} directory exists.
 % \end{markdown}
 %  \begin{macrocode}
   local lfs = require("lfs")
@@ -24974,7 +24973,7 @@ end
 % \begin{markdown}
 %
 % The \mref{markdownReadAndConvert} macro is largely a rewrite of the
-% \Hologo{LaTeX2e} \mref{filecontents} macro to plain \TeX{}.
+% \Hologo{LaTeX2e} `\filecontents` macro to plain \TeX{}.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -24986,7 +24985,7 @@ end
 % backslash as an ordinary character inside the macro definition.  Likewise,
 % swap the character codes of the percent sign (`\%`) and the ampersand (`@`),
 % so that we can remove percent signs from the beginning of lines when
-% \mref{markdownOptionStripPercentSigns} is enabled.
+% \Opt{stripPercentSigns} is enabled.
 % \end{markdown}
 %  \begin{macrocode}
   \catcode`\^^M=13%
@@ -25000,7 +24999,7 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 % If we are not reading markdown documents from the frozen cache,
-% open the \mref{markdownOptionInputTempFileName} file for writing.
+% open the \Opt{inputTempFileName} file for writing.
 % \end{markdown}
 %  \begin{macrocode}
     |markdownIfOption{frozenCache}{}{@
@@ -25025,7 +25024,7 @@ end
 % \begin{markdown}
 % The \mdef{markdownReadAndConvertStripPercentSigns} macro will process the
 % individual lines of output, stipping away leading percent signs (`\%`) when
-% \mref{markdownOptionStripPercentSigns} is enabled.
+% \Opt{stripPercentSigns} is enabled.
 % Notice the use of the comments (`@`) to ensure that the entire macro is at
 % a single line and therefore no (active) newline symbols
 % (`^^M`) are produced.
@@ -25061,7 +25060,7 @@ end
 % \begin{markdown}
 % If we are not reading markdown documents from the frozen cache and the ending
 % token sequence does not appear in the line, store the line in the
-% \mref{markdownOptionInputTempFileName} file.
+% \Opt{inputTempFileName} file.
 % If we are reading markdown documents from the frozen cache and the
 % ending token sequence does not appear in the line, gobble the line.
 % \end{markdown}
@@ -25074,10 +25073,10 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 % When the ending token sequence appears in the line, make the next newline
-% character close the \mref{markdownOptionInputTempFileName} file, return the
+% character close the \Opt{inputTempFileName} file, return the
 % character categories back to the former state, convert the
-% \mref{markdownOptionInputTempFileName} file from markdown to plain \TeX{},
-% \mref{input} the result of the conversion, and expand the ending control
+% \Opt{inputTempFileName} file from markdown to plain \TeX{},
+% `\input` the result of the conversion, and expand the ending control
 % sequence.
 % \end{markdown}
 %  \begin{macrocode}
@@ -25182,10 +25181,10 @@ end
 % whether the shell access is enabled (`1`), disabled (`0`), or restricted
 % (`2`).
 %
-% Inherit the value of the the \mref{pdfshellescape} (Lua\TeX{}, \Hologo{pdfTeX})
-% or the \mref{shellescape} (\Hologo{XeTeX}) commands. If neither of these
+% Inherit the value of the the `\pdfshellescape` (Lua\TeX{}, \Hologo{pdfTeX})
+% or the `\shellescape` (\Hologo{XeTeX}) commands. If neither of these
 % commands is defined and Lua is available, attempt to access the
-% \luamref{status.shell_escape} configuration item.
+% `status.shell_escape` configuration item.
 %
 % If you cannot detect, whether the shell access is enabled, act as if it were.
 %
@@ -25211,7 +25210,7 @@ end
 %
 % The \mdef{markdownExecuteDirect} macro executes the code it has received as
 % its first argument by writing it to the output file stream 18, if Lua is
-% unavailable, or by using the Lua \luamref{os.execute} method otherwise.
+% unavailable, or by using the Lua `os.execute` method otherwise.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -25246,8 +25245,8 @@ end
 %
 % The \mdef{markdownLuaExecute} macro executes the Lua code it has received as
 % its first argument. The Lua code may not directly interact with the \TeX{}
-% engine, but it can use the \luamref{print} function in the same manner it
-% would use the \luamref{tex.print} method.
+% engine, but it can use the `print` function in the same manner it
+% would use the `tex.print` method.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -25263,7 +25262,7 @@ end
   |gdef|markdownLuaExecute#1{%
 %    \end{macrocode}
 % \begin{markdown}
-% Create the file \mref{markdownOptionHelperScriptFileName} and fill it with the
+% Create the file \Opt{helperScriptFileName} and fill it with the
 % input Lua code prepended with \pkg{kpathsea} initialization, so that Lua
 % modules from the \TeX{} distribution are available.
 % \end{markdown}
@@ -25280,7 +25279,7 @@ end
       end)
 %    \end{macrocode}
 % \begin{markdown}
-% If there was an error, use the file \mref{markdownOptionErrorTempFileName} to
+% If there was an error, use the file \Opt{errorTempFileName} to
 % store the error message.
 % \end{markdown}
 %  \begin{macrocode}
@@ -25300,9 +25299,9 @@ end
     |immediate|closeout|markdownOutputFileStream
 %    \end{macrocode}
 % \begin{markdown}
-% Execute the generated \mref{markdownOptionHelperScriptFileName} Lua script using
+% Execute the generated \Opt{helperScriptFileName} Lua script using
 % the \TeX{}Lua binary and store the output in the
-% \mref{markdownOptionOutputTempFileName} file.
+% \Opt{outputTempFileName} file.
 % \end{markdown}
 %  \begin{macrocode}
     |markdownInfo{Executing a helper Lua script from the file
@@ -25314,7 +25313,7 @@ end
       /|markdownOptionOutputTempFileName"}%
 %    \end{macrocode}
 % \begin{markdown}
-% \mref{input} the generated \mref{markdownOptionOutputTempFileName} file.
+% `\input` the generated \Opt{outputTempFileName} file.
 % \end{markdown}
 %  \begin{macrocode}
     |input|markdownOptionOutputTempFileName|relax}%
@@ -25341,8 +25340,8 @@ end
 % \begin{markdown}
 %
 % The direct Lua access version of the \mref{markdownLuaExecute} macro is defined
-% in terms of the \mref{directlua} primitive. The \luamref{print} function is set as
-% an alias to the \luamref{tex.print} method in order to mimic the behaviour of the
+% in terms of the `\directlua` primitive. The `print` function is set as
+% an alias to the `tex.print` method in order to mimic the behaviour of the
 % \mref{markdownLuaExecute} definition from Section <#sec:luabridge>,
 %
 % \end{markdown}
@@ -25521,8 +25520,8 @@ end
 %
 %### Logging Facilities
 % The \LaTeX{} implementation redefines the plain \TeX{} logging macros (see
-% Section <#sec:texinterfacelogging>) to use the \LaTeX{} \mref{PackageInfo},
-% \mref{PackageWarning}, and \mref{PackageError} macros.
+% Section <#sec:texinterfacelogging>) to use the \LaTeX{} `\PackageInfo`,
+% `\PackageWarning`, and `\PackageError` macros.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -25661,7 +25660,7 @@ end
 %
 % If the infostring starts with `dot …`, we redefine the fenced code block
 % token renderer prototype, so that it typesets the code block via Graphviz
-% tools if and only if the \mref{markdownOptionFrozenCache} plain \TeX{} option is
+% tools if and only if the \Opt{frozenCache} plain \TeX{} option is
 % disabled and the code block has not been previously typeset:
 %
 % \end{markdown}
@@ -25724,8 +25723,8 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% We define the \mref{markdown@witiko@graphicx@http@counter} counter to enumerate
-% the images for caching and the \mref{markdown@witiko@graphicx@http@filename}
+% We define the \mdef{markdown@witiko@graphicx@http@counter} counter to enumerate
+% the images for caching and the \mdef{markdown@witiko@graphicx@http@filename}
 % command, which will store the pathname of the file containing the pathname
 % of the downloaded image file.
 %
@@ -25739,7 +25738,7 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% We define the \mref{markdown@witiko@graphicx@http@download} command, which will
+% We define the \mdef{markdown@witiko@graphicx@http@download} command, which will
 % receive two arguments that correspond to the URL of the online image and to
 % the pathname, where the online image should be downloaded. The command will
 % produce a shell command that tries to downloads the online image to the
@@ -25775,7 +25774,7 @@ end
 % \begin{markdown}
 %
 % The image will be downloaded only if the image URL has the http or https
-% protocols and the \mref{markdownOptionFrozenCache} plain \TeX{} option is disabled:
+% protocols and the \Opt{frozenCache} plain \TeX{} option is disabled:
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -25787,7 +25786,7 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% The image will be downloaded to the pathname \mref{markdownOptionCacheDir}<!--
+% The image will be downloaded to the pathname \Opt{cacheDir}<!--
 % -->`/`\meta{the MD5 digest of the image URL}`.`\meta{the suffix of the
 % image URL}:
 %
@@ -26256,7 +26255,7 @@ end
 % \begin{markdown}
 %
 % If identifier attributes appear at the beginning of a section, we make the
-% next heading produce the \mref{label} macro.
+% next heading produce the `\label` macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -26440,9 +26439,9 @@ end
 % \begin{markdown}
 %
 %#### Citations
-% Here is a basic implementation for citations that uses the \LaTeX{} \mref{cite}
-% macro. There are also implementations that use the \pkg{natbib} \mref{citep},
-% and \mref{citet} macros, and the Bib\LaTeX{} \mref{autocites} and \mref{textcites}
+% Here is a basic implementation for citations that uses the \LaTeX{} `\cite`
+% macro. There are also implementations that use the \pkg{natbib} `\citep`,
+% and `\citet` macros, and the Bib\LaTeX{} `\autocites` and `\textcites`
 % macros. These implementations will be used, when the respective packages are
 % loaded.
 %
@@ -26850,8 +26849,8 @@ end
 %
 %#### YAML Metadata {#latexyamlmetadata}
 %
-% The default setup of \acro{yaml} metadata will invoke the \mref{title},
-% \mref{author}, and \mref{date} macros when scalar values for keys that
+% The default setup of \acro{yaml} metadata will invoke the `\title`,
+% `\author`, and `\date` macros when scalar values for keys that
 % correspond to the `title`, `author`, and `date` relative wildcards are
 % encountered, respectively.
 %
@@ -26869,10 +26868,10 @@ end
 % \begin{markdown}
 %
 % To complement the default setup of our key--values, we will use
-% the \mref{maketitle} macro to typeset the title page of a document
+% the `\maketitle` macro to typeset the title page of a document
 % at the end of \acro{yaml} metadata. If we are in the preamble, we will wait
 % macro until after the beginning of the document. Otherwise, we will use
-% the \mref{maketitle} macro straight away.
+% the `\maketitle` macro straight away.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -26985,7 +26984,7 @@ end
 % after supplying the missing plain \TeX{} macros.
 %
 % When buffering user input, we should disable the bytes with the high bit set,
-% since these are made active by the \mref{enableregime} macro. We will do this
+% since these are made active by the `\enableregime` macro. We will do this
 % by redefining the \mref{markdownMakeOther} macro accordingly. The code is
 % courtesy of Scott Pakin, the creator of the \pkg{filecontents} \LaTeX{}
 % package.
@@ -27170,7 +27169,7 @@ end
 % \begin{markdown}
 %
 % The code fence infostring is used as a name from the \Hologo{ConTeXt}
-% \mref{definetyping} macro. This allows the user to set up code highlighting
+% `\definetyping` macro. This allows the user to set up code highlighting
 % mapping as follows:
 % ````` tex
 % % Map the `TEX` syntax highlighter to the `latex` infostring.
