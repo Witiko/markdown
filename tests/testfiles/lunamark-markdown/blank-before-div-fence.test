@@ -1,0 +1,31 @@
+\def\markdownOptionFencedDivs{true}
+\def\markdownOptionBlankBeforeDivFence{true}
+<<<
+This test ensures that the Lua `fencedDivs` and `blankBeforeDivFence` options
+correctly propagate through the plain TeX interface.
+
+The following fenced div should resolve to a paragraph:
+
+::: foo
+bar
+:::
+
+The following fenced div should be recognized as such:
+
+::: foo
+
+bar
+
+:::
+>>>
+documentBegin
+codeSpan: fencedDivs
+codeSpan: blankBeforeDivFence
+interblockSeparator
+interblockSeparator
+interblockSeparator
+interblockSeparator
+fencedDivAttributeContextBegin
+attributeClassName: foo
+fencedDivAttributeContextEnd
+documentEnd

@@ -1,0 +1,196 @@
+\def\markdownOptionFencedCode{true}
+<<<
+This test ensures that the Lua `fencedDivs` option is disabled by default
+and that the `fencedCode` option correctly propagates through the plain TeX
+interface.
+
+:::
+This is not a div
+:::
+
+ ::: {.myclass lang=fr}
+Some better div
+  :::
+
+:::: {.level1}
+Fenced divs can be nested
+
+::::: {.level2-more-colons}
+This is a nested div
+:::::
+
+::: {.level2-fewer-colons}
+This is also a nested div that contains
+
+several paragraphs of text
+:::
+
+:::: {.level2-same-number-of-colons}
+This is another nested div
+
+::::: {.level3}
+with another nested div inside
+:::::
+::::
+::::
+
+::: Warning ::::::
+This is a warning.
+
+::: Danger
+This is a warning within a warning.
+:::
+::::::::::::::::::
+
+::: {.some-classname}
+::: {#some-id}
+::: {lang=some}
+Divs can be nested directly inside one another without surrounding text.
+:::
+:::
+:::
+
+::: {.level1}
+This is the beginning of a div
+
+> This is a blockquote
+>
+> ::: {.level2-inside-blockquote}
+> This is a div inside a blockquote
+> :::
+
+:::
+
+::: {#some-identifier}
+This is the beginning of a div
+
+> This is a blockquote that contains three colons:
+> :::
+
+This is the end of a div
+:::
+
+Here are some extra colons that will be shown as just text:
+
+::::
+
+::: {.not-a-div}
+here is a code span `
+:::
+` that contains three colons
+
+::: {.some-classname}
+This is a div with a fenced code inside
+
+```
+:::
+```
+:::
+
+::: {.cit custom-style=raggedleft}
+I am a _fenced_ div
+:::
+
+::: {.cit custom-style=raggedleft}
+
+I am a _fenced_ div
+
+:::
+
+::: {.some-classname}
+This is not a div
+```
+:::
+```
+
+::: {.some-classname}
+This is not a div
+>>>
+documentBegin
+codeSpan: fencedDivs
+codeSpan: fencedCode
+interblockSeparator
+interblockSeparator
+leftBrace
+rightBrace
+interblockSeparator
+leftBrace
+rightBrace
+interblockSeparator
+leftBrace
+rightBrace
+interblockSeparator
+leftBrace
+rightBrace
+interblockSeparator
+interblockSeparator
+leftBrace
+rightBrace
+interblockSeparator
+leftBrace
+rightBrace
+interblockSeparator
+interblockSeparator
+interblockSeparator
+leftBrace
+rightBrace
+leftBrace
+hash
+rightBrace
+leftBrace
+rightBrace
+interblockSeparator
+leftBrace
+rightBrace
+interblockSeparator
+blockQuoteBegin
+interblockSeparator
+leftBrace
+rightBrace
+blockQuoteEnd
+interblockSeparator
+interblockSeparator
+leftBrace
+hash
+rightBrace
+interblockSeparator
+blockQuoteBegin
+blockQuoteEnd
+interblockSeparator
+interblockSeparator
+interblockSeparator
+interblockSeparator
+leftBrace
+rightBrace
+codeSpan:  ::: 
+interblockSeparator
+leftBrace
+rightBrace
+interblockSeparator
+BEGIN fencedCode
+- src: ./_markdown_test/e441fcf4a7686817fe868bf38a5c2c07.verbatim
+- infostring: 
+END fencedCode
+interblockSeparator
+interblockSeparator
+leftBrace
+rightBrace
+emphasis: fenced
+interblockSeparator
+leftBrace
+rightBrace
+interblockSeparator
+emphasis: fenced
+interblockSeparator
+interblockSeparator
+leftBrace
+rightBrace
+interblockSeparator
+BEGIN fencedCode
+- src: ./_markdown_test/e441fcf4a7686817fe868bf38a5c2c07.verbatim
+- infostring: 
+END fencedCode
+interblockSeparator
+leftBrace
+rightBrace
+documentEnd

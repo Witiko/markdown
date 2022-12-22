@@ -1,16 +1,30 @@
 # Changes
 
-## 2.19.0
+## 2.19.0 (2022-12-23)
 
-Refactoring:
+Development:
 
-- Sort Lua options, token renderers, and built-in syntax extensions. (#208)
+- Add support for fenced divs and bracketed spans. (#207)
 
 Fixes:
 
 - Fix incorrect category codes in plain TeX renderer prototype definitions.
   (f156f05)
 - Allow backticks in tilde code block infostrings. (#214, #219, #221)
+
+Refactoring:
+
+- Sort Lua options, token renderers, and built-in syntax extensions. (#208)
+
+Documentation:
+
+- Link article [*High-Level Languages for
+  TeX*](https://www.doi.org/10.5300/2022-1-4/35) (in Czech) from
+  CSTUG Bulletin 1–4/2022 to `README.md`. (authored by @witiko, a2bbdea)
+
+Continuous Integration:
+
+- Make latexmk treat warnings as errors. (#228)
 
 ## 2.18.0 (2022-10-30)
 
