@@ -12,6 +12,10 @@ Fixes:
   (f156f05)
 - Allow backticks in tilde code block infostrings. (#214, #219, #221)
 
+Continuous Integration:
+
+- Make latexmk treat warnings as errors. (#228)
+
 ## 2.18.0 (2022-10-30)
 
 Development:
