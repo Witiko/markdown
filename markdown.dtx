@@ -21414,6 +21414,10 @@ parsers.htmlcomment       = P("<!--")
 
 parsers.htmlinstruction   = P("<?") * (parsers.any - P("?>"))^0 * P("?>")
 
+parsers.htmlcdatasection   = P("<![CDATA[") * (parsers.any - P("]]>"))^0 * P("]]>")
+
+parsers.htmldeclaration   = P("<!") * (parsers.any - P(">"))^0 * P(">")
+
 parsers.openelt_any = parsers.less * parsers.keyword * parsers.htmlattribute^0
                     * parsers.sp * parsers.more
 
@@ -22044,7 +22048,9 @@ function M.reader.new(writer, options)
   parsers.InlineHtml    = parsers.emptyelt_any / writer.inline_html_tag
                         + (parsers.htmlcomment / self.parser_functions.parse_inlines_no_html)
                         / writer.inline_html_comment
-                        + parsers.htmlinstruction
+                        + parsers.htmlinstruction / writer.inline_html_tag
+                        + parsers.htmlcdatasection / writer.inline_html_tag
+                        + parsers.htmldeclaration / writer.inline_html_tag
                         + parsers.openelt_any / writer.inline_html_tag
                         + parsers.closeelt_any / writer.inline_html_tag
   
@@ -22064,7 +22070,9 @@ function M.reader.new(writer, options)
                        + parsers.emptyelt_block / writer.block_html_element
                        + parsers.openelt_exact("hr") / writer.block_html_element
                        + parsers.in_matched_block_tags / writer.block_html_element
-                       + parsers.htmlinstruction
+                       + parsers.htmlinstruction / writer.block_html_element           
+                       + parsers.htmlcdatasection / writer.block_html_element
+                       + parsers.htmldeclaration / writer.block_html_element
 
   parsers.Verbatim     = Cs( (parsers.blanklines
                            * ((parsers.indentedline - parsers.blankline))^1)^1
