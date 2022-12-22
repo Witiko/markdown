@@ -23205,7 +23205,7 @@ M.extensions.bracketed_spans = function()
       function self.span(s, attr)
         return {"\\markdownRendererBracketedSpanAttributeContextBegin",
                 self.attributes(attr),
-                "\\markdownRendererBracketedSpan{",s,"}",
+                s,
                 "\\markdownRendererBracketedSpanAttributeContextEnd{}"}
       end
     end, extend_reader = function(self)
