@@ -22827,17 +22827,30 @@ function M.reader.new(writer, options)
 % \begin{markdown}
 %
 % Define \luamref{reader->update_rule} as a function that receives two
-% arguments: a left-hand side terminal symbol and a \acro{peg} pattern.
-% The function (re)defines \luamref{walkable_syntax}`[`left-hand side terminal
-% symbol`]` to be equal to pattern.
+% arguments: a left-hand side terminal symbol and a function that accepts
+% the current \acro{peg} pattern in \luamref{walkable_syntax}`[`left-hand side
+% terminal symbol`]` if defined or `nil` otherwise and returns a
+% \acro{peg} pattern that will (re)define \luamref{walkable_syntax}`[`left-hand
+% side terminal symbol`]`.
 %
 % \end{markdown}
 %  \begin{macrocode}
-    self.update_rule = function(rule_name, pattern)
+    self.update_rule = function(rule_name, get_pattern)
       assert(current_extension_name ~= nil)
       assert(syntax[rule_name] ~= nil,
         [[Rule ]] .. rule_name .. [[ -> ... does not exist in markdown grammar]])
-      local accountable_pattern = { pattern, current_extension_name, rule_name }
+      local previous_pattern
+      local extension_name
+      if walkable_syntax[rule_name] then
+        local previous_accountable_pattern = walkable_syntax[rule_name][1]
+        previous_pattern = previous_accountable_pattern[1]
+        extension_name = previous_accountable_pattern[2] .. ", " .. current_extension_name
+      else
+        previous_pattern = nil
+        extension_name = current_extension_name
+      end
+      local pattern = get_pattern(previous_pattern)
+      local accountable_pattern = { pattern, extension_name, rule_name }
       walkable_syntax[rule_name] = { accountable_pattern }
     end
 %    \end{macrocode}
@@ -23881,7 +23894,7 @@ M.extensions.fancy_lists = function()
                       * Cc(false) * parsers.skipblanklines
                       ) * Cb("listtype") / fancylist
 
-      self.update_rule("OrderedList", FancyList)
+      self.update_rule("OrderedList", function() return FancyList end)
     end
   }
 end
@@ -23944,8 +23957,12 @@ M.extensions.fenced_code = function(blank_before_code_fence)
                                        parsers.tilde_infostring)
       end
 
-      local EndlineExceptions = parsers.EndlineExceptions + fencestart
-      self.update_rule("EndlineExceptions", EndlineExceptions)
+      self.update_rule("EndlineExceptions", function(previous_pattern)
+        if previous_pattern == nil then
+          previous_pattern = parsers.EndlineExceptions
+        end
+        return previous_pattern + fencestart
+      end)
 
       self.add_special_character("~")
     end
@@ -24074,8 +24091,12 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
 
         local is_inside_div = Cmt(Cb("div_level"), check_div_level)
         local fencestart = is_inside_div * fenced_div_end
-        local EndlineExceptions = parsers.EndlineExceptions + fencestart
-        self.update_rule("EndlineExceptions", EndlineExceptions)
+        self.update_rule("EndlineExceptions", function(previous_pattern)
+          if previous_pattern == nil then
+            previous_pattern = parsers.EndlineExceptions
+          end
+          return previous_pattern + fencestart
+        end)
       end
     end
   }
@@ -24141,7 +24162,7 @@ M.extensions.header_attributes = function()
                           / writer.heading
 
       local Heading = AtxHeading + SetextHeading
-      self.update_rule("Heading", Heading)
+      self.update_rule("Heading", function() return Heading end)
     end
   }
 end
@@ -24226,7 +24247,7 @@ M.extensions.notes = function(notes, inline_notes)
                     / register_note
 
         local Blank = NoteBlock + parsers.Blank
-        self.update_rule("Blank", Blank)
+        self.update_rule("Blank", function() return Blank end)
 
         self.insert_pattern("Inline after Emph",
                             NoteRef, "NoteRef")
@@ -24761,7 +24782,7 @@ M.extensions.jekyll_data = function(expect_jekyll_data)
       self.insert_pattern("Block before Blockquote",
                           UnexpectedJekyllData, "UnexpectedJekyllData")
       if expect_jekyll_data then
-        self.update_rule("ExpectedJekyllData", ExpectedJekyllData)
+        self.update_rule("ExpectedJekyllData", function() return ExpectedJekyllData end)
       end
     end
   }
