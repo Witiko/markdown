@@ -1,10 +1,12 @@
 # Changes
 
+## 2.20.0
+
 ## 2.19.0 (2022-12-23)
 
 Development:
 
-- Add support for fenced divs and bracketed spans. (#207)
+- Add support for fenced divs and bracketed spans. (#126, #207)
 
 Fixes:
 
