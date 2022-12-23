@@ -18,7 +18,7 @@ Refactoring:
 
 Documentation:
 
-- Link article [*High-Level Languages for
+- Add article [*High-Level Languages for
   TeX*](https://www.doi.org/10.5300/2022-1-4/35) (in Czech) from
   CSTUG Bulletin 1–4/2022 to `README.md`. (authored by @witiko, a2bbdea)
 
