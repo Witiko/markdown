@@ -21006,7 +21006,7 @@ parsers.hexdigit               = R("09","af","AF")
 parsers.letter                 = R("AZ","az")
 parsers.alphanumeric           = R("AZ","az","09")
 parsers.keyword                = parsers.letter
-                               * parsers.alphanumeric^0
+                               * (parsers.alphanumeric + parsers.dash)^0
 parsers.internal_punctuation   = S(":;,.?")
 
 parsers.doubleasterisks        = P("**")
@@ -21372,39 +21372,98 @@ parsers.keyword_exact = function(s)
   return parser
 end
 
+parsers.special_block_keyword =
+    parsers.keyword_exact("pre") + 
+    parsers.keyword_exact("script") +
+    parsers.keyword_exact("style") +
+    parsers.keyword_exact("textarea")
+
 parsers.block_keyword =
-    parsers.keyword_exact("address") + parsers.keyword_exact("blockquote") +
-    parsers.keyword_exact("center") + parsers.keyword_exact("del") +
-    parsers.keyword_exact("dir") + parsers.keyword_exact("div") +
-    parsers.keyword_exact("p") + parsers.keyword_exact("pre") +
-    parsers.keyword_exact("li") + parsers.keyword_exact("ol") +
-    parsers.keyword_exact("ul") + parsers.keyword_exact("dl") +
-    parsers.keyword_exact("dd") + parsers.keyword_exact("form") +
-    parsers.keyword_exact("fieldset") + parsers.keyword_exact("isindex") +
-    parsers.keyword_exact("ins") + parsers.keyword_exact("menu") +
-    parsers.keyword_exact("noframes") + parsers.keyword_exact("frameset") +
-    parsers.keyword_exact("h1") + parsers.keyword_exact("h2") +
-    parsers.keyword_exact("h3") + parsers.keyword_exact("h4") +
-    parsers.keyword_exact("h5") + parsers.keyword_exact("h6") +
-    parsers.keyword_exact("hr") + parsers.keyword_exact("script") +
-    parsers.keyword_exact("noscript") + parsers.keyword_exact("table") +
-    parsers.keyword_exact("tbody") + parsers.keyword_exact("tfoot") +
-    parsers.keyword_exact("thead") + parsers.keyword_exact("th") +
-    parsers.keyword_exact("td") + parsers.keyword_exact("tr")
+    parsers.keyword_exact("address") +
+    parsers.keyword_exact("article") +
+    parsers.keyword_exact("aside") +
+    parsers.keyword_exact("base") +
+    parsers.keyword_exact("basefont") +
+    parsers.keyword_exact("blockquote") +
+    parsers.keyword_exact("body") +
+    parsers.keyword_exact("caption") +
+    parsers.keyword_exact("center") +
+    parsers.keyword_exact("col") +
+    parsers.keyword_exact("colgroup") +
+    parsers.keyword_exact("dd") +
+    parsers.keyword_exact("details") +
+    parsers.keyword_exact("dialog") +
+    parsers.keyword_exact("dir") +
+    parsers.keyword_exact("div") +
+    parsers.keyword_exact("dl") +
+    parsers.keyword_exact("dt") +
+    parsers.keyword_exact("fieldset") +
+    parsers.keyword_exact("figcaption") +
+    parsers.keyword_exact("figure") +
+    parsers.keyword_exact("footer") +
+    parsers.keyword_exact("form") +
+    parsers.keyword_exact("frame") +
+    parsers.keyword_exact("frameset") +
+    parsers.keyword_exact("h1") +
+    parsers.keyword_exact("h2") +
+    parsers.keyword_exact("h3") +
+    parsers.keyword_exact("h4") +
+    parsers.keyword_exact("h5") +
+    parsers.keyword_exact("h6") +
+    parsers.keyword_exact("head") +
+    parsers.keyword_exact("header") +
+    parsers.keyword_exact("hr") +
+    parsers.keyword_exact("html") +
+    parsers.keyword_exact("iframe") +
+    parsers.keyword_exact("legend") +
+    parsers.keyword_exact("li") +
+    parsers.keyword_exact("link") +
+    parsers.keyword_exact("main") +
+    parsers.keyword_exact("menu") +
+    parsers.keyword_exact("menuitem") +
+    parsers.keyword_exact("nav") +
+    parsers.keyword_exact("noframes") +
+    parsers.keyword_exact("ol") +
+    parsers.keyword_exact("optgroup") +
+    parsers.keyword_exact("option") +
+    parsers.keyword_exact("p") +
+    parsers.keyword_exact("param") +
+    parsers.keyword_exact("section") +
+    parsers.keyword_exact("source") +
+    parsers.keyword_exact("summary") +
+    parsers.keyword_exact("table") +
+    parsers.keyword_exact("tbody") +
+    parsers.keyword_exact("td") +
+    parsers.keyword_exact("tfoot") +
+    parsers.keyword_exact("th") +
+    parsers.keyword_exact("thead") +
+    parsers.keyword_exact("title") +
+    parsers.keyword_exact("tr") +
+    parsers.keyword_exact("track") +
+    parsers.keyword_exact("ul")
 
--- There is no reason to support bad html, so we expect quoted attributes
-parsers.htmlattributevalue
-                          = parsers.squote * (parsers.any - (parsers.blankline
-                                                            + parsers.squote))^0
-                                           * parsers.squote
-                          + parsers.dquote * (parsers.any - (parsers.blankline
-                                                            + parsers.dquote))^0
-                                           * parsers.dquote
+parsers.spaces_tabs_optional_newline = parsers.spacechar^1 * parsers.spnl
+                                     + parsers.spacechar^0 * parsers.newline * parsers.spacechar^0
 
-parsers.htmlattribute     = parsers.spacing^1
-                          * (parsers.alphanumeric + S("_-"))^1
-                          * parsers.sp * parsers.equal * parsers.sp
-                          * parsers.htmlattributevalue
+parsers.htmlattributename = (parsers.letter + parsers.colon + parsers.underscore)
+                          * (parsers.alphanumeric + parsers.colon + parsers.underscore 
+                             + parsers.period + parsers.dash)^0
+
+parsers.htmlattributevalue = parsers.squote * (parsers.any - parsers.squote)^0
+                                            * parsers.squote
+                           + parsers.dquote * (parsers.any - parsers.dquote)^0
+                                            * parsers.dquote
+                           + (parsers.any - parsers.spacechar - parsers.newline
+                              - parsers.dquote - parsers.squote - parsers.backtick
+                              - parsers.equal- parsers.less - parsers.more)^1
+
+parsers.htmlattributevaluespecification = parsers.spnl * parsers.equal * parsers.spnl * parsers.htmlattributevalue 
+
+parsers.htmlattribute = parsers.spaces_tabs_optional_newline * parsers.htmlattributename
+                      * parsers.htmlattributevaluespecification^-1
+
+parsers.nonnewlinehtmlattribute = parsers.spacechar^1 * parsers.htmlattributename
+                                * parsers.htmlattributevaluespecification^-1
 
 parsers.htmlcomment       = P("<!--")
                           * parsers.optionalspace
@@ -21414,50 +21473,79 @@ parsers.htmlcomment       = P("<!--")
 
 parsers.htmlinstruction   = P("<?") * (parsers.any - P("?>"))^0 * P("?>")
 
-parsers.openelt_any = parsers.less * parsers.keyword * parsers.htmlattribute^0
+parsers.htmlblankline = parsers.newline * parsers.spacechar^0 * parsers.newline
+
+parsers.openelt_any = parsers.nonindentspace * parsers.less * parsers.keyword * parsers.nonnewlinehtmlattribute^0
                     * parsers.sp * parsers.more
 
-parsers.openelt_exact = function(s)
-  return parsers.less * parsers.sp * parsers.keyword_exact(s)
-       * parsers.htmlattribute^0 * parsers.sp * parsers.more
-end
+parsers.openelt_special_block = parsers.nonindentspace * parsers.less * parsers.special_block_keyword
+                              * parsers.htmlattribute^0 * parsers.sp * parsers.more
 
-parsers.openelt_block = parsers.sp * parsers.block_keyword
+parsers.closeelt_special_block = parsers.nonindentspace * parsers.less * parsers.slash
+                               * parsers.special_block_keyword * parsers.sp * parsers.more
+
+parsers.openelt_block = parsers.nonindentspace * parsers.less * parsers.block_keyword
                       * parsers.htmlattribute^0 * parsers.sp * parsers.more
 
-parsers.closeelt_any = parsers.less * parsers.sp * parsers.slash
+-- incomplete blocks
+parsers.incomplete_openelt_block = parsers.nonindentspace * parsers.less * parsers.block_keyword
+
+parsers.incomplete_openelt_special_block = parsers.nonindentspace * parsers.less * parsers.special_block_keyword
+
+parsers.incomplete_closeelt_block = parsers.nonindentspace * parsers.less * parsers.slash * parsers.block_keyword
+
+parsers.incomplete_closeelt_special_block = parsers.nonindentspace * parsers.less * parsers.slash * parsers.special_block_keyword
+
+parsers.closeelt_block = parsers.nonindentspace * parsers.less * parsers.slash
+                       * parsers.block_keyword * parsers.sp * parsers.more
+
+parsers.closeelt_any = parsers.nonindentspace * parsers.less * parsers.slash
                      * parsers.keyword * parsers.sp * parsers.more
 
-parsers.closeelt_exact = function(s)
-  return parsers.less * parsers.sp * parsers.slash * parsers.keyword_exact(s)
-       * parsers.sp * parsers.more
-end
-
-parsers.emptyelt_any = parsers.less * parsers.sp * parsers.keyword
+parsers.inline_emptyelt_any = parsers.nonindentspace * parsers.less * parsers.keyword
                      * parsers.htmlattribute^0 * parsers.sp * parsers.slash
                      * parsers.more
 
-parsers.emptyelt_block = parsers.less * parsers.sp * parsers.block_keyword
+parsers.emptyelt_any = parsers.nonindentspace * parsers.less * parsers.keyword
+                     * parsers.nonnewlinehtmlattribute^0 * parsers.spacechar^0 * parsers.slash
+                     * parsers.more * parsers.spacechar^0 * #parsers.newline
+
+parsers.emptyelt_block = parsers.nonindentspace * parsers.less * parsers.block_keyword
                        * parsers.htmlattribute^0 * parsers.sp * parsers.slash
-                       * parsers.more
+                       * parsers.more * (parsers.any - parsers.htmlblankline)^0
+                       * #parsers.htmlblankline
 
-parsers.displaytext = (parsers.any - parsers.less)^1
+parsers.emptyelt_special_block = parsers.nonindentspace * parsers.less * parsers.special_block_keyword
+                                * parsers.htmlattribute^0 * parsers.sp * parsers.slash
+                                * parsers.more
 
--- return content between two matched HTML tags
-parsers.in_matched = function(s)
-  return { parsers.openelt_exact(s)
-         * (V(1) + parsers.displaytext
-           + (parsers.less - parsers.closeelt_exact(s)))^0
-         * parsers.closeelt_exact(s) }
-end
+parsers.in_special_block_tags = (parsers.openelt_special_block + parsers.incomplete_openelt_special_block - parsers.emptyelt_special_block)
+                              * (parsers.any - parsers.closeelt_special_block)^0
+                              * parsers.closeelt_special_block
+                              * (parsers.any - parsers.newline)^0
 
-local function parse_matched_tags(s,pos)
-  local t = string.lower(lpeg.match(C(parsers.keyword),s,pos))
-  return lpeg.match(parsers.in_matched(t),s,pos-1)
-end
+parsers.incomplete_blocks = parsers.incomplete_openelt_block
+                       + parsers.incomplete_openelt_special_block
+                       + parsers.incomplete_closeelt_block
+                       
+-- parse html block tag
+parsers.block_tag = (parsers.openelt_block + parsers.closeelt_block + parsers.incomplete_blocks - parsers.emptyelt_special_block - parsers.closeelt_special_block)
+                  * (parsers.any - parsers.htmlblankline)^0
+                  * #parsers.htmlblankline
 
-parsers.in_matched_block_tags = parsers.less
-                              * Cmt(#parsers.openelt_block, parse_matched_tags)
+-- parse any html tag
+parsers.any_tag_single = (parsers.openelt_any + parsers.closeelt_any)
+                       * parsers.spacechar^0
+                        
+parsers.any_tag = parsers.any_tag_single * #parsers.htmlblankline
+                  + parsers.any_tag_single * parsers.newline
+                    * (parsers.any - parsers.htmlblankline)^1 * #parsers.htmlblankline
+
+parsers.html_interrupting = parsers.incomplete_openelt_block
+                          + parsers.incomplete_closeelt_block
+                          + parsers.incomplete_openelt_special_block
+                          - parsers.closeelt_special_block
+                          - parsers.emptyelt_special_block
 
 %    \end{macrocode}
 % \par
@@ -21923,6 +22011,7 @@ function M.reader.new(writer, options)
                      + parsers.eof       -- end of document
                      + parsers.bqstart
                      + parsers.headerstart
+                     + parsers.html_interrupting
 
   parsers.Endline   = parsers.newline
                     * -V("EndlineExceptions")
@@ -22041,7 +22130,7 @@ function M.reader.new(writer, options)
 
   parsers.EscapedChar   = parsers.backslash * C(parsers.escapable) / writer.string
   
-  parsers.InlineHtml    = parsers.emptyelt_any / writer.inline_html_tag
+  parsers.InlineHtml    = parsers.inline_emptyelt_any / writer.inline_html_tag
                         + (parsers.htmlcomment / self.parser_functions.parse_inlines_no_html)
                         / writer.inline_html_comment
                         + parsers.htmlinstruction
@@ -22061,9 +22150,12 @@ function M.reader.new(writer, options)
 %  \begin{macrocode}
   parsers.DisplayHtml  = (parsers.htmlcomment / self.parser_functions.parse_blocks_nested)
                        / writer.block_html_comment
+                       + (parsers.emptyelt_special_block * parsers.spacechar^0 * #parsers.newline)/ writer.block_html_element
                        + parsers.emptyelt_block / writer.block_html_element
-                       + parsers.openelt_exact("hr") / writer.block_html_element
-                       + parsers.in_matched_block_tags / writer.block_html_element
+                       + parsers.emptyelt_any / writer.block_html_element
+                       + parsers.in_special_block_tags / writer.block_html_element
+                       + parsers.block_tag / writer.block_html_element
+                       + parsers.any_tag / writer.block_html_element
                        + parsers.htmlinstruction
 
   parsers.Verbatim     = Cs( (parsers.blanklines
