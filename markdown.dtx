@@ -21412,6 +21412,11 @@ parsers.htmlcomment       = P("<!--")
                           * parsers.optionalspace
                           * P("-->")
 
+parsers.inlinehtmlcomment = P("<!--")
+                          * -P(">") * -P("->")
+                          * Cs((P(1) - P("--"))^0)
+                          * P("-->")
+
 parsers.htmlinstruction   = P("<?") * (parsers.any - P("?>"))^0 * P("?>")
 
 parsers.openelt_any = parsers.less * parsers.keyword * parsers.htmlattribute^0
@@ -22042,7 +22047,7 @@ function M.reader.new(writer, options)
   parsers.EscapedChar   = parsers.backslash * C(parsers.escapable) / writer.string
   
   parsers.InlineHtml    = parsers.emptyelt_any / writer.inline_html_tag
-                        + (parsers.htmlcomment / self.parser_functions.parse_inlines_no_html)
+                        + (parsers.inlinehtmlcomment / self.parser_functions.parse_inlines_no_html)
                         / writer.inline_html_comment
                         + parsers.htmlinstruction
                         + parsers.openelt_any / writer.inline_html_tag
