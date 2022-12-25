@@ -21471,7 +21471,16 @@ parsers.htmlcomment       = P("<!--")
                           * parsers.optionalspace
                           * P("-->")
 
+parsers.inlinehtmlcomment = P("<!--")
+                          * -P(">") * -P("->")
+                          * Cs((P(1) - P("--"))^0)
+                          * P("-->")
+
 parsers.htmlinstruction   = P("<?") * (parsers.any - P("?>"))^0 * P("?>")
+
+parsers.htmlcdatasection   = P("<![CDATA[") * (parsers.any - P("]]>"))^0 * P("]]>")
+
+parsers.htmldeclaration   = P("<!") * (parsers.any - P(">"))^0 * P(">")
 
 parsers.htmlblankline = parsers.newline * parsers.spacechar^0 * parsers.newline
 
@@ -22131,9 +22140,11 @@ function M.reader.new(writer, options)
   parsers.EscapedChar   = parsers.backslash * C(parsers.escapable) / writer.string
   
   parsers.InlineHtml    = parsers.inline_emptyelt_any / writer.inline_html_tag
-                        + (parsers.htmlcomment / self.parser_functions.parse_inlines_no_html)
+                        + (parsers.inlinehtmlcomment / self.parser_functions.parse_inlines_no_html)
                         / writer.inline_html_comment
-                        + parsers.htmlinstruction
+                        + parsers.htmlinstruction / writer.inline_html_tag
+                        + parsers.htmlcdatasection / writer.inline_html_tag
+                        + parsers.htmldeclaration / writer.inline_html_tag
                         + parsers.openelt_any / writer.inline_html_tag
                         + parsers.closeelt_any / writer.inline_html_tag
   
@@ -22156,7 +22167,9 @@ function M.reader.new(writer, options)
                        + parsers.in_special_block_tags / writer.block_html_element
                        + parsers.block_tag / writer.block_html_element
                        + parsers.any_tag / writer.block_html_element
-                       + parsers.htmlinstruction
+                       + parsers.htmlinstruction / writer.block_html_element           
+                       + parsers.htmlcdatasection / writer.block_html_element
+                       + parsers.htmldeclaration / writer.block_html_element
 
   parsers.Verbatim     = Cs( (parsers.blanklines
                            * ((parsers.indentedline - parsers.blankline))^1)^1
