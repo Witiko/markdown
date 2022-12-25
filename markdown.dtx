@@ -21465,22 +21465,21 @@ parsers.htmlattribute = parsers.spaces_tabs_optional_newline * parsers.htmlattri
 parsers.nonnewlinehtmlattribute = parsers.spacechar^1 * parsers.htmlattributename
                                 * parsers.htmlattributevaluespecification^-1
 
-parsers.htmlcomment       = P("<!--")
-                          * parsers.optionalspace
-                          * Cs((parsers.any - parsers.optionalspace * P("-->"))^0)
-                          * parsers.optionalspace
+parsers.htmlcomment       = parsers.nonindentspace 
+                          * P("<!--")
+                          * Cs((parsers.any - P("-->"))^0)
                           * P("-->")
 
 parsers.inlinehtmlcomment = P("<!--")
                           * -P(">") * -P("->")
-                          * Cs((P(1) - P("--"))^0)
+                          * Cs((parsers.any - P("--"))^0)
                           * P("-->")
 
-parsers.htmlinstruction   = P("<?") * (parsers.any - P("?>"))^0 * P("?>")
+parsers.htmlinstruction = parsers.nonindentspace * P("<?") * (parsers.any - P("?>"))^0 * P("?>")
 
-parsers.htmlcdatasection   = P("<![CDATA[") * (parsers.any - P("]]>"))^0 * P("]]>")
+parsers.htmlcdatasection = parsers.nonindentspace * P("<![CDATA[") * (parsers.any - P("]]>"))^0 * P("]]>")
 
-parsers.htmldeclaration   = P("<!") * (parsers.any - P(">"))^0 * P(">")
+parsers.htmldeclaration = parsers.nonindentspace * P("<!") * parsers.letter * (parsers.any - P(">"))^0 * P(">")
 
 parsers.htmlblankline = parsers.newline * parsers.spacechar^0 * parsers.newline
 
@@ -22140,8 +22139,7 @@ function M.reader.new(writer, options)
   parsers.EscapedChar   = parsers.backslash * C(parsers.escapable) / writer.string
   
   parsers.InlineHtml    = parsers.inline_emptyelt_any / writer.inline_html_tag
-                        + (parsers.inlinehtmlcomment / self.parser_functions.parse_inlines_no_html)
-                        / writer.inline_html_comment
+                        + parsers.inlinehtmlcomment / writer.inline_html_comment
                         + parsers.htmlinstruction / writer.inline_html_tag
                         + parsers.htmlcdatasection / writer.inline_html_tag
                         + parsers.htmldeclaration / writer.inline_html_tag
@@ -22159,8 +22157,7 @@ function M.reader.new(writer, options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  parsers.DisplayHtml  = (parsers.htmlcomment / self.parser_functions.parse_blocks_nested)
-                       / writer.block_html_comment
+  parsers.DisplayHtml  = parsers.htmlcomment / writer.block_html_comment
                        + (parsers.emptyelt_special_block * parsers.spacechar^0 * #parsers.newline)/ writer.block_html_element
                        + parsers.emptyelt_block / writer.block_html_element
                        + parsers.emptyelt_any / writer.block_html_element
