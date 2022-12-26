@@ -21469,6 +21469,7 @@ parsers.htmlcomment       = parsers.nonindentspace
                           * P("<!--")
                           * Cs((parsers.any - P("-->"))^0)
                           * P("-->")
+                          * (parsers.any - parsers.newline)^0
 
 parsers.inlinehtmlcomment = P("<!--")
                           * -P(">") * -P("->")
