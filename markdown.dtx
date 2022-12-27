@@ -22197,10 +22197,14 @@ function M.reader.new(writer, options)
                      * Cb("level")
                      / writer.heading
 
-  parsers.SetextHeading = #(parsers.line * parsers.nonindentspace * S("=-"))
-                        * Ct(parsers.linechar^1
-                            / self.parser_functions.parse_inlines)
-                        * parsers.newline
+  parsers.heading_line = parsers.line - parsers.blankline
+
+  parsers.heading_text = parsers.heading_line
+                       * (parsers.heading_line - parsers.heading_level)^0
+
+  parsers.SetextHeading = #(parsers.heading_text * parsers.heading_level)
+                        * Ct(parsers.heading_text 
+                            / self.parser_functions.parse_blocks_nested )
                         * parsers.heading_level
                         * parsers.newline
                         / writer.heading
