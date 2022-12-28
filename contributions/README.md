@@ -3,7 +3,8 @@ been contributed to the Markdown package:
 
 - [book-templates][] from [xvrabcov][]: Open-source Markdown LaTeX themes for typesetting books and marketing colaterals
 - [doctoral-thesis][] from [witiko][]: A doctoral thesis written using the Markdown package
-- [pandoc-to-markdown][] from [drehak][]: A proof-of-concept that shows how Pandoc can be integrated with the Markdown package (see also [the thesis][thesis-umhg5] by [drehak][])
+- [pandoc-to-markdown][] from [drehak][]: A proof-of-concept that shows how Pandoc can be integrated with the Markdown package
+    - For more information, see also [the bachelor's thesis][thesis-umhg5] of [drehak][].
 
  [book-templates]: https://github.com/xvrabcov/md-templates
  [doctoral-thesis]: https://github.com/witiko/doctoral-thesis
