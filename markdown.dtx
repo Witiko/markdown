@@ -3290,6 +3290,7 @@ following content:
 
 \begin{markdown}
 A paragraph.
+
 ::: {.identifier}
 A fenced div.
 :::
@@ -3297,9 +3298,10 @@ A fenced div.
 
 \begin{markdown*}{blankBeforeDivFence}
 A paragraph.
-```
+
+::: {.identifier}
 Not a fenced div.
-```
+:::
 \end{markdown*}
 
 \end{document}
@@ -3315,7 +3317,9 @@ following text:
 >
 > A fenced div.
 >
-> A paragraph. ::: {.identifier} Not a fenced div. :::
+> A paragraph.
+>
+> ::: {.identifier} Not a fenced div. :::
 
 %</manual-options>
 %<*tex>
@@ -3612,10 +3616,10 @@ following content:
         renderers = {
           attributeKeyValue = {
             \str_if_eq:nnT
-              { #1 }
+              { ##1 }
               { color }
               {
-                 \color_select:n { #2 }
+                 \color_select:n { ##2 }
               }
           },
         },
@@ -3636,12 +3640,12 @@ Here is some [colored text]{color=red}.
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-lualatex --shell-escape document.tex
+lualatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
 
-> Here is some [colored text]{color=red}.
+> Here is some <span style="color: red">colored text</span>.
 
 %</manual-options>
 %<*tex>
@@ -10271,8 +10275,8 @@ following content:
 \usepackage[bracketedSpans]{markdown}
 \markdownSetup{
   renderers = {
-    fencedDivAttributeContextBegin = {(},
-    fencedDivAttributeContextEnd = {)},
+    bracketedSpanAttributeContextBegin = {(},
+    bracketedSpanAttributeContextEnd = {)},
   },
 }
 \begin{document}
@@ -12176,7 +12180,7 @@ Using a text editor, create a text document named `document.tex` with the
 following content:
 ``` tex
 \documentclass{article}
-\usepackage[fencedDiv]{markdown}
+\usepackage[fencedDivs]{markdown}
 \markdownSetup{
   renderers = {
     fencedDivAttributeContextBegin = {%
