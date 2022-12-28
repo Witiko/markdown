@@ -21541,8 +21541,8 @@ parsers.heading_start = #parsers.hash * C(parsers.hash^-6)
                       * -parsers.hash / length
 
 -- parse setext header ending and return level
-parsers.heading_level = parsers.nonindentspace * parsers.equal^1 * parsers.optionalspace * Cc(1) 
-                      + parsers.nonindentspace * parsers.dash^1 * parsers.optionalspace * Cc(2)
+parsers.heading_level = parsers.nonindentspace * parsers.equal^1 * parsers.optionalspace * #parsers.newline * Cc(1) 
+                      + parsers.nonindentspace * parsers.dash^1 * parsers.optionalspace * #parsers.newline * Cc(2)
 
 local function strip_atx_end(s)
   return s:gsub("[#%s]*\n$","")
@@ -21805,7 +21805,7 @@ function M.reader.new(writer, options)
   parsers.blockquote_body = ((parsers.leader * parsers.more * parsers.space^-1)/""
                              * parsers.linechar^0 * parsers.newline)^1
                             * (-(parsers.leader * parsers.more
-                                + parsers.blankline) * parsers.linechar^1
+                                + parsers.blankline) * (#parsers.heading_level + parsers.linechar^1)
                               * parsers.newline)^0
 
   if not options.breakableBlockquotes then
@@ -22197,13 +22197,25 @@ function M.reader.new(writer, options)
                      * Cb("level")
                      / writer.heading
 
+  parsers.heading_lineof = function(c)
+    return parsers.leader * (P(c) * parsers.optionalspace)^3 * parsers.newline
+  end           
+
+  function remove_enclosing_whitespaces(o)
+    local res = ""
+    for line in o:gmatch("([^\n]*)\n?") do
+      res = res .. (line:gsub("^%s*(.-)%s*$", "%1" .. "\n"))
+    end
+    return res
+  end
+
   parsers.heading_line = parsers.line - parsers.blankline
 
   parsers.heading_text = parsers.heading_line
                        * (parsers.heading_line - parsers.heading_level)^0
 
   parsers.SetextHeading = #(parsers.heading_text * parsers.heading_level)
-                        * Ct(parsers.heading_text 
+                        * Ct(parsers.heading_text / remove_enclosing_whitespaces
                             / self.parser_functions.parse_blocks_nested )
                         * parsers.heading_level
                         * parsers.newline
