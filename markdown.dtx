@@ -21525,9 +21525,13 @@ parsers.BacktickFencedCode
 
 parsers.lineof = function(c)
     return (parsers.leader * (P(c) * parsers.optionalspace)^3
-           * (parsers.newline * parsers.blankline^1
+           * (parsers.newline
              + parsers.newline^-1 * parsers.eof))
 end
+
+parsers.thematic_break_lines = parsers.lineof(parsers.asterisk)
+                             + parsers.lineof(parsers.dash)
+                             + parsers.lineof(parsers.underscore)
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -21923,6 +21927,7 @@ function M.reader.new(writer, options)
                      + parsers.tightblocksep  -- nested list
                      + parsers.eof       -- end of document
                      + parsers.bqstart
+                     + parsers.thematic_break_lines
                      + parsers.headerstart
 
   parsers.Endline   = parsers.newline
@@ -22075,9 +22080,7 @@ function M.reader.new(writer, options)
                        / self.parser_functions.parse_blocks_nested
                        / writer.blockquote
 
-  parsers.ThematicBreak = ( parsers.lineof(parsers.asterisk)
-                          + parsers.lineof(parsers.dash)
-                          + parsers.lineof(parsers.underscore)
+  parsers.ThematicBreak = ( parsers.thematic_break_lines
                           ) / writer.thematic_break
 
   parsers.Reference    = parsers.define_reference_parser / register_link
@@ -22209,7 +22212,8 @@ function M.reader.new(writer, options)
     return res
   end
 
-  parsers.heading_line = parsers.line - parsers.blankline
+  parsers.heading_line = parsers.line - parsers.blankline 
+                          - parsers.thematic_break_lines
 
   parsers.heading_text = parsers.heading_line
                        * (parsers.heading_line - parsers.heading_level)^0
