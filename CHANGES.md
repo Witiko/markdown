@@ -5,6 +5,8 @@
 Documentation:
 
 - Add @drehak's thesis to `README.md`. (204a18c, aec9b44, cda53fb)
+- Update examples for options `bracketedSpans` and `fencedDivs`.
+  (499c65a, 532cdb8)
 
 ## 2.19.0 (2022-12-23)
 
