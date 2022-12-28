@@ -4,7 +4,7 @@
 
 Documentation:
 
-- Add @drehak's thesis to `README.md`. (204a18c)
+- Add @drehak's thesis to `README.md`. (204a18c, aec9b44)
 
 ## 2.19.0 (2022-12-23)
 
