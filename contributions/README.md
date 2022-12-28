@@ -10,7 +10,7 @@ been contributed to the Markdown package:
  [doctoral-thesis]: https://github.com/witiko/doctoral-thesis
  [pandoc-to-markdown]: https://github.com/drehak/pandoc-to-markdown
 
- [thesis-umhg5]: https://is.muni.cz/th/umhg5/ "Generic TeX Writer for the Pandoc Document Converter"
+ [thesis-umhg5]: https://is.muni.cz/th/umhg5/?lang=en "Generic TeX Writer for the Pandoc Document Converter"
 
 Here are some other repositories that have been contributed to the Markdown
 package but cannot be directly included as Git submodules:

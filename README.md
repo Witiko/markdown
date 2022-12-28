@@ -241,7 +241,7 @@ For further information, consult one of the following:
  [techdoc-latest]:    https://github.com/Witiko/markdown/releases/download/latest/markdown.pdf  "A Markdown Interpreter for TeX"
  [techdoc-tex-live]:  https://mirrors.ctan.org/macros/generic/markdown/markdown.pdf             "A Markdown Interpreter for TeX"
 
- [thesis-umhg5]: https://is.muni.cz/th/umhg5/ "Generic TeX Writer for the Pandoc Document Converter"
+ [thesis-umhg5]: https://is.muni.cz/th/umhg5/?lang=en "Generic TeX Writer for the Pandoc Document Converter"
 
 Acknowledgements
 ----------------
