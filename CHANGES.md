@@ -2,6 +2,10 @@
 
 ## 2.20.0
 
+Documentation:
+
+- Add @drehak's thesis to `README.md`. (204a18c)
+
 ## 2.19.0 (2022-12-23)
 
 Development:
