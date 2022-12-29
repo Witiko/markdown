@@ -21323,7 +21323,7 @@ parsers.tag         = parsers.lbracket
                          + parsers.inticks
                          + ( parsers.backslash / "" * (parsers.lbracket + parsers.rbracket)
                            + parsers.any
-                           - (parsers.rbracket + parsers.blankline^2)))^0)
+                           - (parsers.rbracket + parsers.blankline^2)))^1)
                     * parsers.rbracket
 
 -- url for markdown links, allowing nested brackets:
