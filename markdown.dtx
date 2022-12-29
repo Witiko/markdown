@@ -21322,7 +21322,7 @@ parsers.tag         = parsers.lbracket
                     * Cs((parsers.alphanumeric^1
                          + parsers.bracketed
                          + parsers.inticks
-                         + ( parsers.backslash / "" * parsers.rbracket
+                         + ( parsers.backslash / "" * (parsers.lbracket + parsers.rbracket)
                            + parsers.any
                            - (parsers.rbracket + parsers.blankline^2)))^0)
                     * parsers.rbracket
