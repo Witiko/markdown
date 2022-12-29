@@ -22016,7 +22016,7 @@ function M.reader.new(writer, options)
                         * parsers.rparent
                         / writer.link
 
-  parsers.IndirectLink  = parsers.tag * (C(parsers.spnl) * parsers.tag)^-1
+  parsers.IndirectLink  = parsers.tag * (parsers.tag)^-1
                         / indirect_link
 
   -- parse a link or image (direct or indirect)
@@ -22033,7 +22033,7 @@ function M.reader.new(writer, options)
                         / writer.image
 
   parsers.IndirectImage = parsers.exclamation * parsers.tag
-                        * (C(parsers.spnl) * parsers.tag)^-1 / indirect_image
+                        * (parsers.tag)^-1 / indirect_image
 
   parsers.Image         = parsers.DirectImage + parsers.IndirectImage
 
