@@ -248,7 +248,7 @@ Acknowledgements
 
 | Logo          | Acknowledgement |
 | ------------- | --------------- |
-| [<img width="150" src="https://www.fi.muni.cz/images/fi-logo.png">][fimu] | I gratefully acknowledge the funding from the [Faculty of Informatics][fimu] at the [Masaryk University][mu] in Brno, Czech Republic, for the development of the Markdown package. |
+| [<img width="150" src="https://www.fi.muni.cz/images/fi-logo.png">][fimu] | I gratefully acknowledge the funding from the [Faculty of Informatics][fimu] at the [Masaryk University][mu] in Brno, Czech Republic, for the development of the Markdown package in projects [MUNI/33/12/2015][], [MUNI/33/1784/2020][], [MUNI/33/0776/2021][], [MUNI/33/1654/2022][], and [MUNI/33/1658/2022][]. |
 | [<img width="150" src="https://cdn.overleaf.com/img/ol-brand/overleaf_og_logo.png">][overleaf] | Extensive user documentation for the Markdown package was kindly written by [Lian Tze Lim][liantze] and published by [Overleaf][]. |
 | [<img width="150" src="https://pbs.twimg.com/profile_images/1004769879319334912/6Bh1UthD.jpg">][omedym] | Support for content slicing (Lua options [`shiftHeadings`][option-shift-headings] and [`slice`][option-slice]) and pipe tables (Lua options [`pipeTables`][option-pipe-tables] and [`tableCaptions`][option-table-captions]) was graciously sponsored by [David Vins][dvins] and [Omedym][]. |
 
@@ -261,6 +261,12 @@ Acknowledgements
  [option-shift-headings]: https://mirrors.ctan.org/macros/generic/markdown/markdown.html#option-shiftheadings "Markdown Package User Manual"
  [option-slice]:          https://mirrors.ctan.org/macros/generic/markdown/markdown.html#slice                "Markdown Package User Manual"
  [option-table-captions]: https://mirrors.ctan.org/macros/generic/markdown/markdown.html#option-tablecaptions "Markdown Package User Manual"
+ 
+ [MUNI/33/12/2015]:   https://www.muni.cz/en/research/projects/32984 "A Markdown Interpreter in TeX"
+ [MUNI/33/1784/2020]: https://www.muni.cz/en/research/projects/58488 "Extension of the Input Formats of the Markdown Tool"
+ [MUNI/33/0776/2021]: https://www.muni.cz/en/research/projects/62168 "Preparation of Templates for Typesetting Books and Publishing Collaterals with the Markdown TeX Package"
+ [MUNI/33/1654/2022]: https://www.muni.cz/en/research/projects/69763 "An Implementation of the CommonMark Standard into the Markdown Package for TeX"
+ [MUNI/33/1658/2022]: https://www.muni.cz/en/research/projects/69762 "Syntax Extensions of the Markdown Package for TeX"
 
 Contributing to the Development of Markdown
 -------------------------------------------
