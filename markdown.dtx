@@ -22010,8 +22010,10 @@ function M.reader.new(writer, options)
   parsers.DirectLink    = (parsers.tag / self.parser_functions.parse_inlines_no_link)
                         * parsers.spnl
                         * parsers.lparent
+                        * parsers.spnl
                         * (parsers.url + Cc(""))  -- link can be empty [foo]()
                         * parsers.optionaltitle
+                        * parsers.spnl
                         * parsers.rparent
                         / writer.link
 
