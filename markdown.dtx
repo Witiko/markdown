@@ -21320,7 +21320,6 @@ parsers.dquoted     = P{ parsers.dquote * parsers.alphanumeric
 -- bracketed tag for markdown links, allowing nested brackets:
 parsers.tag         = parsers.lbracket
                     * Cs((parsers.alphanumeric^1
-                         + parsers.bracketed
                          + parsers.inticks
                          + ( parsers.backslash / "" * (parsers.lbracket + parsers.rbracket)
                            + parsers.any
