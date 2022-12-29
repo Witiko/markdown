@@ -22024,10 +22024,11 @@ function M.reader.new(writer, options)
 
   parsers.DirectImage   = parsers.exclamation
                         * (parsers.tag / self.parser_functions.parse_inlines)
-                        * parsers.spnl
                         * parsers.lparent
+                        * parsers.spnl
                         * (parsers.url + Cc(""))  -- link can be empty [foo]()
                         * parsers.optionaltitle
+                        * parsers.spnl
                         * parsers.rparent
                         / writer.image
 
