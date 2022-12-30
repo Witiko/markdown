@@ -261,7 +261,7 @@ Acknowledgements
  [option-shift-headings]: https://mirrors.ctan.org/macros/generic/markdown/markdown.html#option-shiftheadings "Markdown Package User Manual"
  [option-slice]:          https://mirrors.ctan.org/macros/generic/markdown/markdown.html#slice                "Markdown Package User Manual"
  [option-table-captions]: https://mirrors.ctan.org/macros/generic/markdown/markdown.html#option-tablecaptions "Markdown Package User Manual"
- 
+
  [MUNI/33/12/2015]:   https://www.muni.cz/en/research/projects/32984 "A Markdown Interpreter in TeX"
  [MUNI/33/1784/2020]: https://www.muni.cz/en/research/projects/58488 "Extension of the Input Formats of the Markdown Tool"
  [MUNI/33/0776/2021]: https://www.muni.cz/en/research/projects/62168 "Preparation of Templates for Typesetting Books and Publishing Collaterals with the Markdown TeX Package"
