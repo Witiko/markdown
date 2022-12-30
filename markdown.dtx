@@ -21502,6 +21502,20 @@ parsers.between = function(p, starter, ender)
 end
 
 parsers.urlchar      = parsers.anyescaped - parsers.newline - parsers.more
+
+parsers.autolink_scheme_part = parsers.alphanumeric + parsers.plus + parsers.period + parsers.dash
+
+parsers.autolink_scheme = parsers.letter * parsers.autolink_scheme_part
+                        * parsers.autolink_scheme_part^-30
+
+parsers.absolute_uri = parsers.autolink_scheme * parsers.colon 
+                      * (parsers.any - parsers.spacing - parsers.less - parsers.more)^0
+
+parsers.email_address_dns_label = parsers.alphanumeric * ((parsers.alphanumeric + parsers.dash)^-62 * B(parsers.alphanumeric))^-1
+
+parsers.email_address = (parsers.alphanumeric + S(".!#$%&'*+/=?^_`{|}~-"))^1
+                      * parsers.at * parsers.email_address_dns_label
+                      * (parsers.period * parsers.email_address_dns_label)^0
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -21983,15 +21997,14 @@ function M.reader.new(writer, options)
   end
 
   parsers.AutoLinkUrl    = parsers.less
-                         * C(parsers.alphanumeric^1 * P("://") * parsers.urlchar^1)
+                         * C(parsers.absolute_uri)
                          * parsers.more
                          / function(url)
                              return writer.link(writer.escape(url), url)
                            end
 
   parsers.AutoLinkEmail = parsers.less
-                        * C((parsers.alphanumeric + S("-._+"))^1
-                        * P("@") * parsers.urlchar^1)
+                        * C(parsers.email_address)
                         * parsers.more
                         / function(email)
                             return writer.link(writer.escape(email),
