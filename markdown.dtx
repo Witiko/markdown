@@ -21837,7 +21837,10 @@ function M.reader.new(writer, options)
 
   -- add a reference to the list
   local function register_link(tag,url,title)
-      references[self.normalize_tag(tag)] = { url = url, title = title }
+      local normalized_tag = self.normalize_tag(tag)
+      if references[normalized_tag] == nil then
+        references[normalized_tag] = { url = url, title = title }
+      end
       return ""
   end
 
@@ -23566,7 +23569,10 @@ M.extensions.notes = function(notes, inline_notes)
         end
 
         local function register_note(ref,rawnote)
-          rawnotes[self.normalize_tag(ref)] = rawnote
+          local normalized_tag = self.normalize_tag(ref)
+          if rawnotes[normalized_tag] == nil then
+            rawnotes[normalized_tag] = rawnote
+          end
           return ""
         end
 
