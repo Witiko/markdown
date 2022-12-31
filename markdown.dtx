@@ -22843,7 +22843,6 @@ function M.reader.new(writer, options)
     end
 
     self.add_special_character("*")
-    self.add_special_character("`")
     self.add_special_character("[")
     self.add_special_character("]")
     self.add_special_character("<")
@@ -23000,6 +22999,8 @@ function M.reader.new(writer, options)
 
     if not options.codeSpans then
       syntax.Code = parsers.fail
+    else
+      self.add_special_character("`")
     end
 
     if not options.html then
@@ -23937,6 +23938,7 @@ M.extensions.fenced_code = function(blank_before_code_fence)
         return previous_pattern + fencestart
       end)
 
+      self.add_special_character("`")
       self.add_special_character("~")
     end
   }

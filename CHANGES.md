@@ -8,6 +8,11 @@ Documentation:
 - Update examples for options `bracketedSpans` and `fencedDivs`.
   (499c65a, 532cdb8)
 
+Speed Improvements:
+
+- Only make backticks special when `codeSpans` or `fencedCode` are enabled.
+  (#239)
+
 ## 2.19.0 (2022-12-23)
 
 Development:
