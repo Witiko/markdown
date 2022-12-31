@@ -21878,17 +21878,12 @@ function M.reader.new(writer, options)
   local function indirect_link(labels)
     return writer.defer_call(function()
       local index = 1
-      local label_count = #labels
       local result = {}
 
-      while(index <= label_count)
+      while(index <= #labels)
       do
         local label = labels[index]
-        local tag = nil
-
-        if (index + 1 <= label_count) then
-          tag = labels[index+1]
-        end
+        local tag = labels[index+1]
 
         local r,fallback = lookup_reference(label,"",tag)
         if r then
