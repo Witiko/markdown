@@ -21872,77 +21872,37 @@ function M.reader.new(writer, options)
       end
   end
 
-  -- lookup link reference and return a link, if the reference is found,
-  -- or a bracketed label otherwise.
-  local backlog_tag = nil
+  -- iterate through pairs of consecutive link tags and
+  -- return a table with either a link if a pair has a link reference,
+  -- or a bracketed label otherwise
+  local function indirect_link(labels)
+    return writer.defer_call(function()
+      local index = 1
+      local label_count = #labels
+      local result = {}
 
-  local function indirect_link(label,sps,tag,hasnext)
-    return writer.defer_call(function()    
-      local override_label = backlog_tag
+      while(index <= label_count)
+      do
+        local label = labels[index]
+        local tag = nil
 
-      if (override_label == nil) then
-        local r,fallback = lookup_reference(label,sps,tag)
+        if (index + 1 <= label_count) then
+          tag = labels[index+1]
+        end
+
+        local r,fallback = lookup_reference(label,"",tag)
         if r then
-          return writer.link(
-            self.parser_functions.parse_inlines_no_link(label),
-            r.url, r.title)
-        end
-        if (not hasnext) then
-          backlog_tag = nil
-          return fallback
-        end
-        backlog_tag = tag
-        return {"[",self.parser_functions.parse_inlines(label),"]"}
-      else
-        local backlog_r,backlog_fallback = lookup_reference(override_label,sps,label)
-
-        if (backlog_r) then          
-          local single = nil
-
-          if (not hasnext) then
-            backlog_tag = nil
-            if (tag ~= nil) then
-              local r,fallback = lookup_reference(tag,sps,"")
-              if r then
-                single = writer.link(
-                  self.parser_functions.parse_inlines_no_link(tag),
-                  backlog_r.url, backlog_r.title)
-              else
-                single = {"[",self.parser_functions.parse_inlines(tag),"]"}
-              end
-            end
-          else
-            backlog_tag = tag
-          end
-
-          if single ~= nil then
-            return {writer.link(
-            self.parser_functions.parse_inlines_no_link(override_label),
-            backlog_r.url, backlog_r.title),single}
-          end
-
-          return writer.link(
-              self.parser_functions.parse_inlines_no_link(override_label),
-              backlog_r.url, backlog_r.title)
+          result[#result + 1] = writer.link(
+                                self.parser_functions.parse_inlines_no_link(label),
+                                r.url, r.title)
+          index = index + 2
         else
-          local r,fallback = lookup_reference(label,sps,tag)
-          if r then
-            backlog_tag = nil
-            return {{"[",self.parser_functions.parse_inlines_no_link(override_label),"]"}, writer.link(
-              self.parser_functions.parse_inlines_no_link(label),
-              r.url, r.title)}
-          end
-
-          if (not hasnext) then
-            backlog_tag = nil
-            return {{"[",self.parser_functions.parse_inlines_no_link(override_label),"]"}, 
-                    fallback}
-          end
-          backlog_tag = tag
-          return {{"[",self.parser_functions.parse_inlines_no_link(override_label),"]"}, 
-                  {"[",self.parser_functions.parse_inlines_no_link(label),"]"}}
+          result[#result + 1] = fallback
+          index = index + 1
         end
       end
+
+      return result
     end)
   end
 
@@ -22090,10 +22050,7 @@ function M.reader.new(writer, options)
                         * parsers.rparent
                         / writer.link
 
-  parsers.IndirectLink  = parsers.tag * (Cc("") * parsers.tag)^-1 * -#parsers.tag
-                        * Cc(false) / indirect_link
-                        + parsers.tag * Cc("") * parsers.tag
-                        * Cc(true) / indirect_link
+  parsers.IndirectLink  = Ct(parsers.tag^1) / indirect_link
 
   -- parse a link or image (direct or indirect)
   parsers.Link          = parsers.DirectLink + parsers.IndirectLink
