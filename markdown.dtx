@@ -21901,16 +21901,30 @@ function M.reader.new(writer, options)
     end)
   end
 
-  -- lookup image reference and return an image, if the reference is found,
-  -- or a bracketed label otherwise.
-  local function indirect_image(label,sps,tag)
+  -- iterate through pairs of consecutive link tags and
+  -- return a table with either a image if a pair has a image reference,
+  -- or a bracketed label otherwise
+  local function indirect_image(labels)
     return writer.defer_call(function()
-      local r,fallback = lookup_reference(label,sps,tag)
-      if r then
-        return writer.image(writer.string(label), r.url, r.title)
-      else
-        return {"!", fallback}
+      local index = 1
+      local result = {}
+
+      while(index <= #labels)
+      do
+        local label = labels[index]
+        local tag = labels[index+1]
+
+        local r,fallback = lookup_reference(label,"",tag)
+        if r then
+          result[#result + 1] = writer.image(writer.string(label), r.url, r.title)
+          index = index + 2
+        else
+          result[#result + 1] = {"!", fallback}
+          index = index + 1
+        end
       end
+
+      return result
     end)
   end
 %    \end{macrocode}
@@ -22060,9 +22074,7 @@ function M.reader.new(writer, options)
                         * parsers.rparent
                         / writer.image
 
-  parsers.IndirectImage = parsers.exclamation * parsers.tag
-                        * (Cc("") * parsers.tag)^-1
-                        / indirect_image
+  parsers.IndirectImage = parsers.exclamation * Ct(parsers.tag^1) / indirect_image
 
   parsers.Image         = parsers.DirectImage + parsers.IndirectImage
 
