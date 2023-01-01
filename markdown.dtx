@@ -21320,6 +21320,7 @@ parsers.dquoted     = P{ parsers.dquote * parsers.alphanumeric
 -- bracketed tag for markdown links, allowing nested brackets:
 parsers.tag         = parsers.lbracket
                     * Cs((parsers.alphanumeric^1
+                         + parsers.bracketed
                          + parsers.inticks
                          + ( parsers.backslash / "" * (parsers.lbracket + parsers.rbracket)
                            + parsers.any
@@ -21888,8 +21889,7 @@ function M.reader.new(writer, options)
         local r,fallback = lookup_reference(label,"",tag)
         if r then
           result[#result + 1] = writer.link(
-                                self.parser_functions.parse_inlines_no_link(label),
-                                r.url, r.title)
+            self.parser_functions.parse_inlines_no_link(label),r.url, r.title)
           index = index + 2
         else
           result[#result + 1] = fallback
@@ -21916,7 +21916,8 @@ function M.reader.new(writer, options)
 
         local r,fallback = lookup_reference(label,"",tag)
         if r then
-          result[#result + 1] = writer.image(writer.string(label), r.url, r.title)
+          result[#result + 1] = writer.image(
+            self.parser_functions.parse_inlines(label), r.url, r.title)
           index = index + 2
         else
           result[#result + 1] = {"!", fallback}
