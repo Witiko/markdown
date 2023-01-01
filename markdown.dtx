@@ -21335,13 +21335,11 @@ parsers.url         = parsers.less * Cs((parsers.anyescaped
                                              - parsers.spacing
                                              - parsers.rparent))^1)
 
--- quoted text, possibly with nested quotes:
-parsers.title_s     = parsers.squote * Cs(((parsers.anyescaped-parsers.squote)
-                                           + parsers.squoted)^0)
+-- quoted text:
+parsers.title_s     = parsers.squote * Cs(((parsers.anyescaped-parsers.squote))^0)
                                      * parsers.squote
 
-parsers.title_d     = parsers.dquote * Cs(((parsers.anyescaped-parsers.dquote)
-                                           + parsers.dquoted)^0)
+parsers.title_d     = parsers.dquote * Cs(((parsers.anyescaped-parsers.dquote))^0)
                                      * parsers.dquote
 
 parsers.title_p     = parsers.lparent
