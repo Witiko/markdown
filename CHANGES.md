@@ -8,6 +8,11 @@ Documentation:
 - Update examples for options `bracketedSpans` and `fencedDivs`.
   (499c65a, 532cdb8)
 
+Default Renderer Prototypes:
+
+- Use `paralist` LaTeX package to define default renderer prototypes for
+  fancy lists when `fancyList` Lua option is enabled. (#241)
+
 Speed Improvements:
 
 - Only make backticks special when `codeSpans` or `fencedCode` are enabled.
