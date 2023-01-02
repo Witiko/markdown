@@ -16,11 +16,13 @@
 \def\markdownRendererBracketedSpanAttributeContextEnd{%
   \TYPE{bracketedSpanAttributeContextEnd}}%
 \def\markdownRendererDocumentBegin{%
-  \TYPE{documentBegin}}%
-\def\markdownRendererDocumentBegin{%
+  \begingroup
+  \catcode"09=12%  Prevent spaces (U+0009) from folding into a single space token
+  \catcode"20=12%  Prevent tabs (U+0020) from folding into a single space token
   \TYPE{documentBegin}}%
 \def\markdownRendererDocumentEnd{%
-  \TYPE{documentEnd}}%
+  \TYPE{documentEnd}%
+  \endgroup}%
 \def\markdownRendererInterblockSeparator#1{%
   \TYPE{interblockSeparator}}%
 \def\markdownRendererLineBreak#1{%

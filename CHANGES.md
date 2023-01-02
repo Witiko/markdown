@@ -13,6 +13,10 @@ Default Renderer Prototypes:
 - Use `paralist` LaTeX package to define default renderer prototypes for
   fancy lists when `fancyList` Lua option is enabled. (#241)
 
+Unit Tests:
+
+- Do not fold tabs and spaces into a single space token. (#242)
+
 Speed Improvements:
 
 - Only make backticks special when `codeSpans` or `fencedCode` are enabled.
