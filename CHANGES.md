@@ -13,6 +13,10 @@ Speed Improvements:
 - Only make backticks special when `codeSpans` or `fencedCode` are enabled.
   (#239)
 
+Continuous Integration:
+
+- Fix ownership of repository before running Docker image. (#240)
+
 ## 2.19.0 (2022-12-23)
 
 Development:
