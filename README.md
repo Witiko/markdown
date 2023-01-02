@@ -165,9 +165,8 @@ For further information, consult one of the following:
 1. The user manual for either [the released version][manual-tex-live] or
    [the latest development version][manual-latest], which can be produced by
    interpreting the `markdown.ins` file using a Unicode-aware TeX engine, such
-   as XeTeX (`xetex markdown.ins`) or LuaTeX (`luatex markdown.ins`). The
-   manual will reside in the file `markdown.md` and the CSS stylesheet
-   `markdown.css`.
+   as LuaTeX (`luatex markdown.ins`). The manual will reside in the file
+   `markdown.md` and the CSS stylesheet `markdown.css`.
 2. The technical documentation for either [the released version][techdoc-tex-live]
    or [the latest development version][techdoc-latest], which can be typeset by
    running the [LaTeXMK][] tool on the `markdown.dtx` file (`latexmk
@@ -198,6 +197,8 @@ For further information, consult one of the following:
     - [Five Years of Markdown in LaTeX: What, Why, How, and Whereto][pv212-fall2020] (in Czech), and
     - [Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX][tb131-video] ([slides][tb131-slides]).
     - [A Gentle Introduction to Markdown for Writers][tb134-video] ([slides][tb134-slides], [example][tb134-example]).
+7. Theses by my students:
+    - [Generic TeX Writer for the Pandoc Document Converter][thesis-umhg5]
 
  [overleaf-1]: https://www.overleaf.com/learn/latex/Articles/How_to_write_in_Markdown_on_Overleaf       "How to write in Markdown on Overleaf"
  [overleaf-2]: https://www.overleaf.com/learn/latex/Articles/Markdown_into_LaTeX_with_Style             "Markdown into LaTeX with Style"
@@ -239,12 +240,14 @@ For further information, consult one of the following:
  [techdoc-latest]:    https://github.com/Witiko/markdown/releases/download/latest/markdown.pdf  "A Markdown Interpreter for TeX"
  [techdoc-tex-live]:  https://mirrors.ctan.org/macros/generic/markdown/markdown.pdf             "A Markdown Interpreter for TeX"
 
+ [thesis-umhg5]: https://is.muni.cz/th/umhg5/?lang=en "Generic TeX Writer for the Pandoc Document Converter"
+
 Acknowledgements
 ----------------
 
 | Logo          | Acknowledgement |
 | ------------- | --------------- |
-| [<img width="150" src="https://www.fi.muni.cz/images/fi-logo.png">][fimu] | I gratefully acknowledge the funding from the [Faculty of Informatics][fimu] at the [Masaryk University][mu] in Brno, Czech Republic, for the development of the Markdown package. |
+| [<img width="150" src="https://www.fi.muni.cz/images/fi-logo.png">][fimu] | I gratefully acknowledge the funding from the [Faculty of Informatics][fimu] at the [Masaryk University][mu] in Brno, Czech Republic, for the development of the Markdown package in projects [MUNI/33/12/2015][], [MUNI/33/1784/2020][], [MUNI/33/0776/2021][], [MUNI/33/1654/2022][], and [MUNI/33/1658/2022][]. |
 | [<img width="150" src="https://cdn.overleaf.com/img/ol-brand/overleaf_og_logo.png">][overleaf] | Extensive user documentation for the Markdown package was kindly written by [Lian Tze Lim][liantze] and published by [Overleaf][]. |
 | [<img width="150" src="https://pbs.twimg.com/profile_images/1004769879319334912/6Bh1UthD.jpg">][omedym] | Support for content slicing (Lua options [`shiftHeadings`][option-shift-headings] and [`slice`][option-slice]) and pipe tables (Lua options [`pipeTables`][option-pipe-tables] and [`tableCaptions`][option-table-captions]) was graciously sponsored by [David Vins][dvins] and [Omedym][]. |
 
@@ -258,6 +261,12 @@ Acknowledgements
  [option-slice]:          https://mirrors.ctan.org/macros/generic/markdown/markdown.html#slice                "Markdown Package User Manual"
  [option-table-captions]: https://mirrors.ctan.org/macros/generic/markdown/markdown.html#option-tablecaptions "Markdown Package User Manual"
 
+ [MUNI/33/12/2015]:   https://www.muni.cz/en/research/projects/32984 "A Markdown Interpreter in TeX"
+ [MUNI/33/1784/2020]: https://www.muni.cz/en/research/projects/58488 "Extension of the Input Formats of the Markdown Tool"
+ [MUNI/33/0776/2021]: https://www.muni.cz/en/research/projects/62168 "Preparation of Templates for Typesetting Books and Publishing Collaterals with the Markdown TeX Package"
+ [MUNI/33/1654/2022]: https://www.muni.cz/en/research/projects/69763 "An Implementation of the CommonMark Standard into the Markdown Package for TeX"
+ [MUNI/33/1658/2022]: https://www.muni.cz/en/research/projects/69762 "Syntax Extensions of the Markdown Package for TeX"
+
 Contributing to the Development of Markdown
 -------------------------------------------
 
@@ -269,11 +278,11 @@ Some useful commands, such as building the release archives and typesetting
 the documentation, are placed in the `Makefile` file for ease of maintenance.
 
 When the file `markdown.ins` is interpreted using a Unicode-aware TeX engine,
-such as XeTeX (`xetex markdown.ins`) or LuaTeX (`luatex markdown.ins`), several
-files are produced from the `markdown.dtx` document. The `make base` command
-is provided by `Makefile` for convenience. In `markdown.dtx`, the boundaries
-between the produced files are marked up using an XML-like syntax provided by
-the [l3docstrip][] plain TeX package.
+such LuaTeX (`luatex markdown.ins`), several files are produced from the
+`markdown.dtx` document. The `make base` command is provided by `Makefile` for
+convenience. In `markdown.dtx`, the boundaries between the produced files are
+marked up using an XML-like syntax provided by the [l3docstrip][] plain TeX
+package.
 
 Running the [LaTeXMK][] tool on the `markdown.dtx` file
 (`latexmk markdown.dtx`) after the Markdown package has been

@@ -1,10 +1,36 @@
 # Changes
 
+## 2.20.0
+
+Documentation:
+
+- Add @drehak's thesis to `README.md`. (204a18c, aec9b44, cda53fb)
+- Update examples for options `bracketedSpans` and `fencedDivs`.
+  (499c65a, 532cdb8)
+
+Default Renderer Prototypes:
+
+- Use `paralist` LaTeX package to define default renderer prototypes for
+  fancy lists when `fancyList` Lua option is enabled. (#241)
+
+Unit Tests:
+
+- Do not fold tabs and spaces into a single space token. (#242)
+
+Speed Improvements:
+
+- Only make backticks special when `codeSpans` or `fencedCode` are enabled.
+  (#239)
+
+Continuous Integration:
+
+- Fix ownership of repository before running Docker image. (#240)
+
 ## 2.19.0 (2022-12-23)
 
 Development:
 
-- Add support for fenced divs and bracketed spans. (#207)
+- Add support for fenced divs and bracketed spans. (#126, #207)
 
 Fixes:
 
@@ -18,7 +44,7 @@ Refactoring:
 
 Documentation:
 
-- Link article [*High-Level Languages for
+- Add article [*High-Level Languages for
   TeX*](https://www.doi.org/10.5300/2022-1-4/35) (in Czech) from
   CSTUG Bulletin 1–4/2022 to `README.md`. (authored by @witiko, a2bbdea)
 

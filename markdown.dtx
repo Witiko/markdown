@@ -1213,7 +1213,8 @@ local md5 = require("md5")
 %
 %:    A package that provides the `compactitem`, `compactenum`, and
 %     `compactdesc` macros for the typesetting of tight bulleted lists,
-%     ordered lists, and definition lists.
+%     ordered lists, and definition lists as well as the rendering of
+%     fancy lists.
 %
 % \pkg{ifthen}
 %
@@ -3290,6 +3291,7 @@ following content:
 
 \begin{markdown}
 A paragraph.
+
 ::: {.identifier}
 A fenced div.
 :::
@@ -3297,9 +3299,10 @@ A fenced div.
 
 \begin{markdown*}{blankBeforeDivFence}
 A paragraph.
-```
+
+::: {.identifier}
 Not a fenced div.
-```
+:::
 \end{markdown*}
 
 \end{document}
@@ -3315,7 +3318,9 @@ following text:
 >
 > A fenced div.
 >
-> A paragraph. ::: {.identifier} Not a fenced div. :::
+> A paragraph.
+>
+> ::: {.identifier} Not a fenced div. :::
 
 %</manual-options>
 %<*tex>
@@ -3612,10 +3617,10 @@ following content:
         renderers = {
           attributeKeyValue = {
             \str_if_eq:nnT
-              { #1 }
+              { ##1 }
               { color }
               {
-                 \color_select:n { #2 }
+                 \color_select:n { ##2 }
               }
           },
         },
@@ -3636,12 +3641,12 @@ Here is some [colored text]{color=red}.
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-lualatex --shell-escape document.tex
+lualatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
 
-> Here is some [colored text]{color=red}.
+> Here is some <span style="color: red">colored text</span>.
 
 %</manual-options>
 %<*tex>
@@ -5437,35 +5442,6 @@ defaultOptions.fencedCode = true
 
 % \end{markdown}
 % \iffalse
-
-##### \LaTeX{} Example {.unnumbered}
-
-Using a text editor, create a text document named `document.tex` with the
-following content:
-```` tex
-\documentclass{article}
-\usepackage[fencedDivs]{markdown}
-\begin{document}
-\begin{markdown}{slice=special}
-Here is a regular paragraph.
-
-::::: {#special}
-Here is a special paragraph.
-:::::
-
-And here is another regular paragraph.
-\end{markdown}
-\end{document}
-```````
-Next, invoke LuaTeX from the terminal:
-``` sh
-lualatex --shell-escape document.tex
-``````
-A PDF document named `document.pdf` should be produced and contain the
-following text:
-
-> Here is a special paragraph.
-
 %</manual-options>
 %<*tex>
 % \fi
@@ -10252,7 +10228,7 @@ following text:
 %
 % \begin{markdown}
 
-#### Bracketed Spans Context Renderers
+#### Bracketed Spans Attribute Context Renderers
 The following macros are only produced, when the \Opt{bracketedSpans} option is
 enabled.
 
@@ -10274,8 +10250,8 @@ following content:
 \usepackage[bracketedSpans]{markdown}
 \markdownSetup{
   renderers = {
-    fencedDivAttributeContextBegin = {(},
-    fencedDivAttributeContextEnd = {)},
+    bracketedSpanAttributeContextBegin = {(},
+    bracketedSpanAttributeContextEnd = {)},
   },
 }
 \begin{document}
@@ -12160,7 +12136,7 @@ corresponds to the emphasized span of text.
 %
 % \begin{markdown}
 
-#### Fenced Div Context Renderers
+#### Fenced Div Attribute Context Renderers
 The following macros are only produced, when the \Opt{fencedDiv} option is
 enabled.
 
@@ -12179,7 +12155,7 @@ Using a text editor, create a text document named `document.tex` with the
 following content:
 ``` tex
 \documentclass{article}
-\usepackage[fencedDiv]{markdown}
+\usepackage[fencedDivs]{markdown}
 \markdownSetup{
   renderers = {
     fencedDivAttributeContextBegin = {%
@@ -20792,7 +20768,7 @@ function M.writer.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.pack(name)
-    return [[\input ]] .. name .. [[\relax]]
+    return [[\input{]] .. name .. [[}\relax]]
   end
 %    \end{macrocode}
 % \par
@@ -22871,7 +22847,6 @@ function M.reader.new(writer, options)
     end
 
     self.add_special_character("*")
-    self.add_special_character("`")
     self.add_special_character("[")
     self.add_special_character("]")
     self.add_special_character("<")
@@ -23028,6 +23003,8 @@ function M.reader.new(writer, options)
 
     if not options.codeSpans then
       syntax.Code = parsers.fail
+    else
+      self.add_special_character("`")
     end
 
     if not options.html then
@@ -23921,7 +23898,7 @@ M.extensions.fenced_code = function(blank_before_code_fence)
 % \par
 % \begin{markdown}
 %
-% Define \luamdef{writer->codeFence} as a function that will transform an
+% Define \luamdef{writer->fencedCode} as a function that will transform an
 % input fenced code block `s` with the infostring `i` to the output
 % format.
 %
@@ -23965,6 +23942,7 @@ M.extensions.fenced_code = function(blank_before_code_fence)
         return previous_pattern + fencestart
       end)
 
+      self.add_special_character("`")
       self.add_special_character("~")
     end
   }
@@ -26693,14 +26671,16 @@ end
 %    \end{macrocode}
 % \par
 % \begin{markdown}%
-% If the \Opt{tightLists} Lua option is disabled or the current document class
-% is \pkg{beamer}, do not load the \pkg{paralist} package.
+% If either the \Opt{tightLists} or the \Opt{fancyLists} Lua option is enabled
+% and the current document class is not \pkg{beamer}, then load the
+% \pkg{paralist} package.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\markdownIfOption{tightLists}{
-  \@ifclassloaded{beamer}{}{\RequirePackage{paralist}}%
-}{}
+\@ifclassloaded{beamer}{}{%
+  \markdownIfOption{tightLists}{\RequirePackage{paralist}}{}%
+  \markdownIfOption{fancyLists}{\RequirePackage{paralist}}{}%
+}
 %    \end{macrocode}
 % \par
 % \begin{markdown}
