@@ -20765,7 +20765,7 @@ function M.writer.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.pack(name)
-    return [[\input ]] .. name .. [[\relax]]
+    return [[\input{]] .. name .. [[}\relax]]
   end
 %    \end{macrocode}
 % \par

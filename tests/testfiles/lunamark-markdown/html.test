@@ -38,7 +38,7 @@ inputBlockHtmlElement: ./_markdown_test/db2433856814aefaa62794558a22a63c.verbati
 interblockSeparator
 emphasis: There is (inlineHtmlTag: <inline tag="value">)(inlineHtmlTag: </inline>) support.(inlineHtmlTag: <br/>)
 emphasis: There is (inlineHtmlComment: (emphasis: comment)) support.
-emphasis: There is support.
+emphasis: There is  support.
 interblockSeparator
 blockHtmlCommentBegin
 emphasis: block comment
