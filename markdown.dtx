@@ -1213,7 +1213,8 @@ local md5 = require("md5")
 %
 %:    A package that provides the `compactitem`, `compactenum`, and
 %     `compactdesc` macros for the typesetting of tight bulleted lists,
-%     ordered lists, and definition lists.
+%     ordered lists, and definition lists as well as the rendering of
+%     fancy lists.
 %
 % \pkg{ifthen}
 %
@@ -26667,14 +26668,16 @@ end
 %    \end{macrocode}
 % \par
 % \begin{markdown}%
-% If the \Opt{tightLists} Lua option is disabled or the current document class
-% is \pkg{beamer}, do not load the \pkg{paralist} package.
+% If either the \Opt{tightLists} or the \Opt{fancyLists} Lua option is enabled
+% and the current document class is not \pkg{beamer}, then load the
+% \pkg{paralist} package.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\markdownIfOption{tightLists}{
-  \@ifclassloaded{beamer}{}{\RequirePackage{paralist}}%
-}{}
+\@ifclassloaded{beamer}{}{%
+  \markdownIfOption{tightLists}{\RequirePackage{paralist}}{}%
+  \markdownIfOption{fancyLists}{\RequirePackage{paralist}}{}%
+}
 %    \end{macrocode}
 % \par
 % \begin{markdown}
