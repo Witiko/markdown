@@ -165,9 +165,8 @@ For further information, consult one of the following:
 1. The user manual for either [the released version][manual-tex-live] or
    [the latest development version][manual-latest], which can be produced by
    interpreting the `markdown.ins` file using a Unicode-aware TeX engine, such
-   as XeTeX (`xetex markdown.ins`) or LuaTeX (`luatex markdown.ins`). The
-   manual will reside in the file `markdown.md` and the CSS stylesheet
-   `markdown.css`.
+   as LuaTeX (`luatex markdown.ins`). The manual will reside in the file
+   `markdown.md` and the CSS stylesheet `markdown.css`.
 2. The technical documentation for either [the released version][techdoc-tex-live]
    or [the latest development version][techdoc-latest], which can be typeset by
    running the [LaTeXMK][] tool on the `markdown.dtx` file (`latexmk
@@ -279,11 +278,11 @@ Some useful commands, such as building the release archives and typesetting
 the documentation, are placed in the `Makefile` file for ease of maintenance.
 
 When the file `markdown.ins` is interpreted using a Unicode-aware TeX engine,
-such as XeTeX (`xetex markdown.ins`) or LuaTeX (`luatex markdown.ins`), several
-files are produced from the `markdown.dtx` document. The `make base` command
-is provided by `Makefile` for convenience. In `markdown.dtx`, the boundaries
-between the produced files are marked up using an XML-like syntax provided by
-the [l3docstrip][] plain TeX package.
+such LuaTeX (`luatex markdown.ins`), several files are produced from the
+`markdown.dtx` document. The `make base` command is provided by `Makefile` for
+convenience. In `markdown.dtx`, the boundaries between the produced files are
+marked up using an XML-like syntax provided by the [l3docstrip][] plain TeX
+package.
 
 Running the [LaTeXMK][] tool on the `markdown.dtx` file
 (`latexmk markdown.dtx`) after the Markdown package has been
