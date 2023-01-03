@@ -9,10 +9,22 @@
       \TYPE{- key:                 #1}%
       \TYPE{- value:               #2}%
       \TYPE{END attributeKeyValue}},
+    fencedDivAttributeContextBegin = {%
+      \TYPE{fencedDivAttributeContextBegin}},
+    fencedDivAttributeContextEnd = {%
+      \TYPE{fencedDivAttributeContextEnd}},
+    bracketedSpanAttributeContextBegin = {%
+      \TYPE{bracketedSpanAttributeContextBegin}},
+    bracketedSpanAttributeContextEnd = {%
+      \TYPE{bracketedSpanAttributeContextEnd}},
     documentBegin = {%
+      \begingroup
+      \catcode"09=12%  Prevent spaces (U+0009) from folding into a single space token
+      \catcode"20=12%  Prevent tabs (U+0020) from folding into a single space token
       \TYPE{documentBegin}},
     documentEnd = {%
-      \TYPE{documentEnd}},
+      \TYPE{documentEnd}%
+      \endgroup},
     interblockSeparator = {%
       \TYPE{interblockSeparator}%
       \GOBBLE},

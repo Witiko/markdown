@@ -1,6 +1,6 @@
 % \iffalse
 %<*driver>
-\documentclass[nohyperref]{ltxdockit}
+\documentclass{ltxdockit}
 \usepackage[american]{babel}
 \usepackage{amsmath,btxdockit,doc,fancyvrb,graphicx,hologo,microtype,minted}
 
@@ -1145,11 +1145,11 @@ local md5 = require("md5")
 %
 %:    A library that provides access to the filesystem via \acro{os}-specific
 %     syscalls. It is used by the plain \TeX{} code to create the cache
-%     directory specified by the \mref{markdownOptionCacheDir} macro before
-%     interfacing with the \pkg{Lunamark} library. \pkg{Lua File System} is
-%     included in all releases of Lua\TeX{} (\TeX Live${}\geq{}2008$).
+%     directory specified by the \Opt{cacheDir} option before interfacing with
+%     the \pkg{Lunamark} library. \pkg{Lua File System} is included in all
+%     releases of Lua\TeX{} (\TeX Live${}\geq{}2008$).
 %
-%     The plain \TeX{} code makes use of the \luamref{isdir} method that was added
+%     The plain \TeX{} code makes use of the `isdir` method that was added
 %     to the \pkg{Lua File System} library by the Lua\TeX{} engine
 %     developers~[@luatex21, Section 4.2.4].
 %
@@ -1159,7 +1159,7 @@ local md5 = require("md5")
 % Unless you convert markdown documents to \TeX{} manually using the Lua
 % command-line interface (see Section <#sec:lua-cli-interface>), the plain
 % \TeX{} part of the package will require that either the Lua\TeX{}
-% \mref{directlua} primitive or the shell access file stream 18 is available in
+% `\directlua` primitive or the shell access file stream 18 is available in
 % your \TeX{} engine. If only the shell access file stream is available in your
 % \TeX{} engine (as is the case with \hologo{pdfTeX} and \Hologo{XeTeX}) or if
 % you enforce the use of shell using the \mref{markdownMode} macro, then unless
@@ -1202,19 +1202,19 @@ local md5 = require("md5")
 %
 % \pkg{url}
 %
-%:    A package that provides the \mref{url} macro for the typesetting of
-%     links.
+%:    A package that provides the `\url` macro for the typesetting of links.
 %
 % \pkg{graphicx}
 %
-%:    A package that provides the \mref{includegraphics} macro for the typesetting
+%:    A package that provides the `\includegraphics` macro for the typesetting
 %     of images.
 %
 % \pkg{paralist}
 %
-%:    A package that provides the \envmref{compactitem}, \envmref{compactenum}, and
-%     \envmref{compactdesc} macros for the typesetting of tight bulleted lists,
-%     ordered lists, and definition lists.
+%:    A package that provides the `compactitem`, `compactenum`, and
+%     `compactdesc` macros for the typesetting of tight bulleted lists,
+%     ordered lists, and definition lists as well as the rendering of
+%     fancy lists.
 %
 % \pkg{ifthen}
 %
@@ -1224,18 +1224,18 @@ local md5 = require("md5")
 %
 % \pkg{fancyvrb}
 %
-%:    A package that provides the \mref{VerbatimInput} macros for the verbatim
+%:    A package that provides the `\VerbatimInput` macros for the verbatim
 %     inclusion of files containing code.
 %
 % \pkg{csvsimple}
 %
-%:    A package that provides the \mref{csvautotabular} macro for typesetting
+%:    A package that provides the `\csvautotabular` macro for typesetting
 %     \acro{csv} files in the default renderer prototypes for iA\,Writer
 %     content blocks.
 %
 % \pkg{gobble}
 %
-%:    A package that provides the \mref{\@gobblethree} \TeX{} command that
+%:    A package that provides the `\@gobblethree` \TeX{} command that
 %     is used in the default renderer prototype for citations. The package
 %     is included in \TeX Live${}\geq{}2016$.
 %
@@ -1680,7 +1680,7 @@ local walkable_syntax = {
 % \luamref{reader->insert_pattern} with `"Inline after Emph"` (or `"Inline
 % before Link"`) and `pattern` as the arguments.
 %
-% The \luamdef{reader->add_special_character} method adds a new character with
+% The \luamref{reader->add_special_character} method adds a new character with
 % special meaning to the grammar of markdown. The method receives the character
 % as its only argument.
 %
@@ -2569,7 +2569,7 @@ defaultOptions.debugExtensionsFileName = "debug-extensions.json"
 
      The frozen cache makes it possible to later typeset a plain \TeX{}
      document that contains markdown documents without invoking Lua using
-     the \mref{markdownOptionFrozenCache} plain \TeX{} option. As a result, the
+     the \Opt{frozenCache} plain \TeX{} option. As a result, the
      plain \TeX{} document becomes more portable, but further changes in the
      order and the content of markdown documents will not be reflected.
 
@@ -3048,7 +3048,7 @@ following content:
   convert = markdown.new({fencedCode = true})
   input = "A paragraph."   .. newline ..
           "```"            .. newline ..
-          "A code fence."  .. newline ..
+          "A fenced code." .. newline ..
           "```"            .. newline
   tex.sprint(convert(input))
 
@@ -3056,7 +3056,7 @@ following content:
     fencedCode = true, blankBeforeCodeFence = true})
   input = "A paragraph."       .. newline ..
           "```"                .. newline ..
-          "Not a code fence."  .. newline ..
+          "Not a fenced code." .. newline ..
           "```"                .. newline
   tex.sprint(convert(input)) }
 \bye
@@ -3071,10 +3071,10 @@ following text:
 > A paragraph.
 >
 > ```
-> A code fence.
+> A fenced code.
 > ```
 >
-> A paragraph. ``` Not a code fence. ```
+> A paragraph. ``` Not a fenced code. ```
 
 ##### Lua CLI Example {.unnumbered}
 
@@ -3129,7 +3129,7 @@ following content:
 \markdownBegin
 A paragraph.
 ```
-A code fence.
+A fenced code.
 ```
 \markdownEnd
 
@@ -3137,7 +3137,7 @@ A code fence.
 \markdownBegin
 A paragraph.
 ```
-Not a code fence.
+Not a fenced code.
 ```
 \markdownEnd
 
@@ -3153,10 +3153,10 @@ following text:
 > A paragraph.
 >
 > ```
-> A code fence.
+> A fenced code.
 > ```
 >
-> A paragraph. ``` Not a code fence. ```
+> A paragraph. ``` Not a fenced code. ```
 
 ##### \LaTeX{} Example {.unnumbered}
 
@@ -3170,14 +3170,14 @@ following content:
 \begin{markdown}
 A paragraph.
 ```
-A code fence.
+A fenced code.
 ```
 \end{markdown}
 
 \begin{markdown*}{blankBeforeCodeFence}
 A paragraph.
 ```
-Not a code fence.
+Not a fenced code.
 ```
 \end{markdown*}
 
@@ -3193,10 +3193,10 @@ following text:
 > A paragraph.
 >
 > ```
-> A code fence.
+> A fenced code.
 > ```
 >
-> A paragraph. ``` Not a code fence. ```
+> A paragraph. ``` Not a fenced code. ```
 
 ##### \Hologo{ConTeXt} Example {.unnumbered}
 
@@ -3210,7 +3210,7 @@ following content:
 \startmarkdown
 A paragraph.
 ```
-A code fence.
+A fenced code.
 ```
 \stopmarkdown
 
@@ -3218,7 +3218,7 @@ A code fence.
 \startmarkdown
 A paragraph.
 ```
-Not a code fence.
+Not a fenced code.
 ```
 \stopmarkdown
 
@@ -3234,10 +3234,10 @@ following text:
 > A paragraph.
 >
 > ```
-> A code fence.
+> A fenced code.
 > ```
 >
-> A paragraph. ``` Not a code fence. ```
+> A paragraph. ``` Not a fenced code. ```
 
 %</manual-options>
 %<*tex>
@@ -3254,6 +3254,89 @@ following text:
 % \fi
 %  \begin{macrocode}
 defaultOptions.blankBeforeCodeFence = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
+#### Option `blankBeforeDivFence`
+
+`blankBeforeDivFence` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{blankBeforeDivFence}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Require a blank line before the closing fence of a fenced div.
+
+     false
+
+     :  Do not require a blank line before the closing fence of a fenced div.
+
+% \end{markdown}
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+```` tex
+\documentclass{article}
+\usepackage[fencedDivs]{markdown}
+\begin{document}
+
+\begin{markdown}
+A paragraph.
+
+::: {.identifier}
+A fenced div.
+:::
+\end{markdown}
+
+\begin{markdown*}{blankBeforeDivFence}
+A paragraph.
+
+::: {.identifier}
+Not a fenced div.
+:::
+\end{markdown*}
+
+\end{document}
+````````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> A paragraph.
+>
+> A fenced div.
+>
+> A paragraph.
+>
+> ::: {.identifier} Not a fenced div. :::
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { blankBeforeDivFence }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.blankBeforeDivFence = false
 %    \end{macrocode}
 % \par
 % \iffalse
@@ -3486,6 +3569,100 @@ following text:
 % \fi
 %  \begin{macrocode}
 defaultOptions.blankBeforeHeading = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
+#### Option `bracketedSpans`
+
+`bracketedSpans` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{bracketedSpans}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Enable the Pandoc bracketed spans extension:
+
+        ``` md
+        [This is *some text*]{.class key="val"}
+        ``````
+
+:    false
+
+     :  Disable the Pandoc bracketed spans extension:
+
+% \end{markdown}
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+```` tex
+\documentclass{article}
+\usepackage[bracketedSpans]{markdown}
+\usepackage{expl3}
+\ExplSyntaxOn
+\markdownSetup{
+  renderers = {
+    bracketedSpanAttributeContextBegin = {
+      \group_begin:
+      \color_group_begin:
+      \markdownSetup{
+        renderers = {
+          attributeKeyValue = {
+            \str_if_eq:nnT
+              { ##1 }
+              { color }
+              {
+                 \color_select:n { ##2 }
+              }
+          },
+        },
+      }
+    },
+    bracketedSpanAttributeContextEnd = {
+      \color_group_end:
+      \group_end:
+    },
+  },
+}
+\ExplSyntaxOff
+\begin{document}
+\begin{markdown}
+Here is some [colored text]{color=red}.
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> Here is some <span style="color: red">colored text</span>.
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { bracketedSpans }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.bracketedSpans = false
 %    \end{macrocode}
 % \par
 % \iffalse
@@ -5238,6 +5415,54 @@ defaultOptions.fencedCode = true
 %</lua,lua-cli>
 %<*manual-options>
 
+#### Option `fencedDivs`
+
+`fencedDivs` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{fencedDivs}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Enable the Pandoc fenced divs extension:
+
+        ``` md
+        ::::: {#special .sidebar}
+        Here is a paragraph.
+
+        And another.
+        :::::
+        ``````
+
+:    false
+
+     :  Disable the Pandoc fenced divs extension:
+
+% \end{markdown}
+% \iffalse
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { fencedDivs }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.fencedDivs = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
 #### Option `finalizeCache`
 
 `finalizeCache` (default value: `false`)
@@ -5253,7 +5478,7 @@ defaultOptions.fencedCode = true
 
      The frozen cache makes it possible to later typeset a plain \TeX{}
      document that contains markdown documents without invoking Lua using
-     the \mref{markdownOptionFrozenCache} plain \TeX{} option. As a result, the
+     the \Opt{frozenCache} plain \TeX{} option. As a result, the
      plain \TeX{} document becomes more portable, but further changes in the
      order and the content of markdown documents will not be reflected.
 
@@ -9039,7 +9264,7 @@ pdftex --shell-escape document.tex
 % \input markdown
 % ```````
 % \noindent It is expected that the special plain \TeX{} characters have the
-% expected category codes, when \mref{input}ting the file.
+% expected category codes, when `\input`ting the file.
 %
 %### Typesetting Markdown {#textypesetting}
 %
@@ -9205,7 +9430,7 @@ following code in your plain \TeX{} document:
 %#### Finalizing and Freezing the Cache
 % The \mdef{markdownOptionFinalizeCache} option corresponds to the Lua
 % interface \Opt{finalizeCache} option, which creates an output file
-% \mref{markdownOptionFrozenCacheFileName} (frozen cache) that contains a mapping
+% \Opt{frozenCacheFileName} (frozen cache) that contains a mapping
 % between an enumeration of the markdown documents in the plain \TeX{} document
 % and their auxiliary files cached in the \Opt{cacheDir} directory.
 %
@@ -9218,7 +9443,7 @@ following code in your plain \TeX{} document:
 % \fi
 %
 The \mdef{markdownOptionFrozenCache} option uses the mapping previously
-% created by the \mref{markdownOptionFinalizeCache} option,
+% created by the \Opt{finalizeCache} option,
 % \iffalse
 created by the Lua interface \Opt{finalizeCache} option,
 % \fi
@@ -9252,12 +9477,12 @@ options is as follows:
 
 1. Remove the \Opt{cacheDir} cache directory with stale auxiliary cache
    files.
-% 2. Enable the \mref{markdownOptionFinalizeCache} option.
+% 2. Enable the \Opt{finalizeCache} option.
 % \iffalse
 2. Enable the \Opt{finalizeCache} option.
 % \fi
 3. Typeset the plain \TeX{} document to populate and finalize the cache.
-4. Enable the \mref{markdownOptionFrozenCache} option.
+4. Enable the \Opt{frozenCache} option.
 5. Publish the source code of the plain \TeX{} document and the
    \Opt{cacheDir} directory.
 
@@ -9276,13 +9501,13 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 %
 % The \mdef{markdownOptionHelperScriptFileName} macro sets the filename of the
 % helper Lua script file that is created during the conversion from markdown to
-% plain \TeX{} in \TeX{} engines without the \mref{directlua} primitive. It
-% defaults to \mref{jobname}`.markdown.lua`, where \mref{jobname} is the base name
+% plain \TeX{} in \TeX{} engines without the `\directlua` primitive. It
+% defaults to `\jobname.markdown.lua`, where `\jobname` is the base name
 % of the document being typeset.
 %
 % The expansion of this macro must not contain quotation marks (`"`) or
 % backslash symbols (`\`). Mind that \TeX{} engines tend to
-% put quotation marks around \mref{jobname}, when it contains spaces.
+% put quotation marks around `\jobname`, when it contains spaces.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -9294,10 +9519,10 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 % \par
 % \begin{markdown}
 %
-% The \mref{markdownOptionHelperScriptFileName} macro has been deprecated and
+% The \Opt{helperScriptFileName} macro has been deprecated and
 % will be removed in Markdown 3.0.0. To control the filename of the helper Lua
-% script file, use the \mref{g_luabridge_helper_script_filename_str} macro
-% from the \pkg{lt3luabridge} package.
+% script file, use the `\g_luabridge_helper_script_filename_str` macro from the
+% \pkg{lt3luabridge} package.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -9311,8 +9536,8 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 %
 % The \mdef{markdownOptionInputTempFileName} macro sets the filename of the
 % temporary input file that is created during the buffering of markdown text
-% from a \TeX{} source. It defaults to \mref{jobname}`.markdown.in`. The same
-% limitations as in the case of the \mref{markdownOptionHelperScriptFileName}
+% from a \TeX{} source. It defaults to `\jobname.markdown.in`. The same
+% limitations as in the case of the \Opt{helperScriptFileName}
 % macro apply here.
 %
 % \end{markdown}
@@ -9328,8 +9553,8 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 % The \mdef{markdownOptionOutputTempFileName} macro sets the filename of the
 % temporary output file that is created during the conversion from markdown to
 % plain \TeX{} in \mref{markdownMode} other than `2` It defaults to
-% \mref{jobname}`.markdown.out`. The same limitations apply here as in the case
-% of the \mref{markdownOptionHelperScriptFileName} macro.
+% `\jobname.markdown.out`. The same limitations apply here as in the case
+% of the \Opt{helperScriptFileName} macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -9341,7 +9566,7 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 % \par
 % \begin{markdown}
 %
-% The \mref{markdownOptionOutputTempFileName} macro has been deprecated and
+% The \Opt{outputTempFileName} macro has been deprecated and
 % will be removed in Markdown 3.0.0.
 %
 % \end{markdown}
@@ -9357,8 +9582,8 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 % The \mdef{markdownOptionErrorTempFileName} macro sets the filename of the
 % temporary output file that is created when a Lua error is encountered during
 % the conversion from markdown to plain \TeX{} in \mref{markdownMode} other than
-% `2`. It defaults to \mref{jobname}`.markdown.err`. The same limitations
-% apply here as in the case of the \mref{markdownOptionHelperScriptFileName}
+% `2`. It defaults to `\jobname.markdown.err`. The same limitations
+% apply here as in the case of the \Opt{helperScriptFileName}
 % macro.
 %
 % \end{markdown}
@@ -9371,10 +9596,10 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 % \par
 % \begin{markdown}
 %
-% The \mref{markdownOptionErrorTempFileName} macro has been deprecated and
+% The \Opt{errorTempFileName} macro has been deprecated and
 % will be removed in Markdown 3.0.0. To control the filename of the temporary
-% file for Lua errors, use the \mref{g_luabridge_error_output_filename_str}
-% macro from the \pkg{lt3luabridge} package.
+% file for Lua errors, use the `\g_luabridge_error_output_filename_str` macro
+% from the \pkg{lt3luabridge} package.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -9395,7 +9620,7 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 % your \TeX{} engine for the package to function correctly. We need this macro
 % to make the Lua implementation aware where it should store the helper files.
 % The same limitations apply here as in the case of the
-% \mref{markdownOptionHelperScriptFileName} macro.
+% \Opt{helperScriptFileName} macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -9416,7 +9641,7 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 %
 % For the macros that correspond to the non-boolean options recognized by the
 % Lua interface, the same limitations apply here in the case of the
-% \mref{markdownOptionHelperScriptFileName} macro.
+% \Opt{helperScriptFileName} macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -9991,6 +10216,86 @@ following text:
 \prop_gput:Nnn
   \g_@@_renderer_arities_prop
   { blockQuoteEnd }
+  { 0 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
+#### Bracketed Spans Attribute Context Renderers
+The following macros are only produced, when the \Opt{bracketedSpans} option is
+enabled.
+
+The \mdef{markdownRendererBracketedSpanAttributeContextBegin} and
+\mdef{markdownRendererBracketedSpanAttributeContextEnd} macros represent the
+beginning and the end of an inline bracketed span in which the attributes of
+the span apply. The macros receive no arguments.
+
+% \end{markdown}
+%
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[bracketedSpans]{markdown}
+\markdownSetup{
+  renderers = {
+    bracketedSpanAttributeContextBegin = {(},
+    bracketedSpanAttributeContextEnd = {)},
+  },
+}
+\begin{document}
+\begin{markdown}
+
+[foo [bar]{#identifier}]{key=value} [baz]{.class_name}
+
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> (foo (bar)) (baz)
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererBracketedSpanAttributeContextBegin{%
+  \markdownRendererBracketedSpanAttributeContextBeginPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { bracketedSpanAttributeContextBegin }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { bracketedSpanAttributeContextBegin }
+  { 0 }
+\ExplSyntaxOff
+\def\markdownRendererBracketedSpanAttributeContextEnd{%
+  \markdownRendererBracketedSpanAttributeContextEndPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { bracketedSpanAttributeContextEnd }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { bracketedSpanAttributeContextEnd }
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
@@ -11831,6 +12136,126 @@ corresponds to the emphasized span of text.
 %
 % \begin{markdown}
 
+#### Fenced Div Attribute Context Renderers
+The following macros are only produced, when the \Opt{fencedDiv} option is
+enabled.
+
+The \mdef{markdownRendererFencedDivAttributeContextBegin} and
+\mdef{markdownRendererFencedDivAttributeContextEnd} macros represent the beginning
+and the end of a div in which the attributes of the div apply. The macros
+receive no arguments.
+
+% \end{markdown}
+%
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[fencedDivs]{markdown}
+\markdownSetup{
+  renderers = {
+    fencedDivAttributeContextBegin = {%
+      \par
+      \emph{(The beginning of a fenced div attribute context)}
+      \par
+    },
+    fencedDivAttributeContextEnd = {%
+      \par
+      \emph{(The end of a fenced div attribute context)}
+      \par
+    },
+  },
+}
+\begin{document}
+\begin{markdown}
+
+::: {key=value}
+
+foo
+
+:::: {#identifier}
+
+bar
+
+::::
+
+:::
+
+::: {.class_name}
+
+baz
+
+:::
+
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> *(The beginning of a fenced div attribute context)*
+>
+> foo
+>
+> *(The beginning of a fenced div attribute context)*
+>
+> bar
+>
+> *(The end of a fenced div attribute context)*
+>
+> *(The end of a fenced div attribute context)*
+>
+> *(The beginning of a fenced div attribute context)*
+>
+> baz
+>
+> *(The end of a fenced div attribute context)*
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererFencedDivAttributeContextBegin{%
+  \markdownRendererFencedDivAttributeContextBeginPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { fencedDivAttributeContextBegin }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { fencedDivAttributeContextBegin }
+  { 0 }
+\ExplSyntaxOff
+\def\markdownRendererFencedDivAttributeContextEnd{%
+  \markdownRendererFencedDivAttributeContextEndPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { fencedDivAttributeContextEnd }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { fencedDivAttributeContextEnd }
+  { 0 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
 #### Header Attribute Context Renderers
 The following macros are only produced, when the \Opt{headerAttributes} option
 is enabled.
@@ -11858,7 +12283,7 @@ following content:
       \emph{(The beginning of a header attribute context)}
       \par
     },
-    headerAttributeContextBegin = {%
+    headerAttributeContextEnd = {%
       \par
       \emph{(The end of a header attribute context)}
       \par
@@ -16056,8 +16481,8 @@ following text:
 %    \end{macrocode}
 % \begin{markdown}
 %
-% The \mdef{markdownRendererFootnote} and
-% \mdef{markdownRendererFootnotePrototype} macros have been deprecated
+% The \mref{markdownRendererFootnote} and
+% \mref{markdownRendererFootnotePrototype} macros have been deprecated
 % and will be removed in Markdown 3.0.0.
 %
 % \end{markdown}
@@ -16067,8 +16492,8 @@ following text:
 %    \end{macrocode}
 % \begin{markdown}
 %
-% The \mdef{markdownRendererHorizontalRule} and
-% \mdef{markdownRendererHorizontalRulePrototype} macros have been deprecated
+% The \mref{markdownRendererHorizontalRule} and
+% \mref{markdownRendererHorizontalRulePrototype} macros have been deprecated
 % and will be removed in Markdown 3.0.0.
 %
 % \end{markdown}
@@ -16181,7 +16606,7 @@ following text:
 % as follows:
 %
 % - `0` – Shell escape via the 18 output file stream
-% - `1` – Shell escape via the Lua \luamref{os.execute} method
+% - `1` – Shell escape via the Lua `os.execute` method
 % - `2` – Direct Lua access
 % - `3` – The \pkg{lt3luabridge} Lua package
 %
@@ -16308,8 +16733,8 @@ pdflatex --shell-escape document.tex
 % Section <#sec:texinterface>).
 %
 % The \LaTeX{} implementation redefines the plain \TeX{} logging macros (see
-% Section <#sec:texinterfacelogging>) to use the \LaTeX{} \mref{PackageInfo},
-% \mref{PackageWarning}, and \mref{PackageError} macros.
+% Section <#sec:texinterfacelogging>) to use the \LaTeX{} `\PackageInfo`,
+% `\PackageWarning`, and `\PackageError` macros.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -16328,7 +16753,7 @@ pdflatex --shell-escape document.tex
 % \end{Verbatim}
 % \begin{markdown}
 % where \meta{options} are the \LaTeX{} interface options (see Section
-% <#sec:latexoptions>). Note that \meta{options} inside the \mref{usepackage}
+% <#sec:latexoptions>). Note that \meta{options} inside the `\usepackage`
 % macro may not set the `markdownRenderers` (see Section
 % <#sec:latexrenderers>) and `markdownRendererPrototypes` (see Section
 % <#sec:latexrendererprototypes>) keys. This limitation is due to the way
@@ -16355,8 +16780,8 @@ pdflatex --shell-escape document.tex
 %    \end{macrocode}
 % \markdownBegin
 %
-% You may prepend your own code to the \mref{markdown} macro and append your own
-% code to the \mref{endmarkdown} macro to produce special effects before and after
+% You may prepend your own code to the \mdef{markdown} macro and append your own
+% code to the \mdef{endmarkdown} macro to produce special effects before and after
 % the \envmref{markdown} \LaTeX{} environment (and likewise for the starred
 % version).
 %
@@ -16598,7 +17023,7 @@ without low-level programming.
 % *name* is *qualified* and contains no underscores, and a value is qualified
 % if and only if it contains at least one forward slash. Themes are inspired by
 % the Beamer \LaTeX{} package, which provides similar functionality with its
-% \mref{usetheme} macro [@tantau21, Section 15.1].
+% `\usetheme` macro [@tantau21, Section 15.1].
 %
 % Theme names must be qualified to minimize naming conflicts between different
 % themes intended for a single \LaTeX{} document class or for a single \LaTeX{}
@@ -16616,7 +17041,7 @@ without low-level programming.
 % package named `markdownthemewitiko_beamer_MU.sty`.
 %
 % If the \LaTeX{} option with key `theme` is (repeatedly) specified in the
-% \mref{usepackage} macro, the loading of the theme(s) will be postponed in
+% `\usepackage` macro, the loading of the theme(s) will be postponed in
 % first-in-first-out order until after the Markdown \LaTeX{} package has been
 % loaded. Otherwise, the theme(s) will be loaded immediately. For example,
 % there is a theme named `witiko/dot`, which typesets fenced code blocks with
@@ -16797,7 +17222,7 @@ Example themes provided with the Markdown package include:
 %    ```
      The theme requires a Unix-like operating system with GNU Diffutils and
      Graphviz installed. The theme also requires shell access unless the
-     \mref{markdownOptionFrozenCache} plain \TeX{} option is enabled.
+     \Opt{frozenCache} plain \TeX{} option is enabled.
 
 % \markdownEnd
 % \iffalse
@@ -16890,7 +17315,7 @@ conference article:
      The theme requires the \pkg{catchfile} \LaTeX{} package and a Unix-like
      operating system with GNU Coreutils `md5sum` and either GNU Wget or cURL
      installed. The theme also requires shell access unless the
-     \mref{markdownOptionFrozenCache} plain \TeX{} option is enabled.
+     \Opt{frozenCache} plain \TeX{} option is enabled.
 
 % \markdownEnd
 % \iffalse
@@ -17232,7 +17657,7 @@ The following ordered list will be preceded by roman numerals:
 % \par
 % \begin{markdown}
 %
-% The \mref{markdownOptionFinalizeCache} and \mref{markdownOptionFrozenCache} plain
+% The \Opt{finalizeCache} and \Opt{frozenCache} plain
 % \TeX{} options are exposed through \LaTeX{} options with keys `finalizeCache`
 % and `frozenCache`.
 %
@@ -17264,8 +17689,8 @@ The following ordered list will be preceded by roman numerals:
 % \begin{markdown}
 %
 % The following example \LaTeX{} code showcases a possible configuration of
-% plain \TeX{} interface options \mref{markdownOptionHybrid},
-% \mref{markdownOptionSmartEllipses}, and \mref{markdownOptionCacheDir}.
+% plain \TeX{} interface options \Opt{hybrid}, \Opt{smartEllipses}, and
+% \Opt{cacheDir}.
 % ``` tex
 % \markdownSetup{
 %   hybrid,
@@ -17412,7 +17837,7 @@ The following ordered list will be preceded by roman numerals:
 % \begin{markdown}
 %
 % The following example \LaTeX{} code showcases a possible configuration of the
-% \mref{markdownRendererImagePrototype} and \mref{markdownRendererCodeSpanPrototype}
+% `\markdownRendererImagePrototype` and `\markdownRendererCodeSpanPrototype`
 % markdown token renderer prototypes.
 % ``` tex
 % \markdownSetup{
@@ -17499,7 +17924,7 @@ texexec --passon=--shell-escape document.tex
 %
 % The \Hologo{ConTeXt} implementation redefines the plain \TeX{} logging macros
 % (see Section <#sec:texinterfacelogging>) to use the \Hologo{ConTeXt}
-% \mref{writestatus} macro.
+% `\writestatus` macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -17518,7 +17943,7 @@ texexec --passon=--shell-escape document.tex
 % \usemodule[t][markdown]
 % ```````
 % \noindent It is expected that the special plain \TeX{} characters have the
-% expected category codes, when \mref{input}ting the file.
+% expected category codes, when `\input`ting the file.
 %
 %### Typesetting Markdown
 % The interface exposes the \mdef{startmarkdown} and \mdef{stopmarkdown} macro
@@ -20343,7 +20768,7 @@ function M.writer.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.pack(name)
-    return [[\input ]] .. name .. [[\relax]]
+    return [[\input{]] .. name .. [[}\relax]]
   end
 %    \end{macrocode}
 % \par
@@ -20759,9 +21184,39 @@ function M.writer.new(options)
 % \par
 % \begin{markdown}
 %
+% Define \luamdef{writer->attributes} as a function that will transform
+% input attributes `attr` to the output format.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  function self.attributes(attr)
+    local buf = {}
+
+    table.sort(attr)
+    local key, value
+    for i = 1, #attr do
+      if attr[i]:sub(1, 1) == "#" then
+        table.insert(buf, {"\\markdownRendererAttributeIdentifier{",
+                           attr[i]:sub(2), "}"})
+      elseif attr[i]:sub(1, 1) == "." then
+        table.insert(buf, {"\\markdownRendererAttributeClassName{",
+                           attr[i]:sub(2), "}"})
+      else
+        key, value = attr[i]:match("([^= ]+)%s*=%s*(.*)")
+        table.insert(buf, {"\\markdownRendererAttributeKeyValue{",
+                           key, "}{", value, "}"})
+      end
+    end
+
+    return buf
+  end
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
 % Define \luamdef{writer->active\_attributes} as a stack of attributes
 % of the headings that are currently active. The
-% \luamref{writer->active\_headings} member variable is mutable.
+% \luamdef{writer->active\_headings} member variable is mutable.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -20853,21 +21308,7 @@ function M.writer.new(options)
     end
 
     if self.is_writing then
-      table.sort(attributes)
-      local key, value
-      for i = 1, #attributes do
-        if attributes[i]:sub(1, 1) == "#" then
-          table.insert(buf, {"\\markdownRendererAttributeIdentifier{",
-                             attributes[i]:sub(2), "}"})
-        elseif attributes[i]:sub(1, 1) == "." then
-          table.insert(buf, {"\\markdownRendererAttributeClassName{",
-                             attributes[i]:sub(2), "}"})
-        else
-          key, value = attributes[i]:match("([^= ]+)%s*=%s*(.*)")
-          table.insert(buf, {"\\markdownRendererAttributeKeyValue{",
-                             key, "}{", value, "}"})
-        end
-      end
+      table.insert(buf, self.attributes(attributes))
     end
 
     local cmd
@@ -21015,7 +21456,8 @@ parsers.doubletildes           = P("~~")
 parsers.fourspaces             = P("    ")
 
 parsers.any                    = P(1)
-parsers.fail                   = parsers.any - 1
+parsers.succeed                = P(true)
+parsers.fail                   = P(false)
 
 parsers.escapable              = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
 parsers.anyescaped             = parsers.backslash / "" * parsers.escapable
@@ -21250,6 +21692,14 @@ parsers.fencehead    = function(char, infostring)
   return               C(parsers.nonindentspace) / function(s) fenceindent = #s end
                      * Cg(char^3, "fencelength")
                      * parsers.optionalspace * infostring
+end
+
+parsers.fencehead_with_attributes
+                     = function(char)
+  return               C(parsers.nonindentspace) / function(s) fenceindent = #s end
+                     * Cg(char^3, "fencelength")
+                     * parsers.optionalspace * Ct(parsers.attributes)
+                     * parsers.optionalspace * (parsers.newline + parsers.eof)
 end
 
 parsers.fencetail    = function(char)
@@ -21589,7 +22039,7 @@ function M.reader.new(writer, options)
 % \begin{markdown}
 %
 % Create a \luamdef{reader->parsers} hash table that stores \acro{peg} patterns
-% that depend on the received `options`. Make \luamdef{reader->parsers} inherit
+% that depend on the received `options`. Make \luamref{reader->parsers} inherit
 % from the global \luamref{parsers} table.
 %
 % \end{markdown}
@@ -22223,7 +22673,7 @@ function M.reader.new(writer, options)
 % \begin{markdown}
 %
 % Create a local writable copy of the global read-only
-% \luamdef{walkable_syntax} hash table. This table can be used by user-defined
+% \luamref{walkable_syntax} hash table. This table can be used by user-defined
 % syntax extensions to insert new \acro{peg} patterns into existing rules
 % of the \acro{peg} grammar of markdown using
 % the \luamref{reader->insert_pattern} method. Furthermore, built-in syntax
@@ -22303,12 +22753,12 @@ function M.reader.new(writer, options)
     local syntax =
       { "Blocks",
 
-        Blocks                = ( V("ExpectedJekyllData")
-                                * (V("Blank")^0 / writer.interblocksep)
-                                )^-1
+        Blocks                = V("InitializeState")
+                              * ( V("ExpectedJekyllData")
+                                * (V("Blank")^0 / writer.interblocksep))^-1
                               * V("Blank")^0
                               * V("Block")^-1
-                              * (V("Blank")^0 / writer.interblocksep
+                              * ( V("Blank")^0 / writer.interblocksep
                                 * V("Block"))^0
                               * V("Blank")^0 * parsers.eof,
 
@@ -22347,23 +22797,37 @@ function M.reader.new(writer, options)
         Smart                 = parsers.Smart,
         Symbol                = parsers.Symbol,
         SpecialChar           = parsers.fail,
+        InitializeState       = parsers.succeed,
       }
 %    \end{macrocode}
 % \par
 % \begin{markdown}
 %
 % Define \luamref{reader->update_rule} as a function that receives two
-% arguments: a left-hand side terminal symbol and a \acro{peg} pattern.
-% The function (re)defines \luamref{walkable_syntax}`[`left-hand side terminal
-% symbol`]` to be equal to pattern.
+% arguments: a left-hand side terminal symbol and a function that accepts
+% the current \acro{peg} pattern in \luamref{walkable_syntax}`[`left-hand side
+% terminal symbol`]` if defined or `nil` otherwise and returns a
+% \acro{peg} pattern that will (re)define \luamref{walkable_syntax}`[`left-hand
+% side terminal symbol`]`.
 %
 % \end{markdown}
 %  \begin{macrocode}
-    self.update_rule = function(rule_name, pattern)
+    self.update_rule = function(rule_name, get_pattern)
       assert(current_extension_name ~= nil)
       assert(syntax[rule_name] ~= nil,
         [[Rule ]] .. rule_name .. [[ -> ... does not exist in markdown grammar]])
-      local accountable_pattern = { pattern, current_extension_name, rule_name }
+      local previous_pattern
+      local extension_name
+      if walkable_syntax[rule_name] then
+        local previous_accountable_pattern = walkable_syntax[rule_name][1]
+        previous_pattern = previous_accountable_pattern[1]
+        extension_name = previous_accountable_pattern[2] .. ", " .. current_extension_name
+      else
+        previous_pattern = nil
+        extension_name = current_extension_name
+      end
+      local pattern = get_pattern(previous_pattern)
+      local accountable_pattern = { pattern, extension_name, rule_name }
       walkable_syntax[rule_name] = { accountable_pattern }
     end
 %    \end{macrocode}
@@ -22383,12 +22847,24 @@ function M.reader.new(writer, options)
     end
 
     self.add_special_character("*")
-    self.add_special_character("`")
     self.add_special_character("[")
     self.add_special_character("]")
     self.add_special_character("<")
     self.add_special_character("!")
     self.add_special_character("\\")
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Add method \luamdef{reader->initialize_named_group} that defines named groups
+% with a default capture value.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    self.initialize_named_group = function(name, value)
+      syntax.InitializeState = syntax.InitializeState
+                             * Cg(Ct("") / value, name)
+    end
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -22527,6 +23003,8 @@ function M.reader.new(writer, options)
 
     if not options.codeSpans then
       syntax.Code = parsers.fail
+    else
+      self.add_special_character("`")
     end
 
     if not options.html then
@@ -22559,7 +23037,10 @@ function M.reader.new(writer, options)
 
     local inlines_t = util.table_copy(syntax)
     inlines_t[1] = "Inlines"
-    inlines_t.Inlines = parsers.Inline^0 * (parsers.spacing^0 * parsers.eof / "")
+    inlines_t.Inlines = V("InitializeState")
+                      * parsers.Inline^0
+                      * ( parsers.spacing^0
+                        * parsers.eof / "")
     parsers.inlines = Ct(inlines_t)
 
     local inlines_no_link_t = util.table_copy(inlines_t)
@@ -22668,7 +23149,7 @@ end
 %
 %### Built-In Syntax Extensions {#luabuiltinextensions}
 %
-% Create \luamdef{extensions} hash table that contains built-in syntax
+% Create \luamref{extensions} hash table that contains built-in syntax
 % extensions. Syntax extensions are functions that produce objects with two
 % methods: `extend_writer` and `extend_reader`. The `extend_writer` object
 % takes a \luamref{writer} object as the only parameter and mutates it.
@@ -22678,6 +23159,50 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 M.extensions = {}
+%    \end{macrocode}
+% \begin{markdown}
+%
+%#### Bracketed Spans
+%
+% The \luamdef{extensions.bracketed_spans} function implements the Pandoc
+% bracketed spans syntax extension.
+%
+% \end{markdown}
+%  \begin{macrocode}
+M.extensions.bracketed_spans = function()
+  return {
+    name = "built-in bracketed_spans syntax extension",
+    extend_writer = function(self)
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define \luamdef{writer->span} as a function that will transform an input
+% bracketed span `s` with attributes `attr` to the output format.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      function self.span(s, attr)
+        return {"\\markdownRendererBracketedSpanAttributeContextBegin",
+                self.attributes(attr),
+                s,
+                "\\markdownRendererBracketedSpanAttributeContextEnd{}"}
+      end
+    end, extend_reader = function(self)
+      local parsers = self.parsers
+      local writer = self.writer
+
+      local Span = parsers.between(parsers.Inline,
+                                   parsers.lbracket,
+                                   parsers.rbracket)
+                 * Ct(parsers.attributes)
+                 / writer.span
+
+      self.insert_pattern("Inline after Emph",
+                          Span, "Span")
+    end
+  }
+end
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -22729,7 +23254,7 @@ M.extensions.citations = function(citation_nbsps)
 % \begin{markdown}
 %
 % Define \luamdef{writer->citation} as a function that will transform an input
-% citation name `c` to the output format. If \luamref{writer->hybrid} is `true`,
+% citation name `c` to the output format. If option \Opt{hybrid} is enabled,
 % use the \luamref{writer->escape_minimal} function. Otherwise, use the
 % \luamref{escape_citation} function.
 %
@@ -23347,7 +23872,7 @@ M.extensions.fancy_lists = function()
                       * Cc(false) * parsers.skipblanklines
                       ) * Cb("listtype") / fancylist
 
-      self.update_rule("OrderedList", FancyList)
+      self.update_rule("OrderedList", function() return FancyList end)
     end
   }
 end
@@ -23373,7 +23898,7 @@ M.extensions.fenced_code = function(blank_before_code_fence)
 % \par
 % \begin{markdown}
 %
-% Define \luamdef{writer->codeFence} as a function that will transform an
+% Define \luamdef{writer->fencedCode} as a function that will transform an
 % input fenced code block `s` with the infostring `i` to the output
 % format.
 %
@@ -23410,10 +23935,148 @@ M.extensions.fenced_code = function(blank_before_code_fence)
                                        parsers.tilde_infostring)
       end
 
-      local EndlineExceptions = parsers.EndlineExceptions + fencestart
-      self.update_rule("EndlineExceptions", EndlineExceptions)
+      self.update_rule("EndlineExceptions", function(previous_pattern)
+        if previous_pattern == nil then
+          previous_pattern = parsers.EndlineExceptions
+        end
+        return previous_pattern + fencestart
+      end)
 
+      self.add_special_character("`")
       self.add_special_character("~")
+    end
+  }
+end
+%    \end{macrocode}
+% \begin{markdown}
+%
+%#### Fenced Divs
+%
+% The \luamdef{extensions.fenced_divs} function implements the Pandoc fenced
+% divs syntax extension. When the `blank_before_div_fence` parameter is `true`,
+% the syntax extension requires a blank line between a paragraph and the
+% following fenced code block.
+%
+% \end{markdown}
+%  \begin{macrocode}
+M.extensions.fenced_divs = function(blank_before_div_fence)
+  return {
+    name = "built-in fenced_divs syntax extension",
+    extend_writer = function(self)
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define \luamdef{writer->div} as a function that will transform an input
+% fenced div with content `c` and with attributes `attr` to the output format.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      function self.div(c, attr)
+        return {"\\markdownRendererFencedDivAttributeContextBegin",
+                self.attributes(attr),
+                c,
+                "\\markdownRendererFencedDivAttributeContextEnd"}
+      end
+    end, extend_reader = function(self)
+      local parsers = self.parsers
+      local writer = self.writer
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define basic patterns for matching the opening and the closing tag of a div.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      local fenced_div_infostring
+                             = C((parsers.linechar
+                                - ( parsers.spacechar^1
+                                  * parsers.colon^1))^1)
+
+      local fenced_div_begin = parsers.nonindentspace
+                             * parsers.colon^3
+                             * parsers.optionalspace
+                             * fenced_div_infostring
+                             * ( parsers.spacechar^1
+                               * parsers.colon^1)^0
+                             * parsers.optionalspace
+                             * (parsers.newline + parsers.eof)
+
+      local fenced_div_end = parsers.nonindentspace
+                           * parsers.colon^3
+                           * parsers.optionalspace
+                           * (parsers.newline + parsers.eof)
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Initialize a named group named `div_level` for tracking how deep we are
+% nested in divs.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      self.initialize_named_group("div_level", "0")
+
+      local function increment_div_level(increment)
+        local function update_div_level(s, i, current_level) -- luacheck: ignore s i
+          current_level = tonumber(current_level)
+          local next_level = tostring(current_level + increment)
+          return true, next_level
+        end
+
+        return Cg( Cmt(Cb("div_level"), update_div_level)
+                 , "div_level")
+      end
+
+      local FencedDiv = fenced_div_begin * increment_div_level(1)
+                      * parsers.skipblanklines
+                      * Ct( (V("Block") - fenced_div_end)^-1
+                          * ( parsers.blanklines
+                            / function()
+                                return writer.interblocksep
+                              end
+                            * (V("Block") - fenced_div_end))^0)
+                      * parsers.skipblanklines
+                      * fenced_div_end * increment_div_level(-1)
+                      / function (infostring, div)
+                          local attr = lpeg.match(Ct(parsers.attributes), infostring)
+                          if attr == nil then
+                            attr = {"." .. infostring}
+                          end
+                          return div, attr
+                        end
+                      / writer.div
+
+      self.insert_pattern("Block after Verbatim",
+                          FencedDiv, "FencedDiv")
+
+      self.add_special_character(":")
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% If the `blank_before_div_fence` parameter is `false`, we will have the
+% closing div at the beginning of a line break the current paragraph if
+% we are currently nested in a div.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      if not blank_before_div_fence then
+        local function check_div_level(s, i, current_level) -- luacheck: ignore s i
+          current_level = tonumber(current_level)
+          return current_level > 0
+        end
+
+        local is_inside_div = Cmt(Cb("div_level"), check_div_level)
+        local fencestart = is_inside_div * fenced_div_end
+        self.update_rule("EndlineExceptions", function(previous_pattern)
+          if previous_pattern == nil then
+            previous_pattern = parsers.EndlineExceptions
+          end
+          return previous_pattern + fencestart
+        end)
+      end
     end
   }
 end
@@ -23478,7 +24141,7 @@ M.extensions.header_attributes = function()
                           / writer.heading
 
       local Heading = AtxHeading + SetextHeading
-      self.update_rule("Heading", Heading)
+      self.update_rule("Heading", function() return Heading end)
     end
   }
 end
@@ -23563,7 +24226,7 @@ M.extensions.notes = function(notes, inline_notes)
                     / register_note
 
         local Blank = NoteBlock + parsers.Blank
-        self.update_rule("Blank", Blank)
+        self.update_rule("Blank", function() return Blank end)
 
         self.insert_pattern("Inline after Emph",
                             NoteRef, "NoteRef")
@@ -24098,7 +24761,7 @@ M.extensions.jekyll_data = function(expect_jekyll_data)
       self.insert_pattern("Block before Blockquote",
                           UnexpectedJekyllData, "UnexpectedJekyllData")
       if expect_jekyll_data then
-        self.update_rule("ExpectedJekyllData", ExpectedJekyllData)
+        self.update_rule("ExpectedJekyllData", function() return ExpectedJekyllData end)
       end
     end
   }
@@ -24136,6 +24799,11 @@ function M.new(options)
 %  \begin{macrocode}
   local extensions = {}
 
+  if options.bracketedSpans then
+    local bracketed_spans_extension = M.extensions.bracketed_spans()
+    table.insert(extensions, bracketed_spans_extension)
+  end
+
   if options.contentBlocks then
     local content_blocks_extension = M.extensions.content_blocks(
       options.contentBlocksLanguageMap)
@@ -24152,6 +24820,12 @@ function M.new(options)
     local fenced_code_extension = M.extensions.fenced_code(
       options.blankBeforeCodeFence)
     table.insert(extensions, fenced_code_extension)
+  end
+
+  if options.fencedDivs then
+    local fenced_div_extension = M.extensions.fenced_divs(
+      options.blankBeforeDivFence)
+    table.insert(extensions, fenced_div_extension)
   end
 
   if options.headerAttributes then
@@ -24874,14 +25548,14 @@ end
 %
 % The \mdef{markdownPrepare} macro contains the Lua code that is executed prior
 % to any conversion from markdown to plain \TeX{}. It exposes the
-% \luamref{convert} function for the use by any further Lua code.
+% `convert` function for the use by any further Lua code.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \def\markdownPrepare{%
 %    \end{macrocode}
 % \begin{markdown}
-% First, ensure that the \mref{markdownOptionCacheDir} directory exists.
+% First, ensure that the \Opt{cacheDir} directory exists.
 % \end{markdown}
 %  \begin{macrocode}
   local lfs = require("lfs")
@@ -24977,7 +25651,7 @@ end
 % \begin{markdown}
 %
 % The \mref{markdownReadAndConvert} macro is largely a rewrite of the
-% \Hologo{LaTeX2e} \mref{filecontents} macro to plain \TeX{}.
+% \Hologo{LaTeX2e} `\filecontents` macro to plain \TeX{}.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -24989,7 +25663,7 @@ end
 % backslash as an ordinary character inside the macro definition.  Likewise,
 % swap the character codes of the percent sign (`\%`) and the ampersand (`@`),
 % so that we can remove percent signs from the beginning of lines when
-% \mref{markdownOptionStripPercentSigns} is enabled.
+% \Opt{stripPercentSigns} is enabled.
 % \end{markdown}
 %  \begin{macrocode}
   \catcode`\^^M=13%
@@ -25003,7 +25677,7 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 % If we are not reading markdown documents from the frozen cache,
-% open the \mref{markdownOptionInputTempFileName} file for writing.
+% open the \Opt{inputTempFileName} file for writing.
 % \end{markdown}
 %  \begin{macrocode}
     |markdownIfOption{frozenCache}{}{@
@@ -25028,7 +25702,7 @@ end
 % \begin{markdown}
 % The \mdef{markdownReadAndConvertStripPercentSigns} macro will process the
 % individual lines of output, stipping away leading percent signs (`\%`) when
-% \mref{markdownOptionStripPercentSigns} is enabled.
+% \Opt{stripPercentSigns} is enabled.
 % Notice the use of the comments (`@`) to ensure that the entire macro is at
 % a single line and therefore no (active) newline symbols
 % (`^^M`) are produced.
@@ -25064,7 +25738,7 @@ end
 % \begin{markdown}
 % If we are not reading markdown documents from the frozen cache and the ending
 % token sequence does not appear in the line, store the line in the
-% \mref{markdownOptionInputTempFileName} file.
+% \Opt{inputTempFileName} file.
 % If we are reading markdown documents from the frozen cache and the
 % ending token sequence does not appear in the line, gobble the line.
 % \end{markdown}
@@ -25077,10 +25751,10 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 % When the ending token sequence appears in the line, make the next newline
-% character close the \mref{markdownOptionInputTempFileName} file, return the
+% character close the \Opt{inputTempFileName} file, return the
 % character categories back to the former state, convert the
-% \mref{markdownOptionInputTempFileName} file from markdown to plain \TeX{},
-% \mref{input} the result of the conversion, and expand the ending control
+% \Opt{inputTempFileName} file from markdown to plain \TeX{},
+% `\input` the result of the conversion, and expand the ending control
 % sequence.
 % \end{markdown}
 %  \begin{macrocode}
@@ -25185,10 +25859,10 @@ end
 % whether the shell access is enabled (`1`), disabled (`0`), or restricted
 % (`2`).
 %
-% Inherit the value of the the \mref{pdfshellescape} (Lua\TeX{}, \Hologo{pdfTeX})
-% or the \mref{shellescape} (\Hologo{XeTeX}) commands. If neither of these
+% Inherit the value of the the `\pdfshellescape` (Lua\TeX{}, \Hologo{pdfTeX})
+% or the `\shellescape` (\Hologo{XeTeX}) commands. If neither of these
 % commands is defined and Lua is available, attempt to access the
-% \luamref{status.shell_escape} configuration item.
+% `status.shell_escape` configuration item.
 %
 % If you cannot detect, whether the shell access is enabled, act as if it were.
 %
@@ -25214,7 +25888,7 @@ end
 %
 % The \mdef{markdownExecuteDirect} macro executes the code it has received as
 % its first argument by writing it to the output file stream 18, if Lua is
-% unavailable, or by using the Lua \luamref{os.execute} method otherwise.
+% unavailable, or by using the Lua `os.execute` method otherwise.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -25249,8 +25923,8 @@ end
 %
 % The \mdef{markdownLuaExecute} macro executes the Lua code it has received as
 % its first argument. The Lua code may not directly interact with the \TeX{}
-% engine, but it can use the \luamref{print} function in the same manner it
-% would use the \luamref{tex.print} method.
+% engine, but it can use the `print` function in the same manner it
+% would use the `tex.print` method.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -25266,7 +25940,7 @@ end
   |gdef|markdownLuaExecute#1{%
 %    \end{macrocode}
 % \begin{markdown}
-% Create the file \mref{markdownOptionHelperScriptFileName} and fill it with the
+% Create the file \Opt{helperScriptFileName} and fill it with the
 % input Lua code prepended with \pkg{kpathsea} initialization, so that Lua
 % modules from the \TeX{} distribution are available.
 % \end{markdown}
@@ -25283,7 +25957,7 @@ end
       end)
 %    \end{macrocode}
 % \begin{markdown}
-% If there was an error, use the file \mref{markdownOptionErrorTempFileName} to
+% If there was an error, use the file \Opt{errorTempFileName} to
 % store the error message.
 % \end{markdown}
 %  \begin{macrocode}
@@ -25303,9 +25977,9 @@ end
     |immediate|closeout|markdownOutputFileStream
 %    \end{macrocode}
 % \begin{markdown}
-% Execute the generated \mref{markdownOptionHelperScriptFileName} Lua script using
+% Execute the generated \Opt{helperScriptFileName} Lua script using
 % the \TeX{}Lua binary and store the output in the
-% \mref{markdownOptionOutputTempFileName} file.
+% \Opt{outputTempFileName} file.
 % \end{markdown}
 %  \begin{macrocode}
     |markdownInfo{Executing a helper Lua script from the file
@@ -25317,7 +25991,7 @@ end
       /|markdownOptionOutputTempFileName"}%
 %    \end{macrocode}
 % \begin{markdown}
-% \mref{input} the generated \mref{markdownOptionOutputTempFileName} file.
+% `\input` the generated \Opt{outputTempFileName} file.
 % \end{markdown}
 %  \begin{macrocode}
     |input|markdownOptionOutputTempFileName|relax}%
@@ -25344,8 +26018,8 @@ end
 % \begin{markdown}
 %
 % The direct Lua access version of the \mref{markdownLuaExecute} macro is defined
-% in terms of the \mref{directlua} primitive. The \luamref{print} function is set as
-% an alias to the \luamref{tex.print} method in order to mimic the behaviour of the
+% in terms of the `\directlua` primitive. The `print` function is set as
+% an alias to the `tex.print` method in order to mimic the behaviour of the
 % \mref{markdownLuaExecute} definition from Section <#sec:luabridge>,
 %
 % \end{markdown}
@@ -25524,8 +26198,8 @@ end
 %
 %### Logging Facilities
 % The \LaTeX{} implementation redefines the plain \TeX{} logging macros (see
-% Section <#sec:texinterfacelogging>) to use the \LaTeX{} \mref{PackageInfo},
-% \mref{PackageWarning}, and \mref{PackageError} macros.
+% Section <#sec:texinterfacelogging>) to use the \LaTeX{} `\PackageInfo`,
+% `\PackageWarning`, and `\PackageError` macros.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -25664,7 +26338,7 @@ end
 %
 % If the infostring starts with `dot …`, we redefine the fenced code block
 % token renderer prototype, so that it typesets the code block via Graphviz
-% tools if and only if the \mref{markdownOptionFrozenCache} plain \TeX{} option is
+% tools if and only if the \Opt{frozenCache} plain \TeX{} option is
 % disabled and the code block has not been previously typeset:
 %
 % \end{markdown}
@@ -25727,8 +26401,8 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% We define the \mref{markdown@witiko@graphicx@http@counter} counter to enumerate
-% the images for caching and the \mref{markdown@witiko@graphicx@http@filename}
+% We define the \mdef{markdown@witiko@graphicx@http@counter} counter to enumerate
+% the images for caching and the \mdef{markdown@witiko@graphicx@http@filename}
 % command, which will store the pathname of the file containing the pathname
 % of the downloaded image file.
 %
@@ -25742,7 +26416,7 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% We define the \mref{markdown@witiko@graphicx@http@download} command, which will
+% We define the \mdef{markdown@witiko@graphicx@http@download} command, which will
 % receive two arguments that correspond to the URL of the online image and to
 % the pathname, where the online image should be downloaded. The command will
 % produce a shell command that tries to downloads the online image to the
@@ -25778,7 +26452,7 @@ end
 % \begin{markdown}
 %
 % The image will be downloaded only if the image URL has the http or https
-% protocols and the \mref{markdownOptionFrozenCache} plain \TeX{} option is disabled:
+% protocols and the \Opt{frozenCache} plain \TeX{} option is disabled:
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -25790,7 +26464,7 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% The image will be downloaded to the pathname \mref{markdownOptionCacheDir}<!--
+% The image will be downloaded to the pathname \Opt{cacheDir}<!--
 % -->`/`\meta{the MD5 digest of the image URL}`.`\meta{the suffix of the
 % image URL}:
 %
@@ -25997,14 +26671,16 @@ end
 %    \end{macrocode}
 % \par
 % \begin{markdown}%
-% If the \Opt{tightLists} Lua option is disabled or the current document class
-% is \pkg{beamer}, do not load the \pkg{paralist} package.
+% If either the \Opt{tightLists} or the \Opt{fancyLists} Lua option is enabled
+% and the current document class is not \pkg{beamer}, then load the
+% \pkg{paralist} package.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\markdownIfOption{tightLists}{
-  \@ifclassloaded{beamer}{}{\RequirePackage{paralist}}%
-}{}
+\@ifclassloaded{beamer}{}{%
+  \markdownIfOption{tightLists}{\RequirePackage{paralist}}{}%
+  \markdownIfOption{fancyLists}{\RequirePackage{paralist}}{}%
+}
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -26259,7 +26935,7 @@ end
 % \begin{markdown}
 %
 % If identifier attributes appear at the beginning of a section, we make the
-% next heading produce the \mref{label} macro.
+% next heading produce the `\label` macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -26443,9 +27119,9 @@ end
 % \begin{markdown}
 %
 %#### Citations
-% Here is a basic implementation for citations that uses the \LaTeX{} \mref{cite}
-% macro. There are also implementations that use the \pkg{natbib} \mref{citep},
-% and \mref{citet} macros, and the Bib\LaTeX{} \mref{autocites} and \mref{textcites}
+% Here is a basic implementation for citations that uses the \LaTeX{} `\cite`
+% macro. There are also implementations that use the \pkg{natbib} `\citep`,
+% and `\citet` macros, and the Bib\LaTeX{} `\autocites` and `\textcites`
 % macros. These implementations will be used, when the respective packages are
 % loaded.
 %
@@ -26853,8 +27529,8 @@ end
 %
 %#### YAML Metadata {#latexyamlmetadata}
 %
-% The default setup of \acro{yaml} metadata will invoke the \mref{title},
-% \mref{author}, and \mref{date} macros when scalar values for keys that
+% The default setup of \acro{yaml} metadata will invoke the `\title`,
+% `\author`, and `\date` macros when scalar values for keys that
 % correspond to the `title`, `author`, and `date` relative wildcards are
 % encountered, respectively.
 %
@@ -26872,10 +27548,10 @@ end
 % \begin{markdown}
 %
 % To complement the default setup of our key--values, we will use
-% the \mref{maketitle} macro to typeset the title page of a document
+% the `\maketitle` macro to typeset the title page of a document
 % at the end of \acro{yaml} metadata. If we are in the preamble, we will wait
 % macro until after the beginning of the document. Otherwise, we will use
-% the \mref{maketitle} macro straight away.
+% the `\maketitle` macro straight away.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -26988,7 +27664,7 @@ end
 % after supplying the missing plain \TeX{} macros.
 %
 % When buffering user input, we should disable the bytes with the high bit set,
-% since these are made active by the \mref{enableregime} macro. We will do this
+% since these are made active by the `\enableregime` macro. We will do this
 % by redefining the \mref{markdownMakeOther} macro accordingly. The code is
 % courtesy of Scott Pakin, the creator of the \pkg{filecontents} \LaTeX{}
 % package.
@@ -27173,7 +27849,7 @@ end
 % \begin{markdown}
 %
 % The code fence infostring is used as a name from the \Hologo{ConTeXt}
-% \mref{definetyping} macro. This allows the user to set up code highlighting
+% `\definetyping` macro. This allows the user to set up code highlighting
 % mapping as follows:
 % ````` tex
 % % Map the `TEX` syntax highlighter to the `latex` infostring.

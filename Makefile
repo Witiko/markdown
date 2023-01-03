@@ -15,7 +15,7 @@ ARCHIVES=$(TDSARCHIVE) $(CTANARCHIVE) $(DISTARCHIVE)
 EXAMPLES_RESOURCES=examples/example.md examples/scientists.csv
 EXAMPLES_SOURCES=examples/context-mkii.tex examples/context-mkiv.tex examples/latex.tex
 EXAMPLES=examples/context-mkii.pdf examples/context-mkiv.pdf \
-  examples/latex-pdftex.pdf examples/latex-luatex.pdf examples/latex-xetex.pdf \
+  examples/latex-pdftex.pdf examples/latex-luatex.pdf \
   examples/latex-tex4ht.html examples/latex-tex4ht.css
 TESTS=tests/test.sh tests/support/*.tex tests/templates/*/*.tex.m4 \
   tests/templates/*/COMMANDS.m4 tests/testfiles/*/*.test
@@ -74,7 +74,7 @@ $(GITHUB_PAGES): $(HTML_USER_MANUAL)
 
 # This target extracts the source files out of the DTX archive.
 $(EXTRACTABLES): $(INSTALLER) $(DTXARCHIVE)
-	xetex $<
+	luatex $<
 	sed -i \
 	    -e 's#(((VERSION)))#$(VERSION)#g' \
 	    -e 's#(((LASTMODIFIED)))#$(LASTMODIFIED)#g' \

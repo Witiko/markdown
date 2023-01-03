@@ -168,7 +168,7 @@ END image
 interblockSeparator
 interblockSeparator
 interblockSeparator
-codeSpan: latex (backslash)documentclass(leftBrace)article(rightBrace) (backslash)begin(leftBrace)document(rightBrace) Hello world! (backslash)end(leftBrace)document(rightBrace) 
+codeSpan: latex (backslash)documentclass(leftBrace)article(rightBrace) (backslash)begin(leftBrace)document(rightBrace)   Hello world! (backslash)end(leftBrace)document(rightBrace) 
 interblockSeparator
 headerAttributeContextEnd
 headerAttributeContextBegin
