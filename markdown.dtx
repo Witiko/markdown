@@ -27000,7 +27000,7 @@ end
 \cs_gset:Npn
   \markdownRendererInputFencedCodePrototype#1#2
   {
-    \str_if_empty:nTF
+    \tl_if_empty:nTF
       { #2 }
       { \markdownRendererInputVerbatim{#1} }
       {
@@ -27921,7 +27921,7 @@ end
 \cs_gset:Npn
   \markdownRendererInputFencedCodePrototype#1#2
   {
-    \str_if_empty:nTF
+    \tl_if_empty:nTF
       { #2 }
       { \markdownRendererInputVerbatim{#1} }
 %    \end{macrocode}
