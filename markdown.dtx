@@ -27907,17 +27907,30 @@ end
 \def\markdownRendererBlockQuoteBeginPrototype{\startquotation}%
 \def\markdownRendererBlockQuoteEndPrototype{\stopquotation}%
 \def\markdownRendererInputVerbatimPrototype#1{\typefile{#1}}%
-\def\markdownRendererInputFencedCodePrototype#1#2{%
-  \ifx\relax#2\relax
-    \typefile{#1}%
-  \else
 %    \end{macrocode}
 % \par
 % \begin{markdown}
 %
-% The code fence infostring is used as a name from the \Hologo{ConTeXt}
-% `\definetyping` macro. This allows the user to set up code highlighting
-% mapping as follows:
+%#### Fenced Code
+% When no infostring has been specified, default to the indented code block
+% renderer.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\cs_gset:Npn
+  \markdownRendererInputFencedCodePrototype#1#2
+  {
+    \str_if_empty:nTF
+      { #2 }
+      { \markdownRendererInputVerbatim{#1} }
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Otherwise, the code fence infostring is used as a name from the
+% \Hologo{ConTeXt} `\definetyping` macro. This allows the user to set up
+% code highlighting mapping as follows:
 % ````` tex
 % % Map the `TEX` syntax highlighter to the `latex` infostring.
 % \definetyping [latex]
@@ -27934,6 +27947,16 @@ end
 %   \stopmarkdown
 % \stoptext
 % `````````
+%
+% \end{markdown}
+%  \begin{macrocode}
+      { \typefile[#2][]{#1} }
+  }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
 %
 % \end{markdown}
 %  \begin{macrocode}
