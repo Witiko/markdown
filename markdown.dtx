@@ -27010,7 +27010,22 @@ end
     \tl_if_empty:nTF
       { #2 }
       { \markdownRendererInputVerbatim{#1} }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Otherwise, extract the first word of the infostring and treat it as the name
+% of the programming language in which the code block is written.
+%
+% \end{markdown}
+%  \begin{macrocode}
       {
+        \regex_extract_once:nnN
+          { \w* }
+          { #2 }
+          \l_tmpa_seq
+        \seq_pop_left:NN
+          \l_tmpa_seq
+          \l_tmpa_tl
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -27023,7 +27038,10 @@ end
           { minted }
           {
             \catcode`\#=6\relax
-            \inputminted{#2}{#1}
+            \exp_args:NV
+              \inputminted
+              \l_tmpa_tl
+              { #1 }
             \catcode`\#=12\relax
           }
           {
@@ -27037,7 +27055,7 @@ end
 %  \begin{macrocode}
             \ltx@ifpackageloaded
               { listings }
-              { \lstinputlisting[language=#2]{#1} }
+              { \lstinputlisting[language=\l_tmpa_tl]{#1} }
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -27935,9 +27953,10 @@ end
 % \par
 % \begin{markdown}
 %
-% Otherwise, the code fence infostring is used as a name from the
-% \Hologo{ConTeXt} `\definetyping` macro. This allows the user to set up
-% code highlighting mapping as follows:
+% Otherwise, extract the first word of the infostring and treat it as the name
+% of the programming language in which the code block is written.
+% This name is then used in the \Hologo{ConTeXt} `\definetyping` macro, which
+% allows the user to set up code highlighting mapping as follows:
 % ````` tex
 % % Map the `TEX` syntax highlighter to the `latex` infostring.
 % \definetyping [latex]
@@ -27957,18 +27976,18 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-      { \typefile[#2][]{#1} }
+      {
+        \regex_extract_once:nnN
+          { \w* }
+          { #2 }
+          \l_tmpa_seq
+        \seq_pop_left:NN
+          \l_tmpa_seq
+          \l_tmpa_tl
+        \typefile[\l_tmpa_tl][]{#1}
+      }
   }
 \ExplSyntaxOff
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-%
-% \end{markdown}
-%  \begin{macrocode}
-    \typefile[#2][]{#1}%
-  \fi}%
 \def\markdownRendererHeadingOnePrototype#1{\chapter{#1}}%
 \def\markdownRendererHeadingTwoPrototype#1{\section{#1}}%
 \def\markdownRendererHeadingThreePrototype#1{\subsection{#1}}%
