@@ -25199,15 +25199,22 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\cs_gset:Npn
-  \markdownRendererInputRawInlinePrototype#1#2
+\cs_new:Nn
+  \@@_plain_tex_default_input_raw_inline_renderer_prototype:nn
   {
     \str_case:nn
       { #2 }
       {
-        { tex } { \markdownEscape{#1} }
         { md  } { \markdownInput{#1}  }
+        { tex } { \markdownEscape{#1} }
       }
+  }
+\cs_gset:Npn
+  \markdownRendererInputRawInlinePrototype#1#2
+  {
+    \@@_plain_tex_default_input_raw_inline_renderer_prototype:nn
+      { #1 }
+      { #2 }
   }
 \cs_gset_eq:NN
   \markdownRendererInputRawBlockPrototype
@@ -27601,9 +27608,8 @@ end
 %
 %#### Raw Attribute Renderer Prototypes
 %
-% In the raw block and inline raw span renderer prototypes, execute the content
-% with TeX when the raw attribute is `tex` or `latex`, display the content as
-% markdown when the raw attribute is `md`, and ignore the content otherwise.
+% In the raw block and inline raw span renderer prototypes, default to the
+% plain TeX renderer prototypes, translating raw attribute `latex` to `tex`.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -27611,12 +27617,20 @@ end
 \cs_gset:Npn
   \markdownRendererInputRawInlinePrototype#1#2
   {
-    \str_case:nn
+    \str_case:nnF
       { #2 }
       {
-        { tex   } { \markdownEscape{#1} }
-        { latex } { \markdownEscape{#1} }
-        { md    } { \markdownInput{#1}  }
+        { latex }
+          {
+            \@@_plain_tex_default_input_raw_inline_renderer_prototype:nn
+              { #1 }
+              { tex }
+          }
+      }
+      {
+        \@@_plain_tex_default_input_raw_inline_renderer_prototype:nn
+          { #1 }
+          { #2 }
       }
   }
 \cs_gset_eq:NN
@@ -27964,9 +27978,8 @@ end
 %
 %#### Raw Attribute Renderer Prototypes
 %
-% In the raw block and inline raw span renderer prototypes, execute the content
-% with TeX when the raw attribute is `tex` or `context`, display the content as
-% markdown when the raw attribute is `md`, and ignore the content otherwise.
+% In the raw block and inline raw span renderer prototypes, default to the
+% plain TeX renderer prototypes, translating raw attribute `context` to `tex`.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -27974,12 +27987,20 @@ end
 \cs_gset:Npn
   \markdownRendererInputRawInlinePrototype#1#2
   {
-    \str_case:nn
+    \str_case:nnF
       { #2 }
       {
-        { tex     } { \markdownEscape{#1} }
-        { context } { \markdownEscape{#1} }
-        { md      } { \markdownInput{#1}  }
+        { latex }
+          {
+            \@@_plain_tex_default_input_raw_inline_renderer_prototype:nn
+              { #1 }
+              { context }
+          }
+      }
+      {
+        \@@_plain_tex_default_input_raw_inline_renderer_prototype:nn
+          { #1 }
+          { #2 }
       }
   }
 \cs_gset_eq:NN
