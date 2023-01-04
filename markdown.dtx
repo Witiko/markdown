@@ -26984,13 +26984,42 @@ end
   blockQuoteBegin = {\begin{quotation}},
   blockQuoteEnd = {\end{quotation}},
   inputVerbatim = {\VerbatimInput{#1}},
-  inputFencedCode = {%
-    \ifx\relax#2\relax
-      \VerbatimInput{#1}%
-    \else
-      \@ifundefined{minted@code}{%
-        \@ifundefined{lst@version}{%
-          \markdownRendererInputFencedCode{#1}{}%
+  thematicBreak = {\noindent\rule[0.5ex]{\linewidth}{1pt}},
+  note = {\footnote{#1}}}}
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+%#### Fenced Code
+% When no infostring has been specified, default to the indented code block
+% renderer.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\cs_gset:Npn
+  \markdownRendererInputFencedCodePrototype#1#2
+  {
+    \str_if_empty:nTF
+      { #2 }
+      { \markdownRendererInputVerbatim{#1} }
+      {
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% When the \pkg{minted} package is loaded, use it for syntax highlighting.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        \@ifpackageloaded
+          { minted }
+          {
+            \catcode`\#=6\relax
+            \inputminted{#2}{#1}
+            \catcode`\#=12\relax
+          }
+          {
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -26999,26 +27028,23 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-        }{%
-          \lstinputlisting[language=#2]{#1}%
-        }%
+            \@ifpackageloaded
+              { listings }
+              { \lstinputlisting[language=#2]{#1} }
 %    \end{macrocode}
 % \par
 % \begin{markdown}
 %
-% When the \pkg{minted} package is loaded, use it for syntax highlighting.
-% The \pkg{minted} package is preferred over \pkg{listings}.
+% When neither the \pkg{listings} package nor the \pkg{minted} package is
+% loaded, act as though no infostring were given.
 %
 % \end{markdown}
 %  \begin{macrocode}
-      }{%
-        \catcode`\#=6\relax
-        \inputminted{#2}{#1}%
-        \catcode`\#=12\relax
-      }%
-    \fi},
-  thematicBreak = {\noindent\rule[0.5ex]{\linewidth}{1pt}},
-  note = {\footnote{#1}}}}
+              { \markdownRendererInputFencedCode{#1}{} }
+          }
+      }
+  }
+\ExplSyntaxOff
 %    \end{macrocode}
 % \par
 % \begin{markdown}
