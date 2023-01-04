@@ -25192,6 +25192,32 @@ end
 \def\markdownRendererStrikeThroughPrototype#1{#1}%
 \def\markdownRendererSuperscriptPrototype#1{#1}%
 \def\markdownRendererSubscriptPrototype#1{#1}%
+\ExplSyntaxOn
+\cs_gset:Npn
+  \markdownRendererHeaderAttributeContextBeginPrototype
+  {
+    \group_begin:
+    \color_group_begin:
+  }
+\cs_gset:Npn
+  \markdownRendererHeaderAttributeContextEndPrototype
+  {
+    \color_group_end:
+    \group_end:
+  }
+\cs_gset_eq:NN
+  \markdownRendererBracketedSpanAttributeContextBeginPrototype
+  \markdownRendererHeaderAttributeContextBeginPrototype
+\cs_gset_eq:NN
+  \markdownRendererBracketedSpanAttributeContextEndPrototype
+  \markdownRendererHeaderAttributeContextEndPrototype
+\cs_gset_eq:NN
+  \markdownRendererFencedDivAttributeContextBeginPrototype
+  \markdownRendererHeaderAttributeContextBeginPrototype
+\cs_gset_eq:NN
+  \markdownRendererFencedDivAttributeContextEndPrototype
+  \markdownRendererHeaderAttributeContextEndPrototype
+\ExplSyntaxOff
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -26963,7 +26989,7 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-  headerAttributeContextBegin = {
+  headerAttributeContextBegin = {%
     \markdownSetup{
       rendererPrototypes = {
         attributeIdentifier = {%
@@ -26985,6 +27011,7 @@ end
       },
     }%
   },
+  headerAttributeContextEnd = {},
   superscript = {\textsuperscript{#1}},
   subscript = {\textsubscript{#1}},
   blockQuoteBegin = {\begin{quotation}},

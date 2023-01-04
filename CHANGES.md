@@ -13,6 +13,8 @@ Default Renderer Prototypes:
 - Use `paralist` LaTeX package to define default renderer prototypes for
   fancy lists when `fancyList` Lua option is enabled. (#241)
 - Insert `\unskip` after default raw inline renderer prototype. (ca2047e)
+- Make `\*group_begin:` and `\*group_end:` the default renderer prototypes
+  for attribute contexts. (#243)
 - In LaTeX and ConTeXt, use just first word of infostring to determine fence
   code block language. (#244)
 
