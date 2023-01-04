@@ -25206,6 +25206,16 @@ end
       { #2 }
       {
         { md  } { \markdownInput{#1}  }
+        { tex } { \markdownEscape{#1} \unskip }
+      }
+  }
+\cs_new:Nn
+  \@@_plain_tex_default_input_raw_block_renderer_prototype:nn
+  {
+    \str_case:nn
+      { #2 }
+      {
+        { md  } { \markdownInput{#1}  }
         { tex } { \markdownEscape{#1} }
       }
   }
@@ -25216,9 +25226,13 @@ end
       { #1 }
       { #2 }
   }
-\cs_gset_eq:NN
-  \markdownRendererInputRawBlockPrototype
-  \markdownRendererInputRawInlinePrototype
+\cs_gset:Npn
+  \markdownRendererInputRawBlockPrototype#1#2
+  {
+    \@@_plain_tex_default_input_raw_block_renderer_prototype:nn
+      { #1 }
+      { #2 }
+  }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par
@@ -27633,9 +27647,25 @@ end
           { #2 }
       }
   }
-\cs_gset_eq:NN
-  \markdownRendererInputRawBlockPrototype
-  \markdownRendererInputRawInlinePrototype
+\cs_gset:Npn
+  \markdownRendererInputRawBlockPrototype#1#2
+  {
+    \str_case:nnF
+      { #2 }
+      {
+        { latex }
+          {
+            \@@_plain_tex_default_input_raw_block_renderer_prototype:nn
+              { #1 }
+              { tex }
+          }
+      }
+      {
+        \@@_plain_tex_default_input_raw_block_renderer_prototype:nn
+          { #1 }
+          { #2 }
+      }
+  }
 \ExplSyntaxOff
 \fi % Closes `\markdownIfOption{Plain}{\iffalse}{iftrue}`
 %    \end{macrocode}
@@ -27999,6 +28029,25 @@ end
       }
       {
         \@@_plain_tex_default_input_raw_inline_renderer_prototype:nn
+          { #1 }
+          { #2 }
+      }
+  }
+\cs_gset:Npn
+  \markdownRendererInputRawBlockPrototype#1#2
+  {
+    \str_case:nnF
+      { #2 }
+      {
+        { context }
+          {
+            \@@_plain_tex_default_input_raw_block_renderer_prototype:nn
+              { #1 }
+              { tex }
+          }
+      }
+      {
+        \@@_plain_tex_default_input_raw_block_renderer_prototype:nn
           { #1 }
           { #2 }
       }
