@@ -12,6 +12,7 @@ Default Renderer Prototypes:
 
 - Use `paralist` LaTeX package to define default renderer prototypes for
   fancy lists when `fancyList` Lua option is enabled. (#241)
+- Insert `\unskip` after default raw inline renderer prototype. (ca2047e)
 
 Unit Tests:
 
