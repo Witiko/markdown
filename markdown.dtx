@@ -1264,12 +1264,18 @@ local md5 = require("md5")
 %:    A package that is used to polyfill the general hook management system in
 %     the default renderer prototypes for \acro{yaml} metadata, see Section
 %     <#sec:latexyamlmetadata>, and also in the default renderer prototype
-%     for attribute identifiers.
+%     for identifier attributes.
 %
 % \pkg{soulutf8}
 %
 %:    A package that is used in the default renderer prototype for
 %     strike-throughs.
+%
+% \pkg{ltxcmds}
+%
+%:    A package that is used to detect whether the \pkg{minted} and
+%     \pkg{listings} packages are loaded in the default renderer prototype
+%     for fenced code blocks.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -26996,6 +27002,7 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
+\RequirePackage{ltxcmds}
 \ExplSyntaxOn
 \cs_gset:Npn
   \markdownRendererInputFencedCodePrototype#1#2
@@ -27012,7 +27019,7 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-        \@ifpackageloaded
+        \ltx@ifpackageloaded
           { minted }
           {
             \catcode`\#=6\relax
@@ -27028,7 +27035,7 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-            \@ifpackageloaded
+            \ltx@ifpackageloaded
               { listings }
               { \lstinputlisting[language=#2]{#1} }
 %    \end{macrocode}
