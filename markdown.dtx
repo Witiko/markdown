@@ -21898,7 +21898,7 @@ function M.reader.new(writer, options)
             self.parser_functions.parse_inlines_no_link(label),r.url, r.title)
           index = index + 2
         else
-          result[#result + 1] = fallback
+          result[#result + 1] = {fallback[1], fallback[2], fallback[3]}
           index = index + 1
         end
       end
@@ -21926,7 +21926,7 @@ function M.reader.new(writer, options)
             self.parser_functions.parse_inlines(label), r.url, r.title)
           index = index + 2
         else
-          result[#result + 1] = {"!", fallback}
+          result[#result + 1] = {"!", fallback[1], fallback[2], fallback[3]}
           index = index + 1
         end
       end
