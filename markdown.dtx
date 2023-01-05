@@ -21327,6 +21327,14 @@ parsers.tag         = parsers.lbracket
                            - (parsers.rbracket + parsers.blankline^2)))^1)
                     * parsers.rbracket
 
+parsers.link_label         = parsers.lbracket
+                            * Cs((parsers.alphanumeric^1
+                                + parsers.inticks
+                                + ( parsers.backslash / "" * (parsers.lbracket + parsers.rbracket)
+                                  + parsers.any
+                                  - (parsers.rbracket + parsers.blankline^2)))^1)
+                            * parsers.rbracket
+
 -- url for markdown links, allowing nested brackets:
 parsers.url         = parsers.less * Cs((parsers.anyescaped
                                         - parsers.more)^0)
@@ -21480,7 +21488,7 @@ parsers.tagentity = parsers.ampersand * C(parsers.alphanumeric^1)
 % \end{markdown}
 %  \begin{macrocode}
 -- parse a reference definition:  [foo]: /bar "title"
-parsers.define_reference_parser = parsers.leader * parsers.tag * parsers.colon
+parsers.define_reference_parser = parsers.leader * parsers.link_label * parsers.colon
                                 * parsers.spacechar^0 * parsers.url
                                 * parsers.optionaltitle * parsers.blankline^1
 %    \end{macrocode}
