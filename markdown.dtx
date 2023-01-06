@@ -21879,6 +21879,33 @@ function M.reader.new(writer, options)
       end
   end
 
+  -- TODO
+  local function parsed_inline_has_link(t)
+    for a, b in pairs(t) do
+      if type(b) == 'table' then
+        if (b[1] == "\\markdownRendererLink{" or parsed_inline_has_link(b)) then
+          return true
+        end
+      end
+      if type(b) == 'function' then
+        return true
+      end
+    end
+    return false
+  end
+
+  local function write_link_2(lab,direct,src,tit)
+    local lab = self.parser_functions.parse_inlines(lab)
+    if (parsed_inline_has_link(lab)) then
+      if (direct) then
+        return {{"[", lab, "]"},{"(", self.parser_functions.parse_inlines(src), self.parser_functions.parse_inlines(tit), ")"}}
+      else
+        return {"[", lab, "]"}
+      end
+    end
+    return writer.link(lab,src,tit)
+  end
+
   -- iterate through pairs of consecutive direct and indirect links and
   -- return a table with either a link if a pair has a link reference,
   -- or a bracketed label otherwise
@@ -21890,12 +21917,13 @@ function M.reader.new(writer, options)
       while(index <= #links)
       do
         local link = links[index]
+        local label = link[1]
 
         if (link[2]) then
-          result[#result + 1] = writer.link(self.parser_functions.parse_inlines(link[1]), link[3], link[4])
+          result[#result + 1] = write_link_2(label, link[2], link[3], link[4])
           index = index + 1
         else
-          local label = link[1]
+          
           local next_link = links[index+1]
           local r,fallback
 
@@ -21906,8 +21934,7 @@ function M.reader.new(writer, options)
           end
 
           if r then
-            result[#result + 1] = writer.link(
-              self.parser_functions.parse_inlines_no_link(label),r.url, r.title)
+            result[#result + 1] = write_link_2(label,link[2],r.url, r.title)
             if (next_link ~= nil and next_link[2]) then
               result[#result + 1] = {"(",self.parser_functions.parse_inlines(next_link[3]),self.parser_functions.parse_inlines(next_link[4]),")"}
             end
@@ -22084,7 +22111,7 @@ function M.reader.new(writer, options)
   parsers.IndirectLink  = parsers.tag * Cc(false)
 
   -- parse a link or image (direct or indirect)
-  parsers.Link          = Ct((Ct(parsers.DirectLink) +  Ct(parsers.IndirectLink))^1) / parse_links
+  parsers.Link          = Ct((Ct(parsers.DirectLink) + Ct(parsers.IndirectLink))^1) / parse_links
 
   parsers.DirectImage   = parsers.exclamation
                         * (parsers.tag / self.parser_functions.parse_inlines)
