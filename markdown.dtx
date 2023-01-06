@@ -22638,7 +22638,8 @@ function M.reader.new(writer, options)
 % \end{markdown}
 %  \begin{macrocode}
   -- parse atx header
-  parsers.AtxHeading = Cg(parsers.heading_start, "level")
+  parsers.AtxHeading = parsers.nonindentspace
+                     * Cg(parsers.heading_start, "level")
                      * parsers.spacechar^1
                      * (C(parsers.linechar^0 * parsers.newline)
                        / strip_atx_end
