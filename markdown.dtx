@@ -22643,6 +22643,7 @@ function M.reader.new(writer, options)
                      * (C(parsers.line)
                        / strip_atx_end
                        / self.parser_functions.parse_inlines)
+                     * parsers.spacechar^1
                      * Cb("level")
                      / writer.heading
 
