@@ -20861,6 +20861,7 @@ function M.writer.new(options)
      ["^"] = "\\markdownRendererCircumflex{}",
      ["~"] = "\\markdownRendererTilde{}",
      ["|"] = "\\markdownRendererPipe{}",
+     [entities.hex_entity('0000')] = entities.hex_entity('FFFD'),
      [entities.hex_entity('00A0')] = self.nbsp,
    }
 %    \end{macrocode}
