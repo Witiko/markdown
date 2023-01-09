@@ -8,6 +8,11 @@ Documentation:
 - Update examples for options `bracketedSpans` and `fencedDivs`.
   (499c65a, 532cdb8)
 
+Fixes:
+
+- Map U+0000 to U+FFFD in strings. (lostenderman#34, #247)
+- Map non-breaking space to `writer->nbsp` in strings. (lostenderman#99, #247)
+
 Default Renderer Prototypes:
 
 - Use `paralist` LaTeX package to define default renderer prototypes for
@@ -20,7 +25,8 @@ Default Renderer Prototypes:
 
 Unit Tests:
 
-- Do not fold tabs and spaces into a single space token. (#242)
+- Do not fold tabs and spaces into a single space token.
+  (lostenderman#107, #242)
 
 Speed Improvements:
 
