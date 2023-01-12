@@ -171,3 +171,9 @@ This is raw `\TeX`{=tex} code:
 ``` {=tex}
 $$ x^n + y^n = z^n $$
 ```
+
+| this is a line block that
+| spans multiple
+| even
+  discontinuous
+| lines
