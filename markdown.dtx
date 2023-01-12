@@ -6708,6 +6708,84 @@ defaultOptions.jekyllData = false
 %</lua,lua-cli>
 %<*manual-options>
 
+#### Option `lineBlocks`
+
+`lineBlocks` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{lineBlocks}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Enable the Pandoc line block syntax extension.
+
+        ``` md
+        | this is a line block that
+        | spans multiple
+        | even
+          discontinuous
+        | lines
+        ``````
+
+:    false
+
+     :   Disable the Pandoc line block syntax extension.
+
+% \end{markdown}
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage{minted}
+\usepackage[lineBlocks]{markdown}
+\begin{document}
+\begin{markdown}
+| I would spread the cloths under your feet:
+| But I, being poor, have only my dreams;
+| I have spread my dreams under your feet;
+| Tread softly because you tread on my dreams.
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> | I would spread the cloths under your feet:
+> | But I, being poor, have only my dreams;
+> | I have spread my dreams under your feet;
+> | Tread softly because you tread on my dreams.
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { lineBlocks }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.lineBlocks = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
 #### Option `notes`
 
 `notes` (default value: `false`)
@@ -13224,6 +13302,147 @@ following text:
 \prop_gput:Nnn
   \g_@@_renderer_arities_prop
   { lineBreak }
+  { 0 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
+#### LineBlock Renderer
+The following macros are only produced, when the \Opt{lineBlocks} option
+is enabled.
+
+The  The \mdef{markdownRendererLineBlockBegin} and \mdef{markdownRendererLineBlockEnd} macros 
+represent the beginning and the end of a *markdown* document. The macros
+receive no arguments.
+
+% \end{markdown}
+%
+% \iffalse
+
+##### Plain \TeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\input markdown
+\def\markdownOptionLineBlocks{true}
+\def\markdownRendererLineBlockBeginPrototype{}%
+\def\markdownRendererLineBlockEndPrototype{}%
+\markdownBegin
+| I would spread the cloths under your feet:
+| But I, being poor, have only my dreams;
+| I have spread my dreams under your feet;
+| Tread softly because you tread on my dreams.
+\markdownEnd
+\bye
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+luatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> | I would spread the cloths under your feet:
+> | But I, being poor, have only my dreams;
+> | I have spread my dreams under your feet;
+> | Tread softly because you tread on my dreams.
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[lineBlocks]{markdown}
+\markdownSetup{
+  renderers = {
+    lineBlock = {},
+  },
+}
+\begin{document}
+\begin{markdown}
+| I would spread the cloths under your feet:
+| But I, being poor, have only my dreams;
+| I have spread my dreams under your feet;
+| Tread softly because you tread on my dreams.
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> | I would spread the cloths under your feet:
+> | But I, being poor, have only my dreams;
+> | I have spread my dreams under your feet;
+> | Tread softly because you tread on my dreams.
+
+##### \Hologo{ConTeXt} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\usemodule[t][markdown]
+\setupmarkdown[lineBlocks = yes]
+\def\markdownRendererLineBlockBeginPrototype{}%
+\def\markdownRendererLineBlockEndPrototype{}%
+\starttext
+\startmarkdown
+| I would spread the cloths under your feet:
+| But I, being poor, have only my dreams;
+| I have spread my dreams under your feet;
+| Tread softly because you tread on my dreams.
+\stopmarkdown
+\stoptext
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+context document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> | I would spread the cloths under your feet:
+> | But I, being poor, have only my dreams;
+> | I have spread my dreams under your feet;
+> | Tread softly because you tread on my dreams.
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererLineBlockBegin{%
+  \markdownRendererLineBlockBeginPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { lineBlockBegin }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { lineBlockBegin }
+  { 0 }
+\ExplSyntaxOff
+\def\markdownRendererLineBlockEnd{%
+  \markdownRendererLineBlockEndPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { lineBlockEnd }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { lineBlockEnd }
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
@@ -24774,6 +24993,68 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Line blocks
+%
+% The \luamdef{extensions.line_blocks} function implements the Pandoc line blocks
+% syntax extension.
+%
+% \end{markdown}
+%  \begin{macrocode}
+M.extensions.line_blocks = function()
+  return {
+    name = "built-in line_blocks syntax extension",
+    extend_writer = function(self)
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define \luamdef{writer->lineblock} as a function that will transform
+% a line block consisted of lines `l` to the output format, with
+% all but the last newline rendered as a line break.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      function self.lineblock(l)
+        if not self.is_writing then return "" end
+        local buffer = {}
+        for i = 1, #l - 1 do
+          buffer[#buffer + 1] = { l[i], self.linebreak }
+        end
+        buffer[#buffer + 1] = l[#l]
+        
+        return {"\\markdownRendererLineBlockBegin\n"
+                  ,buffer,
+                  "\n\\markdownRendererLineBlockEnd "}
+      end
+    end, extend_reader = function(self)
+      local parsers = self.parsers
+      local writer = self.writer
+
+      local function lineblock(lines)
+        return writer.lineblock(lines)
+      end
+
+      local LineBlock = Ct(
+                        (Cs(
+                          ( (parsers.pipe * parsers.space)/""
+                          * ((parsers.space)/entities.char_entity("nbsp"))^0
+                          * parsers.linechar^0 * (parsers.newline/""))
+                          * (-parsers.pipe
+                            * (parsers.space^1/" ")
+                            * parsers.linechar^1
+                            * (parsers.newline/"")
+                            )^0
+                          * (parsers.blankline/"")^0
+                        ) / self.parser_functions.parse_inlines)^1) / lineblock
+
+      self.insert_pattern("Block after Blockquote",
+                           LineBlock, "LineBlock")
+    end
+  }
+end
+%    \end{macrocode}
+% \begin{markdown}
+%
 %### Conversion from Markdown to Plain \TeX{}
 %
 % The \luamref{new} function returns a conversion function that takes a
@@ -24868,6 +25149,11 @@ function M.new(options)
   if options.superscripts then
     local superscript_extension = M.extensions.superscripts()
     table.insert(extensions, superscript_extension)
+  end
+
+  if options.lineBlocks then
+    local line_block_extension = M.extensions.line_blocks()
+    table.insert(extensions, line_block_extension)
   end
 
 %    \end{macrocode}
@@ -25174,6 +25460,8 @@ end
 \def\markdownRendererStrongEmphasisPrototype#1{{\bf#1}}%
 \def\markdownRendererBlockQuoteBeginPrototype{\par\begingroup\it}%
 \def\markdownRendererBlockQuoteEndPrototype{\endgroup\par}%
+\def\markdownRendererLineBlockBeginPrototype{}%
+\def\markdownRendererLineBlockEndPrototype{}%
 \def\markdownRendererInputVerbatimPrototype#1{%
   \par{\tt\input#1\relax{}}\par}%
 \def\markdownRendererInputFencedCodePrototype#1#2{%
@@ -27625,6 +27913,23 @@ end
 % \par
 % \begin{markdown}
 %
+%#### Line blocks
+% Here is a basic implementation of line blocks. If the \pkg{verse} package is
+% loaded, then it is used to produce the verses.
+%
+% \end{markdown}
+%  \begin{macrocode}
+
+\RequirePackage{verse}
+\markdownSetup{rendererPrototypes={
+  lineBlockBegin = {\begin{verse}},
+  lineBlockEnd = {\end{verse}},
+}}
+
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
 %#### YAML Metadata {#latexyamlmetadata}
 %
 % The default setup of \acro{yaml} metadata will invoke the `\title`,
@@ -27960,6 +28265,8 @@ end
 \def\markdownRendererStrongEmphasisPrototype#1{{\bf#1}}%
 \def\markdownRendererBlockQuoteBeginPrototype{\startquotation}%
 \def\markdownRendererBlockQuoteEndPrototype{\stopquotation}%
+\def\markdownRendererLineBlockBeginPrototype{}%
+\def\markdownRendererLineBlockEndPrototype{}%
 \def\markdownRendererInputVerbatimPrototype#1{\typefile{#1}}%
 %    \end{macrocode}
 % \par
