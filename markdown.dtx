@@ -20828,24 +20828,35 @@ function M.writer.new(options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-   self.escaped_uri_chars = {
-     ["{"] = "\\markdownRendererLeftBrace{}",
-     ["}"] = "\\markdownRendererRightBrace{}",
-     ["\\"] = "\\markdownRendererBackslash{}",
-   }
-   self.escaped_minimal_strings = {
-     ["^^"] = "\\markdownRendererCircumflex\\markdownRendererCircumflex ",
-     ["☒"] = "\\markdownRendererTickedBox{}",
-     ["⌛"] = "\\markdownRendererHalfTickedBox{}",
-     ["☐"] = "\\markdownRendererUntickedBox{}",
-   }
+  self.escaped_uri_chars = {
+    ["{"] = "\\markdownRendererLeftBrace{}",
+    ["}"] = "\\markdownRendererRightBrace{}",
+    ["\\"] = "\\markdownRendererBackslash{}",
+  }
+  self.escaped_minimal_strings = {
+    ["^^"] = "\\markdownRendererCircumflex\\markdownRendererCircumflex ",
+    ["☒"] = "\\markdownRendererTickedBox{}",
+    ["⌛"] = "\\markdownRendererHalfTickedBox{}",
+    ["☐"] = "\\markdownRendererUntickedBox{}",
+  }
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define table \luamdef{writer->escaped_strings} containing the mapping from
+% character strings that need to be escaped in typeset content.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  self.escaped_strings = util.table_copy(self.escaped_minimal_strings)
+  self.escaped_strings[entities.hex_entity('00A0')] = self.nbsp
 %    \end{macrocode}
 % \par
 % \begin{markdown}
 %
 % Define a table \luamdef{writer->escaped_chars} containing the mapping from
 % special plain \TeX{} characters (including the active pipe character (`|`)
-% of \Hologo{ConTeXt}) that need to be escaped for typeset content.
+% of \Hologo{ConTeXt}) that need to be escaped in typeset content.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -20862,7 +20873,6 @@ function M.writer.new(options)
      ["~"] = "\\markdownRendererTilde{}",
      ["|"] = "\\markdownRendererPipe{}",
      [entities.hex_entity('0000')] = entities.hex_entity('FFFD'),
-     [entities.hex_entity('00A0')] = self.nbsp,
    }
 %    \end{macrocode}
 % \par
@@ -20875,7 +20885,7 @@ function M.writer.new(options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  self.escape = util.escaper(self.escaped_chars, self.escaped_minimal_strings)
+  self.escape = util.escaper(self.escaped_chars, self.escaped_strings)
   self.escape_uri = util.escaper(self.escaped_uri_chars, self.escaped_minimal_strings)
   self.escape_minimal = util.escaper({}, self.escaped_minimal_strings)
 %    \end{macrocode}
