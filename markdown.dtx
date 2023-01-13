@@ -13368,7 +13368,7 @@ following text:
 %
 % \begin{markdown}
 
-#### LineBlock Renderer
+#### Line Block Renderer
 The following macros are only produced, when the \Opt{lineBlocks} option
 is enabled.
 
@@ -13386,8 +13386,15 @@ following content:
 ``` tex
 \input markdown
 \def\markdownOptionLineBlocks{true}
-\def\markdownRendererLineBlockBeginPrototype{}%
-\def\markdownRendererLineBlockEndPrototype{}%
+\def\markdownRendererLineBlockBegin{%
+  \begingroup
+  \leftskip=1.5\parindent
+  \parindent=0pt
+}
+\def\markdownRendererLineBlockEnd{%
+  \par
+  \endgroup
+}
 \markdownBegin
 | I would spread the cloths under your feet:
 | But I, being poor, have only my dreams;
@@ -13414,10 +13421,12 @@ Using a text editor, create a text document named `document.tex` with the
 following content:
 ``` tex
 \documentclass{article}
+\usepackage{verse}
 \usepackage[lineBlocks]{markdown}
 \markdownSetup{
   renderers = {
-    lineBlock = {},
+    lineBlockBegin = {\begin{verse}},
+    lineBlockEnd = {\end{verse}},
   },
 }
 \begin{document}
@@ -13448,8 +13457,8 @@ following content:
 ``` tex
 \usemodule[t][markdown]
 \setupmarkdown[lineBlocks = yes]
-\def\markdownRendererLineBlockBeginPrototype{}%
-\def\markdownRendererLineBlockEndPrototype{}%
+\def\markdownRendererLineBlockBegin{\startlines}
+\def\markdownRendererLineBlockEnd{\stoplines}
 \starttext
 \startmarkdown
 | I would spread the cloths under your feet:
