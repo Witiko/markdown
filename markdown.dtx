@@ -25518,8 +25518,8 @@ end
 \def\markdownRendererStrongEmphasisPrototype#1{{\bf#1}}%
 \def\markdownRendererBlockQuoteBeginPrototype{\par\begingroup\it}%
 \def\markdownRendererBlockQuoteEndPrototype{\endgroup\par}%
-\def\markdownRendererLineBlockBeginPrototype{}%
-\def\markdownRendererLineBlockEndPrototype{}%
+\def\markdownRendererLineBlockBeginPrototype{\begingroup\parindent=0pt}%
+\def\markdownRendererLineBlockEndPrototype{\endgroup}%
 \def\markdownRendererInputVerbatimPrototype#1{%
   \par{\tt\input#1\relax{}}\par}%
 \def\markdownRendererInputFencedCodePrototype#1#2{%
@@ -28323,8 +28323,8 @@ end
 \def\markdownRendererStrongEmphasisPrototype#1{{\bf#1}}%
 \def\markdownRendererBlockQuoteBeginPrototype{\startquotation}%
 \def\markdownRendererBlockQuoteEndPrototype{\stopquotation}%
-\def\markdownRendererLineBlockBeginPrototype{}%
-\def\markdownRendererLineBlockEndPrototype{}%
+\def\markdownRendererLineBlockBeginPrototype{\startlines}%
+\def\markdownRendererLineBlockEndPrototype{\stoplines}%
 \def\markdownRendererInputVerbatimPrototype#1{\typefile{#1}}%
 %    \end{macrocode}
 % \par
