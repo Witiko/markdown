@@ -6736,14 +6736,47 @@ defaultOptions.jekyllData = false
 % \end{markdown}
 % \iffalse
 
+##### Plain \TeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\input markdown
+\def\markdownOptionLineBlocks{true}
+\def\markdownRendererLineBlockBeginPrototype{}%
+\def\markdownRendererLineBlockEndPrototype{}%
+\markdownBegin
+| I would spread the cloths under your feet:
+| But I, being poor, have only my dreams;
+| I have spread my dreams under your feet;
+| Tread softly because you tread on my dreams.
+\markdownEnd
+\bye
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+luatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> | I would spread the cloths under your feet:
+> | But I, being poor, have only my dreams;
+> | I have spread my dreams under your feet;
+> | Tread softly because you tread on my dreams.
+
 ##### \LaTeX{} Example {.unnumbered}
 
 Using a text editor, create a text document named `document.tex` with the
 following content:
 ``` tex
 \documentclass{article}
-\usepackage{minted}
 \usepackage[lineBlocks]{markdown}
+\markdownSetup{
+  renderers = {
+    lineBlock = {},
+  },
+}
 \begin{document}
 \begin{markdown}
 | I would spread the cloths under your feet:
@@ -6756,6 +6789,36 @@ following content:
 Next, invoke LuaTeX from the terminal:
 ``` sh
 lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> | I would spread the cloths under your feet:
+> | But I, being poor, have only my dreams;
+> | I have spread my dreams under your feet;
+> | Tread softly because you tread on my dreams.
+
+##### \Hologo{ConTeXt} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\usemodule[t][markdown]
+\setupmarkdown[lineBlocks = yes]
+\def\markdownRendererLineBlockBeginPrototype{}%
+\def\markdownRendererLineBlockEndPrototype{}%
+\starttext
+\startmarkdown
+| I would spread the cloths under your feet:
+| But I, being poor, have only my dreams;
+| I have spread my dreams under your feet;
+| Tread softly because you tread on my dreams.
+\stopmarkdown
+\stoptext
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+context document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -13319,8 +13382,7 @@ The following macros are only produced, when the \Opt{lineBlocks} option
 is enabled.
 
 The  The \mdef{markdownRendererLineBlockBegin} and \mdef{markdownRendererLineBlockEnd} macros 
-represent the beginning and the end of a *markdown* document. The macros
-receive no arguments.
+represent the beginning and the end of a line block. The macros receive no arguments.
 
 % \end{markdown}
 %
@@ -25009,18 +25071,18 @@ M.extensions.line_blocks = function()
 % \begin{markdown}
 %
 % Define \luamdef{writer->lineblock} as a function that will transform
-% a line block consisted of lines `l` to the output format, with
+% a line block consisted of `lines` to the output format, with
 % all but the last newline rendered as a line break.
 %
 % \end{markdown}
 %  \begin{macrocode}
-      function self.lineblock(l)
+      function self.lineblock(lines)
         if not self.is_writing then return "" end
         local buffer = {}
-        for i = 1, #l - 1 do
-          buffer[#buffer + 1] = { l[i], self.linebreak }
+        for i = 1, #lines - 1 do
+          buffer[#buffer + 1] = { lines[i], self.linebreak }
         end
-        buffer[#buffer + 1] = l[#l]
+        buffer[#buffer + 1] = lines[#lines]
         
         return {"\\markdownRendererLineBlockBegin\n"
                   ,buffer,
@@ -25029,10 +25091,6 @@ M.extensions.line_blocks = function()
     end, extend_reader = function(self)
       local parsers = self.parsers
       local writer = self.writer
-
-      local function lineblock(lines)
-        return writer.lineblock(lines)
-      end
 
       local LineBlock = Ct(
                         (Cs(
@@ -25045,7 +25103,7 @@ M.extensions.line_blocks = function()
                             * (parsers.newline/"")
                             )^0
                           * (parsers.blankline/"")^0
-                        ) / self.parser_functions.parse_inlines)^1) / lineblock
+                        ) / self.parser_functions.parse_inlines)^1) / writer.lineblock
 
       self.insert_pattern("Block after Blockquote",
                            LineBlock, "LineBlock")
