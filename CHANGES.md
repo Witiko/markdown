@@ -8,14 +8,25 @@ Documentation:
 - Update examples for options `bracketedSpans` and `fencedDivs`.
   (499c65a, 532cdb8)
 
+Fixes:
+
+- Map U+0000 to U+FFFD in strings. (lostenderman#34, #247)
+- Map non-breaking space to `writer->nbsp` in strings. (lostenderman#99, #247)
+
 Default Renderer Prototypes:
 
 - Use `paralist` LaTeX package to define default renderer prototypes for
   fancy lists when `fancyList` Lua option is enabled. (#241)
+- Insert `\unskip` after default raw inline renderer prototype. (ca2047e)
+- Make `\*group_begin:` and `\*group_end:` the default renderer prototypes
+  for attribute contexts. (#243)
+- In LaTeX and ConTeXt, use just first word of infostring to determine fence
+  code block language. (#244)
 
 Unit Tests:
 
-- Do not fold tabs and spaces into a single space token. (#242)
+- Do not fold tabs and spaces into a single space token.
+  (lostenderman#107, #242)
 
 Speed Improvements:
 

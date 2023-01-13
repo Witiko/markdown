@@ -1264,12 +1264,18 @@ local md5 = require("md5")
 %:    A package that is used to polyfill the general hook management system in
 %     the default renderer prototypes for \acro{yaml} metadata, see Section
 %     <#sec:latexyamlmetadata>, and also in the default renderer prototype
-%     for attribute identifiers.
+%     for identifier attributes.
 %
 % \pkg{soulutf8}
 %
 %:    A package that is used in the default renderer prototype for
 %     strike-throughs.
+%
+% \pkg{ltxcmds}
+%
+%:    A package that is used to detect whether the \pkg{minted} and
+%     \pkg{listings} packages are loaded in the default renderer prototype
+%     for fenced code blocks.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -20858,6 +20864,8 @@ function M.writer.new(options)
      ["^"] = "\\markdownRendererCircumflex{}",
      ["~"] = "\\markdownRendererTilde{}",
      ["|"] = "\\markdownRendererPipe{}",
+     [entities.hex_entity('0000')] = entities.hex_entity('FFFD'),
+     [entities.hex_entity('00A0')] = self.nbsp,
    }
 %    \end{macrocode}
 % \par
@@ -25172,7 +25180,7 @@ end
 \def\markdownRendererInputVerbatimPrototype#1{%
   \par{\tt\input#1\relax{}}\par}%
 \def\markdownRendererInputFencedCodePrototype#1#2{%
-  \markdownRendererInputVerbatimPrototype{#1}}%
+  \markdownRendererInputVerbatim{#1}}%
 \def\markdownRendererHeadingOnePrototype#1{#1}%
 \def\markdownRendererHeadingTwoPrototype#1{#1}%
 \def\markdownRendererHeadingThreePrototype#1{#1}%
@@ -25189,6 +25197,32 @@ end
 \def\markdownRendererStrikeThroughPrototype#1{#1}%
 \def\markdownRendererSuperscriptPrototype#1{#1}%
 \def\markdownRendererSubscriptPrototype#1{#1}%
+\ExplSyntaxOn
+\cs_gset:Npn
+  \markdownRendererHeaderAttributeContextBeginPrototype
+  {
+    \group_begin:
+    \color_group_begin:
+  }
+\cs_gset:Npn
+  \markdownRendererHeaderAttributeContextEndPrototype
+  {
+    \color_group_end:
+    \group_end:
+  }
+\cs_gset_eq:NN
+  \markdownRendererBracketedSpanAttributeContextBeginPrototype
+  \markdownRendererHeaderAttributeContextBeginPrototype
+\cs_gset_eq:NN
+  \markdownRendererBracketedSpanAttributeContextEndPrototype
+  \markdownRendererHeaderAttributeContextEndPrototype
+\cs_gset_eq:NN
+  \markdownRendererFencedDivAttributeContextBeginPrototype
+  \markdownRendererHeaderAttributeContextBeginPrototype
+\cs_gset_eq:NN
+  \markdownRendererFencedDivAttributeContextEndPrototype
+  \markdownRendererHeaderAttributeContextEndPrototype
+\ExplSyntaxOff
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -25202,19 +25236,40 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\cs_gset:Npn
-  \markdownRendererInputRawInlinePrototype#1#2
+\cs_new:Nn
+  \@@_plain_tex_default_input_raw_inline_renderer_prototype:nn
   {
     \str_case:nn
       { #2 }
       {
-        { tex } { \markdownEscape{#1} }
         { md  } { \markdownInput{#1}  }
+        { tex } { \markdownEscape{#1} \unskip }
       }
   }
-\cs_gset_eq:NN
-  \markdownRendererInputRawBlockPrototype
-  \markdownRendererInputRawInlinePrototype
+\cs_new:Nn
+  \@@_plain_tex_default_input_raw_block_renderer_prototype:nn
+  {
+    \str_case:nn
+      { #2 }
+      {
+        { md  } { \markdownInput{#1}  }
+        { tex } { \markdownEscape{#1} }
+      }
+  }
+\cs_gset:Npn
+  \markdownRendererInputRawInlinePrototype#1#2
+  {
+    \@@_plain_tex_default_input_raw_inline_renderer_prototype:nn
+      { #1 }
+      { #2 }
+  }
+\cs_gset:Npn
+  \markdownRendererInputRawBlockPrototype#1#2
+  {
+    \@@_plain_tex_default_input_raw_block_renderer_prototype:nn
+      { #1 }
+      { #2 }
+  }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par
@@ -26343,7 +26398,7 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\renewcommand\markdownRendererInputFencedCode[2]{%
+\renewcommand\markdownRendererInputFencedCodePrototype[2]{%
   \def\next##1 ##2\relax{%
     \ifthenelse{\equal{##1}{dot}}{%
       \markdownIfOption{frozenCache}{}{%
@@ -26939,7 +26994,7 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-  headerAttributeContextBegin = {
+  headerAttributeContextBegin = {%
     \markdownSetup{
       rendererPrototypes = {
         attributeIdentifier = {%
@@ -26961,18 +27016,67 @@ end
       },
     }%
   },
+  headerAttributeContextEnd = {},
   superscript = {\textsuperscript{#1}},
   subscript = {\textsubscript{#1}},
   blockQuoteBegin = {\begin{quotation}},
   blockQuoteEnd = {\end{quotation}},
   inputVerbatim = {\VerbatimInput{#1}},
-  inputFencedCode = {%
-    \ifx\relax#2\relax
-      \VerbatimInput{#1}%
-    \else
-      \@ifundefined{minted@code}{%
-        \@ifundefined{lst@version}{%
-          \markdownRendererInputFencedCode{#1}{}%
+  thematicBreak = {\noindent\rule[0.5ex]{\linewidth}{1pt}},
+  note = {\footnote{#1}}}}
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+%#### Fenced Code
+% When no infostring has been specified, default to the indented code block
+% renderer.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\RequirePackage{ltxcmds}
+\ExplSyntaxOn
+\cs_gset:Npn
+  \markdownRendererInputFencedCodePrototype#1#2
+  {
+    \tl_if_empty:nTF
+      { #2 }
+      { \markdownRendererInputVerbatim{#1} }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Otherwise, extract the first word of the infostring and treat it as the name
+% of the programming language in which the code block is written.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      {
+        \regex_extract_once:nnN
+          { \w* }
+          { #2 }
+          \l_tmpa_seq
+        \seq_pop_left:NN
+          \l_tmpa_seq
+          \l_tmpa_tl
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% When the \pkg{minted} package is loaded, use it for syntax highlighting.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        \ltx@ifpackageloaded
+          { minted }
+          {
+            \catcode`\#=6\relax
+            \exp_args:NV
+              \inputminted
+              \l_tmpa_tl
+              { #1 }
+            \catcode`\#=12\relax
+          }
+          {
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -26981,26 +27085,23 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-        }{%
-          \lstinputlisting[language=#2]{#1}%
-        }%
+            \ltx@ifpackageloaded
+              { listings }
+              { \lstinputlisting[language=\l_tmpa_tl]{#1} }
 %    \end{macrocode}
 % \par
 % \begin{markdown}
 %
-% When the \pkg{minted} package is loaded, use it for syntax highlighting.
-% The \pkg{minted} package is preferred over \pkg{listings}.
+% When neither the \pkg{listings} package nor the \pkg{minted} package is
+% loaded, act as though no infostring were given.
 %
 % \end{markdown}
 %  \begin{macrocode}
-      }{%
-        \catcode`\#=6\relax
-        \inputminted{#2}{#1}%
-        \catcode`\#=12\relax
-      }%
-    \fi},
-  thematicBreak = {\noindent\rule[0.5ex]{\linewidth}{1pt}},
-  note = {\footnote{#1}}}}
+              { \markdownRendererInputFencedCode{#1}{} }
+          }
+      }
+  }
+\ExplSyntaxOff
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -27604,9 +27705,8 @@ end
 %
 %#### Raw Attribute Renderer Prototypes
 %
-% In the raw block and inline raw span renderer prototypes, execute the content
-% with TeX when the raw attribute is `tex` or `latex`, display the content as
-% markdown when the raw attribute is `md`, and ignore the content otherwise.
+% In the raw block and inline raw span renderer prototypes, default to the
+% plain TeX renderer prototypes, translating raw attribute `latex` to `tex`.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -27614,17 +27714,41 @@ end
 \cs_gset:Npn
   \markdownRendererInputRawInlinePrototype#1#2
   {
-    \str_case:nn
+    \str_case:nnF
       { #2 }
       {
-        { tex   } { \markdownEscape{#1} }
-        { latex } { \markdownEscape{#1} }
-        { md    } { \markdownInput{#1}  }
+        { latex }
+          {
+            \@@_plain_tex_default_input_raw_inline_renderer_prototype:nn
+              { #1 }
+              { tex }
+          }
+      }
+      {
+        \@@_plain_tex_default_input_raw_inline_renderer_prototype:nn
+          { #1 }
+          { #2 }
       }
   }
-\cs_gset_eq:NN
-  \markdownRendererInputRawBlockPrototype
-  \markdownRendererInputRawInlinePrototype
+\cs_gset:Npn
+  \markdownRendererInputRawBlockPrototype#1#2
+  {
+    \str_case:nnF
+      { #2 }
+      {
+        { latex }
+          {
+            \@@_plain_tex_default_input_raw_block_renderer_prototype:nn
+              { #1 }
+              { tex }
+          }
+      }
+      {
+        \@@_plain_tex_default_input_raw_block_renderer_prototype:nn
+          { #1 }
+          { #2 }
+      }
+  }
 \ExplSyntaxOff
 \fi % Closes `\markdownIfOption{Plain}{\iffalse}{iftrue}`
 %    \end{macrocode}
@@ -27840,17 +27964,31 @@ end
 \def\markdownRendererBlockQuoteBeginPrototype{\startquotation}%
 \def\markdownRendererBlockQuoteEndPrototype{\stopquotation}%
 \def\markdownRendererInputVerbatimPrototype#1{\typefile{#1}}%
-\def\markdownRendererInputFencedCodePrototype#1#2{%
-  \ifx\relax#2\relax
-    \typefile{#1}%
-  \else
 %    \end{macrocode}
 % \par
 % \begin{markdown}
 %
-% The code fence infostring is used as a name from the \Hologo{ConTeXt}
-% `\definetyping` macro. This allows the user to set up code highlighting
-% mapping as follows:
+%#### Fenced Code
+% When no infostring has been specified, default to the indented code block
+% renderer.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\cs_gset:Npn
+  \markdownRendererInputFencedCodePrototype#1#2
+  {
+    \tl_if_empty:nTF
+      { #2 }
+      { \markdownRendererInputVerbatim{#1} }
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Otherwise, extract the first word of the infostring and treat it as the name
+% of the programming language in which the code block is written.
+% This name is then used in the \Hologo{ConTeXt} `\definetyping` macro, which
+% allows the user to set up code highlighting mapping as follows:
 % ````` tex
 % % Map the `TEX` syntax highlighter to the `latex` infostring.
 % \definetyping [latex]
@@ -27870,8 +28008,18 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-    \typefile[#2][]{#1}%
-  \fi}%
+      {
+        \regex_extract_once:nnN
+          { \w* }
+          { #2 }
+          \l_tmpa_seq
+        \seq_pop_left:NN
+          \l_tmpa_seq
+          \l_tmpa_tl
+        \typefile[\l_tmpa_tl][]{#1}
+      }
+  }
+\ExplSyntaxOff
 \def\markdownRendererHeadingOnePrototype#1{\chapter{#1}}%
 \def\markdownRendererHeadingTwoPrototype#1{\section{#1}}%
 \def\markdownRendererHeadingThreePrototype#1{\subsection{#1}}%
@@ -27967,9 +28115,8 @@ end
 %
 %#### Raw Attribute Renderer Prototypes
 %
-% In the raw block and inline raw span renderer prototypes, execute the content
-% with TeX when the raw attribute is `tex` or `context`, display the content as
-% markdown when the raw attribute is `md`, and ignore the content otherwise.
+% In the raw block and inline raw span renderer prototypes, default to the
+% plain TeX renderer prototypes, translating raw attribute `context` to `tex`.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -27977,12 +28124,39 @@ end
 \cs_gset:Npn
   \markdownRendererInputRawInlinePrototype#1#2
   {
-    \str_case:nn
+    \str_case:nnF
       { #2 }
       {
-        { tex     } { \markdownEscape{#1} }
-        { context } { \markdownEscape{#1} }
-        { md      } { \markdownInput{#1}  }
+        { latex }
+          {
+            \@@_plain_tex_default_input_raw_inline_renderer_prototype:nn
+              { #1 }
+              { context }
+          }
+      }
+      {
+        \@@_plain_tex_default_input_raw_inline_renderer_prototype:nn
+          { #1 }
+          { #2 }
+      }
+  }
+\cs_gset:Npn
+  \markdownRendererInputRawBlockPrototype#1#2
+  {
+    \str_case:nnF
+      { #2 }
+      {
+        { context }
+          {
+            \@@_plain_tex_default_input_raw_block_renderer_prototype:nn
+              { #1 }
+              { tex }
+          }
+      }
+      {
+        \@@_plain_tex_default_input_raw_block_renderer_prototype:nn
+          { #1 }
+          { #2 }
       }
   }
 \cs_gset_eq:NN
