@@ -6743,8 +6743,6 @@ following content:
 ``` tex
 \input markdown
 \def\markdownOptionLineBlocks{true}
-\def\markdownRendererLineBlockBeginPrototype{}%
-\def\markdownRendererLineBlockEndPrototype{}%
 \markdownBegin
 | I would spread the cloths under your feet:
 | But I, being poor, have only my dreams;
@@ -6772,11 +6770,6 @@ following content:
 ``` tex
 \documentclass{article}
 \usepackage[lineBlocks]{markdown}
-\markdownSetup{
-  renderers = {
-    lineBlock = {},
-  },
-}
 \begin{document}
 \begin{markdown}
 | I would spread the cloths under your feet:
@@ -6805,8 +6798,6 @@ following content:
 ``` tex
 \usemodule[t][markdown]
 \setupmarkdown[lineBlocks = yes]
-\def\markdownRendererLineBlockBeginPrototype{}%
-\def\markdownRendererLineBlockEndPrototype{}%
 \starttext
 \startmarkdown
 | I would spread the cloths under your feet:
