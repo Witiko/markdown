@@ -10,7 +10,7 @@ Documentation:
 
 Fixes:
 
-- Map U+0000 to U+FFFD in strings. (lostenderman#34, #247)
+- Map U+0000 to U+FFFD in strings. (lostenderman#34, #247, #250)
 - Map non-breaking space to `writer->nbsp` in strings.
   (lostenderman#99, #247, #249)
 
