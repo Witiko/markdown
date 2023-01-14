@@ -14718,6 +14718,39 @@ following text:
 %
 % \begin{markdown}
 
+#### Replacement Character Renderers
+The \mdef{markdownRendererReplacementCharacter} macro represents the U+0000
+and U+FFFD Unicode characters. The macro receives no arguments.
+
+% \end{markdown}
+%
+% \iffalse
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererReplacementCharacter{%
+  \markdownRendererReplacementCharacterPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { replacementCharacter }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { replacementCharacter }
+  { 0 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
 #### Special Character Renderers
 The following macros replace any special plain \TeX{} characters, including
 % \iffalse
@@ -20841,6 +20874,7 @@ function M.writer.new(options)
     ["☒"] = "\\markdownRendererTickedBox{}",
     ["⌛"] = "\\markdownRendererHalfTickedBox{}",
     ["☐"] = "\\markdownRendererUntickedBox{}",
+    [entities.hex_entity('FFFD')] = "\\markdownRendererReplacementCharacter{}",
   }
 %    \end{macrocode}
 % \par
@@ -20864,19 +20898,19 @@ function M.writer.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   self.escaped_chars = {
-     ["{"] = "\\markdownRendererLeftBrace{}",
-     ["}"] = "\\markdownRendererRightBrace{}",
-     ["%"] = "\\markdownRendererPercentSign{}",
-     ["\\"] = "\\markdownRendererBackslash{}",
-     ["#"] = "\\markdownRendererHash{}",
-     ["$"] = "\\markdownRendererDollarSign{}",
-     ["&"] = "\\markdownRendererAmpersand{}",
-     ["_"] = "\\markdownRendererUnderscore{}",
-     ["^"] = "\\markdownRendererCircumflex{}",
-     ["~"] = "\\markdownRendererTilde{}",
-     ["|"] = "\\markdownRendererPipe{}",
-     [entities.hex_entity('0000')] = entities.hex_entity('FFFD'),
-   }
+    ["{"] = "\\markdownRendererLeftBrace{}",
+    ["}"] = "\\markdownRendererRightBrace{}",
+    ["%"] = "\\markdownRendererPercentSign{}",
+    ["\\"] = "\\markdownRendererBackslash{}",
+    ["#"] = "\\markdownRendererHash{}",
+    ["$"] = "\\markdownRendererDollarSign{}",
+    ["&"] = "\\markdownRendererAmpersand{}",
+    ["_"] = "\\markdownRendererUnderscore{}",
+    ["^"] = "\\markdownRendererCircumflex{}",
+    ["~"] = "\\markdownRendererTilde{}",
+    ["|"] = "\\markdownRendererPipe{}",
+    [entities.hex_entity('0000')] = "\\markdownRendererReplacementCharacter{}",
+  }
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -25232,6 +25266,14 @@ end
 \cs_gset_eq:NN
   \markdownRendererFencedDivAttributeContextEndPrototype
   \markdownRendererHeaderAttributeContextEndPrototype
+\cs_gset:Npn
+  \markdownRendererReplacementCharacterPrototype
+  {
+    % TODO: Replace with `\codepoint_generate:nn` in TeX Live 2023
+    \sys_if_engine_pdftex:TF
+      { ^^ef^^bf^^bd }
+      { ^^^^fffd }
+  }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par
