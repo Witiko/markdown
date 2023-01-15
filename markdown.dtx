@@ -22200,10 +22200,6 @@ function M.reader.new(writer, options)
                      * Cb("level")
                      / writer.heading
 
-  parsers.heading_lineof = function(c)
-    return parsers.leader * (P(c) * parsers.optionalspace)^3 * parsers.newline
-  end           
-
   function remove_enclosing_whitespaces(o)
     local res = ""
     for line in o:gmatch("([^\n]*)\n?") do
