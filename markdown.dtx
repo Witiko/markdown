@@ -21492,7 +21492,7 @@ parsers.tagentity = parsers.ampersand * C(parsers.alphanumeric^1)
 -- parse a reference definition:  [foo]: /bar "title"
 parsers.define_reference_parser = parsers.leader * parsers.link_label * parsers.colon
                                 * parsers.spacechar^0 * parsers.url
-                                * parsers.optionaltitle * parsers.blankline^1
+                                * parsers.optionaltitle * parsers.blankline^0
 %    \end{macrocode}
 % \par
 % \begin{markdown}
