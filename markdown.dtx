@@ -21322,18 +21322,20 @@ parsers.tag         = parsers.lbracket
                     * Cs((parsers.alphanumeric^1
                          + parsers.bracketed
                          + parsers.inticks
+                         + ( parsers.backslash * parsers.backslash)
                          + ( parsers.backslash / "" * (parsers.lbracket + parsers.rbracket)
                            + parsers.any
                            - (parsers.rbracket + parsers.blankline^2)))^1)
                     * parsers.rbracket
 
-parsers.link_label         = parsers.lbracket
-                            * Cs((parsers.alphanumeric^1
-                                + parsers.inticks
-                                + ( parsers.backslash / "" * (parsers.lbracket + parsers.rbracket)
-                                  + parsers.any
-                                  - (parsers.rbracket + parsers.blankline^2)))^1)
-                            * parsers.rbracket
+parsers.link_label  = parsers.lbracket
+                    * Cs((parsers.alphanumeric^1
+                        + parsers.inticks
+                        + ( parsers.backslash * parsers.backslash)
+                        + ( parsers.backslash / "" * (parsers.lbracket + parsers.rbracket)
+                          + parsers.any
+                          - (parsers.rbracket + parsers.blankline^2)))^1)
+                    * parsers.rbracket
 
 -- url for markdown links, allowing nested brackets:
 parsers.url         = parsers.less * Cs((parsers.anyescaped
