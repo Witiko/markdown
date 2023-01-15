@@ -21703,17 +21703,23 @@ local function captures_equal_length(_,i,a,b)
   return #a == #b and i
 end
 
-parsers.closeticks  = parsers.space^-1
-                    * Cmt(C(parsers.backtick^1)
-                         * Cb("ticks"), captures_equal_length)
+parsers.closeticks  = Cmt(C(parsers.backtick^1)
+                          * Cb("ticks"), captures_equal_length)
 
-parsers.intickschar = (parsers.any - S(" \n\r`"))
-                    + (parsers.newline * -parsers.blankline)
-                    + (parsers.space - parsers.closeticks)
-                    + (parsers.backtick^1 - parsers.closeticks)
+parsers.intickschar = (parsers.any - S("\n\r`"))
+                      + (parsers.newline * -parsers.blankline)
+                      + (parsers.backtick^1 - parsers.closeticks)
 
-parsers.inticks     = parsers.openticks * parsers.space^-1
-                    * C(parsers.intickschar^0) * parsers.closeticks
+parsers.inticks     = parsers.openticks
+                    * C(parsers.space^0)
+                    * parsers.closeticks
+                    + parsers.openticks * parsers.space
+                    * C((parsers.intickschar - (parsers.space * parsers.closeticks))^0) 
+                    * parsers.space * parsers.closeticks
+                    + parsers.openticks
+                    * C(parsers.intickschar^0) 
+                    * parsers.closeticks
+
 %    \end{macrocode}
 % \par
 % \begin{markdown}
