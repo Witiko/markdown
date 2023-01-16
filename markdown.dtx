@@ -21889,30 +21889,17 @@ function M.reader.new(writer, options)
           return true
         end
       end
-      if type(b) == 'function' then
-        return true
-      end
     end
     return false
   end
 
-  local function write_link_2(lab,direct,src,tit)
-    local lab = self.parser_functions.parse_inlines(lab)
-    if (parsed_inline_has_link(lab)) then
-      if (direct) then
-        return {{"[", lab, "]"},{"(", self.parser_functions.parse_inlines(src), self.parser_functions.parse_inlines(tit), ")"}}
-      else
-        return {"[", lab, "]"}
-      end
-    end
-    return writer.link(lab,src,tit)
-  end
+  -- return writer.defer_call(function()
+  -- end)
 
   -- iterate through pairs of consecutive direct and indirect links and
   -- return a table with either a link if a pair has a link reference,
   -- or a bracketed label otherwise
   local function parse_links(links)
-    return writer.defer_call(function()
       local index = 1
       local result = {}
 
@@ -21921,35 +21908,43 @@ function M.reader.new(writer, options)
         local link = links[index]
         local label = link[1]
 
-        if (link[2]) then
-          result[#result + 1] = write_link_2(label, link[2], link[3], link[4])
+        local parsed_label = self.parser_functions.parse_inlines(label)
+        if (parsed_inline_has_link(parsed_label)) then
+          if (direct) then
+            result[#result + 1] = {{"[", parsed_label, "]"},{"(", self.parser_functions.parse_inlines(src), self.parser_functions.parse_inlines(tit), ")"}}
+          else
+            result[#result + 1] = {"[", parsed_label, "]"}
+          end
           index = index + 1
         else
-          
-          local next_link = links[index+1]
-          local r,fallback
-
-          if (next_link == nil) then
-            r,fallback = lookup_reference(label,"",nil)
-          else
-            r,fallback = lookup_reference(label,"",next_link[1])
-          end
-
-          if r then
-            result[#result + 1] = write_link_2(label,link[2],r.url, r.title)
-            if (next_link ~= nil and next_link[2]) then
-              result[#result + 1] = {"(",self.parser_functions.parse_inlines(next_link[3]),self.parser_functions.parse_inlines(next_link[4]),")"}
-            end
-            index = index + 2
-          else
-            result[#result + 1] = {fallback[1], fallback[2], fallback[3]}
+          if (link[2]) then
+            result[#result + 1] = writer.link(parsed_label, link[3], link[4])
             index = index + 1
+          else
+            local next_link = links[index+1]
+            local r,fallback
+
+            if (next_link == nil) then
+              r,fallback = lookup_reference(label,"",nil)
+            else
+              r,fallback = lookup_reference(label,"",next_link[1])
+            end
+
+            if r then
+              result[#result + 1] = writer.link(parsed_label,r.url, r.title)
+              if (next_link ~= nil and next_link[2]) then
+                result[#result + 1] = {"(",self.parser_functions.parse_inlines(next_link[3]),self.parser_functions.parse_inlines(next_link[4]),")"}
+              end
+              index = index + 2
+            else
+              result[#result + 1] = {fallback[1], fallback[2], fallback[3]}
+              index = index + 1
+            end
           end
         end
       end
 
       return result
-    end)
   end
 
   -- iterate through pairs of consecutive link tags and
