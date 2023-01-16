@@ -27983,11 +27983,13 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 
-\RequirePackage{verse}
-\markdownSetup{rendererPrototypes={
-  lineBlockBegin = {\begin{verse}},
-  lineBlockEnd = {\end{verse}},
-}}
+\markdownIfOption{lineBlocks}{%
+  \RequirePackage{verse}
+  \markdownSetup{rendererPrototypes={
+    lineBlockBegin = {\begin{verse}},
+    lineBlockEnd = {\end{verse}},
+  }}
+}{}
 
 %    \end{macrocode}
 % \par
