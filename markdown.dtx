@@ -1277,6 +1277,11 @@ local md5 = require("md5")
 %     \pkg{listings} packages are loaded in the default renderer prototype
 %     for fenced code blocks.
 %
+% \pkg{verse}
+%
+%:    A package that is used in the default renderer prototypes for
+%     line blocks.
+%
 % \end{markdown}
 %  \begin{macrocode}
 \RequirePackage{expl3}
@@ -13421,8 +13426,8 @@ Using a text editor, create a text document named `document.tex` with the
 following content:
 ``` tex
 \documentclass{article}
-\usepackage{verse}
 \usepackage[lineBlocks]{markdown}
+\usepackage{verse}
 \markdownSetup{
   renderers = {
     lineBlockBegin = {\begin{verse}},
