@@ -21318,23 +21318,23 @@ parsers.dquoted     = P{ parsers.dquote * parsers.alphanumeric
                        * parsers.dquote }
 
 -- bracketed tag for markdown links, allowing nested brackets:
-parsers.tag         = parsers.lbracket
+parsers.tag         = parsers.lbracket * -#(parsers.sp * parsers.rbracket)
                     * Cs((parsers.alphanumeric^1
                          + parsers.bracketed
                          + parsers.inticks
                          + ( parsers.backslash * parsers.backslash)
                          + ( parsers.backslash / "" * (parsers.lbracket + parsers.rbracket)
                            + parsers.any
-                           - (parsers.rbracket + parsers.blankline^2)))^1)
+                           - (parsers.rbracket + parsers.blankline^2)))^0)
                     * parsers.rbracket
 
-parsers.link_label  = parsers.lbracket
+parsers.link_label  = parsers.lbracket * -#(parsers.sp * parsers.rbracket)
                     * Cs((parsers.alphanumeric^1
                         + parsers.inticks
                         + ( parsers.backslash * parsers.backslash)
                         + ( parsers.backslash / "" * (parsers.lbracket + parsers.rbracket)
                           + parsers.any
-                          - (parsers.rbracket + parsers.blankline^2)))^1)
+                          - (parsers.lbracket + parsers.rbracket + parsers.blankline^2)))^1)
                     * parsers.rbracket
 
 -- url for markdown links, allowing nested brackets:
@@ -21788,6 +21788,11 @@ function M.reader.new(writer, options)
                      function()
                        return parsers.inlines_nbsp
                      end, false)
+
+  self.create_parser("parse_inlines_full_link",
+                    function()
+                      return parsers.inlines_full_link
+                    end, false)
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -21881,7 +21886,6 @@ function M.reader.new(writer, options)
       end
   end
 
-  -- TODO
   local function parsed_inline_has_link(t)
     for a, b in pairs(t) do
       if type(b) == 'table' then
@@ -21908,10 +21912,11 @@ function M.reader.new(writer, options)
         local link = links[index]
         local label = link[1]
 
-        local parsed_label = self.parser_functions.parse_inlines(label)
+        local parsed_label = self.parser_functions.parse_inlines_full_link(label)
         if (parsed_inline_has_link(parsed_label)) then
-          if (direct) then
-            result[#result + 1] = {{"[", parsed_label, "]"},{"(", self.parser_functions.parse_inlines(src), self.parser_functions.parse_inlines(tit), ")"}}
+        
+          if (link[2]) then
+            result[#result + 1] = {{"[", parsed_label, "]"},{"(", self.parser_functions.parse_inlines(link[3]), self.parser_functions.parse_inlines(link[4]), ")"}}
           else
             result[#result + 1] = {"[", parsed_label, "]"}
           end
@@ -21945,6 +21950,12 @@ function M.reader.new(writer, options)
       end
 
       return result
+  end
+
+  local function stash_links(links)
+    return writer.defer_call(function()
+      return parse_links(links)
+    end)
   end
 
   -- iterate through pairs of consecutive link tags and
@@ -22109,6 +22120,8 @@ function M.reader.new(writer, options)
 
   -- parse a link or image (direct or indirect)
   parsers.Link          = Ct((Ct(parsers.DirectLink) + Ct(parsers.IndirectLink))^1) / parse_links
+
+  parsers.MaybeLink    = Ct((Ct(parsers.DirectLink) + Ct(parsers.IndirectLink))^1) / stash_links
 
   parsers.DirectImage   = parsers.exclamation
                         * (parsers.tag / self.parser_functions.parse_inlines)
@@ -22423,7 +22436,7 @@ function M.reader.new(writer, options)
         UlOrStarLine          = parsers.UlOrStarLine,
         Strong                = parsers.Strong,
         Emph                  = parsers.Emph,
-        Link                  = parsers.Link,
+        Link                  = parsers.MaybeLink,
         Image                 = parsers.Image,
         Code                  = parsers.Code,
         AutoLinkUrl           = parsers.AutoLinkUrl,
@@ -22669,6 +22682,10 @@ function M.reader.new(writer, options)
     inlines_nbsp_t.Endline = parsers.NonbreakingEndline
     inlines_nbsp_t.Space = parsers.NonbreakingSpace
     parsers.inlines_nbsp = Ct(inlines_nbsp_t)
+
+    local inlines_full_link = util.table_copy(inlines_t)
+    inlines_full_link.Link = parsers.Link
+    parsers.inlines_full_link = Ct(inlines_full_link)
 %    \end{macrocode}
 % \par
 % \begin{markdown}
