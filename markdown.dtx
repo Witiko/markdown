@@ -21328,6 +21328,16 @@ parsers.tag         = parsers.lbracket * -#(parsers.sp * parsers.rbracket)
                            - (parsers.rbracket + parsers.blankline^2)))^0)
                     * parsers.rbracket
 
+parsers.whitespace_tag = parsers.lbracket
+                        * Cs((parsers.alphanumeric^1
+                            + parsers.bracketed
+                            + parsers.inticks
+                            + ( parsers.backslash * parsers.backslash)
+                            + ( parsers.backslash / "" * (parsers.lbracket + parsers.rbracket)
+                              + parsers.any
+                              - (parsers.rbracket + parsers.blankline^2)))^0)
+                        * parsers.rbracket
+
 parsers.link_label  = parsers.lbracket * -#(parsers.sp * parsers.rbracket)
                     * Cs((parsers.alphanumeric^1
                         + parsers.inticks
@@ -21339,9 +21349,9 @@ parsers.link_label  = parsers.lbracket * -#(parsers.sp * parsers.rbracket)
 
 -- url for markdown links, allowing nested brackets:
 parsers.url         = parsers.less * Cs((parsers.anyescaped
-                                        - parsers.more)^0)
+                                        - parsers.newline - parsers.more)^0)
                                    * parsers.more
-                    + Cs((parsers.inparens + (parsers.anyescaped
+                    + -parsers.less * Cs((parsers.inparens + (parsers.anyescaped
                                              - parsers.spacing
                                              - parsers.rparent))^1)
 
@@ -22108,7 +22118,7 @@ function M.reader.new(writer, options)
                              return writer.link(writer.escape(url), url)
                            end
 
-  parsers.DirectLink   = parsers.tag * Cc(true)
+  parsers.DirectLink   = parsers.whitespace_tag * Cc(true)
                         * parsers.lparent
                         * parsers.spnl
                         * (parsers.url + Cc(""))  -- link can be empty [foo]()
