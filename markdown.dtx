@@ -22139,14 +22139,14 @@ function M.reader.new(writer, options)
                          * C(parsers.absolute_uri)
                          * parsers.more
                          / function(url)
-                             return writer.link(writer.escape(url), url)
+                             return writer.link(writer.escape_typographic_text(url), url)
                            end
 
   parsers.AutoLinkEmail = parsers.less
                         * C(parsers.email_address)
                         * parsers.more
                         / function(email)
-                            return writer.link(writer.escape(email),
+                            return writer.link(writer.escape_typographic_text(email),
                                                "mailto:"..email)
                           end
 
@@ -22155,7 +22155,7 @@ function M.reader.new(writer, options)
                          * C(parsers.urlchar^1)
                          * parsers.more
                          / function(url)
-                             return writer.link(writer.escape(url), url)
+                             return writer.link(writer.escape_typographic_text(url), url)
                            end
 
   parsers.DirectLink   = parsers.whitespace_tag * Cc(true)
