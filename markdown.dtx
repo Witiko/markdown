@@ -18277,7 +18277,6 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 function util.cache_verbatim(dir, string)
-  string = string:gsub('[\r\n%s]*$', '')
   local name = util.cache(dir, string, nil, nil, ".verbatim")
   return name
 end
