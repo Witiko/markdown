@@ -25101,14 +25101,7 @@ if metadata.version ~= md.metadata.version then
        "markdown.lua " .. md.metadata.version .. ".")
 end
 local convert = md.new(options)
-%    \end{macrocode}
-% \begin{markdown}
-% Since the Lua converter expects \acro{unix} line endings, normalize the
-% input. Also add a line ending at the end of the file in case the input file
-% has none.
-% \end{markdown}
-%  \begin{macrocode}
-local output = convert(input:gsub("\r\n?", "\n") .. "\n")
+local output = convert(input)
 
 if output_filename then
   local output_file = assert(io.open(output_filename, "w"),
@@ -26234,7 +26227,7 @@ end
 % has none.
 % \end{markdown}
 %  \begin{macrocode}
-        print(convert(input:gsub("\r\n?", "\n") .. "\n"))}%
+        print(convert(input))}%
 %    \end{macrocode}
 % \begin{markdown}
 % In case we were finalizing the frozen cache, increment \Opt{frozenCacheCounter}.
