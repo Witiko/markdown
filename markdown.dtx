@@ -23114,13 +23114,22 @@ function M.reader.new(writer, options)
 % \begin{markdown}
 %
 % Return a function that converts markdown string `input` into a plain \TeX{}
-% output and returns it. Note that the converter assumes that the input has
-% \acro{unix} line endings.
+% output and returns it..
 %
 % \end{markdown}
 %  \begin{macrocode}
     return function(input)
-      references = {}
+%    \end{macrocode}
+% \begin{markdown}
+% Since the Lua converter expects \acro{unix} line endings, normalize the
+% input. Also add a line ending at the end of the file in case the input file
+% has none.
+% \end{markdown}
+%  \begin{macrocode}
+      input = input:gsub("\r\n?", "\n")
+      if input:sub(-1) ~= "\n" then
+        input = input .. "\n"
+      end
 %    \end{macrocode}
 % \begin{markdown}
 % When determining the name of the cache file, create salt for the hashing
@@ -23129,6 +23138,7 @@ function M.reader.new(writer, options)
 % is disregarded.
 % \end{markdown}
 %  \begin{macrocode}
+      references = {}
       local opt_string = {}
       for k, _ in pairs(defaultOptions) do
         local v = options[k]
