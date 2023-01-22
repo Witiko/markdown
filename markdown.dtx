@@ -20548,8 +20548,8 @@ function M.writer.new(options)
 %  \begin{macrocode}
   function self.image(lab,src,tit)
     return {"\\markdownRendererImage{",lab,"}",
-                           "{",self.string(src),"}",
                            "{",self.uri(src),"}",
+                           "{",self.escape_programmatic_text(src),"}",
                            "{",self.string(tit or ""),"}"}
   end
 %    \end{macrocode}
@@ -21839,9 +21839,9 @@ function M.reader.new(writer, options)
                        return parsers.inlines_nbsp
                      end, false)
 
-  self.create_parser("parse_inlines_full_link",
+  self.create_parser("parse_inlines_full_link_and_image",
                     function()
-                      return parsers.inlines_full_link
+                      return parsers.inlines_full_link_and_image
                     end, false)
 %    \end{macrocode}
 % \par
@@ -21960,20 +21960,29 @@ function M.reader.new(writer, options)
       while(index <= #links)
       do
         local link = links[index]
-        local label = link[1]
 
-        local parsed_label = self.parser_functions.parse_inlines_full_link(label)
-        if (parsed_inline_has_link(parsed_label)) then
-        
+        local label = link[1]
+        local is_direct = link[1]
+        local type = link[3]
+        local source = link[4]
+        local title = link[5]
+
+        local parsed_label = self.parser_functions.parse_inlines_full_link_and_image(label)
+        if (type == "Link" and parsed_inline_has_link(parsed_label)) then
           if (link[2]) then
-            result[#result + 1] = {{"[", parsed_label, "]"},{"(", self.parser_functions.parse_inlines(link[3]), self.parser_functions.parse_inlines(link[4]), ")"}}
+            result[#result + 1] = {{"[", parsed_label, "]"},{"(", self.parser_functions.parse_inlines(source), self.parser_functions.parse_inlines(title), ")"}}
           else
             result[#result + 1] = {"[", parsed_label, "]"}
           end
           index = index + 1
         else
           if (link[2]) then
-            result[#result + 1] = writer.link(parsed_label, link[3], link[4])
+            if (type == "Link") then
+              result[#result + 1] = writer.link(parsed_label, source, title)
+            end
+            if (type == "Image") then
+              result[#result + 1] = writer.image(parsed_label, source, title)
+            end
             index = index + 1
           else
             local next_link = links[index+1]
@@ -21986,13 +21995,23 @@ function M.reader.new(writer, options)
             end
 
             if r then
-              result[#result + 1] = writer.link(parsed_label,r.url, r.title)
+              if (type == "Link") then
+                result[#result + 1] = writer.link(parsed_label,r.url, r.title)
+              end
+              if (type == "Image") then
+                result[#result + 1] = writer.image(parsed_label,r.url, r.title)
+              end
               if (next_link ~= nil and next_link[2]) then
-                result[#result + 1] = {"(",self.parser_functions.parse_inlines(next_link[3]),self.parser_functions.parse_inlines(next_link[4]),")"}
+                result[#result + 1] = {"(",self.parser_functions.parse_inlines(next_link[4]),self.parser_functions.parse_inlines(next_link[5]),")"}
               end
               index = index + 2
             else
-              result[#result + 1] = {fallback[1], fallback[2], fallback[3]}
+              if (type == "Link") then
+                result[#result + 1] = {fallback[1], fallback[2], fallback[3]}
+              end
+              if (type == "Image") then
+                result[#result + 1] = {"!", fallback[1], fallback[2], fallback[3]}
+              end
               index = index + 1
             end
           end
@@ -22008,33 +22027,6 @@ function M.reader.new(writer, options)
     end)
   end
 
-  -- iterate through pairs of consecutive link tags and
-  -- return a table with either a image if a pair has a image reference,
-  -- or a bracketed label otherwise
-  local function indirect_image(labels)
-    return writer.defer_call(function()
-      local index = 1
-      local result = {}
-
-      while(index <= #labels)
-      do
-        local label = labels[index]
-        local tag = labels[index+1]
-
-        local r,fallback = lookup_reference(label,"",tag)
-        if r then
-          result[#result + 1] = writer.image(
-            self.parser_functions.parse_inlines(label), r.url, r.title)
-          index = index + 2
-        else
-          result[#result + 1] = {"!", fallback[1], fallback[2], fallback[3]}
-          index = index + 1
-        end
-      end
-
-      return result
-    end)
-  end
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -22158,7 +22150,7 @@ function M.reader.new(writer, options)
                              return writer.link(writer.escape_typographic_text(url), url)
                            end
 
-  parsers.DirectLink   = parsers.whitespace_tag * Cc(true)
+  parsers.DirectLink   = parsers.whitespace_tag * Cc(true) * Cc("Link")
                         * parsers.lparent
                         * parsers.spnl
                         * (parsers.url + Cc(""))  -- link can be empty [foo]()
@@ -22166,26 +22158,34 @@ function M.reader.new(writer, options)
                         * parsers.spnl
                         * parsers.rparent
                         
-  parsers.IndirectLink  = parsers.tag * Cc(false)
-
-  -- parse a link or image (direct or indirect)
-  parsers.Link          = Ct((Ct(parsers.DirectLink) + Ct(parsers.IndirectLink))^1) / parse_links
-
-  parsers.MaybeLink    = Ct((Ct(parsers.DirectLink) + Ct(parsers.IndirectLink))^1) / stash_links
+  parsers.IndirectLink  = parsers.tag * Cc(false) * Cc("Link")
 
   parsers.DirectImage   = parsers.exclamation
-                        * (parsers.tag / self.parser_functions.parse_inlines)
+                        * parsers.whitespace_tag * Cc(true) * Cc("Image")
                         * parsers.lparent
                         * parsers.spnl
                         * (parsers.url + Cc(""))  -- link can be empty ![foo]()
                         * parsers.optionaltitle
                         * parsers.spnl
                         * parsers.rparent
-                        / writer.image
 
-  parsers.IndirectImage = parsers.exclamation * Ct(parsers.tag^1) / indirect_image
+  parsers.IndirectImage = parsers.exclamation * parsers.tag * Cc(false) * Cc("Image")
 
-  parsers.Image         = parsers.DirectImage + parsers.IndirectImage
+  -- parse a link or image (direct or indirect)
+  parsers.Link          = Ct((
+                              Ct(parsers.DirectImage ) + Ct(parsers.IndirectImage )
+                            + Ct(parsers.DirectLink ) + Ct(parsers.IndirectLink )
+                            )^1) / parse_links
+
+  parsers.Image         = Ct((
+                              Ct(parsers.DirectImage ) + Ct(parsers.IndirectImage )
+                            + Ct(parsers.DirectLink ) + Ct(parsers.IndirectLink )
+                            )^1) / parse_links
+
+  parsers.MaybeLinkOrImage = Ct((
+                              Ct(parsers.DirectImage ) + Ct(parsers.IndirectImage )
+                            + Ct(parsers.DirectLink ) + Ct(parsers.IndirectLink )
+                            )^1) / stash_links
 
   -- avoid parsing long strings of * or _ as emph/strong
   parsers.UlOrStarLine  = parsers.asterisk^4 + parsers.underscore^4
@@ -22486,8 +22486,8 @@ function M.reader.new(writer, options)
         UlOrStarLine          = parsers.UlOrStarLine,
         Strong                = parsers.Strong,
         Emph                  = parsers.Emph,
-        Link                  = parsers.MaybeLink,
-        Image                 = parsers.Image,
+        Link                  = parsers.MaybeLinkOrImage,
+        Image                 = parsers.MaybeLinkOrImage,
         Code                  = parsers.Code,
         AutoLinkUrl           = parsers.AutoLinkUrl,
         AutoLinkEmail         = parsers.AutoLinkEmail,
@@ -22733,9 +22733,10 @@ function M.reader.new(writer, options)
     inlines_nbsp_t.Space = parsers.NonbreakingSpace
     parsers.inlines_nbsp = Ct(inlines_nbsp_t)
 
-    local inlines_full_link = util.table_copy(inlines_t)
-    inlines_full_link.Link = parsers.Link
-    parsers.inlines_full_link = Ct(inlines_full_link)
+    local inlines_full_link_and_image = util.table_copy(inlines_t)
+    inlines_full_link_and_image.Link = parsers.Link
+    inlines_full_link_and_image.Image = parsers.Image
+    parsers.inlines_full_link_and_image = Ct(inlines_full_link_and_image)
 %    \end{macrocode}
 % \par
 % \begin{markdown}
