@@ -21962,21 +21962,21 @@ function M.reader.new(writer, options)
         local link = links[index]
 
         local label = link[1]
-        local is_direct = link[1]
+        local is_direct = link[2]
         local type = link[3]
         local source = link[4]
         local title = link[5]
 
         local parsed_label = self.parser_functions.parse_inlines_full_link_and_image(label)
         if (type == "Link" and parsed_inline_has_link(parsed_label)) then
-          if (link[2]) then
+          if (is_direct) then
             result[#result + 1] = {{"[", parsed_label, "]"},{"(", self.parser_functions.parse_inlines(source), self.parser_functions.parse_inlines(title), ")"}}
           else
             result[#result + 1] = {"[", parsed_label, "]"}
           end
           index = index + 1
         else
-          if (link[2]) then
+          if (is_direct) then
             if (type == "Link") then
               result[#result + 1] = writer.link(parsed_label, source, title)
             end
@@ -21988,7 +21988,12 @@ function M.reader.new(writer, options)
             local next_link = links[index+1]
             local r,fallback
 
-            if (next_link == nil) then
+            local can_use_next_link = true
+            if (type == "Image" and next_link ~= nil and next_link[3] == "Image") then
+              can_use_next_link = false
+            end
+
+            if (next_link == nil or not can_use_next_link) then
               r,fallback = lookup_reference(label,"",nil)
             else
               r,fallback = lookup_reference(label,"",next_link[1])
@@ -22001,10 +22006,14 @@ function M.reader.new(writer, options)
               if (type == "Image") then
                 result[#result + 1] = writer.image(parsed_label,r.url, r.title)
               end
-              if (next_link ~= nil and next_link[2]) then
+              if (next_link ~= nil and next_link[2] and can_use_next_link) then
                 result[#result + 1] = {"(",self.parser_functions.parse_inlines(next_link[4]),self.parser_functions.parse_inlines(next_link[5]),")"}
               end
-              index = index + 2
+              if (not can_use_next_link) then
+                index = index + 1
+              else
+                index = index + 2
+              end
             else
               if (type == "Link") then
                 result[#result + 1] = {fallback[1], fallback[2], fallback[3]}
