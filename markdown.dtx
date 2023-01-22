@@ -21710,14 +21710,17 @@ parsers.intickschar = (parsers.any - S("\n\r`"))
                       + (parsers.newline * -parsers.blankline)
                       + (parsers.backtick^1 - parsers.closeticks)
 
-parsers.inticks     = parsers.openticks
+local function process_inticks(s)
+  s = s:gsub("\n"," ")
+  s = s:gsub("^ (.*) $","%1")
+  return s
+end
+
+parsers.inticks =   parsers.openticks
                     * C(parsers.space^0)
                     * parsers.closeticks
-                    + parsers.openticks * parsers.space
-                    * C((parsers.intickschar - (parsers.space * parsers.closeticks))^0) 
-                    * parsers.space * parsers.closeticks
                     + parsers.openticks
-                    * C(parsers.intickschar^0) 
+                    * Cs(parsers.intickschar^0 / process_inticks) 
                     * parsers.closeticks
 
 %    \end{macrocode}
@@ -22402,7 +22405,7 @@ function M.reader.new(writer, options)
   parsers.Str      = (parsers.normalchar * (parsers.normalchar + parsers.at)^0)
                    / writer.string
 
-  parsers.Symbol   = (V("SpecialChar") - parsers.tightblocksep)
+  parsers.Symbol   = (parsers.backtick^1 + V("SpecialChar") - parsers.tightblocksep)
                    / writer.string
 
   parsers.Ellipsis = P("...") / writer.ellipsis
