@@ -14,6 +14,8 @@ Fixes:
   (lostenderman#34, #247, #250)
 - Map non-breaking space to `writer->nbsp` in strings.
   (lostenderman#99, #247, #249)
+- Fix input normalization and move it from Lua CLI and plain TeX
+  layers directly to the `convert()` Lua method. (#246, #253)
 
 Default Renderer Prototypes:
 
