@@ -34,6 +34,7 @@ Speed Improvements:
 
 - Only make backticks special when `codeSpans` or `fencedCode` are enabled.
   (#239)
+- Use fast unit testing in continuous integration. (#231, #255)
 
 Continuous Integration:
 
