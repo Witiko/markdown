@@ -18280,7 +18280,6 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 function util.cache_verbatim(dir, string)
-  string = string:gsub('[\r\n%s]*$', '')
   local name = util.cache(dir, string, nil, nil, ".verbatim")
   return name
 end
@@ -21201,6 +21200,7 @@ function M.writer.new(options)
 %  \begin{macrocode}
   function self.verbatim(s)
     if not self.is_writing then return "" end
+    s = s:gsub("\n$", "")
     local name = util.cache_verbatim(options.cacheDir, s)
     return {"\\markdownRendererInputVerbatim{",name,"}"}
   end
@@ -23118,13 +23118,22 @@ function M.reader.new(writer, options)
 % \begin{markdown}
 %
 % Return a function that converts markdown string `input` into a plain \TeX{}
-% output and returns it. Note that the converter assumes that the input has
-% \acro{unix} line endings.
+% output and returns it..
 %
 % \end{markdown}
 %  \begin{macrocode}
     return function(input)
-      references = {}
+%    \end{macrocode}
+% \begin{markdown}
+% Since the Lua converter expects \acro{unix} line endings, normalize the
+% input. Also add a line ending at the end of the file in case the input file
+% has none.
+% \end{markdown}
+%  \begin{macrocode}
+      input = input:gsub("\r\n?", "\n")
+      if input:sub(-1) ~= "\n" then
+        input = input .. "\n"
+      end
 %    \end{macrocode}
 % \begin{markdown}
 % When determining the name of the cache file, create salt for the hashing
@@ -23133,6 +23142,7 @@ function M.reader.new(writer, options)
 % is disregarded.
 % \end{markdown}
 %  \begin{macrocode}
+      references = {}
       local opt_string = {}
       for k, _ in pairs(defaultOptions) do
         local v = options[k]
@@ -23958,6 +23968,7 @@ M.extensions.fenced_code = function(blank_before_code_fence)
 %  \begin{macrocode}
       function self.fencedCode(s, i)
         if not self.is_writing then return "" end
+        s = s:gsub("\n$", "")
         local name = util.cache_verbatim(options.cacheDir, s)
         return {"\\markdownRendererInputFencedCode{",
                 name,"}{",self.string(i),"}"}
@@ -24495,6 +24506,7 @@ M.extensions.raw_attribute = function()
 %  \begin{macrocode}
         function self.rawBlock(s, attr)
           if not self.is_writing then return "" end
+          s = s:gsub("\n$", "")
           local name = util.cache_verbatim(options.cacheDir, s)
           return {"\\markdownRendererInputRawBlock{",
                   name,"}{", self.string(attr),"}"}
@@ -25105,14 +25117,7 @@ if metadata.version ~= md.metadata.version then
        "markdown.lua " .. md.metadata.version .. ".")
 end
 local convert = md.new(options)
-%    \end{macrocode}
-% \begin{markdown}
-% Since the Lua converter expects \acro{unix} line endings, normalize the
-% input. Also add a line ending at the end of the file in case the input file
-% has none.
-% \end{markdown}
-%  \begin{macrocode}
-local output = convert(input:gsub("\r\n?", "\n") .. "\n")
+local output = convert(input)
 
 if output_filename then
   local output_file = assert(io.open(output_filename, "w"),
@@ -26238,7 +26243,7 @@ end
 % has none.
 % \end{markdown}
 %  \begin{macrocode}
-        print(convert(input:gsub("\r\n?", "\n") .. "\n"))}%
+        print(convert(input))}%
 %    \end{macrocode}
 % \begin{markdown}
 % In case we were finalizing the frozen cache, increment \Opt{frozenCacheCounter}.

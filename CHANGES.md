@@ -10,9 +10,12 @@ Documentation:
 
 Fixes:
 
-- Map U+0000 to U+FFFD in strings. (lostenderman#34, #247, #250)
+- Map U+0000 and U+FFFD to new replacement character renderer.
+  (lostenderman#34, #247, #250)
 - Map non-breaking space to `writer->nbsp` in strings.
   (lostenderman#99, #247, #249)
+- Fix input normalization and move it from Lua CLI and plain TeX
+  layers directly to the `convert()` Lua method. (#246, #253)
 
 Default Renderer Prototypes:
 
@@ -33,6 +36,7 @@ Speed Improvements:
 
 - Only make backticks special when `codeSpans` or `fencedCode` are enabled.
   (#239)
+- Use fast unit testing in continuous integration. (#231, #255)
 
 Continuous Integration:
 
