@@ -8599,7 +8599,7 @@ defaultOptions.tableCaptions = false
 :    true
 
      :   Enable the Pandoc `task_lists` syntax extension.
-       
+
 
         ``` md
         - [ ] an unticked task list item
@@ -9375,7 +9375,7 @@ following text:
 > \$\\sqrt{-1}\$ *equals* \$i\$.
 > 
 > √-̅1̅ *equals* $i$.
-  
+
 Invoking pdfTeX should have the same effect:
 ``` sh
 pdftex --shell-escape document.tex
@@ -18168,7 +18168,7 @@ following text:
 > \$\\sqrt{-1}\$ *equals* \$i\$.
 > 
 > √-̅1̅ *equals* $i$.
-  
+
 Invoking pdfTeX should have the same effect:
 ``` sh
 texexec --passon=--shell-escape document.tex
@@ -22763,14 +22763,14 @@ function M.reader.new(writer, options)
                         / writer.string
 
   parsers.EscapedChar   = parsers.backslash * C(parsers.escapable) / writer.string
-  
+
   parsers.InlineHtml    = parsers.emptyelt_any / writer.inline_html_tag
                         + (parsers.htmlcomment / self.parser_functions.parse_inlines_no_html)
                         / writer.inline_html_comment
                         + parsers.htmlinstruction
                         + parsers.openelt_any / writer.inline_html_tag
                         + parsers.closeelt_any / writer.inline_html_tag
-  
+
   parsers.HtmlEntity    = parsers.hexentity / entities.hex_entity  / writer.string
                         + parsers.decentity / entities.dec_entity  / writer.string
                         + parsers.tagentity / entities.char_entity / writer.string
@@ -24449,7 +24449,7 @@ M.extensions.line_blocks = function()
           buffer[#buffer + 1] = { lines[i], self.linebreak }
         end
         buffer[#buffer + 1] = lines[#lines]
-        
+
         return {"\\markdownRendererLineBlockBegin\n"
                   ,buffer,
                   "\n\\markdownRendererLineBlockEnd "}
