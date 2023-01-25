@@ -27986,8 +27986,15 @@ end
 \markdownIfOption{lineBlocks}{%
   \RequirePackage{verse}
   \markdownSetup{rendererPrototypes={
-    lineBlockBegin = {\begin{verse}},
-    lineBlockEnd = {\end{verse}},
+    lineBlockBegin = {%
+      \begingroup
+        \def\markdownRendererLineBreak{\\}%
+        \begin{verse}%
+    },
+    lineBlockEnd = {%
+        \end{verse}%
+      \endgroup
+    },
   }}
 }{}
 
