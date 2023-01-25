@@ -28330,8 +28330,15 @@ end
 \def\markdownRendererStrongEmphasisPrototype#1{{\bf#1}}%
 \def\markdownRendererBlockQuoteBeginPrototype{\startquotation}%
 \def\markdownRendererBlockQuoteEndPrototype{\stopquotation}%
-\def\markdownRendererLineBlockBeginPrototype{\startlines}%
-\def\markdownRendererLineBlockEndPrototype{\stoplines}%
+\def\markdownRendererLineBlockBeginPrototype{%
+  \begingroup
+    \def\markdownRendererLineBreak{^^M}%
+    \startlines
+}%
+\def\markdownRendererLineBlockEndPrototype{%
+    \stoplines
+  \endgroup
+}%
 \def\markdownRendererInputVerbatimPrototype#1{\typefile{#1}}%
 %    \end{macrocode}
 % \par
