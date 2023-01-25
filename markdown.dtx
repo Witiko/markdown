@@ -13245,15 +13245,6 @@ following content:
 ``` tex
 \input markdown
 \def\markdownOptionLineBlocks{true}
-\def\markdownRendererLineBlockBegin{%
-  \begingroup
-  \leftskip=1.5\parindent
-  \parindent=0pt
-}
-\def\markdownRendererLineBlockEnd{%
-  \par
-  \endgroup
-}
 \markdownBegin
 | I would spread the cloths under your feet:
 | But I, being poor, have only my dreams;
@@ -13281,13 +13272,6 @@ following content:
 ``` tex
 \documentclass{article}
 \usepackage[lineBlocks]{markdown}
-\usepackage{verse}
-\markdownSetup{
-  renderers = {
-    lineBlockBegin = {\begin{verse}},
-    lineBlockEnd = {\end{verse}},
-  },
-}
 \begin{document}
 \begin{markdown}
 | I would spread the cloths under your feet:
@@ -13316,8 +13300,6 @@ following content:
 ``` tex
 \usemodule[t][markdown]
 \setupmarkdown[lineBlocks = yes]
-\def\markdownRendererLineBlockBegin{\startlines}
-\def\markdownRendererLineBlockEnd{\stoplines}
 \starttext
 \startmarkdown
 | I would spread the cloths under your feet:
@@ -24479,7 +24461,6 @@ M.extensions.line_blocks = function()
       local LineBlock = Ct(
                         (Cs(
                           ( (parsers.pipe * parsers.space)/""
-                          * ((parsers.space)/entities.char_entity("nbsp"))^0
                           * parsers.linechar^0 * (parsers.newline/""))
                           * (-parsers.pipe
                             * (parsers.space^1/" ")
@@ -25523,7 +25504,7 @@ end
 \def\markdownRendererStrongEmphasisPrototype#1{{\bf#1}}%
 \def\markdownRendererBlockQuoteBeginPrototype{\par\begingroup\it}%
 \def\markdownRendererBlockQuoteEndPrototype{\endgroup\par}%
-\def\markdownRendererLineBlockBeginPrototype{\begingroup\parindent=0pt}%
+\def\markdownRendererLineBlockBeginPrototype{\begingroup\obeyspaces\parindent=0pt}%
 \def\markdownRendererLineBlockEndPrototype{\endgroup}%
 \def\markdownRendererInputVerbatimPrototype#1{%
   \par{\tt\input#1\relax{}}\par}%
@@ -27988,6 +27969,7 @@ end
   \markdownSetup{rendererPrototypes={
     lineBlockBegin = {%
       \begingroup
+        \obeyspaces
         \def\markdownRendererLineBreak{\\}%
         \begin{verse}%
     },
@@ -28339,6 +28321,7 @@ end
 \def\markdownRendererBlockQuoteEndPrototype{\stopquotation}%
 \def\markdownRendererLineBlockBeginPrototype{%
   \begingroup
+    \obeyspaces
     \def\markdownRendererLineBreak{^^M}%
     \startlines
 }%
