@@ -2,6 +2,10 @@
 
 ## 2.20.0
 
+Development:
+
+- Add support for line blocks (contributed by @lostenderman, #209, #248)
+
 Documentation:
 
 - Add @drehak's thesis to `README.md`. (204a18c, aec9b44, cda53fb)
