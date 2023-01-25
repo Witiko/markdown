@@ -13227,152 +13227,6 @@ following text:
 %
 % \begin{markdown}
 
-#### Line Break Renderer
-The \mdef{markdownRendererLineBreak} macro represents a forced line break.
-The macro receives no arguments.
-
-% \end{markdown}
-%
-% \iffalse
-
-##### Plain \TeX{} Example {.unnumbered}
-
-Using a text editor, create a text document named `document.tex` with the
-following content:
-``` tex
-\input markdown
-\def\markdownRendererLineBreak{%
-  \par
-  {\it(A forced linebreak)}%
-  \par
-}
-\markdownInput{example.md}
-\bye
-```````
-Using a text editor, create a text document named `example.md` with the
-following content.  Note the two spaces at the end of the first line, which
-specify a hard linebreak.  Due to the limitations of the \TeX{} input
-processor, hard linebreaks would be ignored if we typed them directly into the
-`document.tex` document.
-
-<pre><code>Hello world!  <br/>_Foo_ bar!</code></pre>
-
-Next, invoke LuaTeX from the terminal:
-``` sh
-luatex document.tex
-``````
-A PDF document named `document.pdf` should be produced and contain the
-following text:
-
-> Hello *world*!
->
-> *(A forced linebreak)*
-> 
-> _Foo_ bar!
-
-##### \LaTeX{} Example {.unnumbered}
-
-Using a text editor, create a text document named `document.tex` with the
-following content:
-``` tex
-\documentclass{article}
-\usepackage{markdown}
-\markdownSetup{
-  renderers = {
-    lineBreak = {%
-      \par
-      \emph{(A forced linebreak)}%
-      \par
-    },
-  },
-}
-\begin{document}
-\markdownInput{example.md}
-\end{document}
-```````
-Using a text editor, create a text document named `example.md` with the
-following content.  Note the two spaces at the end of the first line, which
-specify a hard linebreak.  Due to the limitations of the \TeX{} input
-processor, hard linebreaks would be ignored if we typed them directly into the
-`document.tex` document.
-
-<pre><code>Hello world!  <br/>_Foo_ bar!</code></pre>
-
-Next, invoke LuaTeX from the terminal:
-``` sh
-lualatex document.tex
-``````
-A PDF document named `document.pdf` should be produced and contain the
-following text:
-
-> Hello *world*!
->
-> *(A forced linebreak)*
-> 
-> _Foo_ bar!
-
-##### \Hologo{ConTeXt} Example {.unnumbered}
-
-Using a text editor, create a text document named `document.tex` with the
-following content:
-``` tex
-\usemodule[t][markdown]
-\def\markdownRendererLineBreak{%
-  \par
-  \emph{(A forced linebreak)}%
-  \par
-}
-\starttext
-\markdownInput{example.md}
-\stoptext
-```````
-Using a text editor, create a text document named `example.md` with the
-following content.  Note the two spaces at the end of the first line, which
-specify a hard linebreak.  Due to the limitations of the \TeX{} input
-processor, hard linebreaks would be ignored if we typed them directly into the
-`document.tex` document.
-
-<pre><code>Hello world!  <br/>_Foo_ bar!</code></pre>
-
-Next, invoke LuaTeX from the terminal:
-``` sh
-luatex document.tex
-``````
-A PDF document named `document.pdf` should be produced and contain the
-following text:
-
-> Hello *world*!
->
-> *(A forced linebreak)*
-> 
-> _Foo_ bar!
-
-%</manual-tokens>
-%<*tex>
-% \fi
-%
-%  \begin{macrocode}
-\def\markdownRendererLineBreak{%
-  \markdownRendererLineBreakPrototype}%
-\ExplSyntaxOn
-\seq_gput_right:Nn
-  \g_@@_renderers_seq
-  { lineBreak }
-\prop_gput:Nnn
-  \g_@@_renderer_arities_prop
-  { lineBreak }
-  { 0 }
-\ExplSyntaxOff
-%    \end{macrocode}
-% \par
-%
-% \iffalse
-%</tex>
-%<*manual-tokens>
-% \fi
-%
-% \begin{markdown}
-
 #### Line Block Renderer
 The following macros are only produced, when the \Opt{lineBlocks} option
 is enabled.
@@ -13510,6 +13364,152 @@ following text:
 \prop_gput:Nnn
   \g_@@_renderer_arities_prop
   { lineBlockEnd }
+  { 0 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
+#### Line Break Renderer
+The \mdef{markdownRendererLineBreak} macro represents a forced line break.
+The macro receives no arguments.
+
+% \end{markdown}
+%
+% \iffalse
+
+##### Plain \TeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\input markdown
+\def\markdownRendererLineBreak{%
+  \par
+  {\it(A forced linebreak)}%
+  \par
+}
+\markdownInput{example.md}
+\bye
+```````
+Using a text editor, create a text document named `example.md` with the
+following content.  Note the two spaces at the end of the first line, which
+specify a hard linebreak.  Due to the limitations of the \TeX{} input
+processor, hard linebreaks would be ignored if we typed them directly into the
+`document.tex` document.
+
+<pre><code>Hello world!  <br/>_Foo_ bar!</code></pre>
+
+Next, invoke LuaTeX from the terminal:
+``` sh
+luatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> Hello *world*!
+>
+> *(A forced linebreak)*
+> 
+> _Foo_ bar!
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage{markdown}
+\markdownSetup{
+  renderers = {
+    lineBreak = {%
+      \par
+      \emph{(A forced linebreak)}%
+      \par
+    },
+  },
+}
+\begin{document}
+\markdownInput{example.md}
+\end{document}
+```````
+Using a text editor, create a text document named `example.md` with the
+following content.  Note the two spaces at the end of the first line, which
+specify a hard linebreak.  Due to the limitations of the \TeX{} input
+processor, hard linebreaks would be ignored if we typed them directly into the
+`document.tex` document.
+
+<pre><code>Hello world!  <br/>_Foo_ bar!</code></pre>
+
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> Hello *world*!
+>
+> *(A forced linebreak)*
+> 
+> _Foo_ bar!
+
+##### \Hologo{ConTeXt} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\usemodule[t][markdown]
+\def\markdownRendererLineBreak{%
+  \par
+  \emph{(A forced linebreak)}%
+  \par
+}
+\starttext
+\markdownInput{example.md}
+\stoptext
+```````
+Using a text editor, create a text document named `example.md` with the
+following content.  Note the two spaces at the end of the first line, which
+specify a hard linebreak.  Due to the limitations of the \TeX{} input
+processor, hard linebreaks would be ignored if we typed them directly into the
+`document.tex` document.
+
+<pre><code>Hello world!  <br/>_Foo_ bar!</code></pre>
+
+Next, invoke LuaTeX from the terminal:
+``` sh
+luatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> Hello *world*!
+>
+> *(A forced linebreak)*
+> 
+> _Foo_ bar!
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererLineBreak{%
+  \markdownRendererLineBreakPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { lineBreak }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { lineBreak }
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
@@ -24439,6 +24439,64 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Line Blocks
+%
+% The \luamdef{extensions.line_blocks} function implements the Pandoc line blocks
+% syntax extension.
+%
+% \end{markdown}
+%  \begin{macrocode}
+M.extensions.line_blocks = function()
+  return {
+    name = "built-in line_blocks syntax extension",
+    extend_writer = function(self)
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define \luamdef{writer->lineblock} as a function that will transform
+% a line block consisted of `lines` to the output format, with
+% all but the last newline rendered as a line break.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      function self.lineblock(lines)
+        if not self.is_writing then return "" end
+        local buffer = {}
+        for i = 1, #lines - 1 do
+          buffer[#buffer + 1] = { lines[i], self.linebreak }
+        end
+        buffer[#buffer + 1] = lines[#lines]
+        
+        return {"\\markdownRendererLineBlockBegin\n"
+                  ,buffer,
+                  "\n\\markdownRendererLineBlockEnd "}
+      end
+    end, extend_reader = function(self)
+      local parsers = self.parsers
+      local writer = self.writer
+
+      local LineBlock = Ct(
+                        (Cs(
+                          ( (parsers.pipe * parsers.space)/""
+                          * ((parsers.space)/entities.char_entity("nbsp"))^0
+                          * parsers.linechar^0 * (parsers.newline/""))
+                          * (-parsers.pipe
+                            * (parsers.space^1/" ")
+                            * parsers.linechar^1
+                            * (parsers.newline/"")
+                            )^0
+                          * (parsers.blankline/"")^0
+                        ) / self.parser_functions.parse_inlines)^1) / writer.lineblock
+
+      self.insert_pattern("Block after Blockquote",
+                           LineBlock, "LineBlock")
+    end
+  }
+end
+%    \end{macrocode}
+% \begin{markdown}
+%
 %#### Notes
 %
 % The \luamdef{extensions.notes} function implements the Pandoc note
@@ -25054,64 +25112,6 @@ M.extensions.jekyll_data = function(expect_jekyll_data)
       if expect_jekyll_data then
         self.update_rule("ExpectedJekyllData", function() return ExpectedJekyllData end)
       end
-    end
-  }
-end
-%    \end{macrocode}
-% \begin{markdown}
-%
-%#### Line blocks
-%
-% The \luamdef{extensions.line_blocks} function implements the Pandoc line blocks
-% syntax extension.
-%
-% \end{markdown}
-%  \begin{macrocode}
-M.extensions.line_blocks = function()
-  return {
-    name = "built-in line_blocks syntax extension",
-    extend_writer = function(self)
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% Define \luamdef{writer->lineblock} as a function that will transform
-% a line block consisted of `lines` to the output format, with
-% all but the last newline rendered as a line break.
-%
-% \end{markdown}
-%  \begin{macrocode}
-      function self.lineblock(lines)
-        if not self.is_writing then return "" end
-        local buffer = {}
-        for i = 1, #lines - 1 do
-          buffer[#buffer + 1] = { lines[i], self.linebreak }
-        end
-        buffer[#buffer + 1] = lines[#lines]
-        
-        return {"\\markdownRendererLineBlockBegin\n"
-                  ,buffer,
-                  "\n\\markdownRendererLineBlockEnd "}
-      end
-    end, extend_reader = function(self)
-      local parsers = self.parsers
-      local writer = self.writer
-
-      local LineBlock = Ct(
-                        (Cs(
-                          ( (parsers.pipe * parsers.space)/""
-                          * ((parsers.space)/entities.char_entity("nbsp"))^0
-                          * parsers.linechar^0 * (parsers.newline/""))
-                          * (-parsers.pipe
-                            * (parsers.space^1/" ")
-                            * parsers.linechar^1
-                            * (parsers.newline/"")
-                            )^0
-                          * (parsers.blankline/"")^0
-                        ) / self.parser_functions.parse_inlines)^1) / writer.lineblock
-
-      self.insert_pattern("Block after Blockquote",
-                           LineBlock, "LineBlock")
     end
   }
 end
@@ -27976,7 +27976,7 @@ end
 % \par
 % \begin{markdown}
 %
-%#### Line blocks
+%#### Line Blocks
 % Here is a basic implementation of line blocks. If the \pkg{verse} package is
 % loaded, then it is used to produce the verses.
 %
