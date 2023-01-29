@@ -5425,6 +5425,54 @@ defaultOptions.fencedCode = false
 %</lua,lua-cli>
 %<*manual-options>
 
+#### Option `fencedCodeAttributes`
+
+`fencedCodeAttributes` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{fencedCodeAttributes}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Enable the Pandoc fenced code attribute extension:
+
+        ```````` md
+        ~~~~ {#mycode .haskell .numberLines startFrom="100"}
+        qsort []     = []
+        qsort (x:xs) = qsort (filter (< x) xs) ++ [x] ++
+                       qsort (filter (>= x) xs)
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        ```````````
+
+:    false
+
+     :  Disable the Pandoc fenced code attribute extension.
+
+% \end{markdown}
+% \iffalse
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { fencedCodeAttributes }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.fencedCodeAttributes = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
 #### Option `fencedDivs`
 
 `fencedDivs` (default value: `false`)
@@ -25206,7 +25254,7 @@ function M.new(options)
   if options.fencedCode then
     local fenced_code_extension = M.extensions.fenced_code(
       options.blankBeforeCodeFence,
-      false,
+      options.fencedCodeAttributes,
       options.rawAttribute)
     table.insert(extensions, fenced_code_extension)
   end
