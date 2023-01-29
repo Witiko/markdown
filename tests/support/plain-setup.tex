@@ -8,13 +8,13 @@
   \TYPE{- value:               #2}%
   \TYPE{END attributeKeyValue}}%
 \def\markdownRendererFencedDivAttributeContextBegin{%
-  \TYPE{fencedDivAttributeContextBegin}}%
+  \TYPE{BEGIN fencedDivAttributeContext}}%
 \def\markdownRendererFencedDivAttributeContextEnd{%
-  \TYPE{fencedDivAttributeContextEnd}}%
+  \TYPE{END fencedDivAttributeContext}}%
 \def\markdownRendererBracketedSpanAttributeContextBegin{%
-  \TYPE{bracketedSpanAttributeContextBegin}}%
+  \TYPE{BEGIN bracketedSpanAttributeContext}}%
 \def\markdownRendererBracketedSpanAttributeContextEnd{%
-  \TYPE{bracketedSpanAttributeContextEnd}}%
+  \TYPE{END bracketedSpanAttributeContext}}%
 \def\markdownRendererDocumentBegin{%
   \begingroup
   \catcode"09=12%  Prevent spaces (U+0009) from folding into a single space token
@@ -30,9 +30,9 @@
 \def\markdownRendererEllipsis#1{%
   \TYPE{ellipsis}}%
 \def\markdownRendererHeaderAttributeContextBegin{%
-  \TYPE{headerAttributeContextBegin}}%
+  \TYPE{BEGIN headerAttributeContext}}%
 \def\markdownRendererHeaderAttributeContextEnd{%
-  \TYPE{headerAttributeContextEnd}}%
+  \TYPE{END headerAttributeContext}}%
 \def\markdownRendererNbsp#1{%
   \TYPE{nbsp}}%
 \def\markdownRendererLeftBrace#1{%

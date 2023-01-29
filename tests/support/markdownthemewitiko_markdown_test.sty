@@ -10,13 +10,13 @@
       \TYPE{- value:               #2}%
       \TYPE{END attributeKeyValue}},
     fencedDivAttributeContextBegin = {%
-      \TYPE{fencedDivAttributeContextBegin}},
+      \TYPE{BEGIN fencedDivAttributeContext}},
     fencedDivAttributeContextEnd = {%
-      \TYPE{fencedDivAttributeContextEnd}},
+      \TYPE{END fencedDivAttributeContext}},
     bracketedSpanAttributeContextBegin = {%
-      \TYPE{bracketedSpanAttributeContextBegin}},
+      \TYPE{BEGIN bracketedSpanAttributeContext}},
     bracketedSpanAttributeContextEnd = {%
-      \TYPE{bracketedSpanAttributeContextEnd}},
+      \TYPE{END bracketedSpanAttributeContext}},
     documentBegin = {%
       \begingroup
       \catcode"09=12%  Prevent spaces (U+0009) from folding into a single space token
@@ -35,9 +35,9 @@
       \TYPE{ellipsis}%
       \GOBBLE},
     headerAttributeContextBegin = {%
-      \TYPE{headerAttributeContextBegin}},
+      \TYPE{BEGIN headerAttributeContext}},
     headerAttributeContextEnd = {%
-      \TYPE{headerAttributeContextEnd}},
+      \TYPE{END headerAttributeContext}},
     nbsp = {%
       \TYPE{nbsp}%
       \GOBBLE},
