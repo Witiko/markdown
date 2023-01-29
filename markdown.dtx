@@ -12324,6 +12324,55 @@ corresponds to the emphasized span of text.
 %
 % \begin{markdown}
 
+#### Fenced Code Attribute Context Renderers
+The following macros are only produced, when the \Opt{fencedCode} option is
+enabled.
+
+The \mdef{markdownRendererFencedCodeAttributeContextBegin} and
+\mdef{markdownRendererFencedCodeAttributeContextEnd} macros represent the
+beginning and the end of a context in which the attributes of a fenced code
+apply. The macros receive no arguments.
+
+% \end{markdown}
+%
+% \iffalse
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererFencedCodeAttributeContextBegin{%
+  \markdownRendererFencedCodeAttributeContextBeginPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { fencedCodeAttributeContextBegin }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { fencedCodeAttributeContextBegin }
+  { 0 }
+\ExplSyntaxOff
+\def\markdownRendererFencedCodeAttributeContextEnd{%
+  \markdownRendererFencedCodeAttributeContextEndPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { fencedCodeAttributeContextEnd }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { fencedCodeAttributeContextEnd }
+  { 0 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
 #### Fenced Div Attribute Context Renderers
 The following macros are only produced, when the \Opt{fencedDiv} option is
 enabled.
@@ -25650,6 +25699,12 @@ end
   \markdownRendererHeaderAttributeContextBeginPrototype
 \cs_gset_eq:NN
   \markdownRendererFencedDivAttributeContextEndPrototype
+  \markdownRendererHeaderAttributeContextEndPrototype
+\cs_gset_eq:NN
+  \markdownRendererFencedCodeAttributeContextBeginPrototype
+  \markdownRendererHeaderAttributeContextBeginPrototype
+\cs_gset_eq:NN
+  \markdownRendererFencedCodeAttributeContextEndPrototype
   \markdownRendererHeaderAttributeContextEndPrototype
 \cs_gset:Npn
   \markdownRendererReplacementCharacterPrototype
