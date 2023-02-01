@@ -16,7 +16,7 @@ Here are the definitions:
  [image]: http://image (This is the title of the image.)
 >>>
 documentBegin
-headerAttributeContextBegin
+BEGIN headerAttributeContext
 attributeIdentifier: section-with-deferred-content
 headingOne: This is another section
 interblockSeparator
@@ -32,5 +32,5 @@ BEGIN image
 - title: This is the title of the image.
 END image
 interblockSeparator
-headerAttributeContextEnd
+END headerAttributeContext
 documentEnd
