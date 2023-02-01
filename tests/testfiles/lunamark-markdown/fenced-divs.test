@@ -87,6 +87,11 @@ This is a div with a fenced code inside
 ```
 :::
 
+::: {#another-identifier}
+> This is a blockquote immediately in a
+> div
+:::
+
 ::: {.cit custom-style=raggedleft}
 I am a _fenced_ div
 :::
@@ -193,6 +198,12 @@ BEGIN fencedCode
 - src: ./_markdown_test/e441fcf4a7686817fe868bf38a5c2c07.verbatim
 - infostring: 
 END fencedCode
+END fencedDivAttributeContext
+interblockSeparator
+BEGIN fencedDivAttributeContext
+attributeIdentifier: another-identifier
+blockQuoteBegin
+blockQuoteEnd
 END fencedDivAttributeContext
 interblockSeparator
 BEGIN fencedDivAttributeContext
