@@ -140,7 +140,7 @@ belong to the previous note.
     multi-paragraph list items.
 >>>
 documentBegin
-headerAttributeContextBegin
+BEGIN headerAttributeContext
 attributeIdentifier: first-h2
 headingTwo: This is an H2
 interblockSeparator
@@ -183,5 +183,5 @@ BEGIN fencedCode
 - infostring: latex
 END fencedCode
 interblockSeparator
-headerAttributeContextEnd
+END headerAttributeContext
 documentEnd

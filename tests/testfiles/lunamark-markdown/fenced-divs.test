@@ -111,74 +111,74 @@ codeSpan: fencedDivs
 codeSpan: fencedCode
 interblockSeparator
 interblockSeparator
-fencedDivAttributeContextBegin
+BEGIN fencedDivAttributeContext
 attributeClassName: myclass
 BEGIN attributeKeyValue
 - key: lang
 - value: fr
 END attributeKeyValue
-fencedDivAttributeContextEnd
+END fencedDivAttributeContext
 interblockSeparator
-fencedDivAttributeContextBegin
+BEGIN fencedDivAttributeContext
 attributeClassName: level1
 interblockSeparator
-fencedDivAttributeContextBegin
+BEGIN fencedDivAttributeContext
 attributeClassName: level2-more-colons
-fencedDivAttributeContextEnd
+END fencedDivAttributeContext
 interblockSeparator
-fencedDivAttributeContextBegin
+BEGIN fencedDivAttributeContext
 attributeClassName: level2-fewer-colons
 interblockSeparator
-fencedDivAttributeContextEnd
+END fencedDivAttributeContext
 interblockSeparator
-fencedDivAttributeContextBegin
+BEGIN fencedDivAttributeContext
 attributeClassName: level2-same-number-of-colons
 interblockSeparator
-fencedDivAttributeContextBegin
+BEGIN fencedDivAttributeContext
 attributeClassName: level3
-fencedDivAttributeContextEnd
-fencedDivAttributeContextEnd
-fencedDivAttributeContextEnd
+END fencedDivAttributeContext
+END fencedDivAttributeContext
+END fencedDivAttributeContext
 interblockSeparator
-fencedDivAttributeContextBegin
+BEGIN fencedDivAttributeContext
 attributeClassName: Warning
 interblockSeparator
-fencedDivAttributeContextBegin
+BEGIN fencedDivAttributeContext
 attributeClassName: Danger
-fencedDivAttributeContextEnd
-fencedDivAttributeContextEnd
+END fencedDivAttributeContext
+END fencedDivAttributeContext
 interblockSeparator
-fencedDivAttributeContextBegin
+BEGIN fencedDivAttributeContext
 attributeClassName: some-classname
-fencedDivAttributeContextBegin
+BEGIN fencedDivAttributeContext
 attributeIdentifier: some-id
-fencedDivAttributeContextBegin
+BEGIN fencedDivAttributeContext
 BEGIN attributeKeyValue
 - key: lang
 - value: some
 END attributeKeyValue
-fencedDivAttributeContextEnd
-fencedDivAttributeContextEnd
-fencedDivAttributeContextEnd
+END fencedDivAttributeContext
+END fencedDivAttributeContext
+END fencedDivAttributeContext
 interblockSeparator
-fencedDivAttributeContextBegin
+BEGIN fencedDivAttributeContext
 attributeClassName: level1
 interblockSeparator
 blockQuoteBegin
 interblockSeparator
-fencedDivAttributeContextBegin
+BEGIN fencedDivAttributeContext
 attributeClassName: level2-inside-blockquote
-fencedDivAttributeContextEnd
+END fencedDivAttributeContext
 blockQuoteEnd
-fencedDivAttributeContextEnd
+END fencedDivAttributeContext
 interblockSeparator
-fencedDivAttributeContextBegin
+BEGIN fencedDivAttributeContext
 attributeIdentifier: some-identifier
 interblockSeparator
 blockQuoteBegin
 blockQuoteEnd
 interblockSeparator
-fencedDivAttributeContextEnd
+END fencedDivAttributeContext
 interblockSeparator
 interblockSeparator
 interblockSeparator
@@ -186,32 +186,32 @@ leftBrace
 rightBrace
 codeSpan:  ::: 
 interblockSeparator
-fencedDivAttributeContextBegin
+BEGIN fencedDivAttributeContext
 attributeClassName: some-classname
 interblockSeparator
 BEGIN fencedCode
 - src: ./_markdown_test/e441fcf4a7686817fe868bf38a5c2c07.verbatim
 - infostring: 
 END fencedCode
-fencedDivAttributeContextEnd
+END fencedDivAttributeContext
 interblockSeparator
-fencedDivAttributeContextBegin
+BEGIN fencedDivAttributeContext
 attributeClassName: cit
 BEGIN attributeKeyValue
 - key: custom-style
 - value: raggedleft
 END attributeKeyValue
 emphasis: fenced
-fencedDivAttributeContextEnd
+END fencedDivAttributeContext
 interblockSeparator
-fencedDivAttributeContextBegin
+BEGIN fencedDivAttributeContext
 attributeClassName: cit
 BEGIN attributeKeyValue
 - key: custom-style
 - value: raggedleft
 END attributeKeyValue
 emphasis: fenced
-fencedDivAttributeContextEnd
+END fencedDivAttributeContext
 interblockSeparator
 leftBrace
 rightBrace

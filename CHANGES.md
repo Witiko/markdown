@@ -4,7 +4,8 @@
 
 Development:
 
-- Add support for line blocks (contributed by @lostenderman, #209, #248)
+- Add support for line blocks. (contributed by @lostenderman, #209, #248)
+- Add support for attributes on fenced code blocks. (#123, #211)
 
 Documentation:
 

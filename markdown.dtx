@@ -275,6 +275,15 @@ pre {
   white-space: pre;
   white-space: pre-wrap;
   word-wrap: break-word;
+  counter-reset: line;
+}
+
+.sourceCode.linenos > span {
+  counter-increment: line;
+}
+
+.sourceCode.linenos > span:before{
+  content: counter(line) "  ";
 }
 
 b, strong {
@@ -5419,6 +5428,104 @@ following text:
 % \fi
 %  \begin{macrocode}
 defaultOptions.fencedCode = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
+#### Option `fencedCodeAttributes`
+
+`fencedCodeAttributes` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{fencedCodeAttributes}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Enable the Pandoc fenced code attribute extension:
+
+        ```````` md
+        ~~~~ {#mycode .haskell .numberLines startFrom="100"}
+        qsort []     = []
+        qsort (x:xs) = qsort (filter (< x) xs) ++ [x] ++
+                       qsort (filter (>= x) xs)
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        ```````````
+
+:    false
+
+     :  Disable the Pandoc fenced code attribute extension.
+
+% \end{markdown}
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+```` tex
+\documentclass{article}
+\usepackage[fencedCode,
+            fencedCodeAttributes]{markdown}
+\usepackage{minted}
+\markdownSetup{
+  renderers = {
+    fencedCodeAttributeContextBegin = {%
+      \begingroup
+      \markdownSetup{
+        renderers = {
+          attributeKeyValue = {%
+            \setminted{{#1} = {#2}}%
+          },
+        },
+      }%
+    },
+    fencedCodeAttributeContextEnd = {%
+      \endgroup
+    },
+  },
+}
+\begin{document}
+\begin{markdown}
+``` js {linenos=true}
+if (a > 3) {
+    moveShip(5 * gravity, DOWN);
+}
+``````
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex --shell-escape document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> ``` js {.linenos}
+> 1. if (a > 3) {
+> 2.     moveShip(5 * gravity, DOWN);
+> 3. }
+> ``````
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { fencedCodeAttributes }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.fencedCodeAttributes = false
 %    \end{macrocode}
 % \par
 % \iffalse
@@ -12265,6 +12372,105 @@ corresponds to the emphasized span of text.
   \g_@@_renderer_arities_prop
   { strongEmphasis }
   { 1 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
+#### Fenced Code Attribute Context Renderers
+The following macros are only produced, when the \Opt{fencedCode} option is
+enabled.
+
+The \mdef{markdownRendererFencedCodeAttributeContextBegin} and
+\mdef{markdownRendererFencedCodeAttributeContextEnd} macros represent the
+beginning and the end of a context in which the attributes of a fenced code
+apply. The macros receive no arguments.
+
+% \end{markdown}
+%
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+```` tex
+\documentclass{article}
+\usepackage[fencedCode,
+            fencedCodeAttributes]{markdown}
+\usepackage{minted}
+\markdownSetup{
+  renderers = {
+    fencedCodeAttributeContextBegin = {%
+      \begingroup
+      \markdownSetup{
+        renderers = {
+          attributeKeyValue = {%
+            \setminted{{#1} = {#2}}%
+          },
+        },
+      }%
+    },
+    fencedCodeAttributeContextEnd = {%
+      \endgroup
+    },
+  },
+}
+\begin{document}
+\begin{markdown}
+``` js {linenos=true}
+if (a > 3) {
+    moveShip(5 * gravity, DOWN);
+}
+``````
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex --shell-escape document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> ``` js {.linenos}
+> 1. if (a > 3) {
+> 2.     moveShip(5 * gravity, DOWN);
+> 3. }
+> ``````
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererFencedCodeAttributeContextBegin{%
+  \markdownRendererFencedCodeAttributeContextBeginPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { fencedCodeAttributeContextBegin }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { fencedCodeAttributeContextBegin }
+  { 0 }
+\ExplSyntaxOff
+\def\markdownRendererFencedCodeAttributeContextEnd{%
+  \markdownRendererFencedCodeAttributeContextEndPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { fencedCodeAttributeContextEnd }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { fencedCodeAttributeContextEnd }
+  { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par
@@ -21917,6 +22123,14 @@ parsers.attributes = parsers.lbrace
                    * parsers.optionalspace
                    * parsers.rbrace
 
+
+parsers.raw_attribute = parsers.lbrace
+                      * parsers.optionalspace
+                      * parsers.equal
+                      * C(parsers.attribute_key)
+                      * parsers.optionalspace
+                      * parsers.rbrace
+
 -- block followed by 0 or more optionally
 -- indented blocks with first line indented.
 parsers.indented_blocks = function(bl)
@@ -21979,73 +22193,6 @@ parsers.intickschar = (parsers.any - S(" \n\r`"))
 
 parsers.inticks     = parsers.openticks * parsers.space^-1
                     * C(parsers.intickschar^0) * parsers.closeticks
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-%#### Parsers Used for Fenced Code Blocks
-%
-% \end{markdown}
-%  \begin{macrocode}
-local function captures_geq_length(_,i,a,b)
-  return #a >= #b and i
-end
-
-parsers.tilde_infostring
-                     = C((parsers.linechar
-                        - (parsers.spacechar^1 * parsers.newline))^0)
-                     * parsers.optionalspace
-                     * (parsers.newline + parsers.eof)
-
-parsers.backtick_infostring
-                     = C((parsers.linechar
-                        - (parsers.backtick
-                          + parsers.spacechar^1 * parsers.newline))^0)
-                     * parsers.optionalspace
-                     * (parsers.newline + parsers.eof)
-
-local fenceindent
-parsers.fencehead    = function(char, infostring)
-  return               C(parsers.nonindentspace) / function(s) fenceindent = #s end
-                     * Cg(char^3, "fencelength")
-                     * parsers.optionalspace * infostring
-end
-
-parsers.fencehead_with_attributes
-                     = function(char)
-  return               C(parsers.nonindentspace) / function(s) fenceindent = #s end
-                     * Cg(char^3, "fencelength")
-                     * parsers.optionalspace * Ct(parsers.attributes)
-                     * parsers.optionalspace * (parsers.newline + parsers.eof)
-end
-
-parsers.fencetail    = function(char)
-  return               parsers.nonindentspace
-                     * Cmt(C(char^3) * Cb("fencelength"), captures_geq_length)
-                     * parsers.optionalspace * (parsers.newline + parsers.eof)
-                     + parsers.eof
-end
-
-parsers.fencedline   = function(char)
-  return               C(parsers.line - parsers.fencetail(char))
-                     / function(s)
-                         local i = 1
-                         local remaining = fenceindent
-                         while true do
-                           local c = s:sub(i, i)
-                           if c == " " and remaining > 0 then
-                             remaining = remaining - 1
-                             i = i + 1
-                           elseif c == "\t" and remaining > 3 then
-                             remaining = remaining - 4
-                             i = i + 1
-                           else
-                             break
-                           end
-                         end
-                         return s:sub(i)
-                       end
-end
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -22278,18 +22425,6 @@ parsers.urlchar      = parsers.anyescaped - parsers.newline - parsers.more
 %
 % \end{markdown}
 %  \begin{macrocode}
-parsers.TildeFencedCode
-       = parsers.fencehead(parsers.tilde,
-                           parsers.tilde_infostring)
-       * Cs(parsers.fencedline(parsers.tilde)^0)
-       * parsers.fencetail(parsers.tilde)
-
-parsers.BacktickFencedCode
-       = parsers.fencehead(parsers.backtick,
-                           parsers.backtick_infostring)
-       * Cs(parsers.fencedline(parsers.backtick)^0)
-       * parsers.fencetail(parsers.backtick)
-
 parsers.lineof = function(c)
     return (parsers.leader * (P(c) * parsers.optionalspace)^3
            * (parsers.newline * parsers.blankline^1
@@ -24213,9 +24348,16 @@ end
 % parameter is `true`, the syntax extension requires a blank line between a
 % paragraph and the following fenced code block.
 %
+% When the `allow_attributes` option is `true`, the syntax extension permits
+% attributes following the infostring. When the `allow_raw_blocks` option is
+% `true`, the syntax extension permits the specification of raw blocks using
+% Pandoc's raw attribute syntax extension.
+%
 % \end{markdown}
 %  \begin{macrocode}
-M.extensions.fenced_code = function(blank_before_code_fence)
+M.extensions.fenced_code = function(blank_before_code_fence,
+                                    allow_attributes,
+                                    allow_raw_blocks)
   return {
     name = "built-in fenced_code syntax extension",
     extend_writer = function(self)
@@ -24226,29 +24368,140 @@ M.extensions.fenced_code = function(blank_before_code_fence)
 % \begin{markdown}
 %
 % Define \luamdef{writer->fencedCode} as a function that will transform an
-% input fenced code block `s` with the infostring `i` to the output
-% format.
+% input fenced code block `s` with the infostring `i` and optional attributes
+% `attr` to the output format.
 %
 % \end{markdown}
 %  \begin{macrocode}
-      function self.fencedCode(s, i)
+      function self.fencedCode(s, i, attr)
         if not self.is_writing then return "" end
         s = s:gsub("\n$", "")
+        local buf = {}
+        if attr ~= nil then
+          table.insert(buf, {"\\markdownRendererFencedCodeAttributeContextBegin",
+                             self.attributes(attr)})
+        end
         local name = util.cache_verbatim(options.cacheDir, s)
-        return {"\\markdownRendererInputFencedCode{",
-                name,"}{",self.string(i),"}"}
+        table.insert(buf, {"\\markdownRendererInputFencedCode{",
+                           name,"}{",self.string(i),"}"})
+        if attr ~= nil then
+          table.insert(buf, "\\markdownRendererFencedCodeAttributeContextEnd")
+        end
+        return buf
+      end
+
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define \luamdef{writer->rawBlock} as a function that will transform an
+% input raw block `s` with the raw attribute `attr` to the output format.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      if allow_raw_blocks then
+        function self.rawBlock(s, attr)
+          if not self.is_writing then return "" end
+          s = s:gsub("\n$", "")
+          local name = util.cache_verbatim(options.cacheDir, s)
+          return {"\\markdownRendererInputRawBlock{",
+                  name,"}{", self.string(attr),"}"}
+        end
       end
     end, extend_reader = function(self)
       local parsers = self.parsers
       local writer = self.writer
 
-      local FencedCode = (parsers.TildeFencedCode
-                         + parsers.BacktickFencedCode)
-                       / function(infostring, code)
-                           local expanded_code = self.expandtabs(code)
-                           return writer.fencedCode(expanded_code,
-                                                    infostring)
-                         end
+      local function captures_geq_length(_,i,a,b)
+        return #a >= #b and i
+      end
+
+      local tilde_infostring
+                           = C((parsers.linechar
+                              - (parsers.spacechar^1 * parsers.newline))^0)
+
+      local backtick_infostring
+                           = C((parsers.linechar
+                              - (parsers.backtick
+                                + parsers.spacechar^1 * parsers.newline))^0)
+
+      local fenceindent
+      local fencehead      = function(char, infostring)
+        return               C(parsers.nonindentspace) / function(s) fenceindent = #s end
+                           * Cg(char^3, "fencelength")
+                           * parsers.optionalspace
+                           * infostring
+                           * (parsers.newline + parsers.eof)
+      end
+
+      local fencetail      = function(char)
+        return               parsers.nonindentspace
+                           * Cmt(C(char^3) * Cb("fencelength"), captures_geq_length)
+                           * parsers.optionalspace * (parsers.newline + parsers.eof)
+                           + parsers.eof
+      end
+
+      local fencedline     = function(char)
+        return               C(parsers.line - fencetail(char))
+                           / function(s)
+                               local i = 1
+                               local remaining = fenceindent
+                               while true do
+                                 local c = s:sub(i, i)
+                                 if c == " " and remaining > 0 then
+                                   remaining = remaining - 1
+                                   i = i + 1
+                                 elseif c == "\t" and remaining > 3 then
+                                   remaining = remaining - 4
+                                   i = i + 1
+                                 else
+                                   break
+                                 end
+                               end
+                               return s:sub(i)
+                             end
+      end
+
+      local TildeFencedCode
+             = fencehead(parsers.tilde, tilde_infostring)
+             * Cs(fencedline(parsers.tilde)^0)
+             * fencetail(parsers.tilde)
+
+      local BacktickFencedCode
+             = fencehead(parsers.backtick, backtick_infostring)
+             * Cs(fencedline(parsers.backtick)^0)
+             * fencetail(parsers.backtick)
+
+            local infostring_with_attributes
+                             = Ct(C((parsers.linechar
+                                    - ( parsers.optionalspace
+                                      * parsers.attributes))^0)
+                                 * parsers.optionalspace
+                                 * Ct(parsers.attributes))
+
+      local FencedCode
+               = (TildeFencedCode + BacktickFencedCode)
+               / function(infostring, code)
+                   local expanded_code = self.expandtabs(code)
+
+                   if allow_raw_blocks then
+                     local raw_attr = lpeg.match(parsers.raw_attribute,
+                                                 infostring)
+                     if raw_attr then
+                       return writer.rawBlock(expanded_code, raw_attr)
+                     end
+                   end
+
+                   local attr = nil
+                   if allow_attributes then
+                     local match = lpeg.match(infostring_with_attributes,
+                                              infostring)
+                     if match then
+                       infostring, attr = table.unpack(match)
+                     end
+                   end
+                   return writer.fencedCode(expanded_code, infostring, attr)
+                 end
 
       self.insert_pattern("Block after Verbatim",
                           FencedCode, "FencedCode")
@@ -24257,10 +24510,8 @@ M.extensions.fenced_code = function(blank_before_code_fence)
       if blank_before_code_fence then
         fencestart = parsers.fail
       else
-        fencestart = parsers.fencehead(parsers.backtick,
-                                       parsers.backtick_infostring)
-                   + parsers.fencehead(parsers.tilde,
-                                       parsers.tilde_infostring)
+        fencestart = fencehead(parsers.backtick, backtick_infostring)
+                   + fencehead(parsers.tilde, tilde_infostring)
       end
 
       self.update_rule("EndlineExceptions", function(previous_pattern)
@@ -24790,14 +25041,14 @@ end
 %
 %#### Raw Attributes
 %
-% The \luamdef{extensions.raw_attribute} function implements the Pandoc
-% raw attribute syntax extension.
+% The \luamdef{extensions.raw_inline} function implements the Pandoc
+% raw attribute syntax extension for inline code spans.
 %
 % \end{markdown}
 %  \begin{macrocode}
-M.extensions.raw_attribute = function()
+M.extensions.raw_inline = function()
   return {
-    name = "built-in raw_attribute syntax extension",
+    name = "built-in raw_inline syntax extension",
     extend_writer = function(self)
       local options = self.options
 
@@ -24816,60 +25067,15 @@ M.extensions.raw_attribute = function()
         return {"\\markdownRendererInputRawInline{",
                 name,"}{", self.string(attr),"}"}
       end
-
-      if options.fencedCode then
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% Define \luamdef{writer->rawBlock} as a function that will transform an
-% input raw block `s` with the raw attribute `attr` to the output format.
-%
-% \end{markdown}
-%  \begin{macrocode}
-        function self.rawBlock(s, attr)
-          if not self.is_writing then return "" end
-          s = s:gsub("\n$", "")
-          local name = util.cache_verbatim(options.cacheDir, s)
-          return {"\\markdownRendererInputRawBlock{",
-                  name,"}{", self.string(attr),"}"}
-        end
-      end
     end, extend_reader = function(self)
-      local options = self.options
       local writer = self.writer
 
-      local raw_attribute = parsers.lbrace
-                          * parsers.optionalspace
-                          * parsers.equal
-                          * C(parsers.attribute_key)
-                          * parsers.optionalspace
-                          * parsers.rbrace
-
       local RawInline = parsers.inticks
-                      * raw_attribute
+                      * parsers.raw_attribute
                       / writer.rawInline
 
       self.insert_pattern("Inline before Code",
                           RawInline, "RawInline")
-
-      if options.fencedCode then
-        local RawBlock = (parsers.TildeFencedCode
-                         + parsers.BacktickFencedCode)
-                       / function(infostring, code)
-                           local expanded_code = self.expandtabs(code)
-                           local attr = lpeg.match(raw_attribute, infostring)
-                           if attr then
-                             return writer.rawBlock(expanded_code, attr)
-                           else
-                             return writer.fencedCode(expanded_code,
-                                                      infostring)
-                           end
-                         end
-
-        self.insert_pattern("Block after Verbatim",
-                            RawBlock, "RawBlock")
-      end
     end
   }
 end
@@ -25205,7 +25411,9 @@ function M.new(options)
 
   if options.fencedCode then
     local fenced_code_extension = M.extensions.fenced_code(
-      options.blankBeforeCodeFence)
+      options.blankBeforeCodeFence,
+      options.fencedCodeAttributes,
+      options.rawAttribute)
     table.insert(extensions, fenced_code_extension)
   end
 
@@ -25233,8 +25441,8 @@ function M.new(options)
   end
 
   if options.rawAttribute then
-    local raw_attribute_extension = M.extensions.raw_attribute()
-    table.insert(extensions, raw_attribute_extension)
+    local raw_inline_extension = M.extensions.raw_inline()
+    table.insert(extensions, raw_inline_extension)
   end
 
   if options.strikeThrough then
@@ -25600,6 +25808,12 @@ end
   \markdownRendererHeaderAttributeContextBeginPrototype
 \cs_gset_eq:NN
   \markdownRendererFencedDivAttributeContextEndPrototype
+  \markdownRendererHeaderAttributeContextEndPrototype
+\cs_gset_eq:NN
+  \markdownRendererFencedCodeAttributeContextBeginPrototype
+  \markdownRendererHeaderAttributeContextBeginPrototype
+\cs_gset_eq:NN
+  \markdownRendererFencedCodeAttributeContextEndPrototype
   \markdownRendererHeaderAttributeContextEndPrototype
 \cs_gset:Npn
   \markdownRendererReplacementCharacterPrototype
