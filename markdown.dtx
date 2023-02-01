@@ -22705,8 +22705,7 @@ function M.reader.new(writer, options)
   -- strip off leading > and indents, and run through blocks
   parsers.blockquote_body = ((parsers.leader * parsers.more * parsers.space^-1)/""
                              * parsers.linechar^0 * parsers.newline)^1
-                            * (-(parsers.leader * parsers.more
-                                + parsers.blankline) * parsers.linechar^1
+                            * (-V("BlockquoteExceptions") * parsers.linechar^1
                               * parsers.newline)^0
 
   if not options.breakableBlockquotes then
@@ -22972,6 +22971,9 @@ function M.reader.new(writer, options)
                            * ((parsers.indentedline - parsers.blankline))^1)^1
                            ) / self.expandtabs / writer.verbatim
 
+  parsers.BlockquoteExceptions = parsers.leader * parsers.more
+                               + parsers.blankline
+
   parsers.Blockquote   = Cs(parsers.blockquote_body^1)
                        / self.parser_functions.parse_blocks_nested
                        / writer.blockquote
@@ -23227,7 +23229,9 @@ function M.reader.new(writer, options)
         DisplayHtml           = parsers.DisplayHtml,
         Paragraph             = parsers.Paragraph,
         Plain                 = parsers.Plain,
+
         EndlineExceptions     = parsers.EndlineExceptions,
+        BlockquoteExceptions  = parsers.BlockquoteExceptions,
 
         Str                   = parsers.Str,
         Space                 = parsers.Space,
@@ -24631,6 +24635,31 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
                           FencedDiv, "FencedDiv")
 
       self.add_special_character(":")
+
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Patch blockquotes, so that they allow the end of a fenced div immediately
+% afterwards.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      local function check_div_level(s, i, current_level) -- luacheck: ignore s i
+        current_level = tonumber(current_level)
+        return current_level > 0
+      end
+
+      local is_inside_div = Cmt(Cb("div_level"), check_div_level)
+      local fencestart = is_inside_div * fenced_div_end
+
+      self.update_rule("BlockquoteExceptions", function(previous_pattern)
+        if previous_pattern == nil then
+          previous_pattern = parsers.BlockquoteExceptions
+        end
+        return previous_pattern + fencestart
+      end)
+
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -24642,13 +24671,6 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
 % \end{markdown}
 %  \begin{macrocode}
       if not blank_before_div_fence then
-        local function check_div_level(s, i, current_level) -- luacheck: ignore s i
-          current_level = tonumber(current_level)
-          return current_level > 0
-        end
-
-        local is_inside_div = Cmt(Cb("div_level"), check_div_level)
-        local fencestart = is_inside_div * fenced_div_end
         self.update_rule("EndlineExceptions", function(previous_pattern)
           if previous_pattern == nil then
             previous_pattern = parsers.EndlineExceptions
