@@ -886,7 +886,7 @@ ulBeginTight
 ulItem
 BEGIN link
 - label: Overview
-- URI: (hash)overview
+- URI: #overview
 - title: 
 END link
 interblockSeparator
@@ -894,21 +894,21 @@ ulBeginTight
 ulItem
 BEGIN link
 - label: Philosophy
-- URI: (hash)philosophy
+- URI: #philosophy
 - title: 
 END link
 ulItemEnd
 ulItem
 BEGIN link
 - label: Inline HTML
-- URI: (hash)html
+- URI: #html
 - title: 
 END link
 ulItemEnd
 ulItem
 BEGIN link
 - label: Automatic Escaping for Special Characters
-- URI: (hash)autoescape
+- URI: #autoescape
 - title: 
 END link
 ulItemEnd
@@ -917,7 +917,7 @@ ulItemEnd
 ulItem
 BEGIN link
 - label: Block Elements
-- URI: (hash)block
+- URI: #block
 - title: 
 END link
 interblockSeparator
@@ -925,42 +925,42 @@ ulBeginTight
 ulItem
 BEGIN link
 - label: Paragraphs and Line Breaks
-- URI: (hash)p
+- URI: #p
 - title: 
 END link
 ulItemEnd
 ulItem
 BEGIN link
 - label: Headers
-- URI: (hash)header
+- URI: #header
 - title: 
 END link
 ulItemEnd
 ulItem
 BEGIN link
 - label: Blockquotes
-- URI: (hash)blockquote
+- URI: #blockquote
 - title: 
 END link
 ulItemEnd
 ulItem
 BEGIN link
 - label: Lists
-- URI: (hash)list
+- URI: #list
 - title: 
 END link
 ulItemEnd
 ulItem
 BEGIN link
 - label: Code Blocks
-- URI: (hash)precode
+- URI: #precode
 - title: 
 END link
 ulItemEnd
 ulItem
 BEGIN link
 - label: Horizontal Rules
-- URI: (hash)hr
+- URI: #hr
 - title: 
 END link
 ulItemEnd
@@ -969,7 +969,7 @@ ulItemEnd
 ulItem
 BEGIN link
 - label: Span Elements
-- URI: (hash)span
+- URI: #span
 - title: 
 END link
 interblockSeparator
@@ -977,28 +977,28 @@ ulBeginTight
 ulItem
 BEGIN link
 - label: Links
-- URI: (hash)link
+- URI: #link
 - title: 
 END link
 ulItemEnd
 ulItem
 BEGIN link
 - label: Emphasis
-- URI: (hash)em
+- URI: #em
 - title: 
 END link
 ulItemEnd
 ulItem
 BEGIN link
 - label: Code
-- URI: (hash)code
+- URI: #code
 - title: 
 END link
 ulItemEnd
 ulItem
 BEGIN link
 - label: Images
-- URI: (hash)img
+- URI: #img
 - title: 
 END link
 ulItemEnd
@@ -1007,7 +1007,7 @@ ulItemEnd
 ulItem
 BEGIN link
 - label: Miscellaneous
-- URI: (hash)misc
+- URI: #misc
 - title: 
 END link
 interblockSeparator
@@ -1015,14 +1015,14 @@ ulBeginTight
 ulItem
 BEGIN link
 - label: Backslash Escapes
-- URI: (hash)backslash
+- URI: #backslash
 - title: 
 END link
 ulItemEnd
 ulItem
 BEGIN link
 - label: Automatic Links
-- URI: (hash)autolink
+- URI: #autolink
 - title: 
 END link
 ulItemEnd
@@ -1134,7 +1134,7 @@ inputVerbatim: ./_markdown_test/b8f08cfb9bd87f7cb5dfd6e52220fb5b.verbatim
 interblockSeparator
 BEGIN link
 - label: inline HTML
-- URI: (hash)html
+- URI: #html
 - title: 
 END link
 interblockSeparator
@@ -1163,12 +1163,12 @@ codeSpan: <br />
 codeSpan: <br />
 BEGIN link
 - label: blockquoting
-- URI: (hash)blockquote
+- URI: #blockquote
 - title: 
 END link
 BEGIN link
 - label: list items
-- URI: (hash)list
+- URI: #list
 - title: 
 END link
 interblockSeparator

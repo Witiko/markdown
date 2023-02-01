@@ -36,6 +36,7 @@ Unit Tests:
 
 - Do not fold tabs and spaces into a single space token.
   (lostenderman#107, #242)
+- Do not escape URIs in test outputs. (lostenderman#8, #260)
 
 Speed Improvements:
 
