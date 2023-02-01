@@ -275,6 +275,15 @@ pre {
   white-space: pre;
   white-space: pre-wrap;
   word-wrap: break-word;
+  counter-reset: line;
+}
+
+.sourceCode.linenos > span {
+  counter-increment: line;
+}
+
+.sourceCode.linenos > span:before{
+  content: counter(line) "  ";
 }
 
 b, strong {
@@ -5452,6 +5461,56 @@ defaultOptions.fencedCode = false
 
 % \end{markdown}
 % \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+```` tex
+\documentclass{article}
+\usepackage[fencedCode,
+            fencedCodeAttributes]{markdown}
+\usepackage{minted}
+\markdownSetup{
+  renderers = {
+    fencedCodeAttributeContextBegin = {%
+      \begingroup
+      \markdownSetup{
+        renderers = {
+          attributeKeyValue = {%
+            \setminted{{#1} = {#2}}%
+          },
+        },
+      }%
+    },
+    fencedCodeAttributeContextEnd = {%
+      \endgroup
+    },
+  },
+}
+\begin{document}
+\begin{markdown}
+``` js {linenos=true}
+if (a > 3) {
+    moveShip(5 * gravity, DOWN);
+}
+``````
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex --shell-escape document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> ``` js {.linenos}
+> 1. if (a > 3) {
+> 2.     moveShip(5 * gravity, DOWN);
+> 3. }
+> ``````
+
 %</manual-options>
 %<*tex>
 % \fi
@@ -12336,6 +12395,56 @@ apply. The macros receive no arguments.
 % \end{markdown}
 %
 % \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+```` tex
+\documentclass{article}
+\usepackage[fencedCode,
+            fencedCodeAttributes]{markdown}
+\usepackage{minted}
+\markdownSetup{
+  renderers = {
+    fencedCodeAttributeContextBegin = {%
+      \begingroup
+      \markdownSetup{
+        renderers = {
+          attributeKeyValue = {%
+            \setminted{{#1} = {#2}}%
+          },
+        },
+      }%
+    },
+    fencedCodeAttributeContextEnd = {%
+      \endgroup
+    },
+  },
+}
+\begin{document}
+\begin{markdown}
+``` js {linenos=true}
+if (a > 3) {
+    moveShip(5 * gravity, DOWN);
+}
+``````
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex --shell-escape document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> ``` js {.linenos}
+> 1. if (a > 3) {
+> 2.     moveShip(5 * gravity, DOWN);
+> 3. }
+> ``````
+
 %</manual-tokens>
 %<*tex>
 % \fi
