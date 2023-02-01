@@ -66,32 +66,32 @@
 \def\markdownRendererLink#1#2#3#4{%
   \TYPE{BEGIN link}%
   \TYPE{- label:               #1}%
-  \TYPE{- URI:                 #2}%
+  \TYPE{- URI:                 #3}%
   \TYPE{- title:               #4}%
   \TYPE{END link}}%
 \def\markdownRendererImage#1#2#3#4{%
   \TYPE{BEGIN image}%
   \TYPE{- label:               #1}%
-  \TYPE{- URI:                 #2}%
+  \TYPE{- URI:                 #3}%
   \TYPE{- title:               #4}%
   \TYPE{END image}}%
 \def\markdownRendererContentBlock#1#2#3#4{%
   \TYPE{BEGIN contentBlock}%
   \TYPE{- suffix:              #1}%
-  \TYPE{- URI:                 #2}%
+  \TYPE{- URI:                 #3}%
   \TYPE{- title:               #4}%
   \TYPE{END contentBlock}}%
 \def\markdownRendererContentBlockOnlineImage#1#2#3#4{%
   \TYPE{BEGIN contentBlockOnlineImage}%
   \TYPE{- suffix:              #1}%
-  \TYPE{- URI:                 #2}%
+  \TYPE{- URI:                 #3}%
   \TYPE{- title:               #4}%
   \TYPE{END contentBlockOnlineImage}}%
 \def\markdownRendererContentBlockCode#1#2#3#4#5{%
   \TYPE{BEGIN contentBlockCode}%
   \TYPE{- suffix:              #1}%
   \TYPE{- language:            #2}%
-  \TYPE{- URI:                 #3}%
+  \TYPE{- URI:                 #4}%
   \TYPE{- title:               #5}%
   \TYPE{END contentBlockCode}}%
 \def\markdownRendererUlBegin{%
