@@ -1757,8 +1757,10 @@ A PDF document named `document.pdf` should be produced and contain the
 following text:
 
 > \$\\sqrt{-1}\$ *equals* \$i\$.
-> 
-> √-̅1̅ *equals* $i$.
+>
+> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> *equals*
+> <math><mi>i</mi></math>.
 
 Invoking pdfTeX should have the same effect:
 ``` sh
@@ -1798,8 +1800,10 @@ A PDF document named `document.pdf` should be produced and contain the
 following text:
 
 > \$\\sqrt{-1}\$ *equals* \$i\$.
-> 
-> √-̅1̅ *equals* $i$.
+>
+> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> *equals*
+> <math><mi>i</mi></math>.
 
 In this case, we cannot use pdfTeX, because pdfTeX does not define the
 `\directlua` \TeX{} command.
@@ -1848,8 +1852,10 @@ A PDF document named `document.pdf` should be produced and contain the
 following text:
 
 > \$\\sqrt{-1}\$ *equals* \$i\$.
-> 
-> √-̅1̅ *equals* $i$.
+>
+> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> *equals*
+> <math><mi>i</mi></math>.
 
 Invoking pdfTeX should have the same effect:
 ``` sh
@@ -6394,7 +6400,9 @@ following text:
 
 > \$\\sqrt {-1}\$ *equals* \$i\$.
 >
-> √-̅1̅ *equals* $i$.
+> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> *equals*
+> <math><mi>i</mi></math>.
 
 ##### Lua CLI Example {.unnumbered}
 
@@ -6433,7 +6441,9 @@ following text:
 
 > \$\\sqrt {-1}\$ *equals* \$i\$.
 >
-> √-̅1̅ *equals* $i$.
+> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> *equals*
+> <math><mi>i</mi></math>.
 
 ##### Plain \TeX{} Example {.unnumbered}
 
@@ -6463,7 +6473,9 @@ following text:
 
 > \$\\sqrt {-1}\$ *equals* \$i\$.
 >
-> √-̅1̅ *equals* $i$.
+> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> *equals*
+> <math><mi>i</mi></math>.
 
 ##### \LaTeX{} Example {.unnumbered}
 
@@ -6493,7 +6505,9 @@ following text:
 
 > \$\\sqrt {-1}\$ *equals* \$i\$.
 >
-> √-̅1̅ *equals* $i$.
+> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> *equals*
+> <math><mi>i</mi></math>.
 
 ##### \Hologo{ConTeXt} Example {.unnumbered}
 
@@ -6523,7 +6537,9 @@ following text:
 
 > \$\\sqrt {-1}\$ *equals* \$i\$.
 >
-> √-̅1̅ *equals* $i$.
+> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> *equals*
+> <math><mi>i</mi></math>.
 
 %</manual-options>
 %<*tex>
@@ -9480,8 +9496,10 @@ A PDF document named `document.pdf` should be produced and contain the
 following text:
 
 > \$\\sqrt{-1}\$ *equals* \$i\$.
-> 
-> √-̅1̅ *equals* $i$.
+>
+> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> *equals*
+> <math><mi>i</mi></math>.
 
 Invoking pdfTeX should have the same effect:
 ``` sh
@@ -11145,10 +11163,12 @@ A PDF document named `document.pdf` should be produced and contain the
 following text:
 
 > \$\\sqrt{-1}\$ \*equals\* \$i\$.
-> 
+>
 > \$\\sqrt{-1}\$ *equals* \$i\$.
-> 
-> √-̅1̅ *equals* $i$.
+>
+> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> *equals*
+> <math><mi>i</mi></math>.
 
 ##### \LaTeX{} Example {.unnumbered}
 
@@ -11184,10 +11204,12 @@ A PDF document named `document.pdf` should be produced and contain the
 following text:
 
 > \$\\sqrt{-1}\$ \*equals\* \$i\$.
-> 
+>
 > \$\\sqrt{-1}\$ *equals* \$i\$.
-> 
-> √-̅1̅ *equals* $i$.
+>
+> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> *equals*
+> <math><mi>i</mi></math>.
 
 ##### \Hologo{ConTeXt} Example {.unnumbered}
 
@@ -11219,10 +11241,12 @@ A PDF document named `document.pdf` should be produced and contain the
 following text:
 
 > \$\\sqrt{-1}\$ \*equals\* \$i\$.
-> 
+>
 > \$\\sqrt{-1}\$ *equals* \$i\$.
-> 
-> √-̅1̅ *equals* $i$.
+>
+> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> *equals*
+> <math><mi>i</mi></math>.
 
 %</manual-tokens>
 %<*tex>
@@ -17222,8 +17246,10 @@ A PDF document named `document.pdf` should be produced and contain the
 following text:
 
 > \$\\sqrt{-1}\$ *equals* \$i\$.
-> 
-> √-̅1̅ *equals* $i$.
+>
+> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> *equals*
+> <math><mi>i</mi></math>.
 
 Invoking pdfTeX should have the same effect:
 ``` sh
@@ -18405,8 +18431,10 @@ A PDF document named `document.pdf` should be produced and contain the
 following text:
 
 > \$\\sqrt{-1}\$ *equals* \$i\$.
-> 
-> √-̅1̅ *equals* $i$.
+>
+> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> *equals*
+> <math><mi>i</mi></math>.
 
 Invoking pdfTeX should have the same effect:
 ``` sh
