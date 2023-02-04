@@ -2,6 +2,10 @@
 
 ## 2.21.0
 
+Fixes:
+
+- Use MathML to render math in the user manual. (#261, #262)
+
 ## 2.20.0 (2022-02-01)
 
 Development:
