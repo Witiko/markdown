@@ -2,6 +2,13 @@
 
 ## 2.20.0
 
+Development:
+
+- Add support for line blocks.
+  (contributed by @Omikhleia and @lostenderman, jgm#41, #209, #248)
+- Add support for attributes on fenced code blocks.
+  (contributed by @Omikhleia, jgm#36, #123, #211)
+
 Documentation:
 
 - Add @drehak's thesis to `README.md`. (204a18c, aec9b44, cda53fb)
@@ -16,6 +23,8 @@ Fixes:
   (lostenderman#99, #247, #249)
 - Fix input normalization and move it from Lua CLI and plain TeX
   layers directly to the `convert()` Lua method. (#246, #253)
+- Allow fenced div closing tag to break out of a blockquote.
+  (contributed by @Omikhleia, jgm#60, jgm#61, #230, #259)
 
 Default Renderer Prototypes:
 
@@ -31,6 +40,7 @@ Unit Tests:
 
 - Do not fold tabs and spaces into a single space token.
   (lostenderman#107, #242)
+- Do not escape URIs in test outputs. (lostenderman#8, #260, 291e388)
 
 Speed Improvements:
 

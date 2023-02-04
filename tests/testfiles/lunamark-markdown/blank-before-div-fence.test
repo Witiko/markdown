@@ -25,7 +25,7 @@ interblockSeparator
 interblockSeparator
 interblockSeparator
 interblockSeparator
-fencedDivAttributeContextBegin
+BEGIN fencedDivAttributeContext
 attributeClassName: foo
-fencedDivAttributeContextEnd
+END fencedDivAttributeContext
 documentEnd

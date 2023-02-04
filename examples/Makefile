@@ -14,6 +14,7 @@ LUACLI_OPTIONS=\
   fencedCode=true \
   hashEnumerators=true \
   inlineNotes=true \
+  lineBlocks=true \
   notes=true \
   pipeTables=true \
   rawAttribute=true \
