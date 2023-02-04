@@ -21475,15 +21475,14 @@ parsers.in_matched_block_tags = parsers.less
 %
 % \end{markdown}
 %  \begin{macrocode}
--- TODO find a better place for this
-parsers.range = function(pattern, min, max)
+parsers.pattern_range = function(pattern, min, max)
   return -pattern^(max + 1) * pattern^min
 end
 
 parsers.hexentity = parsers.ampersand * parsers.hash * C(S("Xx"))
-                  * C(parsers.range(parsers.hexdigit, 1, 6)) * parsers.semicolon
+                  * C(parsers.pattern_range(parsers.hexdigit, 1, 6)) * parsers.semicolon
 parsers.decentity = parsers.ampersand * parsers.hash
-                  * C(parsers.range(parsers.digit, 1, 7)) * parsers.semicolon
+                  * C(parsers.pattern_range(parsers.digit, 1, 7)) * parsers.semicolon
 parsers.tagentity = parsers.ampersand * C(parsers.alphanumeric^1)
                   * parsers.semicolon
 %    \end{macrocode}
