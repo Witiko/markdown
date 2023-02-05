@@ -1649,8 +1649,7 @@ local walkable_syntax = {
     "UlOrStarLine",
     "Strong",
     "Emph",
-    "Link",
-    "Image",
+    "LinkOrImage",
     "Code",
     "AutoLinkUrl",
     "AutoLinkEmail",
@@ -4417,8 +4416,7 @@ be produced and contain the following text:
         "Strong",
         "Emph",
         "StrikeThrough (user-defined \"./strike-through.lua\" syntax extension)",
-        "Link",
-        "Image",
+        "LinkOrImage",
         "Code",
         "AutoLinkUrl",
         "AutoLinkEmail",
@@ -20445,11 +20443,9 @@ function M.writer.new(options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-
   self.escape = util.escaper(self.escaped_chars, self.escaped_minimal_strings)
   self.escape_uri = util.escaper(self.escaped_uri_chars, self.escaped_minimal_strings)
   self.escape_minimal = util.escaper({}, self.escaped_minimal_strings)
-
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -21781,11 +21777,6 @@ function M.reader.new(writer, options)
                        return parsers.inlines
                      end, false)
 
-  self.create_parser("parse_inlines_no_link",
-                     function()
-                       return parsers.inlines_no_link
-                     end, false)
-
   self.create_parser("parse_inlines_no_inline_note",
                      function()
                        return parsers.inlines_no_inline_note
@@ -21915,7 +21906,7 @@ function M.reader.new(writer, options)
   -- iterate through pairs of consecutive direct and indirect links and
   -- return a table with either a link if a pair has a link reference,
   -- or a bracketed label otherwise
-  local function parse_links(links)
+  local function process_links_and_images(links)
       local index = 1
       local result = {}
 
@@ -21992,9 +21983,9 @@ function M.reader.new(writer, options)
       return result
   end
 
-  local function stash_links(links)
+  local function defer_link_and_image_processing(links)
     return writer.defer_call(function()
-      return parse_links(links)
+      return process_links_and_images(links)
     end)
   end
 
@@ -22143,20 +22134,15 @@ function M.reader.new(writer, options)
   parsers.IndirectImage = parsers.exclamation * parsers.tag * Cc(false) * Cc("Image")
 
   -- parse a link or image (direct or indirect)
-  parsers.Link          = Ct((
-                              Ct(parsers.DirectImage ) + Ct(parsers.IndirectImage )
-                            + Ct(parsers.DirectLink ) + Ct(parsers.IndirectLink )
-                            )^1) / parse_links
-
-  parsers.Image         = Ct((
-                              Ct(parsers.DirectImage ) + Ct(parsers.IndirectImage )
-                            + Ct(parsers.DirectLink ) + Ct(parsers.IndirectLink )
-                            )^1) / parse_links
-
   parsers.MaybeLinkOrImage = Ct((
                               Ct(parsers.DirectImage ) + Ct(parsers.IndirectImage )
                             + Ct(parsers.DirectLink ) + Ct(parsers.IndirectLink )
-                            )^1) / stash_links
+                            )^1) / defer_link_and_image_processing
+
+  parsers.LinkOrImage     = Ct((
+                              Ct(parsers.DirectImage ) + Ct(parsers.IndirectImage )
+                            + Ct(parsers.DirectLink ) + Ct(parsers.IndirectLink )
+                            )^1) / process_links_and_images
 
   -- avoid parsing long strings of * or _ as emph/strong
   parsers.UlOrStarLine  = parsers.asterisk^4 + parsers.underscore^4
@@ -22457,8 +22443,7 @@ function M.reader.new(writer, options)
         UlOrStarLine          = parsers.UlOrStarLine,
         Strong                = parsers.Strong,
         Emph                  = parsers.Emph,
-        Link                  = parsers.MaybeLinkOrImage,
-        Image                 = parsers.MaybeLinkOrImage,
+        LinkOrImage           = parsers.MaybeLinkOrImage,
         Code                  = parsers.Code,
         AutoLinkUrl           = parsers.AutoLinkUrl,
         AutoLinkEmail         = parsers.AutoLinkEmail,
@@ -22685,10 +22670,6 @@ function M.reader.new(writer, options)
     inlines_t.Inlines = parsers.Inline^0 * (parsers.spacing^0 * parsers.eof / "")
     parsers.inlines = Ct(inlines_t)
 
-    local inlines_no_link_t = util.table_copy(inlines_t)
-    inlines_no_link_t.Link = parsers.fail
-    parsers.inlines_no_link = Ct(inlines_no_link_t)
-
     local inlines_no_inline_note_t = util.table_copy(inlines_t)
     inlines_no_inline_note_t.InlineNote = parsers.fail
     parsers.inlines_no_inline_note = Ct(inlines_no_inline_note_t)
@@ -22705,8 +22686,7 @@ function M.reader.new(writer, options)
     parsers.inlines_nbsp = Ct(inlines_nbsp_t)
 
     local inlines_full_link_and_image = util.table_copy(inlines_t)
-    inlines_full_link_and_image.Link = parsers.Link
-    inlines_full_link_and_image.Image = parsers.Image
+    inlines_full_link_and_image.LinkOrImage = parsers.LinkOrImage
     parsers.inlines_full_link_and_image = Ct(inlines_full_link_and_image)
 %    \end{macrocode}
 % \par
