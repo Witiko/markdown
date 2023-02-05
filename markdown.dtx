@@ -19031,6 +19031,34 @@ end
 % \par
 % \begin{markdown}
 %
+% The \luamdef{util.char_to_hex} converts a character to a hexadecimal value.
+%
+% \end{markdown}
+%  \begin{macrocode}
+function util.char_to_hex(c)
+  return string.format("%%%02X", string.byte(c))
+end
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% The \luamdef{util.uri_encode} percent-encodes a string.
+%
+% \end{markdown}
+%  \begin{macrocode}
+function util.uri_encode(s)
+  if s == nil then
+    return
+  end
+  s = s:gsub("\n", "\r\n")
+  s = s:gsub("([^%w _ %- . ~])", util.char_to_hex)
+  s = s:gsub(" ", "+")
+  return s
+end
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
 % The \luamdef{util.pathname} method produces a pathname out of a directory
 % name `dir` and a filename `file` and returns it.
 %
@@ -21390,14 +21418,14 @@ function M.writer.new(options)
 %
 % Use the \luamref{writer->escaped_chars}, \luamref{writer->escaped_uri_chars},
 % and \luamref{writer->escaped_minimal_strings} tables to create the
-% \luamdef{writer->escape}, \luamdef{writer->escape_uri}, and
-% \luamdef{writer->escape_minimal} escaper functions.
+% \luamdef{writer->escape_typographic_text}, \luamdef{writer->escape_programmatic_text}, and
+% \luamdef{writer->escape_hybrid_text} escaper functions.
 %
 % \end{markdown}
 %  \begin{macrocode}
-  self.escape = util.escaper(self.escaped_chars, self.escaped_strings)
-  self.escape_uri = util.escaper(self.escaped_uri_chars, self.escaped_minimal_strings)
-  self.escape_minimal = util.escaper({}, self.escaped_minimal_strings)
+  self.escape_typographic_text = util.escaper(self.escaped_chars, self.escaped_minimal_strings)
+  self.escape_programmatic_text = util.escaper(self.escaped_uri_chars, self.escaped_minimal_strings)
+  self.escape_hybrid_text = util.escaper({}, self.escaped_minimal_strings)
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -21406,17 +21434,27 @@ function M.writer.new(options)
 % plain text span `s` to the output format and \luamdef{writer->uri} as a
 % function that will transform an input \acro{uri} `u` to the output format.
 % If the \Opt{hybrid} option is enabled, use the
-% \luamref{writer->escape_minimal}.  Otherwise, use the
-% \luamref{writer->escape}, and \luamref{writer->escape_uri} functions.
+% \luamref{writer->escape_hybrid_text}.  Otherwise, use the
+% \luamref{writer->escape_typographic_text}, and \luamref{writer->escape_programmatic_text} functions.
 %
 % \end{markdown}
 %  \begin{macrocode}
   if options.hybrid then
-    self.string = self.escape_minimal
-    self.uri = self.escape_minimal
+    self.string = self.escape_hybrid_text
+    self.uri = function(s)
+      s = util.uri_encode(s)
+      s = self.escape_hybrid_text(s)
+      return s
+    end
+    self.key = self.escape_hybrid_text
   else
-    self.string = self.escape
-    self.uri = self.escape_uri
+    self.string = self.escape_typographic_text
+    self.uri = function(s)
+      s = util.uri_encode(s)
+      s = self.escape_programmatic_text(s)
+      return s
+    end
+    self.key = self.escape_programmatic_text
   end
 %    \end{macrocode}
 % \par
@@ -21428,7 +21466,7 @@ function M.writer.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.code(s)
-    return {"\\markdownRendererCodeSpan{",self.escape(s),"}"}
+    return {"\\markdownRendererCodeSpan{",self.escape_typographic_text(s),"}"}
   end
 %    \end{macrocode}
 % \par
@@ -21442,8 +21480,8 @@ function M.writer.new(options)
 %  \begin{macrocode}
   function self.link(lab,src,tit)
     return {"\\markdownRendererLink{",lab,"}",
-                          "{",self.escape(src),"}",
                           "{",self.uri(src),"}",
+                          "{",self.escape_programmatic_text(src),"}",
                           "{",self.string(tit or ""),"}"}
   end
 %    \end{macrocode}
@@ -21458,8 +21496,8 @@ function M.writer.new(options)
 %  \begin{macrocode}
   function self.image(lab,src,tit)
     return {"\\markdownRendererImage{",lab,"}",
-                           "{",self.string(src),"}",
                            "{",self.uri(src),"}",
+                           "{",self.escape_programmatic_text(src),"}",
                            "{",self.string(tit or ""),"}"}
   end
 %    \end{macrocode}
@@ -22891,7 +22929,7 @@ function M.reader.new(writer, options)
                          * C(parsers.alphanumeric^1 * P("://") * parsers.urlchar^1)
                          * parsers.more
                          / function(url)
-                             return writer.link(writer.escape(url), url)
+                             return writer.link(writer.escape_typographic_text(url), url)
                            end
 
   parsers.AutoLinkEmail = parsers.less
@@ -22899,7 +22937,7 @@ function M.reader.new(writer, options)
                         * P("@") * parsers.urlchar^1)
                         * parsers.more
                         / function(email)
-                            return writer.link(writer.escape(email),
+                            return writer.link(writer.escape_typographic_text(email),
                                                "mailto:"..email)
                           end
 
@@ -22908,7 +22946,7 @@ function M.reader.new(writer, options)
                          * C(parsers.urlchar^1)
                          * parsers.more
                          / function(url)
-                             return writer.link(writer.escape(url), url)
+                             return writer.link(writer.escape_typographic_text(url), url)
                            end
 
   parsers.DirectLink    = (parsers.tag / self.parser_functions.parse_inlines_no_link)
@@ -23724,13 +23762,13 @@ M.extensions.citations = function(citation_nbsps)
 %
 % Define \luamdef{writer->citation} as a function that will transform an input
 % citation name `c` to the output format. If option \Opt{hybrid} is enabled,
-% use the \luamref{writer->escape_minimal} function. Otherwise, use the
+% use the \luamref{writer->escape_hybrid_text} function. Otherwise, use the
 % \luamref{escape_citation} function.
 %
 % \end{markdown}
 %  \begin{macrocode}
       if options.hybrid then
-        self.citation = self.escape_minimal
+        self.citation = self.escape_hybrid_text
       else
         self.citation = escape_citation
       end
