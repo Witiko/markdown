@@ -24424,11 +24424,11 @@ M.extensions.fenced_code = function(blank_before_code_fence,
       end
 
       local tilde_infostring
-                           = C((parsers.linechar
+                           = Cs((parsers.backslash / "" * parsers.escapable + parsers.linechar
                               - (parsers.spacechar^1 * parsers.newline))^0)
 
       local backtick_infostring
-                           = C((parsers.linechar
+                           = Cs((parsers.backslash / "" * (parsers.escapable - parsers.backtick) + parsers.linechar
                               - (parsers.backtick
                                 + parsers.spacechar^1 * parsers.newline))^0)
 
