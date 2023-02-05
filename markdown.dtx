@@ -11097,7 +11097,7 @@ following text except for the filename, which may differ:
 \prop_gput:Nnn
   \g_@@_renderer_arities_prop
   { inputFencedCode }
-  { 2 }
+  { 3 }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par
@@ -21446,11 +21446,19 @@ function M.writer.new(options)
       s = self.escape_hybrid_text(s)
       return s
     end
+    self.infostring = function(s)
+      s = self.escape_hybrid_text(s)
+      return s
+    end
     self.key = self.escape_hybrid_text
   else
     self.string = self.escape_typographic_text
     self.uri = function(s)
       s = util.uri_encode(s)
+      s = self.escape_programmatic_text(s)
+      return s
+    end
+    self.infostring = function(s)
       s = self.escape_programmatic_text(s)
       return s
     end
@@ -24428,7 +24436,7 @@ M.extensions.fenced_code = function(blank_before_code_fence,
         end
         local name = util.cache_verbatim(options.cacheDir, s)
         table.insert(buf, {"\\markdownRendererInputFencedCode{",
-                           name,"}{",self.string(i),"}"})
+                           name,"}{",self.string(i),"}{",self.infostring(i),"}"})
         if attr ~= nil then
           table.insert(buf, "\\markdownRendererFencedCodeAttributeContextEnd")
         end
