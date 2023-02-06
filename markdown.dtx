@@ -13595,7 +13595,7 @@ following text:
 % \begin{markdown}
 
 #### Line Break Renderer
-The \mdef{markdownRendererLineBreak} macro represents a forced line break.
+The \mdef{markdownRendererHardLineBreak} macro represents a hard line break.
 The macro receives no arguments.
 
 % \end{markdown}
@@ -13608,9 +13608,9 @@ Using a text editor, create a text document named `document.tex` with the
 following content:
 ``` tex
 \input markdown
-\def\markdownRendererLineBreak{%
+\def\markdownRendererHardLineBreak{%
   \par
-  {\it(A forced linebreak)}%
+  {\it(A hard line break)}%
   \par
 }
 \markdownInput{example.md}
@@ -13618,8 +13618,8 @@ following content:
 ```````
 Using a text editor, create a text document named `example.md` with the
 following content.  Note the two spaces at the end of the first line, which
-specify a hard linebreak.  Due to the limitations of the \TeX{} input
-processor, hard linebreaks would be ignored if we typed them directly into the
+specify a hard line break.  Due to the limitations of the \TeX{} input
+processor, hard line breaks would be ignored if we typed them directly into the
 `document.tex` document.
 
 <pre><code>Hello world!  <br/>_Foo_ bar!</code></pre>
@@ -13633,8 +13633,8 @@ following text:
 
 > Hello *world*!
 >
-> *(A forced linebreak)*
-> 
+> *(A hard line break)*
+>
 > _Foo_ bar!
 
 ##### \LaTeX{} Example {.unnumbered}
@@ -13646,9 +13646,9 @@ following content:
 \usepackage{markdown}
 \markdownSetup{
   renderers = {
-    lineBreak = {%
+    hardLineBreak = {%
       \par
-      \emph{(A forced linebreak)}%
+      \emph{(A hard line break)}%
       \par
     },
   },
@@ -13659,8 +13659,8 @@ following content:
 ```````
 Using a text editor, create a text document named `example.md` with the
 following content.  Note the two spaces at the end of the first line, which
-specify a hard linebreak.  Due to the limitations of the \TeX{} input
-processor, hard linebreaks would be ignored if we typed them directly into the
+specify a hard line break.  Due to the limitations of the \TeX{} input
+processor, hard line breaks would be ignored if we typed them directly into the
 `document.tex` document.
 
 <pre><code>Hello world!  <br/>_Foo_ bar!</code></pre>
@@ -13674,60 +13674,64 @@ following text:
 
 > Hello *world*!
 >
-> *(A forced linebreak)*
-> 
-> _Foo_ bar!
-
-##### \Hologo{ConTeXt} Example {.unnumbered}
-
-Using a text editor, create a text document named `document.tex` with the
-following content:
-``` tex
-\usemodule[t][markdown]
-\def\markdownRendererLineBreak{%
-  \par
-  \emph{(A forced linebreak)}%
-  \par
-}
-\starttext
-\markdownInput{example.md}
-\stoptext
-```````
-Using a text editor, create a text document named `example.md` with the
-following content.  Note the two spaces at the end of the first line, which
-specify a hard linebreak.  Due to the limitations of the \TeX{} input
-processor, hard linebreaks would be ignored if we typed them directly into the
-`document.tex` document.
-
-<pre><code>Hello world!  <br/>_Foo_ bar!</code></pre>
-
-Next, invoke LuaTeX from the terminal:
-``` sh
-luatex document.tex
-``````
-A PDF document named `document.pdf` should be produced and contain the
-following text:
-
-> Hello *world*!
+> *(A hard line break)*
 >
-> *(A forced linebreak)*
-> 
 > _Foo_ bar!
 
 %</manual-tokens>
 %<*tex>
 % \fi
+% \begin{markdown}
 %
+% The \mdef{markdownRendererLineBreak} and
+% \mdef{markdownRendererLineBreakPrototype} macros have been deprecated
+% and will be removed in Markdown 3.0.0.
+%
+% \end{markdown}
 %  \begin{macrocode}
-\def\markdownRendererLineBreak{%
-  \markdownRendererLineBreakPrototype}%
 \ExplSyntaxOn
+\cs_new:Npn
+  \markdownRendererHardLineBreak
+  {
+    \cs_if_exist:NTF
+      \markdownRendererLineBreak
+      {
+        \markdownWarning
+          {
+            Line~break~renderer~has~been~deprecated,~
+            to~be~removed~in~Markdown~3.0.0
+          }
+        \markdownRendererLineBreak
+      }
+      {
+        \cs_if_exist:NTF
+          \markdownRendererLineBreakPrototype
+          {
+            \markdownWarning
+              {
+                Line~break~renderer~prototype~has~been~deprecated,~
+                to~be~removed~in~Markdown~3.0.0
+              }
+            \markdownRendererLineBreakPrototype
+          }
+          {
+            \markdownRendererHardLineBreakPrototype
+          }
+      }
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { lineBreak }
 \prop_gput:Nnn
   \g_@@_renderer_arities_prop
   { lineBreak }
+  { 0 }
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { hardLineBreak }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { hardLineBreak }
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
@@ -21374,11 +21378,12 @@ function M.writer.new(options)
 % \par
 % \begin{markdown}
 %
-% Define \luamdef{writer->linebreak} as the output format of a forced line break.
+% Define \luamdef{writer->hard_line_break} as the output format of a forced
+% line break.
 %
 % \end{markdown}
 %  \begin{macrocode}
-  self.linebreak = "\\markdownRendererLineBreak\n{}"
+  self.hard_line_break = "\\markdownRendererHardLineBreak\n{}"
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -22917,18 +22922,18 @@ function M.reader.new(writer, options)
   parsers.Endline   = parsers.newline
                     * -V("EndlineExceptions")
                     * parsers.spacechar^0
-                    / (options.hardLineBreaks and writer.linebreak
+                    / (options.hardLineBreaks and writer.hard_line_break
                                                or writer.space)
 
   parsers.OptionalIndent
                      = parsers.spacechar^1 / writer.space
 
-  parsers.Space      = parsers.spacechar^2 * parsers.Endline / writer.linebreak
+  parsers.Space      = parsers.spacechar^2 * parsers.Endline / writer.hard_line_break
                      + parsers.spacechar^1 * parsers.Endline^-1 * parsers.eof / ""
                      + parsers.spacechar^1 * parsers.Endline
                                            * parsers.optionalspace
                                            / (options.hardLineBreaks
-                                              and writer.linebreak
+                                              and writer.hard_line_break
                                                or writer.space)
                      + parsers.spacechar^1 * parsers.optionalspace
                                            / writer.space
@@ -22937,16 +22942,16 @@ function M.reader.new(writer, options)
                     = parsers.newline
                     * -V("EndlineExceptions")
                     * parsers.spacechar^0
-                    / (options.hardLineBreaks and writer.linebreak
+                    / (options.hardLineBreaks and writer.hard_line_break
                                                or writer.nbsp)
 
   parsers.NonbreakingSpace
-                  = parsers.spacechar^2 * parsers.Endline / writer.linebreak
+                  = parsers.spacechar^2 * parsers.Endline / writer.hard_line_break
                   + parsers.spacechar^1 * parsers.Endline^-1 * parsers.eof / ""
                   + parsers.spacechar^1 * parsers.Endline
                                         * parsers.optionalspace
                                         / (options.hardLineBreaks
-                                           and writer.linebreak
+                                           and writer.hard_line_break
                                             or writer.nbsp)
                   + parsers.spacechar^1 * parsers.optionalspace
                                         / writer.nbsp
@@ -24863,7 +24868,7 @@ M.extensions.line_blocks = function()
         if not self.is_writing then return "" end
         local buffer = {}
         for i = 1, #lines - 1 do
-          buffer[#buffer + 1] = { lines[i], self.linebreak }
+          buffer[#buffer + 1] = { lines[i], self.hard_line_break }
         end
         buffer[#buffer + 1] = lines[#lines]
 
@@ -25818,7 +25823,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \def\markdownRendererInterblockSeparatorPrototype{\par}%
-\def\markdownRendererLineBreakPrototype{\hfil\break}%
+\def\markdownRendererHardLineBreakPrototype{\hfil\break}%
 \let\markdownRendererEllipsisPrototype\dots
 \def\markdownRendererNbspPrototype{~}%
 \def\markdownRendererLeftBracePrototype{\char`\{}%
@@ -27618,7 +27623,7 @@ end
 \RequirePackage{fancyvrb}
 \RequirePackage{graphicx}
 \markdownSetup{rendererPrototypes={
-  lineBreak = {\\},
+  hardLineBreak = {\\},
   leftBrace = {\textbraceleft},
   rightBrace = {\textbraceright},
   dollarSign = {\textdollar},
@@ -28354,7 +28359,7 @@ end
   \markdownSetup{rendererPrototypes={
     lineBlockBegin = {%
       \begingroup
-        \def\markdownRendererLineBreak{\\}%
+        \def\markdownRendererHardLineBreak{\\}%
         \begin{verse}%
     },
     lineBlockEnd = {%
@@ -28632,7 +28637,7 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\def\markdownRendererLineBreakPrototype{\blank}%
+\def\markdownRendererHardLineBreakPrototype{\blank}%
 \def\markdownRendererLeftBracePrototype{\textbraceleft}%
 \def\markdownRendererRightBracePrototype{\textbraceright}%
 \def\markdownRendererDollarSignPrototype{\textdollar}%
@@ -28705,7 +28710,7 @@ end
 \def\markdownRendererBlockQuoteEndPrototype{\stopquotation}%
 \def\markdownRendererLineBlockBeginPrototype{%
   \begingroup
-    \def\markdownRendererLineBreak{
+    \def\markdownRendererHardLineBreak{
     }%
     \startlines
 }%
