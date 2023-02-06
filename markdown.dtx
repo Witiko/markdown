@@ -15219,6 +15219,50 @@ following text:
 %
 % \begin{markdown}
 
+#### Section Renderers
+The \mdef{markdownRendererSectionBegin} and \mdef{markdownRendererSectionEnd}
+macros represent the beginning and the end of a section based on headings.
+
+% \end{markdown}
+%
+% \iffalse
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererSectionBegin{%
+  \markdownRendererSectionBeginPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { sectionBegin }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { sectionBegin }
+  { 0 }
+\ExplSyntaxOff
+\def\markdownRendererSectionEnd{%
+  \markdownRendererSectionEndPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { sectionEnd }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { sectionEnd }
+  { 0 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
 #### Replacement Character Renderers
 The \mdef{markdownRendererReplacementCharacter} macro represents the U+0000
 and U+FFFD Unicode characters. The macro receives no arguments.
@@ -21729,6 +21773,7 @@ function M.writer.new(options)
         if #attributes > 0 then
           table.insert(buf, "\\markdownRendererHeaderAttributeContextEnd")
         end
+        table.insert(buf, "\\markdownRendererSectionEnd")
         table.remove(active_attributes, #active_attributes)
       end
     end
@@ -21817,17 +21862,22 @@ function M.writer.new(options)
           if options.headerAttributes and #active_attributes[header_level] > 0 then
             table.insert(buf, "\\markdownRendererHeaderAttributeContextEnd")
           end
+          table.insert(buf, "\\markdownRendererSectionEnd")
         end
         self.is_writing = false
       end
       table.remove(active_attributes, #active_attributes)
-      if self.is_writing and options.headerAttributes and #active_identifiers > 0 then
-        table.insert(buf, "\\markdownRendererHeaderAttributeContextEnd")
+      if self.is_writing then
+        if options.headerAttributes and #active_identifiers > 0 then
+          table.insert(buf, "\\markdownRendererHeaderAttributeContextEnd")
+        end
+        table.insert(buf, "\\markdownRendererSectionEnd")
       end
       -- apply all active attributes at slice beginning
       if active_identifiers["#" .. slice_begin_identifier] ~= nil
           and slice_begin_type == "$" then
         for header_level = 1, #active_attributes do
+          table.insert(buf, "\\markdownRendererSectionBegin")
           if options.headerAttributes and #active_attributes[header_level] > 0 then
             table.insert(buf, "\\markdownRendererHeaderAttributeContextBegin")
           end
@@ -21843,20 +21893,25 @@ function M.writer.new(options)
         if options.headerAttributes and #active_attributes[header_level] > 0 then
           table.insert(buf, "\\markdownRendererHeaderAttributeContextEnd")
         end
+        table.insert(buf, "\\markdownRendererSectionEnd")
       end
       self.is_writing = false
     end
 
     -- push attributes for the new section
     table.insert(active_attributes, attributes)
-    if self.is_writing and options.headerAttributes and #attributes > 0 then
-      table.insert(buf, "\\markdownRendererHeaderAttributeContextBegin")
+    if self.is_writing then
+      table.insert(buf, "\\markdownRendererSectionBegin")
+      if options.headerAttributes and #attributes > 0 then
+        table.insert(buf, "\\markdownRendererHeaderAttributeContextBegin")
+      end
     end
 
     -- apply all active attributes at slice beginning
     if attributes["#" .. slice_begin_identifier] ~= nil
         and slice_begin_type == "^" then
       for header_level = 1, #active_attributes do
+        table.insert(buf, "\\markdownRendererSectionBegin")
         if options.headerAttributes and #active_attributes[header_level] > 0 then
           table.insert(buf, "\\markdownRendererHeaderAttributeContextBegin")
         end
@@ -25880,6 +25935,8 @@ end
       { ^^^^fffd }
   }
 \ExplSyntaxOff
+\def\markdownRendererSectionBeginPrototype{}%
+\def\markdownRendererSectionEndPrototype{}%
 %    \end{macrocode}
 % \par
 % \begin{markdown}
