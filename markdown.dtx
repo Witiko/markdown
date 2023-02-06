@@ -21488,8 +21488,8 @@ function M.writer.new(options)
 %  \begin{macrocode}
   function self.link(lab,src,tit)
     return {"\\markdownRendererLink{",lab,"}",
+                          "{",self.escape_typographic_text(src),"}",
                           "{",self.uri(src),"}",
-                          "{",self.escape_programmatic_text(src),"}",
                           "{",self.string(tit or ""),"}"}
   end
 %    \end{macrocode}
@@ -21504,8 +21504,8 @@ function M.writer.new(options)
 %  \begin{macrocode}
   function self.image(lab,src,tit)
     return {"\\markdownRendererImage{",lab,"}",
+                           "{",self.escape_typographic_text(src),"}",
                            "{",self.uri(src),"}",
-                           "{",self.escape_programmatic_text(src),"}",
                            "{",self.string(tit or ""),"}"}
   end
 %    \end{macrocode}
