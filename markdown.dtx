@@ -12696,7 +12696,13 @@ following text:
 %</manual-tokens>
 %<*tex>
 % \fi
+% \begin{markdown}
 %
+% These semantics have been deprecated and will be changed in Markdown 3.0.0.
+% From then on, header attribute contexts will only span headings, not the
+% surrounding sections.
+%
+% \end{markdown}
 %  \begin{macrocode}
 \def\markdownRendererHeaderAttributeContextBegin{%
   \markdownRendererHeaderAttributeContextBeginPrototype}%
