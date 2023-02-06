@@ -19,19 +19,29 @@ A level two heading {#fourth4-id .2not-a-class}
 documentBegin
 codeSpan: headerAttributes
 interblockSeparator
+BEGIN section
 headingOne: A level one heading (leftBrace) - (hash)first-id (rightBrace)
 interblockSeparator
+END section
+BEGIN section
 headingOne: A level one heading (leftBrace)(hash)second(emphasis: id2 - some)key = "some quoted value with escaped quotes and Unicode: "ěščřžýáíé""(rightBrace)
 interblockSeparator
+BEGIN section
 headingTwo: A level two heading (hash)(hash)(hash) (leftBrace)(hash)third-3id .a-class(rightBrace)
 interblockSeparator
+END section
+BEGIN section
 headingTwo: A level two heading (leftBrace)(hash)fourth4-id .2not-a-class(rightBrace)
 interblockSeparator
+BEGIN section
 headingThree: A level three heading (hash)(hash) (leftBrace)(hash)5not-the-fifth-id(rightBrace)
 interblockSeparator
+BEGIN section
 headingFour: A level four heading (leftBrace)(hash)-6not-the-sixth-id(rightBrace)
 interblockSeparator
+BEGIN section
 headingFive: A level five heading (hash)(hash) (leftBrace)(hash)--not-7the-seventh-id(rightBrace)
 interblockSeparator
+BEGIN section
 headingSix: A level six heading (leftBrace)(hash)the-eighth-id attribute=value(rightBrace)
 documentEnd

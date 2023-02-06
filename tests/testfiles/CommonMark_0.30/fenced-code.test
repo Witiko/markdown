@@ -281,6 +281,7 @@ END fencedCode
 interblockSeparator
 interblockSeparator
 interblockSeparator
+BEGIN section
 headingTwo: foo
 interblockSeparator
 BEGIN fencedCode
@@ -288,6 +289,9 @@ BEGIN fencedCode
 - infostring: 
 END fencedCode
 interblockSeparator
+END section
+END section
+BEGIN section
 headingOne: baz
 interblockSeparator
 interblockSeparator
