@@ -2,9 +2,19 @@
 
 ## 2.21.0
 
+Development:
+
+- Add renderers that represent the sections implied by headings.
+  (#258, #264)
+
 Fixes:
 
 - Use MathML to render math in the user manual. (#261, #262)
+
+Deprecation:
+
+- Deprecate the current semantics of header attribute contexts.
+  (#258, #264)
 
 ## 2.20.0 (2022-02-01)
 
