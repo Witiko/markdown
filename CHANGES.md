@@ -15,6 +15,7 @@ Deprecation:
 
 - Deprecate the current semantics of header attribute contexts.
   (#258, #264)
+- Deprecate `hardLineBreaks` option. (#227, #263)
 
 ## 2.20.0 (2022-02-01)
 
