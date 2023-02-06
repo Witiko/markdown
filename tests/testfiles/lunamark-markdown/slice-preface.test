@@ -145,6 +145,8 @@ belong to the previous note.
 documentBegin
 codeSpan: slice
 interblockSeparator
+BEGIN section
 headingOne: This is an H1
 interblockSeparator
+END section
 documentEnd

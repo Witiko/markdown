@@ -10,6 +10,7 @@ Paragraphr
 Paragraph
 >>>
 documentBegin
+BEGIN section
 headingThree: Header
 interblockSeparator
 thematicBreak

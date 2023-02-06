@@ -165,6 +165,7 @@ END table
 interblockSeparator
 thematicBreak
 interblockSeparator
+BEGIN section
 headingOne: One-column one-row table
 interblockSeparator
 interblockSeparator
@@ -237,6 +238,8 @@ END table
 interblockSeparator
 thematicBreak
 interblockSeparator
+END section
+BEGIN section
 headingOne: Empty cells
 interblockSeparator
 BEGIN table (3 rows, 2 columns)
@@ -265,6 +268,8 @@ END table
 interblockSeparator
 thematicBreak
 interblockSeparator
+END section
+BEGIN section
 headingOne: Missing tailing pipe
 interblockSeparator
 BEGIN table (3 rows, 2 columns)
@@ -317,6 +322,8 @@ END table
 interblockSeparator
 thematicBreak
 interblockSeparator
+END section
+BEGIN section
 headingOne: Too many pipes in rows
 interblockSeparator
 BEGIN table (3 rows, 1 columns)

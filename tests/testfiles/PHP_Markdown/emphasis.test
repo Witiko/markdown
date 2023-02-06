@@ -225,12 +225,15 @@ olEndTight
 interblockSeparator
 emphasis: precious
 interblockSeparator
+BEGIN section
 headingTwo: Tricky Cases
 interblockSeparator
 strongEmphasis: Test
 interblockSeparator
 strongEmphasis: Test
 interblockSeparator
+END section
+BEGIN section
 headingTwo: Overlong emphasis
 interblockSeparator
 underscore

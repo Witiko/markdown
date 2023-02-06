@@ -29,10 +29,13 @@ codeSpan: /e
 codeSpan: (underscore)UnslashQuotes
 interblockSeparator
 interblockSeparator
+BEGIN section
 headingOne: Header "quoted" again (backslash)""
 interblockSeparator
+BEGIN section
 headingTwo: Header "quoted" again (backslash)""
 interblockSeparator
+BEGIN section
 headingThree: Header "quoted" again (backslash)""
 interblockSeparator
 codeSpan: (underscore)Detab

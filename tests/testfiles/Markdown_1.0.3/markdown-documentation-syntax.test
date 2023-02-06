@@ -880,6 +880,7 @@ Markdown provides backslash escapes for the following characters:
 
 >>>
 documentBegin
+BEGIN section
 headingOne: Markdown: Syntax
 interblockSeparator
 ulBeginTight
@@ -1039,8 +1040,10 @@ END link
 interblockSeparator
 thematicBreak
 interblockSeparator
+BEGIN section
 headingTwo: Overview
 interblockSeparator
+BEGIN section
 headingThree: Philosophy
 interblockSeparator
 interblockSeparator
@@ -1076,6 +1079,8 @@ BEGIN link
 END link
 interblockSeparator
 interblockSeparator
+END section
+BEGIN section
 headingThree: Inline HTML
 interblockSeparator
 emphasis: writing
@@ -1104,6 +1109,8 @@ codeSpan: <img>
 interblockSeparator
 emphasis: is
 interblockSeparator
+END section
+BEGIN section
 headingThree: Automatic Escaping for Special Characters
 interblockSeparator
 codeSpan: <
@@ -1149,8 +1156,12 @@ codeSpan: (ampersand)
 interblockSeparator
 thematicBreak
 interblockSeparator
+END section
+END section
+BEGIN section
 headingTwo: Block Elements
 interblockSeparator
+BEGIN section
 headingThree: Paragraphs and Line Breaks
 interblockSeparator
 interblockSeparator
@@ -1172,6 +1183,8 @@ BEGIN link
 - title: 
 END link
 interblockSeparator
+END section
+BEGIN section
 headingThree: Headers
 interblockSeparator
 BEGIN link
@@ -1197,6 +1210,8 @@ interblockSeparator
 interblockSeparator
 inputVerbatim: ./_markdown_test/b1c734088558783c318bbcca92d87dfb.verbatim
 interblockSeparator
+END section
+BEGIN section
 headingThree: Blockquotes
 interblockSeparator
 codeSpan: >
@@ -1216,6 +1231,8 @@ interblockSeparator
 inputVerbatim: ./_markdown_test/e0551bbbbadc854888810d197c71994a.verbatim
 interblockSeparator
 interblockSeparator
+END section
+BEGIN section
 headingThree: Lists
 interblockSeparator
 interblockSeparator
@@ -1283,6 +1300,8 @@ emphasis: number-period-space
 interblockSeparator
 inputVerbatim: ./_markdown_test/3311d57ffe81d920b965b76b809dede7.verbatim
 interblockSeparator
+END section
+BEGIN section
 headingThree: Code Blocks
 interblockSeparator
 codeSpan: <pre>
@@ -1311,6 +1330,8 @@ interblockSeparator
 inputVerbatim: ./_markdown_test/d6be2fe3c7e11108954d5ad01232127c.verbatim
 interblockSeparator
 interblockSeparator
+END section
+BEGIN section
 headingThree: Horizontal Rules
 interblockSeparator
 codeSpan: <hr />
@@ -1319,8 +1340,12 @@ inputVerbatim: ./_markdown_test/7b1097924e84f9f8a3fdd03ac0f4293a.verbatim
 interblockSeparator
 thematicBreak
 interblockSeparator
+END section
+END section
+BEGIN section
 headingTwo: Span Elements
 interblockSeparator
+BEGIN section
 headingThree: Links
 interblockSeparator
 emphasis: inline
@@ -1400,6 +1425,8 @@ inputVerbatim: ./_markdown_test/784b3c629a2525d50763694e2cfff6a6.verbatim
 interblockSeparator
 interblockSeparator
 interblockSeparator
+END section
+BEGIN section
 headingThree: Emphasis
 interblockSeparator
 codeSpan: *
@@ -1426,6 +1453,8 @@ interblockSeparator
 interblockSeparator
 inputVerbatim: ./_markdown_test/3350aadded5e97288005f366ce9e968f.verbatim
 interblockSeparator
+END section
+BEGIN section
 headingThree: Code
 interblockSeparator
 codeSpan: `
@@ -1459,6 +1488,8 @@ interblockSeparator
 interblockSeparator
 inputVerbatim: ./_markdown_test/4972e6763169966a715cd56ed32159ce.verbatim
 interblockSeparator
+END section
+BEGIN section
 headingThree: Images
 interblockSeparator
 interblockSeparator
@@ -1491,8 +1522,12 @@ codeSpan: <img>
 interblockSeparator
 thematicBreak
 interblockSeparator
+END section
+END section
+BEGIN section
 headingTwo: Miscellaneous
 interblockSeparator
+BEGIN section
 headingThree: Automatic Links
 interblockSeparator
 interblockSeparator
@@ -1509,6 +1544,8 @@ inputVerbatim: ./_markdown_test/6c6e7a7b85345dd94cb68a9bebb64e99.verbatim
 interblockSeparator
 interblockSeparator
 interblockSeparator
+END section
+BEGIN section
 headingThree: Backslash Escapes
 interblockSeparator
 codeSpan: <em>

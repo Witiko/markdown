@@ -134,18 +134,24 @@ belong to the previous note.
 documentBegin
 codeSpan: slice
 interblockSeparator
+BEGIN section
 headingOne: This is an H1
 interblockSeparator
+BEGIN section
 BEGIN headerAttributeContext
 attributeIdentifier: first-h2
 headingTwo: This is an H2
 interblockSeparator
+BEGIN section
 headingThree: This is an H3
 interblockSeparator
+BEGIN section
 headingFour: This is an H4
 interblockSeparator
+BEGIN section
 headingFive: This is an H5
 interblockSeparator
+BEGIN section
 headingSix: This is an H6
 interblockSeparator
 interblockSeparator
@@ -170,7 +176,13 @@ interblockSeparator
 interblockSeparator
 codeSpan: latex (backslash)documentclass(leftBrace)article(rightBrace) (backslash)begin(leftBrace)document(rightBrace)   Hello world! (backslash)end(leftBrace)document(rightBrace) 
 interblockSeparator
+END section
+END section
+END section
+END section
 END headerAttributeContext
+END section
+BEGIN section
 BEGIN headerAttributeContext
 attributeIdentifier: second-h2
 headingTwo: This is an H2
@@ -243,6 +255,8 @@ interblockSeparator
 emphasis: Term 2
 interblockSeparator
 END headerAttributeContext
+END section
+BEGIN section
 headingTwo: This is an H2
 interblockSeparator
 interblockSeparator
@@ -265,4 +279,6 @@ inputVerbatim: ./_markdown_test/abbf8dcafba2274ed2400ea0c2d432ff.verbatim
 interblockSeparator
 interblockSeparator
 inputVerbatim: ./_markdown_test/3372369b5571c25af4e3298ee616142e.verbatim
+END section
+END section
 documentEnd
