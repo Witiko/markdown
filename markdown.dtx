@@ -19031,34 +19031,6 @@ end
 % \par
 % \begin{markdown}
 %
-% The \luamdef{util.char_to_hex} converts a character to a hexadecimal value.
-%
-% \end{markdown}
-%  \begin{macrocode}
-function util.char_to_hex(c)
-  return string.format("%%%02X", string.byte(c))
-end
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% The \luamdef{util.uri_encode} percent-encodes a string.
-%
-% \end{markdown}
-%  \begin{macrocode}
-function util.uri_encode(s)
-  if s == nil then
-    return
-  end
-  s = s:gsub("\n", "\r\n")
-  s = s:gsub("([^%w _ %- . ~])", util.char_to_hex)
-  s = s:gsub(" ", "+")
-  return s
-end
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
 % The \luamdef{util.pathname} method produces a pathname out of a directory
 % name `dir` and a filename `file` and returns it.
 %
@@ -21442,7 +21414,6 @@ function M.writer.new(options)
   if options.hybrid then
     self.string = self.escape_hybrid_text
     self.uri = function(s)
-      s = util.uri_encode(s)
       s = self.escape_hybrid_text(s)
       return s
     end
@@ -21454,7 +21425,6 @@ function M.writer.new(options)
   else
     self.string = self.escape_typographic_text
     self.uri = function(s)
-      s = util.uri_encode(s)
       s = self.escape_programmatic_text(s)
       return s
     end
