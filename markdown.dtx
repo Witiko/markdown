@@ -8943,6 +8943,200 @@ defaultOptions.texComments = false
 %</lua,lua-cli>
 %<*manual-options>
 
+#### Option `texMathDollars`
+
+`texMathDollars` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{texMathDollars}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Enable the Pandoc `tex_math_dollars` syntax extension.
+
+        ```
+        inline math: $E=mc^2$
+
+        display math: $$E=mc^2$$
+        ```
+
+:    false
+
+     :  Disable Pandoc `tex_math_dollars` syntax extension.
+
+% \end{markdown}
+% \iffalse
+
+##### Lua Module Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\input markdown
+\input lmfonts
+\directlua{
+  local markdown = require("markdown")
+  local convert = markdown.new({texMathDollars = true})
+  local input =
+    "$E=mc^2$" .. newline .. newline ..
+    "$$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$"
+  tex.sprint(convert(input)) }
+\bye
+```````
+Then, invoke LuaTeX from the terminal:
+``` sh
+luatex document.tex
+```````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> $E=mc^2$
+>
+> $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
+
+##### Lua CLI Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\input markdown
+\input lmfonts
+\input optionfalse
+\par
+\input optiontrue
+\bye
+```````
+Using a text editor, create a text document named `content.md` with the
+following content:
+``` md
+$E=mc^2$
+
+$$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
+``````
+Next, invoke LuaTeX from the terminal:
+``` sh
+texlua ⟨CLI pathname⟩ -- content.md optionfalse.tex
+texlua ⟨CLI pathname⟩ texMathDollars=true -- content.md optiontrue.tex
+luatex document.tex
+```````
+where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
+such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
+`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
+systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
+script file using [Kpathsea][].
+
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> $E=mc^2$
+> 
+> $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
+
+##### Plain \TeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\input markdown
+
+\def\markdownOptionTexMathDollars{true}
+\markdownBegin
+$E=mc^2$
+
+$$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
+\markdownEnd
+
+\bye
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+luatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> $E=mc^2$
+> 
+> $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[texMathDollars]{markdown}
+\begin{document}
+
+\begin{markdown}
+$E=mc^2$
+
+$$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
+\end{markdown}
+
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> $E=mc^2$
+> 
+> $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
+
+##### \Hologo{ConTeXt} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\usemodule[t][markdown]
+\setupmarkdown[texMathDollars = yes]
+\starttext
+
+\startmarkdown
+$E=mc^2$
+
+$$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
+\stopmarkdown
+
+\stoptext
+````````
+Next, invoke LuaTeX from the terminal:
+``` sh
+context document.tex
+`````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> $E=mc^2$
+> 
+> $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { texMathDollars }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.texMathDollars = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
 
 #### Option `tightLists`
 
@@ -15994,6 +16188,175 @@ following text:
 %
 % \begin{markdown}
 
+#### Tex Math Renderers
+The \mdef{markdownRendererDisplayMath} macro represents TMD TODO. 
+The macro receives a single argument that corresponds to TMD TODO.
+This macro will only be produced, when the \Opt{texMathDollars}
+option is enabled.
+
+The \mdef{markdownRendererInlineMath} macro represents TMD TODO. 
+The macro receives a single argument that corresponds to TMD TODO.
+This macro will only be produced, when the \Opt{texMathDollars}
+option is enabled.
+
+% \end{markdown}
+%
+% \iffalse
+
+##### Plain \TeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\input markdown
+\def\markdownOptionTexMathDollars{true}
+\markdownBegin
+$E=mc^2$
+
+$$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
+\markdownEnd
+\bye
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+luatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> $E=mc^2$
+> 
+> $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[texMathDollars]{markdown}
+\begin{document}
+\begin{markdown}
+$E=mc^2$
+
+$$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> $E=mc^2$
+> 
+> $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
+
+##### \Hologo{ConTeXt} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\usemodule[t][markdown]
+\setupmarkdown[texMathDollars = yes]
+\starttext
+\startmarkdown
+$E=mc^2$
+
+$$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
+\stopmarkdown
+\stoptext
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+context document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> $E=mc^2$
+> 
+> $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererDisplayMathBegin{%
+  \markdownRendererDisplayMathBeginPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { displayMathBegin }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { displayMathBegin }
+  { 0 }
+\ExplSyntaxOff
+\def\markdownRendererDisplayMathEnd{%
+  \markdownRendererDisplayMathEndPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { displayMathEnd }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { displayMathEnd }
+  { 0 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
+% \end{markdown}
+%
+% \iffalse
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererInlineMathBegin{%
+  \markdownRendererInlineMathBeginPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { inlineMathBegin }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { inlineMathBegin }
+  { 0 }
+\ExplSyntaxOff
+\def\markdownRendererInlineMathEnd{%
+  \markdownRendererInlineMathEndPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { inlineMathEnd }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { inlineMathEnd }
+  { 0 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
 #### Text Citations Renderer
 The \mdef{markdownRendererTextCite} macro represents a string of one or more
 text citations. This macro will only be produced, when the
@@ -22040,6 +22403,7 @@ parsers.plus                   = P("+")
 parsers.underscore             = P("_")
 parsers.period                 = P(".")
 parsers.hash                   = P("#")
+parsers.dollar                 = P("$")
 parsers.ampersand              = P("&")
 parsers.backtick               = P("`")
 parsers.less                   = P("<")
@@ -25329,6 +25693,66 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Tex Math Dollars
+%
+% The \luamdef{extensions.tex_math_dollars} function implements the Pandoc
+% tex_math_dollars syntax extension.
+%
+% \end{markdown}
+%  \begin{macrocode}
+M.extensions.tex_math_dollars = function()
+  return {
+    name = "built-in tex_math_dollars syntax extension",
+    extend_writer = function(self)
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define \luamdef{writer->tex_math_dollars} as a function that will transform
+% a tex_math_dollars span `s` of input text to the output format.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      function self.display_math(s)
+        if not self.is_writing then return "" end
+        return {"\\markdownRendererDisplayMathBegin\n"
+          ,s,
+          "\n\\markdownRendererDisplayMathEnd "}
+      end
+
+      function self.inline_math(s)
+        if not self.is_writing then return "" end
+        return {"\\markdownRendererInlineMathBegin\n"
+          ,s,
+          "\n\\markdownRendererInlineMathEnd "}
+      end
+    end, extend_reader = function(self)
+      local parsers = self.parsers
+      local writer = self.writer
+
+      parsers.inlinemathtail = B(parsers.linechar - parsers.space) * parsers.dollar * -#(parsers.digit)
+      parsers.inlinemath = parsers.between(C((parsers.linechar - parsers.dollar)^1),
+                                          parsers.dollar * #(parsers.any - parsers.space),
+                                          parsers.inlinemathtail)
+
+      parsers.displaymathdelim = parsers.dollar * parsers.dollar
+      parsers.displaymath     = parsers.displaymathdelim
+                              * C((parsers.any - parsers.blankline^2 - parsers.dollar - parsers.displaymathdelim)^1)
+                              * parsers.displaymathdelim
+
+      local TexMathDollars = parsers.displaymath / writer.display_math
+                           + parsers.inlinemath / writer.inline_math
+
+      self.insert_pattern("Inline after Emph",
+                          TexMathDollars, "TexMathDollars")
+
+      self.add_special_character("$")
+    end
+  }
+end
+%    \end{macrocode}
+% \begin{markdown}
+%
 %#### YAML Metadata
 %
 % The \luamdef{extensions.jekyll_data} function implements the Pandoc
@@ -25557,6 +25981,11 @@ function M.new(options)
     table.insert(extensions, jekyll_data_extension)
   end
 
+  if options.lineBlocks then
+    local line_block_extension = M.extensions.line_blocks()
+    table.insert(extensions, line_block_extension)
+  end
+
   if options.pipeTables then
     local pipe_tables_extension = M.extensions.pipe_tables(
       options.tableCaptions)
@@ -25583,9 +26012,9 @@ function M.new(options)
     table.insert(extensions, superscript_extension)
   end
 
-  if options.lineBlocks then
-    local line_block_extension = M.extensions.line_blocks()
-    table.insert(extensions, line_block_extension)
+  if options.texMathDollars then
+    local tex_math_dollars_extension = M.extensions.tex_math_dollars()
+    table.insert(extensions, tex_math_dollars_extension)
   end
 
 %    \end{macrocode}
@@ -25907,6 +26336,10 @@ end
 \def\markdownRendererStrikeThroughPrototype#1{#1}%
 \def\markdownRendererSuperscriptPrototype#1{#1}%
 \def\markdownRendererSubscriptPrototype#1{#1}%
+\def\markdownRendererDisplayMathBeginPrototype{$$}%
+\def\markdownRendererDisplayMathEndPrototype{$$}%
+\def\markdownRendererInlineMathBeginPrototype{$}%
+\def\markdownRendererInlineMathEndPrototype{$}%
 \ExplSyntaxOn
 \cs_gset:Npn
   \markdownRendererHeaderAttributeContextBeginPrototype
@@ -27745,6 +28178,10 @@ end
   headerAttributeContextEnd = {},
   superscript = {\textsuperscript{#1}},
   subscript = {\textsubscript{#1}},
+  displayMathBegin = {\begin{displaymath}},
+  displayMathEnd = {\end{displaymath}},
+  inlineMathBegin = {\begin{math}},
+  inlineMathEnd = {\end{math}},
   blockQuoteBegin = {\begin{quotation}},
   blockQuoteEnd = {\end{quotation}},
   inputVerbatim = {\VerbatimInput{#1}},
@@ -28797,6 +29234,10 @@ end
 \def\markdownRendererStrikeThroughPrototype#1{\overstrikes{#1}}
 \def\markdownRendererSuperscriptPrototype#1{\high{#1}}
 \def\markdownRendererSubscriptPrototype#1{\low{#1}}
+\def\markdownRendererDisplayMathBeginPrototype{\startformula}%
+\def\markdownRendererDisplayMathEndPrototype{\stopformula}%
+\def\markdownRendererInlineMathBeginPrototype{$}%
+\def\markdownRendererInlineMathEndPrototype{$}%
 %    \end{macrocode}
 % \par
 % \begin{markdown}
