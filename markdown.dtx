@@ -22675,7 +22675,9 @@ function M.reader.new(writer, options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.normalize_tag(tag)
-    tag = gsub(util.rope_to_string(tag), "[ \n\r\t]+", " ")
+    tag = util.rope_to_string(tag)
+    tag = tag:gsub("[ \n\r\t]+", " ")
+    tag = tag:gsub("^ ", ""):gsub(" $", "")
     tag = uni_case.casefold(tag, true, false)
     return tag
   end
