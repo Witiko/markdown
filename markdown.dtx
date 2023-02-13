@@ -18818,8 +18818,8 @@ texexec --passon=--shell-escape document.tex
 %
 % \end{markdown}
 %  \begin{macrocode}
-local upper, gsub, format, length =
-  string.upper, string.gsub, string.format, string.len
+local upper, format, length =
+  string.upper, string.format, string.len
 local P, R, S, V, C, Cg, Cb, Cmt, Cc, Ct, B, Cs, any =
   lpeg.P, lpeg.R, lpeg.S, lpeg.V, lpeg.C, lpeg.Cg, lpeg.Cb,
   lpeg.Cmt, lpeg.Cc, lpeg.Ct, lpeg.B, lpeg.Cs, lpeg.P(1)
