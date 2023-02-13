@@ -1081,7 +1081,7 @@ local unicode
 % \end{markdown}
 %  \begin{macrocode}
   if not ran_ok then
-    unicode = {["utf8"]={char=utf8.char}}
+    unicode = {utf8 = {char=utf8.char}}
   end
 end)()
 %    \end{macrocode}
@@ -1103,14 +1103,62 @@ local md5 = require("md5")
 % \begin{markdown}
 %
 % All the abovelisted modules are statically linked into the current version of
-% the Lua\TeX{} engine~[@luatex21, Section 4.3]. Beside these, we also carry
+% the Lua\TeX{} engine~[@luatex21, Section 4.3]. Beside these, we also include
 % the following third-party Lua libraries:
+%
+% \pkg{lua-uni-algos}
+%
+%:    A package that implements Unicode case-folding in \TeX{} Live${}\geq{}2020$.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local uni_case
+(function()
+  local ran_ok
+  -- TODO: Stop loading kpse module to a global kpse variable
+  -- after https://github.com/latex3/lua-uni-algos/issues/3 has been fixed.
+  -- Remove kpse global also from file .luacheckrc.
+  ran_ok, kpse = pcall(require, "kpse")
+  if ran_ok then
+    kpse.set_program_name("luatex")
+    ran_ok, uni_case = pcall(require, "lua-uni-case")
+  end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If the lua-uni-algos library is unavailable but the Selene Unicode library
+% is available, we will use its Unicode lower-casing support instead of
+% the more proper case-folding.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  if not ran_ok then
+    if unicode.utf8.lower then
+      uni_case = {casefold = unicode.utf8.lower}
+    else
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If the Selene Unicode library is also unavailable, we will defer to using
+% ASCII lower-casing.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      uni_case = {casefold = string.lower}
+    end
+  end
+end)()
+%    \end{macrocode}
+% \par
+% \begin{markdown}
 %
 % \pkg{api7/lua-tinyyaml}
 %
 %:    A library that provides a regex-based recursive descent \acro{yaml}
 %     (subset) parser that is used to read \acro{yaml} metadata when the
-%     \Opt{jekyllData} option is enabled.
+%     \Opt{jekyllData} option is enabled. We carry a copy of the library
+%     in file `markdown-tinyyaml.lua` distributed together with the Markdown
+%     package.
 %
 % \end{markdown}
 % \iffalse
@@ -22627,8 +22675,9 @@ function M.reader.new(writer, options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.normalize_tag(tag)
-    return string.lower(
-      gsub(util.rope_to_string(tag), "[ \n\r\t]+", " "))
+    tag = gsub(util.rope_to_string(tag), "[ \n\r\t]+", " ")
+    tag = uni_case.casefold(tag, true, false)
+    return tag
   end
 %    \end{macrocode}
 % \par
