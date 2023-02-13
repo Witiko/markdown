@@ -258,6 +258,14 @@
   \TYPE{superscript:           #1}}%
 \def\markdownRendererSubscript#1{%
   \TYPE{subscript:             #1}}%
+\def\markdownRendererDisplayMathBegin{%
+  \TYPE{displayMathBegin}}%
+\def\markdownRendererDisplayMathEnd{%
+  \TYPE{displayMathEnd}}%
+\def\markdownRendererInlineMathBegin{%
+  \TYPE{inlineMathBegin}}%
+\def\markdownRendererInlineMathEnd{%
+  \TYPE{inlineMathEnd}}%
 \def\markdownRendererInputRawInline#1#2{%
   \TYPE{BEGIN rawInline}%
   \TYPE{- src:                 #1}%
