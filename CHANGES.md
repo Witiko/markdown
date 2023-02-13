@@ -10,6 +10,9 @@ Development:
 Fixes:
 
 - Use MathML to render math in the user manual. (#261, #262)
+- Properly normalize link references according to
+  [CommonMark](https://spec.commonmark.org/0.30/#matches).
+  (lostenderman#56, #265)
 
 Deprecation:
 
