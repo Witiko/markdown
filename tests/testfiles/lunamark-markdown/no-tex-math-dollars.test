@@ -1,0 +1,59 @@
+<<<
+This test ensures that the Lua `texMathDollars` option is disabled by default.
+
+$E=mc^2$
+
+$2.56
+
+$ \infty $
+
+$$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
+
+$$ $ $$
+>>>
+documentBegin
+codeSpan: texMathDollars
+interblockSeparator
+dollarSign
+circumflex
+dollarSign
+interblockSeparator
+dollarSign
+interblockSeparator
+dollarSign
+backslash
+dollarSign
+interblockSeparator
+dollarSign
+dollarSign
+backslash
+leftBrace
+rightBrace
+backslash
+backslash
+backslash
+backslash
+underscore
+leftBrace
+backslash
+rightBrace
+circumflex
+leftBrace
+backslash
+rightBrace
+backslash
+backslash
+circumflex
+leftBrace
+backslash
+backslash
+rightBrace
+dollarSign
+dollarSign
+interblockSeparator
+dollarSign
+dollarSign
+dollarSign
+dollarSign
+dollarSign
+documentEnd

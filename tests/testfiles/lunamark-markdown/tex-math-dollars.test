@@ -1,0 +1,36 @@
+\def\markdownOptionTexMathDollars{true}
+<<<
+This test ensures that the Lua `texMathDollars` option correctly propagates
+through the plain TeX interface.
+
+$E=mc^2$
+
+$2.56
+
+$ \infty $
+
+$$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
+
+$$ $ $$
+>>>
+documentBegin
+codeSpan: texMathDollars
+interblockSeparator
+inlineMathBegin
+inlineMathEnd
+interblockSeparator
+dollarSign
+interblockSeparator
+dollarSign
+backslash
+dollarSign
+interblockSeparator
+displayMathBegin
+displayMathEnd
+interblockSeparator
+dollarSign
+dollarSign
+dollarSign
+dollarSign
+dollarSign
+documentEnd
