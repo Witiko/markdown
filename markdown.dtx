@@ -21350,6 +21350,11 @@ function M.writer.new(options)
     self.slice_end = "$" .. slice_specifiers[1]
   end
 
+  self.slice_begin_type = self.slice_begin:sub(1, 1)
+  self.slice_begin_identifier = self.slice_begin:sub(2) or ""
+  self.slice_end_type = self.slice_end:sub(1, 1)
+  self.slice_end_identifier = self.slice_end:sub(2) or ""
+
   if self.slice_begin == "^" and self.slice_end ~= "^" then
     self.is_writing = true
   else
@@ -21828,19 +21833,13 @@ function M.writer.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.document(d)
-    local active_attributes = self.active_attributes
     local buf = {"\\markdownRendererDocumentBegin\n", d}
+    local attribute_change_buf
 
-    -- pop attributes for sections that have ended
-    if options.headerAttributes and self.is_writing then
-      while #active_attributes > 0 do
-        local attributes = active_attributes[#active_attributes]
-        if #attributes > 0 then
-          table.insert(buf, "\\markdownRendererHeaderAttributeContextEnd")
-        end
-        table.insert(buf, "\\markdownRendererSectionEnd")
-        table.remove(active_attributes, #active_attributes)
-      end
+    -- pop all attributes
+    while #self.active_attributes > 0 do
+      attribute_change_buf = self.pop_attributes()
+      table.insert(buf, attribute_change_buf)
     end
 
     table.insert(buf, "\\markdownRendererDocumentEnd")
@@ -21881,13 +21880,116 @@ function M.writer.new(options)
 % \par
 % \begin{markdown}
 %
-% Define \luamdef{writer->active\_attributes} as a stack of attributes
-% of the headings that are currently active. The
-% \luamdef{writer->active\_headings} member variable is mutable.
+% Define \luamdef{writer->active\_attributes} as a stack of block-level
+% attributes that are currently active. The
+% \luamref{writer->active\_attributes} member variable is mutable.
 %
 % \end{markdown}
 %  \begin{macrocode}
   self.active_attributes = {}
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define \luamdef{writer->push\_attributes} and
+% \luamdef{writer->pop\_attributes} as functions that will add a new set
+% of active block-level attributes or remove the most current attributes
+% from \luamref{writer->active\_attributes}.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function apply_attributes()
+    local buf = {}
+    for i = 1, #self.active_attributes do
+      local start_output = self.active_attributes[i][2]
+      if start_output ~= nil then
+        table.insert(buf, start_output)
+      end
+    end
+    return buf
+  end
+
+  local function tear_down_attributes()
+    local buf = {}
+    for i = #self.active_attributes, 1, -1 do
+      local end_output = self.active_attributes[i][3]
+      if end_output ~= nil then
+        table.insert(buf, end_output)
+      end
+    end
+    return buf
+  end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The \luamref{writer->push\_attributes} method adds `attributes`
+% to \luamref{writer->active\_attributes}. The `start_output` string
+% is used to construct a rope that will be returned by this function,
+% together with output produced as a result of slicing (see \Opt{slice}).
+% The `end_output` string is stored together with `attributes` and is
+% used to construct the return value of the \luamref{writer->pop\_attributes}
+% method.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  function self.push_attributes(attributes, start_output, end_output)
+    attributes = attributes or {}
+    local buf = {}
+    if attributes["#" .. self.slice_end_identifier] ~= nil and
+       self.slice_end_type == "^" then
+      if self.is_writing then
+        table.insert(buf, tear_down_attributes())
+      end
+      self.is_writing = false
+    end
+    if attributes["#" .. self.slice_begin_identifier] ~= nil and
+       self.slice_begin_type == "^" then
+      self.is_writing = true
+      table.insert(buf, apply_attributes())
+      self.is_writing = true
+    end
+    if self.is_writing and start_output ~= nil then
+      table.insert(buf, start_output)
+    end
+    table.insert(self.active_attributes,
+      {attributes, start_output, end_output})
+    return buf
+  end
+
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The \luamref{writer->pop\_attributes} method removes the most current of
+% active block-level attributes from \luamref{writer->active\_attributes}
+% and returns a rope constructed from the `end_output` string specified
+% in the call of \luamref{writer->push\_attributes} that produced the most
+% current attributes, and also from output produced as a result of slicing (see
+% \Opt{slice}).
+%
+% \end{markdown}
+%  \begin{macrocode}
+  function self.pop_attributes()
+    local buf = {}
+    local attributes, _, end_output = table.unpack(
+      self.active_attributes[#self.active_attributes])
+    if self.is_writing and end_output ~= nil then
+      table.insert(buf, end_output)
+    end
+    table.remove(self.active_attributes, #self.active_attributes)
+    if attributes["#" .. self.slice_end_identifier] ~= nil
+       and self.slice_end_type == "$" then
+      if self.is_writing then
+        table.insert(buf, tear_down_attributes())
+      end
+      self.is_writing = false
+    end
+    if attributes["#" .. self.slice_begin_identifier] ~= nil and
+       self.slice_begin_type == "$" then
+      self.is_writing = true
+      table.insert(buf, apply_attributes())
+    end
+    return buf
+  end
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -21898,96 +22000,53 @@ function M.writer.new(options)
 %
 % \end{markdown}
 %  \begin{macrocode}
+  local active_heading_attribute_indexes = {}
   function self.heading(s, level, attributes)
     attributes = attributes or {}
     for i = 1, #attributes do
       attributes[attributes[i]] = true
     end
 
-    local active_attributes = self.active_attributes
-    local slice_begin_type = self.slice_begin:sub(1, 1)
-    local slice_begin_identifier = self.slice_begin:sub(2) or ""
-    local slice_end_type = self.slice_end:sub(1, 1)
-    local slice_end_identifier = self.slice_end:sub(2) or ""
-
     local buf = {}
+    local attribute_change_buf
 
     -- push empty attributes for implied sections
-    while #active_attributes < level-1 do
-      table.insert(active_attributes, {})
+    while #active_heading_attribute_indexes < level - 1 do
+      attribute_change_buf = self.push_attributes(nil,
+                                                  "\\markdownRendererSectionBegin\n",
+                                                  "\n\\markdownRendererSectionEnd ")
+      table.insert(buf, attribute_change_buf)
+      table.insert(active_heading_attribute_indexes, #self.active_attributes)
     end
 
     -- pop attributes for sections that have ended
-    while #active_attributes >= level do
-      local active_identifiers = active_attributes[#active_attributes]
-      -- tear down all active attributes at slice end
-      if active_identifiers["#" .. slice_end_identifier] ~= nil
-          and slice_end_type == "$" then
-        for header_level = #active_attributes, 1, -1 do
-          if options.headerAttributes and #active_attributes[header_level] > 0 then
-            table.insert(buf, "\\markdownRendererHeaderAttributeContextEnd")
-          end
-          table.insert(buf, "\\markdownRendererSectionEnd")
-        end
-        self.is_writing = false
+    while #active_heading_attribute_indexes >= level do
+      while #self.active_attributes >= active_heading_attribute_indexes[
+                                      #active_heading_attribute_indexes] do
+        attribute_change_buf = self.pop_attributes()
+        table.insert(buf, attribute_change_buf)
       end
-      table.remove(active_attributes, #active_attributes)
-      if self.is_writing then
-        if options.headerAttributes and #active_identifiers > 0 then
-          table.insert(buf, "\\markdownRendererHeaderAttributeContextEnd")
-        end
-        table.insert(buf, "\\markdownRendererSectionEnd")
-      end
-      -- apply all active attributes at slice beginning
-      if active_identifiers["#" .. slice_begin_identifier] ~= nil
-          and slice_begin_type == "$" then
-        for header_level = 1, #active_attributes do
-          table.insert(buf, "\\markdownRendererSectionBegin")
-          if options.headerAttributes and #active_attributes[header_level] > 0 then
-            table.insert(buf, "\\markdownRendererHeaderAttributeContextBegin")
-          end
-        end
-        self.is_writing = true
-      end
-    end
-
-    -- tear down all active attributes at slice end
-    if attributes["#" .. slice_end_identifier] ~= nil
-        and slice_end_type == "^" then
-      for header_level = #active_attributes, 1, -1 do
-        if options.headerAttributes and #active_attributes[header_level] > 0 then
-          table.insert(buf, "\\markdownRendererHeaderAttributeContextEnd")
-        end
-        table.insert(buf, "\\markdownRendererSectionEnd")
-      end
-      self.is_writing = false
+      table.remove(active_heading_attribute_indexes,
+                  #active_heading_attribute_indexes)
     end
 
     -- push attributes for the new section
-    table.insert(active_attributes, attributes)
-    if self.is_writing then
-      table.insert(buf, "\\markdownRendererSectionBegin")
-      if options.headerAttributes and #attributes > 0 then
-        table.insert(buf, "\\markdownRendererHeaderAttributeContextBegin")
-      end
+    local start_output = {}
+    local end_output = {}
+    table.insert(start_output, "\\markdownRendererSectionBegin\n")
+    if options.headerAttributes and #attributes > 0 then
+      table.insert(start_output, "\\markdownRendererHeaderAttributeContextBegin\n")
+      table.insert(start_output, self.attributes(attributes))
+      table.insert(end_output, "\n\\markdownRendererHeaderAttributeContextEnd ")
     end
+    table.insert(end_output, "\n\\markdownRendererSectionEnd ")
 
-    -- apply all active attributes at slice beginning
-    if attributes["#" .. slice_begin_identifier] ~= nil
-        and slice_begin_type == "^" then
-      for header_level = 1, #active_attributes do
-        table.insert(buf, "\\markdownRendererSectionBegin")
-        if options.headerAttributes and #active_attributes[header_level] > 0 then
-          table.insert(buf, "\\markdownRendererHeaderAttributeContextBegin")
-        end
-      end
-      self.is_writing = true
-    end
+    attribute_change_buf = self.push_attributes(
+      attributes, start_output, end_output)
+    table.insert(buf, attribute_change_buf)
+    table.insert(active_heading_attribute_indexes, #self.active_attributes)
 
-    if self.is_writing then
-      table.insert(buf, self.attributes(attributes))
-    end
-
+    -- produce the renderer
     local cmd
     level = level + options.shiftHeadings
     if level <= 1 then

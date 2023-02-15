@@ -11,6 +11,8 @@ Paragraph
 >>>
 documentBegin
 BEGIN section
+BEGIN section
+BEGIN section
 headingThree: Header
 interblockSeparator
 thematicBreak
@@ -18,4 +20,7 @@ interblockSeparator
 interblockSeparator
 thematicBreak
 interblockSeparator
+END section
+END section
+END section
 documentEnd

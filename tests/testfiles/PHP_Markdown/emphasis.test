@@ -226,6 +226,7 @@ interblockSeparator
 emphasis: precious
 interblockSeparator
 BEGIN section
+BEGIN section
 headingTwo: Tricky Cases
 interblockSeparator
 strongEmphasis: Test
@@ -274,4 +275,6 @@ underscore
 underscore
 underscore
 underscore
+END section
+END section
 documentEnd

@@ -333,4 +333,5 @@ BEGIN table (3 rows, 1 columns)
 - row 2, column 1: Cell
 - row 3, column 1: Cell
 END table
+END section
 documentEnd

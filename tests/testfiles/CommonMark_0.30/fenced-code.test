@@ -282,6 +282,7 @@ interblockSeparator
 interblockSeparator
 interblockSeparator
 BEGIN section
+BEGIN section
 headingTwo: foo
 interblockSeparator
 BEGIN fencedCode
@@ -330,4 +331,5 @@ BEGIN fencedCode
 - src: ./_markdown_test/bf41e9999cfc44d815c2a227bc67b1ab.verbatim
 - infostring: 
 END fencedCode
+END section
 documentEnd
