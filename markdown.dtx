@@ -5586,7 +5586,7 @@ defaultOptions.fencedCodeAttributes = false
 %</lua,lua-cli>
 %<*manual-options>
 
-#### Option `fencedDivs`
+#### Option `fencedDivs` {#fenced-divs}
 
 `fencedDivs` (default value: `false`)
 
@@ -7687,11 +7687,16 @@ defaultOptions.shiftHeadings = 0
 
      - The circumflex (`^`) selects the beginning of a document.
      - The dollar sign (`$`) selects the end of a document.
-     - `^`\meta{identifier} selects the beginning of a section with the
-%      \acro{HTML} attribute `#`\meta{identifier} (see the
-%      \Opt{headerAttributes} option).
+     - `^`\meta{identifier} selects the beginning of
+%      a section (see the \Opt{headerAttributes} option)
 %      \iffalse
-       [\acro{HTML} attribute](#header-attributes) `#`\meta{identifier}.
+       a [section](#header-attributes)
+%      \fi
+%      or a fenced div (see the \Opt{fencedDivs} option) with the \acro{HTML}
+%      attribute `#`\meta{identifier}.
+%      \iffalse
+       or a [fenced div](#fenced-divs)
+       with the \acro{HTML} attribute `#`\meta{identifier}.
 %      \fi
      - `$`\meta{identifier} selects the end of a section with the \acro{HTML}
        attribute `#`\meta{identifier}.
