@@ -16189,14 +16189,10 @@ following text:
 % \begin{markdown}
 
 #### Tex Math Renderers
-The \mdef{markdownRendererDisplayMath} macro represents TMD TODO. 
-The macro receives a single argument that corresponds to TMD TODO.
-This macro will only be produced, when the \Opt{texMathDollars}
-option is enabled.
-
-The \mdef{markdownRendererInlineMath} macro represents TMD TODO. 
-The macro receives a single argument that corresponds to TMD TODO.
-This macro will only be produced, when the \Opt{texMathDollars}
+The \mdef{markdownRendererInlineMath} and \mdef{markdownRendererDisplayMath} macros 
+represent tex inline and display math. 
+Both macros receive a single argument that corresponds to the tex math content.
+These macros will only be produced, when the \Opt{texMathDollars}
 option is enabled.
 
 % \end{markdown}
@@ -16280,33 +16276,24 @@ following text:
 > 
 > $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
 
+% \end{markdown}
+%
+% \iffalse
 %</manual-tokens>
 %<*tex>
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererDisplayMathBegin{%
-  \markdownRendererDisplayMathBeginPrototype}%
+\def\markdownRendererDisplayMath{%
+  \markdownRendererDisplayMathPrototype}%
 \ExplSyntaxOn
 \seq_gput_right:Nn
   \g_@@_renderers_seq
-  { displayMathBegin }
+  { displayMath }
 \prop_gput:Nnn
   \g_@@_renderer_arities_prop
-  { displayMathBegin }
-  { 0 }
-\ExplSyntaxOff
-\def\markdownRendererDisplayMathEnd{%
-  \markdownRendererDisplayMathEndPrototype}%
-\ExplSyntaxOn
-\seq_gput_right:Nn
-  \g_@@_renderers_seq
-  { displayMathEnd }
-\prop_gput:Nnn
-  \g_@@_renderer_arities_prop
-  { displayMathEnd }
-  { 0 }
-\ExplSyntaxOff
+  { displayMath }
+  { 1 }
 %    \end{macrocode}
 % \par
 %
@@ -16325,28 +16312,16 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererInlineMathBegin{%
-  \markdownRendererInlineMathBeginPrototype}%
+\def\markdownRendererInlineMath{%
+  \markdownRendererInlineMathPrototype}%
 \ExplSyntaxOn
 \seq_gput_right:Nn
   \g_@@_renderers_seq
-  { inlineMathBegin }
+  { inlineMath }
 \prop_gput:Nnn
   \g_@@_renderer_arities_prop
-  { inlineMathBegin }
-  { 0 }
-\ExplSyntaxOff
-\def\markdownRendererInlineMathEnd{%
-  \markdownRendererInlineMathEndPrototype}%
-\ExplSyntaxOn
-\seq_gput_right:Nn
-  \g_@@_renderers_seq
-  { inlineMathEnd }
-\prop_gput:Nnn
-  \g_@@_renderer_arities_prop
-  { inlineMathEnd }
-  { 0 }
-\ExplSyntaxOff
+  { inlineMath }
+  { 1 }
 %    \end{macrocode}
 % \par
 %
@@ -16356,6 +16331,8 @@ following text:
 % \fi
 %
 % \begin{markdown}
+
+
 
 #### Text Citations Renderer
 The \mdef{markdownRendererTextCite} macro represents a string of one or more
@@ -25715,23 +25692,19 @@ M.extensions.tex_math_dollars = function()
 %  \begin{macrocode}
       function self.display_math(s)
         if not self.is_writing then return "" end
-        return {"\\markdownRendererDisplayMathBegin\n"
-          ,s,
-          "\n\\markdownRendererDisplayMathEnd "}
+        return {"\\markdownRendererDisplayMath{",s,"}"}
       end
 
       function self.inline_math(s)
         if not self.is_writing then return "" end
-        return {"\\markdownRendererInlineMathBegin\n"
-          ,s,
-          "\n\\markdownRendererInlineMathEnd "}
+        return {"\\markdownRendererInlineMath{",s,"}"}
       end
     end, extend_reader = function(self)
       local parsers = self.parsers
       local writer = self.writer
 
       parsers.inlinemathtail = B(parsers.linechar - parsers.space) * parsers.dollar * -#(parsers.digit)
-      parsers.inlinemath = parsers.between(C((parsers.backslash / "" * parsers.dollar + parsers.linechar - parsers.dollar)^1),
+      parsers.inlinemath = parsers.between(C((parsers.backslash / "" * parsers.dollar + parsers.linechar - parsers.dollar)),
                                           parsers.dollar * #(parsers.any - parsers.space),
                                           parsers.inlinemathtail)
 
@@ -26336,10 +26309,8 @@ end
 \def\markdownRendererStrikeThroughPrototype#1{#1}%
 \def\markdownRendererSuperscriptPrototype#1{#1}%
 \def\markdownRendererSubscriptPrototype#1{#1}%
-\def\markdownRendererDisplayMathBeginPrototype{$$}%
-\def\markdownRendererDisplayMathEndPrototype{$$}%
-\def\markdownRendererInlineMathBeginPrototype{$}%
-\def\markdownRendererInlineMathEndPrototype{$}%
+\def\markdownRendererDisplayMathPrototype#1{$$#1$$}%
+\def\markdownRendererInlineMathPrototype#1{$#1$}%
 \ExplSyntaxOn
 \cs_gset:Npn
   \markdownRendererHeaderAttributeContextBeginPrototype
@@ -28178,10 +28149,8 @@ end
   headerAttributeContextEnd = {},
   superscript = {\textsuperscript{#1}},
   subscript = {\textsubscript{#1}},
-  displayMathBegin = {\begin{displaymath}},
-  displayMathEnd = {\end{displaymath}},
-  inlineMathBegin = {\begin{math}},
-  inlineMathEnd = {\end{math}},
+  displayMath = {\begin{displaymath}#1\end{displaymath}},
+  inlineMath = {\begin{math}#1\end{math}},
   blockQuoteBegin = {\begin{quotation}},
   blockQuoteEnd = {\end{quotation}},
   inputVerbatim = {\VerbatimInput{#1}},
@@ -29234,10 +29203,8 @@ end
 \def\markdownRendererStrikeThroughPrototype#1{\overstrikes{#1}}
 \def\markdownRendererSuperscriptPrototype#1{\high{#1}}
 \def\markdownRendererSubscriptPrototype#1{\low{#1}}
-\def\markdownRendererDisplayMathBeginPrototype{\startformula}%
-\def\markdownRendererDisplayMathEndPrototype{\stopformula}%
-\def\markdownRendererInlineMathBeginPrototype{$}%
-\def\markdownRendererInlineMathEndPrototype{$}%
+\def\markdownRendererDisplayMathPrototype#1{\startformula#1\stopformula}%
+\def\markdownRendererInlineMathPrototype#1{$#1$}%
 %    \end{macrocode}
 % \par
 % \begin{markdown}
