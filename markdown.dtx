@@ -8964,7 +8964,7 @@ defaultOptions.texComments = false
 
 :    false
 
-     :  Disable Pandoc `tex_math_dollars` syntax extension.
+     :  Disable the Pandoc `tex_math_dollars` syntax extension.
 
 % \end{markdown}
 % \iffalse
@@ -16284,34 +16284,6 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererDisplayMath{%
-  \markdownRendererDisplayMathPrototype}%
-\ExplSyntaxOn
-\seq_gput_right:Nn
-  \g_@@_renderers_seq
-  { displayMath }
-\prop_gput:Nnn
-  \g_@@_renderer_arities_prop
-  { displayMath }
-  { 1 }
-%    \end{macrocode}
-% \par
-%
-% \iffalse
-%</tex>
-%<*manual-tokens>
-% \fi
-%
-% \begin{markdown}
-
-% \end{markdown}
-%
-% \iffalse
-%</manual-tokens>
-%<*tex>
-% \fi
-%
-%  \begin{macrocode}
 \def\markdownRendererInlineMath{%
   \markdownRendererInlineMathPrototype}%
 \ExplSyntaxOn
@@ -16332,7 +16304,33 @@ following text:
 %
 % \begin{markdown}
 
-
+% \end{markdown}
+%
+% \iffalse
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererDisplayMath{%
+  \markdownRendererDisplayMathPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { displayMath }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { displayMath }
+  { 1 }
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
 
 #### Text Citations Renderer
 The \mdef{markdownRendererTextCite} macro represents a string of one or more
