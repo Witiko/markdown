@@ -7,9 +7,13 @@ $2.56
 
 $ \infty $
 
+$\$$
+
 $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
 
 $$ $ $$
+
+$$\$$$
 >>>
 documentBegin
 codeSpan: texMathDollars
@@ -22,6 +26,10 @@ dollarSign
 interblockSeparator
 dollarSign
 backslash
+dollarSign
+interblockSeparator
+dollarSign
+dollarSign
 dollarSign
 interblockSeparator
 dollarSign
@@ -48,6 +56,12 @@ leftBrace
 backslash
 backslash
 rightBrace
+dollarSign
+dollarSign
+interblockSeparator
+dollarSign
+dollarSign
+dollarSign
 dollarSign
 dollarSign
 interblockSeparator
