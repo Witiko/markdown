@@ -17,6 +17,10 @@ no spaces are allowed at the beginning or end of the inline math
 
 $ \infty $
 
+unless they are escaped
+
+$\ $
+
 this is not inline math, because the closing dollar sign is followed by a digit
 
 $a$0
@@ -86,6 +90,9 @@ interblockSeparator
 dollarSign
 backslash
 dollarSign
+interblockSeparator
+interblockSeparator
+inlineMath
 interblockSeparator
 interblockSeparator
 dollarSign

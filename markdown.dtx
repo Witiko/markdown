@@ -25686,14 +25686,19 @@ M.extensions.tex_math_dollars = function()
         return (starter * Ct(p * (p - ender)^0) * ender)
       end
 
-      parsers.inlinemathtail = B(parsers.nonspacechar) * parsers.dollar * -#(parsers.digit)
-      parsers.inlinemath = between(C(parsers.backslash / "" * parsers.dollar + parsers.any
+      parsers.inlinemathtail  = B(parsers.any * parsers.nonspacechar
+                                + parsers.backslash * parsers.any)
+                              * parsers.dollar 
+                              * -#(parsers.digit)
+
+      parsers.inlinemath = between(C(parsers.backslash^-1 * parsers.any
                                    - parsers.blankline^2 - parsers.dollar),
                                    parsers.dollar * #(parsers.nonspacechar),
                                    parsers.inlinemathtail)
 
       parsers.displaymathdelim = parsers.dollar * parsers.dollar
-      parsers.displaymath     = between(C(parsers.backslash / "" * parsers.dollar + parsers.any 
+
+      parsers.displaymath     = between(C(parsers.backslash^-1 * parsers.any 
                                           - parsers.blankline^2 - parsers.dollar),
                                         parsers.displaymathdelim,
                                         parsers.displaymathdelim)
