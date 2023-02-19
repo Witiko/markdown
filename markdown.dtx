@@ -25682,17 +25682,21 @@ M.extensions.tex_math_dollars = function()
       local parsers = self.parsers
       local writer = self.writer
 
-      parsers.inlinemathtail = B(parsers.linechar - parsers.space) * parsers.dollar * -#(parsers.digit)
-      parsers.inlinemath = parsers.between(C(parsers.backslash / "" * parsers.dollar + parsers.linechar 
-                                           - parsers.dollar),
-                                          parsers.dollar * #(parsers.any - parsers.space),
-                                          parsers.inlinemathtail)
+      local function between(p, starter, ender)
+        return (starter * Ct(p * (p - ender)^0) * ender)
+      end
+
+      parsers.inlinemathtail = B(parsers.nonspacechar) * parsers.dollar * -#(parsers.digit)
+      parsers.inlinemath = between(C(parsers.backslash / "" * parsers.dollar + parsers.any
+                                   - parsers.blankline^2 - parsers.dollar),
+                                   parsers.dollar * #(parsers.nonspacechar),
+                                   parsers.inlinemathtail)
 
       parsers.displaymathdelim = parsers.dollar * parsers.dollar
-      parsers.displaymath     = parsers.between(C(parsers.backslash / "" * parsers.dollar + parsers.any 
-                                                - parsers.blankline^2 - parsers.dollar),
-                                                parsers.displaymathdelim,
-                                                parsers.displaymathdelim)
+      parsers.displaymath     = between(C(parsers.backslash / "" * parsers.dollar + parsers.any 
+                                          - parsers.blankline^2 - parsers.dollar),
+                                        parsers.displaymathdelim,
+                                        parsers.displaymathdelim)
 
       local TexMathDollars = parsers.displaymath / writer.display_math
                            + parsers.inlinemath / writer.inline_math
