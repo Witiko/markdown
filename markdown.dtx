@@ -21931,7 +21931,12 @@ function M.writer.new(options)
 %  \begin{macrocode}
   function self.push_attributes(attribute_type, attributes,
                                 start_output, end_output)
+    -- index attributes in a hash table for easy lookup
     attributes = attributes or {}
+    for i = 1, #attributes do
+      attributes[attributes[i]] = true
+    end
+
     local buf = {}
     -- handle slicing
     if attributes["#" .. self.slice_end_identifier] ~= nil and
@@ -22011,11 +22016,6 @@ function M.writer.new(options)
 %  \begin{macrocode}
   local current_heading_level = 0
   function self.heading(s, level, attributes)
-    attributes = attributes or {}
-    for i = 1, #attributes do
-      attributes[attributes[i]] = true
-    end
-
     local buf = {}
 
     -- push empty attributes for implied sections
@@ -22038,7 +22038,7 @@ function M.writer.new(options)
     local start_output = {}
     local end_output = {}
     table.insert(start_output, "\\markdownRendererSectionBegin\n")
-    if options.headerAttributes and #attributes > 0 then
+    if options.headerAttributes and attributes ~= nil and #attributes > 0 then
       table.insert(start_output,
                    "\\markdownRendererHeaderAttributeContextBegin\n")
       table.insert(start_output, self.attributes(attributes))
@@ -23211,12 +23211,10 @@ function M.reader.new(writer, options)
 
   parsers.Paragraph    = parsers.nonindentspace * Ct(parsers.Inline^1)
                        * ( parsers.newline
-                       * ( parsers.blankline^1
-                         + #parsers.hash
-                         + #(parsers.leader * parsers.more * parsers.space^-1)
-                         + parsers.eof
+                         * ( parsers.blankline^1
+                           + #V("EndlineExceptions")
                          )
-                       + parsers.eof )
+                         + parsers.eof)
                        / writer.paragraph
 
   parsers.Plain        = parsers.nonindentspace * Ct(parsers.Inline^1)
