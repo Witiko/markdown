@@ -13,6 +13,7 @@ Fixes:
 - Properly normalize link references according to
   [CommonMark](https://spec.commonmark.org/0.30/#matches).
   (lostenderman#56, #265)
+- Fail gracefully when CLI receives unknown option. (eddcb18)
 
 Deprecation:
 
