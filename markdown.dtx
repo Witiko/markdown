@@ -9405,7 +9405,8 @@ for i = 1, #arg do
 %  \begin{macrocode}
     elseif arg[i]:match("=") then
       local key, value = arg[i]:match("(.-)=(.*)")
-      if defaultOptions[key] == nil then
+      if defaultOptions[key] == nil and
+         various_case_options[key] ~= nil then
         key = various_case_options[key]
       end
 %    \end{macrocode}
