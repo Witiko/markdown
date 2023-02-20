@@ -6,6 +6,7 @@ Development:
 
 - Add renderers that represent the sections implied by headings.
   (#258, #264)
+- Add support for slicing fenced divs. (#229, #266)
 
 Fixes:
 
