@@ -1,4 +1,6 @@
 \def\markdownOptionTexMathDollars{true}
+\let\hat=\relax
+\let\int=\relax
 <<<
 This test ensures that the Lua `texMathDollars` option correctly propagates
 through the plain TeX interface.
@@ -76,9 +78,9 @@ $$\$$
 documentBegin
 codeSpan: texMathDollars
 interblockSeparator
-inlineMath
+inlineMath: E=mc^2
 interblockSeparator
-displayMath
+displayMath: \hat {f} \left  ( \xi   \right  )= \int _{-\infty }^{\infty } f\left  ( x  \right  ) e^{-i2\pi  \xi  x} dx
 interblockSeparator
 interblockSeparator
 dollarSign
@@ -92,55 +94,55 @@ backslash
 dollarSign
 interblockSeparator
 interblockSeparator
-inlineMath
+inlineMath: \ 
 interblockSeparator
 interblockSeparator
 dollarSign
 dollarSign
 interblockSeparator
 interblockSeparator
-inlineMath
+inlineMath: a b c
 interblockSeparator
-displayMath
-interblockSeparator
-dollarSign
+displayMath: a b c
 interblockSeparator
 dollarSign
 interblockSeparator
 dollarSign
-dollarSign
-interblockSeparator
-dollarSign
-dollarSign
-interblockSeparator
 interblockSeparator
 dollarSign
 dollarSign
 interblockSeparator
 dollarSign
 dollarSign
+interblockSeparator
+interblockSeparator
 dollarSign
 dollarSign
 interblockSeparator
-interblockSeparator
-displayMath
-interblockSeparator
-interblockSeparator
-inlineMath
 dollarSign
-interblockSeparator
 dollarSign
-inlineMath
 dollarSign
 dollarSign
 interblockSeparator
 interblockSeparator
-inlineMath
+displayMath:  
 interblockSeparator
 interblockSeparator
-displayMath
+inlineMath: .
+dollarSign
+interblockSeparator
+dollarSign
+inlineMath: .
+dollarSign
+dollarSign
+interblockSeparator
+interblockSeparator
+inlineMath: \$
+interblockSeparator
+interblockSeparator
+displayMath: \$
 interblockSeparator
 interblockSeparator
 dollarSign
-inlineMath
+inlineMath: \$
 documentEnd
