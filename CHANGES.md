@@ -7,6 +7,8 @@ Development:
 - Add renderers that represent the sections implied by headings.
   (#258, #264)
 - Add support for slicing fenced divs. (#229, #266)
+- Add support for TeX math surrounded by dollar signs.
+  (contributed by @lostenderman, #61, #216, #267)
 
 Fixes:
 
