@@ -25681,7 +25681,7 @@ M.extensions.tex_math_dollars = function()
 %  \begin{macrocode}
       function self.display_math(s)
         if not self.is_writing then return "" end
-        return {"\\markdownRendererDisplayMath{",s,"}"}
+        return {"\\markdownRendererDisplayMath{",self.escape_minimal(s),"}"}
       end
 %    \end{macrocode}
 % \begin{markdown}
@@ -25693,14 +25693,14 @@ M.extensions.tex_math_dollars = function()
 %  \begin{macrocode}
       function self.inline_math(s)
         if not self.is_writing then return "" end
-        return {"\\markdownRendererInlineMath{",s,"}"}
+        return {"\\markdownRendererInlineMath{",self.escape_minimal(s),"}"}
       end
     end, extend_reader = function(self)
       local parsers = self.parsers
       local writer = self.writer
 
       local function between(p, starter, ender)
-        return (starter * Ct(p * (p - ender)^0) * ender)
+        return (starter * C(p * (p - ender)^0) * ender)
       end
 
       local inlinemathtail  = B( parsers.any * parsers.nonspacechar
