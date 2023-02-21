@@ -16210,6 +16210,8 @@ following content:
 ``` tex
 \input markdown
 \def\markdownOptionTexMathDollars{true}
+\def\markdownRendererInlineMath#1{$\underline{#1}$}
+\def\markdownRendererDisplayMath#1{$$\textstyle#1$$}
 \markdownBegin
 $E=mc^2$
 
@@ -16235,6 +16237,8 @@ following content:
 ``` tex
 \documentclass{article}
 \usepackage[texMathDollars]{markdown}
+\def\markdownRendererInlineMath#1{\fbox{\begin{math}#1\end{math}}}
+\def\markdownRendererDisplayMath#1{\begin{equation}#1\end{equation}}
 \begin{document}
 \begin{markdown}
 $E=mc^2$
@@ -16261,6 +16265,8 @@ following content:
 ``` tex
 \usemodule[t][markdown]
 \setupmarkdown[texMathDollars = yes]
+\def\markdownRendererDisplayMath#1{\placeformula\startformula#1\stopformula}%
+\def\markdownRendererInlineMath#1{\xRightarrow$#1$}%
 \starttext
 \startmarkdown
 $E=mc^2$
