@@ -9030,6 +9030,10 @@ script file using [Kpathsea][].
 A PDF document named `document.pdf` should be produced and contain the
 following text:
 
+> \$E=mc^2\$
+> 
+> \$\$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\$\$
+>
 > $E=mc^2$
 > 
 > $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
@@ -16190,7 +16194,7 @@ following text:
 
 #### Tex Math Renderers
 The \mdef{markdownRendererInlineMath} and \mdef{markdownRendererDisplayMath} macros 
-represent tex inline and display math. 
+represent inline and display \TeX{} math. 
 Both macros receive a single argument that corresponds to the tex math content.
 These macros will only be produced, when the \Opt{texMathDollars}
 option is enabled.
@@ -25664,8 +25668,8 @@ M.extensions.tex_math_dollars = function()
 % \par
 % \begin{markdown}
 %
-% Define \luamdef{writer->tex_math_dollars} as a function that will transform
-% a tex_math_dollars span `s` of input text to the output format.
+% Define \luamdef{writer->display_math} as a function that will transform
+% a math span `s` of input text to the output format.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -25673,7 +25677,14 @@ M.extensions.tex_math_dollars = function()
         if not self.is_writing then return "" end
         return {"\\markdownRendererDisplayMath{",s,"}"}
       end
-
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Define \luamdef{writer->inline_math} as a function that will transform
+% a math span `s` of input text to the output format.
+%
+% \end{markdown}
+%  \begin{macrocode}
       function self.inline_math(s)
         if not self.is_writing then return "" end
         return {"\\markdownRendererInlineMath{",s,"}"}
@@ -25686,25 +25697,30 @@ M.extensions.tex_math_dollars = function()
         return (starter * Ct(p * (p - ender)^0) * ender)
       end
 
-      parsers.inlinemathtail  = B(parsers.any * parsers.nonspacechar
-                                + parsers.backslash * parsers.any)
-                              * parsers.dollar 
-                              * -#(parsers.digit)
+      local inlinemathtail  = B( parsers.any * parsers.nonspacechar
+                               + parsers.backslash * parsers.any)
+                            * parsers.dollar 
+                            * -#(parsers.digit)
 
-      parsers.inlinemath = between(C(parsers.backslash^-1 * parsers.any
-                                   - parsers.blankline^2 - parsers.dollar),
-                                   parsers.dollar * #(parsers.nonspacechar),
-                                   parsers.inlinemathtail)
+      local inlinemath = between(C( parsers.backslash^-1 
+                                  * parsers.any
+                                  - parsers.blankline^2 
+                                  - parsers.dollar),
+                                 parsers.dollar * #(parsers.nonspacechar),
+                                 inlinemathtail)
 
-      parsers.displaymathdelim = parsers.dollar * parsers.dollar
+      local displaymathdelim  = parsers.dollar 
+                              * parsers.dollar
 
-      parsers.displaymath     = between(C(parsers.backslash^-1 * parsers.any 
-                                          - parsers.blankline^2 - parsers.dollar),
-                                        parsers.displaymathdelim,
-                                        parsers.displaymathdelim)
+      local displaymath = between(C( parsers.backslash^-1 
+                                   * parsers.any 
+                                   - parsers.blankline^2 
+                                   - parsers.dollar),
+                                  displaymathdelim,
+                                  displaymathdelim)
 
-      local TexMathDollars = parsers.displaymath / writer.display_math
-                           + parsers.inlinemath / writer.inline_math
+      local TexMathDollars = displaymath / writer.display_math
+                           + inlinemath / writer.inline_math
 
       self.insert_pattern("Inline after Emph",
                           TexMathDollars, "TexMathDollars")
