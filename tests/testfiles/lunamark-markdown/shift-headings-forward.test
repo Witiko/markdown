@@ -46,4 +46,10 @@ headingSix: A level five heading
 interblockSeparator
 BEGIN section
 headingSix: A level six heading
+END section
+END section
+END section
+END section
+END section
+END section
 documentEnd
