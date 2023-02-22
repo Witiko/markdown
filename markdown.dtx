@@ -21941,12 +21941,24 @@ function M.writer.new(options)
 % \begin{markdown}
 %
 % Define \luamdef{writer->code} as a function that will transform an input
-% inline code span `s` to the output format.
+% inline code span `s` with attributes `attributes` to the output format.
 %
 % \end{markdown}
 %  \begin{macrocode}
-  function self.code(s)
-    return {"\\markdownRendererCodeSpan{",self.escape(s),"}"}
+  function self.code(s, attributes)
+    local buf = {}
+    if attributes ~= nil then
+      table.insert(buf,
+                   "\\markdownRendererInlineCodeAttributeContextBegin\n")
+      table.insert(buf, self.attributes(attributes))
+    end
+    table.insert(buf,
+                 {"\\markdownRendererCodeSpan{", self.escape(s), "}"})
+    if attributes ~= nil then
+      table.insert(buf,
+                   "\n\\markdownRendererInlineCodeAttributeContextBegin ")
+    end
+    return buf
   end
 %    \end{macrocode}
 % \par
@@ -25325,7 +25337,16 @@ M.extensions.inline_code_attributes = function()
   return {
     name = "built-in inline_code_attributes syntax extension",
     extend_writer = function()
-    end, extend_reader = function()
+    end, extend_reader = function(self)
+      local writer = self.writer
+
+      local CodeWithAttributes = parsers.inticks
+                               * Ct(parsers.attributes)
+                               / writer.code
+
+      self.insert_pattern("Inline before Code",
+                          CodeWithAttributes,
+                          "CodeWithAttributes")
     end
   }
 end
@@ -26145,6 +26166,12 @@ function M.new(options)
     local pipe_tables_extension = M.extensions.pipe_tables(
       options.tableCaptions)
     table.insert(extensions, pipe_tables_extension)
+  end
+
+  if true then  -- TODO: replace with options.inlineCodeAttributes
+    local inline_code_attributes_extension =
+      M.extensions.inline_code_attributes()
+    table.insert(extensions, inline_code_attributes_extension)
   end
 
   if options.rawAttribute then
