@@ -6,6 +6,7 @@
 \let\int=\relax
 \let\infty=\relax
 \let\pi=\relax
+\let\$=\relax
 <<<
 This test ensures that the Lua `texMathDollars` option correctly propagates
 through the plain TeX interface.
