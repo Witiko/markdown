@@ -25314,6 +25314,24 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Inline Code Attributes
+%
+% The \luamdef{extensions.inline_code_attributes} function implements the
+% Pandoc inline code attributes syntax extension.
+%
+% \end{markdown}
+%  \begin{macrocode}
+M.extensions.inline_code_attributes = function()
+  return {
+    name = "built-in inline_code_attributes syntax extension",
+    extend_writer = function()
+    end, extend_reader = function()
+    end
+  }
+end
+%    \end{macrocode}
+% \begin{markdown}
+%
 %#### Line Blocks
 %
 % The \luamdef{extensions.line_blocks} function implements the Pandoc line blocks
