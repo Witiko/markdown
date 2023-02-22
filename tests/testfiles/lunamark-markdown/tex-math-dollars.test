@@ -1,6 +1,11 @@
 \def\markdownOptionTexMathDollars{true}
 \let\hat=\relax
+\let\left=\relax
+\let\xi=\relax
+\let\right=\relax
 \let\int=\relax
+\let\infty=\relax
+\let\pi=\relax
 <<<
 This test ensures that the Lua `texMathDollars` option correctly propagates
 through the plain TeX interface.
