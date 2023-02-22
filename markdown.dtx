@@ -25390,6 +25390,24 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Link Attributes
+%
+% The \luamdef{extensions.link_attributes} function implements the Pandoc
+% link attributes syntax extension.
+%
+% \end{markdown}
+%  \begin{macrocode}
+M.extensions.link_attributes = function()
+  return {
+    name = "built-in link_attributes syntax extension",
+    extend_writer = function()
+    end, extend_reader = function()
+    end
+  }
+end
+%    \end{macrocode}
+% \begin{markdown}
+%
 %#### Notes
 %
 % The \luamdef{extensions.notes} function implements the Pandoc note
