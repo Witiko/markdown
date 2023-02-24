@@ -1,0 +1,58 @@
+\def\markdownOptionTexMathDoubleBackslash{true}
+\let\hat=\relax
+\let\left=\relax
+\let\xi=\relax
+\let\right=\relax
+\let\int=\relax
+\let\infty=\relax
+\let\pi=\relax
+<<<
+This test ensures that the Lua `texMathDoubleBackslash` option correctly propagates
+through the plain TeX interface.
+
+\\(E=mc^2\\)
+
+\\[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\\]
+
+anything between the opening and ending is interpreted as either inline or display math
+
+\\(a
+b
+c\\)
+
+\\[a
+b
+c\\]
+
+\\(a
+
+c\\)
+
+\\[a
+
+c\\]
+
+\\(\\)
+
+\\[\\]
+>>>
+documentBegin
+codeSpan: texMathDoubleBackslash
+interblockSeparator
+inlineMath: E=mc^2
+interblockSeparator
+displayMath: \hat {f} \left  ( \xi   \right  )= \int _{-\infty }^{\infty } f\left  ( x  \right  ) e^{-i2\pi  \xi  x} dx
+interblockSeparator
+interblockSeparator
+inlineMath: a b c
+interblockSeparator
+displayMath: a b c
+interblockSeparator
+inlineMath: a  c
+interblockSeparator
+displayMath: a  c
+interblockSeparator
+inlineMath: 
+interblockSeparator
+displayMath: 
+documentEnd
