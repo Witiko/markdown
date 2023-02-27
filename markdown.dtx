@@ -14156,7 +14156,7 @@ following text:
 The following macros are only produced, when the \Opt{lineBlocks} option
 is enabled.
 
-The \mdef{markdownRendererLineBlockBegin} and \mdef{markdownRendererLineBlockEnd} macros 
+The \mdef{markdownRendererLineBlockBegin} and \mdef{markdownRendererLineBlockEnd} macros
 represent the beginning and the end of a line block. The macros receive no arguments.
 
 % \end{markdown}
@@ -16677,11 +16677,11 @@ following text:
 % \begin{markdown}
 
 #### Tex Math Renderers
-The \mdef{markdownRendererInlineMath} and \mdef{markdownRendererDisplayMath} macros 
-represent inline and display \TeX{} math. 
+The \mdef{markdownRendererInlineMath} and \mdef{markdownRendererDisplayMath} macros
+represent inline and display \TeX{} math.
 Both macros receive a single argument that corresponds to the tex math content.
-These macros will only be produced, when the \Opt{texMathDollars}
-option is enabled.
+These macros will only be produced, when the \Opt{texMathDollars},
+\Opt{texMathSingleBackslash} or \Opt{texMathDoubleBackslash} option is enabled.
 
 % \end{markdown}
 %
@@ -17953,7 +17953,7 @@ following text:
 %    \end{macrocode}
 % \par
 % \begin{markdown}
-% 
+%
 %### Logging Facilities
 % The \mdef{markdownInfo}, \mdef{markdownWarning}, and \mdef{markdownError}
 % macros perform logging for the Markdown package. Their first argument
@@ -26227,16 +26227,19 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-%#### Tex Math Dollars
+%#### Tex Math
 %
-% The \luamdef{extensions.tex_math_dollars} function implements the Pandoc
-% tex_math_dollars syntax extension.
+% The \luamdef{extensions.tex_math} function implements the Pandoc
+% tex_math_dollars, tex_math_single_backslash and tex_math_double_backslash
+% syntax extensions.
 %
 % \end{markdown}
 %  \begin{macrocode}
-M.extensions.tex_math_dollars = function()
+M.extensions.tex_math = function(tex_math_dollars,
+                                 tex_math_single_backslash,
+                                 tex_math_double_backslash)
   return {
-    name = "built-in tex_math_dollars syntax extension",
+    name = "built-in tex_math syntax extension",
     extend_writer = function(self)
 %    \end{macrocode}
 % \par
@@ -26271,225 +26274,124 @@ M.extensions.tex_math_dollars = function()
         return (starter * C(p * (p - ender)^0) * ender)
       end
 
-      local inlinemathtail  = B( parsers.any * parsers.nonspacechar
-                               + parsers.backslash * parsers.any)
-                            * parsers.dollar 
-                            * -#(parsers.digit)
+      -- tex_math_dollars
+      local inline_math_opening_dollars = parsers.dollar
+                                        * #(parsers.nonspacechar)
 
-      local inlinemath = between(C( parsers.backslash^-1 
-                                  * parsers.any
-                                  - parsers.blankline^2 
-                                  - parsers.dollar),
-                                 parsers.dollar * #(parsers.nonspacechar),
-                                 inlinemathtail)
+      local inline_math_closing_dollars = B( parsers.any * parsers.nonspacechar
+                                           + parsers.backslash * parsers.any)
+                                        * parsers.dollar
+                                        * -#(parsers.digit)
 
-      local displaymathdelim  = parsers.dollar 
-                              * parsers.dollar
+      local inline_math_dollars = between(C( parsers.backslash^-1
+                                           * parsers.any
+                                           - parsers.blankline^2
+                                           - parsers.dollar),
+                                          inline_math_opening_dollars,
+                                          inline_math_closing_dollars)
 
-      local displaymath = between(C( parsers.backslash^-1 
-                                   * parsers.any 
-                                   - parsers.blankline^2 
-                                   - parsers.dollar),
-                                  displaymathdelim,
-                                  displaymathdelim)
+      local display_math_opening_dollars  = parsers.dollar
+                                          * parsers.dollar
 
-      local TexMathDollars = displaymath / writer.display_math
-                           + inlinemath / writer.inline_math
+      local display_math_closing_dollars  = parsers.dollar
+                                          * parsers.dollar
+
+      local display_math_dollars = between(C( parsers.backslash^-1
+                                            * parsers.any
+                                            - parsers.blankline^2
+                                            - parsers.dollar),
+                                           display_math_opening_dollars,
+                                           display_math_closing_dollars)
+
+      local allowed_before_closing_backslash = B( parsers.backslash * parsers.any
+                                             + parsers.any * (parsers.any - parsers.backslash))
+
+      -- tex_math_double_backslash
+      local inline_math_opening_double  = parsers.backslash
+                                        * parsers.backslash
+                                        * parsers.lparent
+
+      local inline_math_closing_double  = allowed_before_closing_backslash
+                                        * parsers.backslash
+                                        * parsers.backslash
+                                        * parsers.rparent
+
+      local inline_math_double  = between(C( parsers.any - parsers.blankline),
+                                          inline_math_opening_double,
+                                          inline_math_closing_double)
+
+      local display_math_opening_double = parsers.backslash
+                                        * parsers.backslash
+                                        * parsers.lbracket
+
+      local display_math_closing_double = allowed_before_closing_backslash
+                                        * parsers.backslash
+                                        * parsers.backslash
+                                        * parsers.rbracket
+
+      local display_math_double = between(C( parsers.any - parsers.blankline),
+                                          display_math_opening_double,
+                                          display_math_closing_double)
+
+      -- tex_math_single_backslash
+      local inline_math_opening_single  = parsers.backslash
+                                      * parsers.lparent
+
+      local inline_math_closing_single  = allowed_before_closing_backslash
+                                        * parsers.backslash
+                                        * parsers.rparent
+
+      local inline_math_single  = between(C( parsers.any - parsers.blankline),
+                                          inline_math_opening_single,
+                                          inline_math_closing_single)
+
+      local display_math_opening_single = parsers.backslash
+                                      * parsers.lbracket
+
+      local display_math_closing_single = allowed_before_closing_backslash
+                                          * parsers.backslash
+                                          * parsers.rbracket
+
+      local display_math_single = between(C( parsers.any - parsers.blankline),
+                                          display_math_opening_single,
+                                          display_math_closing_single)
+
+      local display_math = parsers.fail
+
+      local inline_math = parsers.fail
+
+      if (tex_math_dollars) then
+        display_math = display_math + display_math_dollars
+        inline_math = inline_math + inline_math_dollars
+      end
+
+      if (tex_math_double_backslash) then
+        display_math = display_math + display_math_double
+        inline_math = inline_math + inline_math_double
+      end
+
+      if (tex_math_single_backslash) then
+        display_math = display_math + display_math_single
+        inline_math = inline_math + inline_math_single
+      end
+
+      local TexMath = display_math / writer.display_math
+                    + inline_math / writer.inline_math
 
       self.insert_pattern("Inline after Emph",
-                          TexMathDollars, "TexMathDollars")
+                          TexMath, "TexMath")
 
-      self.add_special_character("$")
-    end
-  }
-end
-%    \end{macrocode}
-% \begin{markdown}
-%
-%#### Tex Math Double Backslash
-%
-% The \luamdef{extensions.tex_math_double_backslash} function implements the Pandoc
-% tex_math_double_backslash syntax extension.
-%
-% \end{markdown}
-%  \begin{macrocode}
-M.extensions.tex_math_double_backslash = function()
-  return {
-    name = "built-in tex_math_double_backslash syntax extension",
-    extend_writer = function(self)
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% Define \luamdef{writer->display_math} as a function that will transform
-% a math span `s` of input text to the output format.
-%
-% \end{markdown}
-%  \begin{macrocode}
-      function self.display_math(s)
-        if not self.is_writing then return "" end
-        if s == "" then
-          s = " "
-        else
-          s = s:gsub("\n", " ")
-        end
-        return {"\\markdownRendererDisplayMath{",self.escape_minimal(s),"}"}
-      end
-%    \end{macrocode}
-% \begin{markdown}
-%
-% Define \luamdef{writer->inline_math} as a function that will transform
-% a math span `s` of input text to the output format.
-%
-% \end{markdown}
-%  \begin{macrocode}
-      function self.inline_math(s)
-        if not self.is_writing then return "" end
-        if s == "" then
-          s = " "
-        else
-          s = s:gsub("\n", " ")
-        end
-        return {"\\markdownRendererInlineMath{",self.escape_minimal(s),"}"}
-      end
-    end, extend_reader = function(self)
-      local parsers = self.parsers
-      local writer = self.writer
-
-      local function between(p, starter, ender)
-        return (starter * C((p - ender)^0) * ender)
+      if (tex_math_dollars) then
+        self.add_special_character("$")
       end
 
-      local inlinemathopening = parsers.backslash
-                              * parsers.backslash
-                              * parsers.lparent
-
-      local inlinemathclosing = B( parsers.backslash * parsers.any
-                                +  parsers.any * (parsers.any - parsers.backslash))
-                              * parsers.backslash
-                              * parsers.backslash
-                              * parsers.rparent
-
-      local inlinemath = between(C( parsers.any),
-                                 inlinemathopening,
-                                 inlinemathclosing)
-
-      local displaymathopening  = parsers.backslash
-                                * parsers.backslash
-                                * parsers.lbracket
-
-      local displaymathclosing  = B( parsers.backslash * parsers.any
-                                  +  parsers.any * (parsers.any - parsers.backslash))
-                                * parsers.backslash
-                                * parsers.backslash
-                                * parsers.rbracket
-
-      local displaymath = between(C( parsers.any),
-                                  displaymathopening,
-                                  displaymathclosing)
-
-      local TexMathDoubleBackslash  = displaymath / writer.display_math
-                                    + inlinemath / writer.inline_math
-
-      self.insert_pattern("Inline after Emph",
-                          TexMathDoubleBackslash, "TexMathDoubleBackslash")
-
-      self.add_special_character("\\")
-      self.add_special_character("[")
-      self.add_special_character("]")
-      self.add_special_character(")")
-      self.add_special_character("(")
-    end
-  }
-end
-%    \end{macrocode}
-% \begin{markdown}
-%
-%#### Tex Math Single Backslash
-%
-% The \luamdef{extensions.tex_math_single_backslash} function implements the Pandoc
-% tex_math_single_backslash syntax extension.
-%
-% \end{markdown}
-%  \begin{macrocode}
-M.extensions.tex_math_single_backslash = function()
-  return {
-    name = "built-in tex_math_single_backslash syntax extension",
-    extend_writer = function(self)
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% Define \luamdef{writer->display_math} as a function that will transform
-% a math span `s` of input text to the output format.
-%
-% \end{markdown}
-%  \begin{macrocode}
-      function self.display_math(s)
-        if not self.is_writing then return "" end
-        if s == "" then
-          s = " "
-        else
-          s = s:gsub("\n", " ")
-        end
-        return {"\\markdownRendererDisplayMath{",self.escape_minimal(s),"}"}
+      if (tex_math_single_backslash or tex_math_double_backslash) then
+        self.add_special_character("\\")
+        self.add_special_character("[")
+        self.add_special_character("]")
+        self.add_special_character(")")
+        self.add_special_character("(")
       end
-%    \end{macrocode}
-% \begin{markdown}
-%
-% Define \luamdef{writer->inline_math} as a function that will transform
-% a math span `s` of input text to the output format.
-%
-% \end{markdown}
-%  \begin{macrocode}
-      function self.inline_math(s)
-        if not self.is_writing then return "" end
-        if s == "" then
-          s = " "
-        else
-          s = s:gsub("\n", " ")
-        end
-        return {"\\markdownRendererInlineMath{",self.escape_minimal(s),"}"}
-      end
-    end, extend_reader = function(self)
-      local parsers = self.parsers
-      local writer = self.writer
-
-      local function between(p, starter, ender)
-        return (starter * C((p - ender)^0) * ender)
-      end
-
-      local inlinemathopening = parsers.backslash
-                              * parsers.lparent
-
-      local inlinemathclosing = parsers.backslash
-                              * parsers.rparent
-
-      local inlinemath = between(C( parsers.any),
-                                 inlinemathopening,
-                                 inlinemathclosing)
-
-      local displaymathopening  = parsers.backslash
-                                * parsers.lbracket
-
-      local displaymathclosing  = parsers.backslash
-                                * parsers.rbracket
-
-      local displaymath = between(C( parsers.any),
-                                  displaymathopening,
-                                  displaymathclosing)
-
-      local TexMathSingleBackslash  = displaymath / writer.display_math
-                                    + inlinemath / writer.inline_math
-
-      self.insert_pattern("Inline after Emph",
-                          TexMathSingleBackslash, "TexMathSingleBackslash")
-
-      self.add_special_character("\\")
-      self.add_special_character("[")
-      self.add_special_character("]")
-      self.add_special_character(")")
-      self.add_special_character("(")
     end
   }
 end
@@ -26755,19 +26657,14 @@ function M.new(options)
     table.insert(extensions, superscript_extension)
   end
 
-  if options.texMathDollars then
-    local tex_math_dollars_extension = M.extensions.tex_math_dollars()
-    table.insert(extensions, tex_math_dollars_extension)
-  end
-
-  if options.texMathDoubleBackslash then
-    local tex_math_double_backslash = M.extensions.tex_math_double_backslash()
-    table.insert(extensions, tex_math_double_backslash)
-  end
-
-  if options.texMathSingleBackslash then
-    local tex_math_single_backslash_extension = M.extensions.tex_math_single_backslash()
-    table.insert(extensions, tex_math_single_backslash_extension)
+  if options.texMathDollars or
+     options.texMathSingleBackslash or
+     options.texMathDoubleBackslash then
+    local tex_math_extension = M.extensions.tex_math(
+      options.texMathDollars,
+      options.texMathSingleBackslash,
+      options.texMathDoubleBackslash)
+    table.insert(extensions, tex_math_extension)
   end
 
 %    \end{macrocode}
