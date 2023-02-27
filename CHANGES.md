@@ -17,6 +17,8 @@ Fixes:
   [CommonMark](https://spec.commonmark.org/0.30/#matches).
   (lostenderman#56, #265)
 - Fail gracefully when CLI receives unknown options. (eddcb18)
+- Rename `writer->encode_*()` methods to clarify their purpose.
+  (lostenderman#101, #271, #272)
 
 Deprecation:
 
