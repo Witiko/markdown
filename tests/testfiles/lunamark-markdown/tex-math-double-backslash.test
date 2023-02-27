@@ -14,27 +14,21 @@ through the plain TeX interface.
 
 \\[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\\]
 
-anything between the opening and ending is interpreted as either inline or display math
-
-\\(a
-b
-c\\)
-
-\\[a
-b
-c\\]
-
-\\(a
-
-c\\)
-
-\\[a
-
-c\\]
+inline or display math may not be empty
 
 \\(\\)
 
 \\[\\]
+
+or have any blank lines
+
+\\(a
+
+c\\)
+
+\\[a
+
+c\\]
 >>>
 documentBegin
 codeSpan: texMathDoubleBackslash
@@ -44,15 +38,18 @@ interblockSeparator
 displayMath: \hat {f} \left  ( \xi   \right  )= \int _{-\infty }^{\infty } f\left  ( x  \right  ) e^{-i2\pi  \xi  x} dx
 interblockSeparator
 interblockSeparator
-inlineMath: a b c
+backslash
+backslash
 interblockSeparator
-displayMath: a b c
+backslash
+backslash
 interblockSeparator
-inlineMath: a  c
 interblockSeparator
-displayMath: a  c
+backslash
 interblockSeparator
-inlineMath: 
+backslash
 interblockSeparator
-displayMath: 
+backslash
+interblockSeparator
+backslash
 documentEnd
