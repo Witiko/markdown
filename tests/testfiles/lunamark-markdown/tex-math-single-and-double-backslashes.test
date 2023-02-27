@@ -1,0 +1,60 @@
+\def\markdownOptionTexMathDoubleBackslash{true}
+\def\markdownOptionTexMathSingleBackslash{true}
+\let\hat=\relax
+\let\left=\relax
+\let\xi=\relax
+\let\right=\relax
+\let\int=\relax
+\let\infty=\relax
+\let\pi=\relax
+\let\\=\relax
+<<<
+This test ensures that the Lua `texMathDoubleBackslash` and `texMathSingleBackslash` options correctly propagate
+through the plain TeX interface.
+
+\(a\)
+
+\[a\]
+
+\(a\\)
+
+\[a\\]
+
+\\(a\)
+
+\\[a\]
+
+\\(a\\)
+
+\\[a\\]
+
+\\\(a\\\)
+
+\\\[a\\\]
+>>>
+documentBegin
+codeSpan: texMathDoubleBackslash
+codeSpan: texMathSingleBackslash
+interblockSeparator
+inlineMath: a
+interblockSeparator
+displayMath: a
+interblockSeparator
+backslash
+interblockSeparator
+backslash
+interblockSeparator
+backslash
+interblockSeparator
+backslash
+interblockSeparator
+inlineMath: a
+interblockSeparator
+displayMath: a
+interblockSeparator
+backslash
+inlineMath: a\\
+interblockSeparator
+backslash
+displayMath: a\\
+documentEnd
