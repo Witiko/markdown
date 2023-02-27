@@ -24278,55 +24278,9 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 M.extensions.citations = function(citation_nbsps)
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% Define table \luamdef{escaped_citation_chars} containing the characters to
-% escape in citations.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  local escaped_citation_chars = {
-    ["{"] = "\\markdownRendererLeftBrace{}",
-    ["}"] = "\\markdownRendererRightBrace{}",
-    ["%"] = "\\markdownRendererPercentSign{}",
-    ["\\"] = "\\markdownRendererBackslash{}",
-    ["#"] = "\\markdownRendererHash{}",
-  }
   return {
     name = "built-in citations syntax extension",
     extend_writer = function(self)
-      local options = self.options
-
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% Use the \luamref{escaped_citation_chars} to create the
-% \luamdef{escape_citation} escaper functions.
-%
-% \end{markdown}
-%  \begin{macrocode}
-      local escape_citation = util.escaper(
-        escaped_citation_chars,
-        self.escaped_minimal_strings)
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% Define \luamdef{writer->citation} as a function that will transform an input
-% citation name `c` to the output format. If option \Opt{hybrid} is enabled,
-% use the \luamref{writer->escape_minimal} function. Otherwise, use the
-% \luamref{escape_citation} function.
-%
-% \end{markdown}
-%  \begin{macrocode}
-      if options.hybrid then
-        self.citation = self.escape_minimal
-      else
-        self.citation = escape_citation
-      end
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -24435,7 +24389,7 @@ M.extensions.citations = function(citation_nbsps)
               cites[#cites+1] = {
                   prenote = normalize(raw_cites[i]),
                   suppress_author = raw_cites[i+1] == "-",
-                  name = writer.citation(raw_cites[i+2]),
+                  name = writer.identifier(raw_cites[i+2]),
                   postnote = normalize(raw_cites[i+3]),
               }
           end
