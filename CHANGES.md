@@ -1,6 +1,6 @@
 # Changes
 
-## 2.21.0
+## 2.21.0 (2022-02-28)
 
 Development:
 
@@ -17,6 +17,9 @@ Fixes:
   [CommonMark](https://spec.commonmark.org/0.30/#matches).
   (lostenderman#56, #265)
 - Fail gracefully when CLI receives unknown options. (eddcb18)
+
+Documentation:
+
 - Rename `writer->encode_*()` methods to clarify their purpose.
   (lostenderman#101, #271, #272)
 
