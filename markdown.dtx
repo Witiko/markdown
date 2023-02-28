@@ -26274,19 +26274,23 @@ M.extensions.tex_math = function(tex_math_dollars,
         return (starter * C(p * (p - ender)^0) * ender)
       end
 
+      local allowed_before_closing = B( parsers.backslash * parsers.any
+                                      + parsers.any * (parsers.nonspacechar - parsers.backslash))
+
       -- tex_math_dollars
+      local dollar_math_content = parsers.backslash^-1
+                                * parsers.any
+                                - parsers.blankline^2
+                                - parsers.dollar
+
       local inline_math_opening_dollars = parsers.dollar
                                         * #(parsers.nonspacechar)
 
-      local inline_math_closing_dollars = B( parsers.any * parsers.nonspacechar
-                                           + parsers.backslash * parsers.any)
+      local inline_math_closing_dollars = allowed_before_closing
                                         * parsers.dollar
                                         * -#(parsers.digit)
 
-      local inline_math_dollars = between(C( parsers.backslash^-1
-                                           * parsers.any
-                                           - parsers.blankline^2
-                                           - parsers.dollar),
+      local inline_math_dollars = between(C( dollar_math_content),
                                           inline_math_opening_dollars,
                                           inline_math_closing_dollars)
 
@@ -26296,27 +26300,26 @@ M.extensions.tex_math = function(tex_math_dollars,
       local display_math_closing_dollars  = parsers.dollar
                                           * parsers.dollar
 
-      local display_math_dollars = between(C( parsers.backslash^-1
-                                            * parsers.any
-                                            - parsers.blankline^2
-                                            - parsers.dollar),
+      local display_math_dollars = between(C( dollar_math_content),
                                            display_math_opening_dollars,
                                            display_math_closing_dollars)
 
-      local allowed_before_closing_backslash = B( parsers.backslash * parsers.any
-                                             + parsers.any * (parsers.any - parsers.backslash))
+      -- tex_math_?_backslash
+      local backslash_math_content  = parsers.any 
+                                    - parsers.blankline^2
 
       -- tex_math_double_backslash
       local inline_math_opening_double  = parsers.backslash
                                         * parsers.backslash
                                         * parsers.lparent
+                                        * #(parsers.nonspacechar)
 
-      local inline_math_closing_double  = allowed_before_closing_backslash
+      local inline_math_closing_double  = allowed_before_closing
                                         * parsers.backslash
                                         * parsers.backslash
                                         * parsers.rparent
 
-      local inline_math_double  = between(C( parsers.any - parsers.blankline),
+      local inline_math_double  = between(C( backslash_math_content),
                                           inline_math_opening_double,
                                           inline_math_closing_double)
 
@@ -26324,35 +26327,36 @@ M.extensions.tex_math = function(tex_math_dollars,
                                         * parsers.backslash
                                         * parsers.lbracket
 
-      local display_math_closing_double = allowed_before_closing_backslash
+      local display_math_closing_double = allowed_before_closing
                                         * parsers.backslash
                                         * parsers.backslash
                                         * parsers.rbracket
 
-      local display_math_double = between(C( parsers.any - parsers.blankline),
+      local display_math_double = between(C( backslash_math_content),
                                           display_math_opening_double,
                                           display_math_closing_double)
 
       -- tex_math_single_backslash
       local inline_math_opening_single  = parsers.backslash
-                                      * parsers.lparent
+                                        * parsers.lparent
+                                        * #(parsers.nonspacechar)
 
-      local inline_math_closing_single  = allowed_before_closing_backslash
+      local inline_math_closing_single  = allowed_before_closing
                                         * parsers.backslash
                                         * parsers.rparent
 
-      local inline_math_single  = between(C( parsers.any - parsers.blankline),
+      local inline_math_single  = between(C( backslash_math_content),
                                           inline_math_opening_single,
                                           inline_math_closing_single)
 
       local display_math_opening_single = parsers.backslash
-                                      * parsers.lbracket
+                                        * parsers.lbracket
 
-      local display_math_closing_single = allowed_before_closing_backslash
-                                          * parsers.backslash
-                                          * parsers.rbracket
+      local display_math_closing_single = allowed_before_closing
+                                        * parsers.backslash
+                                        * parsers.rbracket
 
-      local display_math_single = between(C( parsers.any - parsers.blankline),
+      local display_math_single = between(C( backslash_math_content),
                                           display_math_opening_single,
                                           display_math_closing_single)
 
