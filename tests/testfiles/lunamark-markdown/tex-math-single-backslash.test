@@ -16,19 +16,27 @@ through the plain TeX interface.
 
 inline or display math may not be empty
 
-\\(\\)
+\(\)
 
-\\[\\]
+\[\]
 
 or have any blank lines
 
-\\(a
+\(a
 
-c\\)
+c\)
 
-\\[a
+\[a
 
-c\\]
+c\]
+
+no spaces are allowed at the beginning or end of the inline math
+
+\( \infty \)
+
+unless they are escaped
+
+\(\ \)
 >>>
 documentBegin
 codeSpan: texMathSingleBackslash
@@ -38,18 +46,16 @@ interblockSeparator
 displayMath: \hat {f} \left  ( \xi   \right  )= \int _{-\infty }^{\infty } f\left  ( x  \right  ) e^{-i2\pi  \xi  x} dx
 interblockSeparator
 interblockSeparator
-backslash
-backslash
-interblockSeparator
-backslash
-backslash
 interblockSeparator
 interblockSeparator
-backslash
 interblockSeparator
-backslash
+interblockSeparator
+interblockSeparator
+interblockSeparator
+interblockSeparator
 interblockSeparator
 backslash
 interblockSeparator
-backslash
+interblockSeparator
+inlineMath: \ 
 documentEnd

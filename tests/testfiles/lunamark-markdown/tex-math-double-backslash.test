@@ -29,6 +29,14 @@ c\\)
 \\[a
 
 c\\]
+
+no spaces are allowed at the beginning or end of the inline math
+
+\\( \infty \\)
+
+unless they are escaped
+
+\\(\ \\)
 >>>
 documentBegin
 codeSpan: texMathDoubleBackslash
@@ -52,4 +60,12 @@ interblockSeparator
 backslash
 interblockSeparator
 backslash
+interblockSeparator
+interblockSeparator
+backslash
+backslash
+backslash
+interblockSeparator
+interblockSeparator
+inlineMath: \ 
 documentEnd
