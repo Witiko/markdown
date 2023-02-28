@@ -25,13 +25,13 @@ interblockSeparator
 interblockSeparator
 lineBlockBegin
 emphasis: limerick
-lineBreak
-lineBreak
+hardLineBreak
+hardLineBreak
 nbsp
 nbsp
 nbsp
 strongEmphasis: good
-lineBreak
+hardLineBreak
 nbsp
 nbsp
 nbsp
@@ -39,12 +39,12 @@ nbsp
 nbsp
 nbsp
 nbsp
-lineBreak
+hardLineBreak
 lineBlockEnd
 interblockSeparator
 interblockSeparator
 lineBlockBegin
-lineBreak
-lineBreak
+hardLineBreak
+hardLineBreak
 lineBlockEnd
 documentEnd

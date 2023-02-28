@@ -936,7 +936,7 @@ local metadata = {
     comment   = "A module for the conversion from markdown to plain TeX",
     author    = "John MacFarlane, Hans Hagen, Vít Novotný",
     copyright = {"2009-2016 John MacFarlane, Hans Hagen",
-                 "2016-2022 Vít Novotný"},
+                 "2016-2023 Vít Novotný"},
     license   = "LPPL 1.3c"
 }
 
@@ -1081,7 +1081,7 @@ local unicode
 % \end{markdown}
 %  \begin{macrocode}
   if not ran_ok then
-    unicode = {["utf8"]={char=utf8.char}}
+    unicode = {utf8 = {char=utf8.char}}
   end
 end)()
 %    \end{macrocode}
@@ -1103,14 +1103,62 @@ local md5 = require("md5")
 % \begin{markdown}
 %
 % All the abovelisted modules are statically linked into the current version of
-% the Lua\TeX{} engine~[@luatex21, Section 4.3]. Beside these, we also carry
+% the Lua\TeX{} engine~[@luatex21, Section 4.3]. Beside these, we also include
 % the following third-party Lua libraries:
+%
+% \pkg{lua-uni-algos}
+%
+%:    A package that implements Unicode case-folding in \TeX{} Live${}\geq{}2020$.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local uni_case
+(function()
+  local ran_ok
+  -- TODO: Stop loading kpse module to a global kpse variable
+  -- after https://github.com/latex3/lua-uni-algos/issues/3 has been fixed.
+  -- Remove kpse global also from file .luacheckrc.
+  ran_ok, kpse = pcall(require, "kpse")
+  if ran_ok then
+    kpse.set_program_name("luatex")
+    ran_ok, uni_case = pcall(require, "lua-uni-case")
+  end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If the lua-uni-algos library is unavailable but the Selene Unicode library
+% is available, we will use its Unicode lower-casing support instead of
+% the more proper case-folding.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  if not ran_ok then
+    if unicode.utf8.lower then
+      uni_case = {casefold = unicode.utf8.lower}
+    else
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If the Selene Unicode library is also unavailable, we will defer to using
+% ASCII lower-casing.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      uni_case = {casefold = string.lower}
+    end
+  end
+end)()
+%    \end{macrocode}
+% \par
+% \begin{markdown}
 %
 % \pkg{api7/lua-tinyyaml}
 %
 %:    A library that provides a regex-based recursive descent \acro{yaml}
 %     (subset) parser that is used to read \acro{yaml} metadata when the
-%     \Opt{jekyllData} option is enabled.
+%     \Opt{jekyllData} option is enabled. We carry a copy of the library
+%     in file `markdown-tinyyaml.lua` distributed together with the Markdown
+%     package.
 %
 % \end{markdown}
 % \iffalse
@@ -1757,8 +1805,10 @@ A PDF document named `document.pdf` should be produced and contain the
 following text:
 
 > \$\\sqrt{-1}\$ *equals* \$i\$.
-> 
-> √-̅1̅ *equals* $i$.
+>
+> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> *equals*
+> <math><mi>i</mi></math>.
 
 Invoking pdfTeX should have the same effect:
 ``` sh
@@ -1798,8 +1848,10 @@ A PDF document named `document.pdf` should be produced and contain the
 following text:
 
 > \$\\sqrt{-1}\$ *equals* \$i\$.
-> 
-> √-̅1̅ *equals* $i$.
+>
+> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> *equals*
+> <math><mi>i</mi></math>.
 
 In this case, we cannot use pdfTeX, because pdfTeX does not define the
 `\directlua` \TeX{} command.
@@ -1848,8 +1900,10 @@ A PDF document named `document.pdf` should be produced and contain the
 following text:
 
 > \$\\sqrt{-1}\$ *equals* \$i\$.
-> 
-> √-̅1̅ *equals* $i$.
+>
+> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> *equals*
+> <math><mi>i</mi></math>.
 
 Invoking pdfTeX should have the same effect:
 ``` sh
@@ -5533,7 +5587,7 @@ defaultOptions.fencedCodeAttributes = false
 %</lua,lua-cli>
 %<*manual-options>
 
-#### Option `fencedDivs`
+#### Option `fencedDivs` {#fenced-divs}
 
 `fencedDivs` (default value: `false`)
 
@@ -5560,6 +5614,35 @@ defaultOptions.fencedCodeAttributes = false
 
 % \end{markdown}
 % \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+```` tex
+\documentclass{article}
+\usepackage[fencedDivs]{markdown}
+\begin{document}
+\begin{markdown}{slice=special}
+Here is a regular paragraph.
+
+::::: {#special}
+Here is a special paragraph.
+:::::
+
+And here is another regular paragraph.
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex --shell-escape document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> Here is a special paragraph.
+
 %</manual-options>
 %<*tex>
 % \fi
@@ -5882,6 +5965,13 @@ following text:
   { boolean }
   { false }
 %    \end{macrocode}
+% \begin{markdown}
+%
+% The hardLineBreaks option has been deprecated and will be removed in
+% Markdown 3.0.0. From then on, all line breaks within a paragraph will
+% be interpreted as soft line breaks.
+%
+% \end{markdown}
 % \iffalse
 %</tex>
 %<*lua,lua-cli>
@@ -6397,7 +6487,9 @@ following text:
 
 > \$\\sqrt {-1}\$ *equals* \$i\$.
 >
-> √-̅1̅ *equals* $i$.
+> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> *equals*
+> <math><mi>i</mi></math>.
 
 ##### Lua CLI Example {.unnumbered}
 
@@ -6436,7 +6528,9 @@ following text:
 
 > \$\\sqrt {-1}\$ *equals* \$i\$.
 >
-> √-̅1̅ *equals* $i$.
+> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> *equals*
+> <math><mi>i</mi></math>.
 
 ##### Plain \TeX{} Example {.unnumbered}
 
@@ -6466,7 +6560,9 @@ following text:
 
 > \$\\sqrt {-1}\$ *equals* \$i\$.
 >
-> √-̅1̅ *equals* $i$.
+> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> *equals*
+> <math><mi>i</mi></math>.
 
 ##### \LaTeX{} Example {.unnumbered}
 
@@ -6496,7 +6592,9 @@ following text:
 
 > \$\\sqrt {-1}\$ *equals* \$i\$.
 >
-> √-̅1̅ *equals* $i$.
+> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> *equals*
+> <math><mi>i</mi></math>.
 
 ##### \Hologo{ConTeXt} Example {.unnumbered}
 
@@ -6526,7 +6624,9 @@ following text:
 
 > \$\\sqrt {-1}\$ *equals* \$i\$.
 >
-> √-̅1̅ *equals* $i$.
+> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> *equals*
+> <math><mi>i</mi></math>.
 
 %</manual-options>
 %<*tex>
@@ -7619,11 +7719,16 @@ defaultOptions.shiftHeadings = 0
 
      - The circumflex (`^`) selects the beginning of a document.
      - The dollar sign (`$`) selects the end of a document.
-     - `^`\meta{identifier} selects the beginning of a section with the
-%      \acro{HTML} attribute `#`\meta{identifier} (see the
-%      \Opt{headerAttributes} option).
+     - `^`\meta{identifier} selects the beginning of
+%      a section (see the \Opt{headerAttributes} option)
 %      \iffalse
-       [\acro{HTML} attribute](#header-attributes) `#`\meta{identifier}.
+       a [section](#header-attributes)
+%      \fi
+%      or a fenced div (see the \Opt{fencedDivs} option) with the \acro{HTML}
+%      attribute `#`\meta{identifier}.
+%      \iffalse
+       or a [fenced div](#fenced-divs)
+       with the \acro{HTML} attribute `#`\meta{identifier}.
 %      \fi
      - `$`\meta{identifier} selects the end of a section with the \acro{HTML}
        attribute `#`\meta{identifier}.
@@ -8923,6 +9028,205 @@ defaultOptions.texComments = false
 %</lua,lua-cli>
 %<*manual-options>
 
+#### Option `texMathDollars`
+
+`texMathDollars` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{texMathDollars}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Enable the Pandoc `tex_math_dollars` syntax extension.
+
+        ```
+        inline math: $E=mc^2$
+
+        display math: $$E=mc^2$$
+        ```
+
+:    false
+
+     :  Disable the Pandoc `tex_math_dollars` syntax extension.
+
+% \end{markdown}
+% \iffalse
+
+##### Lua Module Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\input markdown
+\input lmfonts
+\directlua{
+  local markdown = require("markdown")
+  local newline = [[^^J^^J]]
+  local convert = markdown.new({texMathDollars = true})
+  local input =
+    [[$E=mc^2$]] .. newline .. newline ..
+    [[$$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$]]
+  tex.sprint(convert(input)) }
+\bye
+```````
+Then, invoke LuaTeX from the terminal:
+``` sh
+luatex document.tex
+```````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> $E=mc^2$
+>
+> $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
+
+##### Lua CLI Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\input markdown
+\input lmfonts
+\input optionfalse
+\par
+\input optiontrue
+\bye
+```````
+Using a text editor, create a text document named `content.md` with the
+following content:
+``` md
+$E=mc^2$
+
+$$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
+``````
+Next, invoke LuaTeX from the terminal:
+``` sh
+texlua ⟨CLI pathname⟩ -- content.md optionfalse.tex
+texlua ⟨CLI pathname⟩ texMathDollars=true -- content.md optiontrue.tex
+luatex document.tex
+```````
+where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
+such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
+`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
+systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
+script file using [Kpathsea][].
+
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> \$E=mc^2\$
+> 
+> \$\$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\$\$
+>
+> $E=mc^2$
+> 
+> $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
+
+##### Plain \TeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\input markdown
+
+\def\markdownOptionTexMathDollars{true}
+\markdownBegin
+$E=mc^2$
+
+$$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
+\markdownEnd
+
+\bye
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+luatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> $E=mc^2$
+> 
+> $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[texMathDollars]{markdown}
+\begin{document}
+
+\begin{markdown}
+$E=mc^2$
+
+$$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
+\end{markdown}
+
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> $E=mc^2$
+> 
+> $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
+
+##### \Hologo{ConTeXt} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\usemodule[t][markdown]
+\setupmarkdown[texMathDollars = yes]
+\starttext
+
+\startmarkdown
+$E=mc^2$
+
+$$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
+\stopmarkdown
+
+\stoptext
+````````
+Next, invoke LuaTeX from the terminal:
+``` sh
+context document.tex
+`````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> $E=mc^2$
+> 
+> $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { texMathDollars }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.texMathDollars = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
 
 #### Option `tightLists`
 
@@ -9337,7 +9641,8 @@ for i = 1, #arg do
 %  \begin{macrocode}
     elseif arg[i]:match("=") then
       local key, value = arg[i]:match("(.-)=(.*)")
-      if defaultOptions[key] == nil then
+      if defaultOptions[key] == nil and
+         various_case_options[key] ~= nil then
         key = various_case_options[key]
       end
 %    \end{macrocode}
@@ -9483,8 +9788,10 @@ A PDF document named `document.pdf` should be produced and contain the
 following text:
 
 > \$\\sqrt{-1}\$ *equals* \$i\$.
-> 
-> √-̅1̅ *equals* $i$.
+>
+> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> *equals*
+> <math><mi>i</mi></math>.
 
 Invoking pdfTeX should have the same effect:
 ``` sh
@@ -11148,10 +11455,12 @@ A PDF document named `document.pdf` should be produced and contain the
 following text:
 
 > \$\\sqrt{-1}\$ \*equals\* \$i\$.
-> 
+>
 > \$\\sqrt{-1}\$ *equals* \$i\$.
-> 
-> √-̅1̅ *equals* $i$.
+>
+> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> *equals*
+> <math><mi>i</mi></math>.
 
 ##### \LaTeX{} Example {.unnumbered}
 
@@ -11187,10 +11496,12 @@ A PDF document named `document.pdf` should be produced and contain the
 following text:
 
 > \$\\sqrt{-1}\$ \*equals\* \$i\$.
-> 
+>
 > \$\\sqrt{-1}\$ *equals* \$i\$.
-> 
-> √-̅1̅ *equals* $i$.
+>
+> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> *equals*
+> <math><mi>i</mi></math>.
 
 ##### \Hologo{ConTeXt} Example {.unnumbered}
 
@@ -11222,10 +11533,12 @@ A PDF document named `document.pdf` should be produced and contain the
 following text:
 
 > \$\\sqrt{-1}\$ \*equals\* \$i\$.
-> 
+>
 > \$\\sqrt{-1}\$ *equals* \$i\$.
-> 
-> √-̅1̅ *equals* $i$.
+>
+> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> *equals*
+> <math><mi>i</mi></math>.
 
 %</manual-tokens>
 %<*tex>
@@ -12675,7 +12988,13 @@ following text:
 %</manual-tokens>
 %<*tex>
 % \fi
+% \begin{markdown}
 %
+% These semantics have been deprecated and will be changed in Markdown 3.0.0.
+% From then on, header attribute contexts will only span headings, not the
+% surrounding sections.
+%
+% \end{markdown}
 %  \begin{macrocode}
 \def\markdownRendererHeaderAttributeContextBegin{%
   \markdownRendererHeaderAttributeContextBeginPrototype}%
@@ -13568,7 +13887,7 @@ following text:
 % \begin{markdown}
 
 #### Line Break Renderer
-The \mdef{markdownRendererLineBreak} macro represents a forced line break.
+The \mdef{markdownRendererHardLineBreak} macro represents a hard line break.
 The macro receives no arguments.
 
 % \end{markdown}
@@ -13581,9 +13900,9 @@ Using a text editor, create a text document named `document.tex` with the
 following content:
 ``` tex
 \input markdown
-\def\markdownRendererLineBreak{%
+\def\markdownRendererHardLineBreak{%
   \par
-  {\it(A forced linebreak)}%
+  {\it(A hard line break)}%
   \par
 }
 \markdownInput{example.md}
@@ -13591,8 +13910,8 @@ following content:
 ```````
 Using a text editor, create a text document named `example.md` with the
 following content.  Note the two spaces at the end of the first line, which
-specify a hard linebreak.  Due to the limitations of the \TeX{} input
-processor, hard linebreaks would be ignored if we typed them directly into the
+specify a hard line break.  Due to the limitations of the \TeX{} input
+processor, hard line breaks would be ignored if we typed them directly into the
 `document.tex` document.
 
 <pre><code>Hello world!  <br/>_Foo_ bar!</code></pre>
@@ -13606,8 +13925,8 @@ following text:
 
 > Hello *world*!
 >
-> *(A forced linebreak)*
-> 
+> *(A hard line break)*
+>
 > _Foo_ bar!
 
 ##### \LaTeX{} Example {.unnumbered}
@@ -13619,9 +13938,9 @@ following content:
 \usepackage{markdown}
 \markdownSetup{
   renderers = {
-    lineBreak = {%
+    hardLineBreak = {%
       \par
-      \emph{(A forced linebreak)}%
+      \emph{(A hard line break)}%
       \par
     },
   },
@@ -13632,8 +13951,8 @@ following content:
 ```````
 Using a text editor, create a text document named `example.md` with the
 following content.  Note the two spaces at the end of the first line, which
-specify a hard linebreak.  Due to the limitations of the \TeX{} input
-processor, hard linebreaks would be ignored if we typed them directly into the
+specify a hard line break.  Due to the limitations of the \TeX{} input
+processor, hard line breaks would be ignored if we typed them directly into the
 `document.tex` document.
 
 <pre><code>Hello world!  <br/>_Foo_ bar!</code></pre>
@@ -13647,60 +13966,64 @@ following text:
 
 > Hello *world*!
 >
-> *(A forced linebreak)*
-> 
-> _Foo_ bar!
-
-##### \Hologo{ConTeXt} Example {.unnumbered}
-
-Using a text editor, create a text document named `document.tex` with the
-following content:
-``` tex
-\usemodule[t][markdown]
-\def\markdownRendererLineBreak{%
-  \par
-  \emph{(A forced linebreak)}%
-  \par
-}
-\starttext
-\markdownInput{example.md}
-\stoptext
-```````
-Using a text editor, create a text document named `example.md` with the
-following content.  Note the two spaces at the end of the first line, which
-specify a hard linebreak.  Due to the limitations of the \TeX{} input
-processor, hard linebreaks would be ignored if we typed them directly into the
-`document.tex` document.
-
-<pre><code>Hello world!  <br/>_Foo_ bar!</code></pre>
-
-Next, invoke LuaTeX from the terminal:
-``` sh
-luatex document.tex
-``````
-A PDF document named `document.pdf` should be produced and contain the
-following text:
-
-> Hello *world*!
+> *(A hard line break)*
 >
-> *(A forced linebreak)*
-> 
 > _Foo_ bar!
 
 %</manual-tokens>
 %<*tex>
 % \fi
+% \begin{markdown}
 %
+% The \mdef{markdownRendererLineBreak} and
+% \mdef{markdownRendererLineBreakPrototype} macros have been deprecated
+% and will be removed in Markdown 3.0.0.
+%
+% \end{markdown}
 %  \begin{macrocode}
-\def\markdownRendererLineBreak{%
-  \markdownRendererLineBreakPrototype}%
 \ExplSyntaxOn
+\cs_new:Npn
+  \markdownRendererHardLineBreak
+  {
+    \cs_if_exist:NTF
+      \markdownRendererLineBreak
+      {
+        \markdownWarning
+          {
+            Line~break~renderer~has~been~deprecated,~
+            to~be~removed~in~Markdown~3.0.0
+          }
+        \markdownRendererLineBreak
+      }
+      {
+        \cs_if_exist:NTF
+          \markdownRendererLineBreakPrototype
+          {
+            \markdownWarning
+              {
+                Line~break~renderer~prototype~has~been~deprecated,~
+                to~be~removed~in~Markdown~3.0.0
+              }
+            \markdownRendererLineBreakPrototype
+          }
+          {
+            \markdownRendererHardLineBreakPrototype
+          }
+      }
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { lineBreak }
 \prop_gput:Nnn
   \g_@@_renderer_arities_prop
   { lineBreak }
+  { 0 }
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { hardLineBreak }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { hardLineBreak }
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
@@ -15192,6 +15515,50 @@ following text:
 %
 % \begin{markdown}
 
+#### Section Renderers
+The \mdef{markdownRendererSectionBegin} and \mdef{markdownRendererSectionEnd}
+macros represent the beginning and the end of a section based on headings.
+
+% \end{markdown}
+%
+% \iffalse
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererSectionBegin{%
+  \markdownRendererSectionBeginPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { sectionBegin }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { sectionBegin }
+  { 0 }
+\ExplSyntaxOff
+\def\markdownRendererSectionEnd{%
+  \markdownRendererSectionEndPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { sectionEnd }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { sectionEnd }
+  { 0 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
 #### Replacement Character Renderers
 The \mdef{markdownRendererReplacementCharacter} macro represents the U+0000
 and U+FFFD Unicode characters. The macro receives no arguments.
@@ -15901,6 +16268,138 @@ following text:
   \g_@@_renderer_arities_prop
   { table }
   { 3 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
+#### Tex Math Renderers
+The \mdef{markdownRendererInlineMath} and \mdef{markdownRendererDisplayMath} macros 
+represent inline and display \TeX{} math. 
+Both macros receive a single argument that corresponds to the tex math content.
+These macros will only be produced, when the \Opt{texMathDollars}
+option is enabled.
+
+% \end{markdown}
+%
+% \iffalse
+
+##### Plain \TeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\input markdown
+\def\markdownOptionTexMathDollars{true}
+\def\markdownRendererInlineMath#1{$#1\dots$}
+\def\markdownRendererDisplayMath#1{$$#1\eqno(1)$$}
+\markdownBegin
+$E=mc^2$
+
+$$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
+\markdownEnd
+\bye
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+luatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> $E=mc^2\dots$
+> 
+> $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\eqno(1)$$
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[texMathDollars]{markdown}
+\usepackage{amsmath}
+\def\markdownRendererInlineMath#1{\begin{math}#1\dots\end{math}}
+\def\markdownRendererDisplayMath#1{\begin{equation}#1\end{equation}}
+\begin{document}
+\begin{markdown}
+$E=mc^2$
+
+$$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> $E=mc^2\dots$
+> 
+> $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\quad(1)$$
+
+##### \Hologo{ConTeXt} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\usemodule[t][markdown]
+\setupmarkdown[texMathDollars = yes]
+\def\markdownRendererInlineMath#1{$#1\dots$}%
+\def\markdownRendererDisplayMath#1{\placeformula\startformula#1\stopformula}%
+\starttext
+\startmarkdown
+$E=mc^2$
+
+$$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
+\stopmarkdown
+\stoptext
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+context document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> $E=mc^2\dots$
+> 
+> $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\quad(1)$$
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererInlineMath{%
+  \markdownRendererInlineMathPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { inlineMath }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { inlineMath }
+  { 1 }
+\ExplSyntaxOff
+\def\markdownRendererDisplayMath{%
+  \markdownRendererDisplayMathPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { displayMath }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { displayMath }
+  { 1 }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par
@@ -17225,8 +17724,10 @@ A PDF document named `document.pdf` should be produced and contain the
 following text:
 
 > \$\\sqrt{-1}\$ *equals* \$i\$.
-> 
-> √-̅1̅ *equals* $i$.
+>
+> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> *equals*
+> <math><mi>i</mi></math>.
 
 Invoking pdfTeX should have the same effect:
 ``` sh
@@ -18408,8 +18909,10 @@ A PDF document named `document.pdf` should be produced and contain the
 following text:
 
 > \$\\sqrt{-1}\$ *equals* \$i\$.
-> 
-> √-̅1̅ *equals* $i$.
+>
+> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> *equals*
+> <math><mi>i</mi></math>.
 
 Invoking pdfTeX should have the same effect:
 ``` sh
@@ -18684,8 +19187,8 @@ texexec --passon=--shell-escape document.tex
 %
 % \end{markdown}
 %  \begin{macrocode}
-local upper, gsub, format, length =
-  string.upper, string.gsub, string.format, string.len
+local upper, format, length =
+  string.upper, string.format, string.len
 local P, R, S, V, C, Cg, Cb, Cmt, Cc, Ct, B, Cs, any =
   lpeg.P, lpeg.R, lpeg.S, lpeg.V, lpeg.C, lpeg.Cg, lpeg.Cb,
   lpeg.Cmt, lpeg.Cc, lpeg.Ct, lpeg.B, lpeg.Cs, lpeg.P(1)
@@ -21211,6 +21714,11 @@ function M.writer.new(options)
     self.slice_end = "$" .. slice_specifiers[1]
   end
 
+  self.slice_begin_type = self.slice_begin:sub(1, 1)
+  self.slice_begin_identifier = self.slice_begin:sub(2) or ""
+  self.slice_end_type = self.slice_end:sub(1, 1)
+  self.slice_end_identifier = self.slice_end:sub(2) or ""
+
   if self.slice_begin == "^" and self.slice_end ~= "^" then
     self.is_writing = true
   else
@@ -21299,11 +21807,12 @@ function M.writer.new(options)
 % \par
 % \begin{markdown}
 %
-% Define \luamdef{writer->linebreak} as the output format of a forced line break.
+% Define \luamdef{writer->hard_line_break} as the output format of a forced
+% line break.
 %
 % \end{markdown}
 %  \begin{macrocode}
-  self.linebreak = "\\markdownRendererLineBreak\n{}"
+  self.hard_line_break = "\\markdownRendererHardLineBreak\n{}"
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -21390,33 +21899,45 @@ function M.writer.new(options)
 %
 % Use the \luamref{writer->escaped_chars}, \luamref{writer->escaped_uri_chars},
 % and \luamref{writer->escaped_minimal_strings} tables to create the
-% \luamdef{writer->escape}, \luamdef{writer->escape_uri}, and
+% \luamdef{writer->escape_typographic_text},
+% \luamdef{writer->escape_programmatic_text}, and
 % \luamdef{writer->escape_minimal} escaper functions.
 %
 % \end{markdown}
 %  \begin{macrocode}
-  self.escape = util.escaper(self.escaped_chars, self.escaped_strings)
-  self.escape_uri = util.escaper(self.escaped_uri_chars, self.escaped_minimal_strings)
-  self.escape_minimal = util.escaper({}, self.escaped_minimal_strings)
+  local escape_typographic_text = util.escaper(
+    self.escaped_chars, self.escaped_strings)
+  local escape_programmatic_text = util.escaper(
+    self.escaped_uri_chars, self.escaped_minimal_strings)
+  local escape_minimal = util.escaper(
+    {}, self.escaped_minimal_strings)
 %    \end{macrocode}
 % \par
 % \begin{markdown}
 %
-% Define \luamdef{writer->string} as a function that will transform an input
-% plain text span `s` to the output format and \luamdef{writer->uri} as a
-% function that will transform an input \acro{uri} `u` to the output format.
-% If the \Opt{hybrid} option is enabled, use the
-% \luamref{writer->escape_minimal}.  Otherwise, use the
-% \luamref{writer->escape}, and \luamref{writer->escape_uri} functions.
+% Define the following semantic aliases for the escaper functions:
+%
+% - \luamdef{writer->escape} transforms a text string that should always be
+%   made printable.
+% - \luamdef{writer->string} transforms a text string that should be made
+%   printable only when the \Opt{hybrid} Lua option is disabled. When \Opt{hybrid}
+%   is enabled, the text string should be kept as-is.
+% - \luamdef{writer->math} transforms a math span.
+% - \luamdef{writer->identifier} transforms an input programmatic identifier.
+% - \luamdef{writer->uri} transforms an input \acro{uri}.
 %
 % \end{markdown}
 %  \begin{macrocode}
+  self.escape = escape_typographic_text
+  self.math = escape_minimal
   if options.hybrid then
-    self.string = self.escape_minimal
-    self.uri = self.escape_minimal
+    self.identifier = escape_minimal
+    self.string = escape_minimal
+    self.uri = escape_minimal
   else
-    self.string = self.escape
-    self.uri = self.escape_uri
+    self.identifier = escape_programmatic_text
+    self.string = escape_typographic_text
+    self.uri = escape_programmatic_text
   end
 %    \end{macrocode}
 % \par
@@ -21688,19 +22209,10 @@ function M.writer.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.document(d)
-    local active_attributes = self.active_attributes
     local buf = {"\\markdownRendererDocumentBegin\n", d}
 
-    -- pop attributes for sections that have ended
-    if options.headerAttributes and self.is_writing then
-      while #active_attributes > 0 do
-        local attributes = active_attributes[#active_attributes]
-        if #attributes > 0 then
-          table.insert(buf, "\\markdownRendererHeaderAttributeContextEnd")
-        end
-        table.remove(active_attributes, #active_attributes)
-      end
-    end
+    -- pop all attributes
+    table.insert(buf, self.pop_attributes())
 
     table.insert(buf, "\\markdownRendererDocumentEnd")
 
@@ -21740,13 +22252,134 @@ function M.writer.new(options)
 % \par
 % \begin{markdown}
 %
-% Define \luamdef{writer->active\_attributes} as a stack of attributes
-% of the headings that are currently active. The
-% \luamdef{writer->active\_headings} member variable is mutable.
+% Define \luamdef{writer->active\_attributes} as a stack of block-level
+% attributes that are currently active. The
+% \luamref{writer->active\_attributes} member variable is mutable.
 %
 % \end{markdown}
 %  \begin{macrocode}
   self.active_attributes = {}
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define \luamdef{writer->push\_attributes} and
+% \luamdef{writer->pop\_attributes} as functions that will add a new set
+% of active block-level attributes or remove the most current attributes
+% from \luamref{writer->active\_attributes}.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function apply_attributes()
+    local buf = {}
+    for i = 1, #self.active_attributes do
+      local start_output = self.active_attributes[i][3]
+      if start_output ~= nil then
+        table.insert(buf, start_output)
+      end
+    end
+    return buf
+  end
+
+  local function tear_down_attributes()
+    local buf = {}
+    for i = #self.active_attributes, 1, -1 do
+      local end_output = self.active_attributes[i][4]
+      if end_output ~= nil then
+        table.insert(buf, end_output)
+      end
+    end
+    return buf
+  end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The \luamref{writer->push\_attributes} method adds `attributes`
+% of type `attribute_type` to \luamref{writer->active\_attributes}. The
+% `start_output` string is used to construct a rope that will be returned by
+% this function, together with output produced as a result of slicing (see
+% \Opt{slice}).  The `end_output` string is stored together with `attributes`
+% and is used to construct the return value of the
+% \luamref{writer->pop\_attributes}
+% method.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  function self.push_attributes(attribute_type, attributes,
+                                start_output, end_output)
+    -- index attributes in a hash table for easy lookup
+    attributes = attributes or {}
+    for i = 1, #attributes do
+      attributes[attributes[i]] = true
+    end
+
+    local buf = {}
+    -- handle slicing
+    if attributes["#" .. self.slice_end_identifier] ~= nil and
+       self.slice_end_type == "^" then
+      if self.is_writing then
+        table.insert(buf, tear_down_attributes())
+      end
+      self.is_writing = false
+    end
+    if attributes["#" .. self.slice_begin_identifier] ~= nil and
+       self.slice_begin_type == "^" then
+      self.is_writing = true
+      table.insert(buf, apply_attributes())
+      self.is_writing = true
+    end
+    if self.is_writing and start_output ~= nil then
+      table.insert(buf, start_output)
+    end
+    table.insert(self.active_attributes,
+                 {attribute_type, attributes,
+                  start_output, end_output})
+    return buf
+  end
+
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The \luamref{writer->pop\_attributes} method removes the most current of
+% active block-level attributes from \luamref{writer->active\_attributes}
+% until attributes of type `attribute_type` have been removed. The method
+% returns a rope constructed from the `end_output` string specified
+% in the calls of \luamref{writer->push\_attributes} that produced the most
+% current attributes, and also from output produced as a result of slicing
+% (see \Opt{slice}).
+%
+% \end{markdown}
+%  \begin{macrocode}
+  function self.pop_attributes(attribute_type)
+    local buf = {}
+    -- pop attributes until we find attributes of correct type
+    -- or until no attributes remain
+    local current_attribute_type = false
+    while current_attribute_type ~= attribute_type and
+          #self.active_attributes > 0 do
+      local attributes, _, end_output
+      current_attribute_type, attributes, _, end_output = table.unpack(
+        self.active_attributes[#self.active_attributes])
+      if self.is_writing and end_output ~= nil then
+        table.insert(buf, end_output)
+      end
+      table.remove(self.active_attributes, #self.active_attributes)
+      -- handle slicing
+      if attributes["#" .. self.slice_end_identifier] ~= nil
+         and self.slice_end_type == "$" then
+        if self.is_writing then
+          table.insert(buf, tear_down_attributes())
+        end
+        self.is_writing = false
+      end
+      if attributes["#" .. self.slice_begin_identifier] ~= nil and
+         self.slice_begin_type == "$" then
+        self.is_writing = true
+        table.insert(buf, apply_attributes())
+      end
+    end
+    return buf
+  end
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -21757,86 +22390,47 @@ function M.writer.new(options)
 %
 % \end{markdown}
 %  \begin{macrocode}
+  local current_heading_level = 0
   function self.heading(s, level, attributes)
-    attributes = attributes or {}
-    for i = 1, #attributes do
-      attributes[attributes[i]] = true
-    end
-
-    local active_attributes = self.active_attributes
-    local slice_begin_type = self.slice_begin:sub(1, 1)
-    local slice_begin_identifier = self.slice_begin:sub(2) or ""
-    local slice_end_type = self.slice_end:sub(1, 1)
-    local slice_end_identifier = self.slice_end:sub(2) or ""
-
     local buf = {}
 
     -- push empty attributes for implied sections
-    while #active_attributes < level-1 do
-      table.insert(active_attributes, {})
+    while current_heading_level < level - 1 do
+      table.insert(buf,
+                   self.push_attributes("heading",
+                                        nil,
+                                        "\\markdownRendererSectionBegin\n",
+                                        "\n\\markdownRendererSectionEnd "))
+      current_heading_level = current_heading_level + 1
     end
 
     -- pop attributes for sections that have ended
-    while #active_attributes >= level do
-      local active_identifiers = active_attributes[#active_attributes]
-      -- tear down all active attributes at slice end
-      if active_identifiers["#" .. slice_end_identifier] ~= nil
-          and slice_end_type == "$" then
-        for header_level = #active_attributes, 1, -1 do
-          if options.headerAttributes and #active_attributes[header_level] > 0 then
-            table.insert(buf, "\\markdownRendererHeaderAttributeContextEnd")
-          end
-        end
-        self.is_writing = false
-      end
-      table.remove(active_attributes, #active_attributes)
-      if self.is_writing and options.headerAttributes and #active_identifiers > 0 then
-        table.insert(buf, "\\markdownRendererHeaderAttributeContextEnd")
-      end
-      -- apply all active attributes at slice beginning
-      if active_identifiers["#" .. slice_begin_identifier] ~= nil
-          and slice_begin_type == "$" then
-        for header_level = 1, #active_attributes do
-          if options.headerAttributes and #active_attributes[header_level] > 0 then
-            table.insert(buf, "\\markdownRendererHeaderAttributeContextBegin")
-          end
-        end
-        self.is_writing = true
-      end
-    end
-
-    -- tear down all active attributes at slice end
-    if attributes["#" .. slice_end_identifier] ~= nil
-        and slice_end_type == "^" then
-      for header_level = #active_attributes, 1, -1 do
-        if options.headerAttributes and #active_attributes[header_level] > 0 then
-          table.insert(buf, "\\markdownRendererHeaderAttributeContextEnd")
-        end
-      end
-      self.is_writing = false
+    while current_heading_level >= level do
+      table.insert(buf, self.pop_attributes("heading"))
+      current_heading_level = current_heading_level - 1
     end
 
     -- push attributes for the new section
-    table.insert(active_attributes, attributes)
-    if self.is_writing and options.headerAttributes and #attributes > 0 then
-      table.insert(buf, "\\markdownRendererHeaderAttributeContextBegin")
+    local start_output = {}
+    local end_output = {}
+    table.insert(start_output, "\\markdownRendererSectionBegin\n")
+    if options.headerAttributes and attributes ~= nil and #attributes > 0 then
+      table.insert(start_output,
+                   "\\markdownRendererHeaderAttributeContextBegin\n")
+      table.insert(start_output, self.attributes(attributes))
+      table.insert(end_output,
+                   "\n\\markdownRendererHeaderAttributeContextEnd ")
     end
+    table.insert(end_output, "\n\\markdownRendererSectionEnd ")
 
-    -- apply all active attributes at slice beginning
-    if attributes["#" .. slice_begin_identifier] ~= nil
-        and slice_begin_type == "^" then
-      for header_level = 1, #active_attributes do
-        if options.headerAttributes and #active_attributes[header_level] > 0 then
-          table.insert(buf, "\\markdownRendererHeaderAttributeContextBegin")
-        end
-      end
-      self.is_writing = true
-    end
+    table.insert(buf, self.push_attributes("heading",
+                                           attributes,
+                                           start_output,
+                                           end_output))
+    current_heading_level = current_heading_level + 1
+    assert(current_heading_level == level)
 
-    if self.is_writing then
-      table.insert(buf, self.attributes(attributes))
-    end
-
+    -- produce the renderer
     local cmd
     level = level + options.shiftHeadings
     if level <= 1 then
@@ -21942,6 +22536,7 @@ parsers.plus                   = P("+")
 parsers.underscore             = P("_")
 parsers.period                 = P(".")
 parsers.hash                   = P("#")
+parsers.dollar                 = P("$")
 parsers.ampersand              = P("&")
 parsers.backtick               = P("`")
 parsers.less                   = P("<")
@@ -22529,8 +23124,11 @@ function M.reader.new(writer, options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.normalize_tag(tag)
-    return string.lower(
-      gsub(util.rope_to_string(tag), "[ \n\r\t]+", " "))
+    tag = util.rope_to_string(tag)
+    tag = tag:gsub("[ \n\r\t]+", " ")
+    tag = tag:gsub("^ ", ""):gsub(" $", "")
+    tag = uni_case.casefold(tag, true, false)
+    return tag
   end
 %    \end{macrocode}
 % \par
@@ -22831,18 +23429,18 @@ function M.reader.new(writer, options)
   parsers.Endline   = parsers.newline
                     * -V("EndlineExceptions")
                     * parsers.spacechar^0
-                    / (options.hardLineBreaks and writer.linebreak
+                    / (options.hardLineBreaks and writer.hard_line_break
                                                or writer.space)
 
   parsers.OptionalIndent
                      = parsers.spacechar^1 / writer.space
 
-  parsers.Space      = parsers.spacechar^2 * parsers.Endline / writer.linebreak
+  parsers.Space      = parsers.spacechar^2 * parsers.Endline / writer.hard_line_break
                      + parsers.spacechar^1 * parsers.Endline^-1 * parsers.eof / ""
                      + parsers.spacechar^1 * parsers.Endline
                                            * parsers.optionalspace
                                            / (options.hardLineBreaks
-                                              and writer.linebreak
+                                              and writer.hard_line_break
                                                or writer.space)
                      + parsers.spacechar^1 * parsers.optionalspace
                                            / writer.space
@@ -22851,16 +23449,16 @@ function M.reader.new(writer, options)
                     = parsers.newline
                     * -V("EndlineExceptions")
                     * parsers.spacechar^0
-                    / (options.hardLineBreaks and writer.linebreak
+                    / (options.hardLineBreaks and writer.hard_line_break
                                                or writer.nbsp)
 
   parsers.NonbreakingSpace
-                  = parsers.spacechar^2 * parsers.Endline / writer.linebreak
+                  = parsers.spacechar^2 * parsers.Endline / writer.hard_line_break
                   + parsers.spacechar^1 * parsers.Endline^-1 * parsers.eof / ""
                   + parsers.spacechar^1 * parsers.Endline
                                         * parsers.optionalspace
                                         / (options.hardLineBreaks
-                                           and writer.linebreak
+                                           and writer.hard_line_break
                                             or writer.nbsp)
                   + parsers.spacechar^1 * parsers.optionalspace
                                         / writer.nbsp
@@ -22990,12 +23588,10 @@ function M.reader.new(writer, options)
 
   parsers.Paragraph    = parsers.nonindentspace * Ct(parsers.Inline^1)
                        * ( parsers.newline
-                       * ( parsers.blankline^1
-                         + #parsers.hash
-                         + #(parsers.leader * parsers.more * parsers.space^-1)
-                         + parsers.eof
+                         * ( parsers.blankline^1
+                           + #V("EndlineExceptions")
                          )
-                       + parsers.eof )
+                         + parsers.eof)
                        / writer.paragraph
 
   parsers.Plain        = parsers.nonindentspace * Ct(parsers.Inline^1)
@@ -23685,55 +24281,9 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 M.extensions.citations = function(citation_nbsps)
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% Define table \luamdef{escaped_citation_chars} containing the characters to
-% escape in citations.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  local escaped_citation_chars = {
-    ["{"] = "\\markdownRendererLeftBrace{}",
-    ["}"] = "\\markdownRendererRightBrace{}",
-    ["%"] = "\\markdownRendererPercentSign{}",
-    ["\\"] = "\\markdownRendererBackslash{}",
-    ["#"] = "\\markdownRendererHash{}",
-  }
   return {
     name = "built-in citations syntax extension",
     extend_writer = function(self)
-      local options = self.options
-
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% Use the \luamref{escaped_citation_chars} to create the
-% \luamdef{escape_citation} escaper functions.
-%
-% \end{markdown}
-%  \begin{macrocode}
-      local escape_citation = util.escaper(
-        escaped_citation_chars,
-        self.escaped_minimal_strings)
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% Define \luamdef{writer->citation} as a function that will transform an input
-% citation name `c` to the output format. If option \Opt{hybrid} is enabled,
-% use the \luamref{writer->escape_minimal} function. Otherwise, use the
-% \luamref{escape_citation} function.
-%
-% \end{markdown}
-%  \begin{macrocode}
-      if options.hybrid then
-        self.citation = self.escape_minimal
-      else
-        self.citation = escape_citation
-      end
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -23842,7 +24392,7 @@ M.extensions.citations = function(citation_nbsps)
               cites[#cites+1] = {
                   prenote = normalize(raw_cites[i]),
                   suppress_author = raw_cites[i+1] == "-",
-                  name = writer.citation(raw_cites[i+2]),
+                  name = writer.identifier(raw_cites[i+2]),
                   postnote = normalize(raw_cites[i+3]),
               }
           end
@@ -24553,16 +25103,29 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
 % \par
 % \begin{markdown}
 %
-% Define \luamdef{writer->div} as a function that will transform an input
-% fenced div with content `c` and with attributes `attr` to the output format.
+% Define \luamdef{writer->div_begin} as a function that will transform the
+% beginning of an input fenced div with with attributes `attributes` to the
+% output format.
 %
 % \end{markdown}
 %  \begin{macrocode}
-      function self.div(c, attr)
-        return {"\\markdownRendererFencedDivAttributeContextBegin",
-                self.attributes(attr),
-                c,
-                "\\markdownRendererFencedDivAttributeContextEnd"}
+      function self.div_begin(attributes)
+        local start_output = {"\\markdownRendererFencedDivAttributeContextBegin\n",
+                              self.attributes(attributes)}
+        local end_output = {"\n\\markdownRendererFencedDivAttributeContextEnd "}
+        return self.push_attributes("div", attributes, start_output, end_output)
+      end
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define \luamdef{writer->div_end} as a function that will produce the end of a
+% fenced div in the output format.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      function self.div_end()
+        return self.pop_attributes("div")
       end
     end, extend_reader = function(self)
       local parsers = self.parsers
@@ -24615,7 +25178,16 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
                  , "div_level")
       end
 
-      local FencedDiv = fenced_div_begin * increment_div_level(1)
+      local FencedDiv = fenced_div_begin
+                      / function (infostring)
+                          local attr = lpeg.match(Ct(parsers.attributes), infostring)
+                          if attr == nil then
+                            attr = {"." .. infostring}
+                          end
+                          return attr
+                        end
+                      / writer.div_begin
+                      * increment_div_level(1)
                       * parsers.skipblanklines
                       * Ct( (V("Block") - fenced_div_end)^-1
                           * ( parsers.blanklines
@@ -24625,14 +25197,7 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
                             * (V("Block") - fenced_div_end))^0)
                       * parsers.skipblanklines
                       * fenced_div_end * increment_div_level(-1)
-                      / function (infostring, div)
-                          local attr = lpeg.match(Ct(parsers.attributes), infostring)
-                          if attr == nil then
-                            attr = {"." .. infostring}
-                          end
-                          return div, attr
-                        end
-                      / writer.div
+                      * (Cc("") / writer.div_end)
 
       self.insert_pattern("Block after Verbatim",
                           FencedDiv, "FencedDiv")
@@ -24777,7 +25342,7 @@ M.extensions.line_blocks = function()
         if not self.is_writing then return "" end
         local buffer = {}
         for i = 1, #lines - 1 do
-          buffer[#buffer + 1] = { lines[i], self.linebreak }
+          buffer[#buffer + 1] = { lines[i], self.hard_line_break }
         end
         buffer[#buffer + 1] = lines[#lines]
 
@@ -25231,6 +25796,85 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Tex Math Dollars
+%
+% The \luamdef{extensions.tex_math_dollars} function implements the Pandoc
+% tex_math_dollars syntax extension.
+%
+% \end{markdown}
+%  \begin{macrocode}
+M.extensions.tex_math_dollars = function()
+  return {
+    name = "built-in tex_math_dollars syntax extension",
+    extend_writer = function(self)
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define \luamdef{writer->display_math} as a function that will transform
+% a math span `s` of input text to the output format.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      function self.display_math(s)
+        if not self.is_writing then return "" end
+        return {"\\markdownRendererDisplayMath{",self.math(s),"}"}
+      end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Define \luamdef{writer->inline_math} as a function that will transform
+% a math span `s` of input text to the output format.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      function self.inline_math(s)
+        if not self.is_writing then return "" end
+        return {"\\markdownRendererInlineMath{",self.math(s),"}"}
+      end
+    end, extend_reader = function(self)
+      local parsers = self.parsers
+      local writer = self.writer
+
+      local function between(p, starter, ender)
+        return (starter * C(p * (p - ender)^0) * ender)
+      end
+
+      local inlinemathtail  = B( parsers.any * parsers.nonspacechar
+                               + parsers.backslash * parsers.any)
+                            * parsers.dollar 
+                            * -#(parsers.digit)
+
+      local inlinemath = between(C( parsers.backslash^-1 
+                                  * parsers.any
+                                  - parsers.blankline^2 
+                                  - parsers.dollar),
+                                 parsers.dollar * #(parsers.nonspacechar),
+                                 inlinemathtail)
+
+      local displaymathdelim  = parsers.dollar 
+                              * parsers.dollar
+
+      local displaymath = between(C( parsers.backslash^-1 
+                                   * parsers.any 
+                                   - parsers.blankline^2 
+                                   - parsers.dollar),
+                                  displaymathdelim,
+                                  displaymathdelim)
+
+      local TexMathDollars = displaymath / writer.display_math
+                           + inlinemath / writer.inline_math
+
+      self.insert_pattern("Inline after Emph",
+                          TexMathDollars, "TexMathDollars")
+
+      self.add_special_character("$")
+    end
+  }
+end
+%    \end{macrocode}
+% \begin{markdown}
+%
 %#### YAML Metadata
 %
 % The \luamdef{extensions.jekyll_data} function implements the Pandoc
@@ -25274,13 +25918,13 @@ M.extensions.jekyll_data = function(expect_jekyll_data)
 
         if #d > 0 then
             table.insert(buf, "\\markdownRendererJekyllDataSequenceBegin{")
-            table.insert(buf, self.uri(p or "null"))
+            table.insert(buf, self.identifier(p or "null"))
             table.insert(buf, "}{")
             table.insert(buf, #keys)
             table.insert(buf, "}")
         else
             table.insert(buf, "\\markdownRendererJekyllDataMappingBegin{")
-            table.insert(buf, self.uri(p or "null"))
+            table.insert(buf, self.identifier(p or "null"))
             table.insert(buf, "}{")
             table.insert(buf, #keys)
             table.insert(buf, "}")
@@ -25296,7 +25940,7 @@ M.extensions.jekyll_data = function(expect_jekyll_data)
               self.jekyllData(v, t, k)
             )
           else
-            k = self.uri(k)
+            k = self.identifier(k)
             v = tostring(v)
             if typ == "boolean" then
               table.insert(buf, "\\markdownRendererJekyllDataBoolean{")
@@ -25459,6 +26103,11 @@ function M.new(options)
     table.insert(extensions, jekyll_data_extension)
   end
 
+  if options.lineBlocks then
+    local line_block_extension = M.extensions.line_blocks()
+    table.insert(extensions, line_block_extension)
+  end
+
   if options.pipeTables then
     local pipe_tables_extension = M.extensions.pipe_tables(
       options.tableCaptions)
@@ -25485,9 +26134,9 @@ function M.new(options)
     table.insert(extensions, superscript_extension)
   end
 
-  if options.lineBlocks then
-    local line_block_extension = M.extensions.line_blocks()
-    table.insert(extensions, line_block_extension)
+  if options.texMathDollars then
+    local tex_math_dollars_extension = M.extensions.tex_math_dollars()
+    table.insert(extensions, tex_math_dollars_extension)
   end
 
 %    \end{macrocode}
@@ -25732,7 +26381,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \def\markdownRendererInterblockSeparatorPrototype{\par}%
-\def\markdownRendererLineBreakPrototype{\hfil\break}%
+\def\markdownRendererHardLineBreakPrototype{\hfil\break}%
 \let\markdownRendererEllipsisPrototype\dots
 \def\markdownRendererNbspPrototype{~}%
 \def\markdownRendererLeftBracePrototype{\char`\{}%
@@ -25809,6 +26458,8 @@ end
 \def\markdownRendererStrikeThroughPrototype#1{#1}%
 \def\markdownRendererSuperscriptPrototype#1{#1}%
 \def\markdownRendererSubscriptPrototype#1{#1}%
+\def\markdownRendererDisplayMathPrototype#1{$$#1$$}%
+\def\markdownRendererInlineMathPrototype#1{$#1$}%
 \ExplSyntaxOn
 \cs_gset:Npn
   \markdownRendererHeaderAttributeContextBeginPrototype
@@ -25849,6 +26500,8 @@ end
       { ^^^^fffd }
   }
 \ExplSyntaxOff
+\def\markdownRendererSectionBeginPrototype{}%
+\def\markdownRendererSectionEndPrototype{}%
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -27530,7 +28183,7 @@ end
 \RequirePackage{fancyvrb}
 \RequirePackage{graphicx}
 \markdownSetup{rendererPrototypes={
-  lineBreak = {\\},
+  hardLineBreak = {\\},
   leftBrace = {\textbraceleft},
   rightBrace = {\textbraceright},
   dollarSign = {\textdollar},
@@ -27645,6 +28298,8 @@ end
   headerAttributeContextEnd = {},
   superscript = {\textsuperscript{#1}},
   subscript = {\textsubscript{#1}},
+  displayMath = {\begin{displaymath}#1\end{displaymath}},
+  inlineMath = {\begin{math}#1\end{math}},
   blockQuoteBegin = {\begin{quotation}},
   blockQuoteEnd = {\end{quotation}},
   inputVerbatim = {\VerbatimInput{#1}},
@@ -28266,7 +28921,7 @@ end
   \markdownSetup{rendererPrototypes={
     lineBlockBegin = {%
       \begingroup
-        \def\markdownRendererLineBreak{\\}%
+        \def\markdownRendererHardLineBreak{\\}%
         \begin{verse}%
     },
     lineBlockEnd = {%
@@ -28544,7 +29199,7 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\def\markdownRendererLineBreakPrototype{\blank}%
+\def\markdownRendererHardLineBreakPrototype{\blank}%
 \def\markdownRendererLeftBracePrototype{\textbraceleft}%
 \def\markdownRendererRightBracePrototype{\textbraceright}%
 \def\markdownRendererDollarSignPrototype{\textdollar}%
@@ -28617,7 +29272,7 @@ end
 \def\markdownRendererBlockQuoteEndPrototype{\stopquotation}%
 \def\markdownRendererLineBlockBeginPrototype{%
   \begingroup
-    \def\markdownRendererLineBreak{
+    \def\markdownRendererHardLineBreak{
     }%
     \startlines
 }%
@@ -28697,6 +29352,8 @@ end
 \def\markdownRendererStrikeThroughPrototype#1{\overstrikes{#1}}
 \def\markdownRendererSuperscriptPrototype#1{\high{#1}}
 \def\markdownRendererSubscriptPrototype#1{\low{#1}}
+\def\markdownRendererDisplayMathPrototype#1{\startformula#1\stopformula}%
+\def\markdownRendererInlineMathPrototype#1{$#1$}%
 %    \end{macrocode}
 % \par
 % \begin{markdown}

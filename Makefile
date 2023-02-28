@@ -50,12 +50,6 @@ GITHUB_PAGES=gh-pages
 VERSION=$(shell git describe --tags --always --long --exclude latest)
 LASTMODIFIED=$(shell git log -1 --date=format:%Y-%m-%d --format=%ad)
 
-ifeq ($(TEXLIVE_TAG),latest)
-	FROM_IMAGE=witiko/texlive
-else
-	FROM_IMAGE=texlive/texlive
-endif
-
 # This is the default pseudo-target. It typesets the manual,
 # the examples, and extracts the package files.
 all: $(MAKEABLES)
@@ -69,7 +63,6 @@ base: $(INSTALLABLES) $(LIBRARIES)
 # This pseudo-target builds a witiko/markdown Docker image.
 docker-image:
 	DOCKER_BUILDKIT=1 docker build --pull --build-arg TEXLIVE_TAG=$(TEXLIVE_TAG) \
-	                               --build-arg FROM_IMAGE=$(FROM_IMAGE) \
 	                               -t witiko/markdown:$(TEXLIVE_TAG) \
 	                               -t witiko/markdown:$(VERSION)-$(TEXLIVE_TAG) .
 
@@ -134,7 +127,7 @@ examples/example.tex: force
 	    -e 's#\\mdef{\([^}]*\)}#`\\\1`#g' \
 	    -e 's#\\mref{\([^}]*\)}#`\\\1`#g' \
 	| \
-	pandoc -f markdown -t html -N -s --toc --toc-depth=3 --css=$(word 2, $^) >$@
+	pandoc -f markdown-raw_tex -t html -N -s --toc --toc-depth=3 --css=$(word 2, $^) >$@
 
 # This pseudo-target runs all the tests in the `tests/` directory.
 test:
