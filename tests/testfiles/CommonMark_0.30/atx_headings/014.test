@@ -8,5 +8,7 @@
 # foo#
 >>>
 documentBegin
+BEGIN section
 headingOne: foo(hash)
+END section
 documentEnd

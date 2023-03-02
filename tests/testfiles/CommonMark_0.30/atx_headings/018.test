@@ -12,9 +12,19 @@
 ### ###
 >>>
 documentBegin
+BEGIN section
+BEGIN section
 headingTwo: 
 interblockSeparator
+END section
+END section
+BEGIN section
 headingOne: 
 interblockSeparator
+BEGIN section
+BEGIN section
 headingThree: 
+END section
+END section
+END section
 documentEnd

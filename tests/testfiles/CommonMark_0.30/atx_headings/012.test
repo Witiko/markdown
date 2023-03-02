@@ -8,5 +8,11 @@
 ### foo ###     
 >>>
 documentBegin
+BEGIN section
+BEGIN section
+BEGIN section
 headingThree: foo
+END section
+END section
+END section
 documentEnd
