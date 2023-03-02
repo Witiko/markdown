@@ -23698,8 +23698,7 @@ function M.reader.new(writer, options)
                           * parsers.optionalspace
                           * parsers.newline)
                         + parsers.spacechar^1 
-                        * C(parsers.linechar^0 
-                        * parsers.newline))
+                        * C(parsers.line))
                        / strip_atx_end
                        / self.parser_functions.parse_inlines)
                      * Cb("level")
