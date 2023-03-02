@@ -1,0 +1,23 @@
+\def\markdownOptionFencedCode{true}
+<<<
+This test ensures that the Lua `fencedCode` option correctly propagates through
+the plain TeX interface and that the `fencedCodeAttributes` option is disabled
+by default.
+
+The following fenced code block attributes should be recognized as a part of
+the infostring.
+
+~~~~ foo {#mycode .haskell .numberLines startFrom="100"}
+bar
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>>
+documentBegin
+codeSpan: fencedCode
+codeSpan: fencedCodeAttributes
+interblockSeparator
+interblockSeparator
+BEGIN fencedCode
+- src: ./_markdown_test/37b51d194a7513e45b56f6524f2d51f2.verbatim
+- infostring: foo (leftBrace)(hash)mycode .haskell .numberLines startFrom="100"(rightBrace)
+END fencedCode
+documentEnd

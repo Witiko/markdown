@@ -21,19 +21,35 @@ A level two heading
 documentBegin
 codeSpan: shiftHeadings
 interblockSeparator
+BEGIN section
 headingOne: A level one heading
 interblockSeparator
+END section
+BEGIN section
 headingOne: A level one heading
 interblockSeparator
+BEGIN section
 headingOne: A level two heading
 interblockSeparator
+END section
+BEGIN section
 headingOne: A level two heading
 interblockSeparator
+BEGIN section
 headingOne: A level three heading
 interblockSeparator
+BEGIN section
 headingTwo: A level four heading
 interblockSeparator
+BEGIN section
 headingThree: A level five heading
 interblockSeparator
+BEGIN section
 headingFour: A level six heading
+END section
+END section
+END section
+END section
+END section
+END section
 documentEnd

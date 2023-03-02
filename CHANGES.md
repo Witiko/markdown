@@ -1,16 +1,111 @@
 # Changes
 
-## 2.19.0
+## 2.21.0 (2022-02-28)
 
-Refactoring:
+Development:
 
-- Sort Lua options, token renderers, and built-in syntax extensions. (#208)
+- Add renderers that represent the sections implied by headings.
+  (#258, #264)
+- Add support for slicing fenced divs. (#229, #266)
+- Add support for TeX math surrounded by dollar signs.
+  (contributed by @lostenderman, #61, #216, #267)
+
+Fixes:
+
+- Use MathML to render math in the user manual. (#261, #262)
+- Properly normalize link references according to
+  [CommonMark](https://spec.commonmark.org/0.30/#matches).
+  (lostenderman#56, #265)
+- Fail gracefully when CLI receives unknown options. (eddcb18)
+
+Documentation:
+
+- Rename `writer->encode_*()` methods to clarify their purpose.
+  (lostenderman#101, #271, #272)
+
+Deprecation:
+
+- Deprecate the current semantics of header attribute contexts.
+  (#258, #264)
+- Deprecate `hardLineBreaks` option. (#227, #263)
+
+## 2.20.0 (2022-02-01)
+
+Development:
+
+- Add support for line blocks.
+  (contributed by @Omikhleia and @lostenderman, jgm#41, #209, #248)
+- Add support for attributes on fenced code blocks.
+  (contributed by @Omikhleia, jgm#36, #123, #211)
+
+Documentation:
+
+- Add @drehak's thesis to `README.md`. (204a18c, aec9b44, cda53fb)
+- Update examples for options `bracketedSpans` and `fencedDivs`.
+  (499c65a, 532cdb8)
+
+Fixes:
+
+- Map U+0000 and U+FFFD to new replacement character renderer.
+  (lostenderman#34, #247, #250)
+- Map non-breaking space to `writer->nbsp` in strings.
+  (lostenderman#99, #247, #249)
+- Fix input normalization and move it from Lua CLI and plain TeX
+  layers directly to the `convert()` Lua method. (#246, #253)
+- Allow fenced div closing tag to break out of a blockquote.
+  (contributed by @Omikhleia, jgm#60, jgm#61, #230, #259)
+
+Default Renderer Prototypes:
+
+- Use `paralist` LaTeX package to define default renderer prototypes for
+  fancy lists when `fancyList` Lua option is enabled. (#241)
+- Insert `\unskip` after default raw inline renderer prototype. (ca2047e)
+- Make `\*group_begin:` and `\*group_end:` the default renderer prototypes
+  for attribute contexts. (#243)
+- In LaTeX and ConTeXt, use just first word of infostring to determine fence
+  code block language. (#244)
+
+Unit Tests:
+
+- Do not fold tabs and spaces into a single space token.
+  (lostenderman#107, #242)
+- Do not escape URIs in test outputs. (lostenderman#8, #260, 291e388)
+
+Speed Improvements:
+
+- Only make backticks special when `codeSpans` or `fencedCode` are enabled.
+  (#239)
+- Use fast unit testing in continuous integration. (#231, #255)
+
+Continuous Integration:
+
+- Fix ownership of repository before running Docker image. (#240)
+
+## 2.19.0 (2022-12-23)
+
+Development:
+
+- Add support for fenced divs and bracketed spans. (#126, #207)
 
 Fixes:
 
 - Fix incorrect category codes in plain TeX renderer prototype definitions.
   (f156f05)
 - Allow backticks in tilde code block infostrings. (#214, #219, #221)
+
+Refactoring:
+
+- Sort Lua options, token renderers, and built-in syntax extensions. (#208)
+
+Documentation:
+
+- Add article [*High-Level Languages for
+  TeX*](https://www.doi.org/10.5300/2022-1-4/35) (in Czech) from
+  CSTUG Bulletin 1–4/2022 to `README.md`. (authored by @witiko, a2bbdea)
+
+Continuous Integration:
+
+- Make latexmk treat warnings as errors. (#228)
 
 ## 2.18.0 (2022-10-30)
 
