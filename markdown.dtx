@@ -23693,12 +23693,10 @@ function M.reader.new(writer, options)
   -- parse atx header
   parsers.AtxHeading = parsers.nonindentspace
                      * Cg(parsers.heading_start, "level")
-                     * (( parsers.optionalspace
-                        * parsers.newline
-                        + C(parsers.spacechar^1
-                        * parsers.hash^1 
-                        * parsers.optionalspace
-                        * parsers.newline)
+                     * ((C( parsers.optionalspace
+                          * parsers.hash^0 
+                          * parsers.optionalspace
+                          * parsers.newline)
                         + parsers.spacechar^1 
                         * C(parsers.linechar^0 
                         * parsers.newline))
