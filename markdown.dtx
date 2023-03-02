@@ -21588,6 +21588,14 @@ parsers.html_incomplete_blocks  = parsers.html_incomplete_open_tag
                                 + parsers.html_incomplete_open_special_tag
                                 + parsers.html_incomplete_close_tag
 
+-- end conditions
+parsers.html_blankline_end_condition  = parsers.linechar^0 
+                                      * (parsers.newline * parsers.linechar^1)^0
+
+parsers.html_empty_end_condition  = parsers.linechar^0 
+                                  * (( parsers.optionalspace * parsers.newline)^0 
+                                     * parsers.linechar^1)^0
+
 -- parse special html blocks
 parsers.html_blankline_ending_special_block_opening = (parsers.html_close_special_tag 
                                                     + parsers.html_empty_special_tag)
@@ -21595,25 +21603,16 @@ parsers.html_blankline_ending_special_block_opening = (parsers.html_close_specia
                                                       * (parsers.newline + parsers.eof))
 
 parsers.html_blankline_ending_special_block = parsers.html_blankline_ending_special_block_opening
-                                            * (( parsers.any - parsers.html_blankline)^0 
-                                               * #parsers.html_blankline
-                                               + (parsers.line * #parsers.any)^0
-                                               * (parsers.any - parsers.newline)^0
-                                               * (#parsers.newline + #parsers.eof))
+                                            * parsers.html_blankline_end_condition
 
 parsers.html_special_block_opening  = parsers.html_incomplete_open_special_tag 
                                     - parsers.html_empty_special_tag
 
-parsers.html_special_end  = parsers.newline 
-                          * parsers.newline 
-                          * parsers.eof
-
 parsers.html_closing_special_block  = parsers.html_special_block_opening
                                     * (( parsers.any - parsers.html_close_special_tag)^0 
                                        * parsers.html_close_special_tag 
-                                       * (parsers.any - parsers.newline)^0
-                                       + (parsers.any - parsers.html_special_end)^0 
-                                       * #parsers.html_special_end)
+                                       * parsers.linechar^0
+                                       + parsers.html_empty_end_condition)
 
 parsers.html_special_block  = parsers.html_blankline_ending_special_block 
                             + parsers.html_closing_special_block
@@ -21625,10 +21624,7 @@ parsers.html_block_opening  = (parsers.html_incomplete_open_tag
                             - parsers.html_incomplete_close_special_tag)
 
 parsers.html_block  = parsers.html_block_opening
-                    * (( parsers.any - parsers.html_blankline)^0 * #parsers.html_blankline
-                       + (parsers.line * #parsers.any)^0
-                       * (parsers.any - parsers.newline)^0
-                       * (#parsers.newline + #parsers.eof))
+                    * parsers.html_blankline_end_condition
 
 -- parse any html blocks
 parsers.html_any_block_opening  = (parsers.html_any_open_tag 
@@ -21637,11 +21633,7 @@ parsers.html_any_block_opening  = (parsers.html_any_open_tag
                                 * #(parsers.optionalspace * (parsers.newline + parsers.eof))
 
 parsers.html_any_block  = parsers.html_any_block_opening
-                        * (( parsers.any - parsers.html_blankline)^0 
-                           * #parsers.html_blankline
-                           + (parsers.line * #parsers.any)^0
-                           * (parsers.any - parsers.newline)^0
-                           * (#parsers.newline + #parsers.eof))
+                        * parsers.html_blankline_end_condition
 
 parsers.html_interrupting = parsers.html_incomplete_open_tag
                           + parsers.html_incomplete_close_tag
