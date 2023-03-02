@@ -21707,8 +21707,8 @@ parsers.closeticks  = Cmt(C(parsers.backtick^1)
                           * Cb("ticks"), captures_equal_length)
 
 parsers.intickschar = (parsers.any - S("\n\r`"))
-                      + (parsers.newline * -parsers.blankline)
-                      + (parsers.backtick^1 - parsers.closeticks)
+                    + (parsers.newline * -parsers.blankline)
+                    + (parsers.backtick^1 - parsers.closeticks)
 
 local function process_inticks(s)
   s = s:gsub("\n"," ")
@@ -21716,12 +21716,12 @@ local function process_inticks(s)
   return s
 end
 
-parsers.inticks =   parsers.openticks
-                    * C(parsers.space^0)
-                    * parsers.closeticks
-                    + parsers.openticks
-                    * Cs(parsers.intickschar^0 / process_inticks) 
-                    * parsers.closeticks
+parsers.inticks = parsers.openticks
+                * C(parsers.space^0)
+                * parsers.closeticks
+                + parsers.openticks
+                * Cs(parsers.intickschar^0 / process_inticks)
+                * parsers.closeticks
 
 %    \end{macrocode}
 % \par
