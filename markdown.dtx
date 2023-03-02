@@ -1652,7 +1652,7 @@ local walkable_syntax = {
     "Str",
     "Space",
     "Endline",
-    "StrongOrEmph",
+    "Emph",
     "Link",
     "Image",
     "Code",
@@ -4594,7 +4594,7 @@ be produced and contain the following text:
         "Str",
         "Space",
         "Endline",
-        "StrongOrEmph",
+        "Emph",
         "StrikeThrough (user-defined \"./strike-through.lua\" syntax extension)",
         "Link",
         "Image",
@@ -22318,7 +22318,7 @@ function M.reader.new(writer, options)
 % \end{markdown}
 %  \begin{macrocode}
 
-  local function collect_content(t, opening_index, closing_index)
+  local function collect_emphasis_content(t, opening_index, closing_index)
     local content = {}
     for i = opening_index, closing_index, 1 do
       local value = t[i]
@@ -22337,13 +22337,13 @@ function M.reader.new(writer, options)
   end
 
   local function fill_emph(t, opening_index, closing_index)
-    local content = collect_content(t, opening_index + 1, closing_index - 1)
+    local content = collect_emphasis_content(t, opening_index + 1, closing_index - 1)
     t[opening_index + 1]["is_active"] = true
     t[opening_index + 1]["content"] = writer.emphasis(content)
   end
 
   local function fill_strong(t, opening_index, closing_index)
-    local content = collect_content(t, opening_index + 1, closing_index - 1)
+    local content = collect_emphasis_content(t, opening_index + 1, closing_index - 1)
     t[opening_index + 1]["is_active"] = true
     t[opening_index + 1]["content"] = writer.strong(content)
   end
@@ -22357,7 +22357,10 @@ function M.reader.new(writer, options)
   local function find_opener(t, bottom_index, latest_index, delimeter, closing_delimeter)
     for i = latest_index, bottom_index, -2 do
       local value = t[i]
-      if value["is_active"] and value["is_opening"] and (value["character"] == delimeter) and (value["current_count"] > 0) then
+      if value["is_active"] and
+         value["is_opening"] and
+         (value["character"] == delimeter) and
+         (value["current_count"] > 0) then
         if not breaks_three_rule(value, closing_delimeter) then
           return i
         end
@@ -22380,24 +22383,35 @@ function M.reader.new(writer, options)
 
     local current_position = 1
     local openers_bottom = {
-      ['*'] = {
-        [true] = { 1, 1, 1 },
-        [false] = { 1, 1, 1 }
+      ['*'] = { -- character
+        [true] = { -- is opening
+          1, 1, 1 -- lengths
+        },
+        [false] = {
+          1, 1, 1
+        }
       },
       ['_'] = {
-        [true] = { 1, 1, 1 },
-        [false] = { 1, 1, 1 }
+        [true] = {
+          1, 1, 1
+        },
+        [false] = {
+          1, 1, 1
+        }
       }
     }
 
     while current_position <= #t do
       local value = t[current_position]
-
+      local character = value["character"]
+      local is_opening = value["is_opening"]
+      local is_closing = value["is_closing"]
       local closing_length_modulo_three = value["original_count"] % 3
-      local current_openers_bottom = openers_bottom[value["character"]][value["is_opening"]][closing_length_modulo_three + 1]
 
-      if value["is_closing"] and (value["current_count"] > 0) then
-        local opener_position = find_opener(t, current_openers_bottom, current_position - 2, value["character"], value)
+      local current_openers_bottom = openers_bottom[character][is_opening][closing_length_modulo_three + 1]
+
+      if is_closing and (value["current_count"] > 0) then
+        local opener_position = find_opener(t, current_openers_bottom, current_position - 2, character, value)
 
         if (opener_position ~= nil) then
 
@@ -22417,7 +22431,7 @@ function M.reader.new(writer, options)
           end
 
         else
-          openers_bottom[value["character"]][value["is_opening"]][closing_length_modulo_three + 1] = current_position
+          openers_bottom[character][is_opening][closing_length_modulo_three + 1] = current_position
           current_position = current_position + 2
         end
       else
@@ -22425,70 +22439,70 @@ function M.reader.new(writer, options)
       end
     end
 
-    local final_result = collect_content(t, 1, #t)
+    local final_result = collect_emphasis_content(t, 1, #t)
     return final_result
   end
 
   parsers.unicode_whitespace = S("\t\r\f\n  ")
 
-  parsers.none_or_left_esc_whitespace = B(parsers.any) * B(parsers.escapable + parsers.unicode_whitespace)
+  parsers.unicode_punctuation = parsers.escapable
+
+  parsers.none_or_left_esc_whitespace = B(parsers.any)
+                                      * B(parsers.unicode_punctuation + parsers.unicode_whitespace)
                                       + -B(parsers.any)
 
-  parsers.none_or_no_left_esc_whitespace = B(parsers.any) * -B(parsers.escapable + parsers.unicode_whitespace)
+  parsers.none_or_no_left_esc_whitespace  = B(parsers.any)
+                                          * -B(parsers.unicode_punctuation + parsers.unicode_whitespace)
 
   parsers.delimeter_run = function(character)
-    return  (B(character) * B(parsers.backslash * character) + -B(character))
-            * character^1
-            * -#(character)
+    return  (B(parsers.backslash * character) + -B(character))
+          * character^1
+          * -#character
   end
 
   parsers.left_flanking_delimeter_run = function(character)
     return  parsers.none_or_left_esc_whitespace
-            * parsers.delimeter_run(character)
-            * #parsers.escapable
-            + parsers.delimeter_run(character)
-            * -#(parsers.unicode_whitespace + parsers.escapable)
+          * parsers.delimeter_run(character)
+          * #parsers.unicode_punctuation
+          + parsers.delimeter_run(character)
+          * -#(parsers.unicode_whitespace + parsers.unicode_punctuation)
   end
 
   parsers.right_flanking_delimeter_run = function(character)
-    return  B(parsers.escapable)
+    return  B(parsers.unicode_punctuation)
           * parsers.delimeter_run(character)
-          * #(parsers.escapable + parsers.unicode_whitespace)
+          * #(parsers.unicode_punctuation + parsers.unicode_whitespace)
           + parsers.none_or_no_left_esc_whitespace
           * parsers.delimeter_run(character)
   end
 
   parsers.emph_start = parsers.left_flanking_delimeter_run(parsers.asterisk)
                      + (-#parsers.right_flanking_delimeter_run(parsers.underscore)
-                        + (B(parsers.escapable) * #parsers.right_flanking_delimeter_run(parsers.underscore)))
+                        + (B(parsers.unicode_punctuation) 
+                          * #parsers.right_flanking_delimeter_run(parsers.underscore)))
                      * parsers.left_flanking_delimeter_run(parsers.underscore)
 
   parsers.emph_end  = parsers.right_flanking_delimeter_run(parsers.asterisk)
                     + (-#parsers.left_flanking_delimeter_run(parsers.underscore)
-                       + #(parsers.left_flanking_delimeter_run(parsers.underscore) * parsers.escapable))
+                      + #(parsers.left_flanking_delimeter_run(parsers.underscore) 
+                         * parsers.unicode_punctuation))
                     * parsers.right_flanking_delimeter_run(parsers.underscore)
 
-  parsers.emph_capturing_open_and_close = #parsers.emph_start * #parsers.emph_end 
-                                        * Ct(
-                                              Cg(Cc("delimeter_run"), "type")
+  parsers.emph_capturing_open_and_close = #parsers.emph_start * #parsers.emph_end
+                                        * Ct( Cg(Cc("delimeter_run"), "type")
                                             * Cg(C(parsers.emph_start), "content")
                                             * Cg(Cc(true), "is_opening")
-                                            * Cg(Cc(true), "is_closing")
-                                            )
+                                            * Cg(Cc(true), "is_closing"))
 
-  parsers.emph_capturing_open = Ct(
-                                  Cg(Cc("delimeter_run"), "type")
-                                * Cg(C(parsers.emph_start), "content")
-                                * Cg(Cc(true), "is_opening")
-                                * Cg(Cc(false), "is_closing")
-                                )
+  parsers.emph_capturing_open = Ct( Cg(Cc("delimeter_run"), "type")
+                                  * Cg(C(parsers.emph_start), "content")
+                                  * Cg(Cc(true), "is_opening")
+                                  * Cg(Cc(false), "is_closing"))
 
-  parsers.emph_capturing_close = Ct(
-                                    Cg(Cc("delimeter_run"), "type")
-                                  * Cg(C(parsers.emph_end), "content")
-                                  * Cg(Cc(false), "is_opening")
-                                  * Cg(Cc(true), "is_closing")
-                                  )
+  parsers.emph_capturing_close = Ct( Cg(Cc("delimeter_run"), "type")
+                                   * Cg(C(parsers.emph_end), "content")
+                                   * Cg(Cc(false), "is_opening")
+                                   * Cg(Cc(true), "is_closing"))
 
   parsers.emph_open_or_close  = parsers.emph_capturing_open_and_close
                               + parsers.emph_capturing_open
@@ -22500,8 +22514,7 @@ function M.reader.new(writer, options)
   parsers.emph_close  = parsers.emph_capturing_open_and_close
                       + parsers.emph_capturing_close
 
-  parsers.emph_content = Ct(
-                            Cg(Cc("content"), "type") 
+  parsers.emph_content  = Ct( Cg(Cc("content"), "type")
                             * Cg(Ct((parsers.Inline - parsers.emph_open_or_close)^0), "content"))
 
 %    \end{macrocode}
@@ -22654,10 +22667,9 @@ function M.reader.new(writer, options)
                   + parsers.spacechar^1 * parsers.optionalspace
                                         / writer.nbsp
 
-  parsers.StrongOrEmph  = Ct(
-                            parsers.emph_open
-                            * (parsers.emph_content * parsers.emph_open_or_close)^1
-                            ) / process_emphasis
+  parsers.Emph  = Ct( parsers.emph_open
+                    * (parsers.emph_content * parsers.emph_open_or_close)^1
+                    ) / process_emphasis
 
   parsers.AutoLinkUrl    = parsers.less
                          * C(parsers.alphanumeric^1 * P("://") * parsers.urlchar^1)
@@ -23003,7 +23015,7 @@ function M.reader.new(writer, options)
         Space                 = parsers.Space,
         OptionalIndent        = parsers.OptionalIndent,
         Endline               = parsers.Endline,
-        StrongOrEmph          = parsers.StrongOrEmph,
+        Emph                  = parsers.Emph,
         Link                  = parsers.Link,
         Image                 = parsers.Image,
         Code                  = parsers.Code,
