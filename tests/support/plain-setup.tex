@@ -7,14 +7,18 @@
   \TYPE{- key:                 #1}%
   \TYPE{- value:               #2}%
   \TYPE{END attributeKeyValue}}%
+\def\markdownRendererFencedCodeAttributeContextBegin{%
+  \TYPE{BEGIN fencedCodeAttributeContext}}%
+\def\markdownRendererFencedCodeAttributeContextEnd{%
+  \TYPE{END fencedCodeAttributeContext}}%
 \def\markdownRendererFencedDivAttributeContextBegin{%
-  \TYPE{fencedDivAttributeContextBegin}}%
+  \TYPE{BEGIN fencedDivAttributeContext}}%
 \def\markdownRendererFencedDivAttributeContextEnd{%
-  \TYPE{fencedDivAttributeContextEnd}}%
+  \TYPE{END fencedDivAttributeContext}}%
 \def\markdownRendererBracketedSpanAttributeContextBegin{%
-  \TYPE{bracketedSpanAttributeContextBegin}}%
+  \TYPE{BEGIN bracketedSpanAttributeContext}}%
 \def\markdownRendererBracketedSpanAttributeContextEnd{%
-  \TYPE{bracketedSpanAttributeContextEnd}}%
+  \TYPE{END bracketedSpanAttributeContext}}%
 \def\markdownRendererDocumentBegin{%
   \begingroup
   \catcode"09=12%  Prevent spaces (U+0009) from folding into a single space token
@@ -25,14 +29,18 @@
   \endgroup}%
 \def\markdownRendererInterblockSeparator#1{%
   \TYPE{interblockSeparator}}%
-\def\markdownRendererLineBreak#1{%
-  \TYPE{lineBreak}}%
+\def\markdownRendererHardLineBreak#1{%
+  \TYPE{hardLineBreak}}%
 \def\markdownRendererEllipsis#1{%
   \TYPE{ellipsis}}%
+\def\markdownRendererSectionBegin{%
+  \TYPE{BEGIN section}}%
+\def\markdownRendererSectionEnd{%
+  \TYPE{END section}}%
 \def\markdownRendererHeaderAttributeContextBegin{%
-  \TYPE{headerAttributeContextBegin}}%
+  \TYPE{BEGIN headerAttributeContext}}%
 \def\markdownRendererHeaderAttributeContextEnd{%
-  \TYPE{headerAttributeContextEnd}}%
+  \TYPE{END headerAttributeContext}}%
 \def\markdownRendererNbsp#1{%
   \TYPE{nbsp}}%
 \def\markdownRendererLeftBrace#1{%
@@ -62,32 +70,32 @@
 \def\markdownRendererLink#1#2#3#4{%
   \TYPE{BEGIN link}%
   \TYPE{- label:               #1}%
-  \TYPE{- URI:                 #2}%
+  \TYPE{- URI:                 #3}%
   \TYPE{- title:               #4}%
   \TYPE{END link}}%
 \def\markdownRendererImage#1#2#3#4{%
   \TYPE{BEGIN image}%
   \TYPE{- label:               #1}%
-  \TYPE{- URI:                 #2}%
+  \TYPE{- URI:                 #3}%
   \TYPE{- title:               #4}%
   \TYPE{END image}}%
 \def\markdownRendererContentBlock#1#2#3#4{%
   \TYPE{BEGIN contentBlock}%
   \TYPE{- suffix:              #1}%
-  \TYPE{- URI:                 #2}%
+  \TYPE{- URI:                 #3}%
   \TYPE{- title:               #4}%
   \TYPE{END contentBlock}}%
 \def\markdownRendererContentBlockOnlineImage#1#2#3#4{%
   \TYPE{BEGIN contentBlockOnlineImage}%
   \TYPE{- suffix:              #1}%
-  \TYPE{- URI:                 #2}%
+  \TYPE{- URI:                 #3}%
   \TYPE{- title:               #4}%
   \TYPE{END contentBlockOnlineImage}}%
 \def\markdownRendererContentBlockCode#1#2#3#4#5{%
   \TYPE{BEGIN contentBlockCode}%
   \TYPE{- suffix:              #1}%
   \TYPE{- language:            #2}%
-  \TYPE{- URI:                 #3}%
+  \TYPE{- URI:                 #4}%
   \TYPE{- title:               #5}%
   \TYPE{END contentBlockCode}}%
 \def\markdownRendererUlBegin{%
@@ -160,6 +168,10 @@
   \TYPE{blockQuoteBegin}}%
 \def\markdownRendererBlockQuoteEnd{%
   \TYPE{blockQuoteEnd}}%
+\def\markdownRendererLineBlockBegin{%
+  \TYPE{lineBlockBegin}}%
+\def\markdownRendererLineBlockEnd{%
+  \TYPE{lineBlockEnd}}%
 \def\markdownRendererInputVerbatim#1{%
   \TYPE{inputVerbatim:         #1}}%
 \def\markdownRendererInputFencedCode#1#2{%
@@ -246,6 +258,10 @@
   \TYPE{superscript:           #1}}%
 \def\markdownRendererSubscript#1{%
   \TYPE{subscript:             #1}}%
+\def\markdownRendererDisplayMath#1{%
+  \TYPE{displayMath:           #1}}%
+\def\markdownRendererInlineMath#1{%
+  \TYPE{inlineMath:            #1}}%
 \def\markdownRendererInputRawInline#1#2{%
   \TYPE{BEGIN rawInline}%
   \TYPE{- src:                 #1}%
@@ -256,3 +272,5 @@
   \TYPE{- src:                 #1}%
   \TYPE{- raw attribute:       #2}%
   \TYPE{END rawBlock}}%
+\def\markdownRendererReplacementCharacter#1{%
+  \TYPE{replacementCharacter}}%

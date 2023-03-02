@@ -10,13 +10,13 @@ And the mome raths *outgrabe*.
 >>>
 documentBegin
 codeSpan: hardLineBreaks
-lineBreak
+hardLineBreak
 interblockSeparator
 emphasis: brillig
-lineBreak
+hardLineBreak
 emphasis: gyre and gimble
-lineBreak
+hardLineBreak
 emphasis: borogoves
-lineBreak
+hardLineBreak
 emphasis: outgrabe
 documentEnd

@@ -127,7 +127,7 @@ examples/example.tex: force
 	    -e 's#\\mdef{\([^}]*\)}#`\\\1`#g' \
 	    -e 's#\\mref{\([^}]*\)}#`\\\1`#g' \
 	| \
-	pandoc -f markdown -t html -N -s --toc --toc-depth=3 --css=$(word 2, $^) >$@
+	pandoc -f markdown-raw_tex -t html -N -s --toc --toc-depth=3 --css=$(word 2, $^) >$@
 
 # This pseudo-target runs all the tests in the `tests/` directory.
 test:

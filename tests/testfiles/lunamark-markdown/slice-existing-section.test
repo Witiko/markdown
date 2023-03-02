@@ -139,16 +139,22 @@ belong to the previous note.
     multi-paragraph list items.
 >>>
 documentBegin
-headerAttributeContextBegin
+BEGIN section
+BEGIN section
+BEGIN headerAttributeContext
 attributeIdentifier: first-h2
 headingTwo: This is an H2
 interblockSeparator
+BEGIN section
 headingThree: This is an H3
 interblockSeparator
+BEGIN section
 headingFour: This is an H4
 interblockSeparator
+BEGIN section
 headingFive: This is an H5
 interblockSeparator
+BEGIN section
 headingSix: This is an H6
 interblockSeparator
 ellipsis
@@ -182,5 +188,11 @@ BEGIN fencedCode
 - infostring: latex
 END fencedCode
 interblockSeparator
-headerAttributeContextEnd
+END section
+END section
+END section
+END section
+END headerAttributeContext
+END section
+END section
 documentEnd

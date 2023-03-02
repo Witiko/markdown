@@ -21,11 +21,11 @@ codeSpan: fencedDivs
 codeSpan: blankBeforeDivFence
 interblockSeparator
 interblockSeparator
-fencedDivAttributeContextBegin
+BEGIN fencedDivAttributeContext
 attributeClassName: foo
-fencedDivAttributeContextEnd
+END fencedDivAttributeContext
 interblockSeparator
-fencedDivAttributeContextBegin
+BEGIN fencedDivAttributeContext
 attributeClassName: foo
-fencedDivAttributeContextEnd
+END fencedDivAttributeContext
 documentEnd
