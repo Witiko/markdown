@@ -23044,7 +23044,7 @@ parsers.heading_start = #parsers.hash * C(parsers.hash^-6)
 parsers.heading_level = parsers.equal^1 * Cc(1) + parsers.dash^1 * Cc(2)
 
 local function strip_atx_end(s)
-  return s:gsub("[ \t]+#*[ \t]*\n$","")
+  return s:gsub("%s+#*%s*\n$","")
 end
 %    \end{macrocode}
 % \par
