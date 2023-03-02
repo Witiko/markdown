@@ -9,14 +9,18 @@
       \TYPE{- key:                 #1}%
       \TYPE{- value:               #2}%
       \TYPE{END attributeKeyValue}},
+    fencedCodeAttributeContextBegin = {%
+      \TYPE{BEGIN fencedCodeAttributeContext}},
+    fencedCodeAttributeContextEnd = {%
+      \TYPE{END fencedCodeAttributeContext}},
     fencedDivAttributeContextBegin = {%
-      \TYPE{fencedDivAttributeContextBegin}},
+      \TYPE{BEGIN fencedDivAttributeContext}},
     fencedDivAttributeContextEnd = {%
-      \TYPE{fencedDivAttributeContextEnd}},
+      \TYPE{END fencedDivAttributeContext}},
     bracketedSpanAttributeContextBegin = {%
-      \TYPE{bracketedSpanAttributeContextBegin}},
+      \TYPE{BEGIN bracketedSpanAttributeContext}},
     bracketedSpanAttributeContextEnd = {%
-      \TYPE{bracketedSpanAttributeContextEnd}},
+      \TYPE{END bracketedSpanAttributeContext}},
     documentBegin = {%
       \begingroup
       \catcode"09=12%  Prevent spaces (U+0009) from folding into a single space token
@@ -28,16 +32,20 @@
     interblockSeparator = {%
       \TYPE{interblockSeparator}%
       \GOBBLE},
-    lineBreak = {%
-      \TYPE{lineBreak}%
+    hardLineBreak = {%
+      \TYPE{hardLineBreak}%
       \GOBBLE},
     ellipsis = {%
       \TYPE{ellipsis}%
       \GOBBLE},
+    sectionBegin = {%
+      \TYPE{BEGIN section}},
+    sectionEnd = {%
+      \TYPE{END section}},
     headerAttributeContextBegin = {%
-      \TYPE{headerAttributeContextBegin}},
+      \TYPE{BEGIN headerAttributeContext}},
     headerAttributeContextEnd = {%
-      \TYPE{headerAttributeContextEnd}},
+      \TYPE{END headerAttributeContext}},
     nbsp = {%
       \TYPE{nbsp}%
       \GOBBLE},
@@ -79,32 +87,32 @@
     link = {%
       \TYPE{BEGIN link}%
       \TYPE{- label:               #1}%
-      \TYPE{- URI:                 #2}%
+      \TYPE{- URI:                 #3}%
       \TYPE{- title:               #4}%
       \TYPE{END link}},
     image = {%
       \TYPE{BEGIN image}%
       \TYPE{- label:               #1}%
-      \TYPE{- URI:                 #2}%
+      \TYPE{- URI:                 #3}%
       \TYPE{- title:               #4}%
       \TYPE{END image}},
     contentBlock = {%
       \TYPE{BEGIN contentBlock}%
       \TYPE{- suffix:              #1}%
-      \TYPE{- URI:                 #2}%
+      \TYPE{- URI:                 #3}%
       \TYPE{- title:               #4}%
       \TYPE{END contentBlock}},
     contentBlockOnlineImage = {%
       \TYPE{BEGIN contentBlockOnlineImage}%
       \TYPE{- suffix:              #1}%
-      \TYPE{- URI:                 #2}%
+      \TYPE{- URI:                 #3}%
       \TYPE{- title:               #4}%
       \TYPE{END contentBlockOnlineImage}},
     contentBlockCode = {%
       \TYPE{BEGIN contentBlockCode}%
       \TYPE{- suffix:              #1}%
       \TYPE{- language:            #2}%
-      \TYPE{- URI:                 #3}%
+      \TYPE{- URI:                 #4}%
       \TYPE{- title:               #5}%
       \TYPE{END contentBlockCode}},
     ulBegin = {%
@@ -177,6 +185,10 @@
       \TYPE{blockQuoteBegin}},
     blockQuoteEnd = {%
       \TYPE{blockQuoteEnd}},
+    lineBlockBegin = {%
+      \TYPE{lineBlockBegin}},
+    lineBlockEnd = {%
+      \TYPE{lineBlockEnd}},
     inputVerbatim = {%
       \TYPE{inputVerbatim:         #1}},
     inputFencedCode = {%
@@ -266,6 +278,10 @@
       \TYPE{superscript:           #1}},
     subscript = {%
       \TYPE{subscript:             #1}},
+    displayMath = {%
+      \TYPE{displayMath:           #1}},
+    inlineMath = {%
+      \TYPE{inlineMath:            #1}},
     inputRawInline = {%
       \TYPE{BEGIN rawInline}%
       \TYPE{- src:                 #1}%

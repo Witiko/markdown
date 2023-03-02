@@ -10,7 +10,7 @@ codeSpan: relativeReferences
 interblockSeparator
 BEGIN link
 - label: (hash)relative-reference
-- URI: (hash)relative-reference
+- URI: #relative-reference
 - title: 
 END link
 BEGIN link
