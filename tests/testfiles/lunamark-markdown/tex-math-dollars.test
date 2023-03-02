@@ -1,0 +1,154 @@
+\def\markdownOptionTexMathDollars{true}
+\let\hat=\relax
+\let\left=\relax
+\let\xi=\relax
+\let\right=\relax
+\let\int=\relax
+\let\infty=\relax
+\let\pi=\relax
+\let\$=\relax
+<<<
+This test ensures that the Lua `texMathDollars` option correctly propagates
+through the plain TeX interface.
+
+$E=mc^2$
+
+$$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
+
+to produce inline and display math both beginning and ending dollar signs must be present
+
+$2.56
+
+$$2.56
+
+no spaces are allowed at the beginning or end of the inline math
+
+$ \infty $
+
+unless they are escaped
+
+$\ $
+
+this is not inline math, because the closing dollar sign is followed by a digit
+
+$a$0
+
+both inline and display math may span multiple lines, but cannot contain a blank line
+
+$a
+b
+c$
+
+$$a
+b
+c$$
+
+$a
+
+c$
+
+$$a
+
+c$$
+
+neither inline nor display math may be empty
+
+$$
+
+$$$$
+
+note that this is a display math
+
+$$
+$$
+
+no unescaped dollar signs are allowed 
+
+$.$.$
+
+$$.$.$$
+
+escaped dollar signs are allowed
+
+$\$$
+
+note that this is an escaped dollar sign in a display math
+
+$$\$$$
+
+while this is a dollar sign followed by inline math with an escaped dollar sign, not a display math
+
+$$\$$
+
+>>>
+documentBegin
+codeSpan: texMathDollars
+interblockSeparator
+inlineMath: E=mc^2
+interblockSeparator
+displayMath: \hat {f} \left  ( \xi   \right  )= \int _{-\infty }^{\infty } f\left  ( x  \right  ) e^{-i2\pi  \xi  x} dx
+interblockSeparator
+interblockSeparator
+dollarSign
+interblockSeparator
+dollarSign
+dollarSign
+interblockSeparator
+interblockSeparator
+dollarSign
+backslash
+dollarSign
+interblockSeparator
+interblockSeparator
+inlineMath: \ 
+interblockSeparator
+interblockSeparator
+dollarSign
+dollarSign
+interblockSeparator
+interblockSeparator
+inlineMath: a b c
+interblockSeparator
+displayMath: a b c
+interblockSeparator
+dollarSign
+interblockSeparator
+dollarSign
+interblockSeparator
+dollarSign
+dollarSign
+interblockSeparator
+dollarSign
+dollarSign
+interblockSeparator
+interblockSeparator
+dollarSign
+dollarSign
+interblockSeparator
+dollarSign
+dollarSign
+dollarSign
+dollarSign
+interblockSeparator
+interblockSeparator
+displayMath:  
+interblockSeparator
+interblockSeparator
+inlineMath: .
+dollarSign
+interblockSeparator
+dollarSign
+inlineMath: .
+dollarSign
+dollarSign
+interblockSeparator
+interblockSeparator
+inlineMath: \$
+interblockSeparator
+interblockSeparator
+displayMath: \$
+interblockSeparator
+interblockSeparator
+dollarSign
+inlineMath: \$
+documentEnd

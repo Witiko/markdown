@@ -29,10 +29,14 @@
   \endgroup}%
 \def\markdownRendererInterblockSeparator#1{%
   \TYPE{interblockSeparator}}%
-\def\markdownRendererLineBreak#1{%
-  \TYPE{lineBreak}}%
+\def\markdownRendererHardLineBreak#1{%
+  \TYPE{hardLineBreak}}%
 \def\markdownRendererEllipsis#1{%
   \TYPE{ellipsis}}%
+\def\markdownRendererSectionBegin{%
+  \TYPE{BEGIN section}}%
+\def\markdownRendererSectionEnd{%
+  \TYPE{END section}}%
 \def\markdownRendererHeaderAttributeContextBegin{%
   \TYPE{BEGIN headerAttributeContext}}%
 \def\markdownRendererHeaderAttributeContextEnd{%
@@ -254,6 +258,10 @@
   \TYPE{superscript:           #1}}%
 \def\markdownRendererSubscript#1{%
   \TYPE{subscript:             #1}}%
+\def\markdownRendererDisplayMath#1{%
+  \TYPE{displayMath:           #1}}%
+\def\markdownRendererInlineMath#1{%
+  \TYPE{inlineMath:            #1}}%
 \def\markdownRendererInputRawInline#1#2{%
   \TYPE{BEGIN rawInline}%
   \TYPE{- src:                 #1}%
