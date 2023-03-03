@@ -22443,16 +22443,64 @@ function M.reader.new(writer, options)
     return final_result
   end
 
-  parsers.unicode_whitespace = S("\t\r\f\n  ")
+  local cont = lpeg.R("\128\191") -- continuation byte
 
-  parsers.unicode_punctuation = parsers.escapable
+  local function utf8_by_byte_count(n)
+    if (n == 1) then
+      return lpeg.R("\0\127")
+    end
+    if (n == 2) then
+      return lpeg.R("\194\223") * cont
+    end
+    if (n == 3) then
+      return lpeg.R("\224\239") * cont * cont
+    end
+    if (n == 4) then
+      return lpeg.R("\240\244") * cont * cont * cont
+    end
+  end
 
-  parsers.none_or_left_esc_whitespace = B(parsers.any)
-                                      * B(parsers.unicode_punctuation + parsers.unicode_whitespace)
-                                      + -B(parsers.any)
+  local function check_unicode_type(s, i, start_pos, end_pos, chartype)
+    local c = nil
+    local char_length = 0
+    for pos = start_pos, end_pos, 1 do
+      if (start_pos < 0) then
+        char_length = -pos
+      else
+        char_length = pos + 1
+      end
+      c = lpeg.match({ C(utf8_by_byte_count(char_length)) },s,i+pos)
+      if (c ~= nil) and (unicode.utf8.match(c, chartype)) then
+        return i
+      end
+    end
+  end
 
-  parsers.none_or_no_left_esc_whitespace  = B(parsers.any)
-                                          * -B(parsers.unicode_punctuation + parsers.unicode_whitespace)
+  local function check_preceding_unicode_punctuation(s,i)
+    return check_unicode_type(s, i, -4, -1, "%p")
+  end
+
+  local function check_preceding_unicode_whitespace(s,i)
+    return check_unicode_type(s, i, -4, -1, "%s")
+  end
+
+  local function check_following_unicode_punctuation(s,i)
+    return check_unicode_type(s, i, 0, 3, "%p")
+  end
+
+  local function check_following_unicode_whitespace(s,i)
+    return check_unicode_type(s, i, 0, 3, "%s")
+  end
+
+  parsers.unicode_preceding_punctuation = B(parsers.escapable) 
+                                        + Cmt(parsers.succeed, check_preceding_unicode_punctuation)
+
+  parsers.unicode_preceding_whitespace = Cmt(parsers.succeed, check_preceding_unicode_whitespace)
+
+  parsers.unicode_following_punctuation = #parsers.escapable 
+                                        + Cmt(parsers.succeed, check_following_unicode_punctuation)
+
+  parsers.unicode_following_whitespace = Cmt(parsers.succeed, check_following_unicode_whitespace)
 
   parsers.delimeter_run = function(character)
     return  (B(parsers.backslash * character) + -B(character))
@@ -22461,31 +22509,34 @@ function M.reader.new(writer, options)
   end
 
   parsers.left_flanking_delimeter_run = function(character)
-    return  parsers.none_or_left_esc_whitespace
-          * parsers.delimeter_run(character)
-          * #parsers.unicode_punctuation
-          + parsers.delimeter_run(character)
-          * -#(parsers.unicode_whitespace + parsers.unicode_punctuation)
+    return  (B( parsers.any) 
+              * (parsers.unicode_preceding_punctuation + parsers.unicode_preceding_whitespace) 
+             + -B(parsers.any))
+            * parsers.delimeter_run(character)
+            * parsers.unicode_following_punctuation
+            + parsers.delimeter_run(character)
+            * -#(parsers.unicode_following_punctuation + parsers.unicode_following_whitespace)
   end
 
   parsers.right_flanking_delimeter_run = function(character)
-    return  B(parsers.unicode_punctuation)
+    return  parsers.unicode_preceding_punctuation
           * parsers.delimeter_run(character)
-          * #(parsers.unicode_punctuation + parsers.unicode_whitespace)
-          + parsers.none_or_no_left_esc_whitespace
+          * (parsers.unicode_following_punctuation + parsers.unicode_following_whitespace)
+          + (B(parsers.any) 
+            * -(parsers.unicode_preceding_punctuation + parsers.unicode_preceding_whitespace))
           * parsers.delimeter_run(character)
   end
 
   parsers.emph_start = parsers.left_flanking_delimeter_run(parsers.asterisk)
                      + (-#parsers.right_flanking_delimeter_run(parsers.underscore)
-                        + (B(parsers.unicode_punctuation) 
+                        + (parsers.unicode_preceding_punctuation 
                           * #parsers.right_flanking_delimeter_run(parsers.underscore)))
                      * parsers.left_flanking_delimeter_run(parsers.underscore)
 
   parsers.emph_end  = parsers.right_flanking_delimeter_run(parsers.asterisk)
                     + (-#parsers.left_flanking_delimeter_run(parsers.underscore)
                       + #(parsers.left_flanking_delimeter_run(parsers.underscore) 
-                         * parsers.unicode_punctuation))
+                         * parsers.unicode_following_punctuation))
                     * parsers.right_flanking_delimeter_run(parsers.underscore)
 
   parsers.emph_capturing_open_and_close = #parsers.emph_start * #parsers.emph_end
