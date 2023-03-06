@@ -15,13 +15,13 @@ $E=mc^2$
 
 $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
 
-to produce inline and display math both beginning and ending dollar signs must be present
+To produce inline and display math both beginning and ending dollar signs must be present
 
 $2.56
 
 $$2.56
 
-no spaces are allowed at the beginning or end of the inline math
+No spaces are allowed at the beginning or end of the inline math
 
 $ \infty $
 
@@ -29,11 +29,11 @@ unless they are escaped
 
 $\ $
 
-this is not inline math, because the closing dollar sign is followed by a digit
+This is not inline math, because the closing dollar sign is followed by a digit
 
 $a$0
 
-both inline and display math may span multiple lines, but cannot contain a blank line
+Both inline and display math may span multiple lines, but cannot contain a blank line
 
 $a
 b
@@ -57,22 +57,22 @@ $$
 
 $$$$
 
-note that this is a display math
+Note that this is a display math
 
 $$
 $$
 
-no unescaped dollar signs are allowed 
+No unescaped dollar signs are allowed 
 
 $.$.$
 
 $$.$.$$
 
-escaped dollar signs are allowed
+Escaped dollar signs are allowed
 
 $\$$
 
-note that this is an escaped dollar sign in a display math
+Note that this is an escaped dollar sign in a display math
 
 $$\$$$
 
