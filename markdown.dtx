@@ -22899,6 +22899,15 @@ parsers.title       = parsers.title_d + parsers.title_s + parsers.title_p
 parsers.optionaltitle
                     = parsers.spnl * parsers.title * parsers.spacechar^0
                     + Cc("")
+
+parsers.indirect_link
+                    = parsers.tag
+                    * ( C(parsers.spnl) * parsers.tag
+                      + Cc(nil) * Cc(nil)  -- always produce exactly two captures
+                      )
+
+parsers.indirect_image
+                    = parsers.exclamation * parsers.indirect_link
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -23366,7 +23375,7 @@ function M.reader.new(writer, options)
 
   -- lookup link reference and return either
   -- the link or nil and fallback text.
-  local function lookup_reference(label,sps,tag)
+  function self.lookup_reference(label,sps,tag)
       local tagpart
       if not tag then
           tag = label
@@ -23394,9 +23403,9 @@ function M.reader.new(writer, options)
 
   -- lookup link reference and return a link, if the reference is found,
   -- or a bracketed label otherwise.
-  local function indirect_link(label,sps,tag)
+  local function indirect_link(label, sps, tag)
     return writer.defer_call(function()
-      local r,fallback = lookup_reference(label,sps,tag)
+      local r,fallback = self.lookup_reference(label, sps, tag)
       if r then
         return writer.link(
           self.parser_functions.parse_inlines_no_link(label),
@@ -23409,9 +23418,9 @@ function M.reader.new(writer, options)
 
   -- lookup image reference and return an image, if the reference is found,
   -- or a bracketed label otherwise.
-  local function indirect_image(label,sps,tag)
+  local function indirect_image(label, sps, tag)
     return writer.defer_call(function()
-      local r,fallback = lookup_reference(label,sps,tag)
+      local r,fallback = self.lookup_reference(label, sps, tag)
       if r then
         return writer.image(writer.string(label), r.url, r.title)
       else
@@ -23419,6 +23428,19 @@ function M.reader.new(writer, options)
       end
     end)
   end
+
+  parsers.direct_link_tail = parsers.spnl
+                           * parsers.lparent
+                           * (parsers.url + Cc(""))  -- link can be empty [foo]()
+                           * parsers.optionaltitle
+                           * parsers.rparent
+
+  parsers.direct_link = (parsers.tag / self.parser_functions.parse_inlines_no_link)
+                      * parsers.direct_link_tail
+
+  parsers.direct_image = parsers.exclamation
+                       * (parsers.tag / self.parser_functions.parse_inlines)
+                       * parsers.direct_link_tail
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -23543,31 +23565,20 @@ function M.reader.new(writer, options)
                              return writer.link(writer.escape(url), url)
                            end
 
-  parsers.DirectLink    = (parsers.tag / self.parser_functions.parse_inlines_no_link)
-                        * parsers.spnl
-                        * parsers.lparent
-                        * (parsers.url + Cc(""))  -- link can be empty [foo]()
-                        * parsers.optionaltitle
-                        * parsers.rparent
+  parsers.DirectLink    = parsers.direct_link
                         / writer.link
 
-  parsers.IndirectLink  = parsers.tag * (C(parsers.spnl) * parsers.tag)^-1
+  parsers.IndirectLink  = parsers.indirect_link
                         / indirect_link
 
   -- parse a link or image (direct or indirect)
   parsers.Link          = parsers.DirectLink + parsers.IndirectLink
 
-  parsers.DirectImage   = parsers.exclamation
-                        * (parsers.tag / self.parser_functions.parse_inlines)
-                        * parsers.spnl
-                        * parsers.lparent
-                        * (parsers.url + Cc(""))  -- link can be empty [foo]()
-                        * parsers.optionaltitle
-                        * parsers.rparent
+  parsers.DirectImage   = parsers.direct_image
                         / writer.image
 
-  parsers.IndirectImage = parsers.exclamation * parsers.tag
-                        * (C(parsers.spnl) * parsers.tag)^-1 / indirect_image
+  parsers.IndirectImage = parsers.indirect_image
+                        / indirect_image
 
   parsers.Image         = parsers.DirectImage + parsers.IndirectImage
 
@@ -25447,7 +25458,84 @@ M.extensions.link_attributes = function()
   return {
     name = "built-in link_attributes syntax extension",
     extend_writer = function()
-    end, extend_reader = function()
+    end, extend_reader = function(self)
+      local parsers = self.parsers
+      local writer = self.writer
+
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The following patterns define direct and indirect links with attributes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+
+      local function indirect_link(label, sps, tag,
+                                   attribute_text,
+                                   attributes)
+        return writer.defer_call(function()
+          local r, fallback = self.lookup_reference(label, sps, tag)
+          if r then
+            return writer.link(
+              self.parser_functions.parse_inlines_no_link(label),
+              r.url, r.title, attributes)
+          else
+            return {fallback, writer.string(attribute_text)}
+          end
+        end)
+      end
+
+      local DirectLinkWithAttributes = parsers.direct_link
+                                     * Ct(parsers.attributes)
+                                     / writer.link
+
+      local IndirectLinkWithAttributes = parsers.indirect_link
+                                       * C(Ct(parsers.attributes))
+                                       / indirect_link
+
+      local LinkWithAttributes = DirectLinkWithAttributes
+                               + IndirectLinkWithAttributes
+
+      self.insert_pattern("Inline before Link",
+                          LinkWithAttributes,
+                          "LinkWithAttributes")
+
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The following patterns define direct and indirect images with attributes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+
+      local function indirect_image(label, sps, tag,
+                                    attribute_text,
+                                    attributes)
+        return writer.defer_call(function()
+          local r, fallback = self.lookup_reference(label, sps, tag)
+          if r then
+            return writer.image(writer.string(label),
+                                r.url, r.title, attributes)
+          else
+            return {"!", fallback, writer.string(attribute_text)}
+          end
+        end)
+      end
+
+      local DirectImageWithAttributes = parsers.direct_image
+                                      * Ct(parsers.attributes)
+                                      / writer.image
+
+      local IndirectImageWithAttributes = parsers.indirect_image
+                                        * C(Ct(parsers.attributes))
+                                        / indirect_image
+
+      local ImageWithAttributes = DirectImageWithAttributes
+                                + IndirectImageWithAttributes
+
+      self.insert_pattern("Inline before Image",
+                          ImageWithAttributes,
+                          "ImageWithAttributes")
     end
   }
 end
@@ -26197,6 +26285,12 @@ function M.new(options)
     local inline_code_attributes_extension =
       M.extensions.inline_code_attributes()
     table.insert(extensions, inline_code_attributes_extension)
+  end
+
+  if true then  -- TODO: replace with options.linkAttributes
+    local link_attributes_extension =
+      M.extensions.link_attributes()
+    table.insert(extensions, link_attributes_extension)
   end
 
   if options.rawAttribute then
