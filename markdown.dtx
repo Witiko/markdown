@@ -21941,7 +21941,8 @@ function M.writer.new(options)
 % \begin{markdown}
 %
 % Define \luamdef{writer->code} as a function that will transform an input
-% inline code span `s` with attributes `attributes` to the output format.
+% inline code span `s` with optional attributes `attributes` to the output
+% format.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -21956,7 +21957,7 @@ function M.writer.new(options)
                  {"\\markdownRendererCodeSpan{", self.escape(s), "}"})
     if attributes ~= nil then
       table.insert(buf,
-                   "\n\\markdownRendererInlineCodeAttributeContextBegin ")
+                   "\n\\markdownRendererInlineCodeAttributeContextEnd ")
     end
     return buf
   end
@@ -21966,15 +21967,27 @@ function M.writer.new(options)
 %
 % Define \luamdef{writer->link} as a function that will transform an input
 % hyperlink to the output format, where `lab` corresponds to the label,
-% `src` to \acro{uri}, and `tit` to the title of the link.
+% `src` to \acro{uri}, `tit` to the title of the link, and `attributes` to
+% optional attributes.
 %
 % \end{markdown}
 %  \begin{macrocode}
-  function self.link(lab,src,tit)
-    return {"\\markdownRendererLink{",lab,"}",
-                          "{",self.escape(src),"}",
-                          "{",self.uri(src),"}",
-                          "{",self.string(tit or ""),"}"}
+  function self.link(lab, src, tit, attributes)
+    local buf = {}
+    if attributes ~= nil then
+      table.insert(buf,
+                   "\\markdownRendererLinkAttributeContextBegin\n")
+      table.insert(buf, self.attributes(attributes))
+    end
+    table.insert(buf, {"\\markdownRendererLink{",lab,"}",
+                       "{",self.escape(src),"}",
+                       "{",self.uri(src),"}",
+                       "{",self.string(tit or ""),"}"})
+    if attributes ~= nil then
+      table.insert(buf,
+                   "\n\\markdownRendererLinkAttributeContextEnd ")
+    end
+    return buf
   end
 %    \end{macrocode}
 % \par
@@ -21982,15 +21995,27 @@ function M.writer.new(options)
 %
 % Define \luamdef{writer->image} as a function that will transform an input
 % image to the output format, where `lab` corresponds to the label, `src`
-% to the \acro{url}, and `tit` to the title of the image.
+% to the \acro{url}, `tit` to the title of the image, and `attributes` to
+% optional attributes.
 %
 % \end{markdown}
 %  \begin{macrocode}
-  function self.image(lab,src,tit)
-    return {"\\markdownRendererImage{",lab,"}",
-                           "{",self.string(src),"}",
-                           "{",self.uri(src),"}",
-                           "{",self.string(tit or ""),"}"}
+  function self.image(lab, src, tit, attributes)
+    local buf = {}
+    if attributes ~= nil then
+      table.insert(buf,
+                   "\\markdownRendererImageAttributeContextBegin\n")
+      table.insert(buf, self.attributes(attributes))
+    end
+    table.insert(buf, {"\\markdownRendererImage{",lab,"}",
+                       "{",self.string(src),"}",
+                       "{",self.uri(src),"}",
+                       "{",self.string(tit or ""),"}"})
+    if attributes ~= nil then
+      table.insert(buf,
+                   "\n\\markdownRendererImageAttributeContextEnd ")
+    end
+    return buf
   end
 %    \end{macrocode}
 % \par
