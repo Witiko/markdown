@@ -23,7 +23,10 @@ LUACLI_OPTIONS=\
   subscripts=true \
   superscripts=true \
   tableCaptions=true \
-  taskLists=true
+  taskLists=true \
+  texMathDollars=true \
+  texMathDoubleBackslash=true \
+  texMathSingleBackslash=true
 OUTPUT=context-mkii.pdf context-mkiv.pdf latex-pdftex.pdf \
   latex-luatex.pdf latex-tex4ht.html latex-tex4ht.css
 
