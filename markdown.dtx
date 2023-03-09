@@ -21934,10 +21934,12 @@ function M.writer.new(options)
     self.identifier = escape_minimal
     self.string = escape_minimal
     self.uri = escape_minimal
+    self.infostring = escape_minimal
   else
     self.identifier = escape_programmatic_text
     self.string = escape_typographic_text
     self.uri = escape_programmatic_text
+    self.infostring = escape_programmatic_text
   end
 %    \end{macrocode}
 % \par
@@ -21949,7 +21951,7 @@ function M.writer.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.code(s)
-    return {"\\markdownRendererCodeSpan{",self.escape_typographic_text(s),"}"}
+    return {"\\markdownRendererCodeSpan{",self.escape(s),"}"}
   end
 %    \end{macrocode}
 % \par
@@ -21963,7 +21965,7 @@ function M.writer.new(options)
 %  \begin{macrocode}
   function self.link(lab,src,tit)
     return {"\\markdownRendererLink{",lab,"}",
-                          "{",self.escape_typographic_text(src),"}",
+                          "{",self.escape(src),"}",
                           "{",self.uri(src),"}",
                           "{",self.string(tit or ""),"}"}
   end
@@ -21979,7 +21981,7 @@ function M.writer.new(options)
 %  \begin{macrocode}
   function self.image(lab,src,tit)
     return {"\\markdownRendererImage{",lab,"}",
-                           "{",self.escape_typographic_text(src),"}",
+                           "{",self.string(src),"}",
                            "{",self.uri(src),"}",
                            "{",self.string(tit or ""),"}"}
   end
@@ -23489,7 +23491,7 @@ function M.reader.new(writer, options)
                          * C(parsers.alphanumeric^1 * P("://") * parsers.urlchar^1)
                          * parsers.more
                          / function(url)
-                             return writer.link(writer.escape_typographic_text(url), url)
+                             return writer.link(writer.escape(url), url)
                            end
 
   parsers.AutoLinkEmail = parsers.less
@@ -23497,7 +23499,7 @@ function M.reader.new(writer, options)
                         * P("@") * parsers.urlchar^1)
                         * parsers.more
                         / function(email)
-                            return writer.link(writer.escape_typographic_text(email),
+                            return writer.link(writer.escape(email),
                                                "mailto:"..email)
                           end
 
@@ -23506,7 +23508,7 @@ function M.reader.new(writer, options)
                          * C(parsers.urlchar^1)
                          * parsers.more
                          / function(url)
-                             return writer.link(writer.escape_typographic_text(url), url)
+                             return writer.link(writer.escape(url), url)
                            end
 
   parsers.DirectLink    = (parsers.tag / self.parser_functions.parse_inlines_no_link)
