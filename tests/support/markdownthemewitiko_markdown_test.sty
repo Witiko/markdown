@@ -33,12 +33,16 @@
     interblockSeparator = {%
       \TYPE{interblockSeparator}%
       \GOBBLE},
-    lineBreak = {%
-      \TYPE{lineBreak}%
+    hardLineBreak = {%
+      \TYPE{hardLineBreak}%
       \GOBBLE},
     ellipsis = {%
       \TYPE{ellipsis}%
       \GOBBLE},
+    sectionBegin = {%
+      \TYPE{BEGIN section}},
+    sectionEnd = {%
+      \TYPE{END section}},
     headerAttributeContextBegin = {%
       \TYPE{BEGIN headerAttributeContext}},
     headerAttributeContextEnd = {%
@@ -275,6 +279,10 @@
       \TYPE{superscript:           #1}},
     subscript = {%
       \TYPE{subscript:             #1}},
+    displayMath = {%
+      \TYPE{displayMath:           #1}},
+    inlineMath = {%
+      \TYPE{inlineMath:            #1}},
     inputRawInline = {%
       \TYPE{BEGIN rawInline}%
       \TYPE{- src:                 #1}%
