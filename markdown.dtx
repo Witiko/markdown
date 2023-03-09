@@ -22296,33 +22296,45 @@ function M.writer.new(options)
 %
 % Use the \luamref{writer->escaped_chars}, \luamref{writer->escaped_uri_chars},
 % and \luamref{writer->escaped_minimal_strings} tables to create the
-% \luamdef{writer->escape}, \luamdef{writer->escape_uri}, and
+% \luamdef{writer->escape_typographic_text},
+% \luamdef{writer->escape_programmatic_text}, and
 % \luamdef{writer->escape_minimal} escaper functions.
 %
 % \end{markdown}
 %  \begin{macrocode}
-  self.escape = util.escaper(self.escaped_chars, self.escaped_strings)
-  self.escape_uri = util.escaper(self.escaped_uri_chars, self.escaped_minimal_strings)
-  self.escape_minimal = util.escaper({}, self.escaped_minimal_strings)
+  local escape_typographic_text = util.escaper(
+    self.escaped_chars, self.escaped_strings)
+  local escape_programmatic_text = util.escaper(
+    self.escaped_uri_chars, self.escaped_minimal_strings)
+  local escape_minimal = util.escaper(
+    {}, self.escaped_minimal_strings)
 %    \end{macrocode}
 % \par
 % \begin{markdown}
 %
-% Define \luamdef{writer->string} as a function that will transform an input
-% plain text span `s` to the output format and \luamdef{writer->uri} as a
-% function that will transform an input \acro{uri} `u` to the output format.
-% If the \Opt{hybrid} option is enabled, use the
-% \luamref{writer->escape_minimal}.  Otherwise, use the
-% \luamref{writer->escape}, and \luamref{writer->escape_uri} functions.
+% Define the following semantic aliases for the escaper functions:
+%
+% - \luamdef{writer->escape} transforms a text string that should always be
+%   made printable.
+% - \luamdef{writer->string} transforms a text string that should be made
+%   printable only when the \Opt{hybrid} Lua option is disabled. When \Opt{hybrid}
+%   is enabled, the text string should be kept as-is.
+% - \luamdef{writer->math} transforms a math span.
+% - \luamdef{writer->identifier} transforms an input programmatic identifier.
+% - \luamdef{writer->uri} transforms an input \acro{uri}.
 %
 % \end{markdown}
 %  \begin{macrocode}
+  self.escape = escape_typographic_text
+  self.math = escape_minimal
   if options.hybrid then
-    self.string = self.escape_minimal
-    self.uri = self.escape_minimal
+    self.identifier = escape_minimal
+    self.string = escape_minimal
+    self.uri = escape_minimal
   else
-    self.string = self.escape
-    self.uri = self.escape_uri
+    self.identifier = escape_programmatic_text
+    self.string = escape_typographic_text
+    self.uri = escape_programmatic_text
   end
 %    \end{macrocode}
 % \par
@@ -24666,55 +24678,9 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 M.extensions.citations = function(citation_nbsps)
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% Define table \luamdef{escaped_citation_chars} containing the characters to
-% escape in citations.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  local escaped_citation_chars = {
-    ["{"] = "\\markdownRendererLeftBrace{}",
-    ["}"] = "\\markdownRendererRightBrace{}",
-    ["%"] = "\\markdownRendererPercentSign{}",
-    ["\\"] = "\\markdownRendererBackslash{}",
-    ["#"] = "\\markdownRendererHash{}",
-  }
   return {
     name = "built-in citations syntax extension",
     extend_writer = function(self)
-      local options = self.options
-
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% Use the \luamref{escaped_citation_chars} to create the
-% \luamdef{escape_citation} escaper functions.
-%
-% \end{markdown}
-%  \begin{macrocode}
-      local escape_citation = util.escaper(
-        escaped_citation_chars,
-        self.escaped_minimal_strings)
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% Define \luamdef{writer->citation} as a function that will transform an input
-% citation name `c` to the output format. If option \Opt{hybrid} is enabled,
-% use the \luamref{writer->escape_minimal} function. Otherwise, use the
-% \luamref{escape_citation} function.
-%
-% \end{markdown}
-%  \begin{macrocode}
-      if options.hybrid then
-        self.citation = self.escape_minimal
-      else
-        self.citation = escape_citation
-      end
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -24823,7 +24789,7 @@ M.extensions.citations = function(citation_nbsps)
               cites[#cites+1] = {
                   prenote = normalize(raw_cites[i]),
                   suppress_author = raw_cites[i+1] == "-",
-                  name = writer.citation(raw_cites[i+2]),
+                  name = writer.identifier(raw_cites[i+2]),
                   postnote = normalize(raw_cites[i+3]),
               }
           end
@@ -26252,7 +26218,7 @@ M.extensions.tex_math = function(tex_math_dollars,
 %  \begin{macrocode}
       function self.display_math(s)
         if not self.is_writing then return "" end
-        return {"\\markdownRendererDisplayMath{",self.escape_minimal(s),"}"}
+        return {"\\markdownRendererDisplayMath{",self.math(s),"}"}
       end
 %    \end{macrocode}
 % \begin{markdown}
@@ -26264,7 +26230,7 @@ M.extensions.tex_math = function(tex_math_dollars,
 %  \begin{macrocode}
       function self.inline_math(s)
         if not self.is_writing then return "" end
-        return {"\\markdownRendererInlineMath{",self.escape_minimal(s),"}"}
+        return {"\\markdownRendererInlineMath{",self.math(s),"}"}
       end
     end, extend_reader = function(self)
       local parsers = self.parsers
@@ -26466,13 +26432,13 @@ M.extensions.jekyll_data = function(expect_jekyll_data)
 
         if #d > 0 then
             table.insert(buf, "\\markdownRendererJekyllDataSequenceBegin{")
-            table.insert(buf, self.uri(p or "null"))
+            table.insert(buf, self.identifier(p or "null"))
             table.insert(buf, "}{")
             table.insert(buf, #keys)
             table.insert(buf, "}")
         else
             table.insert(buf, "\\markdownRendererJekyllDataMappingBegin{")
-            table.insert(buf, self.uri(p or "null"))
+            table.insert(buf, self.identifier(p or "null"))
             table.insert(buf, "}{")
             table.insert(buf, #keys)
             table.insert(buf, "}")
@@ -26488,7 +26454,7 @@ M.extensions.jekyll_data = function(expect_jekyll_data)
               self.jekyllData(v, t, k)
             )
           else
-            k = self.uri(k)
+            k = self.identifier(k)
             v = tostring(v)
             if typ == "boolean" then
               table.insert(buf, "\\markdownRendererJekyllDataBoolean{")
