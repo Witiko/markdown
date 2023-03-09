@@ -50,6 +50,8 @@ GITHUB_PAGES=gh-pages
 VERSION=$(shell git describe --tags --always --long --exclude latest)
 LASTMODIFIED=$(shell git log -1 --date=format:%Y-%m-%d --format=%ad)
 
+PANDOC_INPUT_FORMAT=markdown+tex_math_single_backslash+tex_math_double_backslash-raw_tex
+
 # This is the default pseudo-target. It typesets the manual,
 # the examples, and extracts the package files.
 all: $(MAKEABLES)
@@ -127,7 +129,7 @@ examples/example.tex: force
 	    -e 's#\\mdef{\([^}]*\)}#`\\\1`#g' \
 	    -e 's#\\mref{\([^}]*\)}#`\\\1`#g' \
 	| \
-	pandoc -f markdown+tex_math_single_backslash+tex_math_double_backslash-raw_tex -t html -N -s --toc --toc-depth=3 --css=$(word 2, $^) >$@
+	pandoc -f $(PANDOC_INPUT_FORMAT) -t html -N -s --toc --toc-depth=3 --css=$(word 2, $^) >$@
 
 # This pseudo-target runs all the tests in the `tests/` directory.
 test:
