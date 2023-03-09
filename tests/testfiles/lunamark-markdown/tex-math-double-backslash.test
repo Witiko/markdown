@@ -15,13 +15,13 @@ through the plain TeX interface.
 
 \\[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\\]
 
-Inline or display math may not be empty
+Inline or display math may not be empty:
 
 \\(\\)
 
 \\[\\]
 
-or have any blank lines
+Inline or display math may not contain any blank lines:
 
 \\(a
 
@@ -31,15 +31,15 @@ c\\)
 
 c\\]
 
-No spaces are allowed at the beginning or end of the inline math
+No spaces are allowed at the beginning or the end of inline math:
 
 \\( \infty \\)
 
-unless they are escaped
+Escaped spaces are allowed at the beginning or the end of inline math:
 
 \\(\ \\)
 
-Note that this is not inline math
+The following is not inline math:
 
 \\\(a\\\)
 >>>
