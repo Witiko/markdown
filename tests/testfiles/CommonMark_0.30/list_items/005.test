@@ -16,6 +16,7 @@
 documentBegin
 ulBeginTight
 ulItem
+emphasis: one
 ulItemEnd
 ulEndTight
 interblockSeparator
