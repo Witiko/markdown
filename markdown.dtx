@@ -23704,15 +23704,16 @@ function M.reader.new(writer, options)
                      / writer.heading
 
   function remove_enclosing_whitespaces(o)
-    local res = ""
+    local heading_content = ""
     for line in o:gmatch("([^\n]*)\n?") do
-      res = res .. (line:gsub("^%s*(.-)%s*$", "%1" .. "\n"))
+      heading_content = heading_content .. (line:gsub("^%s*(.-)%s*$", "%1" .. "\n"))
     end
-    return res
+    return heading_content
   end
 
-  parsers.heading_line = parsers.line - parsers.blankline 
-                          - parsers.thematic_break_lines
+  parsers.heading_line  = parsers.line 
+                        - parsers.blankline 
+                        - parsers.thematic_break_lines
 
   parsers.heading_text = parsers.heading_line
                        * (parsers.heading_line - parsers.heading_level)^0
