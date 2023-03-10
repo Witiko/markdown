@@ -4391,11 +4391,11 @@ defaultOptions.codeSpans = true
 %
 :    true
 
-     :   Enable the
-%        iA\,Writer content blocks syntax extension~[@sotkov17]:
-%        \iffalse
-         iA\,Writer content blocks syntax extension:
-%        \fi
+     :  Enable the
+%       iA\,Writer content blocks syntax extension~[@sotkov17]:
+%       \iffalse
+        iA\,Writer content blocks syntax extension:
+%       \fi
 
         ``` md
         http://example.com/minard.jpg (Napoleon's
@@ -4408,8 +4408,8 @@ defaultOptions.codeSpans = true
 
 :    false
 
-     :   Disable the
-         iA\,Writer content blocks syntax extension.
+     :  Disable the
+        iA\,Writer content blocks syntax extension.
 
 % \end{markdown}
 % \iffalse
@@ -6125,20 +6125,20 @@ defaultOptions.hashEnumerators = false
 %
 :    true
 
-     :   Enable the assignment of HTML attributes to headings:
+     :  Enable the assignment of HTML attributes to headings:
 
-         ``` md
-         # My first heading {#foo}
+        ``` md
+        # My first heading {#foo}
 
-         ## My second heading ##    {#bar .baz}
+        ## My second heading ##    {#bar .baz}
 
-         Yet another heading   {key=value}
-         ===================
-         ``````
+        Yet another heading   {key=value}
+        ===================
+        ``````
 
 :    false
 
-     :   Disable the assignment of HTML attributes to headings.
+     :  Disable the assignment of HTML attributes to headings.
 
 % \end{markdown}
 % \iffalse
@@ -6931,7 +6931,7 @@ defaultOptions.jekyllData = false
 %
 :    true
 
-     :  Enable the Pandoc line block syntax extension.
+     :  Enable the Pandoc line block syntax extension:
 
         ``` md
         | this is a line block that
@@ -6943,7 +6943,7 @@ defaultOptions.jekyllData = false
 
 :    false
 
-     :   Disable the Pandoc line block syntax extension.
+     :  Disable the Pandoc line block syntax extension.
 
 % \end{markdown}
 % \iffalse
@@ -7087,7 +7087,7 @@ defaultOptions.lineBlocks = false
 
 :    false
 
-     :    Disable the Pandoc note syntax extension.
+     :  Disable the Pandoc note syntax extension.
 
 % \end{markdown}
 % \iffalse
@@ -8273,15 +8273,15 @@ defaultOptions.startNumber = true
 %
 :    true
 
-     :   Enable the Pandoc strike-through syntax extension:
+     :  Enable the Pandoc strike-through syntax extension:
 
-         ``` md
-         This ~~is deleted text.~~
-         ``````
+        ``` md
+        This ~~is deleted text.~~
+        ``````
 
 :    false
 
-     :   Disable the Pandoc strike-through syntax extension.
+     :  Disable the Pandoc strike-through syntax extension.
 
 % \end{markdown}
 % \iffalse
@@ -8505,15 +8505,15 @@ defaultOptions.stripIndent = false
 %
 :    true
 
-     :   Enable the Pandoc subscript syntax extension:
+     :  Enable the Pandoc subscript syntax extension:
 
-         ``` md
-         H~2~O is a liquid.
-         ``````
+        ``` md
+        H~2~O is a liquid.
+        ``````
 
 :    false
 
-     :   Disable the Pandoc subscript syntax extension.
+     :  Disable the Pandoc subscript syntax extension.
 
 % \end{markdown}
 % \iffalse
@@ -8594,15 +8594,15 @@ defaultOptions.subscripts = false
 %
 :    true
 
-     :   Enable the Pandoc superscript syntax extension:
+     :  Enable the Pandoc superscript syntax extension:
 
-         ``` md
-         2^10^ is 1024.
-         ``````
+        ``` md
+        2^10^ is 1024.
+        ``````
 
 :    false
 
-     :   Disable the Pandoc superscript syntax extension.
+     :  Disable the Pandoc superscript syntax extension.
 
 % \end{markdown}
 % \iffalse
@@ -8683,11 +8683,11 @@ defaultOptions.superscripts = false
 %
 :    true
 
-     :   Enable the Pandoc `table_captions` syntax extension for
-%        pipe tables (see the \Opt{pipeTables} option).
-%        \iffalse
-         [pipe tables](#pipe-tables).
-%        \fi
+     :  Enable the Pandoc `table_captions` syntax extension for
+%       pipe tables (see the \Opt{pipeTables} option).
+%       \iffalse
+        [pipe tables](#pipe-tables).
+%       \fi
 
         ``` md
         | Right | Left | Default | Center |
@@ -8810,7 +8810,7 @@ defaultOptions.tableCaptions = false
 %
 :    true
 
-     :   Enable the Pandoc `task_lists` syntax extension.
+     :  Enable the Pandoc `task_lists` syntax extension:
 
 
         ``` md
@@ -9036,9 +9036,9 @@ defaultOptions.texComments = false
 %
 :    true
 
-     :  Enable the Pandoc `tex_math_dollars` syntax extension.
+     :  Enable the Pandoc `tex_math_dollars` syntax extension:
 
-        ```
+        ``` md
         inline math: $E=mc^2$
 
         display math: $$E=mc^2$$
@@ -9225,6 +9225,406 @@ defaultOptions.texMathDollars = false
 %</lua,lua-cli>
 %<*manual-options>
 
+#### Option `texMathDoubleBackslash`
+
+`texMathDoubleBackslash` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{texMathDoubleBackslash}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Enable the Pandoc `tex_math_double_backslash` syntax extension:
+
+        ``` md
+        inline math: \\(E=mc^2\\)
+
+        display math: \\[E=mc^2\\]
+        ```
+
+:    false
+
+     :  Disable the Pandoc `tex_math_double_backslash` syntax extension.
+
+% \end{markdown}
+% \iffalse
+
+##### Lua Module Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\input markdown
+\input lmfonts
+\directlua{
+  local markdown = require("markdown")
+  local newline = [[^^J^^J]]
+  local convert = markdown.new({texMathDoubleBackslash = true})
+  local input =
+    [[\\(E=mc^2\\)]] .. newline .. newline ..
+    [[\\[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\\]]]
+  tex.sprint(convert(input)) }
+\bye
+```````
+Then, invoke LuaTeX from the terminal:
+``` sh
+luatex document.tex
+```````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> \\(E=mc^2\\)
+>
+> \\[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\\]
+
+##### Lua CLI Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\input markdown
+\input lmfonts
+\input optionfalse
+\par
+\input optiontrue
+\bye
+```````
+Using a text editor, create a text document named `content.md` with the
+following content:
+``` md
+\\(E=mc^2\\)
+
+\\[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\\]
+``````
+Next, invoke LuaTeX from the terminal:
+``` sh
+texlua ⟨CLI pathname⟩ -- content.md optionfalse.tex
+texlua ⟨CLI pathname⟩ texMathDoubleBackslash=true -- content.md optiontrue.tex
+luatex document.tex
+```````
+where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
+such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
+`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
+systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
+script file using [Kpathsea][].
+
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> \\\(E=mc^2\\)
+> 
+> \\\[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\\]
+>
+> \\(E=mc^2\\)
+> 
+> \\[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\\]
+
+##### Plain \TeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\input markdown
+
+\def\markdownOptionTexMathDoubleBackslash{true}
+\markdownBegin
+\\(E=mc^2\\)
+
+\\[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\\]
+\markdownEnd
+
+\bye
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+luatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> \\(E=mc^2\\)
+> 
+> \\[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\\]
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[texMathDoubleBackslash]{markdown}
+\begin{document}
+
+\begin{markdown}
+\\(E=mc^2\\)
+
+\\[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\\]
+\end{markdown}
+
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> \\(E=mc^2\\)
+> 
+> \\[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\\]
+
+##### \Hologo{ConTeXt} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\usemodule[t][markdown]
+\setupmarkdown[texMathDoubleBackslash = yes]
+\starttext
+
+\startmarkdown
+\\(E=mc^2\\)
+
+\\[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\\]
+\stopmarkdown
+
+\stoptext
+````````
+Next, invoke LuaTeX from the terminal:
+``` sh
+context document.tex
+`````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> \\(E=mc^2\\)
+> 
+> \\[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\\]
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { texMathDoubleBackslash }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.texMathDoubleBackslash = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
+#### Option `texMathSingleBackslash`
+
+`texMathSingleBackslash` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{texMathSingleBackslash}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Enable the Pandoc `tex_math_single_backslash` syntax extension:
+
+        ``` md
+        inline math: \(E=mc^2\)
+
+        display math: \[E=mc^2\]
+        ```
+
+:    false
+
+     :  Disable the Pandoc `tex_math_single_backslash` syntax extension.
+
+% \end{markdown}
+% \iffalse
+
+##### Lua Module Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\input markdown
+\input lmfonts
+\directlua{
+  local markdown = require("markdown")
+  local newline = [[^^J^^J]]
+  local convert = markdown.new({texMathSingleBackslash = true})
+  local input =
+    [[\(E=mc^2\)]] .. newline .. newline ..
+    [[\[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\]]]
+  tex.sprint(convert(input)) }
+\bye
+```````
+Then, invoke LuaTeX from the terminal:
+``` sh
+luatex document.tex
+```````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> \(E=mc^2\)
+>
+> \[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\]
+
+##### Lua CLI Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\input markdown
+\input lmfonts
+\input optionfalse
+\par
+\input optiontrue
+\bye
+```````
+Using a text editor, create a text document named `content.md` with the
+following content:
+``` md
+\(E=mc^2\)
+
+\[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\]
+``````
+Next, invoke LuaTeX from the terminal:
+``` sh
+texlua ⟨CLI pathname⟩ -- content.md optionfalse.tex
+texlua ⟨CLI pathname⟩ texMathSingleBackslash=true -- content.md optiontrue.tex
+luatex document.tex
+```````
+where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
+such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
+`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
+systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
+script file using [Kpathsea][].
+
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> (E=mc^2)
+> 
+> [\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx]
+>
+> \(E=mc^2\)
+> 
+> \[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\]
+
+##### Plain \TeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\input markdown
+
+\def\markdownOptionTexMathSingleBackslash{true}
+\markdownBegin
+\(E=mc^2\)
+
+\[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\]
+\markdownEnd
+
+\bye
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+luatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> \(E=mc^2\)
+> 
+> \[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\]
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[texMathSingleBackslash]{markdown}
+\begin{document}
+
+\begin{markdown}
+\(E=mc^2\)
+
+\[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\]
+\end{markdown}
+
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> \(E=mc^2\)
+> 
+> \[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\]
+
+##### \Hologo{ConTeXt} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\usemodule[t][markdown]
+\setupmarkdown[texMathSingleBackslash = yes]
+\starttext
+
+\startmarkdown
+\(E=mc^2\)
+
+\[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\]
+\stopmarkdown
+
+\stoptext
+````````
+Next, invoke LuaTeX from the terminal:
+``` sh
+context document.tex
+`````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> \(E=mc^2\)
+> 
+> \[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\]
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { texMathSingleBackslash }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.texMathSingleBackslash = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
 #### Option `tightLists`
 
 `tightLists` (default value: `true`)
@@ -9236,27 +9636,27 @@ defaultOptions.texMathDollars = false
 %
 :    true
 
-     :   Unordered and ordered lists whose items do not consist of multiple
-         paragraphs will be considered *tight*. Tight lists will produce tight
-         renderers that may produce different output than lists that are not
-         tight:
+     :  Unordered and ordered lists whose items do not consist of multiple
+        paragraphs will be considered *tight*. Tight lists will produce tight
+        renderers that may produce different output than lists that are not
+        tight:
 
-         ``` md
-         - This is
-         - a tight
-         - unordered list.
+        ``` md
+        - This is
+        - a tight
+        - unordered list.
 
-         - This is
+        - This is
 
-           not a tight
+          not a tight
 
-         - unordered list.
-         ```
+        - unordered list.
+        ```
 
 :    false
 
-     :   Unordered and ordered lists whose items consist of multiple paragraphs
-         will be treated the same way as lists that consist of multiple paragraphs.
+     :  Unordered and ordered lists whose items consist of multiple paragraphs
+        will be treated the same way as lists that consist of multiple paragraphs.
 
 % \end{markdown}
 % \iffalse
@@ -13756,7 +14156,7 @@ following text:
 The following macros are only produced, when the \Opt{lineBlocks} option
 is enabled.
 
-The \mdef{markdownRendererLineBlockBegin} and \mdef{markdownRendererLineBlockEnd} macros 
+The \mdef{markdownRendererLineBlockBegin} and \mdef{markdownRendererLineBlockEnd} macros
 represent the beginning and the end of a line block. The macros receive no arguments.
 
 % \end{markdown}
@@ -16277,11 +16677,11 @@ following text:
 % \begin{markdown}
 
 #### Tex Math Renderers
-The \mdef{markdownRendererInlineMath} and \mdef{markdownRendererDisplayMath} macros 
-represent inline and display \TeX{} math. 
+The \mdef{markdownRendererInlineMath} and \mdef{markdownRendererDisplayMath} macros
+represent inline and display \TeX{} math.
 Both macros receive a single argument that corresponds to the tex math content.
-These macros will only be produced, when the \Opt{texMathDollars}
-option is enabled.
+These macros will only be produced, when the \Opt{texMathDollars},
+\Opt{texMathSingleBackslash}, or \Opt{texMathDoubleBackslash} option are enabled.
 
 % \end{markdown}
 %
@@ -17553,7 +17953,7 @@ following text:
 %    \end{macrocode}
 % \par
 % \begin{markdown}
-% 
+%
 %### Logging Facilities
 % The \mdef{markdownInfo}, \mdef{markdownWarning}, and \mdef{markdownError}
 % macros perform logging for the Markdown package. Their first argument
@@ -25793,16 +26193,19 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-%#### Tex Math Dollars
+%#### Tex Math
 %
-% The \luamdef{extensions.tex_math_dollars} function implements the Pandoc
-% tex_math_dollars syntax extension.
+% The \luamdef{extensions.tex_math} function implements the Pandoc
+% `tex_math_dollars`, `tex_math_single_backslash` and `tex_math_double_backslash`
+% syntax extensions.
 %
 % \end{markdown}
 %  \begin{macrocode}
-M.extensions.tex_math_dollars = function()
+M.extensions.tex_math = function(tex_math_dollars,
+                                 tex_math_single_backslash,
+                                 tex_math_double_backslash)
   return {
-    name = "built-in tex_math_dollars syntax extension",
+    name = "built-in tex_math syntax extension",
     extend_writer = function(self)
 %    \end{macrocode}
 % \par
@@ -25837,35 +26240,149 @@ M.extensions.tex_math_dollars = function()
         return (starter * C(p * (p - ender)^0) * ender)
       end
 
-      local inlinemathtail  = B( parsers.any * parsers.nonspacechar
-                               + parsers.backslash * parsers.any)
-                            * parsers.dollar 
-                            * -#(parsers.digit)
+      local allowed_before_closing = B( parsers.backslash * parsers.any
+                                      + parsers.any * (parsers.nonspacechar - parsers.backslash))
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The following patterns implement the Pandoc `tex_math_dollars` syntax extension.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      local dollar_math_content = parsers.backslash^-1
+                                * parsers.any
+                                - parsers.blankline^2
+                                - parsers.dollar
 
-      local inlinemath = between(C( parsers.backslash^-1 
-                                  * parsers.any
-                                  - parsers.blankline^2 
-                                  - parsers.dollar),
-                                 parsers.dollar * #(parsers.nonspacechar),
-                                 inlinemathtail)
+      local inline_math_opening_dollars = parsers.dollar
+                                        * #(parsers.nonspacechar)
 
-      local displaymathdelim  = parsers.dollar 
-                              * parsers.dollar
+      local inline_math_closing_dollars = allowed_before_closing
+                                        * parsers.dollar
+                                        * -#(parsers.digit)
 
-      local displaymath = between(C( parsers.backslash^-1 
-                                   * parsers.any 
-                                   - parsers.blankline^2 
-                                   - parsers.dollar),
-                                  displaymathdelim,
-                                  displaymathdelim)
+      local inline_math_dollars = between(C( dollar_math_content),
+                                          inline_math_opening_dollars,
+                                          inline_math_closing_dollars)
 
-      local TexMathDollars = displaymath / writer.display_math
-                           + inlinemath / writer.inline_math
+      local display_math_opening_dollars  = parsers.dollar
+                                          * parsers.dollar
+
+      local display_math_closing_dollars  = parsers.dollar
+                                          * parsers.dollar
+
+      local display_math_dollars = between(C( dollar_math_content),
+                                           display_math_opening_dollars,
+                                           display_math_closing_dollars)
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The following patterns implement the Pandoc `tex_math_single_backslash` and
+% `tex_math_double_backslash` syntax extensions.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      local backslash_math_content  = parsers.any 
+                                    - parsers.blankline^2
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The following patterns implement the Pandoc `tex_math_double_backslash` syntax extension.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      local inline_math_opening_double  = parsers.backslash
+                                        * parsers.backslash
+                                        * parsers.lparent
+                                        * #(parsers.nonspacechar)
+
+      local inline_math_closing_double  = allowed_before_closing
+                                        * parsers.backslash
+                                        * parsers.backslash
+                                        * parsers.rparent
+
+      local inline_math_double  = between(C( backslash_math_content),
+                                          inline_math_opening_double,
+                                          inline_math_closing_double)
+
+      local display_math_opening_double = parsers.backslash
+                                        * parsers.backslash
+                                        * parsers.lbracket
+
+      local display_math_closing_double = allowed_before_closing
+                                        * parsers.backslash
+                                        * parsers.backslash
+                                        * parsers.rbracket
+
+      local display_math_double = between(C( backslash_math_content),
+                                          display_math_opening_double,
+                                          display_math_closing_double)
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The following patterns implement the Pandoc `tex_math_single_backslash` syntax extension.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      local inline_math_opening_single  = parsers.backslash
+                                        * parsers.lparent
+                                        * #(parsers.nonspacechar)
+
+      local inline_math_closing_single  = allowed_before_closing
+                                        * parsers.backslash
+                                        * parsers.rparent
+
+      local inline_math_single  = between(C( backslash_math_content),
+                                          inline_math_opening_single,
+                                          inline_math_closing_single)
+
+      local display_math_opening_single = parsers.backslash
+                                        * parsers.lbracket
+
+      local display_math_closing_single = allowed_before_closing
+                                        * parsers.backslash
+                                        * parsers.rbracket
+
+      local display_math_single = between(C( backslash_math_content),
+                                          display_math_opening_single,
+                                          display_math_closing_single)
+
+      local display_math = parsers.fail
+
+      local inline_math = parsers.fail
+
+      if tex_math_dollars then
+        display_math = display_math + display_math_dollars
+        inline_math = inline_math + inline_math_dollars
+      end
+
+      if tex_math_double_backslash then
+        display_math = display_math + display_math_double
+        inline_math = inline_math + inline_math_double
+      end
+
+      if tex_math_single_backslash then
+        display_math = display_math + display_math_single
+        inline_math = inline_math + inline_math_single
+      end
+
+      local TexMath = display_math / writer.display_math
+                    + inline_math / writer.inline_math
 
       self.insert_pattern("Inline after Emph",
-                          TexMathDollars, "TexMathDollars")
+                          TexMath, "TexMath")
 
-      self.add_special_character("$")
+      if tex_math_dollars then
+        self.add_special_character("$")
+      end
+
+      if tex_math_single_backslash or tex_math_double_backslash then
+        self.add_special_character("\\")
+        self.add_special_character("[")
+        self.add_special_character("]")
+        self.add_special_character(")")
+        self.add_special_character("(")
+      end
     end
   }
 end
@@ -26131,9 +26648,14 @@ function M.new(options)
     table.insert(extensions, superscript_extension)
   end
 
-  if options.texMathDollars then
-    local tex_math_dollars_extension = M.extensions.tex_math_dollars()
-    table.insert(extensions, tex_math_dollars_extension)
+  if options.texMathDollars or
+     options.texMathSingleBackslash or
+     options.texMathDoubleBackslash then
+    local tex_math_extension = M.extensions.tex_math(
+      options.texMathDollars,
+      options.texMathSingleBackslash,
+      options.texMathDoubleBackslash)
+    table.insert(extensions, tex_math_extension)
   end
 
 %    \end{macrocode}
