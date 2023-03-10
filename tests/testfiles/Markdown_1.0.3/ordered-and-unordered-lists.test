@@ -133,6 +133,8 @@ This was an error in Markdown 1.0.1:
 
 >>>
 documentBegin
+BEGIN section
+BEGIN section
 headingTwo: Unordered
 interblockSeparator
 interblockSeparator
@@ -199,6 +201,8 @@ ulItem
 ulItemEnd
 ulEnd
 interblockSeparator
+END section
+BEGIN section
 headingTwo: Ordered
 interblockSeparator
 interblockSeparator
@@ -254,6 +258,8 @@ olItemWithNumber: 3
 olItemEnd
 olEnd
 interblockSeparator
+END section
+BEGIN section
 headingTwo: Nested
 interblockSeparator
 ulBeginTight
@@ -322,4 +328,6 @@ ulEndTight
 interblockSeparator
 ulItemEnd
 ulEnd
+END section
+END section
 documentEnd

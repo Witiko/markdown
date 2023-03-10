@@ -1,0 +1,29 @@
+\def\markdownOptionHeaderAttributes{true}
+\def\markdownOptionFencedDivs{true}
+\def\markdownOptionSlice{sliced-div ^first-heading}
+<<<
+This test ensures that the Lua `slice` option applies to fenced divs.
+
+::: {.class-name}
+This text will be *ignored*.
+
+::: {#sliced-div}
+This text will be *displayed*.
+
+# This is an H1 {#first-heading}
+
+This text will be *ignored*.
+:::
+
+This text will be *ignored*.
+:::
+>>>
+documentBegin
+BEGIN fencedDivAttributeContext
+attributeClassName: class-name
+BEGIN fencedDivAttributeContext
+attributeIdentifier: sliced-div
+emphasis: displayed
+END fencedDivAttributeContext
+END fencedDivAttributeContext
+documentEnd

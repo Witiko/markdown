@@ -1,0 +1,19 @@
+\def\markdownOptionBracketedSpans{true}
+<<<
+This test ensures that the Lua `bracketedSpans` option correctly
+propagates through the plain TeX interface.
+
+[This is *some text*]{.class key="val"}
+>>>
+documentBegin
+codeSpan: bracketedSpans
+interblockSeparator
+BEGIN bracketedSpanAttributeContext
+attributeClassName: class
+BEGIN attributeKeyValue
+- key: key
+- value: val
+END attributeKeyValue
+emphasis: some text
+END bracketedSpanAttributeContext
+documentEnd

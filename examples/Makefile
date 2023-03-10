@@ -2,7 +2,7 @@
 
 AUXFILES=*.tmp *.tui *.tuo *.mp *.tuc *.markdown.in *.markdown.out \
   *.markdown.lua *.log *.aux *.dvi *.idv *.lg *.tmp *.xref *.4ct *.4tc \
-  latex-pdftex.tex latex-xetex.tex latex-luatex.tex latex-tex4ht.tex \
+  latex-pdftex.tex latex-luatex.tex latex-tex4ht.tex \
   example.tex *.debug-extensions.json debug-extensions.json
 AUXDIRS=_markdown_*/
 LUACLI_OPTIONS=\
@@ -14,6 +14,7 @@ LUACLI_OPTIONS=\
   fencedCode=true \
   hashEnumerators=true \
   inlineNotes=true \
+  lineBlocks=true \
   notes=true \
   pipeTables=true \
   rawAttribute=true \
@@ -24,7 +25,7 @@ LUACLI_OPTIONS=\
   tableCaptions=true \
   taskLists=true
 OUTPUT=context-mkii.pdf context-mkiv.pdf latex-pdftex.pdf \
-  latex-luatex.pdf latex-xetex.pdf latex-tex4ht.html latex-tex4ht.css
+  latex-luatex.pdf latex-tex4ht.html latex-tex4ht.css
 
 # This is the default pseudo-target.
 all: $(OUTPUT)
@@ -43,12 +44,6 @@ latex-pdftex.pdf: latex.tex example.tex
 	cp latex.tex latex-pdftex.tex
 	pdflatex --shell-escape latex-pdftex
 	pdflatex --shell-escape latex-pdftex
-
-# This target typesets the LaTeX example using the XeTeX engine.
-latex-xetex.pdf: latex.tex example.tex
-	cp latex.tex latex-xetex.tex
-	xelatex --shell-escape --8bit latex-xetex
-	xelatex --shell-escape --8bit latex-xetex
 
 # This target typesets the LaTeX example using the LuaTeX engine.
 latex-luatex.pdf: latex.tex example.tex
