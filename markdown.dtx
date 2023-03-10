@@ -22180,7 +22180,6 @@ function M.writer.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.blockquote(s)
-    if #util.rope_to_string(s) == 0 then return "" end
     return {"\\markdownRendererBlockQuoteBegin\n",s,
       "\n\\markdownRendererBlockQuoteEnd "}
   end
@@ -23303,15 +23302,150 @@ function M.reader.new(writer, options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  -- strip off leading > and indents, and run through blocks
-  parsers.blockquote_body = ((parsers.leader * parsers.more * parsers.space^-1)/""
-                             * parsers.linechar^0 * parsers.newline)^1
-                            * (-V("BlockquoteExceptions") * parsers.linechar^1
-                              * parsers.newline)^0
+
+  parsers.blockquote_start = parsers.leader * parsers.more * parsers.space^-1
+
+  parsers.indent_value = Ct(C(parsers.letter^1) * C(parsers.digit^1))
+
+  parsers.indent_rope = parsers.indent_value * (parsers.comma * parsers.space * parsers.indent_value)^0
+
+  -- increments the indent type by a value
+  local function increment_indent_level(indent_type, increment)
+    local function update_indent_level(s, i, current_indent)
+
+      local indent_table = lpeg.match(Ct(parsers.indent_rope), current_indent)
+
+      if indent_table == nil then
+        indent_table = {}
+        indent_table[#indent_table + 1] = {indent_type, increment}
+      else
+        local last_indent = indent_table[#indent_table]
+        local last_indent_type = last_indent[1]
+        local last_indent_value = last_indent[2]
+        
+        if last_indent_type == indent_type then
+          indent_table[#indent_table][2] = math.floor(last_indent_value + increment)
+        else
+          indent_table[#indent_table + 1] = {indent_type, increment}
+        end
+      end
+
+      local joined_values = {}
+      for _, value in ipairs(indent_table) do
+        if value[2] > 0 then
+          joined_values[#joined_values + 1] = value[1] .. value[2]
+        end
+      end
+
+      local new_indent_table = table.concat(joined_values, ", ")
+      return true, new_indent_table
+    end
+
+    return Cg( Cmt(Cb("relative_indent"), update_indent_level)
+              , "relative_indent")
+  end
+
+  -- decodes pattern name from pair <name><count> to its pattern
+  local function decode_pattern(name)
+    if name == "bq" then
+      return parsers.blockquote_start
+    end
+    return parsers.succeed
+  end
+
+  -- applies decoded pattern
+  local function traverse_indent(s, i, current_indent, is_optional)
+    local indent_table = lpeg.match(Ct(parsers.indent_rope), current_indent)
+
+    if indent_table == nil then
+      return true, i
+    end
+
+    local new_index = i
+
+    for _, value in ipairs(indent_table) do
+      local pattern = decode_pattern(value[1])
+      if is_optional then
+        pattern = pattern^-1
+      end
+
+      for j = 1,value[2] do
+        local possible_next_index = lpeg.match(pattern, s, new_index)
+        if (possible_next_index ~= nil) then
+          new_index = possible_next_index
+        else
+          if is_optional then
+            return true, new_index
+          end
+          return false, i
+        end
+      end
+    end
+
+    return true, new_index
+  end
+
+  -- skip only all indent
+  local function produce_minimal_indent(s, i, current_indent)
+    local passes, new_index = traverse_indent(s, i, current_indent, false)
+
+    if passes then
+      return new_index, ""
+    end
+    return false
+  end
+
+  -- skip maximum of indent
+  local function produce_optional_indent(s, i, current_indent)
+    local passes, new_index = traverse_indent(s, i, current_indent, true)
+
+    if passes then
+      return new_index, ""
+    end
+    return false
+  end
+
+  -- check required
+  check_minimal_indent = Cmt(Cb("relative_indent"), produce_minimal_indent)
+
+  -- check optional indent
+  check_optional_indent = Cmt(Cb("relative_indent"), produce_optional_indent)
+
+  parsers.minimally_indented_blank = check_minimal_indent * V("Blank")
+
+  parsers.minimally_indented_block = check_minimal_indent * V("Block")
+
+  parsers.minimally_indented_separated_block  = check_minimal_indent / writer.interblocksep
+                                              * V("Block")
+
+  parsers.blockquote_content = function(breakable)
+    local blank = parsers.minimally_indented_blank
+    if breakable then
+      blank = blank + V("Blank")
+    end
+
+    return  Ct( V("Blank")
+              * blank^0
+              * parsers.minimally_indented_block
+              * ( blank
+                + parsers.minimally_indented_separated_block)^0
+              + V("Blank")
+              * blank^0
+              + V("Block")
+              * ( blank
+                + parsers.minimally_indented_separated_block)^0)
+  end
+
+  parsers.blockquote_body = parsers.blockquote_start
+                          * increment_indent_level("bq", 1)
+                          * parsers.blockquote_content(false)
+                          * increment_indent_level("bq", -1)
 
   if not options.breakableBlockquotes then
-    parsers.blockquote_body = parsers.blockquote_body
-                            * (parsers.blankline^0 / "")
+    parsers.blockquote_body = parsers.blockquote_start
+                            * increment_indent_level("bq", 1)
+                            * parsers.blockquote_content(true)
+                            * increment_indent_level("bq", -1)
   end
 %    \end{macrocode}
 % \par
@@ -23423,11 +23557,11 @@ function M.reader.new(writer, options)
                      = parsers.blankline -- paragraph break
                      + parsers.tightblocksep  -- nested list
                      + parsers.eof       -- end of document
-                     + parsers.bqstart
+                     + parsers.blockquote_start
                      + parsers.headerstart
 
   parsers.Endline   = parsers.newline
-                    * -V("EndlineExceptions")
+                    * check_optional_indent * -V("EndlineExceptions")
                     * parsers.spacechar^0
                     / (options.hardLineBreaks and writer.hard_line_break
                                                or writer.space)
@@ -23447,7 +23581,7 @@ function M.reader.new(writer, options)
 
   parsers.NonbreakingEndline
                     = parsers.newline
-                    * -V("EndlineExceptions")
+                    * check_optional_indent * -V("EndlineExceptions")
                     * parsers.spacechar^0
                     / (options.hardLineBreaks and writer.hard_line_break
                                                or writer.nbsp)
@@ -23568,15 +23702,18 @@ function M.reader.new(writer, options)
                        + parsers.in_matched_block_tags / writer.block_html_element
                        + parsers.htmlinstruction
 
-  parsers.Verbatim     = Cs( (parsers.blanklines
-                           * ((parsers.indentedline - parsers.blankline))^1)^1
-                           ) / self.expandtabs / writer.verbatim
+  parsers.indented_non_blank_line = parsers.indentedline - parsers.blankline
+
+  parsers.Verbatim  = Cs( 
+                        parsers.indented_non_blank_line
+                      * ((check_minimal_indent * parsers.blankline)^0
+                      * (check_minimal_indent * parsers.indented_non_blank_line)^1)^0
+                      ) / self.expandtabs / writer.verbatim
 
   parsers.BlockquoteExceptions = parsers.leader * parsers.more
                                + parsers.blankline
 
-  parsers.Blockquote   = Cs(parsers.blockquote_body^1)
-                       / self.parser_functions.parse_blocks_nested
+  parsers.Blockquote   = parsers.blockquote_body
                        / writer.blockquote
 
   parsers.ThematicBreak = ( parsers.lineof(parsers.asterisk)
@@ -23586,11 +23723,9 @@ function M.reader.new(writer, options)
 
   parsers.Reference    = parsers.define_reference_parser / register_link
 
-  parsers.Paragraph    = parsers.nonindentspace * Ct(parsers.Inline^1)
+  parsers.Paragraph    = parsers.nonindentspace * Ct((parsers.Inline)^1)
                        * ( parsers.newline
-                         * ( parsers.blankline^1
-                           + #V("EndlineExceptions")
-                         )
+                         * #V("EndlineExceptions")
                          + parsers.eof)
                        / writer.paragraph
 
@@ -23703,7 +23838,7 @@ function M.reader.new(writer, options)
                         * Ct(parsers.linechar^1
                             / self.parser_functions.parse_inlines)
                         * parsers.newline
-                        * parsers.heading_level
+                        * check_minimal_indent * parsers.heading_level
                         * parsers.optionalspace
                         * parsers.newline
                         / writer.heading
@@ -23852,7 +23987,7 @@ function M.reader.new(writer, options)
         Smart                 = parsers.Smart,
         Symbol                = parsers.Symbol,
         SpecialChar           = parsers.fail,
-        InitializeState       = parsers.succeed,
+        InitializeState       = parsers.succeed * Cg(Ct("") / "", "relative_indent"), --temporary initialization
       }
 %    \end{macrocode}
 % \par
@@ -25026,15 +25161,15 @@ M.extensions.fenced_code = function(blank_before_code_fence,
 
       local BacktickFencedCode
              = fencehead(parsers.backtick, backtick_infostring)
-             * Cs(fencedline(parsers.backtick)^0)
-             * fencetail(parsers.backtick)
+             * Cs((check_minimal_indent * fencedline(parsers.backtick))^0)
+             * (check_minimal_indent * fencetail(parsers.backtick) + parsers.succeed)
 
-            local infostring_with_attributes
-                             = Ct(C((parsers.linechar
-                                    - ( parsers.optionalspace
-                                      * parsers.attributes))^0)
-                                 * parsers.optionalspace
-                                 * Ct(parsers.attributes))
+      local infostring_with_attributes
+                        = Ct(C((parsers.linechar
+                              - ( parsers.optionalspace
+                                * parsers.attributes))^0)
+                            * parsers.optionalspace
+                            * Ct(parsers.attributes))
 
       local FencedCode
                = (TildeFencedCode + BacktickFencedCode)
