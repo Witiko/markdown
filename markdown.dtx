@@ -21619,7 +21619,24 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-function entities.hex_entity(x, s)
+function entities.hex_entity(s)
+  local n = tonumber("0x"..s)
+  if n == nil then
+    return "&#x" .. s .. ";"
+  end
+  return unicode.utf8.char(n)
+end
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Given a captured `x` character and a string `s` of hexadecimal digits, the
+% \luamdef{entities.hex_entity_with_x_char} returns the corresponding
+% \acro{utf}8-encoded Unicode codepoint or fallback with the `x` character.
+%
+% \end{markdown}
+%  \begin{macrocode}
+function entities.hex_entity_with_x_char(x, s)
   local n = tonumber("0x"..s)
   if n == nil then
     return "&#" .. x .. s .. ";"
@@ -22848,24 +22865,24 @@ parsers.tag         = parsers.lbracket
                     * parsers.rbracket
 
 -- url for markdown links, allowing nested brackets:
-parsers.url         = parsers.less * Cs(V"HtmlEntity" + (parsers.anyescaped
+parsers.url         = parsers.less * Cs(V("HtmlEntity") + (parsers.anyescaped
                                         - parsers.more)^0)
                                    * parsers.more
-                    + Cs((V"HtmlEntity" + parsers.inparens + (parsers.anyescaped
+                    + Cs((V("HtmlEntity") + parsers.inparens + (parsers.anyescaped
                                              - parsers.spacing
                                              - parsers.rparent))^1)
 
 -- quoted text, possibly with nested quotes:
-parsers.title_s     = parsers.squote * Cs((V"HtmlEntity" + (parsers.anyescaped-parsers.squote)
+parsers.title_s     = parsers.squote * Cs((V("HtmlEntity") + (parsers.anyescaped-parsers.squote)
                                            + parsers.squoted)^0)
                                      * parsers.squote
 
-parsers.title_d     = parsers.dquote * Cs((V"HtmlEntity" + (parsers.anyescaped-parsers.dquote)
+parsers.title_d     = parsers.dquote * Cs((V("HtmlEntity") + (parsers.anyescaped-parsers.dquote)
                                            + parsers.dquoted)^0)
                                      * parsers.dquote
 
 parsers.title_p     = parsers.lparent
-                    * Cs((V"HtmlEntity" + parsers.inparens + (parsers.anyescaped-parsers.rparent))^0)
+                    * Cs((V("HtmlEntity") + parsers.inparens + (parsers.anyescaped-parsers.rparent))^0)
                     * parsers.rparent
 
 parsers.title       = parsers.title_d + parsers.title_s + parsers.title_p
@@ -23562,7 +23579,7 @@ function M.reader.new(writer, options)
                         + parsers.openelt_any / writer.inline_html_tag
                         + parsers.closeelt_any / writer.inline_html_tag
 
-  parsers.HtmlEntity    = parsers.hexentity / entities.hex_entity  / writer.string
+  parsers.HtmlEntity    = parsers.hexentity / entities.hex_entity_with_x_char  / writer.string
                         + parsers.decentity / entities.dec_entity  / writer.string
                         + parsers.tagentity / entities.char_entity / writer.string
 %    \end{macrocode}
@@ -24986,11 +25003,11 @@ M.extensions.fenced_code = function(blank_before_code_fence,
       end
 
       local tilde_infostring
-                           = C((parsers.linechar
+                           = Cs((V("HtmlEntity") + parsers.linechar
                               - (parsers.spacechar^1 * parsers.newline))^0)
 
       local backtick_infostring
-                           = C((parsers.linechar
+                           = Cs((V("HtmlEntity") + parsers.linechar
                               - (parsers.backtick
                                 + parsers.spacechar^1 * parsers.newline))^0)
 
