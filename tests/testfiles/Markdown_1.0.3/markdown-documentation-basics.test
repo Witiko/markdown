@@ -292,8 +292,10 @@ Output:
 
 >>>
 documentBegin
+BEGIN section
 headingOne: Markdown: Basics
 interblockSeparator
+BEGIN section
 headingTwo: Getting the Gist of Markdown's Formatting Syntax
 interblockSeparator
 BEGIN link
@@ -315,6 +317,8 @@ BEGIN link
 - title: 
 END link
 interblockSeparator
+END section
+BEGIN section
 headingTwo: Paragraphs, Headers, Blockquotes
 interblockSeparator
 interblockSeparator
@@ -334,6 +338,7 @@ interblockSeparator
 interblockSeparator
 inputVerbatim: ./_markdown_test/a88786d5556201bd842f795fd43bf808.verbatim
 interblockSeparator
+BEGIN section
 headingThree: Phrase Emphasis
 interblockSeparator
 interblockSeparator
@@ -343,6 +348,9 @@ interblockSeparator
 interblockSeparator
 inputVerbatim: ./_markdown_test/da51b3eeb7218d5bbe6c01eb832599bc.verbatim
 interblockSeparator
+END section
+END section
+BEGIN section
 headingTwo: Lists
 interblockSeparator
 codeSpan: *
@@ -373,6 +381,7 @@ interblockSeparator
 interblockSeparator
 inputVerbatim: ./_markdown_test/9d7b6a9dbba4e63ca51f3cccca3716f0.verbatim
 interblockSeparator
+BEGIN section
 headingThree: Links
 interblockSeparator
 emphasis: inline
@@ -403,6 +412,8 @@ interblockSeparator
 interblockSeparator
 inputVerbatim: ./_markdown_test/c53d47119351d20f8302b44c655ce1dc.verbatim
 interblockSeparator
+END section
+BEGIN section
 headingThree: Images
 interblockSeparator
 interblockSeparator
@@ -415,6 +426,8 @@ interblockSeparator
 interblockSeparator
 inputVerbatim: ./_markdown_test/08a55e6c1710b68db0cda877cfe16f93.verbatim
 interblockSeparator
+END section
+BEGIN section
 headingThree: Code
 interblockSeparator
 codeSpan: (ampersand)
@@ -435,4 +448,7 @@ inputVerbatim: ./_markdown_test/7d9f1e26a42e0270218d0c17064c2013.verbatim
 interblockSeparator
 interblockSeparator
 inputVerbatim: ./_markdown_test/e1de0455cbe83acebe6cfa078bdcb1cc.verbatim
+END section
+END section
+END section
 documentEnd

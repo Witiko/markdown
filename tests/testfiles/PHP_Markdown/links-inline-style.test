@@ -5,7 +5,7 @@
 documentBegin
 BEGIN link
 - label: silly URL w/ angle brackets
-- URI: ?(rightBrace)]*+(pipe)(ampersand))
+- URI: ?(rightBrace)]*+|&)
 - title: 
 END link
 documentEnd

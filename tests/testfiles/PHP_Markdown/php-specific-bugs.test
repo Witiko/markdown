@@ -29,13 +29,19 @@ codeSpan: /e
 codeSpan: (underscore)UnslashQuotes
 interblockSeparator
 interblockSeparator
+BEGIN section
 headingOne: Header "quoted" again (backslash)""
 interblockSeparator
+BEGIN section
 headingTwo: Header "quoted" again (backslash)""
 interblockSeparator
+BEGIN section
 headingThree: Header "quoted" again (backslash)""
 interblockSeparator
 codeSpan: (underscore)Detab
 interblockSeparator
 inputVerbatim: ./_markdown_test/57e7cfa9cb0dc4b666bfe415c968fe70.verbatim
+END section
+END section
+END section
 documentEnd
