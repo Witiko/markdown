@@ -23305,14 +23305,11 @@ function M.reader.new(writer, options)
 
   parsers.blockquote_start = parsers.leader * parsers.more * parsers.space^-1
 
-  -------------------
-  -- indent format --
-  -------------------
-
   parsers.indent_value = Ct(C(parsers.letter^1) * C(parsers.digit^1))
 
   parsers.indent_rope = parsers.indent_value * (parsers.comma * parsers.space * parsers.indent_value)^0
 
+  -- increments the indent type by a value
   local function increment_indent_level(indent_type, increment)
     local function update_indent_level(s, i, current_indent)
 
@@ -23348,10 +23345,6 @@ function M.reader.new(writer, options)
               , "relative_indent")
   end
 
-  -------------------------------
-  -- process indent in general --
-  -------------------------------
-
   -- decodes pattern name from pair <name><count> to its pattern
   local function decode_pattern(name)
     if name == "bq" then
@@ -23372,13 +23365,12 @@ function M.reader.new(writer, options)
 
     for _, value in ipairs(indent_table) do
       local pattern = decode_pattern(value[1])
-      local cond_pattern = pattern;
       if is_optional then
-        cond_pattern = pattern^-1
+        pattern = pattern^-1
       end
 
       for j = 1,value[2] do
-        local possible_next_index = lpeg.match(cond_pattern, s, new_index)
+        local possible_next_index = lpeg.match(pattern, s, new_index)
         if (possible_next_index ~= nil) then
           new_index = possible_next_index
         else
@@ -23395,7 +23387,6 @@ function M.reader.new(writer, options)
 
   -- skip only all indent
   local function produce_minimal_indent(s, i, current_indent)
-
     local passes, new_index = traverse_indent(s, i, current_indent, false)
 
     if passes then
@@ -23406,8 +23397,6 @@ function M.reader.new(writer, options)
 
   -- skip maximum of indent
   local function produce_optional_indent(s, i, current_indent)
-    local indent = parsers.succeed
-
     local passes, new_index = traverse_indent(s, i, current_indent, true)
 
     if passes then
@@ -23416,10 +23405,10 @@ function M.reader.new(writer, options)
     return false
   end
 
-  -- check required - block continuation line
+  -- check required
   check_minimal_indent = Cmt(Cb("relative_indent"), produce_minimal_indent)
 
-  -- check optional indent - paragraph continuation
+  -- check optional indent
   check_optional_indent = Cmt(Cb("relative_indent"), produce_optional_indent)
 
   parsers.minimally_indented_blank = check_minimal_indent * V("Blank")
@@ -23429,27 +23418,34 @@ function M.reader.new(writer, options)
   parsers.minimally_indented_separated_block  = check_minimal_indent / writer.interblocksep
                                               * V("Block")
 
-  parsers.blockquote_body = parsers.blockquote_start
-                        * increment_indent_level("bq", 1)
-                        * (Ct( 
-                              V("Blank")
-                              * parsers.minimally_indented_blank^0
-                              * parsers.minimally_indented_block
-                              * ( parsers.minimally_indented_blank
-                                + parsers.minimally_indented_separated_block)^0
-                              + V("Blank")
-                              * parsers.minimally_indented_blank^0
-                              + V("Block")
-                              * ( parsers.minimally_indented_blank
-                                + parsers.minimally_indented_separated_block)^0
-                            ) 
-                          )
-                        * increment_indent_level("bq", -1)
+  parsers.blockquote_content = function(breakable)
+    local blank = parsers.minimally_indented_blank
+    if breakable then
+      blank = blank + V("Blank")
+    end
 
-  -- disabled temporarily
+    return  Ct( V("Blank")
+              * blank^0
+              * parsers.minimally_indented_block
+              * ( blank
+                + parsers.minimally_indented_separated_block)^0
+              + V("Blank")
+              * blank^0
+              + V("Block")
+              * ( blank
+                + parsers.minimally_indented_separated_block)^0)
+  end
+
+  parsers.blockquote_body = parsers.blockquote_start
+                          * increment_indent_level("bq", 1)
+                          * parsers.blockquote_content(false)
+                          * increment_indent_level("bq", -1)
+
   if not options.breakableBlockquotes then
---  parsers.blockquote_body = parsers.blockquote_body
---                          * (parsers.blankline^0 / "")
+    parsers.blockquote_body = parsers.blockquote_start
+                            * increment_indent_level("bq", 1)
+                            * parsers.blockquote_content(true)
+                            * increment_indent_level("bq", -1)
   end
 %    \end{macrocode}
 % \par
