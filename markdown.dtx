@@ -3649,6 +3649,224 @@ defaultOptions.blankBeforeHeading = false
 %</lua,lua-cli>
 %<*manual-options>
 
+#### Option `blankBeforeList`
+
+`blankBeforeList` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{blankBeforeList}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Require a blank line between a paragraph and the following list.
+
+     false
+
+     :  Do not require a blank line between a paragraph and the following
+        list.
+
+% \end{markdown}
+% \iffalse
+
+##### Lua Module Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\input markdown
+\input lmfonts
+\directlua{
+  local markdown = require("markdown")
+  local newline = [[^^J^^J]]
+  local convert, input
+
+  convert = markdown.new()
+  input = "A paragraph."   .. newline ..
+          "- a list"       .. newline
+  tex.sprint(convert(input))
+
+  convert = markdown.new({
+    blankBeforeList = true})
+  input = "A paragraph."   .. newline ..
+          "- not a list"     .. newline
+  tex.sprint(convert(input)) }
+\bye
+```````
+Then, invoke LuaTeX from the terminal:
+``` sh
+luatex document.tex
+```````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> A paragraph.
+>
+> - a list
+>
+> A paragraph. - not a list
+
+##### Lua CLI Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\input markdown
+\input lmfonts
+\input optionfalse
+\input optiontrue
+\bye
+```````
+Using a text editor, create a text document named `content.md` with the
+following content:
+```` md
+A paragraph.
+- a list?
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+texlua ⟨CLI pathname⟩ -- content.md optionfalse.tex
+texlua ⟨CLI pathname⟩ blankBeforeList=true  -- content.md optiontrue.tex
+luatex document.tex
+```````
+where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
+such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
+`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
+systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
+script file using [Kpathsea][].
+
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> A paragraph.
+>
+> - a list?
+>
+> A paragraph. - a list?
+
+##### Plain \TeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+```` tex
+\input markdown
+
+\markdownBegin
+A paragraph.
+- a list
+\markdownEnd
+
+\def\markdownOptionBlankBeforeList{true}
+\markdownBegin
+A paragraph.
+- not a list
+\markdownEnd
+
+\bye
+````````
+Next, invoke LuaTeX from the terminal:
+``` sh
+luatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> A paragraph.
+>
+> - a list
+>
+> A paragraph. - not a list
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+```` tex
+\documentclass{article}
+\usepackage{markdown}
+\begin{document}
+
+\begin{markdown}
+A paragraph.
+- a list
+\end{markdown}
+
+\begin{markdown*}{blankBeforeList}
+A paragraph.
+- not a list
+\end{markdown*}
+
+\end{document}
+````````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> A paragraph.
+>
+> - a list
+>
+> A paragraph. - not a list
+
+##### \Hologo{ConTeXt} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+```` tex
+\usemodule[t][markdown]
+\starttext
+
+\startmarkdown
+A paragraph.
+- a list
+\stopmarkdown
+
+\setupmarkdown[blankBeforeList = yes]
+\startmarkdown
+A paragraph.
+- not a list
+\stopmarkdown
+
+\stoptext
+````````
+Next, invoke LuaTeX from the terminal:
+``` sh
+context document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> A paragraph.
+>
+> - a list
+>
+> A paragraph. - not a list
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { blankBeforeList }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.blankBeforeList = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
 #### Option `bracketedSpans`
 
 `bracketedSpans` (default value: `false`)
