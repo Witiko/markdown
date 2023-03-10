@@ -17,9 +17,15 @@
 of dashes"/>
 >>>
 documentBegin
+BEGIN section
+BEGIN section
 headingTwo: `Foo
 interblockSeparator
 interblockSeparator
+END section
+BEGIN section
 headingTwo: <a title="a lot
 interblockSeparator
+END section
+END section
 documentEnd

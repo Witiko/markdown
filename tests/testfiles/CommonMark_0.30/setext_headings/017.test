@@ -18,8 +18,14 @@ Baz
 documentBegin
 thematicBreak
 interblockSeparator
+BEGIN section
+BEGIN section
 headingTwo: Foo
 interblockSeparator
+END section
+BEGIN section
 headingTwo: Bar
 interblockSeparator
+END section
+END section
 documentEnd

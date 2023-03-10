@@ -15,6 +15,10 @@ baz
 >>>
 documentBegin
 interblockSeparator
+BEGIN section
+BEGIN section
 headingTwo: bar
 interblockSeparator
+END section
+END section
 documentEnd
