@@ -22961,18 +22961,12 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-parsers.bulletchar = C(parsers.plus + parsers.asterisk + parsers.dash)
-
-parsers.bullet = ( parsers.bulletchar * #parsers.spacing
-                                      * (parsers.tab + parsers.space^-3)
-                 + parsers.space * parsers.bulletchar * #parsers.spacing
-                                 * (parsers.tab + parsers.space^-2)
-                 + parsers.space * parsers.space * parsers.bulletchar
-                                 * #parsers.spacing
-                                 * (parsers.tab + parsers.space^-1)
-                 + parsers.space * parsers.space * parsers.space
-                                 * parsers.bulletchar * #parsers.spacing
-                 )
+parsers.bullet = function(bullet_char)
+  return Ct(C(parsers.space^-3)
+        * C(bullet_char) * Cc("")
+        * (C(parsers.spacechar^1)
+            + #(parsers.newline + parsers.eof)))
+end
 
 local function tickbox(interior)
   return parsers.optionalspace * parsers.lbracket
@@ -23624,18 +23618,11 @@ function M.reader.new(writer, options)
     parsers.dig = parsers.digit
   end
 
-  parsers.enumerator = C(parsers.dig^3 * parsers.period) * #parsers.spacing
-                     + C(parsers.dig^2 * parsers.period) * #parsers.spacing
-                                       * (parsers.tab + parsers.space^1)
-                     + C(parsers.dig * parsers.period) * #parsers.spacing
-                                     * (parsers.tab + parsers.space^-2)
-                     + parsers.space * C(parsers.dig^2 * parsers.period)
-                                     * #parsers.spacing
-                     + parsers.space * C(parsers.dig * parsers.period)
-                                     * #parsers.spacing
-                                     * (parsers.tab + parsers.space^-1)
-                     + parsers.space * parsers.space * C(parsers.dig^1
-                                     * parsers.period) * #parsers.spacing
+  parsers.enumerator = function(delimiter_type)
+    return Ct(C(parsers.space^-3) 
+            * C(parsers.dig * parsers.dig^-8) * C(delimiter_type)
+            * (C(parsers.spacechar^1) + #(parsers.newline + parsers.eof)))
+  end
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -23769,7 +23756,7 @@ function M.reader.new(writer, options)
   if options.blankBeforeBlockquote then
     parsers.bqstart = parsers.fail
   else
-    parsers.bqstart = parsers.more
+    parsers.bqstart = parsers.blockquote_start
   end
 
   if options.blankBeforeHeading then
@@ -23780,11 +23767,29 @@ function M.reader.new(writer, options)
                         * parsers.optionalspace * parsers.newline)
   end
 
+  if options.blankBeforeList then
+    parsers.interrupting_bullets = parsers.fail
+    parsers.interrupting_enumerators = parsers.fail
+  else
+    parsers.interrupting_bullets  = parsers.space^-3
+                                  * (parsers.dash + parsers.asterisk + parsers.plus)
+                                  * parsers.spacechar^1 
+                                  * -#(parsers.newline + parsers.eof)
+
+    parsers.interrupting_enumerators  = parsers.space^-3
+                                      * P("1")
+                                      * (parsers.period + parsers.rparent)
+                                      * parsers.spacechar^1 
+                                      * -#(parsers.newline + parsers.eof)
+  end
+
   parsers.EndlineExceptions
                      = parsers.blankline -- paragraph break
                      + parsers.tightblocksep  -- nested list
                      + parsers.eof       -- end of document
-                     + parsers.blockquote_start
+                     + parsers.bqstart
+                     + parsers.interrupting_bullets
+                     + parsers.interrupting_enumerators
                      + parsers.headerstart
 
   parsers.Endline   = parsers.newline
@@ -23966,7 +23971,11 @@ function M.reader.new(writer, options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  parsers.starter = parsers.bullet + parsers.enumerator
+    parsers.starter = parsers.bullet(parsers.dash) 
+                    + parsers.bullet(parsers.asterisk)
+                    + parsers.bullet(parsers.plus)
+                    + parsers.enumerator(parsers.period)
+                    + parsers.enumerator(parsers.rparent)
 
   if options.taskLists then
     parsers.tickbox = ( parsers.ticked_box
@@ -24007,13 +24016,21 @@ function M.reader.new(writer, options)
                ) / self.parser_functions.parse_blocks_nested
   end
 
-  parsers.BulletList = ( Ct(parsers.TightListItem(parsers.bullet)^1) * Cc(true)
-                       * parsers.skipblanklines * -parsers.bullet
-                       + Ct(parsers.LooseListItem(parsers.bullet)^1) * Cc(false)
-                       * parsers.skipblanklines )
-                     / writer.bulletlist
+  parsers.BulletListOfType = function(bullet_type)
+    local bullet = parsers.bullet(bullet_type)
+    return  ( Ct( parsers.TightListItem(bullet)^1) * Cc(true)
+               * parsers.skipblanklines * -bullet
+               + Ct(parsers.LooseListItem(bullet)^1) * Cc(false)
+               * parsers.skipblanklines)
+            / writer.bulletlist
+  end
 
-  local function ordered_list(items,tight,startnum)
+  parsers.BulletList = parsers.BulletListOfType(parsers.dash) 
+                     + parsers.BulletListOfType(parsers.asterisk)
+                     + parsers.BulletListOfType(parsers.plus)
+
+  local function ordered_list(items,tight,starter)
+    local startnum = starter[2]
     if options.startNumber then
       startnum = tonumber(startnum) or 1  -- fallback for '#'
       if startnum ~= nil then
@@ -24025,14 +24042,20 @@ function M.reader.new(writer, options)
     return writer.orderedlist(items,tight,startnum)
   end
 
-  parsers.OrderedList = Cg(parsers.enumerator, "listtype") *
-                      ( Ct(parsers.TightListItem(Cb("listtype"))
-                          * parsers.TightListItem(parsers.enumerator)^0)
-                      * Cc(true) * parsers.skipblanklines * -parsers.enumerator
-                      + Ct(parsers.LooseListItem(Cb("listtype"))
-                          * parsers.LooseListItem(parsers.enumerator)^0)
-                      * Cc(false) * parsers.skipblanklines
-                      ) * Cb("listtype") / ordered_list
+  parsers.OrderedListOfType = function(delimeter_type)
+    local enumerator = parsers.enumerator(delimeter_type)
+    return  Cg(enumerator, "listtype")
+          * (Ct( parsers.TightListItem(Cb("listtype"))
+               * parsers.TightListItem(enumerator)^0)
+          * Cc(true) * parsers.skipblanklines * -enumerator
+          + Ct( parsers.LooseListItem(Cb("listtype"))
+              * parsers.LooseListItem(enumerator)^0)
+          * Cc(false) * parsers.skipblanklines
+          ) * Cb("listtype") / ordered_list
+  end
+
+  parsers.OrderedList = parsers.OrderedListOfType(parsers.period)
+                      + parsers.OrderedListOfType(parsers.rparent)
 %    \end{macrocode}
 % \par
 % \begin{markdown}
