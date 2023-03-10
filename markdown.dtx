@@ -23272,33 +23272,7 @@ function M.reader.new(writer, options)
 % \par
 % \begin{markdown}
 %
-%#### Parsers Used for Markdown Lists (local)
-%
-% \end{markdown}
-%  \begin{macrocode}
-  if options.hashEnumerators then
-    parsers.dig = parsers.digit + parsers.hash
-  else
-    parsers.dig = parsers.digit
-  end
-
-  parsers.enumerator = C(parsers.dig^3 * parsers.period) * #parsers.spacing
-                     + C(parsers.dig^2 * parsers.period) * #parsers.spacing
-                                       * (parsers.tab + parsers.space^1)
-                     + C(parsers.dig * parsers.period) * #parsers.spacing
-                                     * (parsers.tab + parsers.space^-2)
-                     + parsers.space * C(parsers.dig^2 * parsers.period)
-                                     * #parsers.spacing
-                     + parsers.space * C(parsers.dig * parsers.period)
-                                     * #parsers.spacing
-                                     * (parsers.tab + parsers.space^-1)
-                     + parsers.space * parsers.space * C(parsers.dig^1
-                                     * parsers.period) * #parsers.spacing
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-%#### Parsers Used for Blockquotes (local)
+%#### Parsers Used for Indentation (local)
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -23417,6 +23391,41 @@ function M.reader.new(writer, options)
 
   parsers.minimally_indented_separated_block  = check_minimal_indent / writer.interblocksep
                                               * V("Block")
+
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+%#### Parsers Used for Markdown Lists (local)
+%
+% \end{markdown}
+%  \begin{macrocode}
+  if options.hashEnumerators then
+    parsers.dig = parsers.digit + parsers.hash
+  else
+    parsers.dig = parsers.digit
+  end
+
+  parsers.enumerator = C(parsers.dig^3 * parsers.period) * #parsers.spacing
+                     + C(parsers.dig^2 * parsers.period) * #parsers.spacing
+                                       * (parsers.tab + parsers.space^1)
+                     + C(parsers.dig * parsers.period) * #parsers.spacing
+                                     * (parsers.tab + parsers.space^-2)
+                     + parsers.space * C(parsers.dig^2 * parsers.period)
+                                     * #parsers.spacing
+                     + parsers.space * C(parsers.dig * parsers.period)
+                                     * #parsers.spacing
+                                     * (parsers.tab + parsers.space^-1)
+                     + parsers.space * parsers.space * C(parsers.dig^1
+                                     * parsers.period) * #parsers.spacing
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+%#### Parsers Used for Blockquotes (local)
+%
+% \end{markdown}
+%  \begin{macrocode}
 
   parsers.blockquote_content = function(breakable)
     local blank = parsers.minimally_indented_blank
