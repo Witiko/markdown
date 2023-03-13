@@ -25624,7 +25624,11 @@ M.extensions.link_attributes = function()
               self.parser_functions.parse_inlines_no_link(label),
               r.url, r.title, r.attributes)
           else
-            return {fallback, writer.string(attribute_text)}
+            local buf = {fallback}
+            if attributes then
+              table.insert(buf, writer.string(attribute_text))
+            end
+            return buf
           end
         end)
       end
@@ -25673,7 +25677,11 @@ M.extensions.link_attributes = function()
             return writer.image(writer.string(label),
                                 r.url, r.title, r.attributes)
           else
-            return {"!", fallback, writer.string(attribute_text)}
+            local buf = {"!", fallback}
+            if attributes then
+              table.insert(buf, writer.string(attribute_text))
+            end
+            return buf
           end
         end)
       end
