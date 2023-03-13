@@ -24021,7 +24021,33 @@ end
         previous_pattern = nil
         extension_name = current_extension_name
       end
-      local pattern = get_pattern(previous_pattern)
+      local pattern
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Instead of a function, a \acro{peg} pattern `pattern` may also be
+% supplied with roughly the same effect as supplying the following
+% function, which will define \luamref{walkable_syntax}`[`left-hand
+% side terminal symbol`]` unless it has been previously defined.
+%
+% ``` lua
+% function(previous_pattern)
+%   assert(previous_pattern == nil)
+%   return pattern
+% end
+% ```
+%
+% \end{markdown}
+%  \begin{macrocode}
+      if type(get_pattern) == "function" then
+        pattern = get_pattern(previous_pattern)
+      else
+        assert(previous_pattern == nil,
+               [[Rule ]] .. rule_name ..
+               [[ has already been updated by ]] .. extension_name)
+        pattern = get_pattern
+      end
       local accountable_pattern = { pattern, extension_name, rule_name }
       walkable_syntax[rule_name] = { accountable_pattern }
     end
@@ -25031,7 +25057,7 @@ M.extensions.fancy_lists = function()
                       * Cc(false) * parsers.skipblanklines
                       ) * Cb("listtype") / fancylist
 
-      self.update_rule("OrderedList", function() return FancyList end)
+      self.update_rule("OrderedList", FancyList)
     end
   }
 end
@@ -25450,7 +25476,7 @@ M.extensions.header_attributes = function()
                           / writer.heading
 
       local Heading = AtxHeading + SetextHeading
-      self.update_rule("Heading", function() return Heading end)
+      self.update_rule("Heading", Heading)
     end
   }
 end
@@ -25574,9 +25600,7 @@ M.extensions.link_attributes = function()
                                     * parsers.blankline^1
                                     / self.register_link
 
-      self.update_rule("Reference", function()
-        return ReferenceWithAttributes
-      end)
+      self.update_rule("Reference", ReferenceWithAttributes)
 
 %    \end{macrocode}
 % \begin{markdown}
@@ -25603,19 +25627,30 @@ M.extensions.link_attributes = function()
       end
 
       local DirectLinkWithAttributes = parsers.direct_link
-                                     * Ct(parsers.attributes)
+                                     * (Ct(parsers.attributes))^-1
                                      / writer.link
 
       local IndirectLinkWithAttributes = parsers.indirect_link
-                                       * C(Ct(parsers.attributes))
+                                       * (C(Ct(parsers.attributes)))^-1
                                        / indirect_link
 
       local LinkWithAttributes = DirectLinkWithAttributes
                                + IndirectLinkWithAttributes
 
-      self.insert_pattern("Inline before Link",
-                          LinkWithAttributes,
-                          "LinkWithAttributes")
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Here, we directly update the `Link` grammar rule to keep the
+% method \luamref{reader->parser_functions.parse_inlines_no_link}
+% aware of `LinkWithAttributes` and prevent nested links.
+%
+% If we used \luamref{reader->insert_pattern} instead of
+% \luamref{reader->update_rule}, this correspondence would have
+% been lost and link text would be able to contain nested links.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      self.update_rule("Link", LinkWithAttributes)
 
 %    \end{macrocode}
 % \begin{markdown}
@@ -25779,7 +25814,7 @@ M.extensions.notes = function(notes, inline_notes)
                     / register_note
 
         local Blank = NoteBlock + parsers.Blank
-        self.update_rule("Blank", function() return Blank end)
+        self.update_rule("Blank", Blank)
 
         self.insert_pattern("Inline after Emph",
                             NoteRef, "NoteRef")
@@ -26349,7 +26384,7 @@ M.extensions.jekyll_data = function(expect_jekyll_data)
       self.insert_pattern("Block before Blockquote",
                           UnexpectedJekyllData, "UnexpectedJekyllData")
       if expect_jekyll_data then
-        self.update_rule("ExpectedJekyllData", function() return ExpectedJekyllData end)
+        self.update_rule("ExpectedJekyllData", ExpectedJekyllData)
       end
     end
   }
