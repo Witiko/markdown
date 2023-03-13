@@ -22265,8 +22265,14 @@ function M.writer.new(options)
     local buf = {}
 
     table.sort(attr)
+    local seen = {}
     local key, value
     for i = 1, #attr do
+      if seen[attr[i]] ~= nil then
+        goto continue  -- prevent duplicate attributes
+      else
+        seen[attr[i]] = true
+      end
       if attr[i]:sub(1, 1) == "#" then
         table.insert(buf, {"\\markdownRendererAttributeIdentifier{",
                            attr[i]:sub(2), "}"})
@@ -22278,6 +22284,7 @@ function M.writer.new(options)
         table.insert(buf, {"\\markdownRendererAttributeKeyValue{",
                            key, "}{", value, "}"})
       end
+      ::continue::
     end
 
     return buf
