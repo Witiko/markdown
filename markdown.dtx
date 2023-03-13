@@ -23064,7 +23064,26 @@ parsers.between = function(p, starter, ender)
   return (starter * #parsers.nonspacechar * Ct(p * (p - ender2)^0) * ender2)
 end
 
-parsers.urlchar      = parsers.anyescaped - parsers.newline - parsers.more
+parsers.urlchar       = parsers.anyescaped
+                      - parsers.newline
+                      - parsers.more
+
+parsers.auto_link_url = parsers.less
+                      * C( parsers.alphanumeric^1 * P("://")
+                         * parsers.urlchar^1)
+                      * parsers.more
+
+parsers.auto_link_email
+                      = parsers.less
+                      * C((parsers.alphanumeric + S("-._+"))^1
+                      * P("@") * parsers.urlchar^1)
+                      * parsers.more
+
+parsers.auto_link_relative_reference
+                      = parsers.less
+                      * C(parsers.urlchar^1)
+                      * parsers.more
+
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -23595,29 +23614,48 @@ function M.reader.new(writer, options)
                      ) / writer.emphasis
   end
 
-  parsers.AutoLinkUrl    = parsers.less
-                         * C(parsers.alphanumeric^1 * P("://") * parsers.urlchar^1)
-                         * parsers.more
-                         / function(url)
-                             return writer.link(writer.escape(url), url)
-                           end
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% The \luamdef{reader->auto_link_url} method produces an
+% autolink to a URL or a relative reference in the output
+% format, where `url` is the link destination and
+% `attributes` are the optional attributes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+function self.auto_link_url(url, attributes)
+  return writer.link(writer.escape(url),
+                     url, nil, attributes)
+end
 
-  parsers.AutoLinkEmail = parsers.less
-                        * C((parsers.alphanumeric + S("-._+"))^1
-                        * P("@") * parsers.urlchar^1)
-                        * parsers.more
-                        / function(email)
-                            return writer.link(writer.escape(email),
-                                               "mailto:"..email)
-                          end
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% The \luamdef{reader->auto_link_email} method produces an
+% autolink to an e-mail in the output format, where `email` is the email
+% address destination and `attributes` are the optional attributes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+function self.auto_link_email(email, attributes)
+  return writer.link(writer.escape(email),
+                     "mailto:"..email,
+                     nil, attributes)
+end
+
+  parsers.AutoLinkUrl = parsers.auto_link_url
+                      / self.auto_link_url
+
+  parsers.AutoLinkEmail
+                      = parsers.auto_link_email
+                      / self.auto_link_email
 
   parsers.AutoLinkRelativeReference
-                         = parsers.less
-                         * C(parsers.urlchar^1)
-                         * parsers.more
-                         / function(url)
-                             return writer.link(writer.escape(url), url)
-                           end
+                      = parsers.auto_link_relative_reference
+                      / self.auto_link_url
 
   parsers.DirectLink    = parsers.direct_link
                         / writer.link
@@ -25518,6 +25556,7 @@ M.extensions.link_attributes = function()
     end, extend_reader = function(self)
       local parsers = self.parsers
       local writer = self.writer
+      local options = self.options
 
 %    \end{macrocode}
 % \begin{markdown}
@@ -25615,6 +25654,47 @@ M.extensions.link_attributes = function()
       self.insert_pattern("Inline before Image",
                           ImageWithAttributes,
                           "ImageWithAttributes")
+
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The following patterns define autolinks with attributes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+
+      local AutoLinkUrlWithAttributes
+                      = parsers.auto_link_url
+                      * Ct(parsers.attributes)
+                      / self.auto_link_url
+
+      self.insert_pattern("Inline before AutoLinkUrl",
+                          AutoLinkUrlWithAttributes,
+                          "AutoLinkUrlWithAttributes")
+
+      local AutoLinkEmailWithAttributes
+                      = parsers.auto_link_email
+                      * Ct(parsers.attributes)
+                      / self.auto_link_email
+
+      self.insert_pattern("Inline before AutoLinkEmail",
+                          AutoLinkEmailWithAttributes,
+                          "AutoLinkEmailWithAttributes")
+
+      if options.relativeReferences then
+
+        local AutoLinkRelativeReferenceWithAttributes
+                        = parsers.auto_link_relative_reference
+                        * Ct(parsers.attributes)
+                        / self.auto_link_url
+
+        self.insert_pattern(
+          "Inline before AutoLinkRelativeReference",
+          AutoLinkRelativeReferenceWithAttributes,
+          "AutoLinkRelativeReferenceWithAttributes")
+
+      end
+
     end
   }
 end
