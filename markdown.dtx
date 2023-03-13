@@ -23459,6 +23459,9 @@ function M.reader.new(writer, options)
       for _, attribute in ipairs(attributes or {}) do
         table.insert(merged_attributes, attribute)
       end
+      if #merged_attributes == 0 then
+        merged_attributes = nil
+      end
       return {
         url = r.url,
         title = r.title,
