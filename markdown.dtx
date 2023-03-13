@@ -23039,14 +23039,14 @@ parsers.tagentity = parsers.ampersand * C(parsers.alphanumeric^1)
 % \par
 % \begin{markdown}
 %
-%#### Helpers for References
+%#### Helpers for Link Reference Definitions
 %
 % \end{markdown}
 %  \begin{macrocode}
 -- parse a reference definition:  [foo]: /bar "title"
 parsers.define_reference_parser = parsers.leader * parsers.tag * parsers.colon
                                 * parsers.spacechar^0 * parsers.url
-                                * parsers.optionaltitle * parsers.blankline^1
+                                * parsers.optionaltitle
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -23367,45 +23367,92 @@ function M.reader.new(writer, options)
 % \par
 % \begin{markdown}
 %
-%#### Helpers for Links and References (local)
+%#### Helpers for Links and Link Reference Definitions (local)
 %
 % \end{markdown}
 %  \begin{macrocode}
   -- List of references defined in the document
   local references
 
-  -- add a reference to the list
-  local function register_link(tag,url,title)
-      references[self.normalize_tag(tag)] = { url = url, title = title }
-      return ""
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% The \luamdef{reader->register_link} method registers
+% a link reference, where `tag` is the link label, `url`
+% is the link destination, `title` is the optional link
+% title, and `attributes` are the optional attributes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  function self.register_link(tag, url, title,
+                              attributes)
+    tag = self.normalize_tag(tag)
+    references[tag] = {
+      url = url,
+      title = title,
+      attributes = attributes,
+    }
+    return ""
   end
 
-  -- lookup link reference and return either
-  -- the link or nil and fallback text.
-  function self.lookup_reference(label,sps,tag)
-      local tagpart
-      if not tag then
-          tag = label
-          tagpart = ""
-      elseif tag == "" then
-          tag = label
-          tagpart = "[]"
-      else
-          tagpart = {"[",
-            self.parser_functions.parse_inlines(tag),
-            "]"}
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% The \luamdef{reader->lookup_reference} method looks up a
+% reference with link label `tag`. When the reference exists
+% the method returns a link. The attributes of a link are
+% produced by merging the attributes of the link reference
+% and the optional `attributes`. Otherwise, the method returns a
+% two-tuple of `nil` and fallback text constructed from the
+% link text `label` and the optional spaces `sps` between the
+% link text and the link label.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  function self.lookup_reference(label, sps, tag,
+                                 attributes)
+    local tagpart
+    if not tag then
+      tag = label
+      tagpart = ""
+    elseif tag == "" then
+      tag = label
+      tagpart = "[]"
+    else
+      tagpart = {
+        "[",
+        self.parser_functions.parse_inlines(tag),
+        "]"
+      }
+    end
+    if sps then
+      tagpart = {sps, tagpart}
+    end
+    tag = self.normalize_tag(tag)
+    local r = references[tag]
+    if r then
+      local merged_attributes = {}
+      for _, attribute in ipairs(r.attributes or {}) do
+        table.insert(merged_attributes, attribute)
       end
-      if sps then
-        tagpart = {sps, tagpart}
+      for _, attribute in ipairs(attributes or {}) do
+        table.insert(merged_attributes, attribute)
       end
-      local r = references[self.normalize_tag(tag)]
-      if r then
-        return r
-      else
-        return nil, {"[",
-          self.parser_functions.parse_inlines(label),
-          "]", tagpart}
-      end
+      return {
+        url = r.url,
+        title = r.title,
+        attributes = merged_attributes,
+      }
+    else
+      return nil, {
+        "[",
+        self.parser_functions.parse_inlines(label),
+        "]",
+        tagpart
+      }
+    end
   end
 
   -- lookup link reference and return a link, if the reference is found,
@@ -23636,7 +23683,9 @@ function M.reader.new(writer, options)
                           + parsers.lineof(parsers.underscore)
                           ) / writer.thematic_break
 
-  parsers.Reference    = parsers.define_reference_parser / register_link
+  parsers.Reference    = parsers.define_reference_parser
+                       * parsers.blankline^1
+                       / self.register_link
 
   parsers.Paragraph    = parsers.nonindentspace * Ct(parsers.Inline^1)
                        * ( parsers.newline
@@ -23732,7 +23781,7 @@ function M.reader.new(writer, options)
 % \end{markdown}
 %  \begin{macrocode}
   parsers.Blank        = parsers.blankline / ""
-                       + parsers.Reference
+                       + V("Reference")
                        + (parsers.tightblocksep / "\n")
 %    \end{macrocode}
 % \par
@@ -23870,6 +23919,7 @@ function M.reader.new(writer, options)
         ExpectedJekyllData    = parsers.fail,
 
         Blank                 = parsers.Blank,
+        Reference             = parsers.Reference,
 
         Blockquote            = parsers.Blockquote,
         Verbatim              = parsers.Verbatim,
@@ -25472,6 +25522,26 @@ M.extensions.link_attributes = function()
 %    \end{macrocode}
 % \begin{markdown}
 %
+% The following patterns define link reference definitions with attributes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+
+      local define_reference_parser = parsers.define_reference_parser
+                                    * ( parsers.spnl
+                                      * Ct(parsers.attributes))^-1
+
+      local ReferenceWithAttributes = define_reference_parser
+                                    * parsers.blankline^1
+                                    / self.register_link
+
+      self.update_rule("Reference", function()
+        return ReferenceWithAttributes
+      end)
+
+%    \end{macrocode}
+% \begin{markdown}
+%
 % The following patterns define direct and indirect links with attributes.
 %
 % \end{markdown}
@@ -25481,11 +25551,12 @@ M.extensions.link_attributes = function()
                                    attribute_text,
                                    attributes)
         return writer.defer_call(function()
-          local r, fallback = self.lookup_reference(label, sps, tag)
+          local r, fallback = self.lookup_reference(label, sps, tag,
+                                                    attributes)
           if r then
             return writer.link(
               self.parser_functions.parse_inlines_no_link(label),
-              r.url, r.title, attributes)
+              r.url, r.title, r.attributes)
           else
             return {fallback, writer.string(attribute_text)}
           end
@@ -25519,10 +25590,11 @@ M.extensions.link_attributes = function()
                                     attribute_text,
                                     attributes)
         return writer.defer_call(function()
-          local r, fallback = self.lookup_reference(label, sps, tag)
+          local r, fallback = self.lookup_reference(label, sps, tag,
+                                                    attributes)
           if r then
             return writer.image(writer.string(label),
-                                r.url, r.title, attributes)
+                                r.url, r.title, r.attributes)
           else
             return {"!", fallback, writer.string(attribute_text)}
           end
