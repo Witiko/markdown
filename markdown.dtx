@@ -19407,9 +19407,9 @@ texexec --passon=--shell-escape document.tex
 %  \begin{macrocode}
 local upper, format, length =
   string.upper, string.format, string.len
-local P, R, S, V, C, Cg, Cb, Cmt, Cc, Ct, B, Cs, any =
+local P, R, S, V, C, Cg, Cb, Cmt, Cc, Ct, B, Cs, Cp, any =
   lpeg.P, lpeg.R, lpeg.S, lpeg.V, lpeg.C, lpeg.Cg, lpeg.Cb,
-  lpeg.Cmt, lpeg.Cc, lpeg.Ct, lpeg.B, lpeg.Cs, lpeg.P(1)
+  lpeg.Cmt, lpeg.Cc, lpeg.Ct, lpeg.B, lpeg.Cs, lpeg.Cp, lpeg.P(1)
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -22961,8 +22961,10 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
+parsers.leader      = parsers.space^-3
+
 parsers.bullet = function(bullet_char)
-  return Ct(C(parsers.space^-3)
+  return Ct(C(parsers.leader)
         * C(bullet_char) * Cc("")
         * (C(parsers.spacechar^1)
             + #(parsers.newline + parsers.eof)))
@@ -23010,8 +23012,6 @@ parsers.inticks     = parsers.openticks * parsers.space^-1
 %
 % \end{markdown}
 %  \begin{macrocode}
-parsers.leader      = parsers.space^-3
-
 -- content in balanced brackets, parentheses, or quotes:
 parsers.bracketed   = P{ parsers.lbracket
                        * (( parsers.backslash / "" * parsers.rbracket
@@ -23489,74 +23489,275 @@ function M.reader.new(writer, options)
 % \end{markdown}
 %  \begin{macrocode}
 
+  -- TODO replace
   parsers.blockquote_start = parsers.leader * parsers.more * parsers.space^-1
 
-  parsers.indent_value = Ct(C(parsers.letter^1) * C(parsers.digit^1))
-
-  parsers.indent_rope = parsers.indent_value * (parsers.comma * parsers.space * parsers.indent_value)^0
-
-  -- increments the indent type by a value
-  local function increment_indent_level(indent_type, increment)
-    local function update_indent_level(s, i, current_indent)
-
-      local indent_table = lpeg.match(Ct(parsers.indent_rope), current_indent)
-
-      if indent_table == nil then
-        indent_table = {}
-        indent_table[#indent_table + 1] = {indent_type, increment}
-      else
-        local last_indent = indent_table[#indent_table]
-        local last_indent_type = last_indent[1]
-        local last_indent_value = last_indent[2]
-        
-        if last_indent_type == indent_type then
-          indent_table[#indent_table][2] = math.floor(last_indent_value + increment)
-        else
-          indent_table[#indent_table + 1] = {indent_type, increment}
-        end
-      end
-
-      local joined_values = {}
-      for _, value in ipairs(indent_table) do
-        if value[2] > 0 then
-          joined_values[#joined_values + 1] = value[1] .. value[2]
-        end
-      end
-
-      local new_indent_table = table.concat(joined_values, ", ")
-      return true, new_indent_table
-    end
-
-    return Cg( Cmt(Cb("relative_indent"), update_indent_level)
-              , "relative_indent")
+  local function add_trail(indent_table, trail_info)
+    indent_table[#indent_table + 1] = trail_info
+    return indent_table
   end
 
-  -- decodes pattern name from pair <name><count> to its pattern
+  local function remove_trail(indent_table)
+    if indent_table ~= nil and 
+    indent_table[#indent_table] ~= nil and 
+    indent_table[#indent_table]["type"] == "trail" then
+      indent_table[#indent_table] = nil
+    end
+
+    return indent_table
+  end
+
+  local function leave_trail(s, i, indent_table)
+    indent_table = remove_trail(indent_table)
+
+    return true, indent_table
+  end
+
+  local function update_indent_table(indent_table, new_indent, increment)
+
+    indent_table = remove_trail(indent_table)
+
+    local indent_name = new_indent["name"]
+    local indent_length = new_indent["length"]
+
+    if increment ~= nil and increment > 0 then
+      indent_table[#indent_table + 1] = {
+        ["type"]="indent",
+        ["name"]=indent_name,
+        ["length"]=tostring(indent_length)}
+    else
+      if indent_table[#indent_table]["name"] == indent_name then
+        indent_table[#indent_table] = nil
+      end
+    end
+
+    return indent_table
+  end
+
+  -- removes the indent type by a value
+  local function remove_indent_level(s,i,indent_table, indent_type)
+    indent_table = update_indent_table(indent_table, {["name"]=indent_type})
+    return true, indent_table
+  end
+
+  -- spacing processor
+  local function process_starter_spacing(indent, spacing, minimum, left_strip_length)
+
+    if (left_strip_length == nil) then
+      left_strip_length = 0
+    end
+
+    local count = 0
+    local tab_value = 4 - (indent) % 4
+
+    local code_started = false
+    local code_start = ""
+
+    local t = {}
+
+    local left_stripped = false
+    local left_total_stripped = 0
+
+    local raw_full_remainder = ""
+
+    if spacing ~= nil then
+      for i = 1, #spacing do
+        local character = spacing:sub(i, i)
+
+        if character == "\t" then
+          count = count + tab_value
+          tab_value = 4
+        end
+        if character == " " then
+          count = count + 1
+          tab_value = 4 - (4 - tab_value + 1) % 4
+        end
+
+        if (left_strip_length ~= 0) then
+          local possible_to_strip = math.min(count, left_strip_length)
+          count = count - possible_to_strip
+          left_strip_length = left_strip_length - possible_to_strip
+          left_total_stripped = left_total_stripped + possible_to_strip
+        else
+          raw_full_remainder = raw_full_remainder .. character
+        end
+        
+        if (code_started) then
+          code_start = code_start .. character
+        else
+          if (count >= minimum + 4) then
+            code_started = true
+            code_start = code_start .. string.rep(" ", count - (minimum + 4))
+          end
+        end
+      end
+    end
+
+    local remainder = ""
+
+    if (code_started) then
+      remainder = code_start
+    else
+      remainder = string.rep(" ", count - minimum)
+    end
+
+    return {code_started, remainder, left_total_stripped, raw_full_remainder}
+  end
+
+  local function count_indent_tab_level(indent_table)
+    local count = 0
+    if indent_table == nil then
+      return count
+    end
+
+    for i=1, #indent_table do
+      if indent_table[i]["type"] == "indent" then
+        count = count + tonumber(indent_table[i]["length"])
+      end
+    end
+    return count
+  end
+
+  local function check_trail_joined(s, i, indent_table, spacing, expect_code, substitute)
+    local trail = nil
+    local is_code = false
+    local remainder = ""
+
+    if indent_table ~= nil and indent_table[#indent_table] ~= nil and indent_table[#indent_table]["type"] == "trail" then
+      trail = indent_table[#indent_table]
+      is_code = trail["is_code"]
+      remainder = trail["remainder"]
+    end
+
+    if trail == nil then
+      local sp = process_starter_spacing(0, spacing, 0) 
+      is_code = sp[1]
+      remainder = sp[2]
+    end
+
+    if expect_code then
+      if is_code then
+        if substitute then
+          return true, remainder
+        end
+        return true
+      end
+      return false
+    end
+
+    if is_code then
+      return false
+    end
+
+    if substitute then
+      return true, ""
+    end
+    return true
+  end
+
+  local function process_starter_indent(s, i, indent_table, starter, indent_type)
+    local last_trail = starter[1]
+    local delimiter = starter[2]
+    local raw_new_trail = starter[3]
+
+    if indent_table ~= nil and indent_table[#indent_table] ~= nil and indent_table[#indent_table]["type"] == "trail" then
+      if (indent_table[#indent_table]["is_code"]) then
+        return false
+      end
+      last_trail = indent_table[#indent_table]["remainder"]
+    else
+      local sp = process_starter_spacing(0, last_trail, 0) 
+      local is_code = sp[1]
+      local remainder = sp[2]
+
+      if (is_code) then
+        return false
+      end
+      last_trail = remainder
+    end
+
+    local preceding_indentation = count_indent_tab_level(indent_table) % 4
+    local last_trail_length = #last_trail
+    local delimiter_length = #delimiter
+
+    local total_indent_level = preceding_indentation + last_trail_length + delimiter_length
+
+    local sp = process_starter_spacing(total_indent_level, raw_new_trail, 0, 1)
+
+    local is_code = sp[1]
+    local remainder = sp[2]
+    local left_total_stripped = sp[3]
+
+    local indent_length = last_trail_length + delimiter_length + left_total_stripped
+    local new_indent_info = {["name"]=indent_type, ["length"]=indent_length}
+
+    local indent_table = update_indent_table(indent_table, new_indent_info, 1)
+    local new_trail = {["type"]="trail", ["is_code"]=is_code, ["remainder"]=remainder}
+    indent_table = add_trail(indent_table, new_trail)
+
+    return true, indent_table
+  end
+
   local function decode_pattern(name)
     if name == "bq" then
-      return parsers.blockquote_start
+      return C(parsers.spacechar^0) * C(parsers.more) * C(parsers.spacechar^0) * Cp()
     end
     return parsers.succeed
   end
 
-  -- applies decoded pattern
-  local function traverse_indent(s, i, current_indent, is_optional)
-    local indent_table = lpeg.match(Ct(parsers.indent_rope), current_indent)
-
-    if indent_table == nil then
-      return true, i
-    end
-
+  -- applies decoded pattern iteratively
+  local function traverse_indent(s, i, indent_table, is_optional)
     local new_index = i
 
-    for _, value in ipairs(indent_table) do
-      local pattern = decode_pattern(value[1])
-      if is_optional then
-        pattern = pattern^-1
-      end
+    local preceding_indentation = 0
+    local current_trail = {}
 
-      for j = 1,value[2] do
-        local possible_next_index = lpeg.match(pattern, s, new_index)
+    for _, value in ipairs(indent_table) do
+      if value["type"] == "indent" then
+
+        local pattern = decode_pattern(value["name"])
+
+        local new_indent_info = lpeg.match(Ct(pattern), s, new_index)
+        if new_indent_info == nil then
+          if is_optional then
+            return true, new_index
+          end
+          return false, i
+        end
+
+        local last_trail = new_indent_info[1]
+        local delimiter = new_indent_info[2]
+        local raw_new_trail = new_indent_info[3]
+        local possible_next_index = new_indent_info[4]
+
+        if current_trail ~= nil and current_trail[#current_trail] ~= nil then
+          if (indent_table[#indent_table]["is_code"]) then
+            if is_optional then
+              return true, new_index
+            end
+            return false, i
+          end
+          last_trail = indent_table[#indent_table]["remainder"]
+        end
+
+        -- local preceding_indentation
+        local last_trail_length = #last_trail
+        local delimiter_length = #delimiter
+
+        local total_indent_level = preceding_indentation + last_trail_length + delimiter_length
+
+        local sp = process_starter_spacing(total_indent_level, raw_new_trail, 0, 1)
+
+        local is_code = sp[1]
+        local remainder = sp[2]
+        local left_total_stripped = sp[3]
+        local raw_remainder = sp[4]
+
+        local indent_length = last_trail_length + delimiter_length + left_total_stripped
+
+        preceding_indentation = preceding_indentation + indent_length
+        current_trail = {["type"]="trail", ["is_code"]=is_code, ["remainder"]=remainder, ["raw_remainder"]=raw_remainder}
+
         if (possible_next_index ~= nil) then
           new_index = possible_next_index
         else
@@ -23568,34 +23769,34 @@ function M.reader.new(writer, options)
       end
     end
 
-    return true, new_index
+    return true, new_index, current_trail
   end
 
-  -- skip only all indent
-  local function produce_minimal_indent(s, i, current_indent)
-    local passes, new_index = traverse_indent(s, i, current_indent, false)
+  local function start_traverse_indent(s, i, indent_table, is_optional)
+    if indent_table == nil then
+      return true
+    end
+    local passes, new_index, current_trail = traverse_indent(s, i, indent_table, is_optional)
 
     if passes then
-      return new_index, ""
+      indent_table = add_trail(indent_table, current_trail)
+      return new_index, indent_table
     end
     return false
   end
 
-  -- skip maximum of indent
-  local function produce_optional_indent(s, i, current_indent)
-    local passes, new_index = traverse_indent(s, i, current_indent, true)
+  check_minimal_indent = Cmt(Cb("indent_info") * Cc(false), start_traverse_indent)
 
-    if passes then
-      return new_index, ""
-    end
-    return false
-  end
+  check_optional_indent = Cmt(Cb("indent_info") * Cc(true), start_traverse_indent)
 
-  -- check required
-  check_minimal_indent = Cmt(Cb("relative_indent"), produce_minimal_indent)
+  check_trail = Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(false) * Cc(true), check_trail_joined)
+              * Cg(Cmt(Cb("indent_info"), leave_trail), "indent_info")
 
-  -- check optional indent
-  check_optional_indent = Cmt(Cb("relative_indent"), produce_optional_indent)
+  check_trail_no_sub  = Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(false) * Cc(false), check_trail_joined)
+                      * Cg(Cmt(Cb("indent_info"), leave_trail), "indent_info")
+
+  check_code_trail  = Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(true) * Cc(true), check_trail_joined)
+                    * Cg(Cmt(Cb("indent_info"), leave_trail), "indent_info")
 
   parsers.minimally_indented_blank = check_minimal_indent * V("Blank")
 
@@ -23619,9 +23820,9 @@ function M.reader.new(writer, options)
   end
 
   parsers.enumerator = function(delimiter_type)
-    return Ct(C(parsers.space^-3) 
-            * C(parsers.dig * parsers.dig^-8) * C(delimiter_type)
-            * (C(parsers.spacechar^1) + #(parsers.newline + parsers.eof)))
+    return Ct( C(parsers.leader) 
+             * C(parsers.dig * parsers.dig^-8) * C(delimiter_type)
+             * (C(parsers.spacechar^1) + #(parsers.newline + parsers.eof)))
   end
 %    \end{macrocode}
 % \par
@@ -23650,16 +23851,21 @@ function M.reader.new(writer, options)
                 + parsers.minimally_indented_separated_block)^0)
   end
 
-  parsers.blockquote_body = parsers.blockquote_start
-                          * increment_indent_level("bq", 1)
-                          * parsers.blockquote_content(false)
-                          * increment_indent_level("bq", -1)
+  parsers.blockquote_body = Cg(Cmt( Cb("indent_info") 
+                                  * Ct(C(parsers.spacechar^0) * C(parsers.more) * C(parsers.spacechar^0))
+                                  * Cc("bq"),
+                              process_starter_indent), "indent_info")
+                            * parsers.blockquote_content(false)
+                            * Cg(Cmt( Cb("indent_info") 
+                                    * Cc("bq"),
+                              remove_indent_level), "indent_info")
 
+  -- TODO
   if not options.breakableBlockquotes then
-    parsers.blockquote_body = parsers.blockquote_start
-                            * increment_indent_level("bq", 1)
-                            * parsers.blockquote_content(true)
-                            * increment_indent_level("bq", -1)
+--  parsers.blockquote_body = Cg(parsers.blockquote_start, "starter")
+--                          * increment_indent_level("bq", 1)
+--                          * parsers.blockquote_content(true)
+--                          * increment_indent_level("bq", -1)
   end
 %    \end{macrocode}
 % \par
@@ -23937,9 +24143,10 @@ function M.reader.new(writer, options)
   parsers.indented_non_blank_line = parsers.indentedline - parsers.blankline
 
   parsers.Verbatim  = Cs( 
-                        parsers.indented_non_blank_line
-                      * ((check_minimal_indent * parsers.blankline)^0
-                      * (check_minimal_indent * parsers.indented_non_blank_line)^1)^0
+                        check_code_trail 
+                      * (parsers.line - parsers.blankline)
+                      * (((check_minimal_indent / "") * parsers.blankline)^0
+                      * ((check_minimal_indent / "") * check_code_trail * (parsers.line - parsers.blankline))^1)^0
                       ) / self.expandtabs / writer.verbatim
 
   parsers.BlockquoteExceptions = parsers.leader * parsers.more
@@ -23955,7 +24162,8 @@ function M.reader.new(writer, options)
 
   parsers.Reference    = parsers.define_reference_parser / register_link
 
-  parsers.Paragraph    = parsers.nonindentspace * Ct((parsers.Inline)^1)
+  parsers.Paragraph  = check_trail_no_sub * 
+                       Ct((parsers.Inline)^1)
                        * ( parsers.newline
                          * #V("EndlineExceptions")
                          + parsers.eof)
@@ -24237,7 +24445,7 @@ function M.reader.new(writer, options)
         Smart                 = parsers.Smart,
         Symbol                = parsers.Symbol,
         SpecialChar           = parsers.fail,
-        InitializeState       = parsers.succeed * Cg(Ct("") / "", "relative_indent"), --temporary initialization
+        InitializeState       = parsers.succeed * Cg(Ct(""), "indent_info"), --temporary initialization
       }
 %    \end{macrocode}
 % \par
@@ -25411,8 +25619,8 @@ M.extensions.fenced_code = function(blank_before_code_fence,
 
       local BacktickFencedCode
              = fencehead(parsers.backtick, backtick_infostring)
-             * Cs((check_minimal_indent * fencedline(parsers.backtick))^0)
-             * (check_minimal_indent * fencetail(parsers.backtick) + parsers.succeed)
+             * Cs(((check_minimal_indent / "") * fencedline(parsers.backtick))^0)
+             * ((check_minimal_indent / "") * fencetail(parsers.backtick) + parsers.succeed)
 
       local infostring_with_attributes
                         = Ct(C((parsers.linechar
