@@ -26407,7 +26407,7 @@ end
 \def\markdownRendererContentBlockOnlineImagePrototype{%
   \markdownRendererImage}%
 \def\markdownRendererContentBlockCodePrototype#1#2#3#4#5{%
-  \markdownRendererInputFencedCode{#3}{#2}}%
+  \markdownRendererInputFencedCode{#3}{#2}{#2}}%
 \def\markdownRendererImagePrototype#1#2#3#4{#2}%
 \def\markdownRendererUlBeginPrototype{}%
 \def\markdownRendererUlBeginTightPrototype{}%
@@ -26445,7 +26445,7 @@ end
 \def\markdownRendererLineBlockEndPrototype{\endgroup}%
 \def\markdownRendererInputVerbatimPrototype#1{%
   \par{\tt\input#1\relax{}}\par}%
-\def\markdownRendererInputFencedCodePrototype#1#2{%
+\def\markdownRendererInputFencedCodePrototype#1#2#3{%
   \markdownRendererInputVerbatim{#1}}%
 \def\markdownRendererHeadingOnePrototype#1{#1}%
 \def\markdownRendererHeadingTwoPrototype#1{#1}%
@@ -27682,7 +27682,7 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\renewcommand\markdownRendererInputFencedCodePrototype[2]{%
+\renewcommand\markdownRendererInputFencedCodePrototype[3]{%
   \def\next##1 ##2\relax{%
     \ifthenelse{\equal{##1}{dot}}{%
       \markdownIfOption{frozenCache}{}{%
@@ -27709,7 +27709,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
     }{%
-      \markdown@witiko@dot@oldRendererInputFencedCodePrototype{#1}{#2}%
+      \markdown@witiko@dot@oldRendererInputFencedCodePrototype{#1}{#2}{#3}%
     }%
   }%
   \next#2 \relax}%
@@ -28323,7 +28323,7 @@ end
 \RequirePackage{ltxcmds}
 \ExplSyntaxOn
 \cs_gset:Npn
-  \markdownRendererInputFencedCodePrototype#1#2
+  \markdownRendererInputFencedCodePrototype#1#2#3
   {
     \tl_if_empty:nTF
       { #2 }
@@ -28383,7 +28383,7 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-              { \markdownRendererInputFencedCode{#1}{} }
+              { \markdownRendererInputFencedCode{#1}{}{} }
           }
       }
   }
@@ -29298,7 +29298,7 @@ end
 %  \begin{macrocode}
 \ExplSyntaxOn
 \cs_gset:Npn
-  \markdownRendererInputFencedCodePrototype#1#2
+  \markdownRendererInputFencedCodePrototype#1#2#3
   {
     \tl_if_empty:nTF
       { #2 }
