@@ -24424,15 +24424,15 @@ M.extensions.fenced_code = function(blank_before_code_fence,
       end
 
       local tilde_infostring
-                           = Cs(( parsers.backslash / "" * parsers.escapable 
-                                + parsers.linechar
-                              - (parsers.spacechar^1 * parsers.newline))^0)
+                           = Cs(( parsers.anyescaped 
+                                - parsers.newline
+                                - (parsers.spacechar^1 * parsers.newline))^0)
 
       local backtick_infostring
-                           = Cs(( parsers.backslash / "" * (parsers.escapable - parsers.backtick) 
-                                + parsers.linechar
-                              - (parsers.backtick
-                                + parsers.spacechar^1 * parsers.newline))^0)
+                           = Cs(((-#(parsers.backslash * parsers.backtick) * parsers.anyescaped)
+                                - parsers.newline
+                                - (parsers.backtick
+                                  + parsers.spacechar^1 * parsers.newline))^0)
 
       local fenceindent
       local fencehead      = function(char, infostring)
