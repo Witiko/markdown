@@ -22885,7 +22885,7 @@ parsers.keyword_exact = function(s)
 end
 
 parsers.special_block_keyword =
-    parsers.keyword_exact("pre") + 
+    parsers.keyword_exact("pre") +
     parsers.keyword_exact("script") +
     parsers.keyword_exact("style") +
     parsers.keyword_exact("textarea")
@@ -22954,14 +22954,14 @@ parsers.block_keyword =
     parsers.keyword_exact("track") +
     parsers.keyword_exact("ul")
 
-parsers.html_attribute_spacing  = parsers.spacechar^1 
+parsers.html_attribute_spacing  = parsers.spacechar^1
                                 + parsers.optionalspace
-                                * parsers.newline 
+                                * parsers.newline
                                 * parsers.optionalspace
 
 parsers.html_attribute_name = (parsers.letter + parsers.colon + parsers.underscore)
-                            * (parsers.alphanumeric + parsers.colon + parsers.underscore 
-                             + parsers.period + parsers.dash)^0
+                            * (parsers.alphanumeric + parsers.colon + parsers.underscore
+                            + parsers.period + parsers.dash)^0
 
 parsers.html_attribute_value = parsers.squote * (parsers.any - parsers.squote)^0 * parsers.squote
                              + parsers.dquote * (parsers.any - parsers.dquote)^0 * parsers.dquote
@@ -22969,92 +22969,92 @@ parsers.html_attribute_value = parsers.squote * (parsers.any - parsers.squote)^0
                                - parsers.dquote - parsers.squote - parsers.backtick
                                - parsers.equal - parsers.less - parsers.more)^1
 
-parsers.html_attribute_value_specification  = parsers.spnl 
-                                            * parsers.equal 
-                                            * parsers.spnl 
-                                            * parsers.html_attribute_value 
+parsers.html_attribute_value_specification  = parsers.spnl
+                                            * parsers.equal
+                                            * parsers.spnl
+                                            * parsers.html_attribute_value
 
-parsers.html_attribute  = parsers.html_attribute_spacing 
+parsers.html_attribute  = parsers.html_attribute_spacing
                         * parsers.html_attribute_name
                         * parsers.html_attribute_value_specification^-1
 
-parsers.html_non_newline_attribute  = parsers.spacechar^1 
+parsers.html_non_newline_attribute  = parsers.spacechar^1
                                     * parsers.html_attribute_name
                                     * parsers.html_attribute_value_specification^-1
 
-parsers.html_comment = parsers.nonindentspace 
+parsers.html_comment = parsers.nonindentspace
                      * P("<!--")
                      * Cs((parsers.any - P("-->"))^0)
                      * P("-->")
-                     * (parsers.any - parsers.newline)^0     
+                     * (parsers.any - parsers.newline)^0
 
 parsers.html_inline_comment = P("<!--")
                             * -P(">") * -P("->")
                             * Cs((parsers.any - P("--"))^0)
                             * P("-->")
 
-parsers.html_instruction  = parsers.nonindentspace 
-                          * P("<?") 
-                          * (parsers.any - P("?>"))^0 
+parsers.html_instruction  = parsers.nonindentspace
+                          * P("<?")
+                          * (parsers.any - P("?>"))^0
                           * P("?>")
 
-parsers.html_cdatasection = parsers.nonindentspace 
-                          * P("<![CDATA[") 
-                          * (parsers.any - P("]]>"))^0 
+parsers.html_cdatasection = parsers.nonindentspace
+                          * P("<![CDATA[")
+                          * (parsers.any - P("]]>"))^0
                           * P("]]>")
 
-parsers.html_declaration  = parsers.nonindentspace 
-                          * P("<!") 
-                          * parsers.letter 
-                          * (parsers.any - P(">"))^0 
+parsers.html_declaration  = parsers.nonindentspace
+                          * P("<!")
+                          * parsers.letter
+                          * (parsers.any - P(">"))^0
                           * P(">")
 
-parsers.html_blankline  = parsers.newline 
-                        * parsers.optionalspace 
+parsers.html_blankline  = parsers.newline
+                        * parsers.optionalspace
                         * parsers.newline
 
-parsers.html_tag_start = parsers.nonindentspace 
+parsers.html_tag_start = parsers.nonindentspace
                        * parsers.less
 
-parsers.html_tag_closing_start  = parsers.html_tag_start 
+parsers.html_tag_closing_start  = parsers.html_tag_start
                                 * parsers.slash
 
-parsers.html_tag_end  = parsers.spnl 
+parsers.html_tag_end  = parsers.spnl
                       * parsers.more
 
-parsers.html_empty_tag_end  = parsers.spnl 
-                            * parsers.slash 
+parsers.html_empty_tag_end  = parsers.spnl
+                            * parsers.slash
                             * parsers.more
 
 -- opening tags
-parsers.html_any_open_inline_tag  = parsers.html_tag_start 
-                                  * parsers.keyword 
+parsers.html_any_open_inline_tag  = parsers.html_tag_start
+                                  * parsers.keyword
                                   * parsers.html_attribute^0
                                   * parsers.html_tag_end
 
-parsers.html_any_open_tag = parsers.html_tag_start 
-                          * parsers.keyword 
+parsers.html_any_open_tag = parsers.html_tag_start
+                          * parsers.keyword
                           * parsers.html_non_newline_attribute^0
                           * parsers.html_tag_end
 
-parsers.html_open_tag = parsers.html_tag_start 
+parsers.html_open_tag = parsers.html_tag_start
                       * parsers.block_keyword
-                      * parsers.html_attribute^0 
+                      * parsers.html_attribute^0
                       * parsers.html_tag_end
 
-parsers.html_open_special_tag = parsers.html_tag_start 
+parsers.html_open_special_tag = parsers.html_tag_start
                               * parsers.special_block_keyword
-                              * parsers.html_attribute^0 
+                              * parsers.html_attribute^0
                               * parsers.html_tag_end
 
 -- incomplete tags
-parsers.html_incomplete_open_tag  = parsers.html_tag_start 
+parsers.html_incomplete_open_tag  = parsers.html_tag_start
                                   * parsers.block_keyword
 
-parsers.html_incomplete_open_special_tag  = parsers.html_tag_start 
+parsers.html_incomplete_open_special_tag  = parsers.html_tag_start
                                           * parsers.special_block_keyword
 
-parsers.html_incomplete_close_tag = parsers.html_tag_closing_start 
+parsers.html_incomplete_close_tag = parsers.html_tag_closing_start
                                   * parsers.block_keyword
 
 parsers.html_incomplete_close_special_tag = parsers.html_tag_closing_start
@@ -23062,38 +23062,38 @@ parsers.html_incomplete_close_special_tag = parsers.html_tag_closing_start
 
 -- closing tags
 parsers.html_close_tag  = parsers.html_tag_closing_start
-                        * parsers.block_keyword 
+                        * parsers.block_keyword
                         * parsers.html_tag_end
 
 parsers.html_any_close_tag  = parsers.html_tag_closing_start
-                            * parsers.keyword 
+                            * parsers.keyword
                             * parsers.html_tag_end
 
 parsers.html_close_special_tag = parsers.html_tag_closing_start
-                               * parsers.special_block_keyword 
+                               * parsers.special_block_keyword
                                * parsers.html_tag_end
 
 -- empty tags
-parsers.html_any_empty_inline_tag = parsers.html_tag_start 
+parsers.html_any_empty_inline_tag = parsers.html_tag_start
                                   * parsers.keyword
-                                  * parsers.html_attribute^0 
+                                  * parsers.html_attribute^0
                                   * parsers.html_empty_tag_end
 
-parsers.html_any_empty_tag  = parsers.html_tag_start 
+parsers.html_any_empty_tag  = parsers.html_tag_start
                             * parsers.keyword
-                            * parsers.html_non_newline_attribute^0 
-                            * parsers.optionalspace 
-                            * parsers.slash 
-                            * parsers.more 
+                            * parsers.html_non_newline_attribute^0
+                            * parsers.optionalspace
+                            * parsers.slash
+                            * parsers.more
 
-parsers.html_empty_tag  = parsers.html_tag_start 
+parsers.html_empty_tag  = parsers.html_tag_start
                         * parsers.block_keyword
-                        * parsers.html_attribute^0 
-                        * parsers.html_empty_tag_end 
+                        * parsers.html_attribute^0
+                        * parsers.html_empty_tag_end
 
-parsers.html_empty_special_tag  = parsers.html_tag_start 
+parsers.html_empty_special_tag  = parsers.html_tag_start
                                 * parsers.special_block_keyword
-                                * parsers.html_attribute^0 
+                                * parsers.html_attribute^0
                                 * parsers.html_empty_tag_end
 
 parsers.html_incomplete_blocks  = parsers.html_incomplete_open_tag
@@ -23101,37 +23101,37 @@ parsers.html_incomplete_blocks  = parsers.html_incomplete_open_tag
                                 + parsers.html_incomplete_close_tag
 
 -- end conditions
-parsers.html_blankline_end_condition  = parsers.linechar^0 
+parsers.html_blankline_end_condition  = parsers.linechar^0
                                       * (parsers.newline * parsers.linechar^1)^0
 
-parsers.html_empty_end_condition  = parsers.linechar^0 
-                                  * (( parsers.optionalspace * parsers.newline)^0 
-                                     * parsers.linechar^1)^0
+parsers.html_empty_end_condition  = parsers.linechar^0
+                                  * ((parsers.optionalspace * parsers.newline)^0
+                                    * parsers.linechar^1)^0
 
 -- parse special html blocks
-parsers.html_blankline_ending_special_block_opening = (parsers.html_close_special_tag 
+parsers.html_blankline_ending_special_block_opening = (parsers.html_close_special_tag
                                                     + parsers.html_empty_special_tag)
-                                                    * #(parsers.optionalspace 
-                                                      * (parsers.newline + parsers.eof))
+                                                    * #(parsers.optionalspace
+                                                       * (parsers.newline + parsers.eof))
 
 parsers.html_blankline_ending_special_block = parsers.html_blankline_ending_special_block_opening
                                             * parsers.html_blankline_end_condition
 
-parsers.html_special_block_opening  = parsers.html_incomplete_open_special_tag 
+parsers.html_special_block_opening  = parsers.html_incomplete_open_special_tag
                                     - parsers.html_empty_special_tag
 
 parsers.html_closing_special_block  = parsers.html_special_block_opening
-                                    * (( parsers.any - parsers.html_close_special_tag)^0 
-                                       * parsers.html_close_special_tag 
-                                       * parsers.linechar^0
-                                       + parsers.html_empty_end_condition)
+                                    * ((parsers.any - parsers.html_close_special_tag)^0
+                                      * parsers.html_close_special_tag
+                                      * parsers.linechar^0
+                                      + parsers.html_empty_end_condition)
 
-parsers.html_special_block  = parsers.html_blankline_ending_special_block 
+parsers.html_special_block  = parsers.html_blankline_ending_special_block
                             + parsers.html_closing_special_block
 
 -- parse html blocks
-parsers.html_block_opening  = (parsers.html_incomplete_open_tag 
-                            + parsers.html_incomplete_close_tag 
+parsers.html_block_opening  = (parsers.html_incomplete_open_tag
+                            + parsers.html_incomplete_close_tag
                             - parsers.html_incomplete_open_special_tag
                             - parsers.html_incomplete_close_special_tag)
 
@@ -23139,7 +23139,7 @@ parsers.html_block  = parsers.html_block_opening
                     * parsers.html_blankline_end_condition
 
 -- parse any html blocks
-parsers.html_any_block_opening  = (parsers.html_any_open_tag 
+parsers.html_any_block_opening  = (parsers.html_any_open_tag
                                 + parsers.html_any_close_tag
                                 + parsers.html_any_empty_tag)
                                 * #(parsers.optionalspace * (parsers.newline + parsers.eof))
@@ -23725,7 +23725,7 @@ function M.reader.new(writer, options)
                         / writer.string
 
   parsers.EscapedChar   = parsers.backslash * C(parsers.escapable) / writer.string
-  
+
   parsers.InlineHtml    = parsers.html_inline_comment       / writer.inline_html_comment
                         + parsers.html_any_empty_inline_tag / writer.inline_html_tag
                         + parsers.html_instruction          / writer.inline_html_tag
@@ -23733,7 +23733,7 @@ function M.reader.new(writer, options)
                         + parsers.html_declaration          / writer.inline_html_tag
                         + parsers.html_any_open_inline_tag  / writer.inline_html_tag
                         + parsers.html_any_close_tag        / writer.inline_html_tag
-  
+
   parsers.HtmlEntity    = parsers.hexentity / entities.hex_entity  / writer.string
                         + parsers.decentity / entities.dec_entity  / writer.string
                         + parsers.tagentity / entities.char_entity / writer.string
@@ -23749,7 +23749,7 @@ function M.reader.new(writer, options)
                        + parsers.html_special_block / writer.block_html_element
                        + parsers.html_block         / writer.block_html_element
                        + parsers.html_any_block     / writer.block_html_element
-                       + parsers.html_instruction   / writer.block_html_element           
+                       + parsers.html_instruction   / writer.block_html_element
                        + parsers.html_cdatasection  / writer.block_html_element
                        + parsers.html_declaration   / writer.block_html_element
 
