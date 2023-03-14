@@ -21285,23 +21285,41 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-parsers.leader      = parsers.space^-3
+parsers.leader = parsers.space^-3
 
-parsers.urlchar      = parsers.anyescaped - parsers.newline - parsers.more
+parsers.urlchar = parsers.anyescaped 
+                - parsers.newline 
+                - parsers.more
 
-parsers.autolink_scheme_part = parsers.alphanumeric + parsers.plus + parsers.period + parsers.dash
+parsers.autolink_scheme_part  = parsers.alphanumeric 
+                              + parsers.plus 
+                              + parsers.period 
+                              + parsers.dash
 
-parsers.autolink_scheme = parsers.letter * parsers.autolink_scheme_part
+parsers.autolink_scheme = parsers.letter 
+                        * parsers.autolink_scheme_part
                         * parsers.autolink_scheme_part^-30
 
 parsers.absolute_uri = parsers.autolink_scheme * parsers.colon 
                       * (parsers.any - parsers.spacing - parsers.less - parsers.more)^0
 
-parsers.email_address_dns_label = parsers.alphanumeric * ((parsers.alphanumeric + parsers.dash)^-62 * B(parsers.alphanumeric))^-1
+parsers.printable_characters = S(".!#$%&'*+/=?^_`{|}~-")
 
-parsers.email_address = (parsers.alphanumeric + S(".!#$%&'*+/=?^_`{|}~-"))^1
-                      * parsers.at * parsers.email_address_dns_label
-                      * (parsers.period * parsers.email_address_dns_label)^0
+parsers.email_address_local_part_char = parsers.alphanumeric 
+                                      + parsers.printable_characters
+
+parsers.email_address_local_part = parsers.email_address_local_part_char^1
+
+parsers.email_address_dns_label = parsers.alphanumeric 
+                                * ((parsers.alphanumeric + parsers.dash)^-62 
+                                  * B(parsers.alphanumeric))^-1
+
+parsers.email_address_domain  = parsers.email_address_dns_label
+                              * (parsers.period * parsers.email_address_dns_label)^0
+
+parsers.email_address = parsers.email_address_local_part
+                      * parsers.at 
+                      * parsers.email_address_domain
 
 parsers.autolink_url  = parsers.less
                       * C(parsers.absolute_uri)
@@ -21362,19 +21380,20 @@ parsers.link_label  = parsers.lbracket
                     * -#(parsers.sp * parsers.rbracket) 
                     * #((parsers.any - parsers.rbracket)^-999 * parsers.rbracket)
                     * Cs((parsers.alphanumeric^1
-                       + parsers.inticks
-                       + parsers.autolink
-                       + ( parsers.backslash * parsers.backslash)
-                       + ( parsers.backslash * (parsers.lbracket + parsers.rbracket)
-                         + parsers.any
-                         - (parsers.lbracket + parsers.rbracket + parsers.blankline^2)))^1)
+                        + parsers.inticks
+                        + parsers.autolink
+                        + ( parsers.backslash * parsers.backslash)
+                        + ( parsers.backslash * (parsers.lbracket + parsers.rbracket)
+                          + parsers.any
+                          - (parsers.lbracket + parsers.rbracket + parsers.blankline^2)))^1)
                     * parsers.rbracket
 
 -- url for markdown links, allowing nested brackets:
 parsers.url         = parsers.less * Cs((parsers.anyescaped
                                         - parsers.newline - parsers.more)^0)
                                    * parsers.more
-                    + -parsers.less * Cs((parsers.inparens + (parsers.anyescaped
+                    + -parsers.less 
+                    * Cs((parsers.inparens + (parsers.anyescaped
                                              - parsers.spacing
                                              - parsers.rparent))^1)
 
@@ -22402,7 +22421,7 @@ function M.reader.new(writer, options)
                            end
 
   parsers.MaybeLinkOrImage = Ct(parsers.link_array)  
-                          / defer_link_and_image_processing
+                           / defer_link_and_image_processing
 
   parsers.LinkOrImage     = Ct(parsers.link_array) 
                           / process_links_and_images
