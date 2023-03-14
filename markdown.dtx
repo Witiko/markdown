@@ -21605,7 +21605,7 @@ local character_entities = {
 function entities.dec_entity(s)
   local n = tonumber(s)
   if n == nil then
-    return "&#" .. s .. ";"
+    return "&#" .. s .. ";"  -- fallback for unknown entities
   end
   return unicode.utf8.char(n)
 end
@@ -21622,7 +21622,7 @@ end
 function entities.hex_entity(s)
   local n = tonumber("0x"..s)
   if n == nil then
-    return "&#x" .. s .. ";"
+    return "&#x" .. s .. ";"  -- fallback for unknown entities
   end
   return unicode.utf8.char(n)
 end
@@ -21630,7 +21630,7 @@ end
 % \par
 % \begin{markdown}
 %
-% Given a captured `x` character and a string `s` of hexadecimal digits, the
+% Given a captured character `x` and a string `s` of hexadecimal digits, the
 % \luamdef{entities.hex_entity_with_x_char} returns the corresponding
 % \acro{utf}8-encoded Unicode codepoint or fallback with the `x` character.
 %
@@ -21639,7 +21639,7 @@ end
 function entities.hex_entity_with_x_char(x, s)
   local n = tonumber("0x"..s)
   if n == nil then
-    return "&#" .. x .. s .. ";"
+    return "&#" .. x .. s .. ";"  -- fallback for unknown entities
   end
   return unicode.utf8.char(n)
 end
@@ -23004,14 +23004,14 @@ parsers.in_matched_block_tags = parsers.less
 %
 % \end{markdown}
 %  \begin{macrocode}
-parsers.pattern_range = function(pattern, min, max)
+local function repeat_between(pattern, min, max)
   return -pattern^(max + 1) * pattern^min
 end
 
 parsers.hexentity = parsers.ampersand * parsers.hash * C(S("Xx"))
-                  * C(parsers.pattern_range(parsers.hexdigit, 1, 6)) * parsers.semicolon
+                  * C(repeat_between(parsers.hexdigit, 1, 6)) * parsers.semicolon
 parsers.decentity = parsers.ampersand * parsers.hash
-                  * C(parsers.pattern_range(parsers.digit, 1, 7)) * parsers.semicolon
+                  * C(repeat_between(parsers.digit, 1, 7)) * parsers.semicolon
 parsers.tagentity = parsers.ampersand * C(parsers.alphanumeric^1)
                   * parsers.semicolon
 %    \end{macrocode}
@@ -23579,7 +23579,7 @@ function M.reader.new(writer, options)
                         + parsers.openelt_any / writer.inline_html_tag
                         + parsers.closeelt_any / writer.inline_html_tag
 
-  parsers.HtmlEntity    = parsers.hexentity / entities.hex_entity_with_x_char  / writer.string
+  parsers.HtmlEntity    = parsers.hexentity / entities.hex_entity_with_x_char / writer.string
                         + parsers.decentity / entities.dec_entity  / writer.string
                         + parsers.tagentity / entities.char_entity / writer.string
 %    \end{macrocode}
