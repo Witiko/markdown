@@ -11302,8 +11302,10 @@ filename of a file contaning the code block contents.
 
 The \mdef{markdownRendererInputFencedCode} macro represents a fenced code
 block. This macro will only be produced, when the \Opt{fencedCode} option is
-enabled. The macro receives two arguments that correspond to the filename of
-a file contaning the code block contents and to the code fence infostring.
+enabled. The macro receives three arguments that correspond to the filename of
+a file contaning the code block contents, the fully escaped code fence info string 
+that can be directly typeset, and the raw code fence info string that can be used 
+outside typesetting.
 
 % \end{markdown}
 %
@@ -21925,6 +21927,7 @@ function M.writer.new(options)
 % - \luamdef{writer->math} transforms a math span.
 % - \luamdef{writer->identifier} transforms an input programmatic identifier.
 % - \luamdef{writer->uri} transforms an input \acro{uri}.
+% - \luamdef{writer->infostring} transforms a fence code info string.
 %
 % \end{markdown}
 %  \begin{macrocode}
