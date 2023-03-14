@@ -23585,8 +23585,8 @@ function M.reader.new(writer, options)
                        / self.parser_functions.parse_blocks_nested
                        / writer.blockquote
 
-  parsers.ThematicBreak = ( parsers.thematic_break_lines
-                          ) / writer.thematic_break
+  parsers.ThematicBreak = parsers.thematic_break_lines
+                        / writer.thematic_break
 
   parsers.Reference    = parsers.define_reference_parser / register_link
 
@@ -23703,16 +23703,15 @@ function M.reader.new(writer, options)
                      * Cb("level")
                      / writer.heading
 
-  function remove_enclosing_whitespaces(o)
+  local function remove_enclosing_whitespaces(o)
     local heading_content = ""
     for line in o:gmatch("([^\n]*)\n?") do
-      heading_content = heading_content .. (line:gsub("^%s*(.-)%s*$", "%1" .. "\n"))
+      heading_content = heading_content .. (line:gsub("^%s*(.-)%s*$", "%1\n"))
     end
     return heading_content
   end
 
-  parsers.heading_line  = parsers.line 
-                        - parsers.blankline 
+  parsers.heading_line  = parsers.nonemptyline 
                         - parsers.thematic_break_lines
 
   parsers.heading_text = parsers.heading_line
@@ -23720,7 +23719,7 @@ function M.reader.new(writer, options)
 
   parsers.SetextHeading = #(parsers.heading_text * parsers.heading_level)
                         * Ct(parsers.heading_text / remove_enclosing_whitespaces
-                            / self.parser_functions.parse_blocks_nested )
+                            / self.parser_functions.parse_inlines )
                         * parsers.heading_level
                         * parsers.newline
                         / writer.heading
