@@ -6646,6 +6646,100 @@ defaultOptions.hybrid = false
 %</lua,lua-cli>
 %<*manual-options>
 
+#### Option `inlineCodeAttributes`
+
+`inlineCodeAttributes` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{inlineCodeAttributes}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Enable the Pandoc inline code span attribute extension:
+
+        ``` md
+        `<$>`{.haskell}
+        ``````
+
+:    false
+
+     :  Enable the Pandoc inline code span attribute extension.
+
+% \end{markdown}
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+```` tex
+\documentclass{article}
+\usepackage[inlineCodeAttributes]{markdown}
+\usepackage{expl3}
+\ExplSyntaxOn
+\markdownSetup{
+  renderers = {
+    codeSpanAttributeContextBegin = {
+      \group_begin:
+      \color_group_begin:
+      \markdownSetup{
+        renderers = {
+          attributeKeyValue = {
+            \str_if_eq:nnT
+              { ##1 }
+              { color }
+              {
+                 \color_select:n { ##2 }
+              }
+          },
+        },
+      }
+    },
+    codeSpanAttributeContextEnd = {
+      \color_group_end:
+      \group_end:
+    },
+  },
+}
+\ExplSyntaxOff
+\begin{document}
+\begin{markdown}
+Here is some `colored text`{color=red}.
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> Here is some <span style="color: red">`colored text`</span>.
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { inlineCodeAttributes }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.inlineCodeAttributes = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
 #### Option `inlineNotes`
 
 `inlineNotes` (default value: `false`)
@@ -26712,6 +26806,12 @@ function M.new(options)
     table.insert(extensions, header_attributes_extension)
   end
 
+  if options.inlineCodeAttributes then
+    local inline_code_attributes_extension =
+      M.extensions.inline_code_attributes()
+    table.insert(extensions, inline_code_attributes_extension)
+  end
+
   if options.jekyllData then
     local jekyll_data_extension = M.extensions.jekyll_data(
       options.expectJekyllData)
@@ -26727,12 +26827,6 @@ function M.new(options)
     local pipe_tables_extension = M.extensions.pipe_tables(
       options.tableCaptions)
     table.insert(extensions, pipe_tables_extension)
-  end
-
-  if true then  -- TODO: replace with options.inlineCodeAttributes
-    local inline_code_attributes_extension =
-      M.extensions.inline_code_attributes()
-    table.insert(extensions, inline_code_attributes_extension)
   end
 
   if true then  -- TODO: replace with options.linkAttributes
