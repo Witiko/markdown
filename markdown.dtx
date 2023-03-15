@@ -14157,6 +14157,87 @@ following text:
 %
 % \begin{markdown}
 
+#### Link Attribute Context Renderers
+The following macros are only produced, when the \Opt{linkAttributes} option
+is enabled.
+
+The \mdef{markdownRendererLinkAttributeContextBegin} and
+\mdef{markdownRendererLinkAttributeContextEnd} macros represent the beginning
+and the end of a hyperlink in which the attributes of the hyperlink apply.
+The macros receive no arguments.
+
+% \end{markdown}
+%
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[linkAttributes]{markdown}
+\markdownSetup{
+  renderers = {
+    linkAttributeContextBegin = {(},
+    link = {#1},
+    linkAttributeContextEnd = {)},
+  },
+}
+\begin{document}
+\begin{markdown}
+
+foo [bar](#bar){key=value} baz
+
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> foo (bar) baz
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererLinkAttributeContextBegin{%
+  \markdownRendererLinkAttributeContextBeginPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { linkAttributeContextBegin }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { linkAttributeContextBegin }
+  { 0 }
+\ExplSyntaxOff
+\def\markdownRendererLinkAttributeContextEnd{%
+  \markdownRendererLinkAttributeContextEndPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { linkAttributeContextEnd }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { linkAttributeContextEnd }
+  { 0 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
 #### Markdown Document Renderers
 The \mdef{markdownRendererDocumentBegin} and \mdef{markdownRendererDocumentEnd}
 macros represent the beginning and the end of a *markdown* document. The macros
