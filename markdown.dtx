@@ -7014,6 +7014,98 @@ defaultOptions.jekyllData = false
 %</lua,lua-cli>
 %<*manual-options>
 
+#### Option `linkAttributes`
+
+`linkAttributes` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{linkAttributes}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Enable the Pandoc link and image attribute extension:
+
+        ``` md
+        An inline ![image](foo.jpg){#id .class width=30 height=20px}
+        and a reference ![image][ref] with attributes.
+
+        [ref]: foo.jpg "optional title" {#id .class key=val key2="val 2"}
+        ``````
+
+:    false
+
+     :  Enable the Pandoc link and image attribute extension.
+
+% \end{markdown}
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+```` tex
+\documentclass{article}
+\usepackage[linkAttributes]{markdown}
+\usepackage{expl3, graphicx}
+\ExplSyntaxOn
+\markdownSetup{
+  renderers = {
+    codeSpanAttributeContextBegin = {
+      \group_begin:
+      \markdownSetup{
+        renderers = {
+          attributeKeyValue = {
+            \setkeys
+              { Gin }
+              { { #1 } = { #2 } }
+          },
+        },
+      }
+    },
+    codeSpanAttributeContextEnd = {
+      \group_end:
+    },
+  },
+}
+\ExplSyntaxOff
+\begin{document}
+\begin{markdown}
+Here is an example image:
+
+ ![example image](example−image){width=5cm height=4cm}
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain an example
+image displayed at size 5cm × 4cm.
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { linkAttributes }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.linkAttributes = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
 #### Option `lineBlocks`
 
 `lineBlocks` (default value: `false`)
@@ -26818,6 +26910,12 @@ function M.new(options)
     table.insert(extensions, jekyll_data_extension)
   end
 
+  if options.linkAttributes then
+    local link_attributes_extension =
+      M.extensions.link_attributes()
+    table.insert(extensions, link_attributes_extension)
+  end
+
   if options.lineBlocks then
     local line_block_extension = M.extensions.line_blocks()
     table.insert(extensions, line_block_extension)
@@ -26827,12 +26925,6 @@ function M.new(options)
     local pipe_tables_extension = M.extensions.pipe_tables(
       options.tableCaptions)
     table.insert(extensions, pipe_tables_extension)
-  end
-
-  if true then  -- TODO: replace with options.linkAttributes
-    local link_attributes_extension =
-      M.extensions.link_attributes()
-    table.insert(extensions, link_attributes_extension)
   end
 
   if options.rawAttribute then
