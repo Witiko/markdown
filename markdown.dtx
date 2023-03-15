@@ -11563,6 +11563,87 @@ following text:
 %
 % \begin{markdown}
 
+#### Code Span Attribute Context Renderers
+The following macros are only produced, when the \Opt{inlineCodeAttributes}
+option is enabled.
+
+The \mdef{markdownRendererCodeSpanAttributeContextBegin} and
+\mdef{markdownRendererCodeSpanAttributeContextEnd} macros represent the beginning
+and the end of an inline code span in which the attributes of the inline code
+span apply. The macros receive no arguments.
+
+% \end{markdown}
+%
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[inlineCodeAttributes]{markdown}
+\markdownSetup{
+  renderers = {
+    codeSpanAttributeContextBegin = {(},
+    codeSpan = {#1},
+    codeSpanAttributeContextEnd = {)},
+  },
+}
+\begin{document}
+\begin{markdown}
+
+foo `bar`{key=value} baz
+
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> foo (bar) baz
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererCodeSpanAttributeContextBegin{%
+  \markdownRendererCodeSpanAttributeContextBeginPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { codeSpanAttributeContextBegin }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { codeSpanAttributeContextBegin }
+  { 0 }
+\ExplSyntaxOff
+\def\markdownRendererCodeSpanAttributeContextEnd{%
+  \markdownRendererCodeSpanAttributeContextEndPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { codeSpanAttributeContextEnd }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { codeSpanAttributeContextEnd }
+  { 0 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
 #### Content Block Renderers {#texcontentblockrenderers}
 
 The \mdef{markdownRendererContentBlock} macro represents an iA\,Writer content
@@ -22112,14 +22193,14 @@ function M.writer.new(options)
     local buf = {}
     if attributes ~= nil then
       table.insert(buf,
-                   "\\markdownRendererInlineCodeAttributeContextBegin\n")
+                   "\\markdownRendererCodeSpanAttributeContextBegin\n")
       table.insert(buf, self.attributes(attributes))
     end
     table.insert(buf,
                  {"\\markdownRendererCodeSpan{", self.escape(s), "}"})
     if attributes ~= nil then
       table.insert(buf,
-                   "\n\\markdownRendererInlineCodeAttributeContextEnd ")
+                   "\n\\markdownRendererCodeSpanAttributeContextEnd ")
     end
     return buf
   end
