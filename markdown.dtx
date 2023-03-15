@@ -13618,6 +13618,87 @@ that the \TeX{} engine has shell access.
 %
 % \begin{markdown}
 
+#### Image Attribute Context Renderers
+The following macros are only produced, when the \Opt{linkAttributes} option
+is enabled.
+
+The \mdef{markdownRendererImageAttributeContextBegin} and
+\mdef{markdownRendererImageAttributeContextEnd} macros represent the beginning
+and the end of an image in which the attributes of the image apply. The macros
+receive no arguments.
+
+% \end{markdown}
+%
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[linkAttributes]{markdown}
+\markdownSetup{
+  renderers = {
+    imageAttributeContextBegin = {(},
+    image = {#1},
+    imageAttributeContextEnd = {)},
+  },
+}
+\begin{document}
+\begin{markdown}
+
+foo ![bar](#bar){key=value} baz
+
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> foo (bar) baz
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererImageAttributeContextBegin{%
+  \markdownRendererImageAttributeContextBeginPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { imageAttributeContextBegin }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { imageAttributeContextBegin }
+  { 0 }
+\ExplSyntaxOff
+\def\markdownRendererImageAttributeContextEnd{%
+  \markdownRendererImageAttributeContextEndPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { imageAttributeContextEnd }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { imageAttributeContextEnd }
+  { 0 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
 #### Interblock Separator Renderer
 The \mdef{markdownRendererInterblockSeparator} macro represents a separator
 between two markdown block elements. The macro receives no arguments.
