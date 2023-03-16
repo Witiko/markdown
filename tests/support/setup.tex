@@ -1,4 +1,8 @@
 \long\def\TYPE#1{%
+  \catcode"09=12%  Prevent tabs (U+0009) from folding into a single space token
+  \catcode"20=12%  Prevent spaces (U+0020) from folding into a single space token
+  \catcode"7C=12%  Prevent pipes (U+007C) from being active in ConTeXt
+  \catcode"7E=12%  Prevent tildes (U+007E) from being active in programmatic text
   \begingroup
     \long\def\TYPE##1{(##1)}%
     \immediate\write128{TEST INPUT BEGIN}%
