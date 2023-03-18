@@ -1,0 +1,80 @@
+\def\markdownOptionTexMathDoubleBackslash{true}
+\let\hat=\relax
+\let\left=\relax
+\let\xi=\relax
+\let\right=\relax
+\let\int=\relax
+\let\infty=\relax
+\let\pi=\relax
+\let\\=\relax
+<<<
+This test ensures that the Lua `texMathDoubleBackslash` option correctly propagates
+through the plain TeX interface.
+
+\\(E=mc^2\\)
+
+\\[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\\]
+
+Inline or display math may not be empty:
+
+\\(\\)
+
+\\[\\]
+
+Inline or display math may not contain any blank lines:
+
+\\(a
+
+c\\)
+
+\\[a
+
+c\\]
+
+No spaces are allowed at the beginning or the end of inline math:
+
+\\( \infty \\)
+
+Escaped spaces are allowed at the beginning or the end of inline math:
+
+\\(\ \\)
+
+The following is not inline math:
+
+\\\(a\\\)
+>>>
+documentBegin
+codeSpan: texMathDoubleBackslash
+interblockSeparator
+inlineMath: E=mc^2
+interblockSeparator
+displayMath: \hat {f} \left  ( \xi   \right  )= \int _{-\infty }^{\infty } f\left  ( x  \right  ) e^{-i2\pi  \xi  x} dx
+interblockSeparator
+interblockSeparator
+backslash
+backslash
+interblockSeparator
+backslash
+backslash
+interblockSeparator
+interblockSeparator
+backslash
+interblockSeparator
+backslash
+interblockSeparator
+backslash
+interblockSeparator
+backslash
+interblockSeparator
+interblockSeparator
+backslash
+backslash
+backslash
+interblockSeparator
+interblockSeparator
+inlineMath: \ 
+interblockSeparator
+interblockSeparator
+backslash
+backslash
+documentEnd

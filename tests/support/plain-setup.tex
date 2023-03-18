@@ -19,6 +19,18 @@
   \TYPE{BEGIN bracketedSpanAttributeContext}}%
 \def\markdownRendererBracketedSpanAttributeContextEnd{%
   \TYPE{END bracketedSpanAttributeContext}}%
+\def\markdownRendererLinkAttributeContextBegin{%
+  \TYPE{BEGIN linkAttributeContext}}%
+\def\markdownRendererLinkAttributeContextEnd{%
+  \TYPE{END linkAttributeContext}}%
+\def\markdownRendererImageAttributeContextBegin{%
+  \TYPE{BEGIN imageAttributeContext}}%
+\def\markdownRendererImageAttributeContextEnd{%
+  \TYPE{END imageAttributeContext}}%
+\def\markdownRendererCodeSpanAttributeContextBegin{%
+  \TYPE{BEGIN codeSpanAttributeContext}}%
+\def\markdownRendererCodeSpanAttributeContextEnd{%
+  \TYPE{END codeSpanAttributeContext}}%
 \def\markdownRendererDocumentBegin{%
   \begingroup
   \catcode"09=12%  Prevent spaces (U+0009) from folding into a single space token

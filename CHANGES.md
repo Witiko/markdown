@@ -1,5 +1,15 @@
 # Changes
 
+## 2.22.0
+
+Development:
+
+- Add support for TeX math surrounded by backslash-escaped
+  parens and brackets. (contributed by @lostenderman, #61,
+  #235, #236, #270)
+- Add support for attributes on links, images, and inline
+  code spans. (jgm#36, jgm#43, #50, #123, #256, #280)
+
 ## 2.21.0 (2022-02-28)
 
 Development:
