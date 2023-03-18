@@ -1,0 +1,89 @@
+\def\markdownOptionLinkAttributes{true}
+<<<
+This test ensures that the Lua `linkAttributes` option correctly
+propagates through the plain TeX interface.
+
+An inline [link](foo.jpg){#id .class width=30 height=20px},
+a reference [link][ref]{.another-class} with attributes, and
+an <https://auto/>{.link}.
+
+An inline ![image](foo.jpg){#id .class width=30 height=20px}
+and a reference ![image][ref]{.another-class} with attributes.
+
+[ref]: foo.jpg "optional title" {#id .class key=val}
+>>>
+documentBegin
+codeSpan: linkAttributes
+interblockSeparator
+linkAttributeContextBegin
+attributeIdentifier: id
+attributeClassName: class
+BEGIN attributeKeyValue
+- key: height
+- value: 20px
+END attributeKeyValue
+BEGIN attributeKeyValue
+- key: width
+- value: 30
+END attributeKeyValue
+BEGIN link
+- label: link
+- URI: foo.jpg
+- title: 
+END link
+linkAttributeContextEnd
+linkAttributeContextBegin
+attributeIdentifier: id
+attributeClassName: another-class
+attributeClassName: class
+BEGIN attributeKeyValue
+- key: key
+- value: val
+END attributeKeyValue
+BEGIN link
+- label: link
+- URI: foo.jpg
+- title: optional title
+END link
+linkAttributeContextEnd
+linkAttributeContextBegin
+attributeClassName: link
+BEGIN link
+- label: https://auto/
+- URI: https://auto/
+- title: 
+END link
+linkAttributeContextEnd
+interblockSeparator
+imageAttributeContextBegin
+attributeIdentifier: id
+attributeClassName: class
+BEGIN attributeKeyValue
+- key: height
+- value: 20px
+END attributeKeyValue
+BEGIN attributeKeyValue
+- key: width
+- value: 30
+END attributeKeyValue
+BEGIN image
+- label: image
+- URI: foo.jpg
+- title: 
+END image
+imageAttributeContextEnd
+imageAttributeContextBegin
+attributeIdentifier: id
+attributeClassName: another-class
+attributeClassName: class
+BEGIN attributeKeyValue
+- key: key
+- value: val
+END attributeKeyValue
+BEGIN image
+- label: image
+- URI: foo.jpg
+- title: optional title
+END image
+imageAttributeContextEnd
+documentEnd
