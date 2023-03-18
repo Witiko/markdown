@@ -1307,13 +1307,19 @@ end)()
 %     is used in the `witiko/graphicx/http` \LaTeX{} theme, see Section
 %     <#sec:latexthemes>.
 %
+% \pkg{graphicx}
+%
+%:    A package that builds upon the \pkg{graphics} package, which is part of
+%     the \LaTeXe{} kernel. It provides a key-value interface that is used in
+%     the default renderer prototypes for image attribute contexts.
+%
 % \pkg{grffile}
 %
-%:    A package that extends the name processing of package graphics to support
-%     a larger range of file names in $2006\leq{}$\TeX{} Live${}\leq{}2019$.
-%     Since \TeX{} Live${}\geq{}2020$, the functionality of the package has
-%     been integrated in the \LaTeXe{} kernel. It is used in the `witiko/dot`
-%     and `witiko/graphicx/http` \LaTeX{} themes, see Section
+%:    A package that extends the name processing of the \pkg{graphics} package
+%     to support a larger range of file names in $2006\leq{}$\TeX{}
+%     Live${}\leq{}2019$.  Since \TeX{} Live${}\geq{}2020$, the functionality
+%     of the package has been integrated in the \LaTeXe{} kernel. It is used in
+%     the `witiko/dot` and `witiko/graphicx/http` \LaTeX{} themes, see Section
 %     <#sec:latexthemes>.
 %
 % \pkg{etoolbox}
@@ -7052,7 +7058,7 @@ following content:
 \ExplSyntaxOn
 \markdownSetup{
   renderers = {
-    codeSpanAttributeContextBegin = {
+    imageAttributeContextBegin = {
       \group_begin:
       \markdownSetup{
         renderers = {
@@ -7064,7 +7070,7 @@ following content:
         },
       }
     },
-    codeSpanAttributeContextEnd = {
+    imageAttributeContextEnd = {
       \group_end:
     },
   },
@@ -7083,7 +7089,9 @@ Next, invoke LuaTeX from the terminal:
 lualatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain an example
-image displayed at size 5cm × 4cm.
+image (from [Martin Scharrer's mwe package][mwe]) displayed at size 5cm × 4cm.
+
+ [mwe]: https://ctan.org/pkg/mwe (mwe – Packages and image files for MWEs)
 
 %</manual-options>
 %<*tex>
@@ -27319,7 +27327,7 @@ end
 % \par
 % \begin{markdown}
 %
-%#### Raw Attribute Renderer Prototypes
+%#### Raw Attributes
 %
 % In the raw block and inline raw span renderer prototypes, execute the content
 % with TeX when the raw attribute is `tex`, display the content as markdown when
@@ -29823,7 +29831,68 @@ end
 % \par
 % \begin{markdown}
 %
-%#### Raw Attribute Renderer Prototypes
+%#### Strike-Through
+% If the \Opt{strikeThrough} option is enabled, we will load the
+% \pkg{soulutf8} package and use it to implement strike-throughs.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\markdownIfOption{strikeThrough}{%
+  \RequirePackage{soulutf8}%
+  \markdownSetup{
+    rendererPrototypes = {
+      strikeThrough = {%
+        \st{#1}%
+      },
+    }
+  }
+}{}
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+%#### Image Attributes
+%
+% If the \Opt{linkAttributes} option is enabled, we will load
+% the \pkg{graphicx} package. Furthermore, in image attribute contexts,
+% we will make attributes in the form \meta{key}`=`\meta{value} set the
+% corresponding keys of the \pkg{graphicx} package to the corresponding
+% values.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\@@_if_option:nTF
+  { linkAttributes }
+  {
+    \RequirePackage{graphicx}
+    \markdownSetup{
+      rendererPrototypes = {
+        imageAttributeContextBegin = {
+          \group_begin:
+          \markdownSetup{
+            rendererPrototypes = {
+              attributeKeyValue = {
+                \setkeys
+                  { Gin }
+                  { { #1 } = { #2 } }
+              },
+            },
+          }
+        },
+        imageAttributeContextEnd = {
+          \group_end:
+        },
+      },
+    }
+  }
+  { }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+%#### Raw Attributes
 %
 % In the raw block and inline raw span renderer prototypes, default to the
 % plain TeX renderer prototypes, translating raw attribute `latex` to `tex`.
@@ -30245,7 +30314,7 @@ end
 % \par
 % \begin{markdown}
 %
-%#### Raw Attribute Renderer Prototypes
+%#### Raw Attributes
 %
 % In the raw block and inline raw span renderer prototypes, default to the
 % plain TeX renderer prototypes, translating raw attribute `context` to `tex`.
