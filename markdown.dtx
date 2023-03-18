@@ -1307,13 +1307,19 @@ end)()
 %     is used in the `witiko/graphicx/http` \LaTeX{} theme, see Section
 %     <#sec:latexthemes>.
 %
+% \pkg{graphicx}
+%
+%:    A package that builds upon the \pkg{graphics} package, which is part of
+%     the \LaTeXe{} kernel. It provides a key-value interface that is used in
+%     the default renderer prototypes for image attribute contexts.
+%
 % \pkg{grffile}
 %
-%:    A package that extends the name processing of package graphics to support
-%     a larger range of file names in $2006\leq{}$\TeX{} Live${}\leq{}2019$.
-%     Since \TeX{} Live${}\geq{}2020$, the functionality of the package has
-%     been integrated in the \LaTeXe{} kernel. It is used in the `witiko/dot`
-%     and `witiko/graphicx/http` \LaTeX{} themes, see Section
+%:    A package that extends the name processing of the \pkg{graphics} package
+%     to support a larger range of file names in $2006\leq{}$\TeX{}
+%     Live${}\leq{}2019$.  Since \TeX{} Live${}\geq{}2020$, the functionality
+%     of the package has been integrated in the \LaTeXe{} kernel. It is used in
+%     the `witiko/dot` and `witiko/graphicx/http` \LaTeX{} themes, see Section
 %     <#sec:latexthemes>.
 %
 % \pkg{etoolbox}
@@ -6646,6 +6652,100 @@ defaultOptions.hybrid = false
 %</lua,lua-cli>
 %<*manual-options>
 
+#### Option `inlineCodeAttributes`
+
+`inlineCodeAttributes` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{inlineCodeAttributes}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Enable the Pandoc inline code span attribute extension:
+
+        ``` md
+        `<$>`{.haskell}
+        ``````
+
+:    false
+
+     :  Enable the Pandoc inline code span attribute extension.
+
+% \end{markdown}
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+```` tex
+\documentclass{article}
+\usepackage[inlineCodeAttributes]{markdown}
+\usepackage{expl3}
+\ExplSyntaxOn
+\markdownSetup{
+  renderers = {
+    codeSpanAttributeContextBegin = {
+      \group_begin:
+      \color_group_begin:
+      \markdownSetup{
+        renderers = {
+          attributeKeyValue = {
+            \str_if_eq:nnT
+              { ##1 }
+              { color }
+              {
+                 \color_select:n { ##2 }
+              }
+          },
+        },
+      }
+    },
+    codeSpanAttributeContextEnd = {
+      \color_group_end:
+      \group_end:
+    },
+  },
+}
+\ExplSyntaxOff
+\begin{document}
+\begin{markdown}
+Here is some `colored text`{color=red}.
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> Here is some <span style="color: red">`colored text`</span>.
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { inlineCodeAttributes }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.inlineCodeAttributes = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
 #### Option `inlineNotes`
 
 `inlineNotes` (default value: `false`)
@@ -6914,6 +7014,100 @@ following text:
 % \fi
 %  \begin{macrocode}
 defaultOptions.jekyllData = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
+#### Option `linkAttributes`
+
+`linkAttributes` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{linkAttributes}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Enable the Pandoc link and image attribute extension:
+
+        ``` md
+        An inline ![image](foo.jpg){#id .class width=30 height=20px}
+        and a reference ![image][ref] with attributes.
+
+        [ref]: foo.jpg "optional title" {#id .class key=val key2="val 2"}
+        ``````
+
+:    false
+
+     :  Enable the Pandoc link and image attribute extension.
+
+% \end{markdown}
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+```` tex
+\documentclass{article}
+\usepackage[linkAttributes]{markdown}
+\usepackage{expl3, graphicx}
+\ExplSyntaxOn
+\markdownSetup{
+  renderers = {
+    imageAttributeContextBegin = {
+      \group_begin:
+      \markdownSetup{
+        renderers = {
+          attributeKeyValue = {
+            \setkeys
+              { Gin }
+              { { ##1 } = { ##2 } }
+          },
+        },
+      }
+    },
+    imageAttributeContextEnd = {
+      \group_end:
+    },
+  },
+}
+\ExplSyntaxOff
+\begin{document}
+\begin{markdown}
+Here is an example image:
+
+ ![example image](example-image){width=5cm height=4cm}
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain an example
+image (from [Martin Scharrer's mwe package][mwe]) displayed at size 5cm × 4cm.
+
+ [mwe]: https://ctan.org/pkg/mwe (mwe – Packages and image files for MWEs)
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { linkAttributes }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.linkAttributes = false
 %    \end{macrocode}
 % \par
 % \iffalse
@@ -11963,6 +12157,87 @@ following text:
 %
 % \begin{markdown}
 
+#### Code Span Attribute Context Renderers
+The following macros are only produced, when the \Opt{inlineCodeAttributes}
+option is enabled.
+
+The \mdef{markdownRendererCodeSpanAttributeContextBegin} and
+\mdef{markdownRendererCodeSpanAttributeContextEnd} macros represent the beginning
+and the end of an inline code span in which the attributes of the inline code
+span apply. The macros receive no arguments.
+
+% \end{markdown}
+%
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[inlineCodeAttributes]{markdown}
+\markdownSetup{
+  renderers = {
+    codeSpanAttributeContextBegin = {(},
+    codeSpan = {#1},
+    codeSpanAttributeContextEnd = {)},
+  },
+}
+\begin{document}
+\begin{markdown}
+
+foo `bar`{key=value} baz
+
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> foo (bar) baz
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererCodeSpanAttributeContextBegin{%
+  \markdownRendererCodeSpanAttributeContextBeginPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { codeSpanAttributeContextBegin }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { codeSpanAttributeContextBegin }
+  { 0 }
+\ExplSyntaxOff
+\def\markdownRendererCodeSpanAttributeContextEnd{%
+  \markdownRendererCodeSpanAttributeContextEndPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { codeSpanAttributeContextEnd }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { codeSpanAttributeContextEnd }
+  { 0 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
 #### Content Block Renderers {#texcontentblockrenderers}
 
 The \mdef{markdownRendererContentBlock} macro represents an iA\,Writer content
@@ -14018,6 +14293,87 @@ that the \TeX{} engine has shell access.
 %
 % \begin{markdown}
 
+#### Image Attribute Context Renderers
+The following macros are only produced, when the \Opt{linkAttributes} option
+is enabled.
+
+The \mdef{markdownRendererImageAttributeContextBegin} and
+\mdef{markdownRendererImageAttributeContextEnd} macros represent the beginning
+and the end of an image in which the attributes of the image apply. The macros
+receive no arguments.
+
+% \end{markdown}
+%
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[linkAttributes]{markdown}
+\markdownSetup{
+  renderers = {
+    imageAttributeContextBegin = {(},
+    image = {#1},
+    imageAttributeContextEnd = {)},
+  },
+}
+\begin{document}
+\begin{markdown}
+
+foo ![bar](#bar){key=value} baz
+
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> foo (bar) baz
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererImageAttributeContextBegin{%
+  \markdownRendererImageAttributeContextBeginPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { imageAttributeContextBegin }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { imageAttributeContextBegin }
+  { 0 }
+\ExplSyntaxOff
+\def\markdownRendererImageAttributeContextEnd{%
+  \markdownRendererImageAttributeContextEndPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { imageAttributeContextEnd }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { imageAttributeContextEnd }
+  { 0 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
 #### Interblock Separator Renderer
 The \mdef{markdownRendererInterblockSeparator} macro represents a separator
 between two markdown block elements. The macro receives no arguments.
@@ -14546,6 +14902,87 @@ following text:
   \g_@@_renderer_arities_prop
   { link }
   { 4 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
+#### Link Attribute Context Renderers
+The following macros are only produced, when the \Opt{linkAttributes} option
+is enabled.
+
+The \mdef{markdownRendererLinkAttributeContextBegin} and
+\mdef{markdownRendererLinkAttributeContextEnd} macros represent the beginning
+and the end of a hyperlink in which the attributes of the hyperlink apply.
+The macros receive no arguments.
+
+% \end{markdown}
+%
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[linkAttributes]{markdown}
+\markdownSetup{
+  renderers = {
+    linkAttributeContextBegin = {(},
+    link = {#1},
+    linkAttributeContextEnd = {)},
+  },
+}
+\begin{document}
+\begin{markdown}
+
+foo [bar](#bar){key=value} baz
+
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> foo (bar) baz
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererLinkAttributeContextBegin{%
+  \markdownRendererLinkAttributeContextBeginPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { linkAttributeContextBegin }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { linkAttributeContextBegin }
+  { 0 }
+\ExplSyntaxOff
+\def\markdownRendererLinkAttributeContextEnd{%
+  \markdownRendererLinkAttributeContextEndPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { linkAttributeContextEnd }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { linkAttributeContextEnd }
+  { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par
@@ -22341,12 +22778,25 @@ function M.writer.new(options)
 % \begin{markdown}
 %
 % Define \luamdef{writer->code} as a function that will transform an input
-% inline code span `s` to the output format.
+% inline code span `s` with optional attributes `attributes` to the output
+% format.
 %
 % \end{markdown}
 %  \begin{macrocode}
-  function self.code(s)
-    return {"\\markdownRendererCodeSpan{",self.escape(s),"}"}
+  function self.code(s, attributes)
+    local buf = {}
+    if attributes ~= nil then
+      table.insert(buf,
+                   "\\markdownRendererCodeSpanAttributeContextBegin\n")
+      table.insert(buf, self.attributes(attributes))
+    end
+    table.insert(buf,
+                 {"\\markdownRendererCodeSpan{", self.escape(s), "}"})
+    if attributes ~= nil then
+      table.insert(buf,
+                   "\n\\markdownRendererCodeSpanAttributeContextEnd ")
+    end
+    return buf
   end
 %    \end{macrocode}
 % \par
@@ -22354,15 +22804,27 @@ function M.writer.new(options)
 %
 % Define \luamdef{writer->link} as a function that will transform an input
 % hyperlink to the output format, where `lab` corresponds to the label,
-% `src` to \acro{uri}, and `tit` to the title of the link.
+% `src` to \acro{uri}, `tit` to the title of the link, and `attributes` to
+% optional attributes.
 %
 % \end{markdown}
 %  \begin{macrocode}
-  function self.link(lab,src,tit)
-    return {"\\markdownRendererLink{",lab,"}",
-                          "{",self.escape(src),"}",
-                          "{",self.uri(src),"}",
-                          "{",self.string(tit or ""),"}"}
+  function self.link(lab, src, tit, attributes)
+    local buf = {}
+    if attributes ~= nil then
+      table.insert(buf,
+                   "\\markdownRendererLinkAttributeContextBegin\n")
+      table.insert(buf, self.attributes(attributes))
+    end
+    table.insert(buf, {"\\markdownRendererLink{",lab,"}",
+                       "{",self.escape(src),"}",
+                       "{",self.uri(src),"}",
+                       "{",self.string(tit or ""),"}"})
+    if attributes ~= nil then
+      table.insert(buf,
+                   "\n\\markdownRendererLinkAttributeContextEnd ")
+    end
+    return buf
   end
 %    \end{macrocode}
 % \par
@@ -22370,15 +22832,27 @@ function M.writer.new(options)
 %
 % Define \luamdef{writer->image} as a function that will transform an input
 % image to the output format, where `lab` corresponds to the label, `src`
-% to the \acro{url}, and `tit` to the title of the image.
+% to the \acro{url}, `tit` to the title of the image, and `attributes` to
+% optional attributes.
 %
 % \end{markdown}
 %  \begin{macrocode}
-  function self.image(lab,src,tit)
-    return {"\\markdownRendererImage{",lab,"}",
-                           "{",self.string(src),"}",
-                           "{",self.uri(src),"}",
-                           "{",self.string(tit or ""),"}"}
+  function self.image(lab, src, tit, attributes)
+    local buf = {}
+    if attributes ~= nil then
+      table.insert(buf,
+                   "\\markdownRendererImageAttributeContextBegin\n")
+      table.insert(buf, self.attributes(attributes))
+    end
+    table.insert(buf, {"\\markdownRendererImage{",lab,"}",
+                       "{",self.string(src),"}",
+                       "{",self.uri(src),"}",
+                       "{",self.string(tit or ""),"}"})
+    if attributes ~= nil then
+      table.insert(buf,
+                   "\n\\markdownRendererImageAttributeContextEnd ")
+    end
+    return buf
   end
 %    \end{macrocode}
 % \par
@@ -22628,8 +23102,14 @@ function M.writer.new(options)
     local buf = {}
 
     table.sort(attr)
+    local seen = {}
     local key, value
     for i = 1, #attr do
+      if seen[attr[i]] ~= nil then
+        goto continue  -- prevent duplicate attributes
+      else
+        seen[attr[i]] = true
+      end
       if attr[i]:sub(1, 1) == "#" then
         table.insert(buf, {"\\markdownRendererAttributeIdentifier{",
                            attr[i]:sub(2), "}"})
@@ -22641,6 +23121,7 @@ function M.writer.new(options)
         table.insert(buf, {"\\markdownRendererAttributeKeyValue{",
                            key, "}{", value, "}"})
       end
+      ::continue::
     end
 
     return buf
@@ -23262,6 +23743,15 @@ parsers.title       = parsers.title_d + parsers.title_s + parsers.title_p
 parsers.optionaltitle
                     = parsers.spnl * parsers.title * parsers.spacechar^0
                     + Cc("")
+
+parsers.indirect_link
+                    = parsers.tag
+                    * ( C(parsers.spnl) * parsers.tag
+                      + Cc(nil) * Cc(nil)  -- always produce exactly two captures
+                      )
+
+parsers.indirect_image
+                    = parsers.exclamation * parsers.indirect_link
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -23386,14 +23876,14 @@ parsers.tagentity = parsers.ampersand * C(parsers.alphanumeric^1)
 % \par
 % \begin{markdown}
 %
-%#### Helpers for References
+%#### Helpers for Link Reference Definitions
 %
 % \end{markdown}
 %  \begin{macrocode}
 -- parse a reference definition:  [foo]: /bar "title"
 parsers.define_reference_parser = parsers.leader * parsers.tag * parsers.colon
                                 * parsers.spacechar^0 * parsers.url
-                                * parsers.optionaltitle * parsers.blankline^1
+                                * parsers.optionaltitle
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -23411,7 +23901,26 @@ parsers.between = function(p, starter, ender)
   return (starter * #parsers.nonspacechar * Ct(p * (p - ender2)^0) * ender2)
 end
 
-parsers.urlchar      = parsers.anyescaped - parsers.newline - parsers.more
+parsers.urlchar       = parsers.anyescaped
+                      - parsers.newline
+                      - parsers.more
+
+parsers.auto_link_url = parsers.less
+                      * C( parsers.alphanumeric^1 * P("://")
+                         * parsers.urlchar^1)
+                      * parsers.more
+
+parsers.auto_link_email
+                      = parsers.less
+                      * C((parsers.alphanumeric + S("-._+"))^1
+                      * P("@") * parsers.urlchar^1)
+                      * parsers.more
+
+parsers.auto_link_relative_reference
+                      = parsers.less
+                      * C(parsers.urlchar^1)
+                      * parsers.more
+
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -23714,52 +24223,102 @@ function M.reader.new(writer, options)
 % \par
 % \begin{markdown}
 %
-%#### Helpers for Links and References (local)
+%#### Helpers for Links and Link Reference Definitions (local)
 %
 % \end{markdown}
 %  \begin{macrocode}
   -- List of references defined in the document
   local references
 
-  -- add a reference to the list
-  local function register_link(tag,url,title)
-      references[self.normalize_tag(tag)] = { url = url, title = title }
-      return ""
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% The \luamdef{reader->register_link} method registers
+% a link reference, where `tag` is the link label, `url`
+% is the link destination, `title` is the optional link
+% title, and `attributes` are the optional attributes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  function self.register_link(tag, url, title,
+                              attributes)
+    tag = self.normalize_tag(tag)
+    references[tag] = {
+      url = url,
+      title = title,
+      attributes = attributes,
+    }
+    return ""
   end
 
-  -- lookup link reference and return either
-  -- the link or nil and fallback text.
-  local function lookup_reference(label,sps,tag)
-      local tagpart
-      if not tag then
-          tag = label
-          tagpart = ""
-      elseif tag == "" then
-          tag = label
-          tagpart = "[]"
-      else
-          tagpart = {"[",
-            self.parser_functions.parse_inlines(tag),
-            "]"}
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% The \luamdef{reader->lookup_reference} method looks up a
+% reference with link label `tag`. When the reference exists
+% the method returns a link. The attributes of a link are
+% produced by merging the attributes of the link reference
+% and the optional `attributes`. Otherwise, the method returns a
+% two-tuple of `nil` and fallback text constructed from the
+% link text `label` and the optional spaces `sps` between the
+% link text and the link label.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  function self.lookup_reference(label, sps, tag,
+                                 attributes)
+    local tagpart
+    if not tag then
+      tag = label
+      tagpart = ""
+    elseif tag == "" then
+      tag = label
+      tagpart = "[]"
+    else
+      tagpart = {
+        "[",
+        self.parser_functions.parse_inlines(tag),
+        "]"
+      }
+    end
+    if sps then
+      tagpart = {sps, tagpart}
+    end
+    tag = self.normalize_tag(tag)
+    local r = references[tag]
+    if r then
+      local merged_attributes = {}
+      for _, attribute in ipairs(r.attributes or {}) do
+        table.insert(merged_attributes, attribute)
       end
-      if sps then
-        tagpart = {sps, tagpart}
+      for _, attribute in ipairs(attributes or {}) do
+        table.insert(merged_attributes, attribute)
       end
-      local r = references[self.normalize_tag(tag)]
-      if r then
-        return r
-      else
-        return nil, {"[",
-          self.parser_functions.parse_inlines(label),
-          "]", tagpart}
+      if #merged_attributes == 0 then
+        merged_attributes = nil
       end
+      return {
+        url = r.url,
+        title = r.title,
+        attributes = merged_attributes,
+      }
+    else
+      return nil, {
+        "[",
+        self.parser_functions.parse_inlines(label),
+        "]",
+        tagpart
+      }
+    end
   end
 
   -- lookup link reference and return a link, if the reference is found,
   -- or a bracketed label otherwise.
-  local function indirect_link(label,sps,tag)
+  local function indirect_link(label, sps, tag)
     return writer.defer_call(function()
-      local r,fallback = lookup_reference(label,sps,tag)
+      local r,fallback = self.lookup_reference(label, sps, tag)
       if r then
         return writer.link(
           self.parser_functions.parse_inlines_no_link(label),
@@ -23772,9 +24331,9 @@ function M.reader.new(writer, options)
 
   -- lookup image reference and return an image, if the reference is found,
   -- or a bracketed label otherwise.
-  local function indirect_image(label,sps,tag)
+  local function indirect_image(label, sps, tag)
     return writer.defer_call(function()
-      local r,fallback = lookup_reference(label,sps,tag)
+      local r,fallback = self.lookup_reference(label, sps, tag)
       if r then
         return writer.image(writer.string(label), r.url, r.title)
       else
@@ -23782,6 +24341,19 @@ function M.reader.new(writer, options)
       end
     end)
   end
+
+  parsers.direct_link_tail = parsers.spnl
+                           * parsers.lparent
+                           * (parsers.url + Cc(""))  -- link can be empty [foo]()
+                           * parsers.optionaltitle
+                           * parsers.rparent
+
+  parsers.direct_link = (parsers.tag / self.parser_functions.parse_inlines_no_link)
+                      * parsers.direct_link_tail
+
+  parsers.direct_image = parsers.exclamation
+                       * (parsers.tag / self.parser_functions.parse_inlines)
+                       * parsers.direct_link_tail
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -23882,55 +24454,63 @@ function M.reader.new(writer, options)
                      ) / writer.emphasis
   end
 
-  parsers.AutoLinkUrl    = parsers.less
-                         * C(parsers.alphanumeric^1 * P("://") * parsers.urlchar^1)
-                         * parsers.more
-                         / function(url)
-                             return writer.link(writer.escape(url), url)
-                           end
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% The \luamdef{reader->auto_link_url} method produces an
+% autolink to a URL or a relative reference in the output
+% format, where `url` is the link destination and
+% `attributes` are the optional attributes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+function self.auto_link_url(url, attributes)
+  return writer.link(writer.escape(url),
+                     url, nil, attributes)
+end
 
-  parsers.AutoLinkEmail = parsers.less
-                        * C((parsers.alphanumeric + S("-._+"))^1
-                        * P("@") * parsers.urlchar^1)
-                        * parsers.more
-                        / function(email)
-                            return writer.link(writer.escape(email),
-                                               "mailto:"..email)
-                          end
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% The \luamdef{reader->auto_link_email} method produces an
+% autolink to an e-mail in the output format, where `email` is the email
+% address destination and `attributes` are the optional attributes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+function self.auto_link_email(email, attributes)
+  return writer.link(writer.escape(email),
+                     "mailto:"..email,
+                     nil, attributes)
+end
+
+  parsers.AutoLinkUrl = parsers.auto_link_url
+                      / self.auto_link_url
+
+  parsers.AutoLinkEmail
+                      = parsers.auto_link_email
+                      / self.auto_link_email
 
   parsers.AutoLinkRelativeReference
-                         = parsers.less
-                         * C(parsers.urlchar^1)
-                         * parsers.more
-                         / function(url)
-                             return writer.link(writer.escape(url), url)
-                           end
+                      = parsers.auto_link_relative_reference
+                      / self.auto_link_url
 
-  parsers.DirectLink    = (parsers.tag / self.parser_functions.parse_inlines_no_link)
-                        * parsers.spnl
-                        * parsers.lparent
-                        * (parsers.url + Cc(""))  -- link can be empty [foo]()
-                        * parsers.optionaltitle
-                        * parsers.rparent
+  parsers.DirectLink    = parsers.direct_link
                         / writer.link
 
-  parsers.IndirectLink  = parsers.tag * (C(parsers.spnl) * parsers.tag)^-1
+  parsers.IndirectLink  = parsers.indirect_link
                         / indirect_link
 
   -- parse a link or image (direct or indirect)
   parsers.Link          = parsers.DirectLink + parsers.IndirectLink
 
-  parsers.DirectImage   = parsers.exclamation
-                        * (parsers.tag / self.parser_functions.parse_inlines)
-                        * parsers.spnl
-                        * parsers.lparent
-                        * (parsers.url + Cc(""))  -- link can be empty [foo]()
-                        * parsers.optionaltitle
-                        * parsers.rparent
+  parsers.DirectImage   = parsers.direct_image
                         / writer.image
 
-  parsers.IndirectImage = parsers.exclamation * parsers.tag
-                        * (C(parsers.spnl) * parsers.tag)^-1 / indirect_image
+  parsers.IndirectImage = parsers.indirect_image
+                        / indirect_image
 
   parsers.Image         = parsers.DirectImage + parsers.IndirectImage
 
@@ -23981,7 +24561,9 @@ function M.reader.new(writer, options)
                           + parsers.lineof(parsers.underscore)
                           ) / writer.thematic_break
 
-  parsers.Reference    = parsers.define_reference_parser / register_link
+  parsers.Reference    = parsers.define_reference_parser
+                       * parsers.blankline^1
+                       / self.register_link
 
   parsers.Paragraph    = parsers.nonindentspace * Ct(parsers.Inline^1)
                        * ( parsers.newline
@@ -24077,7 +24659,7 @@ function M.reader.new(writer, options)
 % \end{markdown}
 %  \begin{macrocode}
   parsers.Blank        = parsers.blankline / ""
-                       + parsers.Reference
+                       + V("Reference")
                        + (parsers.tightblocksep / "\n")
 %    \end{macrocode}
 % \par
@@ -24215,6 +24797,7 @@ function M.reader.new(writer, options)
         ExpectedJekyllData    = parsers.fail,
 
         Blank                 = parsers.Blank,
+        Reference             = parsers.Reference,
 
         Blockquote            = parsers.Blockquote,
         Verbatim              = parsers.Verbatim,
@@ -24278,7 +24861,33 @@ function M.reader.new(writer, options)
         previous_pattern = nil
         extension_name = current_extension_name
       end
-      local pattern = get_pattern(previous_pattern)
+      local pattern
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Instead of a function, a \acro{peg} pattern `pattern` may also be
+% supplied with roughly the same effect as supplying the following
+% function, which will define \luamref{walkable_syntax}`[`left-hand
+% side terminal symbol`]` unless it has been previously defined.
+%
+% ``` lua
+% function(previous_pattern)
+%   assert(previous_pattern == nil)
+%   return pattern
+% end
+% ```
+%
+% \end{markdown}
+%  \begin{macrocode}
+      if type(get_pattern) == "function" then
+        pattern = get_pattern(previous_pattern)
+      else
+        assert(previous_pattern == nil,
+               [[Rule ]] .. rule_name ..
+               [[ has already been updated by ]] .. extension_name)
+        pattern = get_pattern
+      end
       local accountable_pattern = { pattern, extension_name, rule_name }
       walkable_syntax[rule_name] = { accountable_pattern }
     end
@@ -25288,7 +25897,7 @@ M.extensions.fancy_lists = function()
                       * Cc(false) * parsers.skipblanklines
                       ) * Cb("listtype") / fancylist
 
-      self.update_rule("OrderedList", function() return FancyList end)
+      self.update_rule("OrderedList", FancyList)
     end
   }
 end
@@ -25707,7 +26316,34 @@ M.extensions.header_attributes = function()
                           / writer.heading
 
       local Heading = AtxHeading + SetextHeading
-      self.update_rule("Heading", function() return Heading end)
+      self.update_rule("Heading", Heading)
+    end
+  }
+end
+%    \end{macrocode}
+% \begin{markdown}
+%
+%#### Inline Code Attributes
+%
+% The \luamdef{extensions.inline_code_attributes} function implements the
+% Pandoc inline code attributes syntax extension.
+%
+% \end{markdown}
+%  \begin{macrocode}
+M.extensions.inline_code_attributes = function()
+  return {
+    name = "built-in inline_code_attributes syntax extension",
+    extend_writer = function()
+    end, extend_reader = function(self)
+      local writer = self.writer
+
+      local CodeWithAttributes = parsers.inticks
+                               * Ct(parsers.attributes)
+                               / writer.code
+
+      self.insert_pattern("Inline before Code",
+                          CodeWithAttributes,
+                          "CodeWithAttributes")
     end
   }
 end
@@ -25766,6 +26402,182 @@ M.extensions.line_blocks = function()
 
       self.insert_pattern("Block after Blockquote",
                            LineBlock, "LineBlock")
+    end
+  }
+end
+%    \end{macrocode}
+% \begin{markdown}
+%
+%#### Link Attributes
+%
+% The \luamdef{extensions.link_attributes} function implements the Pandoc
+% link attributes syntax extension.
+%
+% \end{markdown}
+%  \begin{macrocode}
+M.extensions.link_attributes = function()
+  return {
+    name = "built-in link_attributes syntax extension",
+    extend_writer = function()
+    end, extend_reader = function(self)
+      local parsers = self.parsers
+      local writer = self.writer
+      local options = self.options
+
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The following patterns define link reference definitions with attributes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+
+      local define_reference_parser = parsers.define_reference_parser
+                                    * ( parsers.spnl
+                                      * Ct(parsers.attributes))^-1
+
+      local ReferenceWithAttributes = define_reference_parser
+                                    * parsers.blankline^1
+                                    / self.register_link
+
+      self.update_rule("Reference", ReferenceWithAttributes)
+
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The following patterns define direct and indirect links with attributes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+
+      local function indirect_link(label, sps, tag,
+                                   attribute_text,
+                                   attributes)
+        return writer.defer_call(function()
+          local r, fallback = self.lookup_reference(label, sps, tag,
+                                                    attributes)
+          if r then
+            return writer.link(
+              self.parser_functions.parse_inlines_no_link(label),
+              r.url, r.title, r.attributes)
+          else
+            local buf = {fallback}
+            if attributes then
+              table.insert(buf, writer.string(attribute_text))
+            end
+            return buf
+          end
+        end)
+      end
+
+      local DirectLinkWithAttributes = parsers.direct_link
+                                     * (Ct(parsers.attributes))^-1
+                                     / writer.link
+
+      local IndirectLinkWithAttributes = parsers.indirect_link
+                                       * (C(Ct(parsers.attributes)))^-1
+                                       / indirect_link
+
+      local LinkWithAttributes = DirectLinkWithAttributes
+                               + IndirectLinkWithAttributes
+
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Here, we directly update the `Link` grammar rule to keep the
+% method \luamref{reader->parser_functions.parse_inlines_no_link}
+% aware of `LinkWithAttributes` and prevent nested links.
+%
+% If we used \luamref{reader->insert_pattern} instead of
+% \luamref{reader->update_rule}, this correspondence would have
+% been lost and link text would be able to contain nested links.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      self.update_rule("Link", LinkWithAttributes)
+
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The following patterns define direct and indirect images with attributes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+
+      local function indirect_image(label, sps, tag,
+                                    attribute_text,
+                                    attributes)
+        return writer.defer_call(function()
+          local r, fallback = self.lookup_reference(label, sps, tag,
+                                                    attributes)
+          if r then
+            return writer.image(writer.string(label),
+                                r.url, r.title, r.attributes)
+          else
+            local buf = {"!", fallback}
+            if attributes then
+              table.insert(buf, writer.string(attribute_text))
+            end
+            return buf
+          end
+        end)
+      end
+
+      local DirectImageWithAttributes = parsers.direct_image
+                                      * Ct(parsers.attributes)
+                                      / writer.image
+
+      local IndirectImageWithAttributes = parsers.indirect_image
+                                        * C(Ct(parsers.attributes))
+                                        / indirect_image
+
+      local ImageWithAttributes = DirectImageWithAttributes
+                                + IndirectImageWithAttributes
+
+      self.insert_pattern("Inline before Image",
+                          ImageWithAttributes,
+                          "ImageWithAttributes")
+
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The following patterns define autolinks with attributes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+
+      local AutoLinkUrlWithAttributes
+                      = parsers.auto_link_url
+                      * Ct(parsers.attributes)
+                      / self.auto_link_url
+
+      self.insert_pattern("Inline before AutoLinkUrl",
+                          AutoLinkUrlWithAttributes,
+                          "AutoLinkUrlWithAttributes")
+
+      local AutoLinkEmailWithAttributes
+                      = parsers.auto_link_email
+                      * Ct(parsers.attributes)
+                      / self.auto_link_email
+
+      self.insert_pattern("Inline before AutoLinkEmail",
+                          AutoLinkEmailWithAttributes,
+                          "AutoLinkEmailWithAttributes")
+
+      if options.relativeReferences then
+
+        local AutoLinkRelativeReferenceWithAttributes
+                        = parsers.auto_link_relative_reference
+                        * Ct(parsers.attributes)
+                        / self.auto_link_url
+
+        self.insert_pattern(
+          "Inline before AutoLinkRelativeReference",
+          AutoLinkRelativeReferenceWithAttributes,
+          "AutoLinkRelativeReferenceWithAttributes")
+
+      end
+
     end
   }
 end
@@ -25850,7 +26662,7 @@ M.extensions.notes = function(notes, inline_notes)
                     / register_note
 
         local Blank = NoteBlock + parsers.Blank
-        self.update_rule("Blank", function() return Blank end)
+        self.update_rule("Blank", Blank)
 
         self.insert_pattern("Inline after Emph",
                             NoteRef, "NoteRef")
@@ -26537,7 +27349,7 @@ M.extensions.jekyll_data = function(expect_jekyll_data)
       self.insert_pattern("Block before Blockquote",
                           UnexpectedJekyllData, "UnexpectedJekyllData")
       if expect_jekyll_data then
-        self.update_rule("ExpectedJekyllData", function() return ExpectedJekyllData end)
+        self.update_rule("ExpectedJekyllData", ExpectedJekyllData)
       end
     end
   }
@@ -26611,10 +27423,22 @@ function M.new(options)
     table.insert(extensions, header_attributes_extension)
   end
 
+  if options.inlineCodeAttributes then
+    local inline_code_attributes_extension =
+      M.extensions.inline_code_attributes()
+    table.insert(extensions, inline_code_attributes_extension)
+  end
+
   if options.jekyllData then
     local jekyll_data_extension = M.extensions.jekyll_data(
       options.expectJekyllData)
     table.insert(extensions, jekyll_data_extension)
+  end
+
+  if options.linkAttributes then
+    local link_attributes_extension =
+      M.extensions.link_attributes()
+    table.insert(extensions, link_attributes_extension)
   end
 
   if options.lineBlocks then
@@ -27025,7 +27849,7 @@ end
 % \par
 % \begin{markdown}
 %
-%#### Raw Attribute Renderer Prototypes
+%#### Raw Attributes
 %
 % In the raw block and inline raw span renderer prototypes, execute the content
 % with TeX when the raw attribute is `tex`, display the content as markdown when
@@ -29528,7 +30352,68 @@ end
 % \par
 % \begin{markdown}
 %
-%#### Raw Attribute Renderer Prototypes
+%#### Strike-Through
+% If the \Opt{strikeThrough} option is enabled, we will load the
+% \pkg{soulutf8} package and use it to implement strike-throughs.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\markdownIfOption{strikeThrough}{%
+  \RequirePackage{soulutf8}%
+  \markdownSetup{
+    rendererPrototypes = {
+      strikeThrough = {%
+        \st{#1}%
+      },
+    }
+  }
+}{}
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+%#### Image Attributes
+%
+% If the \Opt{linkAttributes} option is enabled, we will load
+% the \pkg{graphicx} package. Furthermore, in image attribute contexts,
+% we will make attributes in the form \meta{key}`=`\meta{value} set the
+% corresponding keys of the \pkg{graphicx} package to the corresponding
+% values.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\@@_if_option:nTF
+  { linkAttributes }
+  {
+    \RequirePackage{graphicx}
+    \markdownSetup{
+      rendererPrototypes = {
+        imageAttributeContextBegin = {
+          \group_begin:
+          \markdownSetup{
+            rendererPrototypes = {
+              attributeKeyValue = {
+                \setkeys
+                  { Gin }
+                  { { ##1 } = { ##2 } }
+              },
+            },
+          }
+        },
+        imageAttributeContextEnd = {
+          \group_end:
+        },
+      },
+    }
+  }
+  { }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+%#### Raw Attributes
 %
 % In the raw block and inline raw span renderer prototypes, default to the
 % plain TeX renderer prototypes, translating raw attribute `latex` to `tex`.
@@ -29950,7 +30835,7 @@ end
 % \par
 % \begin{markdown}
 %
-%#### Raw Attribute Renderer Prototypes
+%#### Raw Attributes
 %
 % In the raw block and inline raw span renderer prototypes, default to the
 % plain TeX renderer prototypes, translating raw attribute `context` to `tex`.

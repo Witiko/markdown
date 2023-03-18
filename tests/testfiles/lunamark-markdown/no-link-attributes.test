@@ -1,0 +1,49 @@
+<<<
+This test ensures that the Lua `linkAttributes` option is
+disabled by default.
+
+An inline [link](foo.jpg){#id .class width=30 height=20px},
+a reference [link][ref]{.another-class} with attributes, and
+an <https://auto/>{.link}.
+
+An inline ![image](foo.jpg){#id .class width=30 height=20px}
+and a reference ![image][ref]{.another-class} with attributes.
+
+[ref]: foo.jpg "optional title" {#id .class key=val}
+>>>
+documentBegin
+codeSpan: linkAttributes
+interblockSeparator
+BEGIN link
+- label: link
+- URI: foo.jpg
+- title: 
+END link
+leftBrace
+hash
+rightBrace
+leftBrace
+rightBrace
+BEGIN link
+- label: https://auto/
+- URI: https://auto/
+- title: 
+END link
+leftBrace
+rightBrace
+interblockSeparator
+BEGIN image
+- label: image
+- URI: foo.jpg
+- title: 
+END image
+leftBrace
+hash
+rightBrace
+leftBrace
+rightBrace
+interblockSeparator
+leftBrace
+hash
+rightBrace
+documentEnd
