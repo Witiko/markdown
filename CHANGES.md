@@ -1,5 +1,13 @@
 # Changes
 
+## 2.22.0
+
+Development:
+
+- Add support for TeX math surrounded by backslash-escaped
+  parens and brackets. (contributed by @lostenderman, #61,
+  #235, #236, #270)
+
 ## 2.21.0 (2022-02-28)
 
 Development:
