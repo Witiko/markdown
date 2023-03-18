@@ -15,7 +15,7 @@ and a reference ![image][ref]{.another-class} with attributes.
 documentBegin
 codeSpan: linkAttributes
 interblockSeparator
-linkAttributeContextBegin
+BEGIN linkAttributeContext
 attributeIdentifier: id
 attributeClassName: class
 BEGIN attributeKeyValue
@@ -31,8 +31,8 @@ BEGIN link
 - URI: foo.jpg
 - title: 
 END link
-linkAttributeContextEnd
-linkAttributeContextBegin
+END linkAttributeContext
+BEGIN linkAttributeContext
 attributeIdentifier: id
 attributeClassName: another-class
 attributeClassName: class
@@ -45,17 +45,17 @@ BEGIN link
 - URI: foo.jpg
 - title: optional title
 END link
-linkAttributeContextEnd
-linkAttributeContextBegin
+END linkAttributeContext
+BEGIN linkAttributeContext
 attributeClassName: link
 BEGIN link
 - label: https://auto/
 - URI: https://auto/
 - title: 
 END link
-linkAttributeContextEnd
+END linkAttributeContext
 interblockSeparator
-imageAttributeContextBegin
+BEGIN imageAttributeContext
 attributeIdentifier: id
 attributeClassName: class
 BEGIN attributeKeyValue
@@ -71,8 +71,8 @@ BEGIN image
 - URI: foo.jpg
 - title: 
 END image
-imageAttributeContextEnd
-imageAttributeContextBegin
+END imageAttributeContext
+BEGIN imageAttributeContext
 attributeIdentifier: id
 attributeClassName: another-class
 attributeClassName: class
@@ -85,5 +85,5 @@ BEGIN image
 - URI: foo.jpg
 - title: optional title
 END image
-imageAttributeContextEnd
+END imageAttributeContext
 documentEnd

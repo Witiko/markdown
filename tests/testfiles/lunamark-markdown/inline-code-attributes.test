@@ -8,8 +8,8 @@ propagates through the plain TeX interface.
 documentBegin
 codeSpan: inlineCodeAttributes
 interblockSeparator
-codeSpanAttributeContextBegin
+BEGIN codeSpanAttributeContext
 attributeClassName: haskell
 codeSpan: <(dollarSign)>
-codeSpanAttributeContextEnd
+BEGIN codeSpanAttributeContext
 documentEnd
