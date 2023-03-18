@@ -11,5 +11,5 @@ interblockSeparator
 BEGIN codeSpanAttributeContext
 attributeClassName: haskell
 codeSpan: <(dollarSign)>
-BEGIN codeSpanAttributeContext
+END codeSpanAttributeContext
 documentEnd
