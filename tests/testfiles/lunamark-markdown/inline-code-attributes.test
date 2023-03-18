@@ -1,0 +1,15 @@
+\def\markdownOptionInlineCodeAttributes{true}
+<<<
+This test ensures that the Lua `inlineCodeAttributes` option correctly
+propagates through the plain TeX interface.
+
+`<$>`{.haskell}
+>>>
+documentBegin
+codeSpan: inlineCodeAttributes
+interblockSeparator
+codeSpanAttributeContextBegin
+attributeClassName: haskell
+codeSpan: <(dollarSign)>
+codeSpanAttributeContextEnd
+documentEnd
