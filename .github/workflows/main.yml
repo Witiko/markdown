@@ -76,8 +76,19 @@ jobs:
         with:
           fetch-depth: 0
           submodules: true
+      - name: Use only LuaTeX to unit-test pull requests
+        if: github.ref != 'refs/heads/main'
+        run: |
+          set -ex
+          shopt -s extglob
+          rm -rv tests/templates/!(plain)/
+          rm -v tests/templates/plain/!(input).tex.m4
+          grep luatex tests/templates/plain/COMMANDS.m4 > tests/templates/plain/COMMANDS.m4.new
+          mv tests/templates/plain/COMMANDS.m4.new tests/templates/plain/COMMANDS.m4
       - name: Build Docker image
         run: make docker-image TEXLIVE_TAG=${{ matrix.texlive }}
+      - name: Fix ownership of repository
+        run: docker run --rm -v "$PWD":/git-repo -w /git-repo witiko/markdown:${{ matrix.texlive }} chown -R root:root /git-repo
       - name: Test Lua command-line interface
         run: |
           RESULT="$(printf '%s\n' 'Hello *Markdown*! $a_x + b_x = c_x$' |
@@ -85,9 +96,9 @@ jobs:
                     tee /dev/stderr)"
           test "$RESULT" = '\markdownRendererDocumentBegin'$'\n''Hello \markdownRendererEmphasis{Markdown}! $a_x + b_x = c_x$\markdownRendererDocumentEnd'
       - name: Run unit tests
-        run: docker run -v "$PWD":/git-repo -w /git-repo witiko/markdown:${{ matrix.texlive }} make test
+        run: docker run --rm -v "$PWD":/git-repo -w /git-repo witiko/markdown:${{ matrix.texlive }} make test
       - name: Build distribution archives
-        run: docker run -v "$PWD":/git-repo -w /git-repo witiko/markdown:${{ matrix.texlive }} make dist gh-pages
+        run: docker run --rm -v "$PWD":/git-repo -w /git-repo witiko/markdown:${{ matrix.texlive }} make dist gh-pages
       - name: Upload artifact markdown.tds.zip
         if: matrix.texlive == 'latest'
         uses: actions/upload-artifact@v2

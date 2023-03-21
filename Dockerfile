@@ -31,9 +31,10 @@ ARG BINARY_DIR=/usr/local/bin
 ARG BUILD_DIR=/git-repo
 ARG INSTALL_DIR=/usr/local/texlive/texmf-local
 
+ARG FROM_IMAGE=texlive/texlive
 ARG TEXLIVE_TAG=latest
 
-FROM texlive/texlive:$TEXLIVE_TAG as build
+FROM $FROM_IMAGE:$TEXLIVE_TAG as build
 
 ARG DEPENDENCIES
 
@@ -91,7 +92,7 @@ unzip ${BUILD_DIR}/markdown.tds.zip -d ${BUILD_DIR}/dist
 EOF
 
 
-FROM texlive/texlive:$TEXLIVE_TAG
+FROM $FROM_IMAGE:$TEXLIVE_TAG
 
 ARG AUXILIARY_FILES
 ARG DEPENDENCIES

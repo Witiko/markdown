@@ -1,0 +1,13 @@
+<<<
+This test ensures that the Lua `inlineCodeAttributes` option is
+disabled by default.
+
+`<$>`{.haskell}
+>>>
+documentBegin
+codeSpan: inlineCodeAttributes
+interblockSeparator
+codeSpan: <(dollarSign)>
+leftBrace
+rightBrace
+documentEnd

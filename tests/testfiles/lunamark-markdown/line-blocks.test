@@ -1,0 +1,50 @@
+\def\markdownOptionLineBlocks{true}
+<<<
+This test ensures that the Lua `lineBlocks` option correctly propagates
+through the plain TeX interface.
+
+Line blocks
+
+| The _limerick_ packs laughs anatomical
+| In space that is quite economical.
+|    But the **good** ones I have seen
+|        So seldom are clean
+| And the clean ones so seldom are comical
+
+Line blocks with continuation
+
+| The Right Honorable Most Venerable and Righteous Samuel L.
+  Constable, Jr.
+| 200 Main St.
+| Berkeley,
+ CA 94718
+>>>
+documentBegin
+codeSpan: lineBlocks
+interblockSeparator
+interblockSeparator
+lineBlockBegin
+emphasis: limerick
+hardLineBreak
+hardLineBreak
+nbsp
+nbsp
+nbsp
+strongEmphasis: good
+hardLineBreak
+nbsp
+nbsp
+nbsp
+nbsp
+nbsp
+nbsp
+nbsp
+hardLineBreak
+lineBlockEnd
+interblockSeparator
+interblockSeparator
+lineBlockBegin
+hardLineBreak
+hardLineBreak
+lineBlockEnd
+documentEnd

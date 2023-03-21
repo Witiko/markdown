@@ -41,7 +41,7 @@ BEGIN cite
 - suppressAuthor: false
 - prenote: also
 - postnote: chap.(nbsp)1
-- name: smit:.(hash)$(percentSign)&-+?<>_/h04
+- name: smit:.#$%&-+?<>_/h04
 END cite
 END cites
 interblockSeparator
@@ -89,7 +89,7 @@ BEGIN textCite
 - suppressAuthor: false
 - prenote: also
 - postnote: chap.(nbsp)1
-- name: smit:.(hash)$(percentSign)&-+?<>_/h04
+- name: smit:.#$%&-+?<>_/h04
 END textCite
 END textCites
 BEGIN textCites

@@ -22,7 +22,7 @@ END link
 interblockSeparator
 BEGIN link
 - label: http://example.com/?foo=1(ampersand)bar=2
-- URI: http://example.com/?foo=1(ampersand)bar=2
+- URI: http://example.com/?foo=1&bar=2
 - title: 
 END link
 interblockSeparator
