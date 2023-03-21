@@ -22967,11 +22967,16 @@ end
 %  \begin{macrocode}
 parsers.leader      = parsers.space^-3
 
-parsers.bullet = function(bullet_char)
+parsers.bullet = function(bullet_char, interrupting)
+  local allowed_end
+  if interrupting then
+    allowed_end = C(parsers.spacechar^1) * #parsers.linechar
+  else
+    allowed_end = C(parsers.spacechar^1) + #(parsers.newline + parsers.eof)
+  end
   return C(parsers.leader)
         * Ct(C(bullet_char) * Cc(""))
-        * (C(parsers.spacechar^1)
-            + #(parsers.newline + parsers.eof))
+        * allowed_end
 end
 
 local function tickbox(interior)
@@ -23211,7 +23216,7 @@ parsers.tagentity = parsers.ampersand * C(parsers.alphanumeric^1)
 -- parse a reference definition:  [foo]: /bar "title"
 parsers.define_reference_parser = parsers.leader * parsers.tag * parsers.colon
                                 * parsers.spacechar^0 * parsers.url
-                                * parsers.optionaltitle * parsers.blankline^1
+                                * parsers.optionaltitle * (parsers.newline + parsers.eof)
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -23677,7 +23682,7 @@ function M.reader.new(writer, options)
   end
 
   -- process container start
-  local function process_starter_indent(s, i, indent_table, starter, indent_type)
+  local function process_starter_indent(s, i, indent_table, starter, is_blank, indent_type)
     local last_trail = starter[1]
     local delimiter = starter[2]
     local raw_new_trail = starter[3]
@@ -23704,14 +23709,14 @@ function M.reader.new(writer, options)
     local total_indent_level = preceding_indentation + last_trail_length + delimiter_length
 
     local sp = nil
-    if raw_new_trail ~= nil then -- item is not blank
+    if not is_blank then
       sp = process_starter_spacing(total_indent_level, raw_new_trail, 0, 1)
     else
       sp = {}
     end
 
     local del_trail_length = sp.left_total_stripped
-    if raw_new_trail == nil then
+    if is_blank then
       del_trail_length = 1
     elseif not sp.is_code then
       del_trail_length = del_trail_length + #sp.remainder
@@ -23740,9 +23745,24 @@ function M.reader.new(writer, options)
     return parsers.fail
   end
 
+  -- find the last start of an only blank pattern group
+  local function left_blank_starter(indent_table)
+    local blank_starter_index = nil
+    for i = #indent_table.indents,1,-1 do
+      local value = indent_table.indents[i]
+      if value.name == "li" then
+        blank_starter_index = i
+      else
+        break
+      end
+    end
+
+    return blank_starter_index
+  end
+
   -- apply decoded patterns iteratively, 
-  local function traverse_indent(s, i, indent_table, is_optional)
-    local new_index = i
+  local function traverse_indent(s, index, indent_table, is_optional, blank_end)
+    local new_index = index
 
     local preceding_indentation = 0
     local current_trail = {}
@@ -23751,14 +23771,17 @@ function M.reader.new(writer, options)
       return true, new_index, current_trail
     end
 
-    for _, value in ipairs(indent_table.indents) do
+    local blank_starter = left_blank_starter(indent_table)
+
+    for i = 1,#indent_table.indents do
+      local value = indent_table.indents[i]
       local pattern = decode_pattern(value.name)
 
       -- match decoded pattern
       local new_indent_info = lpeg.match(Ct(pattern), s, new_index)
       if new_indent_info == nil then
         if is_optional then
-          return true, new_index
+          return true, new_index, current_trail
         end
         return false
       end
@@ -23767,8 +23790,6 @@ function M.reader.new(writer, options)
       local delimiter = new_indent_info[2]
       local raw_new_trail = new_indent_info[3]
       local possible_next_index = new_indent_info[4]
-
-      local mid_trail = {}
 
       -- check previous trail
       if delimiter ~= "" and current_trail == nil then
@@ -23779,7 +23800,7 @@ function M.reader.new(writer, options)
       if current_trail ~= nil then
         if delimiter ~= "" and current_trail.is_code then
           if is_optional then
-            return true, new_index
+            return true, new_index, current_trail
           end
           return false
         end
@@ -23813,10 +23834,12 @@ function M.reader.new(writer, options)
       local sp = process_starter_spacing(total_indent_level, spacing_to_process, minimum, left_strip_length)
 
       if delimiter == "" and not sp.is_minimum then
-        if is_optional then
-            return true, new_index
-          end
-          return false
+        if is_optional 
+          or (blank_end and blank_starter <= i) 
+          then
+            return true, new_index, current_trail
+        end
+        return false
       end
 
       local indent_length = raw_last_trail_length + delimiter_length + sp.left_total_stripped
@@ -23825,7 +23848,7 @@ function M.reader.new(writer, options)
       local next_trail = {}
       if delimiter ~= "" then
         preceding_indentation = preceding_indentation + indent_length
-        next_trail = {is_code=sp.is_code, remainder=sp.remainder, internal_remainder=sp.remainder}
+        next_trail = {is_code=sp.is_code, remainder=sp.remainder, internal_remainder=sp.minimum_remainder}
       else
         preceding_indentation = preceding_indentation + value.length
         next_trail = {is_code=sp.is_code, remainder=sp.remainder, internal_remainder=sp.minimum_remainder}
@@ -23843,7 +23866,7 @@ function M.reader.new(writer, options)
       return true
     end
 
-    local passes, new_index, current_trail = traverse_indent(s, i, indent_table, is_optional)
+    local passes, new_index, current_trail = traverse_indent(s, i, indent_table, is_optional, false)
 
     if passes then
       indent_table = add_trail(indent_table, current_trail)
@@ -23857,24 +23880,13 @@ function M.reader.new(writer, options)
       return true
     end
 
-    local non_blank_found = false
-    local index = 1
-    while not non_blank_found and index <= #indent_table.indents do
-      if indent_table.indents[index].name == "bq" then
-        non_blank_found = true
-      end
-      index = index + 1
-    end
+    local passes, new_index, current_trail = traverse_indent(s, i, indent_table, is_optional, true)
 
-    if non_blank_found then
-      local result, indent_table = start_traverse_indent(s, i, indent_table, is_optional)
-      if result then
-        return result, indent_table
-      end
-      return false
+    if passes then
+      indent_table = add_trail(indent_table, current_trail)
+      return new_index, indent_table
     end
-
-    return true, indent_table
+    return false
   end
 
   check_minimal_indent = Cmt(Cb("indent_info") * Cc(false), start_traverse_indent)
@@ -23889,25 +23901,32 @@ function M.reader.new(writer, options)
   check_code_trail  = Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(true), check_trail_joined)
                     * Cg(Cmt(Cb("indent_info"), leave_trail), "indent_info")
 
-  parsers.minimally_indented_blank = check_minimal_indent * V("Blank")
+  parsers.minimally_indented_blank = check_minimal_indent * (parsers.blankline / "")
 
   parsers.minimally_indented_block = check_minimal_indent * V("Block")
 
   parsers.minimally_indented_separated_block  = check_minimal_indent / writer.interblocksep
                                               * V("Block")
 
+  parsers.minimally_indented_blank_blank = check_minimal_blank_indent * (parsers.blankline / "")
+
+  -- TODO move - needs to call check_trail
+  parsers.define_reference_parser = (check_trail / "") * parsers.tag * parsers.colon
+                                  * parsers.spacechar^0 * parsers.url
+                                  * parsers.optionaltitle * (parsers.newline + parsers.eof)
+
   parsers.indented_content = function(breakable)
     local blank = parsers.minimally_indented_blank
     if breakable then
-      blank = blank + V("Blank")
+      blank = blank + (parsers.blankline / "")
     end
 
-    return  Ct( V("Blank")
+    return  Ct( (parsers.blankline / "")
               * blank^0
               * parsers.minimally_indented_block
               * ( blank
                 + parsers.minimally_indented_separated_block)^0
-              + V("Blank")
+              + (parsers.blankline / "")
               * blank^0
               + V("Block")
               * ( blank
@@ -23917,6 +23936,7 @@ function M.reader.new(writer, options)
   local function add_indent(pattern, name)
     return  Cg(Cmt( Cb("indent_info") 
                   * Ct(pattern)
+                  * (#parsers.linechar * Cc(false) + Cc(true)) -- check if starter is blank
                   * Cc(name),
               process_starter_indent), "indent_info")
   end
@@ -23935,15 +23955,20 @@ function M.reader.new(writer, options)
     parsers.dig = parsers.digit
   end
 
-  parsers.enumerator = function(delimiter_type, interrupt)
-    local delimiter_range = parsers.dig * parsers.dig^-8
-    if interrupt then
+  parsers.enumerator = function(delimiter_type, interrupting)
+    local delimiter_range
+    local allowed_end
+    if interrupting then
       delimiter_range = P("1")
+      allowed_end = C(parsers.spacechar^1) * #parsers.linechar
+    else
+      delimiter_range = parsers.dig * parsers.dig^-8
+      allowed_end = C(parsers.spacechar^1) + #(parsers.newline + parsers.eof)
     end
 
     return C(parsers.leader)
              * Ct(C(delimiter_range) * C(delimiter_type))
-             * (C(parsers.spacechar^1) + #(parsers.newline + parsers.eof))
+             * allowed_end
   end
 
   parsers.starter = parsers.bullet(parsers.dash) 
@@ -23980,7 +24005,7 @@ function M.reader.new(writer, options)
   local references
 
   -- add a reference to the list
-  local function register_link(tag,url,title)
+  local function register_link(_,tag,url,title)
       references[self.normalize_tag(tag)] = { url = url, title = title }
       return ""
   end
@@ -24078,9 +24103,9 @@ function M.reader.new(writer, options)
     parsers.interrupting_bullets = parsers.fail
     parsers.interrupting_enumerators = parsers.fail
   else
-    parsers.interrupting_bullets  = parsers.bullet(parsers.dash) 
-                                  + parsers.bullet(parsers.asterisk)
-                                  + parsers.bullet(parsers.plus)
+    parsers.interrupting_bullets  = parsers.bullet(parsers.dash, true) 
+                                  + parsers.bullet(parsers.asterisk, true)
+                                  + parsers.bullet(parsers.plus, true)
 
     parsers.interrupting_enumerators  = parsers.enumerator(parsers.period, true)
                                       + parsers.enumerator(parsers.rparent, true)
@@ -24292,35 +24317,67 @@ function M.reader.new(writer, options)
      parsers.tickbox = parsers.fail
   end
 
+  -- TODO move - copied for testing
+  parsers.ref_or_block = parsers.Reference + V("Block")
+
+  parsers.minimally_indented_ref = check_minimal_indent * parsers.Reference
+
+  parsers.minimally_indented_blank = check_minimal_indent * (parsers.blankline / "")
+
+  parsers.minimally_indented_block = check_minimal_indent * parsers.ref_or_block
+
+  parsers.minimally_indented_separated_block  = check_minimal_indent * parsers.Reference 
+                                              + check_minimal_indent / writer.interblocksep
+                                              * V("Block")
+
   parsers.minimally_indented_non_blank  = parsers.minimally_indented_block 
                                         - parsers.minimally_indented_blank
 
   parsers.minimally_indented_separated_non_blank  = parsers.minimally_indented_separated_block 
                                                   - parsers.minimally_indented_blank
 
-  parsers.list_item_tightness_condition = -#((V("Blank")^1 * (parsers.minimally_indented_block))
+  parsers.list_item_tightness_condition = -#((parsers.minimally_indented_blank_blank^1 * (parsers.minimally_indented_block))
                                         * remove_indent("li")
                                         + remove_indent("li")
                                         * parsers.fail)
 
-  parsers.indented_content_tight  = Ct( V("Blank")
-                                      * -parsers.minimally_indented_non_blank
+  parsers.indented_content_tight  = Ct( (parsers.blankline / "")
+                                      * #parsers.minimally_indented_blank_blank
                                       * remove_indent("li")
-                                      + ( V("Blank")
+
+                                      + (parsers.Reference + (parsers.blankline / "") * parsers.minimally_indented_ref)
+                                      * (parsers.minimally_indented_blank_blank^-1 * parsers.minimally_indented_ref^1)^0
+                                      * parsers.minimally_indented_blank_blank
+                                      * #parsers.minimally_indented_blank_blank
+                                      * remove_indent("li")
+
+                                      + ( (parsers.Reference + (parsers.blankline / "") * parsers.minimally_indented_ref)
+                                        * (parsers.minimally_indented_blank_blank^-1 * parsers.minimally_indented_ref^1)^0 * parsers.minimally_indented_blank_blank^-1
+                                        * parsers.minimally_indented_block
+                                        * (parsers.minimally_indented_separated_non_blank)^0
+
+                                        + (parsers.Reference + (parsers.blankline / "") * parsers.minimally_indented_ref)
+                                        * (parsers.minimally_indented_blank_blank^-1 * parsers.minimally_indented_ref^1)^0
+
+                                        + (parsers.blankline / "")
                                         * (parsers.minimally_indented_non_blank)
                                         * (parsers.minimally_indented_separated_non_blank)^0
-                                        + V("Block") 
-                                        * (parsers.minimally_indented_separated_non_blank)^0) 
-                                        * parsers.list_item_tightness_condition)
-  
 
-  parsers.indented_content_loose  = Ct( V("Blank")
+                                        + (parsers.blankline / "")
+
+                                        + V("Block")
+                                        * (parsers.minimally_indented_separated_non_blank)^0) 
+
+                                        * parsers.list_item_tightness_condition
+                                      ) 
+  
+  parsers.indented_content_loose  = Ct( parsers.blankline
                                       * (parsers.minimally_indented_non_blank)
-                                      * ( V("Blank")^0
+                                      * ( parsers.minimally_indented_blank_blank^0
                                         * parsers.minimally_indented_separated_non_blank^1)^0
-                                      + V("Blank")
-                                      + V("Block")
-                                      * ( V("Blank")^0
+                                      + parsers.blankline
+                                      + parsers.ref_or_block
+                                      * ( parsers.minimally_indented_blank_blank^0
                                         * parsers.minimally_indented_separated_non_blank^1)^0)
 
   parsers.TightListItem = function(starter)
@@ -24338,11 +24395,12 @@ function M.reader.new(writer, options)
 
   parsers.BulletListOfType = function(bullet_type)
     local bullet = parsers.bullet(bullet_type)
-    return  ( Ct( parsers.TightListItem(bullet)^1) * Cc(true)
-               * -#(parsers.blanklines * bullet)
+    return  ( Ct( parsers.TightListItem(bullet) 
+                * ((check_minimal_indent / "") * parsers.TightListItem(bullet))^0) * Cc(true)
+               * -#((parsers.minimally_indented_blank_blank / "")^0 * check_minimal_indent * bullet)
                + Ct(parsers.LooseListItem(bullet) 
-                 * ((parsers.blanklines / "") 
-                   * parsers.LooseListItem(bullet))^0) * Cc(false))
+                 * ((parsers.minimally_indented_blank_blank / "")^0 
+                   * (check_minimal_indent / "") * parsers.LooseListItem(bullet))^0) * Cc(false))
             / writer.bulletlist
   end
 
@@ -24367,10 +24425,10 @@ function M.reader.new(writer, options)
     local enumerator = parsers.enumerator(delimeter_type)
     return  Cg(enumerator, "listtype")
           * (Ct( parsers.TightListItem(Cb("listtype"))
-               * parsers.TightListItem(enumerator)^0)
-          * Cc(true) * -#(parsers.blanklines * enumerator)
+               * ((check_minimal_indent / "") * parsers.TightListItem(enumerator))^0)
+          * Cc(true) * -#((parsers.minimally_indented_blank_blank / "")^0 * check_minimal_indent * enumerator)
           + Ct( parsers.LooseListItem(Cb("listtype"))
-              * ((parsers.blanklines / "") * parsers.LooseListItem(enumerator))^0)
+              * ((parsers.minimally_indented_blank_blank / "")^0 * (check_minimal_indent / "") * parsers.LooseListItem(enumerator))^0)
           * Cc(false)
           ) * Ct(Cb("listtype")) / ordered_list
   end
