@@ -1723,6 +1723,7 @@ local walkable_syntax = {
     "UlOrStarLine",
     "Strong",
     "Emph",
+    "MaybeLinkOrImage",
     "LinkOrImage",
     "Code",
     "AutoLinkUrl",
@@ -4673,6 +4674,7 @@ be produced and contain the following text:
         "Strong",
         "Emph",
         "StrikeThrough (user-defined \"./strike-through.lua\" syntax extension)",
+        "MaybeLinkOrImage",
         "LinkOrImage",
         "Code",
         "AutoLinkUrl",
@@ -23684,16 +23686,16 @@ parsers.urlchar = parsers.anyescaped
                 - parsers.newline
                 - parsers.more
 
-parsers.autolink_scheme_part  = parsers.alphanumeric
+parsers.auto_link_scheme_part = parsers.alphanumeric
                               + parsers.plus
                               + parsers.period
                               + parsers.dash
 
-parsers.autolink_scheme = parsers.letter
-                        * parsers.autolink_scheme_part
-                        * parsers.autolink_scheme_part^-30
+parsers.auto_link_scheme  = parsers.letter
+                          * parsers.auto_link_scheme_part
+                          * parsers.auto_link_scheme_part^-30
 
-parsers.absolute_uri = parsers.autolink_scheme * parsers.colon
+parsers.absolute_uri  = parsers.auto_link_scheme * parsers.colon
                       * (parsers.any - parsers.spacing - parsers.less - parsers.more)^0
 
 parsers.printable_characters = S(".!#$%&'*+/=?^_`{|}~-")
@@ -23714,21 +23716,21 @@ parsers.email_address = parsers.email_address_local_part
                       * parsers.at
                       * parsers.email_address_domain
 
-parsers.autolink_url  = parsers.less
+parsers.auto_link_url = parsers.less
                       * C(parsers.absolute_uri)
                       * parsers.more
 
-parsers.autolink_email  = parsers.less
+parsers.auto_link_email = parsers.less
                         * C(parsers.email_address)
                         * parsers.more
 
-parsers.autolink_relative_reference = parsers.less
+parsers.auto_link_relative_reference = parsers.less
                                     * C(parsers.urlchar^1)
                                     * parsers.more
 
-parsers.autolink  = parsers.autolink_url
-                  + parsers.autolink_email
-                  + parsers.autolink_relative_reference
+parsers.autolink  = parsers.auto_link_url
+                  + parsers.auto_link_email
+                  + parsers.auto_link_relative_reference
 
 -- content in balanced brackets, parentheses, or quotes:
 parsers.bracketed   = P{ parsers.lbracket
@@ -23808,15 +23810,6 @@ parsers.title       = parsers.title_d + parsers.title_s + parsers.title_p
 parsers.optionaltitle
                     = parsers.spnl * parsers.title * parsers.spacechar^0
                     + Cc("")
-
-parsers.indirect_link
-                    = parsers.tag
-                    * ( C(parsers.spnl) * parsers.tag
-                      + Cc(nil) * Cc(nil)  -- always produce exactly two captures
-                      )
-
-parsers.indirect_image
-                    = parsers.exclamation * parsers.indirect_link
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -23948,7 +23941,7 @@ parsers.tagentity = parsers.ampersand * C(parsers.alphanumeric^1)
 -- parse a reference definition:  [foo]: /bar "title"
 parsers.define_reference_parser = parsers.leader * parsers.link_label * parsers.colon
                                 * parsers.spacechar^0 * parsers.url
-                                * parsers.optionaltitle
+                                * parsers.optionaltitle * (parsers.newline + parsers.eof)
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -24268,7 +24261,10 @@ function M.reader.new(writer, options)
 % \par
 % \begin{markdown}
 %
-%#### Helpers for Links and Link Reference Definitions (local)
+% The \luamdef{reader->register_link} method registers
+% a link reference, where `tag` is the link label, `url`
+% is the link destination, `title` is the optional link
+% title, and `attributes` are the optional attributes.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -24276,10 +24272,10 @@ function M.reader.new(writer, options)
   local references
 
   -- add a reference to the list
-  local function register_link(tag,url,title)
+  function self.register_link(tag,url,title,attributes)
       local normalized_tag = self.normalize_tag(tag)
       if references[normalized_tag] == nil then
-        references[normalized_tag] = { url = url, title = title }
+        references[normalized_tag] = { url = url, title = title, attributes = attributes }
       end
       return ""
   end
@@ -24321,7 +24317,7 @@ function M.reader.new(writer, options)
                             * Cg((Ct(parsers.link_destination) + Cc("")), "url")
                             * Cg(parsers.spnl, "middle")
                             * Cg(Ct(parsers.title) + Cc(""), "title")
-                            * Cg(parsers.spnl * parsers.rparent, "end")
+                            * Cg(parsers.spnl * parsers.rparent, "ending")
 
   parsers.empty_link  = parsers.lbracket
                       * parsers.rbracket
@@ -24377,7 +24373,7 @@ function M.reader.new(writer, options)
   parsers.link_image_closing  = Ct( Cg(Cc("delim"), "type")
                                   * Cg(Cc(false), "is_opening")
                                   * ( Cg(Cc(true), "is_direct")
-                                    * Cg(Ct(C(parsers.rbracket) * Ct(parsers.inline_direct_ref)), "content")
+                                    * Cg(Ct(C(parsers.rbracket) * Cg(Ct(parsers.inline_direct_ref), "inline_content")), "content")
                                     + Cg(Cc(false), "is_direct")
                                     * Cg(parsers.rbracket, "content")))
 
@@ -24396,14 +24392,29 @@ function M.reader.new(writer, options)
   -- exactly as they were in the input
   local function resolve_inline_link_closer(t, index, include_bracket)
     local value = t[index]
-    if value["type"] == "delim" and
-       value["is_direct"] then
-      local content = value["content"][2]
+    if value.type == "delim" then
+      local inline_content = value.content.inline_content
+      local attribute_content = value.content.attribute_content
+
       local result = ""
       if include_bracket then
-        result = value["content"][1]
+        result = value.content[1]
       end
-      result = result .. content["start"] .. util.rope_to_string(content["url"]) .. content["middle"] .. util.rope_to_string(content["title"]) .. content["end"]
+
+      if inline_content ~= nil then
+        result = result ..
+          inline_content.start ..
+          util.rope_to_string(inline_content.url) ..
+          inline_content.middle .. util.rope_to_string(inline_content.title) ..
+          inline_content.ending
+      end
+
+      if attribute_content ~= nil then
+        result = result ..
+        attribute_content.opening ..
+        util.rope_to_string(attribute_content.content) ..
+        attribute_content.ending
+      end
       return result
     end
   end
@@ -24413,15 +24424,15 @@ function M.reader.new(writer, options)
     local content = {}
     for i = opening_index, closing_index do
       local value = t[i]
-      if value["type"] == "delim" then
-        if value["is_direct"] then
+      if value.type == "delim" then
+        if value.is_direct then
           content[#content + 1] = resolve_inline_link_closer(t, i, true)
         else
-          content[#content + 1] = value["content"]
+          content[#content + 1] = value.content
         end
       else
-        content[#content + 1] = value["content"]
-        t[i]["is_active"] = false
+        content[#content + 1] = value.content
+        t[i].is_active = false
       end
     end
     return content
@@ -24432,7 +24443,7 @@ function M.reader.new(writer, options)
     local content = {}
     for i = opening_index, closing_index do
       local value = t[i]
-      local rendered = value["rendered"]
+      local rendered = value.rendered
       if (rendered ~= nil) then
         content[#content + 1] = rendered
       end
@@ -24444,10 +24455,10 @@ function M.reader.new(writer, options)
   local function find_opener(t, bottom_index, latest_index)
     for i = latest_index, bottom_index, -2 do
       local value = t[i]
-      if value["is_opening"] and 
-         value["end_position"] == 0 and 
-         not value["part_of_link"] then
-        if value["is_active"] then
+      if value.is_opening and 
+         value.end_position == 0 and 
+         not value.part_of_link then
+        if value.is_active then
           return i, i
         end
         return nil, i
@@ -24458,17 +24469,17 @@ function M.reader.new(writer, options)
   -- mark previous opening delimiters as inactive
   -- to prevent links within links, nested images are allowed
   local function disable_previous_link_openers(t, index)
-    if t[index]["element"] == "image" then
+    if t[index].element == "image" then
       return
     end
 
     for i = index, 1, -1 do
       local value = t[i]
-      if value["is_active"] and
-         value["type"] == "delim" and
-         value["is_opening"] and
-         value["element"] == "link" then
-        value["is_active"] = false
+      if value.is_active and
+         value.type == "delim" and
+         value.is_opening and
+         value.element == "link" then
+        value.is_active = false
       end
     end
   end
@@ -24479,9 +24490,9 @@ function M.reader.new(writer, options)
   local function disable_range(t, opening_index, closing_index)
     for i = opening_index, closing_index do
       local value = t[i]
-      if value["is_active"] then
-        value["is_active"] = false
-        value["part_of_link"] = true
+      if value.is_active then
+        value.is_active = false
+        value.part_of_link = true
       end
     end
   end
@@ -24489,8 +24500,43 @@ function M.reader.new(writer, options)
   -- delete already rendered content
   local function delete_rendered_content_in_range(t, opening_index, closing_index)
     for i = opening_index, closing_index do
-      t[i]["rendered"] = nil
+      t[i].rendered = nil
     end
+  end
+
+  -- extract attribute values
+  local function extract_attributes(attribute_list)
+    local attributes = {}
+
+    if attribute_list == nil then
+      return attributes
+    end
+
+    for i = 2, #attribute_list, 2 do
+      attributes[#attributes + 1] = attribute_list[i]
+    end
+    return attributes
+  end
+
+  -- join reference attributes with link attributes
+  local function join_attributes(attribute_list_one, t, closing_index)
+    local joined_attributes = attribute_list_one
+    if joined_attributes == nil then
+      joined_attributes = {}
+    end
+
+    if t[closing_index].content.attribute_content ~= nil then
+      local closing_attributes = extract_attributes(t[closing_index].content.attribute_content.content)
+
+      for _, attribute in ipairs(closing_attributes) do
+        table.insert(joined_attributes, attribute)
+      end
+    end
+    
+    if not next(joined_attributes) then
+      return nil
+    end
+    return joined_attributes
   end
 
   -- resolve an inline link [a](b)
@@ -24498,12 +24544,19 @@ function M.reader.new(writer, options)
   local function resolve_inline_link(t, opening_index, closing_index)
     local content = collect_link_content(t, opening_index + 1, closing_index - 1)
     local content_rope = util.rope_to_string(content)
-    local parenInfo = t[closing_index]["content"][2]
+    local paren_info = t[closing_index].content.inline_content
 
-    t[opening_index]["is_link"] = true
-    t[opening_index]["rope"] = content_rope
-    t[opening_index]["reference"] = { ["url"] = parenInfo["url"],
-                                      ["title"] = parenInfo["title"]}
+    local all_attributes = {}
+    if t[closing_index].content.attribute_content ~= nil then
+       all_attributes = extract_attributes(t[closing_index].content.attribute_content.content)
+    end
+
+    t[opening_index].is_link = true
+    t[opening_index].rope = content_rope
+    t[opening_index].reference = { url = paren_info.url,
+                                   title = paren_info.title,
+                                   attributes = all_attributes
+                                }
     
     disable_previous_link_openers(t, opening_index)
     disable_range(t, opening_index, closing_index)
@@ -24516,9 +24569,13 @@ function M.reader.new(writer, options)
     local r = lookup_reference(content_rope)
 
     if r then 
-      t[opening_index]["is_link"] = true
-      t[opening_index]["rope"] = content_rope
-      t[opening_index]["reference"] = r
+      t[opening_index].is_link = true
+      t[opening_index].rope = content_rope
+
+      local all_attributes = join_attributes(r.attributes, t, closing_index)
+
+      r.attributes = all_attributes
+      t[opening_index].reference = r
 
       disable_previous_link_openers(t, opening_index)
       disable_range(t, opening_index, closing_index)
@@ -24536,9 +24593,13 @@ function M.reader.new(writer, options)
     local r = lookup_reference(next_link_content_rope)
 
     if r then 
-      t[opening_index]["is_link"] = true
-      t[opening_index]["rope"] = content_rope
-      t[opening_index]["reference"] = r
+      t[opening_index].is_link = true
+      t[opening_index].rope = content_rope
+
+      local all_attributes = join_attributes(r.attributes, t, closing_index + 4)
+
+      r.attributes = all_attributes
+      t[opening_index].reference = r
 
       disable_previous_link_openers(t, opening_index)
       disable_range(t, opening_index, closing_index + 4)
@@ -24553,9 +24614,13 @@ function M.reader.new(writer, options)
     local r = lookup_reference(content_rope)
 
     if r then 
-      t[opening_index]["is_link"] = true
-      t[opening_index]["rope"] = content_rope
-      t[opening_index]["reference"] = r
+      t[opening_index].is_link = true
+      t[opening_index].rope = content_rope
+      
+      local all_attributes = join_attributes(r.attributes, t, closing_index)
+
+      r.attributes = all_attributes
+      t[opening_index].reference = r
       
       disable_previous_link_openers(t, opening_index)
       disable_range(t, opening_index, closing_index)
@@ -24566,37 +24631,43 @@ function M.reader.new(writer, options)
   -- either a link or image macro, resolving potential dangling
   -- parentheses
   local function render_link_or_image(t, opening_index, closing_index)
-    local link_r = t[opening_index]["reference"]
-    local link_content_rope = t[opening_index]["rope"]
+    local link_r = t[opening_index].reference
+    local link_content_rope = t[opening_index].rope
 
-    local url = link_r["url"][2]
+    local url = link_r.url[2]
     if (url == nil) then
-      url = util.rope_to_string(link_r["url"])
+      url = util.rope_to_string(link_r.url)
     end
 
-    local title = link_r["title"][2]
+    local title = link_r.title[2]
     if (title == nil) then
-      title = util.rope_to_string(link_r["title"])
+      title = util.rope_to_string(link_r.title)
     end
+
+    local attributes = link_r.attributes
 
     local mapped = self.parser_functions.parse_inlines_full_link_and_image(link_content_rope)
 
-    local rendered = {}
-    if (t[opening_index]["element"] == "link") then
-      rendered = writer.link(mapped, url, title)
+    if attributes == nil or not next(attributes) then
+      attributes = nil
     end
 
-    if (t[opening_index]["element"] == "image") then
-      rendered = writer.image(mapped, url, title)
+    local rendered = {}
+    if (t[opening_index].element == "link") then
+      rendered = writer.link(mapped, url, title, attributes)
+    end
+
+    if (t[opening_index].element == "image") then
+      rendered = writer.image(mapped, url, title, attributes)
     end
 
     local mapped_parentheses = {}
-    if (t[closing_index]["is_direct"] and t[opening_index]["link_type"] ~= "inline") then
+    if (t[closing_index].is_direct and t[opening_index].link_type ~= "inline") then
       local resolved_closer = resolve_inline_link_closer(t, closing_index, false)
       mapped_parentheses = self.parser_functions.parse_inlines_full_link_and_image(resolved_closer)
     end
 
-    t[opening_index]["rendered"] = { rendered, mapped_parentheses }
+    t[opening_index].rendered = { rendered, mapped_parentheses }
     delete_rendered_content_in_range(t, opening_index + 1, closing_index)
   end
 
@@ -24606,7 +24677,7 @@ function M.reader.new(writer, options)
   -- an exclamation mark is also added
   local function render_link_or_image_fallback(t, opening_index, closing_index)
     local prefix = ""
-    if (t[opening_index]["rendered"]) then
+    if (t[opening_index].rendered) then
       prefix = "!"
     end
 
@@ -24615,7 +24686,7 @@ function M.reader.new(writer, options)
 
     local child = self.parser_functions.parse_inlines_full_link_and_image(content_rope)
     
-    t[opening_index]["rendered"] = {prefix, "[",child,"]", resolve_inline_link_closer(t, closing_index, false)}
+    t[opening_index].rendered = {prefix, "[",child,"]", resolve_inline_link_closer(t, closing_index, false)}
     delete_rendered_content_in_range(t, opening_index + 1, closing_index)
   end
 
@@ -24623,16 +24694,16 @@ function M.reader.new(writer, options)
   -- 1. opening delimiters are marked as links by `is_link` flag
   --    and a closing delimiter is assigned to them
   -- 2. found links (or their fallbacks) are recursively parsed
-  local function process_links_and_images(link_array)
+  function process_links_and_images(link_array, link_group)
 
     -- generate a delimiter array from a array of potential links
-    local t = lpeg.match(parsers.link_group, link_array[1])
+    local t = lpeg.match(link_group, link_array[1])
 
     for _,value in ipairs(t) do
-      value["is_active"] = true
-      if (value["is_opening"]) then
-        value["is_link"] = false
-        value["end_position"] = 0
+      value.is_active = true
+      if (value.is_opening) then
+        value.is_link = false
+        value.end_position = 0
       end
     end
 
@@ -24642,15 +24713,15 @@ function M.reader.new(writer, options)
     while current_position <= #t do
       local value = t[current_position]
 
-      if not value["is_opening"] then
+      if not value.is_opening then
         local opener_position, non_active_opener_position = find_opener(t, 1, current_position - 2)
         local end_position = current_position
 
         if (opener_position ~= nil) then
           local opening_delimiter = t[opener_position]
-          opening_delimiter["end_position"] = current_position
+          opening_delimiter.end_position = current_position
 
-          local link_type = opening_delimiter["link_type"]
+          local link_type = opening_delimiter.link_type
           
           if (link_type == "inline") then
             resolve_inline_link(t, opener_position, current_position)
@@ -24662,7 +24733,7 @@ function M.reader.new(writer, options)
             resolve_full_link(t, opener_position, current_position)
 
             -- skip next label if matched
-            if (opening_delimiter["is_link"]) then
+            if (opening_delimiter.is_link) then
               current_position = current_position + 4
               end_position = end_position + 4
             end
@@ -24671,16 +24742,16 @@ function M.reader.new(writer, options)
             resolve_collapsed_link(t, opener_position, current_position)
 
             -- skip next label if matched
-            if (opening_delimiter["is_link"]) then
+            if (opening_delimiter.is_link) then
               current_position = current_position + 4
               end_position = end_position + 4
             end
           end
 
-          opening_delimiter["end_position"] = end_position
+          opening_delimiter.end_position = end_position
         else
           if (non_active_opener_position ~= nil) then
-            t[non_active_opener_position]["end_position"] = current_position
+            t[non_active_opener_position].end_position = current_position
           end
         end
       end
@@ -24693,10 +24764,10 @@ function M.reader.new(writer, options)
     while current_position <= #t do
       local delimiter = t[current_position]
 
-      if delimiter["is_opening"] then
-        local end_position = delimiter["end_position"]
+      if delimiter.is_opening then
+        local end_position = delimiter.end_position
 
-        if (delimiter["is_link"]) then
+        if (delimiter.is_link) then
           render_link_or_image(t, current_position, end_position)
         else
           render_link_or_image_fallback(t, current_position, end_position)
@@ -24710,9 +24781,9 @@ function M.reader.new(writer, options)
     return collect_link_rendered_content(t, 1, #t)
   end
 
-  local function defer_link_and_image_processing(links)
+  function defer_link_and_image_processing(links, link_group)
     return writer.defer_call(function()
-      return process_links_and_images(links)
+      return process_links_and_images(links, link_group)
     end)
   end
 
@@ -24859,10 +24930,10 @@ end
                       = parsers.auto_link_relative_reference
                       / self.auto_link_url
 
-  parsers.MaybeLinkOrImage = Ct(parsers.link_array)  
+  parsers.MaybeLinkOrImage = Ct(parsers.link_array) * Cc(parsers.link_group)
                            / defer_link_and_image_processing
 
-  parsers.LinkOrImage     = Ct(parsers.link_array) 
+  parsers.LinkOrImage     = Ct(parsers.link_array) * Cc(parsers.link_group)
                           / process_links_and_images
 
   -- avoid parsing long strings of * or _ as emph/strong
@@ -24913,7 +24984,6 @@ end
                           ) / writer.thematic_break
 
   parsers.Reference    = parsers.define_reference_parser
-                       * parsers.blankline^1
                        / self.register_link
 
   parsers.Paragraph    = parsers.nonindentspace * Ct(parsers.Inline^1)
@@ -25170,7 +25240,8 @@ end
         UlOrStarLine          = parsers.UlOrStarLine,
         Strong                = parsers.Strong,
         Emph                  = parsers.Emph,
-        LinkOrImage           = parsers.MaybeLinkOrImage,
+        MaybeLinkOrImage      = parsers.MaybeLinkOrImage,
+        LinkOrImage           = parsers.fail,
         Code                  = parsers.Code,
         AutoLinkUrl           = parsers.AutoLinkUrl,
         AutoLinkEmail         = parsers.AutoLinkEmail,
@@ -25470,6 +25541,7 @@ end
     parsers.inlines_nbsp = Ct(inlines_nbsp_t)
 
     local inlines_full_link_and_image = util.table_copy(inlines_t)
+    inlines_full_link_and_image.MaybeLinkOrImage = parsers.fail
     inlines_full_link_and_image.LinkOrImage = parsers.LinkOrImage
     parsers.inlines_full_link_and_image = Ct(inlines_full_link_and_image)
 %    \end{macrocode}
@@ -26782,12 +26854,14 @@ M.extensions.link_attributes = function()
 % \end{markdown}
 %  \begin{macrocode}
 
-      local define_reference_parser = parsers.define_reference_parser
+      local define_reference_parser = parsers.leader * parsers.link_label * parsers.colon
+                                    * parsers.spacechar^0 * parsers.url
+                                    * parsers.optionaltitle 
                                     * ( parsers.spnl
-                                      * Ct(parsers.attributes))^-1
+                                      * Ct(parsers.attributes))^-1 
+                                    * (parsers.newline + parsers.eof)
 
       local ReferenceWithAttributes = define_reference_parser
-                                    * parsers.blankline^1
                                     / self.register_link
 
       self.update_rule("Reference", ReferenceWithAttributes)
@@ -26800,93 +26874,49 @@ M.extensions.link_attributes = function()
 % \end{markdown}
 %  \begin{macrocode}
 
-      local function indirect_link(label, sps, tag,
-                                   attribute_text,
-                                   attributes)
-        return writer.defer_call(function()
-          local r, fallback = self.lookup_reference(label, sps, tag,
-                                                    attributes)
-          if r then
-            return writer.link(
-              self.parser_functions.parse_inlines_no_link(label),
-              r.url, r.title, r.attributes)
-          else
-            local buf = {fallback}
-            if attributes then
-              table.insert(buf, writer.string(attribute_text))
-            end
-            return buf
-          end
-        end)
-      end
+      local attributes  = Cg(parsers.lbrace, "opening")
+                        * Cg(Ct(C(parsers.optionalspace)
+                        * parsers.attribute
+                        * (C(parsers.spacechar^1)
+                          * parsers.attribute)^0
+                        * C(parsers.optionalspace)), "content")
+                        * Cg(parsers.rbrace, "ending")
 
-      local DirectLinkWithAttributes = parsers.direct_link
-                                     * (Ct(parsers.attributes))^-1
-                                     / writer.link
+      local inline_link = parsers.link_text
+                        * parsers.inline_direct_ref
+                        * (Ct(attributes))^-1
 
-      local IndirectLinkWithAttributes = parsers.indirect_link
-                                       * (C(Ct(parsers.attributes)))^-1
-                                       / indirect_link
+      local simple_link = parsers.link_text
+                        * (Ct(attributes))^-1
 
-      local LinkWithAttributes = DirectLinkWithAttributes
-                               + IndirectLinkWithAttributes
+      local any_link  = inline_link
+                      + simple_link
 
-%    \end{macrocode}
-% \begin{markdown}
-%
-% Here, we directly update the `Link` grammar rule to keep the
-% method \luamref{reader->parser_functions.parse_inlines_no_link}
-% aware of `LinkWithAttributes` and prevent nested links.
-%
-% If we used \luamref{reader->insert_pattern} instead of
-% \luamref{reader->update_rule}, this correspondence would have
-% been lost and link text would be able to contain nested links.
-%
-% \end{markdown}
-%  \begin{macrocode}
-      self.update_rule("Link", LinkWithAttributes)
+      local link_image_closing  = Ct( Cg(Cc("delim"), "type")
+                                      * Cg(Cc(false), "is_opening")
+                                      * ( Cg(Cc(true), "is_direct")
+                                        * Cg(Ct(C(parsers.rbracket) 
+                                               * Cg(Ct(parsers.inline_direct_ref), "inline_content") 
+                                               * Cg(Ct(attributes)^-1, "attribute_content")), "content")
+                                        + Cg(Cc(false), "is_direct")
+                                        * Cg(Ct(C(parsers.rbracket) * Cg(Ct(attributes)^-1, "attribute_content")), "content")))
 
-%    \end{macrocode}
-% \begin{markdown}
-%
-% The following patterns define direct and indirect images with attributes.
-%
-% \end{markdown}
-%  \begin{macrocode}
+      local link_image_open_or_close  = parsers.link_image_opening
+                                        + link_image_closing
 
-      local function indirect_image(label, sps, tag,
-                                    attribute_text,
-                                    attributes)
-        return writer.defer_call(function()
-          local r, fallback = self.lookup_reference(label, sps, tag,
-                                                    attributes)
-          if r then
-            return writer.image(writer.string(label),
-                                r.url, r.title, r.attributes)
-          else
-            local buf = {"!", fallback}
-            if attributes then
-              table.insert(buf, writer.string(attribute_text))
-            end
-            return buf
-          end
-        end)
-      end
+      local link_group  = Ct( parsers.link_image_opening
+                          * (parsers.link_image_content * link_image_open_or_close)^0)
 
-      local DirectImageWithAttributes = parsers.direct_image
-                                      * Ct(parsers.attributes)
-                                      / writer.image
+      local link_array = C((parsers.exclamation^-1 * any_link)^1)
 
-      local IndirectImageWithAttributes = parsers.indirect_image
-                                        * C(Ct(parsers.attributes))
-                                        / indirect_image
+      local MaybeLinkOrImageWithAttributes  = Ct(link_array) * Cc(link_group)
+                                              / defer_link_and_image_processing
 
-      local ImageWithAttributes = DirectImageWithAttributes
-                                + IndirectImageWithAttributes
+      local LinkOrImageWithAttributes     = Ct(link_array) * Cc(link_group)
+                                            / process_links_and_images
 
-      self.insert_pattern("Inline before Image",
-                          ImageWithAttributes,
-                          "ImageWithAttributes")
+      self.update_rule("MaybeLinkOrImage", MaybeLinkOrImageWithAttributes)
+      self.update_rule("LinkOrImage", LinkOrImageWithAttributes)
 
 %    \end{macrocode}
 % \begin{markdown}
