@@ -24740,8 +24740,8 @@ function M.reader.new(writer, options)
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Parse content between two delimiters in the a delimiter table `t`.Produce the respective link and image 
-% macros and resolve potential dangling parentheses. 
+% Parse content between two delimiters in the delimiter table `t`.Produce the respective link and image 
+% macros and resolve potential dangling parentheses and attributes. 
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -24789,8 +24789,8 @@ function M.reader.new(writer, options)
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Parse content between two delimiters in the a delimiter table `t`. Enclose this content with literal brakcets and 
-% resolve potential dangling parentheses. 
+% Parse content between two delimiters in the delimiter table `t`. Enclose this content with literal brakcets and 
+% resolve potential dangling parentheses and attributes. 
 % In case of a image opening delimiter, an exclamation mark is also added before the brackets.
 %
 % \end{markdown}
@@ -24814,7 +24814,7 @@ function M.reader.new(writer, options)
 % \begin{markdown}
 %
 % Parse an array of links `link_array` to an array of delimiters and content with the 'link_group` pattern.
-% Iterate over this delimiter table `t` over the delimiters in two passes. First, the delimiters either 
+% Iterate over the delimiters in the delimiter table `t` in two passes. First, the delimiters either 
 % marked as links (or images) with the `is_link` property, additionally assigned a closing delimiter. 
 % Secondly, the content of the resolved links is parsed, with respective macros produced. 
 % Any delimiters that do not form links are returned as is (fallback), with their content also recursively
