@@ -23810,6 +23810,15 @@ parsers.title       = parsers.title_d + parsers.title_s + parsers.title_p
 parsers.optionaltitle
                     = parsers.spnl * parsers.title * parsers.spacechar^0
                     + Cc("")
+
+parsers.indirect_link
+                    = parsers.tag
+                    * ( C(parsers.spnl) * parsers.tag
+                      + Cc(nil) * Cc(nil)  -- always produce exactly two captures
+                      )
+
+parsers.indirect_image
+                    = parsers.exclamation * parsers.indirect_link
 %    \end{macrocode}
 % \par
 % \begin{markdown}
