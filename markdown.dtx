@@ -24416,7 +24416,7 @@ function M.reader.new(writer, options)
 %
 % Return the parentheses of an inline link for a closing delimiter at index `index` in the delimiter table `t`.
 % If the \Opt{linkAttributes} option extension is enabled, then also the attributes are returned.
-% The closing bracket is returned when the `include_bracket` selected.
+% The closing bracket is returned when the `include_bracket` is selected.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -24491,7 +24491,7 @@ function M.reader.new(writer, options)
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Collect the already parsed content between the `opening_index` and `closing_index` in the delimiter table `t`.
+% Collect the parsed content between the `opening_index` and `closing_index` in the delimiter table `t`.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -24510,7 +24510,7 @@ function M.reader.new(writer, options)
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Look for the first potential unexplored link opener in in the delimiter table `t` in the range 
+% Look for the first potential unexplored link opener in the delimiter table `t` in the range from
 % `bottom_index` to `latest_index`.
 %
 % \end{markdown}
@@ -24638,7 +24638,7 @@ function M.reader.new(writer, options)
 % \begin{markdown}
 %
 % Resolve an inline link [a](b "c") from the delimiters at `opening_index` and `closing_index` within a delimiter table `t`.
-% Here, compared to other types of links, no reference is being looked for.
+% Here, compared to other types of links, no reference definition is needed.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -24763,7 +24763,7 @@ function M.reader.new(writer, options)
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Parse content between two delimiters in the delimiter table `t`.Produce the respective link and image 
+% Parse content between two delimiters in the delimiter table `t`. Produce the respective link and image 
 % macros and resolve potential dangling parentheses and attributes. 
 %
 % \end{markdown}
