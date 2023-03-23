@@ -23500,25 +23500,61 @@ function M.reader.new(writer, options)
 
   parsers.blockquote_start = parsers.leader * parsers.more * parsers.space^-1
 
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Add a trail `trail_info` to the indent table `indent_table.
+%
+% \end{markdown}
+%  \begin{macrocode}
   local function add_trail(indent_table, trail_info)
     indent_table.trail = trail_info
     return indent_table
   end
 
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Remove a trail `trail_info` from the indent table `indent_table.
+%
+% \end{markdown}
+%  \begin{macrocode}
   local function remove_trail(indent_table)
     indent_table.trail = nil
     return indent_table
   end
 
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Leave the current trail of the indent table `indent_table
+%
+% \end{markdown}
+%  \begin{macrocode}
   local function leave_trail(s, i, indent_table)
     indent_table = remove_trail(indent_table)
     return true, indent_table
   end
 
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Check if trail exists and is non-empty in the indent table `indent_table.
+%
+% \end{markdown}
+%  \begin{macrocode}
   local function has_trail(indent_table)
     return indent_table ~= nil and indent_table.trail ~= nil and next(indent_table.trail) ~= nil
   end
 
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Update the indent table `indent_table` by adding `increment > 0` or removing a new
+% indent. Indents have properties `name` and `length`.
+%
+% \end{markdown}
+%  \begin{macrocode}
   local function update_indent_table(indent_table, new_indent, increment)
     indent_table = remove_trail(indent_table)
 
@@ -23539,6 +23575,13 @@ function M.reader.new(writer, options)
     return indent_table
   end
 
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Remove an indent by its name `name`.
+%
+% \end{markdown}
+%  \begin{macrocode}
   local function remove_indent(name)
     local function remove_indent_level(s, i, indent_table)
       indent_table = update_indent_table(indent_table, {name=name})
@@ -23548,7 +23591,18 @@ function M.reader.new(writer, options)
     return Cg(Cmt( Cb("indent_info"), remove_indent_level), "indent_info")
   end
 
-  --- process indentation spacing
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Process the spacing of a string of spaces and tabs `spacing` with preceding indent width from
+% the start of the line `indent` and strip up to `left_strip_length` spaces. Return the remainder
+% `remainder` and whether there is enough spaces to produce a code `is_code`. Return how many 
+% spaces were stripped, as well as if the minimum was met `is_minimum` and what remainder it 
+% left `minimum_remainder`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  -- TODO simplify remainders
   local function process_starter_spacing(indent, spacing, minimum, left_strip_length)
 
     if (left_strip_length == nil) then
@@ -23628,7 +23682,13 @@ function M.reader.new(writer, options)
     }
   end
 
-  -- count total indentation from preceding indentation levels
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Count the total width of all indents in the indent table `indent_table`.
+%
+% \end{markdown}
+%  \begin{macrocode}
   local function count_indent_tab_level(indent_table)
     local count = 0
     if indent_table == nil or indent_table.indents == nil then
@@ -23641,7 +23701,14 @@ function M.reader.new(writer, options)
     return count
   end
 
-  -- check if trail is of expected length
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Check if the current trail of the `indent_table` would produce code if `expect_code` is true.
+% Otherwise check if it would not. If there is no trail, use the caught spacing `spacing`. 
+%
+% \end{markdown}
+%  \begin{macrocode}
   local function check_trail_joined(s, i, indent_table, spacing, expect_code)
     local trail = nil
     local is_code = false
@@ -23671,7 +23738,13 @@ function M.reader.new(writer, options)
     return true, ""
   end
 
-  -- count the total length of a delimiter
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Count the total width of a delimiter `delimiter`.
+%
+% \end{markdown}
+%  \begin{macrocode}
   local function total_delimiter_length(delimiter)
     local count = 0
     if type(delimiter) == "string" then return #delimiter end
@@ -23681,7 +23754,14 @@ function M.reader.new(writer, options)
     return count
   end
 
-  -- process container start
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Process the container starter `starter` of a type `indent_type`. Adjust the width of the indent
+% if the delimiter is followed only by whitespace `is_blank`.
+%
+% \end{markdown}
+%  \begin{macrocode}
   local function process_starter_indent(s, i, indent_table, starter, is_blank, indent_type)
     local last_trail = starter[1]
     local delimiter = starter[2]
@@ -23734,7 +23814,14 @@ function M.reader.new(writer, options)
 
   parsers.blockquote_opening_condition = C(parsers.leader) * C(parsers.more) * C(parsers.spacechar^0)
 
-  -- find indent pattern mapping, format <last_trail><delimiter><new_trail>
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Return the pattern corresponding with the indent name `name`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  -- TODO group indents
   local function decode_pattern(name)
     if name == "bq" then
       return C(parsers.spacechar^0) * C(parsers.more) * C(parsers.spacechar^0) * Cp()
@@ -23745,7 +23832,14 @@ function M.reader.new(writer, options)
     return parsers.fail
   end
 
-  -- find the last start of an only blank pattern group
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Find the first blank-only indent of the indent table `indent_table` followed
+% by blank-only indents.
+%
+% \end{markdown}
+%  \begin{macrocode}
   local function left_blank_starter(indent_table)
     local blank_starter_index = nil
     for i = #indent_table.indents,1,-1 do
@@ -23760,7 +23854,17 @@ function M.reader.new(writer, options)
     return blank_starter_index
   end
 
-  -- apply decoded patterns iteratively, 
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Apply the patterns decoded from the indents of the indent table `indent_table`
+% iteratively starting at position `index` of the string `s`. If the `is_optional`
+% match as many patterns as possible, else match all or fail. With the option `is_blank`,
+% the parsing behaves as optional after the position of a blank-only indent has
+% been surpassed.
+%
+% \end{markdown}
+%  \begin{macrocode}
   local function traverse_indent(s, index, indent_table, is_optional, blank_end)
     local new_index = index
 
@@ -23861,6 +23965,14 @@ function M.reader.new(writer, options)
     return true, new_index, current_trail
   end
 
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Start traversing and checking the indents for a continuation line with the mode `is_optional` 
+% selected.
+%
+% \end{markdown}
+%  \begin{macrocode}
   local function start_traverse_indent(s, i, indent_table, is_optional)
     if indent_table == nil or indent_table.indents == nil then
       return true
@@ -23875,6 +23987,14 @@ function M.reader.new(writer, options)
     return false
   end
 
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Start traversing and checking the indents for a continuation blank line with the mode `is_optional` 
+% selected.
+%
+% \end{markdown}
+%  \begin{macrocode}
   local function start_blank_indent(s, i, indent_table, is_optional)
     if indent_table == nil or indent_table.indents == nil then
       return true
@@ -24421,8 +24541,8 @@ function M.reader.new(writer, options)
     return writer.orderedlist(items,tight,startnum)
   end
 
-  parsers.OrderedListOfType = function(delimeter_type)
-    local enumerator = parsers.enumerator(delimeter_type)
+  parsers.OrderedListOfType = function(delimiter_type)
+    local enumerator = parsers.enumerator(delimiter_type)
     return  Cg(enumerator, "listtype")
           * (Ct( parsers.TightListItem(Cb("listtype"))
                * ((check_minimal_indent / "") * parsers.TightListItem(enumerator))^0)
