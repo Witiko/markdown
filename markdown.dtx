@@ -22318,50 +22318,90 @@ function M.reader.new(writer, options)
 % \end{markdown}
 %  \begin{macrocode}
 
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Collect the content between the `opening_index` and `closing_index` in the delimiter table `t`.
+%
+% \end{markdown}
+%  \begin{macrocode}
   local function collect_emphasis_content(t, opening_index, closing_index)
     local content = {}
     for i = opening_index, closing_index, 1 do
       local value = t[i]
-      if value["is_active"] then
-        if value["type"] == "delimeter_run" then
-          content[#content + 1] = writer.escape(string.rep(value["character"], value["current_count"]))
+      if value.is_active then
+        if value.type == "delimiter_run" then
+          content[#content + 1] = writer.escape(string.rep(value.character, value.current_count))
         else
-          content[#content + 1] = value["content"]
-          value["content"] = ''
+          content[#content + 1] = value.content
+          value.content = ''
         end
-        value["is_active"] = false
+        value.is_active = false
       end
     end
 
     return content
   end
 
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Render content between the `opening_index` and `closing_index` in the delimiter table `t` 
+% as emphasis.
+%
+% \end{markdown}
+%  \begin{macrocode}
   local function fill_emph(t, opening_index, closing_index)
     local content = collect_emphasis_content(t, opening_index + 1, closing_index - 1)
-    t[opening_index + 1]["is_active"] = true
-    t[opening_index + 1]["content"] = writer.emphasis(content)
+    t[opening_index + 1].is_active = true
+    t[opening_index + 1].content = writer.emphasis(content)
   end
 
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Render content between the `opening_index` and `closing_index` in the delimiter table `t` 
+% as strong emphasis.
+%
+% \end{markdown}
+%  \begin{macrocode}
   local function fill_strong(t, opening_index, closing_index)
     local content = collect_emphasis_content(t, opening_index + 1, closing_index - 1)
-    t[opening_index + 1]["is_active"] = true
-    t[opening_index + 1]["content"] = writer.strong(content)
+    t[opening_index + 1].is_active = true
+    t[opening_index + 1].content = writer.strong(content)
   end
 
-  local function breaks_three_rule(opening_delimeter, closing_delimeter)
-    return (opening_delimeter["is_closing"] or closing_delimeter["is_opening"]) and 
-      ((opening_delimeter["original_count"] + closing_delimeter["original_count"]) % 3 == 0) and 
-      (opening_delimeter["original_count"] % 3 ~= 0 or closing_delimeter["original_count"] % 3 ~= 0)
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Check whether the opening delimiter `opening_delimiter` and closing delimiter `closing_delimiter` break
+% rule three together.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function breaks_three_rule(opening_delimiter, closing_delimiter)
+    return (opening_delimiter.is_closing or closing_delimiter.is_opening) and 
+      ((opening_delimiter.original_count + closing_delimiter.original_count) % 3 == 0) and 
+      (opening_delimiter.original_count % 3 ~= 0 or closing_delimiter.original_count % 3 ~= 0)
   end
 
-  local function find_opener(t, bottom_index, latest_index, delimeter, closing_delimeter)
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Look for the first potential emphasis opener in the delimiter table `t` in the range from
+% `bottom_index` to `latest_index`, whose character equals closing character `character` and 
+% for which is the rule three with the closing delimiter `closing_delimiter` not broken.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function find_opener(t, bottom_index, latest_index, character, closing_delimiter)
     for i = latest_index, bottom_index, -2 do
       local value = t[i]
-      if value["is_active"] and
-         value["is_opening"] and
-         (value["character"] == delimeter) and
-         (value["current_count"] > 0) then
-        if not breaks_three_rule(value, closing_delimeter) then
+      if value.is_active and
+         value.is_opening and
+         (value.character == character) and
+         (value.current_count > 0) then
+        if not breaks_three_rule(value, closing_delimiter) then
           return i
         end
       end
@@ -22370,14 +22410,21 @@ function M.reader.new(writer, options)
     return nil
   end
 
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Iterate over the delimiters in the delimiter table `t`, producing emphasis or strong emphasis macros.
+%
+% \end{markdown}
+%  \begin{macrocode}
   local function process_emphasis(t)
     for _,value in ipairs(t) do
-      value["is_active"] = true
-      if value["type"] == "delimeter_run" then
-          local delimeter_length = string.len(value["content"])
-          value["character"] = string.sub(value["content"], 1, 1)
-          value["current_count"] = delimeter_length
-          value["original_count"] = delimeter_length
+      value.is_active = true
+      if value.type == "delimiter_run" then
+          local delimiter_length = string.len(value.content)
+          value.character = string.sub(value.content, 1, 1)
+          value.current_count = delimiter_length
+          value.original_count = delimiter_length
       end
     end
 
@@ -22403,30 +22450,30 @@ function M.reader.new(writer, options)
 
     while current_position <= #t do
       local value = t[current_position]
-      local character = value["character"]
-      local is_opening = value["is_opening"]
-      local is_closing = value["is_closing"]
-      local closing_length_modulo_three = value["original_count"] % 3
+      local character = value.character
+      local is_opening = value.is_opening
+      local is_closing = value.is_closing
+      local closing_length_modulo_three = value.original_count % 3
 
       local current_openers_bottom = openers_bottom[character][is_opening][closing_length_modulo_three + 1]
 
-      if is_closing and (value["current_count"] > 0) then
+      if is_closing and (value.current_count > 0) then
         local opener_position = find_opener(t, current_openers_bottom, current_position - 2, character, value)
 
         if (opener_position ~= nil) then
 
-          local opening_delimeter = t[opener_position]
+          local opening_delimiter = t[opener_position]
 
-          local current_opening_count = opening_delimeter["current_count"]
-          local current_closing_count = t[current_position]["current_count"]
+          local current_opening_count = opening_delimiter.current_count
+          local current_closing_count = t[current_position].current_count
 
           if (current_opening_count >= 2) and (current_closing_count >= 2) then
-            opening_delimeter["current_count"] = current_opening_count - 2
-            t[current_position]["current_count"] = current_closing_count - 2
+            opening_delimiter.current_count = current_opening_count - 2
+            t[current_position].current_count = current_closing_count - 2
             fill_strong(t, opener_position, current_position)
           else
-            opening_delimeter["current_count"] = current_opening_count - 1
-            t[current_position]["current_count"] = current_closing_count - 1
+            opening_delimiter.current_count = current_opening_count - 1
+            t[current_position].current_count = current_closing_count - 1
             fill_emph(t, opener_position, current_position)
           end
 
@@ -22445,6 +22492,13 @@ function M.reader.new(writer, options)
 
   local cont = lpeg.R("\128\191") -- continuation byte
 
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Match a UTF-8 character of byte length `n`.
+%
+% \end{markdown}
+%  \begin{macrocode}
   local function utf8_by_byte_count(n)
     if (n == 1) then
       return lpeg.R("\0\127")
@@ -22460,6 +22514,14 @@ function M.reader.new(writer, options)
     end
   end
 
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Check if a there is a character of a type `chartype` between the start position `start_pos`
+% and end position `end_pos` in a string `s` relative to current index `i`.
+%
+% \end{markdown}
+%  \begin{macrocode}
   local function check_unicode_type(s, i, start_pos, end_pos, chartype)
     local c = nil
     local char_length = 0
@@ -22502,55 +22564,55 @@ function M.reader.new(writer, options)
 
   parsers.unicode_following_whitespace = Cmt(parsers.succeed, check_following_unicode_whitespace)
 
-  parsers.delimeter_run = function(character)
+  parsers.delimiter_run = function(character)
     return  (B(parsers.backslash * character) + -B(character))
           * character^1
           * -#character
   end
 
-  parsers.left_flanking_delimeter_run = function(character)
+  parsers.left_flanking_delimiter_run = function(character)
     return  (B( parsers.any) 
               * (parsers.unicode_preceding_punctuation + parsers.unicode_preceding_whitespace) 
              + -B(parsers.any))
-            * parsers.delimeter_run(character)
+            * parsers.delimiter_run(character)
             * parsers.unicode_following_punctuation
-            + parsers.delimeter_run(character)
+            + parsers.delimiter_run(character)
             * -#(parsers.unicode_following_punctuation + parsers.unicode_following_whitespace)
   end
 
-  parsers.right_flanking_delimeter_run = function(character)
+  parsers.right_flanking_delimiter_run = function(character)
     return  parsers.unicode_preceding_punctuation
-          * parsers.delimeter_run(character)
+          * parsers.delimiter_run(character)
           * (parsers.unicode_following_punctuation + parsers.unicode_following_whitespace)
           + (B(parsers.any) 
             * -(parsers.unicode_preceding_punctuation + parsers.unicode_preceding_whitespace))
-          * parsers.delimeter_run(character)
+          * parsers.delimiter_run(character)
   end
 
-  parsers.emph_start = parsers.left_flanking_delimeter_run(parsers.asterisk)
-                     + (-#parsers.right_flanking_delimeter_run(parsers.underscore)
+  parsers.emph_start = parsers.left_flanking_delimiter_run(parsers.asterisk)
+                     + (-#parsers.right_flanking_delimiter_run(parsers.underscore)
                         + (parsers.unicode_preceding_punctuation 
-                          * #parsers.right_flanking_delimeter_run(parsers.underscore)))
-                     * parsers.left_flanking_delimeter_run(parsers.underscore)
+                          * #parsers.right_flanking_delimiter_run(parsers.underscore)))
+                     * parsers.left_flanking_delimiter_run(parsers.underscore)
 
-  parsers.emph_end  = parsers.right_flanking_delimeter_run(parsers.asterisk)
-                    + (-#parsers.left_flanking_delimeter_run(parsers.underscore)
-                      + #(parsers.left_flanking_delimeter_run(parsers.underscore) 
+  parsers.emph_end  = parsers.right_flanking_delimiter_run(parsers.asterisk)
+                    + (-#parsers.left_flanking_delimiter_run(parsers.underscore)
+                      + #(parsers.left_flanking_delimiter_run(parsers.underscore) 
                          * parsers.unicode_following_punctuation))
-                    * parsers.right_flanking_delimeter_run(parsers.underscore)
+                    * parsers.right_flanking_delimiter_run(parsers.underscore)
 
   parsers.emph_capturing_open_and_close = #parsers.emph_start * #parsers.emph_end
-                                        * Ct( Cg(Cc("delimeter_run"), "type")
+                                        * Ct( Cg(Cc("delimiter_run"), "type")
                                             * Cg(C(parsers.emph_start), "content")
                                             * Cg(Cc(true), "is_opening")
                                             * Cg(Cc(true), "is_closing"))
 
-  parsers.emph_capturing_open = Ct( Cg(Cc("delimeter_run"), "type")
+  parsers.emph_capturing_open = Ct( Cg(Cc("delimiter_run"), "type")
                                   * Cg(C(parsers.emph_start), "content")
                                   * Cg(Cc(true), "is_opening")
                                   * Cg(Cc(false), "is_closing"))
 
-  parsers.emph_capturing_close = Ct( Cg(Cc("delimeter_run"), "type")
+  parsers.emph_capturing_close = Ct( Cg(Cc("delimiter_run"), "type")
                                    * Cg(C(parsers.emph_end), "content")
                                    * Cg(Cc(false), "is_opening")
                                    * Cg(Cc(true), "is_closing"))
