@@ -24261,6 +24261,17 @@ function M.reader.new(writer, options)
 % \par
 % \begin{markdown}
 %
+%#### Helpers for Links and Link Reference Definitions (local)
+%
+% \end{markdown}
+%  \begin{macrocode}
+  -- List of references defined in the document
+  local references
+
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
 % The \luamdef{reader->register_link} method registers
 % a link reference, where `tag` is the link label, `url`
 % is the link destination, `title` is the optional link
@@ -24268,10 +24279,6 @@ function M.reader.new(writer, options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  -- List of references defined in the document
-  local references
-
-  -- add a reference to the list
   function self.register_link(tag,url,title,attributes)
       local normalized_tag = self.normalize_tag(tag)
       if references[normalized_tag] == nil then
@@ -24280,8 +24287,16 @@ function M.reader.new(writer, options)
       return ""
   end
 
-  -- lookup link reference
-  local function lookup_reference(tag)
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% The \luamdef{reader->lookup_reference} method looks up a
+% reference with link label `tag`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  function self.lookup_reference(tag)
     return references[self.normalize_tag(tag)]
   end
 
@@ -24638,7 +24653,7 @@ function M.reader.new(writer, options)
   local function resolve_shortcut_link(t, opening_index, closing_index)
     local content = collect_link_content(t, opening_index + 1, closing_index - 1)
     local content_rope = util.rope_to_string(content)
-    local r = lookup_reference(content_rope)
+    local r = self.lookup_reference(content_rope)
 
     if r then 
       t[opening_index].is_link = true
@@ -24669,7 +24684,7 @@ function M.reader.new(writer, options)
     local content_rope = util.rope_to_string(content)
     local next_link_content_rope = util.rope_to_string(next_link_content)
 
-    local r = lookup_reference(next_link_content_rope)
+    local r = self.lookup_reference(next_link_content_rope)
 
     if r then 
       t[opening_index].is_link = true
@@ -24697,7 +24712,7 @@ function M.reader.new(writer, options)
     local content = collect_link_content(t, opening_index + 1, closing_index - 1)
     local content_rope = util.rope_to_string(content)
 
-    local r = lookup_reference(content_rope)
+    local r = self.lookup_reference(content_rope)
 
     if r then 
       t[opening_index].is_link = true
