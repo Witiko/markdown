@@ -23661,17 +23661,26 @@ local function captures_equal_length(_,i,a,b)
   return #a == #b and i
 end
 
-parsers.closeticks  = parsers.space^-1
-                    * Cmt(C(parsers.backtick^1)
-                         * Cb("ticks"), captures_equal_length)
+parsers.closeticks  = Cmt(C(parsers.backtick^1)
+                          * Cb("ticks"), captures_equal_length)
 
-parsers.intickschar = (parsers.any - S(" \n\r`"))
+parsers.intickschar = (parsers.any - S("\n\r`"))
                     + (parsers.newline * -parsers.blankline)
-                    + (parsers.space - parsers.closeticks)
                     + (parsers.backtick^1 - parsers.closeticks)
 
-parsers.inticks     = parsers.openticks * parsers.space^-1
-                    * C(parsers.intickschar^0) * parsers.closeticks
+local function process_inticks(s)
+  s = s:gsub("\n", " ")
+  s = s:gsub("^ (.*) $", "%1")
+  return s
+end
+
+parsers.inticks = parsers.openticks
+                * C(parsers.space^0)
+                * parsers.closeticks
+                + parsers.openticks
+                * Cs(parsers.intickschar^0 / process_inticks)
+                * parsers.closeticks
+
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -24368,7 +24377,7 @@ function M.reader.new(writer, options)
   parsers.Str      = (parsers.normalchar * (parsers.normalchar + parsers.at)^0)
                    / writer.string
 
-  parsers.Symbol   = (V("SpecialChar") - parsers.tightblocksep)
+  parsers.Symbol   = (parsers.backtick^1 + V("SpecialChar") - parsers.tightblocksep)
                    / writer.string
 
   parsers.Ellipsis = P("...") / writer.ellipsis
