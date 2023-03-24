@@ -7540,12 +7540,12 @@ defaultOptions.pipeTables = false
 
 #### Option `preserveTabs`
 
-`preserveTabs` (default value: `false`)
+`preserveTabs` (default value: `true`)
 
 % \fi
 % \begin{markdown}
 %
-% \Optitem[false]{preserveTabs}{\opt{true}, \opt{false}}
+% \Optitem[true]{preserveTabs}{\opt{true}, \opt{false}}
 %
 :    true
 
@@ -7564,14 +7564,14 @@ defaultOptions.pipeTables = false
 \@@_add_lua_option:nnn
   { preserveTabs }
   { boolean }
-  { false }
+  { true }
 %    \end{macrocode}
 % \iffalse
 %</tex>
 %<*lua,lua-cli>
 % \fi
 %  \begin{macrocode}
-defaultOptions.preserveTabs = false
+defaultOptions.preserveTabs = true
 %    \end{macrocode}
 % \par
 % \iffalse
