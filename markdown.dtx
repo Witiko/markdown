@@ -3669,7 +3669,7 @@ defaultOptions.blankBeforeHeading = false
      :  Enable the Pandoc bracketed spans extension:
 
         ``` md
-        [This is *some text*]{.class key="val"}
+        [This is *some text*]{.class key=val}
         ``````
 
 :    false
@@ -5508,7 +5508,7 @@ defaultOptions.fencedCode = false
      :  Enable the Pandoc fenced code attribute extension:
 
         ```````` md
-        ~~~~ {#mycode .haskell .numberLines startFrom="100"}
+        ~~~~ {#mycode .haskell .numberLines startFrom=100}
         qsort []     = []
         qsort (x:xs) = qsort (filter (< x) xs) ++ [x] ++
                        qsort (filter (>= x) xs)
@@ -7037,7 +7037,7 @@ defaultOptions.jekyllData = false
         An inline ![image](foo.jpg){#id .class width=30 height=20px}
         and a reference ![image][ref] with attributes.
 
-        [ref]: foo.jpg "optional title" {#id .class key=val key2="val 2"}
+        [ref]: foo.jpg "optional title" {#id .class key=val key2=val2}
         ``````
 
 :    false
