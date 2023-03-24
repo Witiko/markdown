@@ -23,13 +23,16 @@ A level two heading {#fourth4-id .2not-a-class}
 documentBegin
 codeSpan: headerAttributes
 interblockSeparator
-headerAttributeContextBegin
+BEGIN section
+BEGIN headerAttributeContext
 attributeIdentifier: first-id
 attributeClassName: unnumbered
 headingOne: A level one heading
 interblockSeparator
-headerAttributeContextEnd
-headerAttributeContextBegin
+END headerAttributeContext
+END section
+BEGIN section
+BEGIN headerAttributeContext
 attributeIdentifier: second_id2
 attributeClassName: unnumbered
 BEGIN attributeKeyValue
@@ -38,21 +41,28 @@ BEGIN attributeKeyValue
 END attributeKeyValue
 headingOne: A level one heading
 interblockSeparator
-headerAttributeContextBegin
+BEGIN section
+BEGIN headerAttributeContext
 attributeIdentifier: third-3id
 attributeClassName: a-class
 headingTwo: A level two heading
 interblockSeparator
-headerAttributeContextEnd
+END headerAttributeContext
+END section
+BEGIN section
 headingTwo: A level two heading (leftBrace)(hash)fourth4-id .2not-a-class(rightBrace)
 interblockSeparator
+BEGIN section
 headingThree: A level three heading (hash)(hash) (leftBrace)(hash)5not-the-fifth-id(rightBrace)
 interblockSeparator
+BEGIN section
 headingFour: A level four heading (leftBrace)(hash)-6not-the-sixth-id(rightBrace)
 interblockSeparator
+BEGIN section
 headingFive: A level five heading (hash)(hash) (leftBrace)(hash)--not-7the-seventh-id(rightBrace)
 interblockSeparator
-headerAttributeContextBegin
+BEGIN section
+BEGIN headerAttributeContext
 attributeIdentifier: the-eighth-id
 BEGIN attributeKeyValue
 - key: attribute
@@ -60,9 +70,16 @@ BEGIN attributeKeyValue
 END attributeKeyValue
 headingSix: A level six heading
 interblockSeparator
-headerAttributeContextEnd
-headerAttributeContextEnd
-headerAttributeContextBegin
+END headerAttributeContext
+END section
+END section
+END section
+END section
+END section
+END headerAttributeContext
+END section
+BEGIN section
+BEGIN headerAttributeContext
 attributeIdentifier: appear
 attributeIdentifier: should
 attributeIdentifier: the
@@ -82,5 +99,6 @@ BEGIN attributeKeyValue
 - value: ing
 END attributeKeyValue
 headingOne: Attributes
-headerAttributeContextEnd
+END headerAttributeContext
+END section
 documentEnd

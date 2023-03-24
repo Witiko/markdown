@@ -8,12 +8,12 @@ propagates through the plain TeX interface.
 documentBegin
 codeSpan: bracketedSpans
 interblockSeparator
-bracketedSpanAttributeContextBegin
+BEGIN bracketedSpanAttributeContext
 attributeClassName: class
 BEGIN attributeKeyValue
 - key: key
 - value: val
 END attributeKeyValue
 emphasis: some text
-bracketedSpanAttributeContextEnd
+END bracketedSpanAttributeContext
 documentEnd

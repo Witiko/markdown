@@ -1,6 +1,52 @@
 # Changes
 
-## 2.20.0
+## 2.22.0
+
+Development:
+
+- Add support for TeX math surrounded by backslash-escaped
+  parens and brackets. (contributed by @lostenderman, #61,
+  #235, #236, #270)
+- Add support for attributes on links, images, and inline
+  code spans. (jgm#36, jgm#43, #50, #123, #256, #280)
+
+## 2.21.0 (2022-02-28)
+
+Development:
+
+- Add renderers that represent the sections implied by headings.
+  (#258, #264)
+- Add support for slicing fenced divs. (#229, #266)
+- Add support for TeX math surrounded by dollar signs.
+  (contributed by @lostenderman, #61, #216, #267)
+
+Fixes:
+
+- Use MathML to render math in the user manual. (#261, #262)
+- Properly normalize link references according to
+  [CommonMark](https://spec.commonmark.org/0.30/#matches).
+  (lostenderman#56, #265)
+- Fail gracefully when CLI receives unknown options. (eddcb18)
+
+Documentation:
+
+- Rename `writer->encode_*()` methods to clarify their purpose.
+  (lostenderman#101, #271, #272)
+
+Deprecation:
+
+- Deprecate the current semantics of header attribute contexts.
+  (#258, #264)
+- Deprecate `hardLineBreaks` option. (#227, #263)
+
+## 2.20.0 (2022-02-01)
+
+Development:
+
+- Add support for line blocks.
+  (contributed by @Omikhleia and @lostenderman, jgm#41, #209, #248)
+- Add support for attributes on fenced code blocks.
+  (contributed by @Omikhleia, jgm#36, #123, #211)
 
 Documentation:
 
@@ -10,9 +56,14 @@ Documentation:
 
 Fixes:
 
-- Map U+0000 to U+FFFD in strings. (lostenderman#34, #247, #250)
+- Map U+0000 and U+FFFD to new replacement character renderer.
+  (lostenderman#34, #247, #250)
 - Map non-breaking space to `writer->nbsp` in strings.
   (lostenderman#99, #247, #249)
+- Fix input normalization and move it from Lua CLI and plain TeX
+  layers directly to the `convert()` Lua method. (#246, #253)
+- Allow fenced div closing tag to break out of a blockquote.
+  (contributed by @Omikhleia, jgm#60, jgm#61, #230, #259)
 
 Default Renderer Prototypes:
 
@@ -28,11 +79,13 @@ Unit Tests:
 
 - Do not fold tabs and spaces into a single space token.
   (lostenderman#107, #242)
+- Do not escape URIs in test outputs. (lostenderman#8, #260, 291e388)
 
 Speed Improvements:
 
 - Only make backticks special when `codeSpans` or `fencedCode` are enabled.
   (#239)
+- Use fast unit testing in continuous integration. (#231, #255)
 
 Continuous Integration:
 
