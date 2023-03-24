@@ -22327,7 +22327,7 @@ function M.reader.new(writer, options)
 %  \begin{macrocode}
   local function collect_emphasis_content(t, opening_index, closing_index)
     local content = {}
-    for i = opening_index, closing_index, 1 do
+    for i = opening_index, closing_index do
       local value = t[i]
       if value.is_active then
         if value.type == "delimiter_run" then
@@ -22389,8 +22389,7 @@ function M.reader.new(writer, options)
 % \begin{markdown}
 %
 % Look for the first potential emphasis opener in the delimiter table `t` in the range from
-% `bottom_index` to `latest_index`, whose character equals closing character `character` and 
-% for which is the rule three with the closing delimiter `closing_delimiter` not broken.
+% `bottom_index` to `latest_index`.
 %
 % \end{markdown}
 %  \begin{macrocode}
