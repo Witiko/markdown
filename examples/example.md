@@ -177,3 +177,21 @@ $$ x^n + y^n = z^n $$
 | even
   discontinuous
 | lines
+
+This is inline and display TeX math created using dollars signs:
+
+$E=mc^2$
+
+$$E=mc^2$$
+
+This is inline and display TeX math created using single backslashes:
+
+\(E=mc^2\)
+
+\[E=mc^2\]
+
+This is inline and display TeX math created using double backslashes:
+
+\\(E=mc^2\\)
+
+\\[E=mc^2\\]
