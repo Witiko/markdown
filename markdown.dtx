@@ -23962,7 +23962,7 @@ parsers.heading_start = #parsers.hash * C(parsers.hash^-6)
 parsers.heading_level = parsers.equal^1 * Cc(1) + parsers.dash^1 * Cc(2)
 
 local function strip_atx_end(s)
-  return s:gsub("[#%s]*\n$","")
+  return s:gsub("%s+#*%s*\n$","")
 end
 %    \end{macrocode}
 % \par
@@ -24682,9 +24682,14 @@ end
 % \end{markdown}
 %  \begin{macrocode}
   -- parse atx header
-  parsers.AtxHeading = Cg(parsers.heading_start, "level")
-                     * parsers.optionalspace
-                     * (C(parsers.line)
+  parsers.AtxHeading = parsers.nonindentspace
+                     * Cg(parsers.heading_start, "level")
+                     * ((C( parsers.optionalspace
+                          * parsers.hash^0 
+                          * parsers.optionalspace
+                          * parsers.newline)
+                        + parsers.spacechar^1 
+                        * C(parsers.line))
                        / strip_atx_end
                        / self.parser_functions.parse_inlines)
                      * Cb("level")

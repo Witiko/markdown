@@ -10,7 +10,17 @@
 ##### foo ##
 >>>
 documentBegin
+BEGIN section
 headingOne: foo
 interblockSeparator
+BEGIN section
+BEGIN section
+BEGIN section
+BEGIN section
 headingFive: foo
+END section
+END section
+END section
+END section
+END section
 documentEnd
