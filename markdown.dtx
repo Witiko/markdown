@@ -24942,7 +24942,7 @@ function M.reader.new(writer, options)
   -- TODO move - needs to call check_trail
   parsers.define_reference_parser = (check_trail / "") * parsers.tag * parsers.colon
                                   * parsers.spacechar^0 * parsers.url
-                                  * parsers.optionaltitle * (parsers.newline + parsers.eof)
+                                  * parsers.optionaltitle
 
   parsers.indented_content = function(breakable)
     local blank = parsers.minimally_indented_blank
@@ -25044,8 +25044,9 @@ function M.reader.new(writer, options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  function self.register_link(tag, url, title,
+  function self.register_link(_,tag, url, title,
                               attributes)
+    print(tag, url, title, attributes)
     tag = self.normalize_tag(tag)
     references[tag] = {
       url = url,
@@ -25391,7 +25392,6 @@ end
                           ) / writer.thematic_break
 
   parsers.Reference    = parsers.define_reference_parser
-                       * parsers.blankline^1
                        / self.register_link
 
   parsers.Paragraph   = (check_trail / "")
@@ -27324,7 +27324,6 @@ M.extensions.link_attributes = function()
                                       * Ct(parsers.attributes))^-1
 
       local ReferenceWithAttributes = define_reference_parser
-                                    * parsers.blankline^1
                                     / self.register_link
 
       self.update_rule("Reference", ReferenceWithAttributes)
