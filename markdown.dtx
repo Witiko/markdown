@@ -23025,8 +23025,7 @@ parsers.urlchar      = parsers.anyescaped - parsers.newline - parsers.more
 %  \begin{macrocode}
 parsers.lineof = function(c)
     return (parsers.leader * (P(c) * parsers.optionalspace)^3
-           * (parsers.newline
-             + parsers.newline^-1 * parsers.eof))
+           * (parsers.newline + parsers.eof))
 end
 
 parsers.thematic_break_lines = parsers.lineof(parsers.asterisk)
