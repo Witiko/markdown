@@ -24937,12 +24937,23 @@ function M.reader.new(writer, options)
   parsers.minimally_indented_separated_block  = check_minimal_indent / writer.interblocksep
                                               * V("Block")
 
-  parsers.minimally_indented_blank_blank = check_minimal_blank_indent * (parsers.blankline / "")
+  parsers.conditionally_indented_blank = check_minimal_blank_indent * (parsers.blankline / "")
+
+  parsers.minimally_indented_ref = check_minimal_indent * V("Reference")
+
+  parsers.minimally_indented_ref_or_block  = check_minimal_indent * V("Reference")
+                                           + check_minimal_indent * V("Block")
+                                           - parsers.minimally_indented_blank
+
+  parsers.minimally_indented_separated_ref_or_block = parsers.minimally_indented_ref
+                                                    + check_minimal_indent / writer.interblocksep
+                                                    * V("Block")
+                                                    - parsers.minimally_indented_blank
 
   -- TODO move - needs to call check_trail
   parsers.define_reference_parser = (check_trail / "") * parsers.tag * parsers.colon
                                   * parsers.spacechar^0 * parsers.url
-                                  * parsers.optionaltitle
+                                  * parsers.optionaltitle * (parsers.newline + parsers.eof)
 
   parsers.indented_content = function(breakable)
     local blank = parsers.minimally_indented_blank
@@ -24950,16 +24961,16 @@ function M.reader.new(writer, options)
       blank = blank + (parsers.blankline / "")
     end
 
-    return  Ct( (parsers.blankline / "")
+    return  Ct( (V("Reference") + (parsers.blankline / ""))
               * blank^0
-              * parsers.minimally_indented_block
+              * parsers.minimally_indented_ref_or_block
               * ( blank
-                + parsers.minimally_indented_separated_block)^0
-              + (parsers.blankline / "")
+                + parsers.minimally_indented_separated_ref_or_block)^0
+              + (V("Reference") + (parsers.blankline / ""))
               * blank^0
               + V("Block")
               * ( blank
-                + parsers.minimally_indented_separated_block)^0)
+                + parsers.minimally_indented_separated_ref_or_block)^0)
   end
 
   local function add_indent(pattern, name)
@@ -25046,7 +25057,6 @@ function M.reader.new(writer, options)
 %  \begin{macrocode}
   function self.register_link(_,tag, url, title,
                               attributes)
-    print(tag, url, title, attributes)
     tag = self.normalize_tag(tag)
     references[tag] = {
       url = url,
@@ -25419,68 +25429,32 @@ end
      parsers.tickbox = parsers.fail
   end
 
-  -- TODO move - copied for testing
-  parsers.ref_or_block = parsers.Reference + V("Block")
-
-  parsers.minimally_indented_ref = check_minimal_indent * parsers.Reference
-
-  parsers.minimally_indented_blank = check_minimal_indent * (parsers.blankline / "")
-
-  parsers.minimally_indented_block = check_minimal_indent * parsers.ref_or_block
-
-  parsers.minimally_indented_separated_block  = check_minimal_indent * parsers.Reference 
-                                              + check_minimal_indent / writer.interblocksep
-                                              * V("Block")
-
-  parsers.minimally_indented_non_blank  = parsers.minimally_indented_block 
-                                        - parsers.minimally_indented_blank
-
-  parsers.minimally_indented_separated_non_blank  = parsers.minimally_indented_separated_block 
-                                                  - parsers.minimally_indented_blank
-
-  parsers.list_item_tightness_condition = -#((parsers.minimally_indented_blank_blank^1 * (parsers.minimally_indented_block))
+  parsers.list_item_tightness_condition = -#(parsers.conditionally_indented_blank^0 * parsers.minimally_indented_ref_or_block)
                                         * remove_indent("li")
                                         + remove_indent("li")
-                                        * parsers.fail)
+                                        * parsers.fail
 
   parsers.indented_content_tight  = Ct( (parsers.blankline / "")
-                                      * #parsers.minimally_indented_blank_blank
+                                      * #parsers.conditionally_indented_blank
                                       * remove_indent("li")
-
-                                      + (parsers.Reference + (parsers.blankline / "") * parsers.minimally_indented_ref)
-                                      * (parsers.minimally_indented_blank_blank^-1 * parsers.minimally_indented_ref^1)^0
-                                      * parsers.minimally_indented_blank_blank
-                                      * #parsers.minimally_indented_blank_blank
-                                      * remove_indent("li")
-
-                                      + ( (parsers.Reference + (parsers.blankline / "") * parsers.minimally_indented_ref)
-                                        * (parsers.minimally_indented_blank_blank^-1 * parsers.minimally_indented_ref^1)^0 * parsers.minimally_indented_blank_blank^-1
-                                        * parsers.minimally_indented_block
-                                        * (parsers.minimally_indented_separated_non_blank)^0
-
-                                        + (parsers.Reference + (parsers.blankline / "") * parsers.minimally_indented_ref)
-                                        * (parsers.minimally_indented_blank_blank^-1 * parsers.minimally_indented_ref^1)^0
-
-                                        + (parsers.blankline / "")
-                                        * (parsers.minimally_indented_non_blank)
-                                        * (parsers.minimally_indented_separated_non_blank)^0
-
-                                        + (parsers.blankline / "")
-
+                                      + ( (parsers.Reference + (parsers.blankline / ""))
+                                        * (parsers.minimally_indented_ref_or_block)
+                                        * (parsers.minimally_indented_separated_ref_or_block)^0
+                                        + (parsers.Reference + (parsers.blankline / ""))
                                         + V("Block")
-                                        * (parsers.minimally_indented_separated_non_blank)^0) 
-
-                                        * parsers.list_item_tightness_condition
-                                      ) 
+                                        * (parsers.minimally_indented_separated_ref_or_block)^0) 
+                                        * parsers.list_item_tightness_condition) 
   
-  parsers.indented_content_loose  = Ct( parsers.blankline
-                                      * (parsers.minimally_indented_non_blank)
-                                      * ( parsers.minimally_indented_blank_blank^0
-                                        * parsers.minimally_indented_separated_non_blank^1)^0
-                                      + parsers.blankline
-                                      + parsers.ref_or_block
-                                      * ( parsers.minimally_indented_blank_blank^0
-                                        * parsers.minimally_indented_separated_non_blank^1)^0)
+  parsers.indented_content_loose  = Ct( (parsers.blankline / "")
+                                      * #parsers.conditionally_indented_blank
+                                      + ( (parsers.Reference + (parsers.blankline / ""))
+                                        * (parsers.minimally_indented_ref_or_block)
+                                        * ( parsers.conditionally_indented_blank^0
+                                          * parsers.minimally_indented_separated_ref_or_block^1)^0
+                                        + (parsers.Reference + (parsers.blankline / ""))
+                                        + V("Block")
+                                        * ( parsers.conditionally_indented_blank^0
+                                          * parsers.minimally_indented_separated_ref_or_block^1)^0))
 
   parsers.TightListItem = function(starter)
     return  -parsers.ThematicBreak
@@ -25499,9 +25473,9 @@ end
     local bullet = parsers.bullet(bullet_type)
     return  ( Ct( parsers.TightListItem(bullet) 
                 * ((check_minimal_indent / "") * parsers.TightListItem(bullet))^0) * Cc(true)
-               * -#((parsers.minimally_indented_blank_blank / "")^0 * check_minimal_indent * bullet)
+                * -#((parsers.conditionally_indented_blank^0 / "") * check_minimal_indent * bullet)
                + Ct(parsers.LooseListItem(bullet) 
-                 * ((parsers.minimally_indented_blank_blank / "")^0 
+                 * ((parsers.conditionally_indented_blank^0 / "") 
                    * (check_minimal_indent / "") * parsers.LooseListItem(bullet))^0) * Cc(false))
             / writer.bulletlist
   end
@@ -25528,9 +25502,9 @@ end
     return  Cg(enumerator, "listtype")
           * (Ct( parsers.TightListItem(Cb("listtype"))
                * ((check_minimal_indent / "") * parsers.TightListItem(enumerator))^0)
-          * Cc(true) * -#((parsers.minimally_indented_blank_blank / "")^0 * check_minimal_indent * enumerator)
+          * Cc(true) * -#((parsers.conditionally_indented_blank / "")^0 * check_minimal_indent * enumerator)
           + Ct( parsers.LooseListItem(Cb("listtype"))
-              * ((parsers.minimally_indented_blank_blank / "")^0 * (check_minimal_indent / "") * parsers.LooseListItem(enumerator))^0)
+              * ((parsers.conditionally_indented_blank / "")^0 * (check_minimal_indent / "") * parsers.LooseListItem(enumerator))^0)
           * Cc(false)
           ) * Ct(Cb("listtype")) / ordered_list
   end
@@ -27319,9 +27293,12 @@ M.extensions.link_attributes = function()
 % \end{markdown}
 %  \begin{macrocode}
 
-      local define_reference_parser = parsers.define_reference_parser
+      local define_reference_parser = (check_trail / "") * parsers.tag * parsers.colon
+                                    * parsers.spacechar^0 * parsers.url
+                                    * parsers.optionaltitle
                                     * ( parsers.spnl
                                       * Ct(parsers.attributes))^-1
+                                    * parsers.optionalspace * (parsers.newline + parsers.eof)
 
       local ReferenceWithAttributes = define_reference_parser
                                     / self.register_link
