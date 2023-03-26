@@ -24099,18 +24099,6 @@ parsers.tagentity = parsers.ampersand * C(parsers.alphanumeric^1)
 % \par
 % \begin{markdown}
 %
-%#### Helpers for Link Reference Definitions
-%
-% \end{markdown}
-%  \begin{macrocode}
--- parse a reference definition:  [foo]: /bar "title"
-parsers.define_reference_parser = parsers.leader * parsers.tag * parsers.colon
-                                * parsers.spacechar^0 * parsers.url
-                                * parsers.optionaltitle
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
 %#### Inline Elements
 %
 % \end{markdown}
@@ -24918,42 +24906,34 @@ function M.reader.new(writer, options)
     return false
   end
 
-  check_minimal_indent = Cmt(Cb("indent_info") * Cc(false), start_traverse_indent)
+  parsers.check_minimal_indent = Cmt(Cb("indent_info") * Cc(false), start_traverse_indent)
 
-  check_optional_indent = Cmt(Cb("indent_info") * Cc(true), start_traverse_indent)
+  parsers.check_optional_indent = Cmt(Cb("indent_info") * Cc(true), start_traverse_indent)
 
-  check_minimal_blank_indent = Cmt(Cb("indent_info") * Cc(false), start_blank_indent)
+  parsers.check_minimal_blank_indent = Cmt(Cb("indent_info") * Cc(false), start_blank_indent)
 
-  check_trail = Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(false), check_trail_joined)
-              * Cg(Cmt(Cb("indent_info"), leave_trail), "indent_info")
+  parsers.check_trail = Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(false), check_trail_joined)
+                      * Cg(Cmt(Cb("indent_info"), leave_trail), "indent_info")
 
-  check_code_trail  = Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(true), check_trail_joined)
-                    * Cg(Cmt(Cb("indent_info"), leave_trail), "indent_info")
+  parsers.check_code_trail  = Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(true), check_trail_joined)
+                            * Cg(Cmt(Cb("indent_info"), leave_trail), "indent_info")
 
-  parsers.minimally_indented_blank = check_minimal_indent * (parsers.blankline / "")
+  parsers.minimally_indented_blank = parsers.check_minimal_indent * (parsers.blankline / "")
 
-  parsers.minimally_indented_block = check_minimal_indent * V("Block")
+  parsers.minimally_indented_block = parsers.check_minimal_indent * V("Block")
 
-  parsers.minimally_indented_separated_block  = check_minimal_indent / writer.interblocksep
-                                              * V("Block")
+  parsers.minimally_indented_ref = parsers.check_minimal_indent * V("Reference")
 
-  parsers.conditionally_indented_blank = check_minimal_blank_indent * (parsers.blankline / "")
+  parsers.conditionally_indented_blank = parsers.check_minimal_blank_indent * (parsers.blankline / "")
 
-  parsers.minimally_indented_ref = check_minimal_indent * V("Reference")
-
-  parsers.minimally_indented_ref_or_block  = check_minimal_indent * V("Reference")
-                                           + check_minimal_indent * V("Block")
+  parsers.minimally_indented_ref_or_block  = parsers.minimally_indented_ref
+                                           + parsers.minimally_indented_block
                                            - parsers.minimally_indented_blank
 
   parsers.minimally_indented_separated_ref_or_block = parsers.minimally_indented_ref
-                                                    + check_minimal_indent / writer.interblocksep
+                                                    + parsers.check_minimal_indent / writer.interblocksep
                                                     * V("Block")
                                                     - parsers.minimally_indented_blank
-
-  -- TODO move - needs to call check_trail
-  parsers.define_reference_parser = (check_trail / "") * parsers.tag * parsers.colon
-                                  * parsers.spacechar^0 * parsers.url
-                                  * parsers.optionaltitle * (parsers.newline + parsers.eof)
 
   parsers.indented_content = function(breakable)
     local blank = parsers.minimally_indented_blank
@@ -25043,6 +25023,10 @@ function M.reader.new(writer, options)
 %  \begin{macrocode}
   -- List of references defined in the document
   local references
+
+  parsers.define_reference_parser = (parsers.check_trail / "") * parsers.tag * parsers.colon
+                                  * parsers.spacechar^0 * parsers.url
+                                  * parsers.optionaltitle * (parsers.newline + parsers.eof)
 
 %    \end{macrocode}
 % \par
@@ -25224,9 +25208,9 @@ function M.reader.new(writer, options)
                      + parsers.headerstart
 
   parsers.Endline   = parsers.newline
-                    * (check_minimal_indent 
+                    * (parsers.check_minimal_indent 
                       * -V("EndlineExceptions") 
-                      + check_optional_indent 
+                      + parsers.check_optional_indent 
                       * -V("EndlineExceptions") 
                       * -parsers.starter)
                     * parsers.spacechar^0
@@ -25248,9 +25232,9 @@ function M.reader.new(writer, options)
 
   parsers.NonbreakingEndline
                     = parsers.newline
-                    * (check_minimal_indent 
+                    * (parsers.check_minimal_indent 
                       * -V("EndlineExceptions") 
-                      + check_optional_indent 
+                      + parsers.check_optional_indent 
                       * -V("EndlineExceptions") 
                       * -parsers.starter)
                     * parsers.spacechar^0
@@ -25384,10 +25368,10 @@ end
   parsers.indented_non_blank_line = parsers.indentedline - parsers.blankline
 
   parsers.Verbatim  = Cs( 
-                        check_code_trail 
+                        parsers.check_code_trail 
                       * (parsers.line - parsers.blankline)
-                      * (((check_minimal_blank_indent / "") * parsers.blankline)^0
-                        * ((check_minimal_indent / "") * check_code_trail * (parsers.line - parsers.blankline))^1)^0
+                      * (((parsers.check_minimal_blank_indent / "") * parsers.blankline)^0
+                        * ((parsers.check_minimal_indent / "") * parsers.check_code_trail * (parsers.line - parsers.blankline))^1)^0
                       ) / self.expandtabs / writer.verbatim
 
   parsers.BlockquoteExceptions = parsers.leader * parsers.more
@@ -25404,7 +25388,7 @@ end
   parsers.Reference    = parsers.define_reference_parser
                        / self.register_link
 
-  parsers.Paragraph   = (check_trail / "")
+  parsers.Paragraph   = (parsers.check_trail / "")
                       * (Ct((parsers.Inline)^1)
                       * (parsers.newline + parsers.eof)
                       / writer.paragraph)
@@ -25472,11 +25456,11 @@ end
   parsers.BulletListOfType = function(bullet_type)
     local bullet = parsers.bullet(bullet_type)
     return  ( Ct( parsers.TightListItem(bullet) 
-                * ((check_minimal_indent / "") * parsers.TightListItem(bullet))^0) * Cc(true)
-                * -#((parsers.conditionally_indented_blank^0 / "") * check_minimal_indent * bullet)
+                * ((parsers.check_minimal_indent / "") * parsers.TightListItem(bullet))^0) * Cc(true)
+                * -#((parsers.conditionally_indented_blank^0 / "") * parsers.check_minimal_indent * bullet)
                + Ct(parsers.LooseListItem(bullet) 
                  * ((parsers.conditionally_indented_blank^0 / "") 
-                   * (check_minimal_indent / "") * parsers.LooseListItem(bullet))^0) * Cc(false))
+                   * (parsers.check_minimal_indent / "") * parsers.LooseListItem(bullet))^0) * Cc(false))
             / writer.bulletlist
   end
 
@@ -25501,10 +25485,13 @@ end
     local enumerator = parsers.enumerator(delimiter_type)
     return  Cg(enumerator, "listtype")
           * (Ct( parsers.TightListItem(Cb("listtype"))
-               * ((check_minimal_indent / "") * parsers.TightListItem(enumerator))^0)
-          * Cc(true) * -#((parsers.conditionally_indented_blank / "")^0 * check_minimal_indent * enumerator)
+               * ((parsers.check_minimal_indent / "") * parsers.TightListItem(enumerator))^0)
+          * Cc(true) 
+          * -#((parsers.conditionally_indented_blank^0 / "") 
+              * parsers.check_minimal_indent * enumerator)
           + Ct( parsers.LooseListItem(Cb("listtype"))
-              * ((parsers.conditionally_indented_blank / "")^0 * (check_minimal_indent / "") * parsers.LooseListItem(enumerator))^0)
+              * ((parsers.conditionally_indented_blank^0 / "") 
+                * (parsers.check_minimal_indent / "") * parsers.LooseListItem(enumerator))^0)
           * Cc(false)
           ) * Ct(Cb("listtype")) / ordered_list
   end
@@ -25543,7 +25530,7 @@ end
                         * Ct(parsers.linechar^1
                             / self.parser_functions.parse_inlines)
                         * parsers.newline
-                        * check_minimal_indent * parsers.heading_level
+                        * parsers.check_minimal_indent * parsers.heading_level
                         * parsers.optionalspace
                         * parsers.newline
                         / writer.heading
@@ -26893,8 +26880,8 @@ M.extensions.fenced_code = function(blank_before_code_fence,
 
       local BacktickFencedCode
              = fencehead(parsers.backtick, backtick_infostring)
-             * Cs(((check_minimal_blank_indent / "") * parsers.blankline + (check_minimal_indent / "") * fencedline(parsers.backtick))^0)
-             * ((check_minimal_indent / "") * fencetail(parsers.backtick) + parsers.succeed)
+             * Cs(((parsers.check_minimal_blank_indent / "") * parsers.blankline + (parsers.check_minimal_indent / "") * fencedline(parsers.backtick))^0)
+             * ((parsers.check_minimal_indent / "") * fencetail(parsers.backtick) + parsers.succeed)
 
       local infostring_with_attributes
                         = Ct(C((parsers.linechar
@@ -27293,7 +27280,7 @@ M.extensions.link_attributes = function()
 % \end{markdown}
 %  \begin{macrocode}
 
-      local define_reference_parser = (check_trail / "") * parsers.tag * parsers.colon
+      local define_reference_parser = (parsers.check_trail / "") * parsers.tag * parsers.colon
                                     * parsers.spacechar^0 * parsers.url
                                     * parsers.optionaltitle
                                     * ( parsers.spnl
