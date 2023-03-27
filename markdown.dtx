@@ -24436,7 +24436,7 @@ function M.reader.new(writer, options)
 %  \end{macrocode}
 % \begin{markdown}
 %
-% Check if trail exists and is non-empty in the indent table `indent_table.
+% Check if a trail exists and is non-empty in the indent table `indent_table.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -24447,12 +24447,12 @@ function M.reader.new(writer, options)
 %  \end{macrocode}
 % \begin{markdown}
 %
-% Update the indent table `indent_table` by adding `increment > 0` or removing a new
-% indent. Indents have properties `name` and `length`.
+% Update the indent table `indent_table` by adding or removing a new
+% indent `add`.
 %
 % \end{markdown}
 %  \begin{macrocode}
-  local function update_indent_table(indent_table, new_indent, increment)
+  local function update_indent_table(indent_table, new_indent, add)
     indent_table = remove_trail(indent_table)
 
     if indent_table.indents == nil then
@@ -24461,7 +24461,7 @@ function M.reader.new(writer, options)
 
     local indent_table_indents = indent_table.indents
 
-    if increment ~= nil and increment > 0 then
+    if add then
       indent_table_indents[#indent_table_indents + 1] = new_indent
     else
       if indent_table_indents[#indent_table_indents].name == new_indent.name then
@@ -24481,7 +24481,7 @@ function M.reader.new(writer, options)
 %  \begin{macrocode}
   local function remove_indent(name)
     local function remove_indent_level(s, i, indent_table)
-      indent_table = update_indent_table(indent_table, {name=name})
+      indent_table = update_indent_table(indent_table, {name=name}, false)
       return true, indent_table
     end
 
@@ -24499,7 +24499,6 @@ function M.reader.new(writer, options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  -- TODO simplify remainders
   local function process_starter_spacing(indent, spacing, minimum, left_strip_length)
 
     if (left_strip_length == nil) then
@@ -24602,7 +24601,7 @@ function M.reader.new(writer, options)
 % \begin{markdown}
 %
 % Check if the current trail of the `indent_table` would produce code if `expect_code` is true.
-% Otherwise check if it would not. If there is no trail, use the caught spacing `spacing`. 
+% Otherwise check if it would not. If there is no trail, use the current spacing `spacing`. 
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -24655,7 +24654,7 @@ function M.reader.new(writer, options)
 % \begin{markdown}
 %
 % Process the container starter `starter` of a type `indent_type`. Adjust the width of the indent
-% if the delimiter is followed only by whitespace `is_blank`.
+% if the delimiter is followed only by whitespaces `is_blank`.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -24702,7 +24701,7 @@ function M.reader.new(writer, options)
     local indent_length = last_trail_length + delimiter_length + del_trail_length
     local new_indent_info = {name=indent_type, length=indent_length}
 
-    local indent_table = update_indent_table(indent_table, new_indent_info, 1)
+    local indent_table = update_indent_table(indent_table, new_indent_info, true)
     local new_trail = {is_code=sp.is_code, remainder=sp.remainder}
     indent_table = add_trail(indent_table, new_trail)
 
@@ -24718,7 +24717,6 @@ function M.reader.new(writer, options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  -- TODO group indents
   local function decode_pattern(name)
     if name == "bq" then
       return C(parsers.spacechar^0) * C(parsers.more) * C(parsers.spacechar^0) * Cp()
@@ -24756,9 +24754,9 @@ function M.reader.new(writer, options)
 %
 % Apply the patterns decoded from the indents of the indent table `indent_table`
 % iteratively starting at position `index` of the string `s`. If the `is_optional`
-% match as many patterns as possible, else match all or fail. With the option `is_blank`,
-% the parsing behaves as optional after the position of a blank-only indent has
-% been surpassed.
+% mode is selected, match as many patterns as possible, else match all or fail. 
+% With the option `is_blank`, the parsing behaves as optional after the position 
+% of a blank-only indent has been surpassed.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -24865,8 +24863,8 @@ function M.reader.new(writer, options)
 %  \end{macrocode}
 % \begin{markdown}
 %
-% Start traversing and checking the indents for a continuation line with the mode `is_optional` 
-% selected.
+% Start traversing and checking the indents for a continuation line, optionally with 
+% the mode `is_optional` selected.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -24887,8 +24885,8 @@ function M.reader.new(writer, options)
 %  \end{macrocode}
 % \begin{markdown}
 %
-% Start traversing and checking the indents for a continuation blank line with the mode `is_optional` 
-% selected.
+% Start traversing and checking the indents for a continuation blank line, optionally with 
+% the mode `is_optional` selected.
 %
 % \end{markdown}
 %  \begin{macrocode}
