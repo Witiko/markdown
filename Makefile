@@ -62,9 +62,18 @@ all: $(MAKEABLES)
 base: $(INSTALLABLES) $(LIBRARIES)
 	$(MAKE) clean
 
+ifeq ($(TEXLIVE_TAG),latest)
+  FROM_IMAGE=registry.gitlab.com/islandoftex/images/texlive
+  FROM_TAG=TL2022-2023-03-19-full
+else
+  FROM_IMAGE=texlive/texlive
+  FROM_TAG=$(TEXLIVE_TAG)
+endif
+
 # This pseudo-target builds a witiko/markdown Docker image.
 docker-image:
-	DOCKER_BUILDKIT=1 docker build --pull --build-arg TEXLIVE_TAG=$(TEXLIVE_TAG) \
+	DOCKER_BUILDKIT=1 docker build --pull --build-arg TEXLIVE_TAG=$(FROM_TAG) \
+	                               --build-arg FROM_IMAGE=$(FROM_IMAGE) \
 	                               -t witiko/markdown:$(TEXLIVE_TAG) \
 	                               -t witiko/markdown:$(VERSION)-$(TEXLIVE_TAG) .
 
