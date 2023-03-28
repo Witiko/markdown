@@ -24400,6 +24400,17 @@ function M.reader.new(writer, options)
 %  \end{macrocode}
 % \begin{markdown}
 %
+% Check if a trail exists and is non-empty in the indent table `indent_table.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  function has_trail(indent_table)
+    return indent_table ~= nil and indent_table.trail ~= nil and next(indent_table.trail) ~= nil
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
 % Add a trail `trail_info` to the indent table `indent_table.
 %
 % \end{markdown}
@@ -24431,17 +24442,6 @@ function M.reader.new(writer, options)
   local function leave_trail(s, i, indent_table)
     indent_table = remove_trail(indent_table)
     return true, indent_table
-  end
-
-%  \end{macrocode}
-% \begin{markdown}
-%
-% Check if a trail exists and is non-empty in the indent table `indent_table.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  local function has_trail(indent_table)
-    return indent_table ~= nil and indent_table.trail ~= nil and next(indent_table.trail) ~= nil
   end
 
 %  \end{macrocode}
@@ -24631,7 +24631,7 @@ function M.reader.new(writer, options)
       return false
     end
 
-    return true, ""
+    return true, remainder
   end
 
 %  \end{macrocode}
@@ -24904,17 +24904,31 @@ function M.reader.new(writer, options)
     return false
   end
 
+%  \end{macrocode}
+% \begin{markdown}
+%
+% The following patterns check whitespace indentation at the start of a block.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  parsers.leave_trail = Cg(Cmt(Cb("indent_info"), leave_trail), "indent_info")
+
+  parsers.check_trail = Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(false), check_trail_joined)
+
+  parsers.check_code_trail  = Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(true), check_trail_joined)
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% The following patterns check indentation in continuation lines as defined by the container start.
+%
+% \end{markdown}
+%  \begin{macrocode}
   parsers.check_minimal_indent = Cmt(Cb("indent_info") * Cc(false), start_traverse_indent)
 
   parsers.check_optional_indent = Cmt(Cb("indent_info") * Cc(true), start_traverse_indent)
 
   parsers.check_minimal_blank_indent = Cmt(Cb("indent_info") * Cc(false), start_blank_indent)
-
-  parsers.check_trail = Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(false), check_trail_joined)
-                      * Cg(Cmt(Cb("indent_info"), leave_trail), "indent_info")
-
-  parsers.check_code_trail  = Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(true), check_trail_joined)
-                            * Cg(Cmt(Cb("indent_info"), leave_trail), "indent_info")
 
   parsers.minimally_indented_blank = parsers.check_minimal_indent * (parsers.blankline / "")
 
@@ -24933,6 +24947,14 @@ function M.reader.new(writer, options)
                                                     * V("Block")
                                                     - parsers.minimally_indented_blank
 
+%  \end{macrocode}
+% \begin{markdown}
+%
+% The following pattern parses the properly indented content that follows the initial container start,
+% optionally with blank lines allowed `breakable`.
+%
+% \end{markdown}
+%  \begin{macrocode}
   parsers.indented_content = function(breakable)
     local blank = parsers.minimally_indented_blank
     if breakable then
@@ -25025,6 +25047,7 @@ function M.reader.new(writer, options)
   parsers.define_reference_parser = (parsers.check_trail / "") * parsers.tag * parsers.colon
                                   * parsers.spacechar^0 * parsers.url
                                   * parsers.optionaltitle * (parsers.newline + parsers.eof)
+                                  * parsers.leave_trail
 
 %    \end{macrocode}
 % \par
@@ -25389,6 +25412,7 @@ end
   parsers.Paragraph   = (parsers.check_trail / "")
                       * (Ct((parsers.Inline)^1)
                       * (parsers.newline + parsers.eof)
+                      * parsers.leave_trail
                       / writer.paragraph)
 
   parsers.Plain        = parsers.nonindentspace * Ct(parsers.Inline^1)
@@ -26835,12 +26859,30 @@ M.extensions.fenced_code = function(blank_before_code_fence,
                                 + parsers.spacechar^1 * parsers.newline))^0)
 
       local fenceindent
+
+      local function get_last_indent_name(indent_table)
+        if indent_table ~= nil and indent_table.indents ~= nil then
+          return indent_table.indents[#indent_table.indents].name
+        end
+        return
+      end
+
+      local function count_fenced_start_indent(s, i, indent_table, trail)
+        local last_indent_name = get_last_indent_name(indent_table)
+        fenceindent = 0
+        if last_indent_name ~= "li" then
+          fenceindent = #trail
+        end
+        return true
+      end
+
       local fencehead      = function(char, infostring)
-        return               C(parsers.nonindentspace) / function(s) fenceindent = #s end
+        return               Cmt(Cb("indent_info") * parsers.check_trail, count_fenced_start_indent)
                            * Cg(char^3, "fencelength")
                            * parsers.optionalspace
                            * infostring
                            * (parsers.newline + parsers.eof)
+                           * parsers.leave_trail
       end
 
       local fencetail      = function(char)
@@ -26850,35 +26892,46 @@ M.extensions.fenced_code = function(blank_before_code_fence,
                            + parsers.eof
       end
 
-      local fencedline     = function(char)
-        return               C(parsers.line - fencetail(char))
-                           / function(s)
-                               local i = 1
-                               local remaining = fenceindent
-                               while true do
-                                 local c = s:sub(i, i)
-                                 if c == " " and remaining > 0 then
-                                   remaining = remaining - 1
-                                   i = i + 1
-                                 elseif c == "\t" and remaining > 3 then
-                                   remaining = remaining - 4
-                                   i = i + 1
-                                 else
-                                   break
-                                 end
-                               end
-                               return s:sub(i)
-                             end
+      local function process_fenced_line(s, i, indent_table, line_content)
+        local trail = ""
+        if has_trail(indent_table) then
+          trail = indent_table.trail.internal_remainder
+        end
+
+        local str = trail .. line_content
+        local index = 1
+        local remaining = fenceindent
+
+        while true do
+          local c = str:sub(index, index)
+          if c == " " and remaining > 0 then
+            remaining = remaining - 1
+            index = index + 1
+          elseif c == "\t" and remaining > 3 then
+            remaining = remaining - 4
+            index = index + 1
+          else
+            break
+          end
+        end
+
+        return true, str:sub(index)
+      end
+
+      local fencedline = function(char)
+        return Cmt(Cb("indent_info") * C(parsers.line - fencetail(char)), process_fenced_line)
       end
 
       local TildeFencedCode
              = fencehead(parsers.tilde, tilde_infostring)
-             * Cs(fencedline(parsers.tilde)^0)
-             * fencetail(parsers.tilde)
+             * Cs(((parsers.check_minimal_blank_indent / "") * parsers.blankline 
+                  + (parsers.check_minimal_indent / "") * fencedline(parsers.tilde))^0)
+             * ((parsers.check_minimal_indent / "") * fencetail(parsers.tilde) + parsers.succeed)
 
       local BacktickFencedCode
              = fencehead(parsers.backtick, backtick_infostring)
-             * Cs(((parsers.check_minimal_blank_indent / "") * parsers.blankline + (parsers.check_minimal_indent / "") * fencedline(parsers.backtick))^0)
+             * Cs(((parsers.check_minimal_blank_indent / "") * parsers.blankline 
+                  + (parsers.check_minimal_indent / "") * fencedline(parsers.backtick))^0)
              * ((parsers.check_minimal_indent / "") * fencetail(parsers.backtick) + parsers.succeed)
 
       local infostring_with_attributes
@@ -26889,7 +26942,7 @@ M.extensions.fenced_code = function(blank_before_code_fence,
                             * Ct(parsers.attributes))
 
       local FencedCode
-               = (TildeFencedCode + BacktickFencedCode)
+               = ((TildeFencedCode + BacktickFencedCode)
                / function(infostring, code)
                    local expanded_code = self.expandtabs(code)
 
@@ -26910,7 +26963,8 @@ M.extensions.fenced_code = function(blank_before_code_fence,
                      end
                    end
                    return writer.fencedCode(expanded_code, infostring, attr)
-                 end
+                 end)
+               * parsers.leave_trail
 
       self.insert_pattern("Block after Verbatim",
                           FencedCode, "FencedCode")
@@ -27284,6 +27338,7 @@ M.extensions.link_attributes = function()
                                     * ( parsers.spnl
                                       * Ct(parsers.attributes))^-1
                                     * parsers.optionalspace * (parsers.newline + parsers.eof)
+                                    * parsers.leave_trail
 
       local ReferenceWithAttributes = define_reference_parser
                                     / self.register_link
