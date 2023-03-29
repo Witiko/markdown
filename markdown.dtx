@@ -24511,23 +24511,15 @@ function M.reader.new(writer, options)
 % \end{markdown}
 %  \begin{macrocode}
   local function process_starter_spacing(indent, spacing, minimum, left_strip_length)
-
-    if (left_strip_length == nil) then
-      left_strip_length = 0
-    end
+    left_strip_length = left_strip_length or 0
 
     local count = 0
     local tab_value = 4 - (indent) % 4
 
-    local code_started = false
-    local code_start = ""
-
-    local minimum_found = false
-    local minimum_remainder = ""
+    local code_started, minimum_found = false, false
+    local code_start, minimum_remainder = "", ""
 
     local left_total_stripped = 0
-
-    local raw_full_remainder = ""
 
     if spacing ~= nil then
       for i = 1, #spacing do
@@ -24536,8 +24528,7 @@ function M.reader.new(writer, options)
         if character == "\t" then
           count = count + tab_value
           tab_value = 4
-        end
-        if character == " " then
+        elseif character == " " then
           count = count + 1
           tab_value = 4 - (1 - tab_value) % 4
         end
@@ -24547,26 +24538,20 @@ function M.reader.new(writer, options)
           count = count - possible_to_strip
           left_strip_length = left_strip_length - possible_to_strip
           left_total_stripped = left_total_stripped + possible_to_strip
-        else
-          raw_full_remainder = raw_full_remainder .. character
         end
 
         if (minimum_found) then
           minimum_remainder = minimum_remainder .. character
-        else
-          if (count >= minimum) then
-            minimum_found = true
-            minimum_remainder = minimum_remainder .. string.rep(" ", count - minimum)
-          end
+        elseif (count >= minimum) then
+          minimum_found = true
+          minimum_remainder = minimum_remainder .. string.rep(" ", count - minimum)
         end
         
         if (code_started) then
           code_start = code_start .. character
-        else
-          if (count >= minimum + 4) then
-            code_started = true
-            code_start = code_start .. string.rep(" ", count - (minimum + 4))
-          end
+        elseif (count >= minimum + 4) then
+          code_started = true
+          code_start = code_start .. string.rep(" ", count - (minimum + 4))
         end
       end
     end
@@ -24583,7 +24568,6 @@ function M.reader.new(writer, options)
       is_code = code_started,
       remainder = remainder,
       left_total_stripped = left_total_stripped,
-      raw_full_remainder = raw_full_remainder,
       is_minimum = is_minimum,
       minimum_remainder = minimum_remainder
     }
@@ -24658,11 +24642,9 @@ function M.reader.new(writer, options)
 
     local total_indent_level = preceding_indentation + last_trail_length + delimiter_length
 
-    local sp
+    local sp = {}
     if not is_blank then
       sp = process_starter_spacing(total_indent_level, raw_new_trail, 0, 1)
-    else
-      sp = {}
     end
 
     local del_trail_length = sp.left_total_stripped
@@ -24675,9 +24657,8 @@ function M.reader.new(writer, options)
     local indent_length = last_trail_length + delimiter_length + del_trail_length
     local new_indent_info = {name=indent_type, length=indent_length}
 
-    local indent_table = update_indent_table(indent_table, new_indent_info, true)
-    local new_trail = {is_code=sp.is_code, remainder=sp.remainder}
-    indent_table = add_trail(indent_table, new_trail)
+    indent_table = update_indent_table(indent_table, new_indent_info, true)
+    indent_table = add_trail(indent_table, {is_code=sp.is_code, remainder=sp.remainder})
 
     return true, indent_table
   end
@@ -24692,13 +24673,12 @@ function M.reader.new(writer, options)
 % \end{markdown}
 %  \begin{macrocode}
   local function decode_pattern(name)
+    local delimeter = parsers.succeed
     if name == "bq" then
-      return C(parsers.spacechar^0) * C(parsers.more) * C(parsers.spacechar^0) * Cp()
+      delimeter = parsers.more
     end
-    if name == "li" then
-      return C(parsers.spacechar^0) * Cc("") * Cc("") * Cp()
-    end
-    return parsers.fail
+
+    return C(parsers.optionalspace) * C(delimeter) * C(parsers.optionalspace) * Cp()
   end
 
 %  \end{macrocode}
@@ -24743,7 +24723,7 @@ function M.reader.new(writer, options)
     local new_index = index
 
     local preceding_indentation = 0
-    local current_trail = {}
+    local current_trail
 
     if not has_indents(indent_table) then
       return true, new_index, current_trail
@@ -24764,16 +24744,18 @@ function M.reader.new(writer, options)
       local raw_last_trail = new_indent_info[1]
       local delimiter = new_indent_info[2]
       local raw_new_trail = new_indent_info[3]
-      local possible_next_index = new_indent_info[4]
+      local next_index = new_indent_info[4]
+
+      local space_only = delimiter == ""
 
       -- check previous trail
-      if delimiter ~= "" and current_trail == nil then
+      if not space_only and current_trail == nil then
         local sp = process_starter_spacing(0, raw_last_trail, 0, 0)
         current_trail = {is_code = sp.is_code, remainder = sp.remainder}
       end
 
       if current_trail ~= nil then
-        if delimiter ~= "" and current_trail.is_code then
+        if not space_only and current_trail.is_code then
           return is_optional, new_index, current_trail
         end
         if current_trail.internal_remainder ~= nil then
@@ -24784,7 +24766,7 @@ function M.reader.new(writer, options)
       local raw_last_trail_length = 0
       local delimiter_length = 0
 
-      if delimiter ~= "" then
+      if not space_only then
         delimiter_length = #delimiter
         raw_last_trail_length = #raw_last_trail
       end
@@ -24795,7 +24777,7 @@ function M.reader.new(writer, options)
       local minimum = 0
       local left_strip_length = 0
 
-      if delimiter ~= "" then
+      if not space_only then
         spacing_to_process = raw_new_trail
         left_strip_length = 1
       else
@@ -24805,24 +24787,21 @@ function M.reader.new(writer, options)
 
       local sp = process_starter_spacing(total_indent_level, spacing_to_process, minimum, left_strip_length)
 
-      if delimiter == "" and not sp.is_minimum then
+      if space_only and not sp.is_minimum then
         return is_optional or (blank_end and blank_starter <= i), new_index, current_trail
       end
 
       local indent_length = raw_last_trail_length + delimiter_length + sp.left_total_stripped
 
       -- update info for the next pattern
-      local next_trail = {}
-      if delimiter ~= "" then
+      if not space_only then
         preceding_indentation = preceding_indentation + indent_length
-        next_trail = {is_code=sp.is_code, remainder=sp.remainder, internal_remainder=sp.minimum_remainder}
       else
         preceding_indentation = preceding_indentation + value.length
-        next_trail = {is_code=sp.is_code, remainder=sp.remainder, internal_remainder=sp.minimum_remainder}
       end
 
-      current_trail = next_trail
-      new_index = possible_next_index
+      current_trail = {is_code=sp.is_code, remainder=sp.remainder, internal_remainder=sp.minimum_remainder}
+      new_index = next_index
     end
 
     return true, new_index, current_trail
