@@ -24411,6 +24411,17 @@ function M.reader.new(writer, options)
 %  \end{macrocode}
 % \begin{markdown}
 %
+% Check if indent table `indent_table` has any indents.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  function has_indents(indent_table)
+    return indent_table ~= nil and indent_table.indents ~= nil and next(indent_table.indents) ~= nil
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
 % Add a trail `trail_info` to the indent table `indent_table.
 %
 % \end{markdown}
@@ -24455,7 +24466,7 @@ function M.reader.new(writer, options)
   local function update_indent_table(indent_table, new_indent, add)
     indent_table = remove_trail(indent_table)
 
-    if indent_table.indents == nil then
+    if not has_indents(indent_table) then
       indent_table.indents = {}
     end
 
@@ -24587,7 +24598,7 @@ function M.reader.new(writer, options)
 %  \begin{macrocode}
   local function count_indent_tab_level(indent_table)
     local count = 0
-    if indent_table == nil or indent_table.indents == nil then
+    if not has_indents(indent_table) then
       return count
     end
 
@@ -24606,9 +24617,9 @@ function M.reader.new(writer, options)
 % \end{markdown}
 %  \begin{macrocode}
   local function check_trail_joined(s, i, indent_table, spacing, expect_code)
-    local trail = nil
+    local trail
     local is_code = false
-    local remainder = nil
+    local remainder
 
     if has_trail(indent_table) then
       trail = indent_table.trail
@@ -24684,7 +24695,7 @@ function M.reader.new(writer, options)
 
     local total_indent_level = preceding_indentation + last_trail_length + delimiter_length
 
-    local sp = nil
+    local sp
     if not is_blank then
       sp = process_starter_spacing(total_indent_level, raw_new_trail, 0, 1)
     else
@@ -24736,7 +24747,12 @@ function M.reader.new(writer, options)
 % \end{markdown}
 %  \begin{macrocode}
   local function left_blank_starter(indent_table)
-    local blank_starter_index = nil
+    local blank_starter_index
+
+    if not has_indents(indent_table) then
+      return
+    end
+
     for i = #indent_table.indents,1,-1 do
       local value = indent_table.indents[i]
       if value.name == "li" then
@@ -24766,7 +24782,7 @@ function M.reader.new(writer, options)
     local preceding_indentation = 0
     local current_trail = {}
 
-    if indent_table.indents == nil then
+    if not has_indents(indent_table) then
       return true, new_index, current_trail
     end
 
@@ -24869,7 +24885,7 @@ function M.reader.new(writer, options)
 % \end{markdown}
 %  \begin{macrocode}
   local function start_traverse_indent(s, i, indent_table, is_optional)
-    if indent_table == nil or indent_table.indents == nil then
+    if not has_indents(indent_table) then
       return true
     end
 
@@ -24891,7 +24907,7 @@ function M.reader.new(writer, options)
 % \end{markdown}
 %  \begin{macrocode}
   local function start_blank_indent(s, i, indent_table, is_optional)
-    if indent_table == nil or indent_table.indents == nil then
+    if not has_indents(indent_table) then
       return true
     end
 
@@ -24958,7 +24974,7 @@ function M.reader.new(writer, options)
   parsers.indented_content = function(breakable)
     local blank = parsers.minimally_indented_blank
     if breakable then
-      blank = blank + (parsers.blankline / "")
+      blank = blank + parsers.check_optional_indent * (parsers.blankline / "")
     end
 
     return  Ct( (V("Reference") + (parsers.blankline / ""))
@@ -25016,6 +25032,7 @@ function M.reader.new(writer, options)
                   + parsers.bullet(parsers.plus)
                   + parsers.enumerator(parsers.period)
                   + parsers.enumerator(parsers.rparent)
+
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -25025,8 +25042,8 @@ function M.reader.new(writer, options)
 % \end{markdown}
 %  \begin{macrocode}
   parsers.blockquote_body = add_indent(parsers.blockquote_opening_condition, "bq")
-                            * parsers.indented_content(false)
-                            * remove_indent("bq")
+                          * parsers.indented_content(false)
+                          * remove_indent("bq")
 
   if not options.breakableBlockquotes then
     parsers.blockquote_body = add_indent(parsers.blockquote_opening_condition, "bq")
@@ -26861,7 +26878,7 @@ M.extensions.fenced_code = function(blank_before_code_fence,
       local fenceindent
 
       local function get_last_indent_name(indent_table)
-        if indent_table ~= nil and indent_table.indents ~= nil then
+        if has_indents(indent_table) then
           return indent_table.indents[#indent_table.indents].name
         end
         return
