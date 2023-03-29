@@ -24611,43 +24611,6 @@ function M.reader.new(writer, options)
 %  \end{macrocode}
 % \begin{markdown}
 %
-% Check if the current trail of the `indent_table` would produce code if `expect_code` is true.
-% Otherwise check if it would not. If there is no trail, use the current spacing `spacing`. 
-%
-% \end{markdown}
-%  \begin{macrocode}
-  local function check_trail_joined(s, i, indent_table, spacing, expect_code)
-    local trail
-    local is_code = false
-    local remainder
-
-    if has_trail(indent_table) then
-      trail = indent_table.trail
-      is_code = trail.is_code
-      remainder = trail.remainder
-    else
-      local sp = process_starter_spacing(0, spacing, 0, 0)
-      is_code = sp.is_code
-      remainder = sp.remainder
-    end
-
-    if expect_code then
-      if is_code then
-        return true, remainder
-      end
-      return false
-    end
-
-    if is_code then
-      return false
-    end
-
-    return true, remainder
-  end
-
-%  \end{macrocode}
-% \begin{markdown}
-%
 % Count the total width of a delimiter `delimiter`.
 %
 % \end{markdown}
@@ -24795,10 +24758,7 @@ function M.reader.new(writer, options)
       -- match decoded pattern
       local new_indent_info = lpeg.match(Ct(pattern), s, new_index)
       if new_indent_info == nil then
-        if is_optional then
-          return true, new_index, current_trail
-        end
-        return false
+        return is_optional, new_index, current_trail
       end
 
       local raw_last_trail = new_indent_info[1]
@@ -24814,10 +24774,7 @@ function M.reader.new(writer, options)
 
       if current_trail ~= nil then
         if delimiter ~= "" and current_trail.is_code then
-          if is_optional then
-            return true, new_index, current_trail
-          end
-          return false
+          return is_optional, new_index, current_trail
         end
         if current_trail.internal_remainder ~= nil then
           raw_last_trail = current_trail.internal_remainder
@@ -24849,12 +24806,7 @@ function M.reader.new(writer, options)
       local sp = process_starter_spacing(total_indent_level, spacing_to_process, minimum, left_strip_length)
 
       if delimiter == "" and not sp.is_minimum then
-        if is_optional 
-          or (blank_end and blank_starter <= i) 
-          then
-            return true, new_index, current_trail
-        end
-        return false
+        return is_optional or (blank_end and blank_starter <= i), new_index, current_trail
       end
 
       local indent_length = raw_last_trail_length + delimiter_length + sp.left_total_stripped
@@ -24918,6 +24870,32 @@ function M.reader.new(writer, options)
       return new_index, indent_table
     end
     return false
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Check if the current trail of the `indent_table` would produce code if it is expected `expect_code` 
+% or it would not if it is not. If there is no trail, process and check the current spacing `spacing`. 
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function check_trail_joined(s, i, indent_table, spacing, expect_code)
+    local is_code = false
+    local remainder
+
+    if has_trail(indent_table) then
+      local trail = indent_table.trail
+      is_code = trail.is_code
+      remainder = trail.remainder
+    else
+      local sp = process_starter_spacing(0, spacing, 0, 0)
+      is_code = sp.is_code
+      remainder = sp.remainder
+    end
+
+    local result = (expect_code and is_code) or (not expect_code and not is_code)
+    return result, remainder
   end
 
 %  \end{macrocode}
