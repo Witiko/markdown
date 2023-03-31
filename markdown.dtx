@@ -11896,8 +11896,10 @@ filename of a file contaning the code block contents.
 
 The \mdef{markdownRendererInputFencedCode} macro represents a fenced code
 block. This macro will only be produced, when the \Opt{fencedCode} option is
-enabled. The macro receives two arguments that correspond to the filename of
-a file contaning the code block contents and to the code fence infostring.
+enabled. The macro receives three arguments that correspond to the filename of
+a file contaning the code block contents, the fully escaped code fence info string 
+that can be directly typeset, and the raw code fence info string that can be used 
+outside typesetting.
 
 % \end{markdown}
 %
@@ -11998,7 +12000,7 @@ following text except for the filename, which may differ:
 \prop_gput:Nnn
   \g_@@_renderer_arities_prop
   { inputFencedCode }
-  { 2 }
+  { 3 }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par
@@ -22787,6 +22789,7 @@ function M.writer.new(options)
 % - \luamdef{writer->math} transforms a math span.
 % - \luamdef{writer->identifier} transforms an input programmatic identifier.
 % - \luamdef{writer->uri} transforms an input \acro{uri}.
+% - \luamdef{writer->infostring} transforms a fence code info string.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -22796,10 +22799,12 @@ function M.writer.new(options)
     self.identifier = escape_minimal
     self.string = escape_minimal
     self.uri = escape_minimal
+    self.infostring = escape_minimal
   else
     self.identifier = escape_programmatic_text
     self.string = escape_typographic_text
     self.uri = escape_programmatic_text
+    self.infostring = escape_programmatic_text
   end
 %    \end{macrocode}
 % \par
@@ -26007,7 +26012,7 @@ M.extensions.fenced_code = function(blank_before_code_fence,
         end
         local name = util.cache_verbatim(options.cacheDir, s)
         table.insert(buf, {"\\markdownRendererInputFencedCode{",
-                           name,"}{",self.string(i),"}"})
+                           name,"}{",self.string(i),"}{",self.infostring(i),"}"})
         if attr ~= nil then
           table.insert(buf, "\\markdownRendererFencedCodeAttributeContextEnd")
         end
@@ -27810,7 +27815,7 @@ end
 \def\markdownRendererContentBlockOnlineImagePrototype{%
   \markdownRendererImage}%
 \def\markdownRendererContentBlockCodePrototype#1#2#3#4#5{%
-  \markdownRendererInputFencedCode{#3}{#2}}%
+  \markdownRendererInputFencedCode{#3}{#2}{#2}}%
 \def\markdownRendererImagePrototype#1#2#3#4{#2}%
 \def\markdownRendererUlBeginPrototype{}%
 \def\markdownRendererUlBeginTightPrototype{}%
@@ -27848,7 +27853,7 @@ end
 \def\markdownRendererLineBlockEndPrototype{\endgroup}%
 \def\markdownRendererInputVerbatimPrototype#1{%
   \par{\tt\input#1\relax{}}\par}%
-\def\markdownRendererInputFencedCodePrototype#1#2{%
+\def\markdownRendererInputFencedCodePrototype#1#2#3{%
   \markdownRendererInputVerbatim{#1}}%
 \def\markdownRendererHeadingOnePrototype#1{#1}%
 \def\markdownRendererHeadingTwoPrototype#1{#1}%
@@ -29085,7 +29090,7 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\renewcommand\markdownRendererInputFencedCodePrototype[2]{%
+\renewcommand\markdownRendererInputFencedCodePrototype[3]{%
   \def\next##1 ##2\relax{%
     \ifthenelse{\equal{##1}{dot}}{%
       \markdownIfOption{frozenCache}{}{%
@@ -29112,7 +29117,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
     }{%
-      \markdown@witiko@dot@oldRendererInputFencedCodePrototype{#1}{#2}%
+      \markdown@witiko@dot@oldRendererInputFencedCodePrototype{#1}{#2}{#3}%
     }%
   }%
   \next#2 \relax}%
@@ -29726,7 +29731,7 @@ end
 \RequirePackage{ltxcmds}
 \ExplSyntaxOn
 \cs_gset:Npn
-  \markdownRendererInputFencedCodePrototype#1#2
+  \markdownRendererInputFencedCodePrototype#1#2#3
   {
     \tl_if_empty:nTF
       { #2 }
@@ -29786,7 +29791,7 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-              { \markdownRendererInputFencedCode{#1}{} }
+              { \markdownRendererInputFencedCode{#1}{}{} }
           }
       }
   }
@@ -30761,7 +30766,7 @@ end
 %  \begin{macrocode}
 \ExplSyntaxOn
 \cs_gset:Npn
-  \markdownRendererInputFencedCodePrototype#1#2
+  \markdownRendererInputFencedCodePrototype#1#2#3
   {
     \tl_if_empty:nTF
       { #2 }
