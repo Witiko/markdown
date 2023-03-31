@@ -24400,7 +24400,7 @@ function M.reader.new(writer, options)
 %  \end{macrocode}
 % \begin{markdown}
 %
-% Check if a trail exists and is non-empty in the indent table `indent_table.
+% Check if a trail exists and is non-empty in the indent table `indent_table`.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -24422,7 +24422,7 @@ function M.reader.new(writer, options)
 %  \end{macrocode}
 % \begin{markdown}
 %
-% Add a trail `trail_info` to the indent table `indent_table.
+% Add a trail `trail_info` to the indent table `indent_table`.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -24434,7 +24434,7 @@ function M.reader.new(writer, options)
 %  \end{macrocode}
 % \begin{markdown}
 %
-% Remove a trail `trail_info` from the indent table `indent_table.
+% Remove a trail `trail_info` from the indent table `indent_table`.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -24446,7 +24446,7 @@ function M.reader.new(writer, options)
 %  \end{macrocode}
 % \begin{markdown}
 %
-% Leave the current trail of the indent table `indent_table
+% Leave the current trail of the indent table `indent_table`
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -25409,7 +25409,8 @@ end
      parsers.tickbox = parsers.fail
   end
 
-  parsers.list_item_tightness_condition = -#(parsers.conditionally_indented_blank^0 * parsers.minimally_indented_ref_or_block)
+  parsers.list_item_tightness_condition = -#( parsers.conditionally_indented_blank^0
+                                            * parsers.minimally_indented_ref_or_block)
                                         * remove_indent("li")
                                         + remove_indent("li")
                                         * parsers.fail
