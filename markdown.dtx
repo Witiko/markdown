@@ -27714,8 +27714,11 @@ if options.cacheDir and not lfs.isdir(options.cacheDir) then
   assert(lfs.mkdir(options["cacheDir"]))
 end
 
+local should_initialize = package.loaded.kpse == nil
 local ran_ok, kpse = pcall(require, "kpse")
-if ran_ok then kpse.set_program_name("luatex") end
+if ran_ok and should_initialize then
+  kpse.set_program_name("luatex")
+end
 local md = require("markdown")
 %    \end{macrocode}
 % \begin{markdown}
