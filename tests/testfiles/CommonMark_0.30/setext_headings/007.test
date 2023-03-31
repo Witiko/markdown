@@ -9,5 +9,9 @@ Foo
    ----      
 >>>
 documentBegin
+BEGIN section
+BEGIN section
 headingTwo: Foo
+END section
+END section
 documentEnd

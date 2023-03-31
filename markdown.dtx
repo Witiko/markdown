@@ -23943,9 +23943,12 @@ parsers.auto_link_relative_reference
 %  \begin{macrocode}
 parsers.lineof = function(c)
     return (parsers.leader * (P(c) * parsers.optionalspace)^3
-           * (parsers.newline * parsers.blankline^1
-             + parsers.newline^-1 * parsers.eof))
+           * (parsers.newline + parsers.eof))
 end
+
+parsers.thematic_break_lines = parsers.lineof(parsers.asterisk)
+                             + parsers.lineof(parsers.dash)
+                             + parsers.lineof(parsers.underscore)
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -23959,7 +23962,8 @@ parsers.heading_start = #parsers.hash * C(parsers.hash^-6)
                       * -parsers.hash / length
 
 -- parse setext header ending and return level
-parsers.heading_level = parsers.equal^1 * Cc(1) + parsers.dash^1 * Cc(2)
+parsers.heading_level = parsers.nonindentspace * parsers.equal^1 * parsers.optionalspace * #parsers.newline * Cc(1) 
+                      + parsers.nonindentspace * parsers.dash^1 * parsers.optionalspace * #parsers.newline * Cc(2)
 
 local function strip_atx_end(s)
   return s:gsub("%s+#*%s*\n$","")
@@ -24405,6 +24409,7 @@ function M.reader.new(writer, options)
                      + parsers.tightblocksep  -- nested list
                      + parsers.eof       -- end of document
                      + parsers.bqstart
+                     + parsers.thematic_break_lines
                      + parsers.headerstart
 
   parsers.Endline   = parsers.newline
@@ -24568,10 +24573,8 @@ end
                        / self.parser_functions.parse_blocks_nested
                        / writer.blockquote
 
-  parsers.ThematicBreak = ( parsers.lineof(parsers.asterisk)
-                          + parsers.lineof(parsers.dash)
-                          + parsers.lineof(parsers.underscore)
-                          ) / writer.thematic_break
+  parsers.ThematicBreak = parsers.thematic_break_lines
+                        / writer.thematic_break
 
   parsers.Reference    = parsers.define_reference_parser
                        * parsers.blankline^1
@@ -24695,12 +24698,24 @@ end
                      * Cb("level")
                      / writer.heading
 
-  parsers.SetextHeading = #(parsers.line * S("=-"))
-                        * Ct(parsers.linechar^1
-                            / self.parser_functions.parse_inlines)
-                        * parsers.newline
+  local function remove_enclosing_whitespaces(o)
+    local heading_content = ""
+    for line in o:gmatch("([^\n]*)\n?") do
+      heading_content = heading_content .. (line:gsub("^%s*(.-)%s*$", "%1\n"))
+    end
+    return heading_content
+  end
+
+  parsers.heading_line  = parsers.nonemptyline 
+                        - parsers.thematic_break_lines
+
+  parsers.heading_text = parsers.heading_line
+                       * (parsers.heading_line - parsers.heading_level)^0
+
+  parsers.SetextHeading = #(parsers.heading_text * parsers.heading_level)
+                        * Ct(parsers.heading_text / remove_enclosing_whitespaces
+                            / self.parser_functions.parse_inlines )
                         * parsers.heading_level
-                        * parsers.optionalspace
                         * parsers.newline
                         / writer.heading
 

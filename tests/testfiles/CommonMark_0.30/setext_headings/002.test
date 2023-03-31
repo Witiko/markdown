@@ -11,5 +11,7 @@ baz*
 ====
 >>>
 documentBegin
+BEGIN section
 headingOne: Foo (emphasis: bar baz)
+END section
 documentEnd
