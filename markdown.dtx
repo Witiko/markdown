@@ -3666,7 +3666,7 @@ defaultOptions.blankBeforeHeading = false
 %
 :    true
 
-     :  Enable the Pandoc bracketed spans extension:
+     :  Enable the Pandoc [bracketed span syntax extension][pandoc-bracketed-spans]:
 
         ``` md
         [This is *some text*]{.class key=val}
@@ -3674,7 +3674,9 @@ defaultOptions.blankBeforeHeading = false
 
 :    false
 
-     :  Disable the Pandoc bracketed spans extension:
+     :  Disable the Pandoc bracketed span syntax extension.
+
+ [pandoc-bracketed-spans]: https://pandoc.org/MANUAL.html#extension-bracketed_spans
 
 % \end{markdown}
 % \iffalse
@@ -4078,7 +4080,7 @@ defaultOptions.citationNbsps = true
 %
 :    true
 
-     :  Enable the Pandoc citation syntax extension:
+     :  Enable the Pandoc [citation syntax extension][pandoc-citations]:
 
         ``` md
         Here is a simple parenthetical citation [@doe99] and here
@@ -4099,6 +4101,8 @@ defaultOptions.citationNbsps = true
 :    false
 
      :  Disable the Pandoc citation syntax extension.
+
+ [pandoc-citations]: https://pandoc.org/MANUAL.html#extension-citations
 
 % \end{markdown}
 % \iffalse
@@ -5237,7 +5241,7 @@ defaultOptions.extensions = {}
 %
 :    true
 
-     :  Enable the Pandoc fancy list extension:
+     :  Enable the Pandoc [fancy list syntax extension][pandoc-fancy-lists]:
 
         ``` md
         a) first item
@@ -5247,7 +5251,9 @@ defaultOptions.extensions = {}
 
 :    false
 
-     :  Disable the Pandoc fancy list extension.
+     :  Disable the Pandoc fancy list syntax extension.
+
+ [pandoc-fancy-lists]: https://pandoc.org/MANUAL.html#org-fancy-lists
 
 % \end{markdown}
 % \iffalse
@@ -5505,7 +5511,7 @@ defaultOptions.fencedCode = false
 %
 :    true
 
-     :  Enable the Pandoc fenced code attribute extension:
+     :  Enable the Pandoc [fenced code attribute syntax extension][pandoc-fenced-code-attributes]:
 
         ```````` md
         ~~~~ {#mycode .haskell .numberLines startFrom=100}
@@ -5517,7 +5523,9 @@ defaultOptions.fencedCode = false
 
 :    false
 
-     :  Disable the Pandoc fenced code attribute extension.
+     :  Disable the Pandoc fenced code attribute syntax extension.
+
+ [pandoc-fenced-code-attributes]: https://pandoc.org/MANUAL.html#extension-fenced_code_attributes
 
 % \end{markdown}
 % \iffalse
@@ -5603,7 +5611,7 @@ defaultOptions.fencedCodeAttributes = false
 %
 :    true
 
-     :  Enable the Pandoc fenced divs extension:
+     :  Enable the Pandoc [fenced div syntax extension][pandoc-fenced-divs]:
 
         ``` md
         ::::: {#special .sidebar}
@@ -5615,7 +5623,9 @@ defaultOptions.fencedCodeAttributes = false
 
 :    false
 
-     :  Disable the Pandoc fenced divs extension:
+     :  Disable the Pandoc fenced div syntax extension.
+
+ [pandoc-fenced-divs]: https://pandoc.org/MANUAL.html#extension-fenced_divs
 
 % \end{markdown}
 % \iffalse
@@ -6663,7 +6673,7 @@ defaultOptions.hybrid = false
 %
 :    true
 
-     :  Enable the Pandoc inline code span attribute extension:
+     :  Enable the Pandoc [inline code span attribute extension][pandoc-inline-code-attributes]:
 
         ``` md
         `<$>`{.haskell}
@@ -6672,6 +6682,8 @@ defaultOptions.hybrid = false
 :    false
 
      :  Enable the Pandoc inline code span attribute extension.
+
+ [pandoc-inline-code-attributes]: https://pandoc.org/MANUAL.html#extension-inline_code_attributes
 
 % \end{markdown}
 % \iffalse
@@ -6757,7 +6769,7 @@ defaultOptions.inlineCodeAttributes = false
 %
 :    true
 
-     :  Enable the Pandoc inline note syntax extension:
+     :  Enable the Pandoc [inline note syntax extension][pandoc-inline-notes]:
 
         ``` md
         Here is an inline note.^[Inlines notes are easier to
@@ -6768,6 +6780,8 @@ defaultOptions.inlineCodeAttributes = false
 :    false
 
      :  Disable the Pandoc inline note syntax extension.
+
+ [pandoc-inline-notes]: https://pandoc.org/MANUAL.html#extension-inline_notes
 
 % \end{markdown}
 % \iffalse
@@ -6867,7 +6881,8 @@ defaultOptions.inlineNotes = false
 %
 :    true
 
-     :  Enable the Pandoc `yaml_metadata_block` syntax extension for entering
+     :  Enable the Pandoc [\acro{yaml} metadata block syntax
+        extension][pandoc-yaml-metadata-block] for entering
         metadata in \acro{yaml}:
 
         ~~~~~~ yaml
@@ -6886,8 +6901,10 @@ defaultOptions.inlineNotes = false
 
 :    false
 
-     :  Disable the Pandoc `yaml_metadata_block` syntax extension for entering
-        metadata in \acro{yaml}.
+     :  Disable the Pandoc \acro{yaml} metadata block syntax extension
+        for entering metadata in \acro{yaml}.
+
+ [pandoc-yaml-metadata-block]: https://pandoc.org/MANUAL.html#extension-yaml_metadata_block
 
 % \end{markdown}
 % \iffalse
@@ -7031,7 +7048,8 @@ defaultOptions.jekyllData = false
 %
 :    true
 
-     :  Enable the Pandoc link and image attribute extension:
+     :  Enable the Pandoc [link and image attribute syntax
+        extension][pandoc-link-attributes]:
 
         ``` md
         An inline ![image](foo.jpg){#id .class width=30 height=20px}
@@ -7042,7 +7060,9 @@ defaultOptions.jekyllData = false
 
 :    false
 
-     :  Enable the Pandoc link and image attribute extension.
+     :  Enable the Pandoc link and image attribute syntax extension.
+
+ [pandoc-link-attributes]: https://pandoc.org/MANUAL.html#extension-link_attributes
 
 % \end{markdown}
 % \iffalse
@@ -7125,7 +7145,8 @@ defaultOptions.linkAttributes = false
 %
 :    true
 
-     :  Enable the Pandoc line block syntax extension:
+     :  Enable the Pandoc [line block syntax
+        extension][pandoc-line-blocks]:
 
         ``` md
         | this is a line block that
@@ -7138,6 +7159,8 @@ defaultOptions.linkAttributes = false
 :    false
 
      :  Disable the Pandoc line block syntax extension.
+
+ [pandoc-line-blocks]: https://pandoc.org/MANUAL.html#extension-line_blocks
 
 % \end{markdown}
 % \iffalse
@@ -7257,7 +7280,7 @@ defaultOptions.lineBlocks = false
 %
 :    true
 
-     :  Enable the Pandoc note syntax extension:
+     :  Enable the Pandoc [note syntax extension][pandoc-footnotes]:
 
         ``` md
         Here is a note reference,[^1] and another.[^longnote]
@@ -7282,6 +7305,8 @@ defaultOptions.lineBlocks = false
 :    false
 
      :  Disable the Pandoc note syntax extension.
+
+ [pandoc-footnotes]: https://pandoc.org/MANUAL.html#extension-footnotes
 
 % \end{markdown}
 % \iffalse
@@ -7586,13 +7611,15 @@ defaultOptions.preserveTabs = false
 %
 :    true
 
-     :  Enable the Pandoc raw attribute syntax extension:
+     :  Enable the Pandoc [raw attribute syntax
+        extension][pandoc-raw-attribute]:
 
         ``` md
         `$H_2 O$`{=tex} is a liquid.
         ```
 
-        To enable raw blocks, the \Opt{fencedCode} option must also be enabled:
+        To enable raw blocks, the \Opt{fencedCode} option must also
+        be enabled:
 
         ~~~~~~~~ md
         Here is a mathematical formula:
@@ -7614,6 +7641,8 @@ defaultOptions.preserveTabs = false
 :    false
 
      :  Disable the Pandoc raw attribute syntax extension.
+
+ [pandoc-raw-attribute]: https://pandoc.org/MANUAL.html#extension-raw_attribute
 
 % \end{markdown}
 % \iffalse
@@ -8467,7 +8496,8 @@ defaultOptions.startNumber = true
 %
 :    true
 
-     :  Enable the Pandoc strike-through syntax extension:
+     :  Enable the Pandoc [strike-through syntax
+        extension][pandoc-strikeout]:
 
         ``` md
         This ~~is deleted text.~~
@@ -8476,6 +8506,8 @@ defaultOptions.startNumber = true
 :    false
 
      :  Disable the Pandoc strike-through syntax extension.
+
+ [pandoc-strikeout]: https://pandoc.org/MANUAL.html#extension-strikeout
 
 % \end{markdown}
 % \iffalse
@@ -8699,7 +8731,8 @@ defaultOptions.stripIndent = false
 %
 :    true
 
-     :  Enable the Pandoc subscript syntax extension:
+     :  Enable the Pandoc [subscript syntax
+        extension][pandoc-subscript]:
 
         ``` md
         H~2~O is a liquid.
@@ -8708,6 +8741,8 @@ defaultOptions.stripIndent = false
 :    false
 
      :  Disable the Pandoc subscript syntax extension.
+
+ [pandoc-subscript]: https://pandoc.org/MANUAL.html#extension-superscript-subscript
 
 % \end{markdown}
 % \iffalse
@@ -8788,7 +8823,8 @@ defaultOptions.subscripts = false
 %
 :    true
 
-     :  Enable the Pandoc superscript syntax extension:
+     :  Enable the Pandoc [superscript syntax
+        extension][pandoc-superscript]:
 
         ``` md
         2^10^ is 1024.
@@ -8797,6 +8833,8 @@ defaultOptions.subscripts = false
 :    false
 
      :  Disable the Pandoc superscript syntax extension.
+
+ [pandoc-superscript]: https://pandoc.org/MANUAL.html#extension-superscript-subscript
 
 % \end{markdown}
 % \iffalse
@@ -8877,7 +8915,8 @@ defaultOptions.superscripts = false
 %
 :    true
 
-     :  Enable the Pandoc `table_captions` syntax extension for
+     :  Enable the Pandoc [table caption syntax
+        extension][pandoc-table-captions] for
 %       pipe tables (see the \Opt{pipeTables} option).
 %       \iffalse
         [pipe tables](#pipe-tables).
@@ -8895,7 +8934,9 @@ defaultOptions.superscripts = false
 
 :    false
 
-     :  Disable the Pandoc `table_captions` syntax extension.
+     :  Disable the Pandoc table caption syntax extension.
+
+ [pandoc-table-captions]: https://pandoc.org/MANUAL.html#extension-table_captions
 
 % \end{markdown}
 % \iffalse
@@ -9004,7 +9045,8 @@ defaultOptions.tableCaptions = false
 %
 :    true
 
-     :  Enable the Pandoc `task_lists` syntax extension:
+     :  Enable the Pandoc [task list syntax
+        extension][pandoc-task-lists]:
 
 
         ``` md
@@ -9015,7 +9057,9 @@ defaultOptions.tableCaptions = false
 
 :    false
 
-     :  Disable the Pandoc `task_lists` syntax extension.
+     :  Disable the Pandoc task list syntax extension.
+
+ [pandoc-task-lists]: https://pandoc.org/MANUAL.html#extension-task_lists
 
 % \end{markdown}
 % \iffalse
@@ -9230,7 +9274,8 @@ defaultOptions.texComments = false
 %
 :    true
 
-     :  Enable the Pandoc `tex_math_dollars` syntax extension:
+     :  Enable the Pandoc [dollar math syntax
+        extension][pandoc-tex-math-dollars]:
 
         ``` md
         inline math: $E=mc^2$
@@ -9240,7 +9285,9 @@ defaultOptions.texComments = false
 
 :    false
 
-     :  Disable the Pandoc `tex_math_dollars` syntax extension.
+     :  Disable the Pandoc dollar math syntax extension.
+
+ [pandoc-tex-math-dollars]: https://pandoc.org/MANUAL.html#extension-tex_math_dollars
 
 % \end{markdown}
 % \iffalse
@@ -9430,7 +9477,8 @@ defaultOptions.texMathDollars = false
 %
 :    true
 
-     :  Enable the Pandoc `tex_math_double_backslash` syntax extension:
+     :  Enable the Pandoc [double backslash math syntax
+        extension][pandoc-tex-math-double-backslash]:
 
         ``` md
         inline math: \\(E=mc^2\\)
@@ -9440,7 +9488,9 @@ defaultOptions.texMathDollars = false
 
 :    false
 
-     :  Disable the Pandoc `tex_math_double_backslash` syntax extension.
+     :  Disable the Pandoc double backslash math syntax extension.
+
+ [pandoc-tex-math-double-backslash]: https://pandoc.org/MANUAL.html#extension-tex_math_double_backslash
 
 % \end{markdown}
 % \iffalse
@@ -9630,7 +9680,8 @@ defaultOptions.texMathDoubleBackslash = false
 %
 :    true
 
-     :  Enable the Pandoc `tex_math_single_backslash` syntax extension:
+     :  Enable the Pandoc [single backslash math syntax
+        extension][pandoc-tex-math-single-backslash]:
 
         ``` md
         inline math: \(E=mc^2\)
@@ -9640,7 +9691,9 @@ defaultOptions.texMathDoubleBackslash = false
 
 :    false
 
-     :  Disable the Pandoc `tex_math_single_backslash` syntax extension.
+     :  Disable the Pandoc single backslash math syntax extension.
+
+ [pandoc-tex-math-single-backslash]: https://pandoc.org/MANUAL.html#extension-tex_math_single_backslash
 
 % \end{markdown}
 % \iffalse
@@ -25236,7 +25289,7 @@ M.extensions = {}
 %#### Bracketed Spans
 %
 % The \luamdef{extensions.bracketed_spans} function implements the Pandoc
-% bracketed spans syntax extension.
+% bracketed span syntax extension.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -25914,7 +25967,7 @@ end
 % When the `allow_attributes` option is `true`, the syntax extension permits
 % attributes following the infostring. When the `allow_raw_blocks` option is
 % `true`, the syntax extension permits the specification of raw blocks using
-% Pandoc's raw attribute syntax extension.
+% the Pandoc raw attribute syntax extension.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -26095,7 +26148,7 @@ end
 %#### Fenced Divs
 %
 % The \luamdef{extensions.fenced_divs} function implements the Pandoc fenced
-% divs syntax extension. When the `blank_before_div_fence` parameter is `true`,
+% div syntax extension. When the `blank_before_div_fence` parameter is `true`,
 % the syntax extension requires a blank line between a paragraph and the
 % following fenced code block.
 %
@@ -26261,7 +26314,7 @@ end
 %#### Header Attributes
 %
 % The \luamdef{extensions.header_attributes} function implements the Pandoc
-% header attributes syntax extension.
+% header attribute syntax extension.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -26326,7 +26379,7 @@ end
 %#### Inline Code Attributes
 %
 % The \luamdef{extensions.inline_code_attributes} function implements the
-% Pandoc inline code attributes syntax extension.
+% Pandoc inline code attribute syntax extension.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -26352,7 +26405,7 @@ end
 %
 %#### Line Blocks
 %
-% The \luamdef{extensions.line_blocks} function implements the Pandoc line blocks
+% The \luamdef{extensions.line_blocks} function implements the Pandoc line block
 % syntax extension.
 %
 % \end{markdown}
@@ -26411,7 +26464,7 @@ end
 %#### Link Attributes
 %
 % The \luamdef{extensions.link_attributes} function implements the Pandoc
-% link attributes syntax extension.
+% link attribute syntax extension.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -26680,7 +26733,7 @@ end
 % The \luamdef{extensions.pipe_table} function implements the \acro{PHP}
 % Markdown table syntax extension (also known as pipe tables in Pandoc). When
 % the `table_captions` parameter is `true`, the function also implements the
-% Pandoc `table_captions` syntax extension for table captions.
+% Pandoc table caption syntax extension for table captions.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -27007,8 +27060,7 @@ end
 %
 %#### Tex Math
 %
-% The \luamdef{extensions.tex_math} function implements the Pandoc
-% `tex_math_dollars`, `tex_math_single_backslash` and `tex_math_double_backslash`
+% The \luamdef{extensions.tex_math} function implements the Pandoc math
 % syntax extensions.
 %
 % \end{markdown}
@@ -27057,7 +27109,7 @@ M.extensions.tex_math = function(tex_math_dollars,
 %    \end{macrocode}
 % \begin{markdown}
 %
-% The following patterns implement the Pandoc `tex_math_dollars` syntax extension.
+% The following patterns implement the Pandoc dollar math syntax extension.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -27089,8 +27141,8 @@ M.extensions.tex_math = function(tex_math_dollars,
 %    \end{macrocode}
 % \begin{markdown}
 %
-% The following patterns implement the Pandoc `tex_math_single_backslash` and
-% `tex_math_double_backslash` syntax extensions.
+% The following patterns implement the Pandoc single and double
+% backslash math syntax extensions.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -27099,7 +27151,8 @@ M.extensions.tex_math = function(tex_math_dollars,
 %    \end{macrocode}
 % \begin{markdown}
 %
-% The following patterns implement the Pandoc `tex_math_double_backslash` syntax extension.
+% The following patterns implement the Pandoc double backslash math
+% syntax extension.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -27132,7 +27185,8 @@ M.extensions.tex_math = function(tex_math_dollars,
 %    \end{macrocode}
 % \begin{markdown}
 %
-% The following patterns implement the Pandoc `tex_math_single_backslash` syntax extension.
+% The following patterns implement the Pandoc single backslash math
+% syntax extension.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -27204,9 +27258,10 @@ end
 %#### YAML Metadata
 %
 % The \luamdef{extensions.jekyll_data} function implements the Pandoc
-% `yaml_metadata_block` syntax extension. When the `expect_jekyll_data`
-% parameter is `true`, then a markdown document may begin directly with
-% \acro{yaml} metadata and may contain nothing but \acro{yaml} metadata.
+% \acro{yaml} metadata block syntax extension. When the
+% `expect_jekyll_data` parameter is `true`, then a markdown document
+% may begin directly with \acro{yaml} metadata and may contain nothing
+% but \acro{yaml} metadata.
 %
 % \end{markdown}
 %  \begin{macrocode}
