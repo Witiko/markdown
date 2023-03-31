@@ -1112,6 +1112,14 @@ local md5 = require("md5")
 %  \begin{macrocode}
 local kpse
 (function()
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If KPathSea has not been loaded before or if we are using the `texlua`
+% interpreter of LUa\TeX, configure KPathSea on top of loading it.
+%
+% \end{markdown}
+%  \begin{macrocode}
   local should_initialize = package.loaded.kpse == nil
                        or tex.initialize ~= nil
   local ran_ok
@@ -27714,7 +27722,14 @@ local lfs = require("lfs")
 if options.cacheDir and not lfs.isdir(options.cacheDir) then
   assert(lfs.mkdir(options["cacheDir"]))
 end
-
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If KPathSea has not been loaded before or if we are using the `texlua`
+% interpreter of LUa\TeX, configure KPathSea on top of loading it.
+%
+% \end{markdown}
+%  \begin{macrocode}
 local should_initialize = package.loaded.kpse == nil
                        or tex.initialize ~= nil
 local ran_ok, kpse = pcall(require, "kpse")
