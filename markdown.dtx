@@ -1115,14 +1115,7 @@ local md5 = require("md5")
 local uni_case
 (function()
   local ran_ok
-  -- TODO: Stop loading kpse module to a global kpse variable
-  -- after https://github.com/latex3/lua-uni-algos/issues/3 has been fixed.
-  -- Remove kpse global also from file .luacheckrc.
-  ran_ok, kpse = pcall(require, "kpse")
-  if ran_ok then
-    kpse.set_program_name("luatex")
-    ran_ok, uni_case = pcall(require, "lua-uni-case")
-  end
+  ran_ok, uni_case = pcall(require, "lua-uni-case")
 %    \end{macrocode}
 % \begin{markdown}
 %
