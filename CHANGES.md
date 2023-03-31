@@ -10,6 +10,11 @@ Development:
 - Add support for attributes on links, images, and inline
   code spans. (jgm#36, jgm#43, #50, #123, #256, #280)
 
+Documentation:
+
+- Unify how Pandoc syntax extensions are named and cited in
+  documentation. (#274, #284)
+
 ## 2.21.0 (2022-02-28)
 
 Development:
