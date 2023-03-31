@@ -22929,55 +22929,71 @@ parsers.html_non_newline_attribute  = parsers.spacechar^1
                                     * parsers.html_attribute_name
                                     * parsers.html_attribute_value_specification^-1
 
+parsers.html_comment_start = P("<!--")
+
+parsers.html_comment_end = P("-->")
+
 parsers.html_comment = parsers.nonindentspace
-                     * P("<!--")
-                     * ((parsers.any - P("-->"))^0
-                       * P("-->")
+                     * parsers.html_comment_start
+                     * ((parsers.any - parsers.html_comment_end)^0
+                       * parsers.html_comment_end
                        * parsers.linechar^0
                        + parsers.html_empty_end_condition)
 
-parsers.html_instruction  = parsers.nonindentspace
-                          * P("<?")
-                          * ((parsers.any - P("?>"))^0
-                            * P("?>")
-                            * parsers.linechar^0
-                            + parsers.html_empty_end_condition)
-
-parsers.html_cdatasection = parsers.nonindentspace
-                          * P("<![CDATA[")
-                          * ((parsers.any - P("]]>"))^0
-                            * P("]]>")
-                            * parsers.linechar^0
-                            + parsers.html_empty_end_condition)
-
-parsers.html_declaration  = parsers.nonindentspace
-                          * P("<!")
-                          * parsers.letter
-                          * ((parsers.any - P(">"))^0
-                            * P(">")
-                            * parsers.linechar^0
-                            + parsers.html_empty_end_condition)
-
-parsers.html_inline_comment = P("<!--")
+parsers.html_inline_comment = parsers.html_comment_start
                             * -P(">") * -P("->")
                             * Cs((parsers.any - P("--"))^0)
-                            * P("-->")
+                            * parsers.html_comment_end
 
-parsers.html_inline_instruction = parsers.nonindentspace
-                                * P("<?")
-                                * (parsers.any - P("?>"))^0
-                                * P("?>")
+parsers.html_cdatasection_start = P("<![CDATA[")
 
+parsers.html_cdatasection_end = P("]]>")
+
+parsers.html_cdatasection = parsers.nonindentspace
+                          * parsers.html_cdatasection_start
+                          * ((parsers.any - parsers.html_cdatasection_end)^0
+                            * parsers.html_cdatasection_end
+                            * parsers.linechar^0
+                            + parsers.html_empty_end_condition)
+                            
 parsers.html_inline_cdatasection  = parsers.nonindentspace
-                                  * P("<![CDATA[")
-                                  * (parsers.any - P("]]>"))^0
-                                  * P("]]>")
+                                  * parsers.html_cdatasection_start
+                                  * (parsers.any - parsers.html_cdatasection_end)^0
+                                  * parsers.html_cdatasection_end
+
+parsers.html_declaration_start = P("<!")
+
+parsers.html_declaration_end = P(">")
+
+parsers.html_declaration  = parsers.nonindentspace
+                          * parsers.html_declaration_start
+                          * parsers.letter
+                          * ((parsers.any - parsers.html_declaration_end)^0
+                            * parsers.html_declaration_end
+                            * parsers.linechar^0
+                            + parsers.html_empty_end_condition)
 
 parsers.html_inline_declaration = parsers.nonindentspace
-                                * P("<!")
+                                * parsers.html_declaration_start
                                 * parsers.letter
-                                * (parsers.any - P(">"))^0
-                                * P(">")
+                                * (parsers.any - parsers.html_declaration_end)^0
+                                * parsers.html_declaration_end
+
+parsers.html_instruction_start = P("<?")
+
+parsers.html_instruction_end = P("?>")
+
+parsers.html_instruction  = parsers.nonindentspace
+                          * parsers.html_instruction_start
+                          * ((parsers.any - parsers.html_instruction_end)^0
+                            * parsers.html_instruction_end
+                            * parsers.linechar^0
+                            + parsers.html_empty_end_condition)
+
+parsers.html_inline_instruction = parsers.nonindentspace
+                                * parsers.html_instruction_start
+                                * (parsers.any - parsers.html_instruction_end)^0
+                                * parsers.html_instruction_end
 
 parsers.html_blankline  = parsers.newline
                         * parsers.optionalspace
