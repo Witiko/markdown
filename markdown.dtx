@@ -1113,6 +1113,7 @@ local md5 = require("md5")
 local kpse
 (function()
   local should_initialize = package.loaded.kpse == nil
+                       or tex.initialize ~= nil
   local ran_ok
   ran_ok, kpse = pcall(require, "kpse")
   if ran_ok and should_initialize then
@@ -27715,6 +27716,7 @@ if options.cacheDir and not lfs.isdir(options.cacheDir) then
 end
 
 local should_initialize = package.loaded.kpse == nil
+                       or tex.initialize ~= nil
 local ran_ok, kpse = pcall(require, "kpse")
 if ran_ok and should_initialize then
   kpse.set_program_name("luatex")
