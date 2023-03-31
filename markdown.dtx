@@ -13327,16 +13327,12 @@ following text:
 %
 % \begin{markdown}
 
-#### HTML Comment Renderers
+#### Inline HTML Comment Renderer
 
 The \mdef{markdownRendererInlineHtmlComment} macro represents the contents of an
 inline \acro{HTML} comment. This macro will only be produced, when the
 \Opt{html} option is enabled. The macro receives a single argument that
 corresponds to the contents of the \acro{HTML} comment.
-
-The \mdef{markdownRendererBlockHtmlCommentBegin} and
-\mdef{markdownRendererBlockHtmlCommentEnd} macros represent the beginning
-and the end of a block \acro{HTML} comment. The macros receive no arguments.
 
 % \end{markdown}
 %
@@ -13353,8 +13349,6 @@ following content:
 \markdownSetup{
   renderers = {
     inlineHtmlComment = {\marginnote{#1}},
-    blockHtmlCommentBegin = {\begin{quote}},
-    blockHtmlCommentEnd = {\end{quote}},
   },
 }
 \begin{document}
@@ -13362,14 +13356,6 @@ following content:
 A useful use of inline HTML comments are side notes.
 <!-- Side notes are displayed in the horizontal margins next to the relevant
 passages, which makes them *easier for the reader to find* than notes. -->
-
-We can render block HTML comments as blockquotes:
-
-<!--
-Here is a block HTML comment with a code example that a programmer might understand:
-
-    foo = bar + baz - 42
--->
 \end{markdown}
 \end{document}
 ```````
@@ -13382,13 +13368,6 @@ A PDF document named `document.pdf` should be produced and contain the
 following body text:
 
 > A useful use of HTML comments are side notes.
->
-> We can render block HTML comments as blockquotes:
-> 
-> > Here is a block HTML comment with a code example that a programmer might
-> > understand:
-> >
-> >     foo = bar + baz - 42
 
 The horizontal margins should contain the following text:
 
@@ -13410,28 +13389,6 @@ The horizontal margins should contain the following text:
   \g_@@_renderer_arities_prop
   { inlineHtmlComment }
   { 1 }
-\ExplSyntaxOff
-\def\markdownRendererBlockHtmlCommentBegin{%
-  \markdownRendererBlockHtmlCommentBeginPrototype}%
-\ExplSyntaxOn
-\seq_gput_right:Nn
-  \g_@@_renderers_seq
-  { blockHtmlCommentBegin }
-\prop_gput:Nnn
-  \g_@@_renderer_arities_prop
-  { blockHtmlCommentBegin }
-  { 0 }
-\ExplSyntaxOff
-\def\markdownRendererBlockHtmlCommentEnd{%
-  \markdownRendererBlockHtmlCommentEndPrototype}%
-\ExplSyntaxOn
-\seq_gput_right:Nn
-  \g_@@_renderers_seq
-  { blockHtmlCommentEnd }
-\prop_gput:Nnn
-  \g_@@_renderer_arities_prop
-  { blockHtmlCommentEnd }
-  { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par
@@ -17486,10 +17443,6 @@ following text:
     \seq_map_function:NN
       \g_@@_renderers_seq
       \@@_plaintex_define_renderer_prototype:n
-    \let\markdownRendererBlockHtmlCommentBeginPrototype=\iffalse
-    \let\markdownRendererBlockHtmlCommentBegin=\iffalse
-    \let\markdownRendererBlockHtmlCommentEndPrototype=\fi
-    \let\markdownRendererBlockHtmlCommentEnd=\fi
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -22088,21 +22041,6 @@ function M.writer.new(options)
 % \par
 % \begin{markdown}
 %
-% Define \luamdef{writer->block_html_comment} as a function that will
-% transform the contents of a block \acro{HTML} comment, to the output
-% format, where `contents` are the contents of the \acro{HTML} comment.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  function self.block_html_comment(contents)
-    if not self.is_writing then return "" end
-    return {"\\markdownRendererBlockHtmlCommentBegin\n",contents,
-            "\n\\markdownRendererBlockHtmlCommentEnd "}
-  end
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
 % Define \luamdef{writer->inline_html_tag} as a function that will
 % transform the contents of an opening, closing, or empty inline \acro{HTML}
 % tag to the output format, where `contents` are the contents of the
@@ -22954,6 +22892,15 @@ parsers.block_keyword =
     parsers.keyword_exact("track") +
     parsers.keyword_exact("ul")
 
+-- end conditions
+parsers.html_blankline_end_condition  = parsers.linechar^0
+                                      * (parsers.newline * parsers.linechar^1)^0
+
+parsers.html_empty_end_condition  = parsers.linechar^0
+                                  * ((parsers.optionalspace * parsers.newline)^0
+                                    * parsers.linechar^1)^0
+
+-- attributes
 parsers.html_attribute_spacing  = parsers.spacechar^1
                                 + parsers.optionalspace
                                 * parsers.newline
@@ -22984,30 +22931,53 @@ parsers.html_non_newline_attribute  = parsers.spacechar^1
 
 parsers.html_comment = parsers.nonindentspace
                      * P("<!--")
-                     * Cs((parsers.any - P("-->"))^0)
-                     * P("-->")
-                     * (parsers.any - parsers.newline)^0
+                     * ((parsers.any - P("-->"))^0
+                       * P("-->")
+                       * parsers.linechar^0
+                       + parsers.html_empty_end_condition)
+
+parsers.html_instruction  = parsers.nonindentspace
+                          * P("<?")
+                          * ((parsers.any - P("?>"))^0
+                            * P("?>")
+                            * parsers.linechar^0
+                            + parsers.html_empty_end_condition)
+
+parsers.html_cdatasection = parsers.nonindentspace
+                          * P("<![CDATA[")
+                          * ((parsers.any - P("]]>"))^0
+                            * P("]]>")
+                            * parsers.linechar^0
+                            + parsers.html_empty_end_condition)
+
+parsers.html_declaration  = parsers.nonindentspace
+                          * P("<!")
+                          * parsers.letter
+                          * ((parsers.any - P(">"))^0
+                            * P(">")
+                            * parsers.linechar^0
+                            + parsers.html_empty_end_condition)
 
 parsers.html_inline_comment = P("<!--")
                             * -P(">") * -P("->")
                             * Cs((parsers.any - P("--"))^0)
                             * P("-->")
 
-parsers.html_instruction  = parsers.nonindentspace
-                          * P("<?")
-                          * (parsers.any - P("?>"))^0
-                          * P("?>")
+parsers.html_inline_instruction = parsers.nonindentspace
+                                * P("<?")
+                                * (parsers.any - P("?>"))^0
+                                * P("?>")
 
-parsers.html_cdatasection = parsers.nonindentspace
-                          * P("<![CDATA[")
-                          * (parsers.any - P("]]>"))^0
-                          * P("]]>")
+parsers.html_inline_cdatasection  = parsers.nonindentspace
+                                  * P("<![CDATA[")
+                                  * (parsers.any - P("]]>"))^0
+                                  * P("]]>")
 
-parsers.html_declaration  = parsers.nonindentspace
-                          * P("<!")
-                          * parsers.letter
-                          * (parsers.any - P(">"))^0
-                          * P(">")
+parsers.html_inline_declaration = parsers.nonindentspace
+                                * P("<!")
+                                * parsers.letter
+                                * (parsers.any - P(">"))^0
+                                * P(">")
 
 parsers.html_blankline  = parsers.newline
                         * parsers.optionalspace
@@ -23099,14 +23069,6 @@ parsers.html_empty_special_tag  = parsers.html_tag_start
 parsers.html_incomplete_blocks  = parsers.html_incomplete_open_tag
                                 + parsers.html_incomplete_open_special_tag
                                 + parsers.html_incomplete_close_tag
-
--- end conditions
-parsers.html_blankline_end_condition  = parsers.linechar^0
-                                      * (parsers.newline * parsers.linechar^1)^0
-
-parsers.html_empty_end_condition  = parsers.linechar^0
-                                  * ((parsers.optionalspace * parsers.newline)^0
-                                    * parsers.linechar^1)^0
 
 -- parse special html blocks
 parsers.html_blankline_ending_special_block_opening = (parsers.html_close_special_tag
@@ -23728,9 +23690,9 @@ function M.reader.new(writer, options)
 
   parsers.InlineHtml    = parsers.html_inline_comment       / writer.inline_html_comment
                         + parsers.html_any_empty_inline_tag / writer.inline_html_tag
-                        + parsers.html_instruction          / writer.inline_html_tag
-                        + parsers.html_cdatasection         / writer.inline_html_tag
-                        + parsers.html_declaration          / writer.inline_html_tag
+                        + parsers.html_inline_instruction   / writer.inline_html_tag
+                        + parsers.html_inline_cdatasection  / writer.inline_html_tag
+                        + parsers.html_inline_declaration   / writer.inline_html_tag
                         + parsers.html_any_open_inline_tag  / writer.inline_html_tag
                         + parsers.html_any_close_tag        / writer.inline_html_tag
 
@@ -23745,7 +23707,7 @@ function M.reader.new(writer, options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  parsers.DisplayHtml  = parsers.html_comment       / writer.block_html_comment
+  parsers.DisplayHtml  = parsers.html_comment       / writer.block_html_element
                        + parsers.html_special_block / writer.block_html_element
                        + parsers.html_block         / writer.block_html_element
                        + parsers.html_any_block     / writer.block_html_element
