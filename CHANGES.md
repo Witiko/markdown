@@ -15,6 +15,11 @@ Documentation:
 - Unify how Pandoc syntax extensions are named and cited in
   documentation. (#274, #284)
 
+Refactoring:
+
+- Only configure the Kpathsea library if it has not already
+  been configured. (#268, #283)
+
 ## 2.21.0 (2022-02-28)
 
 Development:
