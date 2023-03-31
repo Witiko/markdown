@@ -24199,9 +24199,9 @@ function M.reader.new(writer, options)
                      end, false)
 
   self.create_parser("parse_inlines_full_link_and_image",
-                  function()
-                    return parsers.inlines_full_link_and_image
-                  end, false)
+                     function()
+                       return parsers.inlines_full_link_and_image
+                     end, false)
 
   self.create_parser("parse_inlines_no_inline_note",
                      function()
@@ -24286,9 +24286,9 @@ function M.reader.new(writer, options)
   function self.register_link(tag,url,title,attributes)
       local normalized_tag = self.normalize_tag(tag)
       if references[normalized_tag] == nil then
-        references[normalized_tag] = {  url = url, 
-                                        title = title, 
-                                        attributes = attributes }
+        references[normalized_tag] = { url = url, 
+                                       title = title,
+                                       attributes = attributes }
       end
       return ""
   end
@@ -24416,7 +24416,7 @@ function M.reader.new(writer, options)
 %
 % Return the parentheses of an inline link for a closing delimiter at index `index` in the delimiter table `t`.
 % If the \Opt{linkAttributes} option extension is enabled, then also the attributes are returned.
-% The closing bracket is returned when the `include_bracket` is selected.
+% The closing bracket is also included in the return value when `include_bracket` is enabled.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -27063,7 +27063,7 @@ M.extensions.link_attributes = function()
       local MaybeLinkOrImageWithAttributes  = Ct(link_array) * Cc(link_group)
                                               / defer_link_and_image_processing
 
-      local LinkOrImageWithAttributes     = Ct(link_array) * Cc(link_group)
+      local LinkOrImageWithAttributes       = Ct(link_array) * Cc(link_group)
                                             / process_links_and_images
 
       self.update_rule("MaybeLinkOrImage", MaybeLinkOrImageWithAttributes)
