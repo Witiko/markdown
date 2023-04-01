@@ -27730,12 +27730,16 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-local should_initialize = package.loaded.kpse == nil
+local kpse
+(function()
+  local should_initialize = package.loaded.kpse == nil
                        or tex.initialize ~= nil
-local ran_ok, kpse = pcall(require, "kpse")
-if ran_ok and should_initialize then
-  kpse.set_program_name("luatex")
-end
+  local ran_ok
+  ran_ok, kpse = pcall(require, "kpse")
+  if ran_ok and should_initialize then
+    kpse.set_program_name("luatex")
+  end
+end)()
 local md = require("markdown")
 %    \end{macrocode}
 % \begin{markdown}
@@ -28715,12 +28719,16 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-        local should_initialize = package.loaded.kpse == nil
+        local kpse
+        (function()
+          local should_initialize = package.loaded.kpse == nil
                                or tex.initialize ~= nil
-        local ran_ok, kpse = pcall(require, "kpse")
-        if ran_ok and should_initialize then
-          kpse.set_program_name("luatex")
-        end
+          local ran_ok
+          ran_ok, kpse = pcall(require, "kpse")
+          if ran_ok and should_initialize then
+            kpse.set_program_name("luatex")
+          end
+        end)()
         #1
       end)
 %    \end{macrocode}
