@@ -10,5 +10,5 @@ foo\
 bar
 >>>
 documentBegin
-lineBreak
+hardLineBreak
 documentEnd
