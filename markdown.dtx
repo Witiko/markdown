@@ -1130,6 +1130,14 @@ local md5 = require("md5");
   if ran_ok and should_initialize then
     kpse.set_program_name("luatex")
   end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If the \pkg{Kpathsea} library is unavailable, we will look up files only
+% in the current working directory.
+%
+% \end{markdown}
+%  \begin{macrocode}
   if not ran_ok then
     kpse = {lookup = function(f, _) return f end}
   end
