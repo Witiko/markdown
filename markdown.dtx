@@ -1099,7 +1099,7 @@ end)()
 %
 % \end{markdown}
 %  \begin{macrocode}
-local md5 = require("md5")
+local md5 = require("md5");
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -1131,7 +1131,7 @@ local md5 = require("md5")
     kpse.set_program_name("luatex")
   end
   if not ran_ok then
-    kpse = { lookup = function(f, _) return f end }
+    kpse = {lookup = function(f, _) return f end}
   end
 end)()
 %    \end{macrocode}
