@@ -26328,13 +26328,17 @@ function M.reader.new(writer, options)
                       * -V("EndlineExceptions") 
                       * -parsers.starter)
                     * parsers.spacechar^0
-                    / (options.hardLineBreaks and writer.hard_line_break
-                                               or writer.space)
+                    / (options.hardLineBreaks 
+                       and writer.hard_line_break
+                        or writer.space)
 
   parsers.OptionalIndent
                      = parsers.spacechar^1 / writer.space
 
-  parsers.Space      = parsers.spacechar^2 * parsers.Endline / writer.hard_line_break
+  parsers.Space      = parsers.spacechar^2 * parsers.Endline 
+                                           / (options.hardLineBreaks
+                                              and writer.hard_line_break
+                                               or writer.space)
                      + parsers.spacechar^1 * parsers.Endline^-1 * parsers.eof / ""
                      + parsers.spacechar^1 * parsers.Endline
                                            * parsers.optionalspace
@@ -26352,11 +26356,15 @@ function M.reader.new(writer, options)
                       * -V("EndlineExceptions") 
                       * -parsers.starter)
                     * parsers.spacechar^0
-                    / (options.hardLineBreaks and writer.hard_line_break
-                                               or writer.nbsp)
+                    / (options.hardLineBreaks 
+                       and writer.hard_line_break
+                        or writer.nbsp)
 
   parsers.NonbreakingSpace
-                  = parsers.spacechar^2 * parsers.Endline / writer.hard_line_break
+                  = parsers.spacechar^2 * parsers.Endline 
+                                        / (options.hardLineBreaks
+                                           and writer.hard_line_break
+                                            or writer.nbsp)
                   + parsers.spacechar^1 * parsers.Endline^-1 * parsers.eof / ""
                   + parsers.spacechar^1 * parsers.Endline
                                         * parsers.optionalspace

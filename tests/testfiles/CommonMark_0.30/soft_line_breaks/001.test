@@ -5,11 +5,10 @@
 %   
 %   ---\RESULT---
 
-\def\markdownOptionHardLineBreaks{true}
 <<<
 _foo
 baz_
 >>>
 documentBegin
-emphasis: foo(hardLineBreak)baz
+emphasis: foo baz
 documentEnd
