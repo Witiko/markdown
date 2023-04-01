@@ -15,9 +15,11 @@
 >>>
 documentBegin
 blockQuoteBegin
+BEGIN section
 headingOne: Foo
 interblockSeparator
 emphasis: bar
 emphasis: baz
 blockQuoteEnd
+END section
 documentEnd

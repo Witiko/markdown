@@ -3653,6 +3653,224 @@ defaultOptions.blankBeforeHeading = false
 %</lua,lua-cli>
 %<*manual-options>
 
+#### Option `blankBeforeList`
+
+`blankBeforeList` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{blankBeforeList}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Require a blank line between a paragraph and the following list.
+
+     false
+
+     :  Do not require a blank line between a paragraph and the following
+        list.
+
+% \end{markdown}
+% \iffalse
+
+##### Lua Module Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\input markdown
+\input lmfonts
+\directlua{
+  local markdown = require("markdown")
+  local newline = [[^^J^^J]]
+  local convert, input
+
+  convert = markdown.new()
+  input = "A paragraph."   .. newline ..
+          "- a list"       .. newline
+  tex.sprint(convert(input))
+
+  convert = markdown.new({
+    blankBeforeList = true})
+  input = "A paragraph."   .. newline ..
+          "- not a list"     .. newline
+  tex.sprint(convert(input)) }
+\bye
+```````
+Then, invoke LuaTeX from the terminal:
+``` sh
+luatex document.tex
+```````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> A paragraph.
+>
+> - a list
+>
+> A paragraph. - not a list
+
+##### Lua CLI Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\input markdown
+\input lmfonts
+\input optionfalse
+\input optiontrue
+\bye
+```````
+Using a text editor, create a text document named `content.md` with the
+following content:
+```` md
+A paragraph.
+- a list?
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+texlua ⟨CLI pathname⟩ -- content.md optionfalse.tex
+texlua ⟨CLI pathname⟩ blankBeforeList=true  -- content.md optiontrue.tex
+luatex document.tex
+```````
+where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
+such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
+`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
+systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
+script file using [Kpathsea][].
+
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> A paragraph.
+>
+> - a list?
+>
+> A paragraph. - a list?
+
+##### Plain \TeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+```` tex
+\input markdown
+
+\markdownBegin
+A paragraph.
+- a list
+\markdownEnd
+
+\def\markdownOptionBlankBeforeList{true}
+\markdownBegin
+A paragraph.
+- not a list
+\markdownEnd
+
+\bye
+````````
+Next, invoke LuaTeX from the terminal:
+``` sh
+luatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> A paragraph.
+>
+> - a list
+>
+> A paragraph. - not a list
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+```` tex
+\documentclass{article}
+\usepackage{markdown}
+\begin{document}
+
+\begin{markdown}
+A paragraph.
+- a list
+\end{markdown}
+
+\begin{markdown*}{blankBeforeList}
+A paragraph.
+- not a list
+\end{markdown*}
+
+\end{document}
+````````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> A paragraph.
+>
+> - a list
+>
+> A paragraph. - not a list
+
+##### \Hologo{ConTeXt} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+```` tex
+\usemodule[t][markdown]
+\starttext
+
+\startmarkdown
+A paragraph.
+- a list
+\stopmarkdown
+
+\setupmarkdown[blankBeforeList = yes]
+\startmarkdown
+A paragraph.
+- not a list
+\stopmarkdown
+
+\stoptext
+````````
+Next, invoke LuaTeX from the terminal:
+``` sh
+context document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> A paragraph.
+>
+> - a list
+>
+> A paragraph. - not a list
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { blankBeforeList }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.blankBeforeList = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
 #### Option `bracketedSpans`
 
 `bracketedSpans` (default value: `false`)
@@ -19977,9 +20195,9 @@ texexec --passon=--shell-escape document.tex
 %  \begin{macrocode}
 local upper, format, length =
   string.upper, string.format, string.len
-local P, R, S, V, C, Cg, Cb, Cmt, Cc, Ct, B, Cs, any =
+local P, R, S, V, C, Cg, Cb, Cmt, Cc, Ct, B, Cs, Cp, any =
   lpeg.P, lpeg.R, lpeg.S, lpeg.V, lpeg.C, lpeg.Cg, lpeg.Cb,
-  lpeg.Cmt, lpeg.Cc, lpeg.Ct, lpeg.B, lpeg.Cs, lpeg.P(1)
+  lpeg.Cmt, lpeg.Cc, lpeg.Ct, lpeg.B, lpeg.Cs, lpeg.Cp, lpeg.P(1)
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -22850,7 +23068,9 @@ function M.writer.new(options)
     if not self.is_writing then return "" end
     local buffer = {}
     for _,item in ipairs(items) do
-      buffer[#buffer + 1] = self.bulletitem(item)
+      if item ~= "" then
+        buffer[#buffer + 1] = self.bulletitem(item)
+      end
     end
     local contents = util.intersperse(buffer,"\n")
     if tight and options.tightLists then
@@ -22891,8 +23111,10 @@ function M.writer.new(options)
     local buffer = {}
     local num = startnum
     for _,item in ipairs(items) do
-      buffer[#buffer + 1] = self.ordereditem(item,num)
-      if num ~= nil then
+      if item ~= "" then
+        buffer[#buffer + 1] = self.ordereditem(item,num)
+      end
+      if num ~= nil and item ~= "" then
         num = num + 1
       end
     end
@@ -23018,7 +23240,6 @@ function M.writer.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.blockquote(s)
-    if #util.rope_to_string(s) == 0 then return "" end
     return {"\\markdownRendererBlockQuoteBegin\n",s,
       "\n\\markdownRendererBlockQuoteEnd "}
   end
@@ -23589,18 +23810,19 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-parsers.bulletchar = C(parsers.plus + parsers.asterisk + parsers.dash)
+parsers.leader      = parsers.space^-3
 
-parsers.bullet = ( parsers.bulletchar * #parsers.spacing
-                                      * (parsers.tab + parsers.space^-3)
-                 + parsers.space * parsers.bulletchar * #parsers.spacing
-                                 * (parsers.tab + parsers.space^-2)
-                 + parsers.space * parsers.space * parsers.bulletchar
-                                 * #parsers.spacing
-                                 * (parsers.tab + parsers.space^-1)
-                 + parsers.space * parsers.space * parsers.space
-                                 * parsers.bulletchar * #parsers.spacing
-                 )
+parsers.bullet = function(bullet_char, interrupting)
+  local allowed_end
+  if interrupting then
+    allowed_end = C(parsers.spacechar^1) * #parsers.linechar
+  else
+    allowed_end = C(parsers.spacechar^1) + #(parsers.newline + parsers.eof)
+  end
+  return C(parsers.leader)
+        * Ct(C(bullet_char) * Cc(""))
+        * allowed_end
+end
 
 local function tickbox(interior)
   return parsers.optionalspace * parsers.lbracket
@@ -24133,22 +24355,6 @@ parsers.tagentity = parsers.ampersand * C(parsers.alphanumeric^1)
 % \par
 % \begin{markdown}
 %
-%#### Helpers for Link Reference Definitions
-%
-% \end{markdown}
-%  \begin{macrocode}
--- parse a reference definition:  [foo]: /bar "title"
-parsers.spnl_sep  = parsers.optionalspace * parsers.newline * parsers.optionalspace
-                  + parsers.spacechar^1
-
-parsers.define_reference_parser = parsers.leader * parsers.link_label * parsers.colon
-                                * parsers.spnl * parsers.url
-                                * (parsers.spnl_sep * parsers.title + Cc("")) 
-                                * parsers.spacechar^0 * (parsers.newline + parsers.eof)
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
 %#### Inline Elements
 %
 % \end{markdown}
@@ -24424,6 +24630,574 @@ function M.reader.new(writer, options)
 % \par
 % \begin{markdown}
 %
+%#### Parsers Used for Indentation (local)
+%
+% \end{markdown}
+%  \begin{macrocode}
+
+  parsers.blockquote_start = parsers.leader * parsers.more * parsers.space^-1
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Check if a trail exists and is non-empty in the indent table `indent_table`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  function has_trail(indent_table)
+    return indent_table ~= nil and indent_table.trail ~= nil and next(indent_table.trail) ~= nil
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Check if indent table `indent_table` has any indents.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  function has_indents(indent_table)
+    return indent_table ~= nil and indent_table.indents ~= nil and next(indent_table.indents) ~= nil
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Add a trail `trail_info` to the indent table `indent_table`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function add_trail(indent_table, trail_info)
+    indent_table.trail = trail_info
+    return indent_table
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Remove a trail `trail_info` from the indent table `indent_table`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function remove_trail(indent_table)
+    indent_table.trail = nil
+    return indent_table
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Leave the current trail of the indent table `indent_table`
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function leave_trail(s, i, indent_table)
+    indent_table = remove_trail(indent_table)
+    return true, indent_table
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Update the indent table `indent_table` by adding or removing a new
+% indent `add`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function update_indent_table(indent_table, new_indent, add)
+    indent_table = remove_trail(indent_table)
+
+    if not has_indents(indent_table) then
+      indent_table.indents = {}
+    end
+
+    local indent_table_indents = indent_table.indents
+
+    if add then
+      indent_table_indents[#indent_table_indents + 1] = new_indent
+    else
+      if indent_table_indents[#indent_table_indents].name == new_indent.name then
+        indent_table_indents[#indent_table_indents] = nil
+      end
+    end
+
+    return indent_table
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Remove an indent by its name `name`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function remove_indent(name)
+    local function remove_indent_level(s, i, indent_table)
+      indent_table = update_indent_table(indent_table, {name=name}, false)
+      return true, indent_table
+    end
+
+    return Cg(Cmt( Cb("indent_info"), remove_indent_level), "indent_info")
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Process the spacing of a string of spaces and tabs `spacing` with preceding indent width from
+% the start of the line `indent` and strip up to `left_strip_length` spaces. Return the remainder
+% `remainder` and whether there is enough spaces to produce a code `is_code`. Return how many 
+% spaces were stripped, as well as if the minimum was met `is_minimum` and what remainder it 
+% left `minimum_remainder`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function process_starter_spacing(indent, spacing, minimum, left_strip_length)
+    left_strip_length = left_strip_length or 0
+
+    local count = 0
+    local tab_value = 4 - (indent) % 4
+
+    local code_started, minimum_found = false, false
+    local code_start, minimum_remainder = "", ""
+
+    local left_total_stripped = 0
+
+    if spacing ~= nil then
+      for i = 1, #spacing do
+        local character = spacing:sub(i, i)
+
+        if character == "\t" then
+          count = count + tab_value
+          tab_value = 4
+        elseif character == " " then
+          count = count + 1
+          tab_value = 4 - (1 - tab_value) % 4
+        end
+
+        if (left_strip_length ~= 0) then
+          local possible_to_strip = math.min(count, left_strip_length)
+          count = count - possible_to_strip
+          left_strip_length = left_strip_length - possible_to_strip
+          left_total_stripped = left_total_stripped + possible_to_strip
+        end
+
+        if (minimum_found) then
+          minimum_remainder = minimum_remainder .. character
+        elseif (count >= minimum) then
+          minimum_found = true
+          minimum_remainder = minimum_remainder .. string.rep(" ", count - minimum)
+        end
+        
+        if (code_started) then
+          code_start = code_start .. character
+        elseif (count >= minimum + 4) then
+          code_started = true
+          code_start = code_start .. string.rep(" ", count - (minimum + 4))
+        end
+      end
+    end
+
+    local remainder = ""
+    if (code_started) then
+      remainder = code_start
+    else
+      remainder = string.rep(" ", count - minimum)
+    end
+
+    local is_minimum = count >= minimum
+    return {
+      is_code = code_started,
+      remainder = remainder,
+      left_total_stripped = left_total_stripped,
+      is_minimum = is_minimum,
+      minimum_remainder = minimum_remainder
+    }
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Count the total width of all indents in the indent table `indent_table`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function count_indent_tab_level(indent_table)
+    local count = 0
+    if not has_indents(indent_table) then
+      return count
+    end
+
+    for i=1, #indent_table.indents do
+      count = count + indent_table.indents[i].length
+    end
+    return count
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Count the total width of a delimiter `delimiter`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function total_delimiter_length(delimiter)
+    local count = 0
+    if type(delimiter) == "string" then return #delimiter end
+    for _, value in pairs(delimiter) do
+      count = count + total_delimiter_length(value)
+    end
+    return count
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Process the container starter `starter` of a type `indent_type`. Adjust the width of the indent
+% if the delimiter is followed only by whitespaces `is_blank`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function process_starter_indent(s, i, indent_table, starter, is_blank, indent_type)
+    local last_trail = starter[1]
+    local delimiter = starter[2]
+    local raw_new_trail = starter[3]
+
+    if has_trail(indent_table) then
+      local trail = indent_table.trail
+      if trail.is_code then
+        return false
+      end
+      last_trail = trail.remainder
+    else
+      local sp = process_starter_spacing(0, last_trail, 0, 0)
+
+      if sp.is_code then
+        return false
+      end
+      last_trail = sp.remainder
+    end
+
+    local preceding_indentation = count_indent_tab_level(indent_table) % 4
+    local last_trail_length = #last_trail
+    local delimiter_length = total_delimiter_length(delimiter)
+
+    local total_indent_level = preceding_indentation + last_trail_length + delimiter_length
+
+    local sp = {}
+    if not is_blank then
+      sp = process_starter_spacing(total_indent_level, raw_new_trail, 0, 1)
+    end
+
+    local del_trail_length = sp.left_total_stripped
+    if is_blank then
+      del_trail_length = 1
+    elseif not sp.is_code then
+      del_trail_length = del_trail_length + #sp.remainder
+    end
+
+    local indent_length = last_trail_length + delimiter_length + del_trail_length
+    local new_indent_info = {name=indent_type, length=indent_length}
+
+    indent_table = update_indent_table(indent_table, new_indent_info, true)
+    indent_table = add_trail(indent_table, {is_code=sp.is_code, remainder=sp.remainder})
+
+    return true, indent_table
+  end
+
+  parsers.blockquote_opening_condition = C(parsers.leader) * C(parsers.more) * C(parsers.spacechar^0)
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Return the pattern corresponding with the indent name `name`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function decode_pattern(name)
+    local delimeter = parsers.succeed
+    if name == "bq" then
+      delimeter = parsers.more
+    end
+
+    return C(parsers.optionalspace) * C(delimeter) * C(parsers.optionalspace) * Cp()
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Find the first blank-only indent of the indent table `indent_table` followed
+% by blank-only indents.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function left_blank_starter(indent_table)
+    local blank_starter_index
+
+    if not has_indents(indent_table) then
+      return
+    end
+
+    for i = #indent_table.indents,1,-1 do
+      local value = indent_table.indents[i]
+      if value.name == "li" then
+        blank_starter_index = i
+      else
+        break
+      end
+    end
+
+    return blank_starter_index
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Apply the patterns decoded from the indents of the indent table `indent_table`
+% iteratively starting at position `index` of the string `s`. If the `is_optional`
+% mode is selected, match as many patterns as possible, else match all or fail. 
+% With the option `is_blank`, the parsing behaves as optional after the position 
+% of a blank-only indent has been surpassed.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function traverse_indent(s, index, indent_table, is_optional, blank_end)
+    local new_index = index
+
+    local preceding_indentation = 0
+    local current_trail
+
+    if not has_indents(indent_table) then
+      return true, new_index, current_trail
+    end
+
+    local blank_starter = left_blank_starter(indent_table)
+
+    for i = 1,#indent_table.indents do
+      local value = indent_table.indents[i]
+      local pattern = decode_pattern(value.name)
+
+      -- match decoded pattern
+      local new_indent_info = lpeg.match(Ct(pattern), s, new_index)
+      if new_indent_info == nil then
+        return is_optional, new_index, current_trail
+      end
+
+      local raw_last_trail = new_indent_info[1]
+      local delimiter = new_indent_info[2]
+      local raw_new_trail = new_indent_info[3]
+      local next_index = new_indent_info[4]
+
+      local space_only = delimiter == ""
+
+      -- check previous trail
+      if not space_only and current_trail == nil then
+        local sp = process_starter_spacing(0, raw_last_trail, 0, 0)
+        current_trail = {is_code = sp.is_code, remainder = sp.remainder}
+      end
+
+      if current_trail ~= nil then
+        if not space_only and current_trail.is_code then
+          return is_optional, new_index, current_trail
+        end
+        if current_trail.internal_remainder ~= nil then
+          raw_last_trail = current_trail.internal_remainder
+        end
+      end
+
+      local raw_last_trail_length = 0
+      local delimiter_length = 0
+
+      if not space_only then
+        delimiter_length = #delimiter
+        raw_last_trail_length = #raw_last_trail
+      end
+
+      local total_indent_level = preceding_indentation + raw_last_trail_length + delimiter_length
+
+      local spacing_to_process = ""
+      local minimum = 0
+      local left_strip_length = 0
+
+      if not space_only then
+        spacing_to_process = raw_new_trail
+        left_strip_length = 1
+      else
+        spacing_to_process = raw_last_trail
+        minimum = value.length
+      end
+
+      local sp = process_starter_spacing(total_indent_level, spacing_to_process, minimum, left_strip_length)
+
+      if space_only and not sp.is_minimum then
+        return is_optional or (blank_end and blank_starter <= i), new_index, current_trail
+      end
+
+      local indent_length = raw_last_trail_length + delimiter_length + sp.left_total_stripped
+
+      -- update info for the next pattern
+      if not space_only then
+        preceding_indentation = preceding_indentation + indent_length
+      else
+        preceding_indentation = preceding_indentation + value.length
+      end
+
+      current_trail = {is_code=sp.is_code, remainder=sp.remainder, internal_remainder=sp.minimum_remainder}
+      new_index = next_index
+    end
+
+    return true, new_index, current_trail
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Start traversing and checking the indents for a continuation line, optionally with 
+% the mode `is_optional` selected.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function start_traverse_indent(s, i, indent_table, is_optional)
+    if not has_indents(indent_table) then
+      return true
+    end
+
+    local passes, new_index, current_trail = traverse_indent(s, i, indent_table, is_optional, false)
+
+    if passes then
+      indent_table = add_trail(indent_table, current_trail)
+      return new_index, indent_table
+    end
+    return false
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Start traversing and checking the indents for a continuation blank line, optionally with 
+% the mode `is_optional` selected.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function start_blank_indent(s, i, indent_table, is_optional)
+    if not has_indents(indent_table) then
+      return true
+    end
+
+    local passes, new_index, current_trail = traverse_indent(s, i, indent_table, is_optional, true)
+
+    if passes then
+      indent_table = add_trail(indent_table, current_trail)
+      return new_index, indent_table
+    end
+    return false
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Check if the current trail of the `indent_table` would produce code if it is expected `expect_code` 
+% or it would not if it is not. If there is no trail, process and check the current spacing `spacing`. 
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function check_trail_joined(s, i, indent_table, spacing, expect_code)
+    local is_code = false
+    local remainder
+
+    if has_trail(indent_table) then
+      local trail = indent_table.trail
+      is_code = trail.is_code
+      remainder = trail.remainder
+    else
+      local sp = process_starter_spacing(0, spacing, 0, 0)
+      is_code = sp.is_code
+      remainder = sp.remainder
+    end
+
+    local result = (expect_code and is_code) or (not expect_code and not is_code)
+    return result, remainder
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% The following patterns check whitespace indentation at the start of a block.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  parsers.leave_trail = Cg(Cmt(Cb("indent_info"), leave_trail), "indent_info")
+
+  parsers.check_trail = Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(false), check_trail_joined)
+
+  parsers.check_code_trail  = Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(true), check_trail_joined)
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% The following patterns check indentation in continuation lines as defined by the container start.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  parsers.check_minimal_indent = Cmt(Cb("indent_info") * Cc(false), start_traverse_indent)
+
+  parsers.check_optional_indent = Cmt(Cb("indent_info") * Cc(true), start_traverse_indent)
+
+  parsers.check_minimal_blank_indent = Cmt(Cb("indent_info") * Cc(false), start_blank_indent)
+
+  parsers.minimally_indented_blank = parsers.check_minimal_indent * (parsers.blankline / "")
+
+  parsers.minimally_indented_block = parsers.check_minimal_indent * V("Block")
+
+  parsers.minimally_indented_ref = parsers.check_minimal_indent * V("Reference")
+
+  parsers.conditionally_indented_blank = parsers.check_minimal_blank_indent * (parsers.blankline / "")
+
+  parsers.minimally_indented_ref_or_block  = parsers.minimally_indented_ref
+                                           + parsers.minimally_indented_block
+                                           - parsers.minimally_indented_blank
+
+  parsers.minimally_indented_separated_ref_or_block = parsers.minimally_indented_ref
+                                                    + parsers.check_minimal_indent / writer.interblocksep
+                                                    * V("Block")
+                                                    - parsers.minimally_indented_blank
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% The following pattern parses the properly indented content that follows the initial container start,
+% optionally with blank lines allowed `breakable`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  parsers.indented_content = function(breakable)
+    local blank = parsers.minimally_indented_blank
+    if breakable then
+      blank = blank + parsers.check_optional_indent * (parsers.blankline / "")
+    end
+
+    return  Ct( (V("Reference") + (parsers.blankline / ""))
+              * blank^0
+              * parsers.minimally_indented_ref_or_block
+              * ( blank
+                + parsers.minimally_indented_separated_ref_or_block)^0
+              + (V("Reference") + (parsers.blankline / ""))
+              * blank^0
+              + V("Block")
+              * ( blank
+                + parsers.minimally_indented_separated_ref_or_block)^0)
+  end
+
+  local function add_indent(pattern, name)
+    return  Cg(Cmt( Cb("indent_info") 
+                  * Ct(pattern)
+                  * (#parsers.linechar * Cc(false) + Cc(true)) -- check if starter is blank
+                  * Cc(name),
+              process_starter_indent), "indent_info")
+  end
+
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
 %#### Parsers Used for Markdown Lists (local)
 %
 % \end{markdown}
@@ -24434,18 +25208,28 @@ function M.reader.new(writer, options)
     parsers.dig = parsers.digit
   end
 
-  parsers.enumerator = C(parsers.dig^3 * parsers.period) * #parsers.spacing
-                     + C(parsers.dig^2 * parsers.period) * #parsers.spacing
-                                       * (parsers.tab + parsers.space^1)
-                     + C(parsers.dig * parsers.period) * #parsers.spacing
-                                     * (parsers.tab + parsers.space^-2)
-                     + parsers.space * C(parsers.dig^2 * parsers.period)
-                                     * #parsers.spacing
-                     + parsers.space * C(parsers.dig * parsers.period)
-                                     * #parsers.spacing
-                                     * (parsers.tab + parsers.space^-1)
-                     + parsers.space * parsers.space * C(parsers.dig^1
-                                     * parsers.period) * #parsers.spacing
+  parsers.enumerator = function(delimiter_type, interrupting)
+    local delimiter_range
+    local allowed_end
+    if interrupting then
+      delimiter_range = P("1")
+      allowed_end = C(parsers.spacechar^1) * #parsers.linechar
+    else
+      delimiter_range = parsers.dig * parsers.dig^-8
+      allowed_end = C(parsers.spacechar^1) + #(parsers.newline + parsers.eof)
+    end
+
+    return C(parsers.leader)
+             * Ct(C(delimiter_range) * C(delimiter_type))
+             * allowed_end
+  end
+
+  parsers.starter = parsers.bullet(parsers.dash) 
+                  + parsers.bullet(parsers.asterisk)
+                  + parsers.bullet(parsers.plus)
+                  + parsers.enumerator(parsers.period)
+                  + parsers.enumerator(parsers.rparent)
+
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -24454,15 +25238,14 @@ function M.reader.new(writer, options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  -- strip off leading > and indents, and run through blocks
-  parsers.blockquote_body = ((parsers.leader * parsers.more * parsers.space^-1)/""
-                             * parsers.linechar^0 * parsers.newline)^1
-                            * (-V("BlockquoteExceptions") * parsers.linechar^1
-                              * parsers.newline)^0
+  parsers.blockquote_body = add_indent(parsers.blockquote_opening_condition, "bq")
+                          * parsers.indented_content(false)
+                          * remove_indent("bq")
 
   if not options.breakableBlockquotes then
-    parsers.blockquote_body = parsers.blockquote_body
-                            * (parsers.blankline^0 / "")
+    parsers.blockquote_body = add_indent(parsers.blockquote_opening_condition, "bq")
+                            * parsers.indented_content(true)
+                            * remove_indent("bq")
   end
 %    \end{macrocode}
 % \par
@@ -24795,6 +25578,16 @@ function M.reader.new(writer, options)
   -- List of references defined in the document
   local references
 
+  parsers.spnl_sep  = parsers.optionalspace * parsers.newline * parsers.optionalspace
+                    + parsers.spacechar^1
+
+  -- parse a reference definition:  [foo]: /bar "title"
+  parsers.define_reference_parser = (parsers.check_trail / "") * parsers.link_label * parsers.colon
+                                  * parsers.spnl * parsers.url
+                                  * (parsers.spnl_sep * parsers.title + Cc("")) 
+                                  * parsers.spacechar^0 * (parsers.newline + parsers.eof)
+                                  * parsers.leave_trail
+
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -24806,14 +25599,15 @@ function M.reader.new(writer, options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  function self.register_link(tag,url,title,attributes)
-      local normalized_tag = self.normalize_tag(tag)
+  function self.register_link(_, tag, url, title,
+                              attributes)
+    local normalized_tag = self.normalize_tag(tag)
       if references[normalized_tag] == nil then
         references[normalized_tag] = { url = url, 
                                        title = title,
                                        attributes = attributes }
       end
-      return ""
+    return ""
   end
 
 %    \end{macrocode}
@@ -25484,15 +26278,27 @@ function M.reader.new(writer, options)
   if options.blankBeforeBlockquote then
     parsers.bqstart = parsers.fail
   else
-    parsers.bqstart = parsers.more
+    parsers.bqstart = parsers.blockquote_start
   end
 
   if options.blankBeforeHeading then
     parsers.headerstart = parsers.fail
   else
-    parsers.headerstart = parsers.hash
+    parsers.headerstart = parsers.nonindentspace * parsers.hash
                         + (parsers.line * (parsers.equal^1 + parsers.dash^1)
                         * parsers.optionalspace * parsers.newline)
+  end
+
+  if options.blankBeforeList then
+    parsers.interrupting_bullets = parsers.fail
+    parsers.interrupting_enumerators = parsers.fail
+  else
+    parsers.interrupting_bullets  = parsers.bullet(parsers.dash, true) 
+                                  + parsers.bullet(parsers.asterisk, true)
+                                  + parsers.bullet(parsers.plus, true)
+
+    parsers.interrupting_enumerators  = parsers.enumerator(parsers.period, true)
+                                      + parsers.enumerator(parsers.rparent, true)
   end
 
   parsers.EndlineExceptions
@@ -25501,11 +26307,17 @@ function M.reader.new(writer, options)
                      + parsers.eof       -- end of document
                      + parsers.bqstart
                      + parsers.thematic_break_lines
+                     + parsers.interrupting_bullets
+                     + parsers.interrupting_enumerators
                      + parsers.headerstart
                      + parsers.html_interrupting
 
   parsers.Endline   = parsers.newline
-                    * -V("EndlineExceptions")
+                    * (parsers.check_minimal_indent 
+                      * -V("EndlineExceptions") 
+                      + parsers.check_optional_indent 
+                      * -V("EndlineExceptions") 
+                      * -parsers.starter)
                     * parsers.spacechar^0
                     / (options.hardLineBreaks and writer.hard_line_break
                                                or writer.space)
@@ -25525,7 +26337,11 @@ function M.reader.new(writer, options)
 
   parsers.NonbreakingEndline
                     = parsers.newline
-                    * -V("EndlineExceptions")
+                    * (parsers.check_minimal_indent 
+                      * -V("EndlineExceptions") 
+                      + parsers.check_optional_indent 
+                      * -V("EndlineExceptions") 
+                      * -parsers.starter)
                     * parsers.spacechar^0
                     / (options.hardLineBreaks and writer.hard_line_break
                                                or writer.nbsp)
@@ -25622,15 +26438,19 @@ end
                        + parsers.html_cdatasection  / writer.block_html_element
                        + parsers.html_declaration   / writer.block_html_element
 
-  parsers.Verbatim     = Cs( (parsers.blanklines
-                           * ((parsers.indentedline - parsers.blankline))^1)^1
-                           ) / self.expandtabs / writer.verbatim
+  parsers.indented_non_blank_line = parsers.indentedline - parsers.blankline
+
+  parsers.Verbatim  = Cs( 
+                        parsers.check_code_trail 
+                      * (parsers.line - parsers.blankline)
+                      * (((parsers.check_minimal_blank_indent / "") * parsers.blankline)^0
+                        * ((parsers.check_minimal_indent / "") * parsers.check_code_trail * (parsers.line - parsers.blankline))^1)^0
+                      ) / self.expandtabs / writer.verbatim
 
   parsers.BlockquoteExceptions = parsers.leader * parsers.more
                                + parsers.blankline
 
-  parsers.Blockquote   = Cs(parsers.blockquote_body^1)
-                       / self.parser_functions.parse_blocks_nested
+  parsers.Blockquote   = parsers.blockquote_body
                        / writer.blockquote
 
   parsers.ThematicBreak = parsers.thematic_break_lines
@@ -25639,13 +26459,11 @@ end
   parsers.Reference    = parsers.define_reference_parser
                        / self.register_link
 
-  parsers.Paragraph    = parsers.nonindentspace * Ct(parsers.Inline^1)
-                       * ( parsers.newline
-                         * ( parsers.blankline^1
-                           + #V("EndlineExceptions")
-                         )
-                         + parsers.eof)
-                       / writer.paragraph
+  parsers.Paragraph   = (parsers.check_trail / "")
+                      * (Ct((parsers.Inline)^1)
+                      * (parsers.newline + parsers.eof)
+                      * parsers.leave_trail
+                      / writer.paragraph)
 
   parsers.Plain        = parsers.nonindentspace * Ct(parsers.Inline^1)
                        / writer.plain
@@ -25657,7 +26475,6 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-  parsers.starter = parsers.bullet + parsers.enumerator
 
   if options.taskLists then
     parsers.tickbox = ( parsers.ticked_box
@@ -25668,43 +26485,64 @@ end
      parsers.tickbox = parsers.fail
   end
 
-  -- we use \001 as a separator between a tight list item and a
-  -- nested list under it.
-  parsers.NestedList            = Cs((parsers.optionallyindentedline
-                                     - parsers.starter)^1)
-                                / function(a) return "\001"..a end
+  parsers.list_item_tightness_condition = -#( parsers.conditionally_indented_blank^0
+                                            * parsers.minimally_indented_ref_or_block)
+                                        * remove_indent("li")
+                                        + remove_indent("li")
+                                        * parsers.fail
 
-  parsers.ListBlockLine         = parsers.optionallyindentedline
-                                - parsers.blankline - (parsers.indent^-1
-                                                      * parsers.starter)
-
-  parsers.ListBlock             = parsers.line * parsers.ListBlockLine^0
-
-  parsers.ListContinuationBlock = parsers.blanklines * (parsers.indent / "")
-                                * parsers.ListBlock
+  parsers.indented_content_tight  = Ct( (parsers.blankline / "")
+                                      * #parsers.conditionally_indented_blank
+                                      * remove_indent("li")
+                                      + ( (parsers.Reference + (parsers.blankline / ""))
+                                        * (parsers.minimally_indented_ref_or_block)
+                                        * (parsers.minimally_indented_separated_ref_or_block)^0
+                                        + (parsers.Reference + (parsers.blankline / ""))
+                                        + V("Block")
+                                        * (parsers.minimally_indented_separated_ref_or_block)^0) 
+                                        * parsers.list_item_tightness_condition) 
+  
+  parsers.indented_content_loose  = Ct( (parsers.blankline / "")
+                                      * #parsers.conditionally_indented_blank
+                                      + ( (parsers.Reference + (parsers.blankline / ""))
+                                        * (parsers.minimally_indented_ref_or_block)
+                                        * ( parsers.conditionally_indented_blank^0
+                                          * parsers.minimally_indented_separated_ref_or_block^1)^0
+                                        + (parsers.Reference + (parsers.blankline / ""))
+                                        + V("Block")
+                                        * ( parsers.conditionally_indented_blank^0
+                                          * parsers.minimally_indented_separated_ref_or_block^1)^0))
 
   parsers.TightListItem = function(starter)
-      return -parsers.ThematicBreak
-             * (Cs(starter / "" * parsers.tickbox^-1 * parsers.ListBlock * parsers.NestedList^-1)
-               / self.parser_functions.parse_blocks_nested)
-             * -(parsers.blanklines * parsers.indent)
+    return  -parsers.ThematicBreak
+            * add_indent(starter, "li")
+            * parsers.indented_content_tight
   end
 
   parsers.LooseListItem = function(starter)
-      return -parsers.ThematicBreak
-             * Cs( starter / "" * parsers.tickbox^-1 * parsers.ListBlock * Cc("\n")
-               * (parsers.NestedList + parsers.ListContinuationBlock^0)
-               * (parsers.blanklines / "\n\n")
-               ) / self.parser_functions.parse_blocks_nested
+    return  -parsers.ThematicBreak
+            * add_indent(starter, "li")
+            * parsers.indented_content_loose
+            * remove_indent("li")
   end
 
-  parsers.BulletList = ( Ct(parsers.TightListItem(parsers.bullet)^1) * Cc(true)
-                       * parsers.skipblanklines * -parsers.bullet
-                       + Ct(parsers.LooseListItem(parsers.bullet)^1) * Cc(false)
-                       * parsers.skipblanklines )
-                     / writer.bulletlist
+  parsers.BulletListOfType = function(bullet_type)
+    local bullet = parsers.bullet(bullet_type)
+    return  ( Ct( parsers.TightListItem(bullet) 
+                * ((parsers.check_minimal_indent / "") * parsers.TightListItem(bullet))^0) * Cc(true)
+                * -#((parsers.conditionally_indented_blank^0 / "") * parsers.check_minimal_indent * bullet)
+               + Ct(parsers.LooseListItem(bullet) 
+                 * ((parsers.conditionally_indented_blank^0 / "") 
+                   * (parsers.check_minimal_indent / "") * parsers.LooseListItem(bullet))^0) * Cc(false))
+            / writer.bulletlist
+  end
 
-  local function ordered_list(items,tight,startnum)
+  parsers.BulletList = parsers.BulletListOfType(parsers.dash) 
+                     + parsers.BulletListOfType(parsers.asterisk)
+                     + parsers.BulletListOfType(parsers.plus)
+
+  local function ordered_list(items,tight,starter)
+    local startnum = starter[2][1]
     if options.startNumber then
       startnum = tonumber(startnum) or 1  -- fallback for '#'
       if startnum ~= nil then
@@ -25716,14 +26554,23 @@ end
     return writer.orderedlist(items,tight,startnum)
   end
 
-  parsers.OrderedList = Cg(parsers.enumerator, "listtype") *
-                      ( Ct(parsers.TightListItem(Cb("listtype"))
-                          * parsers.TightListItem(parsers.enumerator)^0)
-                      * Cc(true) * parsers.skipblanklines * -parsers.enumerator
-                      + Ct(parsers.LooseListItem(Cb("listtype"))
-                          * parsers.LooseListItem(parsers.enumerator)^0)
-                      * Cc(false) * parsers.skipblanklines
-                      ) * Cb("listtype") / ordered_list
+  parsers.OrderedListOfType = function(delimiter_type)
+    local enumerator = parsers.enumerator(delimiter_type)
+    return  Cg(enumerator, "listtype")
+          * (Ct( parsers.TightListItem(Cb("listtype"))
+               * ((parsers.check_minimal_indent / "") * parsers.TightListItem(enumerator))^0)
+          * Cc(true) 
+          * -#((parsers.conditionally_indented_blank^0 / "") 
+              * parsers.check_minimal_indent * enumerator)
+          + Ct( parsers.LooseListItem(Cb("listtype"))
+              * ((parsers.conditionally_indented_blank^0 / "") 
+                * (parsers.check_minimal_indent / "") * parsers.LooseListItem(enumerator))^0)
+          * Cc(false)
+          ) * Ct(Cb("listtype")) / ordered_list
+  end
+
+  parsers.OrderedList = parsers.OrderedListOfType(parsers.period)
+                      + parsers.OrderedListOfType(parsers.rparent)
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -25921,7 +26768,7 @@ end
         Smart                 = parsers.Smart,
         Symbol                = parsers.Symbol,
         SpecialChar           = parsers.fail,
-        InitializeState       = parsers.succeed,
+        InitializeState       = parsers.succeed * Cg(Ct(""), "indent_info"), --temporary initialization
       }
 %    \end{macrocode}
 % \par
@@ -27083,12 +27930,30 @@ M.extensions.fenced_code = function(blank_before_code_fence,
                                      / strip_enclosing_whitespaces)
 
       local fenceindent
+
+      local function get_last_indent_name(indent_table)
+        if has_indents(indent_table) then
+          return indent_table.indents[#indent_table.indents].name
+        end
+        return
+      end
+
+      local function count_fenced_start_indent(s, i, indent_table, trail)
+        local last_indent_name = get_last_indent_name(indent_table)
+        fenceindent = 0
+        if last_indent_name ~= "li" then
+          fenceindent = #trail
+        end
+        return true
+      end
+
       local fencehead      = function(char, infostring)
-        return               C(parsers.nonindentspace) / function(s) fenceindent = #s end
+        return               Cmt(Cb("indent_info") * parsers.check_trail, count_fenced_start_indent)
                            * Cg(char^3, "fencelength")
                            * parsers.optionalspace
                            * infostring
                            * (parsers.newline + parsers.eof)
+                           * parsers.leave_trail
       end
 
       local fencetail      = function(char)
@@ -27098,46 +27963,57 @@ M.extensions.fenced_code = function(blank_before_code_fence,
                            + parsers.eof
       end
 
-      local fencedline     = function(char)
-        return               C(parsers.line - fencetail(char))
-                           / function(s)
-                               local i = 1
-                               local remaining = fenceindent
-                               while true do
-                                 local c = s:sub(i, i)
-                                 if c == " " and remaining > 0 then
-                                   remaining = remaining - 1
-                                   i = i + 1
-                                 elseif c == "\t" and remaining > 3 then
-                                   remaining = remaining - 4
-                                   i = i + 1
-                                 else
-                                   break
-                                 end
-                               end
-                               return s:sub(i)
-                             end
+      local function process_fenced_line(s, i, indent_table, line_content)
+        local trail = ""
+        if has_trail(indent_table) then
+          trail = indent_table.trail.internal_remainder
+        end
+
+        local str = trail .. line_content
+        local index = 1
+        local remaining = fenceindent
+
+        while true do
+          local c = str:sub(index, index)
+          if c == " " and remaining > 0 then
+            remaining = remaining - 1
+            index = index + 1
+          elseif c == "\t" and remaining > 3 then
+            remaining = remaining - 4
+            index = index + 1
+          else
+            break
+          end
+        end
+
+        return true, str:sub(index)
+      end
+
+      local fencedline = function(char)
+        return Cmt(Cb("indent_info") * C(parsers.line - fencetail(char)), process_fenced_line)
       end
 
       local TildeFencedCode
              = fencehead(parsers.tilde, tilde_infostring)
-             * Cs(fencedline(parsers.tilde)^0)
-             * fencetail(parsers.tilde)
+             * Cs(((parsers.check_minimal_blank_indent / "") * parsers.blankline 
+                  + (parsers.check_minimal_indent / "") * fencedline(parsers.tilde))^0)
+             * ((parsers.check_minimal_indent / "") * fencetail(parsers.tilde) + parsers.succeed)
 
       local BacktickFencedCode
              = fencehead(parsers.backtick, backtick_infostring)
-             * Cs(fencedline(parsers.backtick)^0)
-             * fencetail(parsers.backtick)
+             * Cs(((parsers.check_minimal_blank_indent / "") * parsers.blankline 
+                  + (parsers.check_minimal_indent / "") * fencedline(parsers.backtick))^0)
+             * ((parsers.check_minimal_indent / "") * fencetail(parsers.backtick) + parsers.succeed)
 
-            local infostring_with_attributes
-                             = Ct(C((parsers.linechar
-                                    - ( parsers.optionalspace
-                                      * parsers.attributes))^0)
-                                 * parsers.optionalspace
-                                 * Ct(parsers.attributes))
+      local infostring_with_attributes
+                        = Ct(C((parsers.linechar
+                              - ( parsers.optionalspace
+                                * parsers.attributes))^0)
+                            * parsers.optionalspace
+                            * Ct(parsers.attributes))
 
       local FencedCode
-               = (TildeFencedCode + BacktickFencedCode)
+               = ((TildeFencedCode + BacktickFencedCode)
                / function(infostring, code)
                    local expanded_code = self.expandtabs(code)
 
@@ -27158,7 +28034,8 @@ M.extensions.fenced_code = function(blank_before_code_fence,
                      end
                    end
                    return writer.fencedCode(expanded_code, infostring, attr)
-                 end
+                 end)
+               * parsers.leave_trail
 
       self.insert_pattern("Block after Verbatim",
                           FencedCode, "FencedCode")
@@ -27526,12 +28403,13 @@ M.extensions.link_attributes = function()
 % \end{markdown}
 %  \begin{macrocode}
 
-      local define_reference_parser = parsers.leader * parsers.link_label * parsers.colon
+      local define_reference_parser = (parsers.check_trail / "") * parsers.link_label * parsers.colon
                                     * parsers.spnl * parsers.url
                                     * (parsers.spnl_sep * parsers.title + Cc(""))
                                     * ( parsers.spnl
                                       * Ct(parsers.attributes))^-1
                                     * parsers.optionalspace * (parsers.newline + parsers.eof)
+                                    * parsers.leave_trail
 
       local ReferenceWithAttributes = define_reference_parser
                                     / self.register_link
