@@ -25388,6 +25388,21 @@ function M.reader.new(writer, options)
 % \par
 % \begin{markdown}
 %
+% The \luamdef{reader->auto_link_url} method produces an
+% autolink to a URL or a relative reference in the output
+% format, where `url` is the link destination and
+% `attributes` are the optional attributes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+function self.auto_link_url(url, attributes)
+  return writer.link(writer.escape(url),
+                     url, nil, attributes)
+end
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
 % The \luamdef{reader->auto_link_email} method produces an
 % autolink to an e-mail in the output format, where `email` is the email
 % address destination and `attributes` are the optional attributes.
@@ -25426,9 +25441,9 @@ end
                         + parsers.openelt_any / writer.inline_html_tag
                         + parsers.closeelt_any / writer.inline_html_tag
 
-  parsers.HtmlEntity    = parsers.hexentity / entities.hex_entity_with_x_char  / writer.string
-                        + parsers.decentity / entities.dec_entity              / writer.string
-                        + parsers.tagentity / entities.char_entity             / writer.string
+  parsers.HtmlEntity    = parsers.hexentity / entities.hex_entity_with_x_char / writer.string
+                        + parsers.decentity / entities.dec_entity             / writer.string
+                        + parsers.tagentity / entities.char_entity            / writer.string
 %    \end{macrocode}
 % \par
 % \begin{markdown}
