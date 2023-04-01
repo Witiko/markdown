@@ -25099,7 +25099,7 @@ function M.reader.new(writer, options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  local function check_trail_joined(s, i, indent_table, spacing, expect_code)
+  local function check_trail_joined(s, i, indent_table, spacing, expect_code, omit_remainder)
     local is_code = false
     local remainder
 
@@ -25114,6 +25114,9 @@ function M.reader.new(writer, options)
     end
 
     local result = (expect_code and is_code) or (not expect_code and not is_code)
+    if omit_remainder then
+      return result
+    end
     return result, remainder
   end
 
@@ -25127,6 +25130,8 @@ function M.reader.new(writer, options)
   parsers.leave_trail = Cg(Cmt(Cb("indent_info"), leave_trail), "indent_info")
 
   parsers.check_trail = Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(false), check_trail_joined)
+
+  parsers.check_trail_no_rem = Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(false) * Cc(true), check_trail_joined)
 
   parsers.check_code_trail  = Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(true), check_trail_joined)
 
@@ -26591,7 +26596,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
   -- parse atx header
-  parsers.AtxHeading = parsers.nonindentspace
+  parsers.AtxHeading = parsers.check_trail_no_rem
                      * Cg(parsers.heading_start, "level")
                      * ((C( parsers.optionalspace
                           * parsers.hash^0 
@@ -26602,6 +26607,7 @@ end
                        / strip_atx_end
                        / self.parser_functions.parse_inlines)
                      * Cb("level")
+                     * parsers.leave_trail
                      / writer.heading
 
   local function remove_enclosing_whitespaces(o)
@@ -26616,13 +26622,14 @@ end
                         - parsers.thematic_break_lines
 
   parsers.heading_text = parsers.heading_line
-                       * (parsers.heading_line - parsers.heading_level)^0
+                       * ((parsers.check_optional_indent / "") * (parsers.heading_line - parsers.heading_level))^0
 
-  parsers.SetextHeading = #(parsers.heading_text * parsers.heading_level)
-                        * Ct(parsers.heading_text / remove_enclosing_whitespaces
+  parsers.SetextHeading = #(parsers.heading_text * parsers.check_minimal_indent * parsers.check_trail * parsers.heading_level)
+                        * Ct(Cs(parsers.heading_text) / remove_enclosing_whitespaces
                             / self.parser_functions.parse_inlines )
-                        * parsers.heading_level
+                        * parsers.check_minimal_indent * parsers.check_trail_no_rem * parsers.heading_level
                         * parsers.newline
+                        * parsers.leave_trail
                         / writer.heading
 
   parsers.Heading = parsers.AtxHeading + parsers.SetextHeading
