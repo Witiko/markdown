@@ -13,8 +13,10 @@
 > bar
 >>>
 documentBegin
+BEGIN Section
 headingOne: (BEGIN link)(- label: Foo)(- URI: /url)(- title: )(END link)
 interblockSeparator
 blockQuoteBegin
 blockQuoteEnd
+END Section
 documentEnd
