@@ -1115,8 +1115,8 @@ local kpse
 %    \end{macrocode}
 % \begin{markdown}
 %
-% If KPathSea has not been loaded before or if we are using the `texlua`
-% interpreter of LUa\TeX, configure KPathSea on top of loading it.
+% If KPathSea has not been loaded before or if Lua\TeX{} has not yet
+% been initialized, configure KPathSea on top of loading it.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -27725,8 +27725,8 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% If KPathSea has not been loaded before or if we are using the `texlua`
-% interpreter of LUa\TeX, configure KPathSea on top of loading it.
+% If KPathSea has not been loaded before or if Lua\TeX{} has not yet
+% been initialized, configure KPathSea on top of loading it.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -28707,8 +28707,20 @@ end
       "|markdownOptionHelperScriptFileName"}%
     |immediate|write|markdownOutputFileStream{%
       local ran_ok, error = pcall(function()
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If KPathSea has not been loaded before or if Lua\TeX{} has not yet
+% been initialized, configure KPathSea on top of loading it.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        local should_initialize = package.loaded.kpse == nil
+                               or tex.initialize ~= nil
         local ran_ok, kpse = pcall(require, "kpse")
-        if ran_ok then kpse.set_program_name("luatex") end
+        if ran_ok and should_initialize then
+          kpse.set_program_name("luatex")
+        end
         #1
       end)
 %    \end{macrocode}
