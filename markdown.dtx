@@ -25586,11 +25586,13 @@ function M.reader.new(writer, options)
   parsers.spnl_sep  = parsers.optionalspace * parsers.newline * parsers.optionalspace
                     + parsers.spacechar^1
 
+  parsers.only_blank = parsers.spacechar^0 * (parsers.newline + parsers.eof)
+
   -- parse a reference definition:  [foo]: /bar "title"
   parsers.define_reference_parser = (parsers.check_trail / "") * parsers.link_label * parsers.colon
                                   * parsers.spnl * parsers.url
-                                  * (parsers.spnl_sep * parsers.title + Cc("")) 
-                                  * parsers.spacechar^0 * (parsers.newline + parsers.eof)
+                                  * ( parsers.spnl_sep * parsers.title * parsers.only_blank
+                                    + Cc("") * parsers.only_blank) 
                                   * parsers.leave_trail
 
 %    \end{macrocode}
@@ -25775,7 +25777,7 @@ function M.reader.new(writer, options)
           inline_content.ending
       end
 
-      if attribute_content ~= nil then
+      if attribute_content ~= nil and attribute_content.opening then
         result = result ..
         attribute_content.opening ..
         util.rope_to_string(attribute_content.content) ..
@@ -28412,10 +28414,10 @@ M.extensions.link_attributes = function()
 
       local define_reference_parser = (parsers.check_trail / "") * parsers.link_label * parsers.colon
                                     * parsers.spnl * parsers.url
-                                    * (parsers.spnl_sep * parsers.title + Cc(""))
-                                    * ( parsers.spnl
-                                      * Ct(parsers.attributes))^-1
-                                    * parsers.optionalspace * (parsers.newline + parsers.eof)
+                                    * ( parsers.spnl_sep * parsers.title * (parsers.spnl * Ct(parsers.attributes)) * parsers.only_blank
+                                      + parsers.spnl_sep * parsers.title * parsers.only_blank
+                                      + Cc("") * (parsers.spnl * Ct(parsers.attributes)) * parsers.only_blank
+                                      + Cc("") * parsers.only_blank)
                                     * parsers.leave_trail
 
       local ReferenceWithAttributes = define_reference_parser
