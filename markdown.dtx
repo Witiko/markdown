@@ -25050,45 +25050,12 @@ function M.reader.new(writer, options)
 %  \end{macrocode}
 % \begin{markdown}
 %
-% Start traversing and checking the indents for a continuation line, optionally with 
-% the mode `is_optional` selected.
+%  Check if a code trail is expected.
 %
 % \end{markdown}
 %  \begin{macrocode}
-  local function start_traverse_indent(s, i, indent_table, is_optional)
-    if not has_indents(indent_table) then
-      return true
-    end
-
-    local passes, new_index, current_trail = traverse_indent(s, i, indent_table, is_optional, false)
-
-    if passes then
-      indent_table = add_trail(indent_table, current_trail)
-      return new_index, indent_table
-    end
-    return false
-  end
-
-%  \end{macrocode}
-% \begin{markdown}
-%
-% Start traversing and checking the indents for a continuation blank line, optionally with 
-% the mode `is_optional` selected.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  local function start_blank_indent(s, i, indent_table, is_optional)
-    if not has_indents(indent_table) then
-      return true
-    end
-
-    local passes, new_index, current_trail = traverse_indent(s, i, indent_table, is_optional, true)
-
-    if passes then
-      indent_table = add_trail(indent_table, current_trail)
-      return new_index, indent_table
-    end
-    return false
+  local function check_trail(expect_code, is_code)
+    return (expect_code and is_code) or (not expect_code and not is_code)
   end
 
 %  \end{macrocode}
@@ -25113,11 +25080,40 @@ function M.reader.new(writer, options)
       remainder = sp.remainder
     end
 
-    local result = (expect_code and is_code) or (not expect_code and not is_code)
+    local result = check_trail(expect_code, is_code)
     if omit_remainder then
       return result
     end
     return result, remainder
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Start traversing and checking the indents for a continuation line, optionally with 
+% the mode `is_optional` selected. Check blank line specifically with `is_blank`. 
+% Additionally, also directly check the new trail with a type `check_trail_type`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function start_traverse_indent_joined(s, i, indent_table, is_optional, is_blank, check_trail_type)
+    if not has_indents(indent_table) then
+      return true
+    end
+
+    local passes, new_index, current_trail = traverse_indent(s, i, indent_table, is_optional, is_blank)
+
+    if passes then
+      if check_trail_type == "non-code" then
+        return check_trail(false, current_trail.is_code)
+      end
+      if check_trail_type == "code" then
+        return check_trail(true, current_trail.is_code)
+      end
+      indent_table = add_trail(indent_table, current_trail)
+      return new_index, indent_table
+    end
+    return false
   end
 
 %  \end{macrocode}
@@ -25142,11 +25138,17 @@ function M.reader.new(writer, options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  parsers.check_minimal_indent = Cmt(Cb("indent_info") * Cc(false), start_traverse_indent)
+  parsers.check_minimal_indent = Cmt(Cb("indent_info") * Cc(false), start_traverse_indent_joined)
 
-  parsers.check_optional_indent = Cmt(Cb("indent_info") * Cc(true), start_traverse_indent)
+  parsers.check_optional_indent = Cmt(Cb("indent_info") * Cc(true), start_traverse_indent_joined)
 
-  parsers.check_minimal_blank_indent = Cmt(Cb("indent_info") * Cc(false), start_blank_indent)
+  parsers.check_minimal_indent_and_trail = Cmt(Cb("indent_info") * Cc(false) * Cc(false) * Cc("non-code"), start_traverse_indent_joined)
+
+  parsers.check_minimal_indent_and_code_trail = Cmt(Cb("indent_info") * Cc(false) * Cc(false) * Cc("code"), start_traverse_indent_joined)
+
+  parsers.check_minimal_blank_indent = Cmt(Cb("indent_info") * Cc(false) * Cc(true), start_traverse_indent_joined)
+
+
 
   parsers.minimally_indented_blank = parsers.check_minimal_indent * (parsers.blankline / "")
 
@@ -26630,7 +26632,7 @@ end
   parsers.SetextHeading = #(parsers.heading_text * parsers.check_minimal_indent * parsers.check_trail * parsers.heading_level)
                         * Ct(Cs(parsers.heading_text) / remove_enclosing_whitespaces
                             / self.parser_functions.parse_inlines )
-                        * parsers.check_minimal_indent * parsers.check_trail_no_rem * parsers.heading_level
+                        * parsers.check_minimal_indent_and_trail * parsers.heading_level
                         * parsers.newline
                         * parsers.leave_trail
                         / writer.heading
@@ -27967,7 +27969,7 @@ M.extensions.fenced_code = function(blank_before_code_fence,
       end
 
       local fencetail      = function(char)
-        return               parsers.nonindentspace
+        return               parsers.check_trail_no_rem
                            * Cmt(C(char^3) * Cb("fencelength"), captures_geq_length)
                            * parsers.optionalspace * (parsers.newline + parsers.eof)
                            + parsers.eof
