@@ -27920,14 +27920,14 @@ M.extensions.fenced_code = function(blank_before_code_fence,
         return str:gsub("^%s*(.-)%s*$", "%1")
       end
 
-      local tilde_infostring = Cs(( parsers.anyescaped 
-                                  - parsers.newline)^0 
+      local tilde_infostring = Cs(Cs(( parsers.anyescaped 
+                                     - parsers.newline)^0)
                                  / strip_enclosing_whitespaces)
 
-      local backtick_infostring = Cs(((-#(parsers.backslash * parsers.backtick) * parsers.anyescaped)
-                                      - parsers.newline
-                                      - parsers.backtick)^0 
-                                     / strip_enclosing_whitespaces)
+      local backtick_infostring = Cs(Cs(((-#(parsers.backslash * parsers.backtick) * parsers.anyescaped)
+                                         - parsers.newline
+                                         - parsers.backtick)^0)
+                                    / strip_enclosing_whitespaces)
 
       local fenceindent
 
