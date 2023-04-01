@@ -28004,14 +28004,16 @@ M.extensions.fenced_code = function(blank_before_code_fence,
 
       local TildeFencedCode
              = fencehead(parsers.tilde, tilde_infostring)
-             * Cs(((parsers.check_minimal_blank_indent / "") * parsers.blankline 
-                  + (parsers.check_minimal_indent / "") * fencedline(parsers.tilde))^0)
+             * Cs((((parsers.check_minimal_blank_indent / "") * #parsers.blankline
+                   + (parsers.check_minimal_indent / ""))
+                  * fencedline(parsers.tilde))^0)
              * ((parsers.check_minimal_indent / "") * fencetail(parsers.tilde) + parsers.succeed)
 
       local BacktickFencedCode
              = fencehead(parsers.backtick, backtick_infostring)
-             * Cs(((parsers.check_minimal_blank_indent / "") * parsers.blankline 
-                  + (parsers.check_minimal_indent / "") * fencedline(parsers.backtick))^0)
+             * Cs((((parsers.check_minimal_blank_indent / "") * #parsers.blankline
+                   + (parsers.check_minimal_indent / ""))
+                  * fencedline(parsers.backtick))^0)
              * ((parsers.check_minimal_indent / "") * fencetail(parsers.backtick) + parsers.succeed)
 
       local infostring_with_attributes

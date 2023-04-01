@@ -16,6 +16,8 @@ bar
 # baz
 >>>
 documentBegin
+BEGIN section
+BEGIN section
 headingTwo: foo
 interblockSeparator
 BEGIN fencedCode
@@ -23,5 +25,9 @@ BEGIN fencedCode
 - infostring: 
 END fencedCode
 interblockSeparator
+END section
+END section
+BEGIN section
 headingOne: baz
+END section
 documentEnd
