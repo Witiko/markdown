@@ -18,15 +18,27 @@
 ###### foo
 >>>
 documentBegin
+BEGIN section
 headingOne: foo
 interblockSeparator
+BEGIN section
 headingTwo: foo
 interblockSeparator
+BEGIN section
 headingThree: foo
 interblockSeparator
+BEGIN section
 headingFour: foo
 interblockSeparator
+BEGIN section
 headingFive: foo
 interblockSeparator
+BEGIN section
 headingSix: foo
+END section
+END section
+END section
+END section
+END section
+END section
 documentEnd

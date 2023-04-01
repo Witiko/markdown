@@ -8,5 +8,11 @@
 ### foo ### b
 >>>
 documentBegin
+BEGIN section
+BEGIN section
+BEGIN section
 headingThree: foo (hash)(hash)(hash) b
+END section
+END section
+END section
 documentEnd

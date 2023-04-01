@@ -10,7 +10,7 @@
 documentBegin
 BEGIN link
 - label: link
-- URI: /url%C2%A0%22title%22
+- URI: /url "title"
 - title: 
 END link
 documentEnd

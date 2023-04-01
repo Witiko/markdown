@@ -14,7 +14,7 @@
 documentBegin
 BEGIN link
 - label: Foo bar
-- URI: my%20url
+- URI: my url
 - title: title
 END link
 documentEnd

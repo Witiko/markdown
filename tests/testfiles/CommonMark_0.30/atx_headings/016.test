@@ -14,7 +14,11 @@
 documentBegin
 thematicBreak
 interblockSeparator
+BEGIN section
+BEGIN section
 headingTwo: foo
 interblockSeparator
 thematicBreak
+END section
+END section
 documentEnd

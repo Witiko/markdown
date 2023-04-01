@@ -13,7 +13,11 @@ Foo *bar*
 ---------
 >>>
 documentBegin
+BEGIN section
 headingOne: Foo (emphasis: bar)
 interblockSeparator
+BEGIN section
 headingTwo: Foo (emphasis: bar)
+END section
+END section
 documentEnd

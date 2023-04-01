@@ -1720,8 +1720,6 @@ local walkable_syntax = {
     "Str",
     "Space",
     "Endline",
-    "UlOrStarLine",
-    "Strong",
     "Emph",
     "MaybeLinkOrImage",
     "LinkOrImage",
@@ -4670,8 +4668,6 @@ be produced and contain the following text:
         "Str",
         "Space",
         "Endline",
-        "UlOrStarLine",
-        "Strong",
         "Emph",
         "StrikeThrough (user-defined \"./strike-through.lua\" syntax extension)",
         "MaybeLinkOrImage",
@@ -7540,12 +7536,12 @@ defaultOptions.pipeTables = false
 
 #### Option `preserveTabs`
 
-`preserveTabs` (default value: `false`)
+`preserveTabs` (default value: `true`)
 
 % \fi
 % \begin{markdown}
 %
-% \Optitem[false]{preserveTabs}{\opt{true}, \opt{false}}
+% \Optitem[true]{preserveTabs}{\opt{true}, \opt{false}}
 %
 :    true
 
@@ -7564,14 +7560,14 @@ defaultOptions.pipeTables = false
 \@@_add_lua_option:nnn
   { preserveTabs }
   { boolean }
-  { false }
+  { true }
 %    \end{macrocode}
 % \iffalse
 %</tex>
 %<*lua,lua-cli>
 % \fi
 %  \begin{macrocode}
-defaultOptions.preserveTabs = false
+defaultOptions.preserveTabs = true
 %    \end{macrocode}
 % \par
 % \iffalse
@@ -11896,8 +11892,10 @@ filename of a file contaning the code block contents.
 
 The \mdef{markdownRendererInputFencedCode} macro represents a fenced code
 block. This macro will only be produced, when the \Opt{fencedCode} option is
-enabled. The macro receives two arguments that correspond to the filename of
-a file contaning the code block contents and to the code fence infostring.
+enabled. The macro receives three arguments that correspond to the filename of
+a file contaning the code block contents, the fully escaped code fence info string 
+that can be directly typeset, and the raw code fence info string that can be used 
+outside typesetting.
 
 % \end{markdown}
 %
@@ -11998,7 +11996,7 @@ following text except for the filename, which may differ:
 \prop_gput:Nnn
   \g_@@_renderer_arities_prop
   { inputFencedCode }
-  { 2 }
+  { 3 }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par
@@ -22440,7 +22438,11 @@ local character_entities = {
 % \end{markdown}
 %  \begin{macrocode}
 function entities.dec_entity(s)
-  return unicode.utf8.char(tonumber(s))
+  local n = tonumber(s)
+  if n == nil then
+    return "&#" .. s .. ";"  -- fallback for unknown entities
+  end
+  return unicode.utf8.char(n)
 end
 %    \end{macrocode}
 % \par
@@ -22453,7 +22455,28 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 function entities.hex_entity(s)
-  return unicode.utf8.char(tonumber("0x"..s))
+  local n = tonumber("0x"..s)
+  if n == nil then
+    return "&#x" .. s .. ";"  -- fallback for unknown entities
+  end
+  return unicode.utf8.char(n)
+end
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Given a captured character `x` and a string `s` of hexadecimal digits, the
+% \luamdef{entities.hex_entity_with_x_char} returns the corresponding
+% \acro{utf}8-encoded Unicode codepoint or fallback with the `x` character.
+%
+% \end{markdown}
+%  \begin{macrocode}
+function entities.hex_entity_with_x_char(x, s)
+  local n = tonumber("0x"..s)
+  if n == nil then
+    return "&#" .. x .. s .. ";"  -- fallback for unknown entities
+  end
+  return unicode.utf8.char(n)
 end
 %    \end{macrocode}
 % \par
@@ -22762,6 +22785,7 @@ function M.writer.new(options)
 % - \luamdef{writer->math} transforms a math span.
 % - \luamdef{writer->identifier} transforms an input programmatic identifier.
 % - \luamdef{writer->uri} transforms an input \acro{uri}.
+% - \luamdef{writer->infostring} transforms a fence code info string.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -22771,10 +22795,12 @@ function M.writer.new(options)
     self.identifier = escape_minimal
     self.string = escape_minimal
     self.uri = escape_minimal
+    self.infostring = escape_minimal
   else
     self.identifier = escape_programmatic_text
     self.string = escape_typographic_text
     self.uri = escape_programmatic_text
+    self.infostring = escape_programmatic_text
   end
 %    \end{macrocode}
 % \par
@@ -23661,17 +23687,26 @@ local function captures_equal_length(_,i,a,b)
   return #a == #b and i
 end
 
-parsers.closeticks  = parsers.space^-1
-                    * Cmt(C(parsers.backtick^1)
-                         * Cb("ticks"), captures_equal_length)
+parsers.closeticks  = Cmt(C(parsers.backtick^1)
+                          * Cb("ticks"), captures_equal_length)
 
-parsers.intickschar = (parsers.any - S(" \n\r`"))
+parsers.intickschar = (parsers.any - S("\n\r`"))
                     + (parsers.newline * -parsers.blankline)
-                    + (parsers.space - parsers.closeticks)
                     + (parsers.backtick^1 - parsers.closeticks)
 
-parsers.inticks     = parsers.openticks * parsers.space^-1
-                    * C(parsers.intickschar^0) * parsers.closeticks
+local function process_inticks(s)
+  s = s:gsub("\n", " ")
+  s = s:gsub("^ (.*) $", "%1")
+  return s
+end
+
+parsers.inticks = parsers.openticks
+                * C(parsers.space^0)
+                * parsers.closeticks
+                + parsers.openticks
+                * Cs(parsers.intickschar^0 / process_inticks)
+                * parsers.closeticks
+
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -23924,10 +23959,14 @@ parsers.in_matched_block_tags = parsers.less
 %
 % \end{markdown}
 %  \begin{macrocode}
-parsers.hexentity = parsers.ampersand * parsers.hash * S("Xx")
-                  * C(parsers.hexdigit^1) * parsers.semicolon
+local function repeat_between(pattern, min, max)
+  return -pattern^(max + 1) * pattern^min
+end
+
+parsers.hexentity = parsers.ampersand * parsers.hash * C(S("Xx"))
+                  * C(repeat_between(parsers.hexdigit, 1, 6)) * parsers.semicolon
 parsers.decentity = parsers.ampersand * parsers.hash
-                  * C(parsers.digit^1) * parsers.semicolon
+                  * C(repeat_between(parsers.digit, 1, 7)) * parsers.semicolon
 parsers.tagentity = parsers.ampersand * C(parsers.alphanumeric^1)
                   * parsers.semicolon
 %    \end{macrocode}
@@ -23973,9 +24012,12 @@ end
 %  \begin{macrocode}
 parsers.lineof = function(c)
     return (parsers.leader * (P(c) * parsers.optionalspace)^3
-           * (parsers.newline * parsers.blankline^1
-             + parsers.newline^-1 * parsers.eof))
+           * (parsers.newline + parsers.eof))
 end
+
+parsers.thematic_break_lines = parsers.lineof(parsers.asterisk)
+                             + parsers.lineof(parsers.dash)
+                             + parsers.lineof(parsers.underscore)
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -23989,10 +24031,11 @@ parsers.heading_start = #parsers.hash * C(parsers.hash^-6)
                       * -parsers.hash / length
 
 -- parse setext header ending and return level
-parsers.heading_level = parsers.equal^1 * Cc(1) + parsers.dash^1 * Cc(2)
+parsers.heading_level = parsers.nonindentspace * parsers.equal^1 * parsers.optionalspace * #parsers.newline * Cc(1) 
+                      + parsers.nonindentspace * parsers.dash^1 * parsers.optionalspace * #parsers.newline * Cc(2)
 
 local function strip_atx_end(s)
-  return s:gsub("[#%s]*\n$","")
+  return s:gsub("%s+#*%s*\n$","")
 end
 %    \end{macrocode}
 % \par
@@ -24261,6 +24304,326 @@ function M.reader.new(writer, options)
     parsers.blockquote_body = parsers.blockquote_body
                             * (parsers.blankline^0 / "")
   end
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+%#### Helpers for Emphasis and Strong Emphasis (local)
+%
+% \end{markdown}
+%  \begin{macrocode}
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Collect the content between the `opening_index` and `closing_index` in the delimiter table `t`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function collect_emphasis_content(t, opening_index, closing_index)
+    local content = {}
+    for i = opening_index, closing_index do
+      local value = t[i]
+      if value.is_active then
+        if value.type == "delimiter_run" then
+          content[#content + 1] = writer.escape(string.rep(value.character, value.current_count))
+        else
+          content[#content + 1] = value.content
+          value.content = ''
+        end
+        value.is_active = false
+      end
+    end
+
+    return content
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Render content between the `opening_index` and `closing_index` in the delimiter table `t` 
+% as emphasis.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function fill_emph(t, opening_index, closing_index)
+    local content = collect_emphasis_content(t, opening_index + 1, closing_index - 1)
+    t[opening_index + 1].is_active = true
+    t[opening_index + 1].content = writer.emphasis(content)
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Render content between the `opening_index` and `closing_index` in the delimiter table `t` 
+% as strong emphasis.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function fill_strong(t, opening_index, closing_index)
+    local content = collect_emphasis_content(t, opening_index + 1, closing_index - 1)
+    t[opening_index + 1].is_active = true
+    t[opening_index + 1].content = writer.strong(content)
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Check whether the opening delimiter `opening_delimiter` and closing delimiter `closing_delimiter` break
+% rule three together.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function breaks_three_rule(opening_delimiter, closing_delimiter)
+    return (opening_delimiter.is_closing or closing_delimiter.is_opening) and 
+      ((opening_delimiter.original_count + closing_delimiter.original_count) % 3 == 0) and 
+      (opening_delimiter.original_count % 3 ~= 0 or closing_delimiter.original_count % 3 ~= 0)
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Look for the first potential emphasis opener in the delimiter table `t` in the range from
+% `bottom_index` to `latest_index`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function find_opener(t, bottom_index, latest_index, character, closing_delimiter)
+    for i = latest_index, bottom_index, -2 do
+      local value = t[i]
+      if value.is_active and
+         value.is_opening and
+         (value.character == character) and
+         (value.current_count > 0) then
+        if not breaks_three_rule(value, closing_delimiter) then
+          return i
+        end
+      end
+    end
+
+    return nil
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Iterate over the delimiters in the delimiter table `t`, producing emphasis or strong emphasis macros.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function process_emphasis(t)
+    for _,value in ipairs(t) do
+      value.is_active = true
+      if value.type == "delimiter_run" then
+          local delimiter_length = string.len(value.content)
+          value.character = string.sub(value.content, 1, 1)
+          value.current_count = delimiter_length
+          value.original_count = delimiter_length
+      end
+    end
+
+    local current_position = 1
+    local openers_bottom = {
+      ['*'] = { -- character
+        [true] = { -- is opening
+          1, 1, 1 -- lengths
+        },
+        [false] = {
+          1, 1, 1
+        }
+      },
+      ['_'] = {
+        [true] = {
+          1, 1, 1
+        },
+        [false] = {
+          1, 1, 1
+        }
+      }
+    }
+
+    while current_position <= #t do
+      local value = t[current_position]
+      local character = value.character
+      local is_opening = value.is_opening
+      local is_closing = value.is_closing
+      local closing_length_modulo_three = value.original_count % 3
+
+      local current_openers_bottom = openers_bottom[character][is_opening][closing_length_modulo_three + 1]
+
+      if is_closing and (value.current_count > 0) then
+        local opener_position = find_opener(t, current_openers_bottom, current_position - 2, character, value)
+
+        if (opener_position ~= nil) then
+
+          local opening_delimiter = t[opener_position]
+
+          local current_opening_count = opening_delimiter.current_count
+          local current_closing_count = t[current_position].current_count
+
+          if (current_opening_count >= 2) and (current_closing_count >= 2) then
+            opening_delimiter.current_count = current_opening_count - 2
+            t[current_position].current_count = current_closing_count - 2
+            fill_strong(t, opener_position, current_position)
+          else
+            opening_delimiter.current_count = current_opening_count - 1
+            t[current_position].current_count = current_closing_count - 1
+            fill_emph(t, opener_position, current_position)
+          end
+
+        else
+          openers_bottom[character][is_opening][closing_length_modulo_three + 1] = current_position
+          current_position = current_position + 2
+        end
+      else
+        current_position = current_position + 2
+      end
+    end
+
+    local final_result = collect_emphasis_content(t, 1, #t)
+    return final_result
+  end
+
+  local cont = lpeg.R("\128\191") -- continuation byte
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Match a UTF-8 character of byte length `n`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function utf8_by_byte_count(n)
+    if (n == 1) then
+      return lpeg.R("\0\127")
+    end
+    if (n == 2) then
+      return lpeg.R("\194\223") * cont
+    end
+    if (n == 3) then
+      return lpeg.R("\224\239") * cont * cont
+    end
+    if (n == 4) then
+      return lpeg.R("\240\244") * cont * cont * cont
+    end
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Check if a there is a character of a type `chartype` between the start position `start_pos`
+% and end position `end_pos` in a string `s` relative to current index `i`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function check_unicode_type(s, i, start_pos, end_pos, chartype)
+    local c = nil
+    local char_length = 0
+    for pos = start_pos, end_pos, 1 do
+      if (start_pos < 0) then
+        char_length = -pos
+      else
+        char_length = pos + 1
+      end
+      c = lpeg.match({ C(utf8_by_byte_count(char_length)) },s,i+pos)
+      if (c ~= nil) and (unicode.utf8.match(c, chartype)) then
+        return i
+      end
+    end
+  end
+
+  local function check_preceding_unicode_punctuation(s,i)
+    return check_unicode_type(s, i, -4, -1, "%p")
+  end
+
+  local function check_preceding_unicode_whitespace(s,i)
+    return check_unicode_type(s, i, -4, -1, "%s")
+  end
+
+  local function check_following_unicode_punctuation(s,i)
+    return check_unicode_type(s, i, 0, 3, "%p")
+  end
+
+  local function check_following_unicode_whitespace(s,i)
+    return check_unicode_type(s, i, 0, 3, "%s")
+  end
+
+  parsers.unicode_preceding_punctuation = B(parsers.escapable) 
+                                        + Cmt(parsers.succeed, check_preceding_unicode_punctuation)
+
+  parsers.unicode_preceding_whitespace = Cmt(parsers.succeed, check_preceding_unicode_whitespace)
+
+  parsers.unicode_following_punctuation = #parsers.escapable 
+                                        + Cmt(parsers.succeed, check_following_unicode_punctuation)
+
+  parsers.unicode_following_whitespace = Cmt(parsers.succeed, check_following_unicode_whitespace)
+
+  parsers.delimiter_run = function(character)
+    return  (B(parsers.backslash * character) + -B(character))
+          * character^1
+          * -#character
+  end
+
+  parsers.left_flanking_delimiter_run = function(character)
+    return  (B( parsers.any) 
+              * (parsers.unicode_preceding_punctuation + parsers.unicode_preceding_whitespace) 
+             + -B(parsers.any))
+            * parsers.delimiter_run(character)
+            * parsers.unicode_following_punctuation
+            + parsers.delimiter_run(character)
+            * -#(parsers.unicode_following_punctuation + parsers.unicode_following_whitespace)
+  end
+
+  parsers.right_flanking_delimiter_run = function(character)
+    return  parsers.unicode_preceding_punctuation
+          * parsers.delimiter_run(character)
+          * (parsers.unicode_following_punctuation + parsers.unicode_following_whitespace)
+          + (B(parsers.any) 
+            * -(parsers.unicode_preceding_punctuation + parsers.unicode_preceding_whitespace))
+          * parsers.delimiter_run(character)
+  end
+
+  parsers.emph_start = parsers.left_flanking_delimiter_run(parsers.asterisk)
+                     + (-#parsers.right_flanking_delimiter_run(parsers.underscore)
+                        + (parsers.unicode_preceding_punctuation 
+                          * #parsers.right_flanking_delimiter_run(parsers.underscore)))
+                     * parsers.left_flanking_delimiter_run(parsers.underscore)
+
+  parsers.emph_end  = parsers.right_flanking_delimiter_run(parsers.asterisk)
+                    + (-#parsers.left_flanking_delimiter_run(parsers.underscore)
+                      + #(parsers.left_flanking_delimiter_run(parsers.underscore) 
+                         * parsers.unicode_following_punctuation))
+                    * parsers.right_flanking_delimiter_run(parsers.underscore)
+
+  parsers.emph_capturing_open_and_close = #parsers.emph_start * #parsers.emph_end
+                                        * Ct( Cg(Cc("delimiter_run"), "type")
+                                            * Cg(C(parsers.emph_start), "content")
+                                            * Cg(Cc(true), "is_opening")
+                                            * Cg(Cc(true), "is_closing"))
+
+  parsers.emph_capturing_open = Ct( Cg(Cc("delimiter_run"), "type")
+                                  * Cg(C(parsers.emph_start), "content")
+                                  * Cg(Cc(true), "is_opening")
+                                  * Cg(Cc(false), "is_closing"))
+
+  parsers.emph_capturing_close = Ct( Cg(Cc("delimiter_run"), "type")
+                                   * Cg(C(parsers.emph_end), "content")
+                                   * Cg(Cc(false), "is_opening")
+                                   * Cg(Cc(true), "is_closing"))
+
+  parsers.emph_open_or_close  = parsers.emph_capturing_open_and_close
+                              + parsers.emph_capturing_open
+                              + parsers.emph_capturing_close
+
+  parsers.emph_open = parsers.emph_capturing_open_and_close
+                    + parsers.emph_capturing_open
+
+  parsers.emph_close  = parsers.emph_capturing_open_and_close
+                      + parsers.emph_capturing_close
+
+  parsers.emph_content  = Ct( Cg(Cc("content"), "type")
+                            * Cg(Ct((parsers.Inline - parsers.emph_open_or_close)^0), "content"))
+
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -24949,7 +25312,7 @@ function M.reader.new(writer, options)
   parsers.Str      = (parsers.normalchar * (parsers.normalchar + parsers.at)^0)
                    / writer.string
 
-  parsers.Symbol   = (V("SpecialChar") - parsers.tightblocksep)
+  parsers.Symbol   = (parsers.backtick^1 + V("SpecialChar") - parsers.tightblocksep)
                    / writer.string
 
   parsers.Ellipsis = P("...") / writer.ellipsis
@@ -24977,6 +25340,7 @@ function M.reader.new(writer, options)
                      + parsers.tightblocksep  -- nested list
                      + parsers.eof       -- end of document
                      + parsers.bqstart
+                     + parsers.thematic_break_lines
                      + parsers.headerstart
 
   parsers.Endline   = parsers.newline
@@ -25016,43 +25380,9 @@ function M.reader.new(writer, options)
                   + parsers.spacechar^1 * parsers.optionalspace
                                         / writer.nbsp
 
-  if options.underscores then
-    parsers.Strong = ( parsers.between(parsers.Inline, parsers.doubleasterisks,
-                                       parsers.doubleasterisks)
-                     + parsers.between(parsers.Inline, parsers.doubleunderscores,
-                                       parsers.doubleunderscores)
-                     ) / writer.strong
-
-    parsers.Emph   = ( parsers.between(parsers.Inline, parsers.asterisk,
-                                       parsers.asterisk)
-                     + parsers.between(parsers.Inline, parsers.underscore,
-                                       parsers.underscore)
-                     ) / writer.emphasis
-  else
-    parsers.Strong = ( parsers.between(parsers.Inline, parsers.doubleasterisks,
-                                       parsers.doubleasterisks)
-                     ) / writer.strong
-
-    parsers.Emph   = ( parsers.between(parsers.Inline, parsers.asterisk,
-                                       parsers.asterisk)
-                     ) / writer.emphasis
-  end
-
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% The \luamdef{reader->auto_link_url} method produces an
-% autolink to a URL or a relative reference in the output
-% format, where `url` is the link destination and
-% `attributes` are the optional attributes.
-%
-% \end{markdown}
-%  \begin{macrocode}
-function self.auto_link_url(url, attributes)
-  return writer.link(writer.escape(url),
-                     url, nil, attributes)
-end
+  parsers.Emph  = Ct( parsers.emph_open
+                    * (parsers.emph_content * parsers.emph_open_or_close)^1
+                    ) / process_emphasis
 
 %    \end{macrocode}
 % \par
@@ -25087,10 +25417,6 @@ end
   parsers.LinkOrImage     = Ct(parsers.link_array) * Cc(parsers.link_group)
                           / process_links_and_images
 
-  -- avoid parsing long strings of * or _ as emph/strong
-  parsers.UlOrStarLine  = parsers.asterisk^4 + parsers.underscore^4
-                        / writer.string
-
   parsers.EscapedChar   = parsers.backslash * C(parsers.escapable) / writer.string
 
   parsers.InlineHtml    = parsers.emptyelt_any / writer.inline_html_tag
@@ -25100,9 +25426,9 @@ end
                         + parsers.openelt_any / writer.inline_html_tag
                         + parsers.closeelt_any / writer.inline_html_tag
 
-  parsers.HtmlEntity    = parsers.hexentity / entities.hex_entity / writer.string
-                        + parsers.decentity / entities.dec_entity / writer.string
-                        + parsers.tagentity / entities.char_entity / writer.string
+  parsers.HtmlEntity    = parsers.hexentity / entities.hex_entity_with_x_char  / writer.string
+                        + parsers.decentity / entities.dec_entity              / writer.string
+                        + parsers.tagentity / entities.char_entity             / writer.string
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -25129,10 +25455,8 @@ end
                        / self.parser_functions.parse_blocks_nested
                        / writer.blockquote
 
-  parsers.ThematicBreak = ( parsers.lineof(parsers.asterisk)
-                          + parsers.lineof(parsers.dash)
-                          + parsers.lineof(parsers.underscore)
-                          ) / writer.thematic_break
+  parsers.ThematicBreak = parsers.thematic_break_lines
+                        / writer.thematic_break
 
   parsers.Reference    = parsers.define_reference_parser
                        / self.register_link
@@ -25242,20 +25566,37 @@ end
 % \end{markdown}
 %  \begin{macrocode}
   -- parse atx header
-  parsers.AtxHeading = Cg(parsers.heading_start, "level")
-                     * parsers.optionalspace
-                     * (C(parsers.line)
+  parsers.AtxHeading = parsers.nonindentspace
+                     * Cg(parsers.heading_start, "level")
+                     * ((C( parsers.optionalspace
+                          * parsers.hash^0 
+                          * parsers.optionalspace
+                          * parsers.newline)
+                        + parsers.spacechar^1 
+                        * C(parsers.line))
                        / strip_atx_end
                        / self.parser_functions.parse_inlines)
                      * Cb("level")
                      / writer.heading
 
-  parsers.SetextHeading = #(parsers.line * S("=-"))
-                        * Ct(parsers.linechar^1
-                            / self.parser_functions.parse_inlines)
-                        * parsers.newline
+  local function remove_enclosing_whitespaces(o)
+    local heading_content = ""
+    for line in o:gmatch("([^\n]*)\n?") do
+      heading_content = heading_content .. (line:gsub("^%s*(.-)%s*$", "%1\n"))
+    end
+    return heading_content
+  end
+
+  parsers.heading_line  = parsers.nonemptyline 
+                        - parsers.thematic_break_lines
+
+  parsers.heading_text = parsers.heading_line
+                       * (parsers.heading_line - parsers.heading_level)^0
+
+  parsers.SetextHeading = #(parsers.heading_text * parsers.heading_level)
+                        * Ct(parsers.heading_text / remove_enclosing_whitespaces
+                            / self.parser_functions.parse_inlines )
                         * parsers.heading_level
-                        * parsers.optionalspace
                         * parsers.newline
                         / writer.heading
 
@@ -25388,8 +25729,6 @@ end
         Space                 = parsers.Space,
         OptionalIndent        = parsers.OptionalIndent,
         Endline               = parsers.Endline,
-        UlOrStarLine          = parsers.UlOrStarLine,
-        Strong                = parsers.Strong,
         Emph                  = parsers.Emph,
         MaybeLinkOrImage      = parsers.MaybeLinkOrImage,
         LinkOrImage           = parsers.fail,
@@ -26519,7 +26858,7 @@ M.extensions.fenced_code = function(blank_before_code_fence,
         end
         local name = util.cache_verbatim(options.cacheDir, s)
         table.insert(buf, {"\\markdownRendererInputFencedCode{",
-                           name,"}{",self.string(i),"}"})
+                           name,"}{",self.string(i),"}{",self.infostring(i),"}"})
         if attr ~= nil then
           table.insert(buf, "\\markdownRendererFencedCodeAttributeContextEnd")
         end
@@ -26552,14 +26891,18 @@ M.extensions.fenced_code = function(blank_before_code_fence,
         return #a >= #b and i
       end
 
-      local tilde_infostring
-                           = C((parsers.linechar
-                              - (parsers.spacechar^1 * parsers.newline))^0)
+      local function strip_enclosing_whitespaces(str)
+        return str:gsub("^%s*(.-)%s*$", "%1")
+      end
 
-      local backtick_infostring
-                           = C((parsers.linechar
-                              - (parsers.backtick
-                                + parsers.spacechar^1 * parsers.newline))^0)
+      local tilde_infostring = Cs(( parsers.anyescaped 
+                                  - parsers.newline)^0 
+                                 / strip_enclosing_whitespaces)
+
+      local backtick_infostring = Cs(((-#(parsers.backslash * parsers.backtick) * parsers.anyescaped)
+                                      - parsers.newline
+                                      - parsers.backtick)^0 
+                                     / strip_enclosing_whitespaces)
 
       local fenceindent
       local fencehead      = function(char, infostring)
@@ -28279,7 +28622,7 @@ end
 \def\markdownRendererContentBlockOnlineImagePrototype{%
   \markdownRendererImage}%
 \def\markdownRendererContentBlockCodePrototype#1#2#3#4#5{%
-  \markdownRendererInputFencedCode{#3}{#2}}%
+  \markdownRendererInputFencedCode{#3}{#2}{#2}}%
 \def\markdownRendererImagePrototype#1#2#3#4{#2}%
 \def\markdownRendererUlBeginPrototype{}%
 \def\markdownRendererUlBeginTightPrototype{}%
@@ -28317,7 +28660,7 @@ end
 \def\markdownRendererLineBlockEndPrototype{\endgroup}%
 \def\markdownRendererInputVerbatimPrototype#1{%
   \par{\tt\input#1\relax{}}\par}%
-\def\markdownRendererInputFencedCodePrototype#1#2{%
+\def\markdownRendererInputFencedCodePrototype#1#2#3{%
   \markdownRendererInputVerbatim{#1}}%
 \def\markdownRendererHeadingOnePrototype#1{#1}%
 \def\markdownRendererHeadingTwoPrototype#1{#1}%
@@ -29554,7 +29897,7 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\renewcommand\markdownRendererInputFencedCodePrototype[2]{%
+\renewcommand\markdownRendererInputFencedCodePrototype[3]{%
   \def\next##1 ##2\relax{%
     \ifthenelse{\equal{##1}{dot}}{%
       \markdownIfOption{frozenCache}{}{%
@@ -29581,7 +29924,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
     }{%
-      \markdown@witiko@dot@oldRendererInputFencedCodePrototype{#1}{#2}%
+      \markdown@witiko@dot@oldRendererInputFencedCodePrototype{#1}{#2}{#3}%
     }%
   }%
   \next#2 \relax}%
@@ -30195,7 +30538,7 @@ end
 \RequirePackage{ltxcmds}
 \ExplSyntaxOn
 \cs_gset:Npn
-  \markdownRendererInputFencedCodePrototype#1#2
+  \markdownRendererInputFencedCodePrototype#1#2#3
   {
     \tl_if_empty:nTF
       { #2 }
@@ -30255,7 +30598,7 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-              { \markdownRendererInputFencedCode{#1}{} }
+              { \markdownRendererInputFencedCode{#1}{}{} }
           }
       }
   }
@@ -31230,7 +31573,7 @@ end
 %  \begin{macrocode}
 \ExplSyntaxOn
 \cs_gset:Npn
-  \markdownRendererInputFencedCodePrototype#1#2
+  \markdownRendererInputFencedCodePrototype#1#2#3
   {
     \tl_if_empty:nTF
       { #2 }

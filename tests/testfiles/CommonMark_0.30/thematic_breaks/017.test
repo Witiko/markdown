@@ -11,6 +11,10 @@ Foo
 bar
 >>>
 documentBegin
+BEGIN section
+BEGIN section
 headingTwo: Foo
 interblockSeparator
+END section
+END section
 documentEnd

@@ -12,7 +12,7 @@
 documentBegin
 BEGIN link
 - label: foo
-- URI: /f%C3%B6%C3%B6
+- URI: /f&ouml;&ouml;
 - title: föö
 END link
 documentEnd

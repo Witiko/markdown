@@ -8,5 +8,7 @@
 # foo *bar* \*baz\*
 >>>
 documentBegin
+BEGIN section
 headingOne: foo (emphasis: bar) *baz*
+END section
 documentEnd

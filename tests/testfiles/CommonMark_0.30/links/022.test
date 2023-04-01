@@ -10,7 +10,7 @@
 documentBegin
 BEGIN link
 - label: link
-- URI: foo%20b%C3%A4
+- URI: foo%20b&auml;
 - title: 
 END link
 documentEnd

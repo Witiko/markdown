@@ -12,9 +12,19 @@
 # foo \#
 >>>
 documentBegin
+BEGIN section
+BEGIN section
+BEGIN section
 headingThree: foo (hash)(hash)(hash)
 interblockSeparator
+END section
+END section
+BEGIN section
 headingTwo: foo (hash)(hash)(hash)
 interblockSeparator
+END section
+END section
+BEGIN section
 headingOne: foo (hash)
+END section
 documentEnd
