@@ -28722,7 +28722,7 @@ end
         local kpse
         (function()
           local should_initialize = package.loaded.kpse == nil
-                               or tex.initialize ~= nil
+                               or tex.initialize
           local ran_ok
           ran_ok, kpse = pcall(require, "kpse")
           if ran_ok and should_initialize then
