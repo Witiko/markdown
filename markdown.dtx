@@ -1042,7 +1042,8 @@ a directory named `markdown` due to [issue #74][issue-74].
 %### Lua Requirements {#luaprerequisites}
 %
 % The Lua part of the package requires that the following Lua modules are
-% available from within the Lua\TeX{} engine:
+% available from within the Lua\TeX{} engine (though not necessarily in the
+% LuaMeta\TeX{} engine).
 %
 % \pkg{LPeg${}\geq{}$0.10}
 %
@@ -1075,8 +1076,9 @@ local unicode
 %    \end{macrocode}
 % \begin{markdown}
 %
-% If the Selene Unicode library is unavailable and we are using
-% Lua${}\geq{}$5.3, we will use the built-in support for Unicode.
+% If the Selene Unicode library is unavailable (could be because we are using
+% LuaMeta\TeX) and we are using Lua${}\geq{}$5.3, we will use the built-in
+% support for Unicode.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -1097,7 +1099,49 @@ end)()
 %
 % \end{markdown}
 %  \begin{macrocode}
-local md5 = require("md5")
+local md5 = require("md5");
+%    \end{macrocode}
+% \begin{markdown}
+%
+% \pkg{Kpathsea}
+%
+%:    A package that implements the loading of third-party Lua libraries
+%     and looking up files in the \TeX{} directory structure.
+%
+% \end{markdown}
+%  \begin{macrocode}
+(function()
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If \pkg{Kpathsea} has not been loaded before or if Lua\TeX{} has not yet
+% been initialized, configure \pkg{Kpathsea} on top of loading it. Since
+% \Hologo{ConTeXt} MkIV provides a `kpse` global that acts as a
+% stub for \pkg{Kpathsea} and the \pkg{lua-uni-case} library expects that
+% `kpse` is a reference to the full \pkg{Kpathsea} library, we load
+% \pkg{Kpathsea} to the `kpse` global.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local should_initialize = package.loaded.kpse == nil
+                       or tex.initialize ~= nil
+  local ran_ok
+  ran_ok, kpse = pcall(require, "kpse")
+  if ran_ok and should_initialize then
+    kpse.set_program_name("luatex")
+  end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If the \pkg{Kpathsea} library is unavailable, we will look up files only
+% in the current working directory.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  if not ran_ok then
+    kpse = {lookup = function(f, _) return f end}
+  end
+end)()
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -1115,14 +1159,7 @@ local md5 = require("md5")
 local uni_case
 (function()
   local ran_ok
-  -- TODO: Stop loading kpse module to a global kpse variable
-  -- after https://github.com/latex3/lua-uni-algos/issues/3 has been fixed.
-  -- Remove kpse global also from file .luacheckrc.
-  ran_ok, kpse = pcall(require, "kpse")
-  if ran_ok then
-    kpse.set_program_name("luatex")
-    ran_ok, uni_case = pcall(require, "lua-uni-case")
-  end
+  ran_ok, uni_case = pcall(require, "lua-uni-case")
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -20180,27 +20217,14 @@ end
 % \begin{markdown}
 %
 % The \luamdef{util.lookup_files} method looks up files with filename `f`
-% and returns its path. If the \pkg{kpathsea} library is available, it will
-% search for files not only in the current working directory but also in the
-% \TeX{} directory structure. Further options for \pkg{kpathsea} can be
-% specified in table `options`. [@luatex21, Section 10.7.4]
+% and returns their paths. Further options for the \pkg{Kpathsea} library
+% can be specified in table `options`. [@luatex21, Section 10.7.4]
 %
 % \end{markdown}
 %  \begin{macrocode}
-util.lookup_files = (function()
-  local ran_ok, kpse = pcall(require, "kpse")
-  if ran_ok then
-    kpse.set_program_name("luatex")
-  else
-    kpse = { lookup = function(f, _) return f end }
-  end
-
-  local function lookup_files(f, options)
-    return kpse.lookup(f, options)
-  end
-
-  return lookup_files
-end)()
+function util.lookup_files(f, options)
+  return kpse.lookup(f, options)
+end
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -27709,9 +27733,24 @@ local lfs = require("lfs")
 if options.cacheDir and not lfs.isdir(options.cacheDir) then
   assert(lfs.mkdir(options["cacheDir"]))
 end
-
-local ran_ok, kpse = pcall(require, "kpse")
-if ran_ok then kpse.set_program_name("luatex") end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If \pkg{Kpathsea} has not been loaded before or if Lua\TeX{} has not yet
+% been initialized, configure \pkg{Kpathsea} on top of loading it.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local kpse
+(function()
+  local should_initialize = package.loaded.kpse == nil
+                       or tex.initialize ~= nil
+  local ran_ok
+  ran_ok, kpse = pcall(require, "kpse")
+  if ran_ok and should_initialize then
+    kpse.set_program_name("luatex")
+  end
+end)()
 local md = require("markdown")
 %    \end{macrocode}
 % \begin{markdown}
@@ -28683,8 +28722,24 @@ end
       "|markdownOptionHelperScriptFileName"}%
     |immediate|write|markdownOutputFileStream{%
       local ran_ok, error = pcall(function()
-        local ran_ok, kpse = pcall(require, "kpse")
-        if ran_ok then kpse.set_program_name("luatex") end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If \pkg{Kpathsea} has not been loaded before or if Lua\TeX{} has not yet
+% been initialized, configure \pkg{Kpathsea} on top of loading it.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        local kpse
+        (function()
+          local should_initialize = package.loaded.kpse == nil
+                               or tex.initialize
+          local ran_ok
+          ran_ok, kpse = pcall(require, "kpse")
+          if ran_ok and should_initialize then
+            kpse.set_program_name("luatex")
+          end
+        end)()
         #1
       end)
 %    \end{macrocode}
