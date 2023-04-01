@@ -17,7 +17,7 @@ Documentation:
 
 Refactoring:
 
-- Only configure the KPathsea library if it has not already
+- Only configure the Kpathsea library if it has not already
   been configured. (#268, #283)
 
 ## 2.21.0 (2022-02-28)

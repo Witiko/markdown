@@ -1103,7 +1103,7 @@ local md5 = require("md5");
 %    \end{macrocode}
 % \begin{markdown}
 %
-% \pkg{KPathSea}
+% \pkg{Kpathsea}
 %
 %:    A package that implements the loading of third-party Lua libraries
 %     and looking up files in the \TeX{} directory structure.
@@ -1114,12 +1114,12 @@ local md5 = require("md5");
 %    \end{macrocode}
 % \begin{markdown}
 %
-% If \pkg{KPathSea} has not been loaded before or if Lua\TeX{} has not yet
-% been initialized, configure \pkg{KPathSea} on top of loading it. Since
+% If \pkg{Kpathsea} has not been loaded before or if Lua\TeX{} has not yet
+% been initialized, configure \pkg{Kpathsea} on top of loading it. Since
 % \Hologo{ConTeXt} MkIV provides a `kpse` global that acts as a
-% stub for \pkg{KPathSea} and the \pkg{lua-uni-case} library expects that
-% `kpse` is a reference to the full \pkg{KPathSea} library, we load
-% \pkg{KPathSea} to the `kpse` global.
+% stub for \pkg{Kpathsea} and the \pkg{lua-uni-case} library expects that
+% `kpse` is a reference to the full \pkg{Kpathsea} library, we load
+% \pkg{Kpathsea} to the `kpse` global.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -20209,7 +20209,7 @@ end
 % \begin{markdown}
 %
 % The \luamdef{util.lookup_files} method looks up files with filename `f`
-% and returns their paths. Further options for the \pkg{KPathSea} library
+% and returns their paths. Further options for the \pkg{Kpathsea} library
 % can be specified in table `options`. [@luatex21, Section 10.7.4]
 %
 % \end{markdown}
@@ -27728,8 +27728,8 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% If \pkg{KPathSea} has not been loaded before or if Lua\TeX{} has not yet
-% been initialized, configure \pkg{KPathSea} on top of loading it.
+% If \pkg{Kpathsea} has not been loaded before or if Lua\TeX{} has not yet
+% been initialized, configure \pkg{Kpathsea} on top of loading it.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -28717,8 +28717,8 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% If \pkg{KPathSea} has not been loaded before or if Lua\TeX{} has not yet
-% been initialized, configure \pkg{KPathSea} on top of loading it.
+% If \pkg{Kpathsea} has not been loaded before or if Lua\TeX{} has not yet
+% been initialized, configure \pkg{Kpathsea} on top of loading it.
 %
 % \end{markdown}
 %  \begin{macrocode}
