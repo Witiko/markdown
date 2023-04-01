@@ -12,6 +12,7 @@ bar
 [foo]
 >>>
 documentBegin
+BEGIN Section
 headingOne: bar
 interblockSeparator
 BEGIN link
@@ -19,4 +20,5 @@ BEGIN link
 - URI: /url
 - title: 
 END link
+END Section
 documentEnd

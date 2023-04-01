@@ -12,9 +12,19 @@
    # foo
 >>>
 documentBegin
+BEGIN section
+BEGIN section
+BEGIN section
 headingThree: foo
 interblockSeparator
+END section
+END section
+BEGIN section
 headingTwo: foo
 interblockSeparator
+END section
+END section
+BEGIN section
 headingOne: foo
+END section
 documentEnd

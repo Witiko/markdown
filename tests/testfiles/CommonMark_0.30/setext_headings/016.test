@@ -11,5 +11,9 @@ Bar
 ---
 >>>
 documentBegin
+BEGIN section
+BEGIN section
 headingTwo: Foo Bar
+END section
+END section
 documentEnd

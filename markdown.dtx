@@ -1720,11 +1720,9 @@ local walkable_syntax = {
     "Str",
     "Space",
     "Endline",
-    "UlOrStarLine",
-    "Strong",
     "Emph",
-    "Link",
-    "Image",
+    "MaybeLinkOrImage",
+    "LinkOrImage",
     "Code",
     "AutoLinkUrl",
     "AutoLinkEmail",
@@ -4888,12 +4886,10 @@ be produced and contain the following text:
         "Str",
         "Space",
         "Endline",
-        "UlOrStarLine",
-        "Strong",
         "Emph",
         "StrikeThrough (user-defined \"./strike-through.lua\" syntax extension)",
-        "Link",
-        "Image",
+        "MaybeLinkOrImage",
+        "LinkOrImage",
         "Code",
         "AutoLinkUrl",
         "AutoLinkEmail",
@@ -7759,10 +7755,12 @@ defaultOptions.pipeTables = false
 #### Option `preserveTabs`
 
 `preserveTabs` (default value: `true`)
+`preserveTabs` (default value: `true`)
 
 % \fi
 % \begin{markdown}
 %
+% \Optitem[true]{preserveTabs}{\opt{true}, \opt{false}}
 % \Optitem[true]{preserveTabs}{\opt{true}, \opt{false}}
 %
 :    true
@@ -7783,12 +7781,14 @@ defaultOptions.pipeTables = false
   { preserveTabs }
   { boolean }
   { true }
+  { true }
 %    \end{macrocode}
 % \iffalse
 %</tex>
 %<*lua,lua-cli>
 % \fi
 %  \begin{macrocode}
+defaultOptions.preserveTabs = true
 defaultOptions.preserveTabs = true
 %    \end{macrocode}
 % \par
@@ -12114,8 +12114,10 @@ filename of a file contaning the code block contents.
 
 The \mdef{markdownRendererInputFencedCode} macro represents a fenced code
 block. This macro will only be produced, when the \Opt{fencedCode} option is
-enabled. The macro receives two arguments that correspond to the filename of
-a file contaning the code block contents and to the code fence infostring.
+enabled. The macro receives three arguments that correspond to the filename of
+a file contaning the code block contents, the fully escaped code fence info string 
+that can be directly typeset, and the raw code fence info string that can be used 
+outside typesetting.
 
 % \end{markdown}
 %
@@ -12216,7 +12218,7 @@ following text except for the filename, which may differ:
 \prop_gput:Nnn
   \g_@@_renderer_arities_prop
   { inputFencedCode }
-  { 2 }
+  { 3 }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par
@@ -14220,16 +14222,12 @@ following text:
 %
 % \begin{markdown}
 
-#### HTML Comment Renderers
+#### Inline HTML Comment Renderer
 
 The \mdef{markdownRendererInlineHtmlComment} macro represents the contents of an
 inline \acro{HTML} comment. This macro will only be produced, when the
 \Opt{html} option is enabled. The macro receives a single argument that
 corresponds to the contents of the \acro{HTML} comment.
-
-The \mdef{markdownRendererBlockHtmlCommentBegin} and
-\mdef{markdownRendererBlockHtmlCommentEnd} macros represent the beginning
-and the end of a block \acro{HTML} comment. The macros receive no arguments.
 
 % \end{markdown}
 %
@@ -14246,8 +14244,6 @@ following content:
 \markdownSetup{
   renderers = {
     inlineHtmlComment = {\marginnote{#1}},
-    blockHtmlCommentBegin = {\begin{quote}},
-    blockHtmlCommentEnd = {\end{quote}},
   },
 }
 \begin{document}
@@ -14255,14 +14251,6 @@ following content:
 A useful use of inline HTML comments are side notes.
 <!-- Side notes are displayed in the horizontal margins next to the relevant
 passages, which makes them *easier for the reader to find* than notes. -->
-
-We can render block HTML comments as blockquotes:
-
-<!--
-Here is a block HTML comment with a code example that a programmer might understand:
-
-    foo = bar + baz - 42
--->
 \end{markdown}
 \end{document}
 ```````
@@ -14275,13 +14263,6 @@ A PDF document named `document.pdf` should be produced and contain the
 following body text:
 
 > A useful use of HTML comments are side notes.
->
-> We can render block HTML comments as blockquotes:
-> 
-> > Here is a block HTML comment with a code example that a programmer might
-> > understand:
-> >
-> >     foo = bar + baz - 42
 
 The horizontal margins should contain the following text:
 
@@ -14303,28 +14284,6 @@ The horizontal margins should contain the following text:
   \g_@@_renderer_arities_prop
   { inlineHtmlComment }
   { 1 }
-\ExplSyntaxOff
-\def\markdownRendererBlockHtmlCommentBegin{%
-  \markdownRendererBlockHtmlCommentBeginPrototype}%
-\ExplSyntaxOn
-\seq_gput_right:Nn
-  \g_@@_renderers_seq
-  { blockHtmlCommentBegin }
-\prop_gput:Nnn
-  \g_@@_renderer_arities_prop
-  { blockHtmlCommentBegin }
-  { 0 }
-\ExplSyntaxOff
-\def\markdownRendererBlockHtmlCommentEnd{%
-  \markdownRendererBlockHtmlCommentEndPrototype}%
-\ExplSyntaxOn
-\seq_gput_right:Nn
-  \g_@@_renderers_seq
-  { blockHtmlCommentEnd }
-\prop_gput:Nnn
-  \g_@@_renderer_arities_prop
-  { blockHtmlCommentEnd }
-  { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par
@@ -18541,10 +18500,6 @@ following text:
     \seq_map_function:NN
       \g_@@_renderers_seq
       \@@_plaintex_define_renderer_prototype:n
-    \let\markdownRendererBlockHtmlCommentBeginPrototype=\iffalse
-    \let\markdownRendererBlockHtmlCommentBegin=\iffalse
-    \let\markdownRendererBlockHtmlCommentEndPrototype=\fi
-    \let\markdownRendererBlockHtmlCommentEnd=\fi
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -22658,7 +22613,11 @@ local character_entities = {
 % \end{markdown}
 %  \begin{macrocode}
 function entities.dec_entity(s)
-  return unicode.utf8.char(tonumber(s))
+  local n = tonumber(s)
+  if n == nil then
+    return "&#" .. s .. ";"  -- fallback for unknown entities
+  end
+  return unicode.utf8.char(n)
 end
 %    \end{macrocode}
 % \par
@@ -22671,7 +22630,28 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 function entities.hex_entity(s)
-  return unicode.utf8.char(tonumber("0x"..s))
+  local n = tonumber("0x"..s)
+  if n == nil then
+    return "&#x" .. s .. ";"  -- fallback for unknown entities
+  end
+  return unicode.utf8.char(n)
+end
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Given a captured character `x` and a string `s` of hexadecimal digits, the
+% \luamdef{entities.hex_entity_with_x_char} returns the corresponding
+% \acro{utf}8-encoded Unicode codepoint or fallback with the `x` character.
+%
+% \end{markdown}
+%  \begin{macrocode}
+function entities.hex_entity_with_x_char(x, s)
+  local n = tonumber("0x"..s)
+  if n == nil then
+    return "&#" .. x .. s .. ";"  -- fallback for unknown entities
+  end
+  return unicode.utf8.char(n)
 end
 %    \end{macrocode}
 % \par
@@ -22980,6 +22960,7 @@ function M.writer.new(options)
 % - \luamdef{writer->math} transforms a math span.
 % - \luamdef{writer->identifier} transforms an input programmatic identifier.
 % - \luamdef{writer->uri} transforms an input \acro{uri}.
+% - \luamdef{writer->infostring} transforms a fence code info string.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -22989,10 +22970,12 @@ function M.writer.new(options)
     self.identifier = escape_minimal
     self.string = escape_minimal
     self.uri = escape_minimal
+    self.infostring = escape_minimal
   else
     self.identifier = escape_programmatic_text
     self.string = escape_typographic_text
     self.uri = escape_programmatic_text
+    self.infostring = escape_programmatic_text
   end
 %    \end{macrocode}
 % \par
@@ -23179,21 +23162,6 @@ function M.writer.new(options)
 %  \begin{macrocode}
   function self.inline_html_comment(contents)
     return {"\\markdownRendererInlineHtmlComment{",contents,"}"}
-  end
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% Define \luamdef{writer->block_html_comment} as a function that will
-% transform the contents of a block \acro{HTML} comment, to the output
-% format, where `contents` are the contents of the \acro{HTML} comment.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  function self.block_html_comment(contents)
-    if not self.is_writing then return "" end
-    return {"\\markdownRendererBlockHtmlCommentBegin\n",contents,
-            "\n\\markdownRendererBlockHtmlCommentEnd "}
   end
 %    \end{macrocode}
 % \par
@@ -23670,7 +23638,7 @@ parsers.hexdigit               = R("09","af","AF")
 parsers.letter                 = R("AZ","az")
 parsers.alphanumeric           = R("AZ","az","09")
 parsers.keyword                = parsers.letter
-                               * parsers.alphanumeric^0
+                               * (parsers.alphanumeric + parsers.dash)^0
 parsers.internal_punctuation   = S(":;,.?")
 
 parsers.doubleasterisks        = P("**")
@@ -23883,17 +23851,26 @@ local function captures_equal_length(_,i,a,b)
   return #a == #b and i
 end
 
-parsers.closeticks  = parsers.space^-1
-                    * Cmt(C(parsers.backtick^1)
-                         * Cb("ticks"), captures_equal_length)
+parsers.closeticks  = Cmt(C(parsers.backtick^1)
+                          * Cb("ticks"), captures_equal_length)
 
-parsers.intickschar = (parsers.any - S(" \n\r`"))
+parsers.intickschar = (parsers.any - S("\n\r`"))
                     + (parsers.newline * -parsers.blankline)
-                    + (parsers.space - parsers.closeticks)
                     + (parsers.backtick^1 - parsers.closeticks)
 
-parsers.inticks     = parsers.openticks * parsers.space^-1
-                    * C(parsers.intickschar^0) * parsers.closeticks
+local function process_inticks(s)
+  s = s:gsub("\n", " ")
+  s = s:gsub("^ (.*) $", "%1")
+  return s
+end
+
+parsers.inticks = parsers.openticks
+                * C(parsers.space^0)
+                * parsers.closeticks
+                + parsers.openticks
+                * Cs(parsers.intickschar^0 / process_inticks)
+                * parsers.closeticks
+
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -23902,6 +23879,58 @@ parsers.inticks     = parsers.openticks * parsers.space^-1
 %
 % \end{markdown}
 %  \begin{macrocode}
+parsers.leader = parsers.space^-3
+
+parsers.urlchar = parsers.anyescaped
+                - parsers.newline
+                - parsers.more
+
+parsers.auto_link_scheme_part = parsers.alphanumeric
+                              + parsers.plus
+                              + parsers.period
+                              + parsers.dash
+
+parsers.auto_link_scheme  = parsers.letter
+                          * parsers.auto_link_scheme_part
+                          * parsers.auto_link_scheme_part^-30
+
+parsers.absolute_uri  = parsers.auto_link_scheme * parsers.colon
+                      * (parsers.any - parsers.spacing - parsers.less - parsers.more)^0
+
+parsers.printable_characters = S(".!#$%&'*+/=?^_`{|}~-")
+
+parsers.email_address_local_part_char = parsers.alphanumeric
+                                      + parsers.printable_characters
+
+parsers.email_address_local_part = parsers.email_address_local_part_char^1
+
+parsers.email_address_dns_label = parsers.alphanumeric
+                                * ((parsers.alphanumeric + parsers.dash)^-62
+                                  * B(parsers.alphanumeric))^-1
+
+parsers.email_address_domain  = parsers.email_address_dns_label
+                              * (parsers.period * parsers.email_address_dns_label)^0
+
+parsers.email_address = parsers.email_address_local_part
+                      * parsers.at
+                      * parsers.email_address_domain
+
+parsers.auto_link_url = parsers.less
+                      * C(parsers.absolute_uri)
+                      * parsers.more
+
+parsers.auto_link_email = parsers.less
+                        * C(parsers.email_address)
+                        * parsers.more
+
+parsers.auto_link_relative_reference = parsers.less
+                                    * C(parsers.urlchar^1)
+                                    * parsers.more
+
+parsers.autolink  = parsers.auto_link_url
+                  + parsers.auto_link_email
+                  + parsers.auto_link_relative_reference
+
 -- content in balanced brackets, parentheses, or quotes:
 parsers.bracketed   = P{ parsers.lbracket
                        * (( parsers.backslash / "" * parsers.rbracket
@@ -23930,35 +23959,49 @@ parsers.dquoted     = P{ parsers.dquote * parsers.alphanumeric
                           ) + V(1))^0
                        * parsers.dquote }
 
--- bracketed tag for markdown links, allowing nested brackets:
-parsers.tag         = parsers.lbracket
+parsers.link_text  = parsers.lbracket
                     * Cs((parsers.alphanumeric^1
-                         + parsers.bracketed
-                         + parsers.inticks
-                         + ( parsers.backslash / "" * parsers.rbracket
-                           + parsers.any
-                           - (parsers.rbracket + parsers.blankline^2)))^0)
+                        + parsers.bracketed
+                        + parsers.inticks
+                        + parsers.autolink
+                        + ( parsers.backslash * parsers.backslash)
+                        + ( parsers.backslash * (parsers.lbracket + parsers.rbracket)
+                          + parsers.any
+                          - (parsers.lbracket + parsers.rbracket + parsers.blankline^2)))^0)
+                    * parsers.rbracket
+
+parsers.link_label  = parsers.lbracket
+                    * -#(parsers.sp * parsers.rbracket)
+                    * #((parsers.any - parsers.rbracket)^-999 * parsers.rbracket)
+                    * Cs((parsers.alphanumeric^1
+                        + parsers.inticks
+                        + parsers.autolink
+                        + ( parsers.backslash * parsers.backslash)
+                        + ( parsers.backslash * (parsers.lbracket + parsers.rbracket)
+                          + parsers.any
+                          - (parsers.lbracket + parsers.rbracket + parsers.blankline^2)))^1)
                     * parsers.rbracket
 
 -- url for markdown links, allowing nested brackets:
 parsers.url         = parsers.less * Cs((parsers.anyescaped
-                                        - parsers.more)^0)
+                                        - parsers.newline - parsers.more)^0)
                                    * parsers.more
-                    + Cs((parsers.inparens + (parsers.anyescaped
+                    + -parsers.less
+                    * Cs((parsers.inparens + (parsers.anyescaped
                                              - parsers.spacing
                                              - parsers.rparent))^1)
 
--- quoted text, possibly with nested quotes:
-parsers.title_s     = parsers.squote * Cs(((parsers.anyescaped-parsers.squote)
-                                           + parsers.squoted)^0)
-                                     * parsers.squote
+-- quoted text:
+parsers.title_s     = parsers.squote
+                    * Cs(((parsers.anyescaped - parsers.squote - parsers.blankline^2))^0)
+                    * parsers.squote
 
-parsers.title_d     = parsers.dquote * Cs(((parsers.anyescaped-parsers.dquote)
-                                           + parsers.dquoted)^0)
-                                     * parsers.dquote
+parsers.title_d     = parsers.dquote
+                    * Cs(((parsers.anyescaped - parsers.dquote - parsers.blankline^2))^0)
+                    * parsers.dquote
 
 parsers.title_p     = parsers.lparent
-                    * Cs((parsers.inparens + (parsers.anyescaped-parsers.rparent))^0)
+                    * Cs((parsers.inparens + (parsers.anyescaped - parsers.rparent - parsers.blankline^2))^0)
                     * parsers.rparent
 
 parsers.title       = parsers.title_d + parsers.title_s + parsers.title_p
@@ -23966,15 +24009,6 @@ parsers.title       = parsers.title_d + parsers.title_s + parsers.title_p
 parsers.optionaltitle
                     = parsers.spnl * parsers.title * parsers.spacechar^0
                     + Cc("")
-
-parsers.indirect_link
-                    = parsers.tag
-                    * ( C(parsers.spnl) * parsers.tag
-                      + Cc(nil) * Cc(nil)  -- always produce exactly two captures
-                      )
-
-parsers.indirect_image
-                    = parsers.exclamation * parsers.indirect_link
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -23994,92 +24028,314 @@ parsers.keyword_exact = function(s)
   return parser
 end
 
+parsers.special_block_keyword =
+    parsers.keyword_exact("pre") +
+    parsers.keyword_exact("script") +
+    parsers.keyword_exact("style") +
+    parsers.keyword_exact("textarea")
+
 parsers.block_keyword =
-    parsers.keyword_exact("address") + parsers.keyword_exact("blockquote") +
-    parsers.keyword_exact("center") + parsers.keyword_exact("del") +
-    parsers.keyword_exact("dir") + parsers.keyword_exact("div") +
-    parsers.keyword_exact("p") + parsers.keyword_exact("pre") +
-    parsers.keyword_exact("li") + parsers.keyword_exact("ol") +
-    parsers.keyword_exact("ul") + parsers.keyword_exact("dl") +
-    parsers.keyword_exact("dd") + parsers.keyword_exact("form") +
-    parsers.keyword_exact("fieldset") + parsers.keyword_exact("isindex") +
-    parsers.keyword_exact("ins") + parsers.keyword_exact("menu") +
-    parsers.keyword_exact("noframes") + parsers.keyword_exact("frameset") +
-    parsers.keyword_exact("h1") + parsers.keyword_exact("h2") +
-    parsers.keyword_exact("h3") + parsers.keyword_exact("h4") +
-    parsers.keyword_exact("h5") + parsers.keyword_exact("h6") +
-    parsers.keyword_exact("hr") + parsers.keyword_exact("script") +
-    parsers.keyword_exact("noscript") + parsers.keyword_exact("table") +
-    parsers.keyword_exact("tbody") + parsers.keyword_exact("tfoot") +
-    parsers.keyword_exact("thead") + parsers.keyword_exact("th") +
-    parsers.keyword_exact("td") + parsers.keyword_exact("tr")
+    parsers.keyword_exact("address") +
+    parsers.keyword_exact("article") +
+    parsers.keyword_exact("aside") +
+    parsers.keyword_exact("base") +
+    parsers.keyword_exact("basefont") +
+    parsers.keyword_exact("blockquote") +
+    parsers.keyword_exact("body") +
+    parsers.keyword_exact("caption") +
+    parsers.keyword_exact("center") +
+    parsers.keyword_exact("col") +
+    parsers.keyword_exact("colgroup") +
+    parsers.keyword_exact("dd") +
+    parsers.keyword_exact("details") +
+    parsers.keyword_exact("dialog") +
+    parsers.keyword_exact("dir") +
+    parsers.keyword_exact("div") +
+    parsers.keyword_exact("dl") +
+    parsers.keyword_exact("dt") +
+    parsers.keyword_exact("fieldset") +
+    parsers.keyword_exact("figcaption") +
+    parsers.keyword_exact("figure") +
+    parsers.keyword_exact("footer") +
+    parsers.keyword_exact("form") +
+    parsers.keyword_exact("frame") +
+    parsers.keyword_exact("frameset") +
+    parsers.keyword_exact("h1") +
+    parsers.keyword_exact("h2") +
+    parsers.keyword_exact("h3") +
+    parsers.keyword_exact("h4") +
+    parsers.keyword_exact("h5") +
+    parsers.keyword_exact("h6") +
+    parsers.keyword_exact("head") +
+    parsers.keyword_exact("header") +
+    parsers.keyword_exact("hr") +
+    parsers.keyword_exact("html") +
+    parsers.keyword_exact("iframe") +
+    parsers.keyword_exact("legend") +
+    parsers.keyword_exact("li") +
+    parsers.keyword_exact("link") +
+    parsers.keyword_exact("main") +
+    parsers.keyword_exact("menu") +
+    parsers.keyword_exact("menuitem") +
+    parsers.keyword_exact("nav") +
+    parsers.keyword_exact("noframes") +
+    parsers.keyword_exact("ol") +
+    parsers.keyword_exact("optgroup") +
+    parsers.keyword_exact("option") +
+    parsers.keyword_exact("p") +
+    parsers.keyword_exact("param") +
+    parsers.keyword_exact("section") +
+    parsers.keyword_exact("source") +
+    parsers.keyword_exact("summary") +
+    parsers.keyword_exact("table") +
+    parsers.keyword_exact("tbody") +
+    parsers.keyword_exact("td") +
+    parsers.keyword_exact("tfoot") +
+    parsers.keyword_exact("th") +
+    parsers.keyword_exact("thead") +
+    parsers.keyword_exact("title") +
+    parsers.keyword_exact("tr") +
+    parsers.keyword_exact("track") +
+    parsers.keyword_exact("ul")
 
--- There is no reason to support bad html, so we expect quoted attributes
-parsers.htmlattributevalue
-                          = parsers.squote * (parsers.any - (parsers.blankline
-                                                            + parsers.squote))^0
-                                           * parsers.squote
-                          + parsers.dquote * (parsers.any - (parsers.blankline
-                                                            + parsers.dquote))^0
-                                           * parsers.dquote
+-- end conditions
+parsers.html_blankline_end_condition  = parsers.linechar^0
+                                      * (parsers.newline * parsers.linechar^1)^0
 
-parsers.htmlattribute     = parsers.spacing^1
-                          * (parsers.alphanumeric + S("_-"))^1
-                          * parsers.sp * parsers.equal * parsers.sp
-                          * parsers.htmlattributevalue
+parsers.html_empty_end_condition  = parsers.linechar^0
+                                  * ((parsers.optionalspace * parsers.newline)^0
+                                    * parsers.linechar^1)^0
 
-parsers.htmlcomment       = P("<!--")
-                          * parsers.optionalspace
-                          * Cs((parsers.any - parsers.optionalspace * P("-->"))^0)
-                          * parsers.optionalspace
-                          * P("-->")
+-- attributes
+parsers.html_attribute_spacing  = parsers.spacechar^1
+                                + parsers.optionalspace
+                                * parsers.newline
+                                * parsers.optionalspace
 
-parsers.htmlinstruction   = P("<?") * (parsers.any - P("?>"))^0 * P("?>")
+parsers.html_attribute_name = (parsers.letter + parsers.colon + parsers.underscore)
+                            * (parsers.alphanumeric + parsers.colon + parsers.underscore
+                            + parsers.period + parsers.dash)^0
 
-parsers.openelt_any = parsers.less * parsers.keyword * parsers.htmlattribute^0
-                    * parsers.sp * parsers.more
+parsers.html_attribute_value = parsers.squote * (parsers.any - parsers.squote)^0 * parsers.squote
+                             + parsers.dquote * (parsers.any - parsers.dquote)^0 * parsers.dquote
+                             + ( parsers.any - parsers.spacechar - parsers.newline
+                               - parsers.dquote - parsers.squote - parsers.backtick
+                               - parsers.equal - parsers.less - parsers.more)^1
 
-parsers.openelt_exact = function(s)
-  return parsers.less * parsers.sp * parsers.keyword_exact(s)
-       * parsers.htmlattribute^0 * parsers.sp * parsers.more
-end
+parsers.html_attribute_value_specification  = parsers.spnl
+                                            * parsers.equal
+                                            * parsers.spnl
+                                            * parsers.html_attribute_value
 
-parsers.openelt_block = parsers.sp * parsers.block_keyword
-                      * parsers.htmlattribute^0 * parsers.sp * parsers.more
+parsers.html_attribute  = parsers.html_attribute_spacing
+                        * parsers.html_attribute_name
+                        * parsers.html_attribute_value_specification^-1
 
-parsers.closeelt_any = parsers.less * parsers.sp * parsers.slash
-                     * parsers.keyword * parsers.sp * parsers.more
+parsers.html_non_newline_attribute  = parsers.spacechar^1
+                                    * parsers.html_attribute_name
+                                    * parsers.html_attribute_value_specification^-1
 
-parsers.closeelt_exact = function(s)
-  return parsers.less * parsers.sp * parsers.slash * parsers.keyword_exact(s)
-       * parsers.sp * parsers.more
-end
+parsers.html_comment_start = P("<!--")
 
-parsers.emptyelt_any = parsers.less * parsers.sp * parsers.keyword
-                     * parsers.htmlattribute^0 * parsers.sp * parsers.slash
-                     * parsers.more
+parsers.html_comment_end = P("-->")
 
-parsers.emptyelt_block = parsers.less * parsers.sp * parsers.block_keyword
-                       * parsers.htmlattribute^0 * parsers.sp * parsers.slash
-                       * parsers.more
+parsers.html_comment = parsers.nonindentspace
+                     * parsers.html_comment_start
+                     * ((parsers.any - parsers.html_comment_end)^0
+                       * parsers.html_comment_end
+                       * parsers.linechar^0
+                       + parsers.html_empty_end_condition)
 
-parsers.displaytext = (parsers.any - parsers.less)^1
+parsers.html_inline_comment = parsers.html_comment_start
+                            * -P(">") * -P("->")
+                            * Cs((parsers.any - P("--"))^0)
+                            * parsers.html_comment_end
 
--- return content between two matched HTML tags
-parsers.in_matched = function(s)
-  return { parsers.openelt_exact(s)
-         * (V(1) + parsers.displaytext
-           + (parsers.less - parsers.closeelt_exact(s)))^0
-         * parsers.closeelt_exact(s) }
-end
+parsers.html_cdatasection_start = P("<![CDATA[")
 
-local function parse_matched_tags(s,pos)
-  local t = string.lower(lpeg.match(C(parsers.keyword),s,pos))
-  return lpeg.match(parsers.in_matched(t),s,pos-1)
-end
+parsers.html_cdatasection_end = P("]]>")
 
-parsers.in_matched_block_tags = parsers.less
-                              * Cmt(#parsers.openelt_block, parse_matched_tags)
+parsers.html_cdatasection = parsers.nonindentspace
+                          * parsers.html_cdatasection_start
+                          * ((parsers.any - parsers.html_cdatasection_end)^0
+                            * parsers.html_cdatasection_end
+                            * parsers.linechar^0
+                            + parsers.html_empty_end_condition)
+                            
+parsers.html_inline_cdatasection  = parsers.nonindentspace
+                                  * parsers.html_cdatasection_start
+                                  * (parsers.any - parsers.html_cdatasection_end)^0
+                                  * parsers.html_cdatasection_end
+
+parsers.html_declaration_start = P("<!")
+
+parsers.html_declaration_end = P(">")
+
+parsers.html_declaration  = parsers.nonindentspace
+                          * parsers.html_declaration_start
+                          * parsers.letter
+                          * ((parsers.any - parsers.html_declaration_end)^0
+                            * parsers.html_declaration_end
+                            * parsers.linechar^0
+                            + parsers.html_empty_end_condition)
+
+parsers.html_inline_declaration = parsers.nonindentspace
+                                * parsers.html_declaration_start
+                                * parsers.letter
+                                * (parsers.any - parsers.html_declaration_end)^0
+                                * parsers.html_declaration_end
+
+parsers.html_instruction_start = P("<?")
+
+parsers.html_instruction_end = P("?>")
+
+parsers.html_instruction  = parsers.nonindentspace
+                          * parsers.html_instruction_start
+                          * ((parsers.any - parsers.html_instruction_end)^0
+                            * parsers.html_instruction_end
+                            * parsers.linechar^0
+                            + parsers.html_empty_end_condition)
+
+parsers.html_inline_instruction = parsers.nonindentspace
+                                * parsers.html_instruction_start
+                                * (parsers.any - parsers.html_instruction_end)^0
+                                * parsers.html_instruction_end
+
+parsers.html_blankline  = parsers.newline
+                        * parsers.optionalspace
+                        * parsers.newline
+
+parsers.html_tag_start = parsers.nonindentspace
+                       * parsers.less
+
+parsers.html_tag_closing_start  = parsers.html_tag_start
+                                * parsers.slash
+
+parsers.html_tag_end  = parsers.spnl
+                      * parsers.more
+
+parsers.html_empty_tag_end  = parsers.spnl
+                            * parsers.slash
+                            * parsers.more
+
+-- opening tags
+parsers.html_any_open_inline_tag  = parsers.html_tag_start
+                                  * parsers.keyword
+                                  * parsers.html_attribute^0
+                                  * parsers.html_tag_end
+
+parsers.html_any_open_tag = parsers.html_tag_start
+                          * parsers.keyword
+                          * parsers.html_non_newline_attribute^0
+                          * parsers.html_tag_end
+
+parsers.html_open_tag = parsers.html_tag_start
+                      * parsers.block_keyword
+                      * parsers.html_attribute^0
+                      * parsers.html_tag_end
+
+parsers.html_open_special_tag = parsers.html_tag_start
+                              * parsers.special_block_keyword
+                              * parsers.html_attribute^0
+                              * parsers.html_tag_end
+
+-- incomplete tags
+parsers.html_incomplete_open_tag  = parsers.html_tag_start
+                                  * parsers.block_keyword
+
+parsers.html_incomplete_open_special_tag  = parsers.html_tag_start
+                                          * parsers.special_block_keyword
+
+parsers.html_incomplete_close_tag = parsers.html_tag_closing_start
+                                  * parsers.block_keyword
+
+parsers.html_incomplete_close_special_tag = parsers.html_tag_closing_start
+                                          * parsers.special_block_keyword
+
+-- closing tags
+parsers.html_close_tag  = parsers.html_tag_closing_start
+                        * parsers.block_keyword
+                        * parsers.html_tag_end
+
+parsers.html_any_close_tag  = parsers.html_tag_closing_start
+                            * parsers.keyword
+                            * parsers.html_tag_end
+
+parsers.html_close_special_tag = parsers.html_tag_closing_start
+                               * parsers.special_block_keyword
+                               * parsers.html_tag_end
+
+-- empty tags
+parsers.html_any_empty_inline_tag = parsers.html_tag_start
+                                  * parsers.keyword
+                                  * parsers.html_attribute^0
+                                  * parsers.html_empty_tag_end
+
+parsers.html_any_empty_tag  = parsers.html_tag_start
+                            * parsers.keyword
+                            * parsers.html_non_newline_attribute^0
+                            * parsers.optionalspace
+                            * parsers.slash
+                            * parsers.more
+
+parsers.html_empty_tag  = parsers.html_tag_start
+                        * parsers.block_keyword
+                        * parsers.html_attribute^0
+                        * parsers.html_empty_tag_end
+
+parsers.html_empty_special_tag  = parsers.html_tag_start
+                                * parsers.special_block_keyword
+                                * parsers.html_attribute^0
+                                * parsers.html_empty_tag_end
+
+parsers.html_incomplete_blocks  = parsers.html_incomplete_open_tag
+                                + parsers.html_incomplete_open_special_tag
+                                + parsers.html_incomplete_close_tag
+
+-- parse special html blocks
+parsers.html_blankline_ending_special_block_opening = (parsers.html_close_special_tag
+                                                    + parsers.html_empty_special_tag)
+                                                    * #(parsers.optionalspace
+                                                       * (parsers.newline + parsers.eof))
+
+parsers.html_blankline_ending_special_block = parsers.html_blankline_ending_special_block_opening
+                                            * parsers.html_blankline_end_condition
+
+parsers.html_special_block_opening  = parsers.html_incomplete_open_special_tag
+                                    - parsers.html_empty_special_tag
+
+parsers.html_closing_special_block  = parsers.html_special_block_opening
+                                    * ((parsers.any - parsers.html_close_special_tag)^0
+                                      * parsers.html_close_special_tag
+                                      * parsers.linechar^0
+                                      + parsers.html_empty_end_condition)
+
+parsers.html_special_block  = parsers.html_blankline_ending_special_block
+                            + parsers.html_closing_special_block
+
+-- parse html blocks
+parsers.html_block_opening  = (parsers.html_incomplete_open_tag
+                            + parsers.html_incomplete_close_tag
+                            - parsers.html_incomplete_open_special_tag
+                            - parsers.html_incomplete_close_special_tag)
+
+parsers.html_block  = parsers.html_block_opening
+                    * parsers.html_blankline_end_condition
+
+-- parse any html blocks
+parsers.html_any_block_opening  = (parsers.html_any_open_tag
+                                + parsers.html_any_close_tag
+                                + parsers.html_any_empty_tag)
+                                * #(parsers.optionalspace * (parsers.newline + parsers.eof))
+
+parsers.html_any_block  = parsers.html_any_block_opening
+                        * parsers.html_blankline_end_condition
+
+parsers.html_interrupting = parsers.html_incomplete_open_tag
+                          + parsers.html_incomplete_close_tag
+                          + parsers.html_incomplete_open_special_tag
+                          - parsers.html_close_special_tag
+                          - parsers.html_empty_special_tag
 
 %    \end{macrocode}
 % \par
@@ -24089,10 +24345,14 @@ parsers.in_matched_block_tags = parsers.less
 %
 % \end{markdown}
 %  \begin{macrocode}
-parsers.hexentity = parsers.ampersand * parsers.hash * S("Xx")
-                  * C(parsers.hexdigit^1) * parsers.semicolon
+local function repeat_between(pattern, min, max)
+  return -pattern^(max + 1) * pattern^min
+end
+
+parsers.hexentity = parsers.ampersand * parsers.hash * C(S("Xx"))
+                  * C(repeat_between(parsers.hexdigit, 1, 6)) * parsers.semicolon
 parsers.decentity = parsers.ampersand * parsers.hash
-                  * C(parsers.digit^1) * parsers.semicolon
+                  * C(repeat_between(parsers.digit, 1, 7)) * parsers.semicolon
 parsers.tagentity = parsers.ampersand * C(parsers.alphanumeric^1)
                   * parsers.semicolon
 %    \end{macrocode}
@@ -24112,26 +24372,6 @@ parsers.between = function(p, starter, ender)
   return (starter * #parsers.nonspacechar * Ct(p * (p - ender2)^0) * ender2)
 end
 
-parsers.urlchar       = parsers.anyescaped
-                      - parsers.newline
-                      - parsers.more
-
-parsers.auto_link_url = parsers.less
-                      * C( parsers.alphanumeric^1 * P("://")
-                         * parsers.urlchar^1)
-                      * parsers.more
-
-parsers.auto_link_email
-                      = parsers.less
-                      * C((parsers.alphanumeric + S("-._+"))^1
-                      * P("@") * parsers.urlchar^1)
-                      * parsers.more
-
-parsers.auto_link_relative_reference
-                      = parsers.less
-                      * C(parsers.urlchar^1)
-                      * parsers.more
-
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -24142,9 +24382,12 @@ parsers.auto_link_relative_reference
 %  \begin{macrocode}
 parsers.lineof = function(c)
     return (parsers.leader * (P(c) * parsers.optionalspace)^3
-           * (parsers.newline * parsers.blankline^1
-             + parsers.newline^-1 * parsers.eof))
+           * (parsers.newline + parsers.eof))
 end
+
+parsers.thematic_break_lines = parsers.lineof(parsers.asterisk)
+                             + parsers.lineof(parsers.dash)
+                             + parsers.lineof(parsers.underscore)
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -24158,10 +24401,11 @@ parsers.heading_start = #parsers.hash * C(parsers.hash^-6)
                       * -parsers.hash / length
 
 -- parse setext header ending and return level
-parsers.heading_level = parsers.equal^1 * Cc(1) + parsers.dash^1 * Cc(2)
+parsers.heading_level = parsers.nonindentspace * parsers.equal^1 * parsers.optionalspace * #parsers.newline * Cc(1) 
+                      + parsers.nonindentspace * parsers.dash^1 * parsers.optionalspace * #parsers.newline * Cc(2)
 
 local function strip_atx_end(s)
-  return s:gsub("[#%s]*\n$","")
+  return s:gsub("%s+#*%s*\n$","")
 end
 %    \end{macrocode}
 % \par
@@ -24367,9 +24611,9 @@ function M.reader.new(writer, options)
                        return parsers.inlines
                      end, false)
 
-  self.create_parser("parse_inlines_no_link",
+  self.create_parser("parse_inlines_full_link_and_image",
                      function()
-                       return parsers.inlines_no_link
+                       return parsers.inlines_full_link_and_image
                      end, false)
 
   self.create_parser("parse_inlines_no_inline_note",
@@ -25011,6 +25255,326 @@ function M.reader.new(writer, options)
 % \par
 % \begin{markdown}
 %
+%#### Helpers for Emphasis and Strong Emphasis (local)
+%
+% \end{markdown}
+%  \begin{macrocode}
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Collect the content between the `opening_index` and `closing_index` in the delimiter table `t`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function collect_emphasis_content(t, opening_index, closing_index)
+    local content = {}
+    for i = opening_index, closing_index do
+      local value = t[i]
+      if value.is_active then
+        if value.type == "delimiter_run" then
+          content[#content + 1] = writer.escape(string.rep(value.character, value.current_count))
+        else
+          content[#content + 1] = value.content
+          value.content = ''
+        end
+        value.is_active = false
+      end
+    end
+
+    return content
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Render content between the `opening_index` and `closing_index` in the delimiter table `t` 
+% as emphasis.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function fill_emph(t, opening_index, closing_index)
+    local content = collect_emphasis_content(t, opening_index + 1, closing_index - 1)
+    t[opening_index + 1].is_active = true
+    t[opening_index + 1].content = writer.emphasis(content)
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Render content between the `opening_index` and `closing_index` in the delimiter table `t` 
+% as strong emphasis.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function fill_strong(t, opening_index, closing_index)
+    local content = collect_emphasis_content(t, opening_index + 1, closing_index - 1)
+    t[opening_index + 1].is_active = true
+    t[opening_index + 1].content = writer.strong(content)
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Check whether the opening delimiter `opening_delimiter` and closing delimiter `closing_delimiter` break
+% rule three together.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function breaks_three_rule(opening_delimiter, closing_delimiter)
+    return (opening_delimiter.is_closing or closing_delimiter.is_opening) and 
+      ((opening_delimiter.original_count + closing_delimiter.original_count) % 3 == 0) and 
+      (opening_delimiter.original_count % 3 ~= 0 or closing_delimiter.original_count % 3 ~= 0)
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Look for the first potential emphasis opener in the delimiter table `t` in the range from
+% `bottom_index` to `latest_index`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function find_opener(t, bottom_index, latest_index, character, closing_delimiter)
+    for i = latest_index, bottom_index, -2 do
+      local value = t[i]
+      if value.is_active and
+         value.is_opening and
+         (value.character == character) and
+         (value.current_count > 0) then
+        if not breaks_three_rule(value, closing_delimiter) then
+          return i
+        end
+      end
+    end
+
+    return nil
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Iterate over the delimiters in the delimiter table `t`, producing emphasis or strong emphasis macros.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function process_emphasis(t)
+    for _,value in ipairs(t) do
+      value.is_active = true
+      if value.type == "delimiter_run" then
+          local delimiter_length = string.len(value.content)
+          value.character = string.sub(value.content, 1, 1)
+          value.current_count = delimiter_length
+          value.original_count = delimiter_length
+      end
+    end
+
+    local current_position = 1
+    local openers_bottom = {
+      ['*'] = { -- character
+        [true] = { -- is opening
+          1, 1, 1 -- lengths
+        },
+        [false] = {
+          1, 1, 1
+        }
+      },
+      ['_'] = {
+        [true] = {
+          1, 1, 1
+        },
+        [false] = {
+          1, 1, 1
+        }
+      }
+    }
+
+    while current_position <= #t do
+      local value = t[current_position]
+      local character = value.character
+      local is_opening = value.is_opening
+      local is_closing = value.is_closing
+      local closing_length_modulo_three = value.original_count % 3
+
+      local current_openers_bottom = openers_bottom[character][is_opening][closing_length_modulo_three + 1]
+
+      if is_closing and (value.current_count > 0) then
+        local opener_position = find_opener(t, current_openers_bottom, current_position - 2, character, value)
+
+        if (opener_position ~= nil) then
+
+          local opening_delimiter = t[opener_position]
+
+          local current_opening_count = opening_delimiter.current_count
+          local current_closing_count = t[current_position].current_count
+
+          if (current_opening_count >= 2) and (current_closing_count >= 2) then
+            opening_delimiter.current_count = current_opening_count - 2
+            t[current_position].current_count = current_closing_count - 2
+            fill_strong(t, opener_position, current_position)
+          else
+            opening_delimiter.current_count = current_opening_count - 1
+            t[current_position].current_count = current_closing_count - 1
+            fill_emph(t, opener_position, current_position)
+          end
+
+        else
+          openers_bottom[character][is_opening][closing_length_modulo_three + 1] = current_position
+          current_position = current_position + 2
+        end
+      else
+        current_position = current_position + 2
+      end
+    end
+
+    local final_result = collect_emphasis_content(t, 1, #t)
+    return final_result
+  end
+
+  local cont = lpeg.R("\128\191") -- continuation byte
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Match a UTF-8 character of byte length `n`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function utf8_by_byte_count(n)
+    if (n == 1) then
+      return lpeg.R("\0\127")
+    end
+    if (n == 2) then
+      return lpeg.R("\194\223") * cont
+    end
+    if (n == 3) then
+      return lpeg.R("\224\239") * cont * cont
+    end
+    if (n == 4) then
+      return lpeg.R("\240\244") * cont * cont * cont
+    end
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Check if a there is a character of a type `chartype` between the start position `start_pos`
+% and end position `end_pos` in a string `s` relative to current index `i`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function check_unicode_type(s, i, start_pos, end_pos, chartype)
+    local c = nil
+    local char_length = 0
+    for pos = start_pos, end_pos, 1 do
+      if (start_pos < 0) then
+        char_length = -pos
+      else
+        char_length = pos + 1
+      end
+      c = lpeg.match({ C(utf8_by_byte_count(char_length)) },s,i+pos)
+      if (c ~= nil) and (unicode.utf8.match(c, chartype)) then
+        return i
+      end
+    end
+  end
+
+  local function check_preceding_unicode_punctuation(s,i)
+    return check_unicode_type(s, i, -4, -1, "%p")
+  end
+
+  local function check_preceding_unicode_whitespace(s,i)
+    return check_unicode_type(s, i, -4, -1, "%s")
+  end
+
+  local function check_following_unicode_punctuation(s,i)
+    return check_unicode_type(s, i, 0, 3, "%p")
+  end
+
+  local function check_following_unicode_whitespace(s,i)
+    return check_unicode_type(s, i, 0, 3, "%s")
+  end
+
+  parsers.unicode_preceding_punctuation = B(parsers.escapable) 
+                                        + Cmt(parsers.succeed, check_preceding_unicode_punctuation)
+
+  parsers.unicode_preceding_whitespace = Cmt(parsers.succeed, check_preceding_unicode_whitespace)
+
+  parsers.unicode_following_punctuation = #parsers.escapable 
+                                        + Cmt(parsers.succeed, check_following_unicode_punctuation)
+
+  parsers.unicode_following_whitespace = Cmt(parsers.succeed, check_following_unicode_whitespace)
+
+  parsers.delimiter_run = function(character)
+    return  (B(parsers.backslash * character) + -B(character))
+          * character^1
+          * -#character
+  end
+
+  parsers.left_flanking_delimiter_run = function(character)
+    return  (B( parsers.any) 
+              * (parsers.unicode_preceding_punctuation + parsers.unicode_preceding_whitespace) 
+             + -B(parsers.any))
+            * parsers.delimiter_run(character)
+            * parsers.unicode_following_punctuation
+            + parsers.delimiter_run(character)
+            * -#(parsers.unicode_following_punctuation + parsers.unicode_following_whitespace)
+  end
+
+  parsers.right_flanking_delimiter_run = function(character)
+    return  parsers.unicode_preceding_punctuation
+          * parsers.delimiter_run(character)
+          * (parsers.unicode_following_punctuation + parsers.unicode_following_whitespace)
+          + (B(parsers.any) 
+            * -(parsers.unicode_preceding_punctuation + parsers.unicode_preceding_whitespace))
+          * parsers.delimiter_run(character)
+  end
+
+  parsers.emph_start = parsers.left_flanking_delimiter_run(parsers.asterisk)
+                     + (-#parsers.right_flanking_delimiter_run(parsers.underscore)
+                        + (parsers.unicode_preceding_punctuation 
+                          * #parsers.right_flanking_delimiter_run(parsers.underscore)))
+                     * parsers.left_flanking_delimiter_run(parsers.underscore)
+
+  parsers.emph_end  = parsers.right_flanking_delimiter_run(parsers.asterisk)
+                    + (-#parsers.left_flanking_delimiter_run(parsers.underscore)
+                      + #(parsers.left_flanking_delimiter_run(parsers.underscore) 
+                         * parsers.unicode_following_punctuation))
+                    * parsers.right_flanking_delimiter_run(parsers.underscore)
+
+  parsers.emph_capturing_open_and_close = #parsers.emph_start * #parsers.emph_end
+                                        * Ct( Cg(Cc("delimiter_run"), "type")
+                                            * Cg(C(parsers.emph_start), "content")
+                                            * Cg(Cc(true), "is_opening")
+                                            * Cg(Cc(true), "is_closing"))
+
+  parsers.emph_capturing_open = Ct( Cg(Cc("delimiter_run"), "type")
+                                  * Cg(C(parsers.emph_start), "content")
+                                  * Cg(Cc(true), "is_opening")
+                                  * Cg(Cc(false), "is_closing"))
+
+  parsers.emph_capturing_close = Ct( Cg(Cc("delimiter_run"), "type")
+                                   * Cg(C(parsers.emph_end), "content")
+                                   * Cg(Cc(false), "is_opening")
+                                   * Cg(Cc(true), "is_closing"))
+
+  parsers.emph_open_or_close  = parsers.emph_capturing_open_and_close
+                              + parsers.emph_capturing_open
+                              + parsers.emph_capturing_close
+
+  parsers.emph_open = parsers.emph_capturing_open_and_close
+                    + parsers.emph_capturing_open
+
+  parsers.emph_close  = parsers.emph_capturing_open_and_close
+                      + parsers.emph_capturing_close
+
+  parsers.emph_content  = Ct( Cg(Cc("content"), "type")
+                            * Cg(Ct((parsers.Inline - parsers.emph_open_or_close)^0), "content"))
+
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
 %#### Helpers for Links and Link Reference Definitions (local)
 %
 % \end{markdown}
@@ -25018,9 +25582,14 @@ function M.reader.new(writer, options)
   -- List of references defined in the document
   local references
 
-  parsers.define_reference_parser = (parsers.check_trail / "") * parsers.tag * parsers.colon
-                                  * parsers.spacechar^0 * parsers.url
-                                  * parsers.optionaltitle * (parsers.newline + parsers.eof)
+  parsers.spnl_sep  = parsers.optionalspace * parsers.newline * parsers.optionalspace
+                    + parsers.spacechar^1
+
+  -- parse a reference definition:  [foo]: /bar "title"
+  parsers.define_reference_parser = (parsers.check_trail / "") * parsers.link_label * parsers.colon
+                                  * parsers.spnl * parsers.url
+                                  * (parsers.spnl_sep * parsers.title + Cc("")) 
+                                  * parsers.spacechar^0 * (parsers.newline + parsers.eof)
                                   * parsers.leave_trail
 
 %    \end{macrocode}
@@ -25034,14 +25603,14 @@ function M.reader.new(writer, options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  function self.register_link(_,tag, url, title,
+  function self.register_link(_, tag, url, title,
                               attributes)
-    tag = self.normalize_tag(tag)
-    references[tag] = {
-      url = url,
-      title = title,
-      attributes = attributes,
-    }
+    local normalized_tag = self.normalize_tag(tag)
+      if references[normalized_tag] == nil then
+        references[normalized_tag] = { url = url, 
+                                       title = title,
+                                       attributes = attributes }
+      end
     return ""
   end
 
@@ -25050,103 +25619,646 @@ function M.reader.new(writer, options)
 % \begin{markdown}
 %
 % The \luamdef{reader->lookup_reference} method looks up a
-% reference with link label `tag`. When the reference exists
-% the method returns a link. The attributes of a link are
-% produced by merging the attributes of the link reference
-% and the optional `attributes`. Otherwise, the method returns a
-% two-tuple of `nil` and fallback text constructed from the
-% link text `label` and the optional spaces `sps` between the
-% link text and the link label.
+% reference with link label `tag`.
 %
 % \end{markdown}
 %  \begin{macrocode}
-  function self.lookup_reference(label, sps, tag,
-                                 attributes)
-    local tagpart
-    if not tag then
-      tag = label
-      tagpart = ""
-    elseif tag == "" then
-      tag = label
-      tagpart = "[]"
-    else
-      tagpart = {
-        "[",
-        self.parser_functions.parse_inlines(tag),
-        "]"
-      }
-    end
-    if sps then
-      tagpart = {sps, tagpart}
-    end
-    tag = self.normalize_tag(tag)
-    local r = references[tag]
-    if r then
-      local merged_attributes = {}
-      for _, attribute in ipairs(r.attributes or {}) do
-        table.insert(merged_attributes, attribute)
+  function self.lookup_reference(tag)
+    return references[self.normalize_tag(tag)]
+  end
+
+  parsers.title_s_with_captures = Cg(C(parsers.squote), "delimiter")
+                                * Cg(Cs(((parsers.anyescaped - parsers.squote - parsers.blankline^2))^0), "title")
+                                * parsers.squote
+
+  parsers.title_d_with_captures = Cg(C(parsers.dquote), "delimiter")
+                                * Cg(Cs(((parsers.anyescaped - parsers.dquote - parsers.blankline^2))^0), "title")
+                                * parsers.dquote
+
+  parsers.title_p_with_captures = Cg(C(parsers.lparent), "delimiter")
+                                * Cg(Cs((parsers.inparens + (parsers.anyescaped - parsers.rparent - parsers.blankline^2))^0), "title")
+                                * parsers.rparent
+
+  parsers.title_with_captures = parsers.title_d_with_captures
+                              + parsers.title_s_with_captures
+                              + parsers.title_p_with_captures
+
+  parsers.link_destination  = Cg(C(parsers.less), "opening")
+                            * Cg(Cs(( parsers.anyescaped
+                                    - parsers.newline
+                                    - parsers.less
+                                    - parsers.more)^0), "url")
+                            * Cg(C(parsers.more), "closing")
+                            + -parsers.less
+                            * Cg(Cc(""), "opening")
+                            * Cg(Cs(( parsers.inparens
+                                + ( parsers.anyescaped
+                                  - parsers.spacing
+                                  - parsers.rparent))^1), "url")
+                            * Cg(Cc(""), "closing")
+
+  parsers.inline_direct_ref = Cg(parsers.lparent * parsers.spnl, "start")
+                            * Cg((Ct(parsers.link_destination) + Cc(nil)), "url_content")
+                            * Cg(parsers.spnl, "middle")
+                            * Cg(Ct(parsers.title_with_captures) + Cc(nil), "title_content")
+                            * Cg(parsers.spnl * parsers.rparent, "ending")
+
+  parsers.empty_link  = parsers.lbracket
+                      * parsers.rbracket
+
+  parsers.inline_link = parsers.link_text
+                      * parsers.inline_direct_ref
+
+  parsers.full_reference_link = parsers.link_text
+                              * parsers.link_label
+
+  parsers.collapsed_link  = parsers.link_label
+                          * parsers.empty_link
+
+  parsers.shortcut_link = parsers.link_label
+                        * -(parsers.empty_link + parsers.link_label)
+
+  parsers.any_link  = parsers.inline_link
+                    + parsers.link_text
+
+  parsers.image_opening = #(parsers.exclamation * parsers.inline_link)
+                        * Cg(Cc("inline"), "link_type")
+                        + #(parsers.exclamation * parsers.full_reference_link)
+                        * Cg(Cc("full"), "link_type")
+                        + #(parsers.exclamation * parsers.collapsed_link)
+                        * Cg(Cc("collapsed"), "link_type")
+                        + #(parsers.exclamation * parsers.shortcut_link)
+                        * Cg(Cc("shortcut"), "link_type")
+                        + #(parsers.exclamation * parsers.empty_link)
+                        * Cg(Cc("empty"), "link_type")
+
+  parsers.link_opening  = #parsers.inline_link
+                        * Cg(Cc("inline"), "link_type")
+                        + #parsers.full_reference_link
+                        * Cg(Cc("full"), "link_type")
+                        + #parsers.collapsed_link
+                        * Cg(Cc("collapsed"), "link_type")
+                        + #parsers.shortcut_link
+                        * Cg(Cc("shortcut"), "link_type")
+                        + #parsers.empty_link
+                        * Cg(Cc("empty_link"), "link_type")
+                        + #parsers.link_text
+                        * Cg(Cc("link_text"), "link_type")
+
+  parsers.link_image_opening  = Ct( Cg(Cc("delim"), "type")
+                                  * Cg(Cc(true), "is_opening")
+                                  * ( Cg(Cc("image"), "element")
+                                    * parsers.image_opening
+                                    * Cg(parsers.exclamation * parsers.lbracket, "content")
+                                    + Cg(Cc("link"), "element")
+                                    * parsers.link_opening
+                                    * Cg(parsers.lbracket, "content")))
+
+  parsers.link_image_closing  = Ct( Cg(Cc("delim"), "type")
+                                  * Cg(Cc(false), "is_opening")
+                                  * ( Cg(Cc(true), "is_direct")
+                                    * Cg(Ct(C(parsers.rbracket) * Cg(Ct(parsers.inline_direct_ref), "inline_content")), "content")
+                                    + Cg(Cc(false), "is_direct")
+                                    * Cg(parsers.rbracket, "content")))
+
+  parsers.link_image_open_or_close  = parsers.link_image_opening
+                                    + parsers.link_image_closing
+
+  parsers.link_image_content  = Ct( Cg(Cc("content"), "type")
+                                  * Cg(C(((parsers.backslash^-1 / "" * parsers.any - parsers.link_image_open_or_close))^0), "content"))
+
+  parsers.link_array = C((parsers.exclamation^-1 * parsers.any_link)^1)
+
+  parsers.link_group = Ct( parsers.link_image_opening
+                        * (parsers.link_image_content * parsers.link_image_open_or_close)^0)
+
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Return the parentheses of an inline link for a closing delimiter at index `index` in the delimiter table `t`.
+% If the \Opt{linkAttributes} option extension is enabled, then also the attributes are returned.
+% The closing bracket is also included in the return value when `include_bracket` is enabled.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function resolve_inline_link_closer(t, index, include_bracket)
+    local value = t[index]
+    if value.type == "delim" then
+      local inline_content = value.content.inline_content
+      local attribute_content = value.content.attribute_content
+
+      local result = ""
+      if include_bracket then
+        result = value.content[1]
       end
-      for _, attribute in ipairs(attributes or {}) do
-        table.insert(merged_attributes, attribute)
+
+      if inline_content ~= nil then
+        local url_string = ""
+        local title_string = ""
+
+        if inline_content.url_content ~= nil then
+          local url_content = inline_content.url_content
+          url_string = url_content.opening .. url_content.url .. url_content.closing
+        end
+
+        if inline_content.title_content ~= nil then
+          local title_content = inline_content.title_content
+          title_string = title_content.delimiter .. title_content.title .. title_content.delimiter
+        end
+        
+        result = result ..
+          inline_content.start ..
+          url_string ..
+          inline_content.middle .. 
+          title_string ..
+          inline_content.ending
       end
-      if #merged_attributes == 0 then
-        merged_attributes = nil
+
+      if attribute_content ~= nil then
+        result = result ..
+        attribute_content.opening ..
+        util.rope_to_string(attribute_content.content) ..
+        attribute_content.ending
       end
-      return {
-        url = r.url,
-        title = r.title,
-        attributes = merged_attributes,
-      }
-    else
-      return nil, {
-        "[",
-        self.parser_functions.parse_inlines(label),
-        "]",
-        tagpart
-      }
+      return result
     end
   end
 
-  -- lookup link reference and return a link, if the reference is found,
-  -- or a bracketed label otherwise.
-  local function indirect_link(label, sps, tag)
-    return writer.defer_call(function()
-      local r,fallback = self.lookup_reference(label, sps, tag)
-      if r then
-        return writer.link(
-          self.parser_functions.parse_inlines_no_link(label),
-          r.url, r.title)
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Collect the raw content between the `opening_index` and `closing_index` in the delimiter table `t`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function collect_link_content(t, opening_index, closing_index)
+    local content = {}
+    for i = opening_index, closing_index do
+      local value = t[i]
+      if value.type == "delim" then
+        if value.is_direct then
+          content[#content + 1] = resolve_inline_link_closer(t, i, true)
+        else
+          content[#content + 1] = value.content
+        end
       else
-        return fallback
+        content[#content + 1] = value.content
+        t[i].is_active = false
       end
+    end
+    return content
+  end
+
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Collect the parsed content between the `opening_index` and `closing_index` in the delimiter table `t`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function collect_link_parsed_content(t, opening_index, closing_index)
+    local content = {}
+    for i = opening_index, closing_index do
+      local value = t[i]
+      local rendered = value.rendered
+      if (rendered ~= nil) then
+        content[#content + 1] = rendered
+      end
+    end
+    return content
+  end
+
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Look for the first potential unexplored link opener in the delimiter table `t` in the range from
+% `bottom_index` to `latest_index`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function find_opener(t, bottom_index, latest_index)
+    for i = latest_index, bottom_index, -2 do
+      local value = t[i]
+      if value.is_opening and 
+         value.end_position == 0 and 
+         not value.part_of_link then
+        if value.is_active then
+          return i, i
+        end
+        return nil, i
+      end
+    end
+  end
+
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Disable all previously encountered opening delimiters by marking them inactive with the `is_active` property
+% to prevent links within links. Images within links are allowed.
+% This process starts from `index` and continues to the start of the delimiter table `t`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function disable_previous_link_openers(t, index)
+    if t[index].element == "image" then
+      return
+    end
+
+    for i = index, 1, -1 do
+      local value = t[i]
+      if value.is_active and
+         value.type == "delim" and
+         value.is_opening and
+         value.element == "link" then
+        value.is_active = false
+      end
+    end
+  end
+
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Disable the delimiters between the `opening_index` and `closing_index` in the delimiter table `t` that are 
+% considered a part of link by marking them inactive with the `is_active` property and as a
+% `part_of_link`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function disable_range(t, opening_index, closing_index)
+    for i = opening_index, closing_index do
+      local value = t[i]
+      if value.is_active then
+        value.is_active = false
+        value.part_of_link = true
+      end
+    end
+  end
+
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Clear the parsed content between the `opening_index` and `closing_index` in the delimiter table `t`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function delete_parsed_content_in_range(t, opening_index, closing_index)
+    for i = opening_index, closing_index do
+      t[i].rendered = nil
+    end
+  end
+
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Extract the attributes from an `attribute_list` where the attributes are still separated with spacing.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function extract_attributes(attribute_list)
+    local attributes = {}
+
+    if attribute_list == nil then
+      return attributes
+    end
+
+    for i = 2, #attribute_list, 2 do
+      attributes[#attributes + 1] = attribute_list[i]
+    end
+    return attributes
+  end
+
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Join the attributes from the link reference definition `attribute_list` with the attributes of
+% a closing delimiter at index `index` in the delimiter table `t`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function join_attributes(attribute_list, t, closing_index)
+    local joined_attributes = attribute_list
+    if joined_attributes == nil then
+      joined_attributes = {}
+    end
+
+    if t[closing_index].content.attribute_content ~= nil then
+      local closing_attributes = extract_attributes(t[closing_index].content.attribute_content.content)
+
+      for _, attribute in ipairs(closing_attributes) do
+        table.insert(joined_attributes, attribute)
+      end
+    end
+    
+    if not next(joined_attributes) then
+      return nil
+    end
+    return joined_attributes
+  end
+
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Resolve an inline link [a](b "c") from the delimiters at `opening_index` and `closing_index` within a delimiter table `t`.
+% Here, compared to other types of links, no reference definition is needed.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  -- compared to other link types, here no reference definition is looked up
+  local function resolve_inline_link(t, opening_index, closing_index)
+    local content = collect_link_content(t, opening_index + 1, closing_index - 1)
+    local content_rope = util.rope_to_string(content)
+    local parentheses_info = t[closing_index].content.inline_content
+
+    local all_attributes = {}
+    if t[closing_index].content.attribute_content ~= nil then
+       all_attributes = extract_attributes(t[closing_index].content.attribute_content.content)
+    end
+
+    local url = ""
+    if (parentheses_info.url_content ~= nil) then
+      url = parentheses_info.url_content.url
+    end
+
+    local title = ""
+    if (parentheses_info.title_content ~= nil) then
+      title = parentheses_info.title_content.title
+    end
+
+    t[opening_index].is_link = true
+    t[opening_index].rope = content_rope
+    t[opening_index].reference = { url = url,
+                                   title = title,
+                                   attributes = all_attributes
+                                 }
+    
+    disable_previous_link_openers(t, opening_index)
+    disable_range(t, opening_index, closing_index)
+  end
+
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Resolve a shortcut link [a] from the delimiters at `opening_index` and `closing_index` within a delimiter table `t`.
+% Continue if a tag `a` is not found in the references.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function resolve_shortcut_link(t, opening_index, closing_index)
+    local content = collect_link_content(t, opening_index + 1, closing_index - 1)
+    local content_rope = util.rope_to_string(content)
+    local r = self.lookup_reference(content_rope)
+
+    if r then 
+      t[opening_index].is_link = true
+      t[opening_index].rope = content_rope
+
+      local all_attributes = join_attributes(r.attributes, t, closing_index)
+
+      r.attributes = all_attributes
+      t[opening_index].reference = r
+
+      disable_previous_link_openers(t, opening_index)
+      disable_range(t, opening_index, closing_index)
+    end
+  end
+
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Resolve a full link [a][b] from the delimiters at `opening_index` and `closing_index` within a delimiter table `t`.
+% Continue if a tag `b` is not found in the references. 
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function resolve_full_link(t, opening_index, closing_index)
+    local content = collect_link_content(t, opening_index + 1, closing_index - 1)
+    local next_link_content = collect_link_content(t, closing_index + 3, closing_index + 3)
+
+    local content_rope = util.rope_to_string(content)
+    local next_link_content_rope = util.rope_to_string(next_link_content)
+
+    local r = self.lookup_reference(next_link_content_rope)
+
+    if r then 
+      t[opening_index].is_link = true
+      t[opening_index].rope = content_rope
+
+      local all_attributes = join_attributes(r.attributes, t, closing_index + 4)
+
+      r.attributes = all_attributes
+      t[opening_index].reference = r
+
+      disable_previous_link_openers(t, opening_index)
+      disable_range(t, opening_index, closing_index + 4)
+    end
+  end
+
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Resolve a collapsed link [a][] from the delimiters at `opening_index` and `closing_index` within a delimiter table `t`.
+% Continue if a tag `a` is not found in the references. 
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function resolve_collapsed_link(t, opening_index, closing_index)
+    local content = collect_link_content(t, opening_index + 1, closing_index - 1)
+    local content_rope = util.rope_to_string(content)
+
+    local r = self.lookup_reference(content_rope)
+
+    if r then 
+      t[opening_index].is_link = true
+      t[opening_index].rope = content_rope
+      
+      local all_attributes = join_attributes(r.attributes, t, closing_index)
+
+      r.attributes = all_attributes
+      t[opening_index].reference = r
+      
+      disable_previous_link_openers(t, opening_index)
+      disable_range(t, opening_index, closing_index)
+    end
+  end
+
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Parse content between two delimiters in the delimiter table `t`. Produce the respective link and image 
+% macros and resolve potential dangling parentheses and attributes. 
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function render_link_or_image(t, opening_index, closing_index)
+    local link_r = t[opening_index].reference
+    local link_content_rope = t[opening_index].rope
+
+    local url = ""
+    if (link_r.url ~= nil) then
+      url = link_r.url
+    end
+
+    local title = ""
+    if (link_r.title ~= nil) then
+      title = link_r.title
+    end
+
+    local attributes = link_r.attributes
+
+    local mapped = self.parser_functions.parse_inlines_full_link_and_image(link_content_rope)
+
+    if attributes == nil or not next(attributes) then
+      attributes = nil
+    end
+
+    local rendered = {}
+    if (t[opening_index].element == "link") then
+      rendered = writer.link(mapped, url, title, attributes)
+    end
+
+    if (t[opening_index].element == "image") then
+      rendered = writer.image(mapped, url, title, attributes)
+    end
+
+    local mapped_parentheses = {}
+    if (t[closing_index].is_direct and t[opening_index].link_type ~= "inline") then
+      local resolved_closer = resolve_inline_link_closer(t, closing_index, false)
+      mapped_parentheses = self.parser_functions.parse_inlines_full_link_and_image(resolved_closer)
+    end
+
+    t[opening_index].rendered = { rendered, mapped_parentheses }
+    delete_parsed_content_in_range(t, opening_index + 1, closing_index)
+  end
+
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Parse content between two delimiters in the delimiter table `t`. Enclose this content with literal brakcets and 
+% resolve potential dangling parentheses and attributes. 
+% In case of a image opening delimiter, an exclamation mark is also added before the brackets.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function render_link_or_image_fallback(t, opening_index, closing_index)
+    local prefix = ""
+    if (t[opening_index].rendered) then
+      prefix = "!"
+    end
+
+    local content = collect_link_content(t, opening_index + 1, closing_index - 1)
+    local content_rope = util.rope_to_string(content)
+
+    local child = self.parser_functions.parse_inlines_full_link_and_image(content_rope)
+    
+    t[opening_index].rendered = {prefix, "[",child,"]", resolve_inline_link_closer(t, closing_index, false)}
+    delete_parsed_content_in_range(t, opening_index + 1, closing_index)
+  end
+
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Parse an array of links `link_array` to an array of delimiters and content with the 'link_group` pattern.
+% Iterate over the delimiters in the delimiter table `t` in two passes. First, the delimiters either 
+% marked as links (or images) with the `is_link` property, additionally assigned a closing delimiter. 
+% Secondly, the content of the resolved links is parsed, with respective macros produced. 
+% Any delimiters that do not form links are returned as is (fallback), with their content also recursively
+% parsed.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  function process_links_and_images(link_array, link_group)
+
+    -- generate a delimiter array from a array of potential links
+    local t = lpeg.match(link_group, link_array[1])
+
+    for _,value in ipairs(t) do
+      value.is_active = true
+      if (value.is_opening) then
+        value.is_link = false
+        value.end_position = 0
+      end
+    end
+
+    local current_position = 1
+
+    -- iterate over delimiters, marking links
+    while current_position <= #t do
+      local value = t[current_position]
+
+      if not value.is_opening then
+        local opener_position, non_active_opener_position = find_opener(t, 1, current_position - 2)
+        local end_position = current_position
+
+        if (opener_position ~= nil) then
+          local opening_delimiter = t[opener_position]
+          opening_delimiter.end_position = current_position
+
+          local link_type = opening_delimiter.link_type
+          
+          if (link_type == "inline") then
+            resolve_inline_link(t, opener_position, current_position)
+          end
+          if (link_type == "shortcut") then
+            resolve_shortcut_link(t, opener_position, current_position)
+          end
+          if (link_type == "full") then
+            resolve_full_link(t, opener_position, current_position)
+
+            -- skip next label if matched
+            if (opening_delimiter.is_link) then
+              current_position = current_position + 4
+              end_position = end_position + 4
+            end
+          end
+          if (link_type == "collapsed") then
+            resolve_collapsed_link(t, opener_position, current_position)
+
+            -- skip next label if matched
+            if (opening_delimiter.is_link) then
+              current_position = current_position + 4
+              end_position = end_position + 4
+            end
+          end
+
+          opening_delimiter.end_position = end_position
+        else
+          if (non_active_opener_position ~= nil) then
+            t[non_active_opener_position].end_position = current_position
+          end
+        end
+      end
+      current_position = current_position + 2
+    end
+
+    current_position = 1
+
+    -- iterate over found links, parsing content
+    while current_position <= #t do
+      local delimiter = t[current_position]
+
+      if delimiter.is_opening then
+        local end_position = delimiter.end_position
+
+        if (delimiter.is_link) then
+          render_link_or_image(t, current_position, end_position)
+        else
+          render_link_or_image_fallback(t, current_position, end_position)
+        end
+
+        current_position = end_position
+      end
+      current_position = current_position + 2
+    end
+
+    return collect_link_parsed_content(t, 1, #t)
+  end
+
+  function defer_link_and_image_processing(links, link_group)
+    return writer.defer_call(function()
+      return process_links_and_images(links, link_group)
     end)
   end
 
-  -- lookup image reference and return an image, if the reference is found,
-  -- or a bracketed label otherwise.
-  local function indirect_image(label, sps, tag)
-    return writer.defer_call(function()
-      local r,fallback = self.lookup_reference(label, sps, tag)
-      if r then
-        return writer.image(writer.string(label), r.url, r.title)
-      else
-        return {"!", fallback}
-      end
-    end)
-  end
-
-  parsers.direct_link_tail = parsers.spnl
-                           * parsers.lparent
-                           * (parsers.url + Cc(""))  -- link can be empty [foo]()
-                           * parsers.optionaltitle
-                           * parsers.rparent
-
-  parsers.direct_link = (parsers.tag / self.parser_functions.parse_inlines_no_link)
-                      * parsers.direct_link_tail
-
-  parsers.direct_image = parsers.exclamation
-                       * (parsers.tag / self.parser_functions.parse_inlines)
-                       * parsers.direct_link_tail
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -25158,7 +26270,7 @@ function M.reader.new(writer, options)
   parsers.Str      = (parsers.normalchar * (parsers.normalchar + parsers.at)^0)
                    / writer.string
 
-  parsers.Symbol   = (V("SpecialChar") - parsers.tightblocksep)
+  parsers.Symbol   = (parsers.backtick^1 + V("SpecialChar") - parsers.tightblocksep)
                    / writer.string
 
   parsers.Ellipsis = P("...") / writer.ellipsis
@@ -25198,9 +26310,11 @@ function M.reader.new(writer, options)
                      + parsers.tightblocksep  -- nested list
                      + parsers.eof       -- end of document
                      + parsers.bqstart
+                     + parsers.thematic_break_lines
                      + parsers.interrupting_bullets
                      + parsers.interrupting_enumerators
                      + parsers.headerstart
+                     + parsers.html_interrupting
 
   parsers.Endline   = parsers.newline
                     * (parsers.check_minimal_indent 
@@ -25247,27 +26361,9 @@ function M.reader.new(writer, options)
                   + parsers.spacechar^1 * parsers.optionalspace
                                         / writer.nbsp
 
-  if options.underscores then
-    parsers.Strong = ( parsers.between(parsers.Inline, parsers.doubleasterisks,
-                                       parsers.doubleasterisks)
-                     + parsers.between(parsers.Inline, parsers.doubleunderscores,
-                                       parsers.doubleunderscores)
-                     ) / writer.strong
-
-    parsers.Emph   = ( parsers.between(parsers.Inline, parsers.asterisk,
-                                       parsers.asterisk)
-                     + parsers.between(parsers.Inline, parsers.underscore,
-                                       parsers.underscore)
-                     ) / writer.emphasis
-  else
-    parsers.Strong = ( parsers.between(parsers.Inline, parsers.doubleasterisks,
-                                       parsers.doubleasterisks)
-                     ) / writer.strong
-
-    parsers.Emph   = ( parsers.between(parsers.Inline, parsers.asterisk,
-                                       parsers.asterisk)
-                     ) / writer.emphasis
-  end
+  parsers.Emph  = Ct( parsers.emph_open
+                    * (parsers.emph_content * parsers.emph_open_or_close)^1
+                    ) / process_emphasis
 
 %    \end{macrocode}
 % \par
@@ -25284,7 +26380,6 @@ function self.auto_link_url(url, attributes)
   return writer.link(writer.escape(url),
                      url, nil, attributes)
 end
-
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -25312,39 +26407,25 @@ end
                       = parsers.auto_link_relative_reference
                       / self.auto_link_url
 
-  parsers.DirectLink    = parsers.direct_link
-                        / writer.link
+  parsers.MaybeLinkOrImage = Ct(parsers.link_array) * Cc(parsers.link_group)
+                           / defer_link_and_image_processing
 
-  parsers.IndirectLink  = parsers.indirect_link
-                        / indirect_link
-
-  -- parse a link or image (direct or indirect)
-  parsers.Link          = parsers.DirectLink + parsers.IndirectLink
-
-  parsers.DirectImage   = parsers.direct_image
-                        / writer.image
-
-  parsers.IndirectImage = parsers.indirect_image
-                        / indirect_image
-
-  parsers.Image         = parsers.DirectImage + parsers.IndirectImage
-
-  -- avoid parsing long strings of * or _ as emph/strong
-  parsers.UlOrStarLine  = parsers.asterisk^4 + parsers.underscore^4
-                        / writer.string
+  parsers.LinkOrImage     = Ct(parsers.link_array) * Cc(parsers.link_group)
+                          / process_links_and_images
 
   parsers.EscapedChar   = parsers.backslash * C(parsers.escapable) / writer.string
 
-  parsers.InlineHtml    = parsers.emptyelt_any / writer.inline_html_tag
-                        + (parsers.htmlcomment / self.parser_functions.parse_inlines_no_html)
-                        / writer.inline_html_comment
-                        + parsers.htmlinstruction
-                        + parsers.openelt_any / writer.inline_html_tag
-                        + parsers.closeelt_any / writer.inline_html_tag
+  parsers.InlineHtml    = parsers.html_inline_comment       / writer.inline_html_comment
+                        + parsers.html_any_empty_inline_tag / writer.inline_html_tag
+                        + parsers.html_inline_instruction   / writer.inline_html_tag
+                        + parsers.html_inline_cdatasection  / writer.inline_html_tag
+                        + parsers.html_inline_declaration   / writer.inline_html_tag
+                        + parsers.html_any_open_inline_tag  / writer.inline_html_tag
+                        + parsers.html_any_close_tag        / writer.inline_html_tag
 
-  parsers.HtmlEntity    = parsers.hexentity / entities.hex_entity  / writer.string
-                        + parsers.decentity / entities.dec_entity  / writer.string
-                        + parsers.tagentity / entities.char_entity / writer.string
+  parsers.HtmlEntity    = parsers.hexentity / entities.hex_entity_with_x_char / writer.string
+                        + parsers.decentity / entities.dec_entity             / writer.string
+                        + parsers.tagentity / entities.char_entity            / writer.string
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -25353,12 +26434,13 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-  parsers.DisplayHtml  = (parsers.htmlcomment / self.parser_functions.parse_blocks_nested)
-                       / writer.block_html_comment
-                       + parsers.emptyelt_block / writer.block_html_element
-                       + parsers.openelt_exact("hr") / writer.block_html_element
-                       + parsers.in_matched_block_tags / writer.block_html_element
-                       + parsers.htmlinstruction
+  parsers.DisplayHtml  = parsers.html_comment       / writer.block_html_element
+                       + parsers.html_special_block / writer.block_html_element
+                       + parsers.html_block         / writer.block_html_element
+                       + parsers.html_any_block     / writer.block_html_element
+                       + parsers.html_instruction   / writer.block_html_element
+                       + parsers.html_cdatasection  / writer.block_html_element
+                       + parsers.html_declaration   / writer.block_html_element
 
   parsers.indented_non_blank_line = parsers.indentedline - parsers.blankline
 
@@ -25375,10 +26457,8 @@ end
   parsers.Blockquote   = parsers.blockquote_body
                        / writer.blockquote
 
-  parsers.ThematicBreak = ( parsers.lineof(parsers.asterisk)
-                          + parsers.lineof(parsers.dash)
-                          + parsers.lineof(parsers.underscore)
-                          ) / writer.thematic_break
+  parsers.ThematicBreak = parsers.thematic_break_lines
+                        / writer.thematic_break
 
   parsers.Reference    = parsers.define_reference_parser
                        / self.register_link
@@ -25515,20 +26595,37 @@ end
 % \end{markdown}
 %  \begin{macrocode}
   -- parse atx header
-  parsers.AtxHeading = Cg(parsers.heading_start, "level")
-                     * parsers.optionalspace
-                     * (C(parsers.line)
+  parsers.AtxHeading = parsers.nonindentspace
+                     * Cg(parsers.heading_start, "level")
+                     * ((C( parsers.optionalspace
+                          * parsers.hash^0 
+                          * parsers.optionalspace
+                          * parsers.newline)
+                        + parsers.spacechar^1 
+                        * C(parsers.line))
                        / strip_atx_end
                        / self.parser_functions.parse_inlines)
                      * Cb("level")
                      / writer.heading
 
-  parsers.SetextHeading = #(parsers.line * S("=-"))
-                        * Ct(parsers.linechar^1
-                            / self.parser_functions.parse_inlines)
-                        * parsers.newline
-                        * parsers.check_minimal_indent * parsers.heading_level
-                        * parsers.optionalspace
+  local function remove_enclosing_whitespaces(o)
+    local heading_content = ""
+    for line in o:gmatch("([^\n]*)\n?") do
+      heading_content = heading_content .. (line:gsub("^%s*(.-)%s*$", "%1\n"))
+    end
+    return heading_content
+  end
+
+  parsers.heading_line  = parsers.nonemptyline 
+                        - parsers.thematic_break_lines
+
+  parsers.heading_text = parsers.heading_line
+                       * (parsers.heading_line - parsers.heading_level)^0
+
+  parsers.SetextHeading = #(parsers.heading_text * parsers.heading_level)
+                        * Ct(parsers.heading_text / remove_enclosing_whitespaces
+                            / self.parser_functions.parse_inlines )
+                        * parsers.heading_level
                         * parsers.newline
                         / writer.heading
 
@@ -25661,11 +26758,9 @@ end
         Space                 = parsers.Space,
         OptionalIndent        = parsers.OptionalIndent,
         Endline               = parsers.Endline,
-        UlOrStarLine          = parsers.UlOrStarLine,
-        Strong                = parsers.Strong,
         Emph                  = parsers.Emph,
-        Link                  = parsers.Link,
-        Image                 = parsers.Image,
+        MaybeLinkOrImage      = parsers.MaybeLinkOrImage,
+        LinkOrImage           = parsers.fail,
         Code                  = parsers.Code,
         AutoLinkUrl           = parsers.AutoLinkUrl,
         AutoLinkEmail         = parsers.AutoLinkEmail,
@@ -25949,10 +27044,6 @@ end
                         * parsers.eof / "")
     parsers.inlines = Ct(inlines_t)
 
-    local inlines_no_link_t = util.table_copy(inlines_t)
-    inlines_no_link_t.Link = parsers.fail
-    parsers.inlines_no_link = Ct(inlines_no_link_t)
-
     local inlines_no_inline_note_t = util.table_copy(inlines_t)
     inlines_no_inline_note_t.InlineNote = parsers.fail
     parsers.inlines_no_inline_note = Ct(inlines_no_inline_note_t)
@@ -25967,6 +27058,11 @@ end
     inlines_nbsp_t.Endline = parsers.NonbreakingEndline
     inlines_nbsp_t.Space = parsers.NonbreakingSpace
     parsers.inlines_nbsp = Ct(inlines_nbsp_t)
+
+    local inlines_full_link_and_image = util.table_copy(inlines_t)
+    inlines_full_link_and_image.MaybeLinkOrImage = parsers.fail
+    inlines_full_link_and_image.LinkOrImage = parsers.LinkOrImage
+    parsers.inlines_full_link_and_image = Ct(inlines_full_link_and_image)
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -26791,7 +27887,7 @@ M.extensions.fenced_code = function(blank_before_code_fence,
         end
         local name = util.cache_verbatim(options.cacheDir, s)
         table.insert(buf, {"\\markdownRendererInputFencedCode{",
-                           name,"}{",self.string(i),"}"})
+                           name,"}{",self.string(i),"}{",self.infostring(i),"}"})
         if attr ~= nil then
           table.insert(buf, "\\markdownRendererFencedCodeAttributeContextEnd")
         end
@@ -26824,14 +27920,18 @@ M.extensions.fenced_code = function(blank_before_code_fence,
         return #a >= #b and i
       end
 
-      local tilde_infostring
-                           = C((parsers.linechar
-                              - (parsers.spacechar^1 * parsers.newline))^0)
+      local function strip_enclosing_whitespaces(str)
+        return str:gsub("^%s*(.-)%s*$", "%1")
+      end
 
-      local backtick_infostring
-                           = C((parsers.linechar
-                              - (parsers.backtick
-                                + parsers.spacechar^1 * parsers.newline))^0)
+      local tilde_infostring = Cs(( parsers.anyescaped 
+                                  - parsers.newline)^0 
+                                 / strip_enclosing_whitespaces)
+
+      local backtick_infostring = Cs(((-#(parsers.backslash * parsers.backtick) * parsers.anyescaped)
+                                      - parsers.newline
+                                      - parsers.backtick)^0 
+                                     / strip_enclosing_whitespaces)
 
       local fenceindent
 
@@ -27307,9 +28407,9 @@ M.extensions.link_attributes = function()
 % \end{markdown}
 %  \begin{macrocode}
 
-      local define_reference_parser = (parsers.check_trail / "") * parsers.tag * parsers.colon
-                                    * parsers.spacechar^0 * parsers.url
-                                    * parsers.optionaltitle
+      local define_reference_parser = (parsers.check_trail / "") * parsers.link_label * parsers.colon
+                                    * parsers.spnl * parsers.url
+                                    * (parsers.spnl_sep * parsers.title + Cc(""))
                                     * ( parsers.spnl
                                       * Ct(parsers.attributes))^-1
                                     * parsers.optionalspace * (parsers.newline + parsers.eof)
@@ -27328,93 +28428,49 @@ M.extensions.link_attributes = function()
 % \end{markdown}
 %  \begin{macrocode}
 
-      local function indirect_link(label, sps, tag,
-                                   attribute_text,
-                                   attributes)
-        return writer.defer_call(function()
-          local r, fallback = self.lookup_reference(label, sps, tag,
-                                                    attributes)
-          if r then
-            return writer.link(
-              self.parser_functions.parse_inlines_no_link(label),
-              r.url, r.title, r.attributes)
-          else
-            local buf = {fallback}
-            if attributes then
-              table.insert(buf, writer.string(attribute_text))
-            end
-            return buf
-          end
-        end)
-      end
+      local attributes  = Cg(parsers.lbrace, "opening")
+                        * Cg(Ct(C(parsers.optionalspace)
+                        * parsers.attribute
+                        * (C(parsers.spacechar^1)
+                          * parsers.attribute)^0
+                        * C(parsers.optionalspace)), "content")
+                        * Cg(parsers.rbrace, "ending")
 
-      local DirectLinkWithAttributes = parsers.direct_link
-                                     * (Ct(parsers.attributes))^-1
-                                     / writer.link
+      local inline_link = parsers.link_text
+                        * parsers.inline_direct_ref
+                        * (Ct(attributes))^-1
 
-      local IndirectLinkWithAttributes = parsers.indirect_link
-                                       * (C(Ct(parsers.attributes)))^-1
-                                       / indirect_link
+      local simple_link = parsers.link_text
+                        * (Ct(attributes))^-1
 
-      local LinkWithAttributes = DirectLinkWithAttributes
-                               + IndirectLinkWithAttributes
+      local any_link  = inline_link
+                      + simple_link
 
-%    \end{macrocode}
-% \begin{markdown}
-%
-% Here, we directly update the `Link` grammar rule to keep the
-% method \luamref{reader->parser_functions.parse_inlines_no_link}
-% aware of `LinkWithAttributes` and prevent nested links.
-%
-% If we used \luamref{reader->insert_pattern} instead of
-% \luamref{reader->update_rule}, this correspondence would have
-% been lost and link text would be able to contain nested links.
-%
-% \end{markdown}
-%  \begin{macrocode}
-      self.update_rule("Link", LinkWithAttributes)
+      local link_image_closing  = Ct( Cg(Cc("delim"), "type")
+                                      * Cg(Cc(false), "is_opening")
+                                      * ( Cg(Cc(true), "is_direct")
+                                        * Cg(Ct(C(parsers.rbracket) 
+                                               * Cg(Ct(parsers.inline_direct_ref), "inline_content") 
+                                               * Cg(Ct(attributes)^-1, "attribute_content")), "content")
+                                        + Cg(Cc(false), "is_direct")
+                                        * Cg(Ct(C(parsers.rbracket) * Cg(Ct(attributes)^-1, "attribute_content")), "content")))
 
-%    \end{macrocode}
-% \begin{markdown}
-%
-% The following patterns define direct and indirect images with attributes.
-%
-% \end{markdown}
-%  \begin{macrocode}
+      local link_image_open_or_close  = parsers.link_image_opening
+                                        + link_image_closing
 
-      local function indirect_image(label, sps, tag,
-                                    attribute_text,
-                                    attributes)
-        return writer.defer_call(function()
-          local r, fallback = self.lookup_reference(label, sps, tag,
-                                                    attributes)
-          if r then
-            return writer.image(writer.string(label),
-                                r.url, r.title, r.attributes)
-          else
-            local buf = {"!", fallback}
-            if attributes then
-              table.insert(buf, writer.string(attribute_text))
-            end
-            return buf
-          end
-        end)
-      end
+      local link_group  = Ct( parsers.link_image_opening
+                          * (parsers.link_image_content * link_image_open_or_close)^0)
 
-      local DirectImageWithAttributes = parsers.direct_image
-                                      * Ct(parsers.attributes)
-                                      / writer.image
+      local link_array = C((parsers.exclamation^-1 * any_link)^1)
 
-      local IndirectImageWithAttributes = parsers.indirect_image
-                                        * C(Ct(parsers.attributes))
-                                        / indirect_image
+      local MaybeLinkOrImageWithAttributes  = Ct(link_array) * Cc(link_group)
+                                              / defer_link_and_image_processing
 
-      local ImageWithAttributes = DirectImageWithAttributes
-                                + IndirectImageWithAttributes
+      local LinkOrImageWithAttributes       = Ct(link_array) * Cc(link_group)
+                                            / process_links_and_images
 
-      self.insert_pattern("Inline before Image",
-                          ImageWithAttributes,
-                          "ImageWithAttributes")
+      self.update_rule("MaybeLinkOrImage", MaybeLinkOrImageWithAttributes)
+      self.update_rule("LinkOrImage", LinkOrImageWithAttributes)
 
 %    \end{macrocode}
 % \begin{markdown}
@@ -27496,7 +28552,7 @@ M.extensions.notes = function(notes, inline_notes)
       if inline_notes then
         local InlineNote
                     = parsers.circumflex
-                    * (parsers.tag / self.parser_functions.parse_inlines_no_inline_note)
+                    * (parsers.link_label / self.parser_functions.parse_inlines_no_inline_note)
                     / writer.note
 
         self.insert_pattern("Inline after Emph",
@@ -27509,7 +28565,7 @@ M.extensions.notes = function(notes, inline_notes)
 
         local RawNoteRef
                       = #(parsers.lbracket * parsers.circumflex)
-                      * parsers.tag / strip_first_char
+                      * parsers.link_label / strip_first_char
 
         local rawnotes = {}
 
@@ -27528,7 +28584,10 @@ M.extensions.notes = function(notes, inline_notes)
         end
 
         local function register_note(ref,rawnote)
-          rawnotes[self.normalize_tag(ref)] = rawnote
+          local normalized_tag = self.normalize_tag(ref)
+          if rawnotes[normalized_tag] == nil then
+            rawnotes[normalized_tag] = rawnote
+          end
           return ""
         end
 
@@ -28623,7 +29682,7 @@ end
 \def\markdownRendererContentBlockOnlineImagePrototype{%
   \markdownRendererImage}%
 \def\markdownRendererContentBlockCodePrototype#1#2#3#4#5{%
-  \markdownRendererInputFencedCode{#3}{#2}}%
+  \markdownRendererInputFencedCode{#3}{#2}{#2}}%
 \def\markdownRendererImagePrototype#1#2#3#4{#2}%
 \def\markdownRendererUlBeginPrototype{}%
 \def\markdownRendererUlBeginTightPrototype{}%
@@ -28661,7 +29720,7 @@ end
 \def\markdownRendererLineBlockEndPrototype{\endgroup}%
 \def\markdownRendererInputVerbatimPrototype#1{%
   \par{\tt\input#1\relax{}}\par}%
-\def\markdownRendererInputFencedCodePrototype#1#2{%
+\def\markdownRendererInputFencedCodePrototype#1#2#3{%
   \markdownRendererInputVerbatim{#1}}%
 \def\markdownRendererHeadingOnePrototype#1{#1}%
 \def\markdownRendererHeadingTwoPrototype#1{#1}%
@@ -29898,7 +30957,7 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\renewcommand\markdownRendererInputFencedCodePrototype[2]{%
+\renewcommand\markdownRendererInputFencedCodePrototype[3]{%
   \def\next##1 ##2\relax{%
     \ifthenelse{\equal{##1}{dot}}{%
       \markdownIfOption{frozenCache}{}{%
@@ -29925,7 +30984,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
     }{%
-      \markdown@witiko@dot@oldRendererInputFencedCodePrototype{#1}{#2}%
+      \markdown@witiko@dot@oldRendererInputFencedCodePrototype{#1}{#2}{#3}%
     }%
   }%
   \next#2 \relax}%
@@ -30539,7 +31598,7 @@ end
 \RequirePackage{ltxcmds}
 \ExplSyntaxOn
 \cs_gset:Npn
-  \markdownRendererInputFencedCodePrototype#1#2
+  \markdownRendererInputFencedCodePrototype#1#2#3
   {
     \tl_if_empty:nTF
       { #2 }
@@ -30599,7 +31658,7 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-              { \markdownRendererInputFencedCode{#1}{} }
+              { \markdownRendererInputFencedCode{#1}{}{} }
           }
       }
   }
@@ -31574,7 +32633,7 @@ end
 %  \begin{macrocode}
 \ExplSyntaxOn
 \cs_gset:Npn
-  \markdownRendererInputFencedCodePrototype#1#2
+  \markdownRendererInputFencedCodePrototype#1#2#3
   {
     \tl_if_empty:nTF
       { #2 }

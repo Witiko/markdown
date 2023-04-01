@@ -31,8 +31,7 @@ emphasis: bar
 ulItemEnd
 ulEndTight
 interblockSeparator
-blockHtmlCommentBegin
-blockHtmlCommentEnd
+inputBlockHtmlElement: ./_markdown_test/bd8768ad057df0a9dda8e50a0507b3ed.verbatim
 interblockSeparator
 ulBeginTight
 ulItem

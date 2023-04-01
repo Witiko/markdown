@@ -16,8 +16,7 @@ bar
 *okay*
 >>>
 documentBegin
-blockHtmlCommentBegin
-blockHtmlCommentEnd
+inputBlockHtmlElement: ./_markdown_test/45deef5be185624361649ef06e8fb543.verbatim
 interblockSeparator
 emphasis: okay
 documentEnd

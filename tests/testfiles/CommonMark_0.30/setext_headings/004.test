@@ -13,7 +13,13 @@ Foo
 =
 >>>
 documentBegin
+BEGIN section
+BEGIN section
 headingTwo: Foo
 interblockSeparator
+END section
+END section
+BEGIN section
 headingOne: Foo
+END section
 documentEnd

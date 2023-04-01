@@ -12,7 +12,7 @@
 documentBegin
 BEGIN link
 - label: http://example.com/?search=][ref]
-- URI: http://example.com/?search=%5D%5Bref%5D
+- URI: http://example.com/?search=][ref]
 - title: 
 END link
 documentEnd

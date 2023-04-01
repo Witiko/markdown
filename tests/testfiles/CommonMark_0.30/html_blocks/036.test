@@ -12,8 +12,7 @@
     <!-- foo -->
 >>>
 documentBegin
-blockHtmlCommentBegin
-blockHtmlCommentEnd
+inputBlockHtmlElement: ./_markdown_test/88bad6df9853281dca0b84803af9b7e2.verbatim
 interblockSeparator
 inputVerbatim: ./_markdown_test/0bd4d7739263f98a4f1bf580ac0bf3c1.verbatim
 documentEnd
