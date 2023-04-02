@@ -25090,13 +25090,12 @@ function M.reader.new(writer, options)
 %  \end{macrocode}
 % \begin{markdown}
 %
-% Start traversing and checking the indents for a continuation line, optionally with 
-% the mode `is_optional` selected. Check blank line specifically with `is_blank`. 
-% Additionally, also directly check the new trail with a type `check_trail_type`.
+% Check the indentation of the continuation line, optionally with 
+% the mode `is_optional` selected. Check blank line exclusively with `is_blank`.
 %
 % \end{markdown}
 %  \begin{macrocode}
-  local function start_traverse_indent_joined(s, i, indent_table, is_optional, is_blank, check_trail_type)
+  local function check_continuation_indentation(s, i, indent_table, is_optional, is_blank)
     if not has_indents(indent_table) then
       return true
     end
@@ -25104,14 +25103,99 @@ function M.reader.new(writer, options)
     local passes, new_index, current_trail = traverse_indent(s, i, indent_table, is_optional, is_blank)
 
     if passes then
-      if check_trail_type == "non-code" then
-        return check_trail(false, current_trail.is_code)
-      end
-      if check_trail_type == "code" then
-        return check_trail(true, current_trail.is_code)
-      end
       indent_table = add_trail(indent_table, current_trail)
       return new_index, indent_table
+    end
+    return false
+  end
+  
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Get name of the last indent from the `indent_table`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function get_last_indent_name(indent_table)
+    if has_indents(indent_table) then
+      return indent_table.indents[#indent_table.indents].name
+    end
+    return
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Remove the remainder altogether if the last indent from the `indent_table`
+% is blank-only.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function remove_remainder_if_blank(indent_table, remainder)
+    if get_last_indent_name(indent_table) == "li" then
+      return ""
+    end
+    return remainder
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Take the trail `trail` or create a new one from `spacing` and comapre it 
+% with the expected `trail_type`. On success return the index `i` and the
+% remainder of the trail.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function check_trail_type(s, i, trail, spacing, trail_type)
+    if trail == nil then
+      trail = process_starter_spacing(0, spacing, 0, 0)
+    end
+
+    if trail_type == "non-code" then
+      return check_trail(false, trail.is_code)
+    end
+    if trail_type == "code" then
+      return check_trail(true, trail.is_code)
+    end
+    if trail_type == "full-code" then
+      if (trail.is_code) then
+        return i, trail.remainder
+      end
+      return i, ""
+    end
+  end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Check the indentation of the continuation line, optionally with 
+% the mode `is_optional` selected. Check blank line specifically with `is_blank`. 
+% Additionally, also directly check the new trail with a type `trail_type`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function check_continuation_indentation_and_trail(s, i, indent_table, spacing, is_optional, is_blank, trail_type)
+    if not has_indents(indent_table) then
+      local result, remainder = check_trail_type(s, i, indent_table.trail, spacing, trail_type)
+      if remainder == nil then
+        return result
+      end
+      return result, remainder
+    end
+
+    local passes, new_index, current_trail = traverse_indent(s, i, indent_table, is_optional, is_blank)
+
+    if passes then
+      if current_trail == nil then
+        current_trail = process_starter_spacing(0, spacing, 0, 0)
+      end
+      local result, remainder = check_trail_type(s, new_index, current_trail, spacing, trail_type)
+      if remainder == nil then
+        return result
+      end
+      remainder = remove_remainder_if_blank(indent_table, remainder)
+      return result, remainder
     end
     return false
   end
@@ -25138,18 +25222,40 @@ function M.reader.new(writer, options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  parsers.check_minimal_indent = Cmt(Cb("indent_info") * Cc(false), start_traverse_indent_joined)
+  parsers.check_minimal_indent = Cmt(Cb("indent_info") * Cc(false), check_continuation_indentation)
 
-  parsers.check_optional_indent = Cmt(Cb("indent_info") * Cc(true), start_traverse_indent_joined)
+  parsers.check_optional_indent = Cmt(Cb("indent_info") * Cc(true), check_continuation_indentation)
 
-  parsers.check_minimal_indent_and_trail = Cmt(Cb("indent_info") * Cc(false) * Cc(false) * Cc("non-code"), start_traverse_indent_joined)
+  parsers.check_minimal_blank_indent = Cmt(Cb("indent_info") * Cc(false) * Cc(true), check_continuation_indentation)
 
-  parsers.check_minimal_indent_and_code_trail = Cmt(Cb("indent_info") * Cc(false) * Cc(false) * Cc("code"), start_traverse_indent_joined)
+%  \end{macrocode}
+% \begin{markdown}
+%
+% The following patterns check indentation in continuation lines as defined by the container start.
+% Additionally the subsequent trail is also directly checked.
+%
+% \end{markdown}
+%  \begin{macrocode}
 
-  parsers.check_minimal_blank_indent = Cmt(Cb("indent_info") * Cc(false) * Cc(true), start_traverse_indent_joined)
+  parsers.check_minimal_indent_and_trail = Cmt( Cb("indent_info") * C(parsers.spacechar^0) 
+                                              * Cc(false) * Cc(false) * Cc("non-code"),
+                                               check_continuation_indentation_and_trail)
 
+  parsers.check_minimal_indent_and_code_trail = Cmt( Cb("indent_info") * C(parsers.spacechar^0) 
+                                                   * Cc(false) * Cc(false) * Cc("code"),
+                                                    check_continuation_indentation_and_trail)
 
+  parsers.check_minimal_blank_indent_and_full_code_trail = Cmt( Cb("indent_info") * C(parsers.spacechar^0) 
+                                                              * Cc(false) * Cc(true) * Cc("full-code"), 
+                                                               check_continuation_indentation_and_trail)
 
+%  \end{macrocode}
+% \begin{markdown}
+%
+% The following patterns represent basic building blocks of indented content.
+%
+% \end{markdown}
+%  \begin{macrocode}
   parsers.minimally_indented_blank = parsers.check_minimal_indent * (parsers.blankline / "")
 
   parsers.minimally_indented_block = parsers.check_minimal_indent * V("Block")
@@ -26460,7 +26566,7 @@ end
   parsers.Verbatim  = Cs( 
                         parsers.check_code_trail 
                       * (parsers.line - parsers.blankline)
-                      * (((parsers.check_minimal_blank_indent / "") * parsers.blankline)^0
+                      * ((parsers.check_minimal_blank_indent_and_full_code_trail * parsers.blankline)^0
                         * ((parsers.check_minimal_indent / "") * parsers.check_code_trail * (parsers.line - parsers.blankline))^1)^0
                       ) / self.expandtabs / writer.verbatim
 
@@ -27983,13 +28089,17 @@ M.extensions.fenced_code = function(blank_before_code_fence,
                            + parsers.eof
       end
 
-      local function process_fenced_line(s, i, indent_table, line_content)
-        local trail = ""
+      local function process_fenced_line(s, i, indent_table, line_content, is_blank)
+        local remainder = ""
         if has_trail(indent_table) then
-          trail = indent_table.trail.internal_remainder
+          remainder = indent_table.trail.internal_remainder
         end
 
-        local str = trail .. line_content
+        if is_blank and get_last_indent_name(indent_table) == "li" then
+          remainder = ""
+        end
+
+        local str = remainder .. line_content
         local index = 1
         local remaining = fenceindent
 
@@ -28010,21 +28120,21 @@ M.extensions.fenced_code = function(blank_before_code_fence,
       end
 
       local fencedline = function(char)
-        return Cmt(Cb("indent_info") * C(parsers.line - fencetail(char)), process_fenced_line)
+        return Cmt(Cb("indent_info") * C(parsers.line - fencetail(char)) * Cc(false), process_fenced_line)
       end
+
+      local blankfencedline = Cmt(Cb("indent_info") * C(parsers.blankline) * Cc(true), process_fenced_line)
 
       local TildeFencedCode
              = fencehead(parsers.tilde, tilde_infostring)
-             * Cs((((parsers.check_minimal_blank_indent / "") * #parsers.blankline
-                   + (parsers.check_minimal_indent / ""))
-                  * fencedline(parsers.tilde))^0)
+             * Cs(((parsers.check_minimal_blank_indent / "") * blankfencedline
+                   + (parsers.check_minimal_indent / "") * fencedline(parsers.tilde))^0)
              * ((parsers.check_minimal_indent / "") * fencetail(parsers.tilde) + parsers.succeed)
 
       local BacktickFencedCode
              = fencehead(parsers.backtick, backtick_infostring)
-             * Cs((((parsers.check_minimal_blank_indent / "") * #parsers.blankline
-                   + (parsers.check_minimal_indent / ""))
-                  * fencedline(parsers.backtick))^0)
+             * Cs(((parsers.check_minimal_blank_indent / "") * blankfencedline
+                   + (parsers.check_minimal_indent / "") * fencedline(parsers.backtick))^0)
              * ((parsers.check_minimal_indent / "") * fencetail(parsers.backtick) + parsers.succeed)
 
       local infostring_with_attributes
