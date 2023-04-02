@@ -88,9 +88,13 @@
   relativeReferences,
   stripPercentSigns,
   underscores = false,
-  theme = witiko/dot,
-  theme = witiko/graphicx/http,
-  theme = witiko/markdown/techdoc,
+  import = {
+    witiko/dot,
+    witiko/graphicx/http,
+    witiko/markdown/techdoc = {
+      options as lua-options
+    },
+  },
 ]{markdown}
 
 % Set up Unicode characters.
@@ -1982,7 +1986,7 @@ package.
 local defaultOptions = {}
 %    \end{macrocode}
 % \begingroup
-% \markdownSetup{snippet=witiko/markdown/techdoc/options}
+% \markdownSetup{snippet=lua-options}
 % \par
 % \iffalse
 %</lua,lua-cli>
