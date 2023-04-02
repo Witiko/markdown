@@ -88,10 +88,16 @@
   relativeReferences,
   stripPercentSigns,
   underscores = false,
-  theme = witiko/dot,
-  theme = witiko/graphicx/http,
-  theme = witiko/markdown/techdoc,
 ]{markdown}
+\markdownSetup{
+  import = {
+    witiko/dot,
+    witiko/graphicx/http,
+    witiko/markdown/techdoc = {
+      options as lua-options
+    },
+  },
+}
 
 % Set up Unicode characters.
 \usepackage{newunicodechar}
@@ -1982,7 +1988,7 @@ package.
 local defaultOptions = {}
 %    \end{macrocode}
 % \begingroup
-% \markdownSetup{snippet=witiko/markdown/techdoc/options}
+% \markdownSetup{snippet=lua-options}
 % \par
 % \iffalse
 %</lua,lua-cli>
@@ -18694,7 +18700,11 @@ pdflatex --shell-escape document.tex
 % <#sec:latexoptions>). Note that \meta{options} inside the `\usepackage`
 % macro may not set the `markdownRenderers` (see Section
 % <#sec:latexrenderers>) and `markdownRendererPrototypes` (see Section
-% <#sec:latexrendererprototypes>) keys. This limitation is due to the way
+% <#sec:latexrendererprototypes>) keys. Furthermore, although the
+% base variant of the `import` key that loads a single \LaTeX{} theme
+% (see Section <#sec:latexthemes>) can be used, the extended variant
+% that can load multiple themes and import snippets from them (see
+% Section <#sec:latexsnippets>). This limitation is due to the way
 % \Hologo{LaTeX2e} parses package options.
 %
 % \end{markdown}
@@ -18770,7 +18780,7 @@ pdflatex --shell-escape document.tex
 %
 % Except for the `plain` option described in Section <#sec:latexplain>, and
 % the \LaTeX{} themes described in Section <#sec:latexthemes>, and the
-% \LaTeX{} setup snippets described in Section <#sec:latexsetupsnippets>,
+% \LaTeX{} snippets described in Section <#sec:latexsetupsnippets>,
 % \LaTeX{} options map directly to the options recognized by the plain
 % \TeX{} interface (see Section <#sec:texoptions>) and to the markdown token
 % renderers and their prototypes recognized by the plain \TeX{} interface (see
@@ -18797,30 +18807,40 @@ pdflatex --shell-escape document.tex
 %    \end{macrocode}
 % \begin{markdown}
 %
-% We may also store \LaTeX{} options as *setup snippets* and invoke them later
-% using the \mdef{markdownSetupSnippet} macro. The \mref{markdownSetupSnippet}
-% macro receives two arguments: the name of the setup snippet and the options
-% to store:
+%#### \LaTeX{} snippets {#latexsetupsnippets}
+%
+% We may also set up \LaTeX{} options as *snippets* using the
+% \mdef{markdownSetupSnippet} macro and invoke them later. The
+% \mref{markdownSetupSnippet} macro receives two arguments: the name
+% of the snippet and the options to store:
 %
 % \end{markdown}
 %  \begin{macrocode}
-\newcommand\markdownSetupSnippet[2]{%
-  \markdownIfSnippetExists{#1}%
-    {%
-      \markdownWarning
-        {Redefined setup snippet \markdownLaTeXThemeName#1}%
-      \csname markdownLaTeXSetupSnippet%
-        \markdownLaTeXThemeName#1\endcsname={#2}%
-    }{%
-      \newtoks\next
-        \next={#2}%
-      \expandafter\let\csname markdownLaTeXSetupSnippet%
-        \markdownLaTeXThemeName#1\endcsname=\next
-    }}%
+\ExplSyntaxOn
+\cs_new:Nn
+  \@@_latex_setup_snippet:nn
+  {
+    \markdownIfSnippetExists
+      { #1 }
+      {
+        \markdownWarning
+          {Redefined~snippet~\markdownLaTeXThemeName#1}
+        \csname markdownLaTeXSetupSnippet%
+          \markdownLaTeXThemeName#1\endcsname={#2}
+      }
+      {
+        \newtoks\next
+          \next={#2}
+        \expandafter\let\csname markdownLaTeXSetupSnippet%
+          \markdownLaTeXThemeName#1\endcsname=\next
+      }
+  }
+\let\markdownSetupSnippet=\@@_latex_setup_snippet:nn
+\ExplSyntaxOff
 %    \end{macrocode}
 % \begin{markdown}
 %
-% To decide whether a setup snippet exists, we can use the
+% To decide whether a snippet exists, we can use the
 % \mdef{markdownIfSnippetExists} macro:
 %
 % \end{markdown}
@@ -18833,8 +18853,8 @@ pdflatex --shell-escape document.tex
 % \begin{markdown}
 %
 % See Section <#sec:latexthemes> for information on interactions between
-% setup snippets and \LaTeX{} themes. See Section <#sec:latexsetupsnippets>
-% for information about invoking the stored setup snippets.
+% snippets and \LaTeX{} themes. See Section <#sec:latexsnippets>
+% for information about invoking the set-up snippets.
 %
 % \end{markdown}
 % \iffalse
@@ -18845,7 +18865,7 @@ pdflatex --shell-escape document.tex
 
 \LaTeX{} options allow us to disable the redefinition of the default renderer
 prototypes from plain \TeX{}, load user-defined themes, and invoke user-defined
-setup snippets.
+set-up snippets.
 
 #### Setting Lua and plain \TeX{} options from \LaTeX{}
 
@@ -18954,14 +18974,14 @@ interpretation of Markdown tokens. Similarly to \LaTeX{} packages, themes
 allow the authors to achieve a specific look and other high-level goals
 without low-level programming.
 
-% The \LaTeX{} option `theme`=\meta{theme name} loads a \LaTeX{} package
+% The \LaTeX{} option `import`=\meta{theme name} loads a \LaTeX{} package
 % (further referred to as *a theme*) named `markdowntheme`\meta{munged theme
 % name}`.sty`, where the *munged theme name* is the *theme name* after the
 % substitution of all forward slashes (`/`) for an underscore (`_`), the theme
 % *name* is *qualified* and contains no underscores, and a value is qualified
-% if and only if it contains at least one forward slash. Themes are inspired by
-% the Beamer \LaTeX{} package, which provides similar functionality with its
-% `\usetheme` macro [@tantau21, Section 15.1].
+% if and only if it contains at least one forward slash. Themes are inspired
+% by the Beamer \LaTeX{} package, which provides similar functionality with
+% its `\usetheme` macro [@tantau21, Section 15.1].
 %
 % Theme names must be qualified to minimize naming conflicts between different
 % themes intended for a single \LaTeX{} document class or for a single \LaTeX{}
@@ -18999,8 +19019,8 @@ would use the following code in the preamble of your document:
 
 ``` tex
 \usepackage[
-  theme = witiko/beamer/MU,
-  theme = witiko/dot,
+  import=witiko/beamer/MU,
+  import=witiko/dot,
 ]{markdown}
 ```````
 
@@ -19047,19 +19067,56 @@ would use the following code in the preamble of your document:
 \keys_define:nn
   { markdown/latex-options }
   {
+    import .code:n = {
+      \tl_set:Nn
+        \l_tmpa_tl
+        { #1 }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% To ensure that keys containing forward slashes get passed correctly, we
+% replace all forward slashes in the input with backslash tokens with category
+% code letter and then undo the replacement. This means that if any unbraced
+% backslash tokens with category code letter exist in the input, they will be
+% replaced with forward slashes. However, this should be extremely rare.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      \tl_replace_all:NnV
+        \l_tmpa_tl
+        { / }
+        \c_backslash_str
+      \keys_set:nV
+        { markdown/latex-options/import }
+        \l_tmpa_tl
+    },
+  }
+\cs_generate_variant:Nn
+  \tl_replace_all:Nnn
+  { NnV }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The \LaTeX{} option `theme` has been deprecated and will be removed in
+% Markdown 3.0.0.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\keys_define:nn
+  { markdown/latex-options }
+  {
     theme .code:n = { \@@_set_latex_theme:n { #1 } },
   }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \begin{markdown}
 %
-% The \LaTeX{} themes have a useful synergy with the setup snippets (see
-% Section <#sec:latexoptions>): To make it less likely that different
-% themes will define setup snippets with the same name, we will prepend
-% \meta{theme name}`/` before the snippet name and use the result as the
-% snippet name. For example, if the `witiko/dot` theme defines the `product`
-% setup snippet, the setup snippet will be available under the name
-% `witiko/dot/product`.
+% The \LaTeX{} themes have a useful synergy with snippets (see Section
+% <#sec:latexsetupsnippets>): To make it less likely that different themes
+% will set up snippets with the same name, we will prepend \meta{theme
+% name}`/` before the snippet name and use the result as the snippet name.
+% For example, if the `witiko/dot` theme sets up the `product` snippet, the
+% snippet will be available under the name `witiko/dot/product`.
 %
 % \end{markdown}
 % \iffalse
@@ -19098,7 +19155,7 @@ Example themes provided with the Markdown package include:
      right tail of the infostring is used as the image title.
 %    ```` tex
 %    \documentclass{article}
-%    \usepackage[theme=witiko/dot]{markdown}
+%    \usepackage[import=witiko/dot]{markdown}
 %    \setkeys{Gin}{
 %      width = \columnwidth,
 %      height = 0.65\paperheight,
@@ -19171,7 +19228,7 @@ Using a text editor, create a text document named `document.tex` with the
 following content:
 ```` tex
 \documentclass{article}
-\usepackage[theme=witiko/dot]{markdown}
+\usepackage[import=witiko/dot]{markdown}
 \setkeys{Gin}{
   width=\columnwidth,
   height=0.65\paperheight,
@@ -19238,7 +19295,7 @@ conference article:
      http or https protocol.
 %    ``` tex
 %    \documentclass{article}
-%    \usepackage[theme=witiko/graphicx/http]{markdown}
+%    \usepackage[import=witiko/graphicx/http]{markdown}
 %    \begin{document}
 %    \begin{markdown}
 %    ![img](https://github.com/witiko/markdown/raw/main/markdown.png
@@ -19264,7 +19321,7 @@ Using a text editor, create a text document named `document.tex` with the
 following content:
 ``` tex
 \documentclass{article}
-\usepackage[theme=witiko/graphicx/http]{markdown}
+\usepackage[import=witiko/graphicx/http]{markdown}
 \begin{document}
 \begin{markdown}
 ![img](https://github.com/witiko/markdown/raw/main/markdown.png
@@ -19301,7 +19358,7 @@ following image:
      when the \Opt{hybrid} Lua option is disabled.
 %    ``` tex
 %    \documentclass{article}
-%    \usepackage[theme=witiko/tilde]{markdown}
+%    \usepackage[import=witiko/tilde]{markdown}
 %    \begin{document}
 %    \begin{markdown}
 %    Bartel~Leendert van~der~Waerden
@@ -19320,7 +19377,7 @@ Using a text editor, create a text document named `document.tex` with the
 following content:
 ``` tex
 \documentclass{article}
-\usepackage[theme=witiko/tilde]{markdown}
+\usepackage[import=witiko/tilde]{markdown}
 \begin{document}
 \begin{markdown}
 Bartel~Leendert van~der~Waerden
@@ -19352,15 +19409,15 @@ following text, where the middot (`·`) denotes a non-breaking space:
 % Please, see Section <#sec:latexthemesimplementation> for implementation
 % details of the example themes.
 
-#### \LaTeX{} setup snippets {#latexsetupsnippets}
+#### \LaTeX{} snippets {#latexsnippets}
 
 % \end{markdown}
 % \iffalse
 
 User-defined \LaTeX{} themes provide global control over high-level goals.
 However, it is often desirable to change only some local aspects of a document.
-\LaTeX{} setup snippets provide syntactic sugar for defining and invoking
-various options locally.
+\LaTeX{} snippets provide syntactic sugar for defining and invoking various
+options locally.
 
 % \fi
 % \begin{markdown}
@@ -19397,7 +19454,7 @@ various options locally.
 % \par
 % \markdownBegin
 
-Here is how we can use setup snippets to store options and invoke them later:
+Here is how we can use snippets to store options and invoke them later:
 
 ``` tex
 \markdownSetupSnippet{romanNumerals}{
@@ -19423,14 +19480,171 @@ The following ordered list will be preceded by roman numerals:
 4. quattuor
 
 \end{markdown*}
-
 ```````
+
+If the `romanNumerals` snippet were defined in the `jdoe/lists` theme,
+we can import the theme and use the qualified name of the snippet:
+
+``` tex
+\markdownSetup{import=jdoe/lists}
+\begin{markdown*}{snippet=jdoe/lists/romanNumerals}
+
+The following ordered list will be preceded by roman numerals:
+
+3. tres
+4. quattuor
+
+\end{markdown*}
+```````
+
+Alternatively, we can use the extended variant of the `import` \LaTeX{}
+option that allows us to import the `romanNumerals` snippet to the
+current namespace, so that we can invoke the snippet with less typing:
+
+``` tex
+\markdownSetup{
+  import = {
+    jdoe/lists = romanNumerals,
+  },
+}
+\begin{markdown*}{snippet=romanNumerals}
+
+The following ordered list will be preceded by roman numerals:
+
+3. tres
+4. quattuor
+
+\end{markdown*}
+```````
+
+Furthermore, we can also specify the name of the snippet in the current 
+namespace, which is different from the name of the snippet in the
+`jdoe/lists` theme:
+
+``` tex
+\markdownSetup{
+  import = {
+    jdoe/lists = romanNumerals as roman,
+  },
+}
+\begin{markdown*}{snippet=roman}
+
+The following ordered list will be preceded by roman numerals:
+
+3. tres
+4. quattuor
+
+\end{markdown*}
+```````
+
+Several themes and/or snippets can be loaded at once using the extended
+variant of the `import` \LaTeX{} option.
 
 % \markdownEnd
 % \iffalse
 %</manual-options>
 %<*latex>
 % \fi
+%  \begin{macrocode}
+\ExplSyntaxOn
+\tl_new:N
+  \l_@@_latex_import_current_theme_tl
+\keys_define:nn
+  { markdown/latex-options/import }
+  {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If a theme name is given without a list of snippets to import,
+% we assume that an empty list was given.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    unknown .default:n = {},
+    unknown .code:n = {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% To ensure that keys containing forward slashes get passed correctly, we
+% replace all forward slashes in the input with backslash tokens with category
+% code letter and then undo the replacement. This means that if any unbraced
+% backslash tokens with category code letter exist in the input, they will be
+% replaced with forward slashes. However, this should be extremely rare.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      \tl_set_eq:NN
+        \l_@@_latex_import_current_theme_tl
+        \l_keys_key_str
+      \tl_replace_all:NVn
+        \l_@@_latex_import_current_theme_tl
+        \c_backslash_str
+        { / }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Here, we load the \LaTeX{} theme.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      \@@_set_latex_theme:V
+        \l_@@_latex_import_current_theme_tl
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Here, we import the \LaTeX{} snippets.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      \clist_map_inline:nn
+        { #1 }
+        {
+          \regex_extract_once:nnNTF
+            { ^(.*?)\s+as\s+(.*?)$ }
+            { ##1 }
+            \l_tmpa_seq
+            {
+              \seq_pop:NN
+                \l_tmpa_seq
+                \l_tmpa_tl
+              \seq_pop:NN
+                \l_tmpa_seq
+                \l_tmpa_tl
+              \seq_pop:NN
+                \l_tmpa_seq
+                \l_tmpb_tl
+            }
+            {
+              \tl_set:Nn
+                \l_tmpa_tl
+                { ##1 }
+              \tl_set:Nn
+                \l_tmpb_tl
+                { ##1 }
+            }
+          \tl_put_left:Nn
+            \l_tmpa_tl
+            { / }
+          \tl_put_left:NV
+            \l_tmpa_tl
+            \l_@@_latex_import_current_theme_tl
+          \@@_latex_setup_snippet:Vx
+            \l_tmpb_tl
+            { snippet = { \l_tmpa_tl } }
+        }
+    },
+  }
+\cs_generate_variant:Nn
+  \tl_replace_all:Nnn
+  { NVn }
+\cs_generate_variant:Nn
+  \@@_set_latex_theme:n
+  { V }
+\cs_generate_variant:Nn
+  \@@_latex_setup_snippet:nn
+  { Vx }
+\ExplSyntaxOff
+%    \end{macrocode}
 % \begin{markdown}
 %
 %#### Plain \TeX{} Interface Options
@@ -29363,7 +29577,7 @@ end
 % \begin{markdown}
 %
 % The `code` key is used to immediately expand and execute code, which can be
-% especially useful in \LaTeX{} setup snippets.
+% especially useful in \LaTeX{} snippets.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -29395,7 +29609,7 @@ end
 % \begin{markdown}
 %
 % To ensure that keys containing forward slashes get passed correctly, we
-% replace all forward slashes in the nput with backslash tokens with category
+% replace all forward slashes in the input with backslash tokens with category
 % code letter and then undo the replacement. This means that if any unbraced
 % backslash tokens with category code letter exist in the input, they will be
 % replaced with forward slashes. However, this should be extremely rare.
@@ -29436,12 +29650,6 @@ end
 \cs_generate_variant:Nn
   \keys_define:nn
   { nV }
-\cs_generate_variant:Nn
-  \tl_replace_all:Nnn
-  { NVn }
-\cs_generate_variant:Nn
-  \tl_replace_all:Nnn
-  { NnV }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par

@@ -9,6 +9,7 @@ Development:
   #235, #236, #270)
 - Add support for attributes on links, images, and inline
   code spans. (jgm#36, jgm#43, #50, #123, #256, #280)
+- Add `import` LaTeX option. (#107, #285)
 
 Documentation:
 
@@ -19,6 +20,11 @@ Refactoring:
 
 - Only configure the Kpathsea library if it has not already
   been configured. (#268, #283)
+
+Deprecation:
+
+- Deprecate `theme` LaTeX option in favor of the new
+  `import` LaTeX option. (#107, #285)
 
 ## 2.21.0 (2022-02-28)
 
@@ -47,7 +53,7 @@ Deprecation:
 
 - Deprecate the current semantics of header attribute contexts.
   (#258, #264)
-- Deprecate `hardLineBreaks` option. (#227, #263)
+- Deprecate `hardLineBreaks` Lua option. (#227, #263)
 
 ## 2.20.0 (2022-02-01)
 
