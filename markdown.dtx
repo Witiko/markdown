@@ -18960,14 +18960,15 @@ interpretation of Markdown tokens. Similarly to \LaTeX{} packages, themes
 allow the authors to achieve a specific look and other high-level goals
 without low-level programming.
 
-% The \LaTeX{} option `theme`=\meta{theme name} loads a \LaTeX{} package
-% (further referred to as *a theme*) named `markdowntheme`\meta{munged theme
-% name}`.sty`, where the *munged theme name* is the *theme name* after the
-% substitution of all forward slashes (`/`) for an underscore (`_`), the theme
-% *name* is *qualified* and contains no underscores, and a value is qualified
-% if and only if it contains at least one forward slash. Themes are inspired by
-% the Beamer \LaTeX{} package, which provides similar functionality with its
-% `\usetheme` macro [@tantau21, Section 15.1].
+% The \LaTeX{} option `import`=`{`\meta{comma-delimited list of theme names}`}`
+% loads a \LaTeX{} package (further referred to as *a theme*) named
+% `markdowntheme`\meta{munged theme name}`.sty`, where the *munged theme name*
+% is the *theme name* after the substitution of all forward slashes (`/`) for
+% an underscore (`_`), the theme *name* is *qualified* and contains no
+% underscores, and a value is qualified if and only if it contains at least one
+% forward slash. Themes are inspired by the Beamer \LaTeX{} package, which
+% provides similar functionality with its `\usetheme` macro [@tantau21, Section
+% 15.1].
 %
 % Theme names must be qualified to minimize naming conflicts between different
 % themes intended for a single \LaTeX{} document class or for a single \LaTeX{}
@@ -19005,8 +19006,10 @@ would use the following code in the preamble of your document:
 
 ``` tex
 \usepackage[
-  theme = witiko/beamer/MU,
-  theme = witiko/dot,
+  import = {
+    witiko/beamer/MU,
+    witiko/dot,
+  },
 ]{markdown}
 ```````
 
@@ -19049,6 +19052,15 @@ would use the following code in the preamble of your document:
       markdowntheme\markdownLaTeXThemePackageName}
     \expandafter\markdownLaTeXThemeLoad\expandafter{
       \markdownLaTeXThemePackageName}{#1/}
+  }
+\keys_define:nn
+  { markdown/latex-options }
+  {
+    import .code:n = {
+      \clist_map_inline:nn
+        { #1 }
+        { \@@_set_latex_theme:n { ##1 } }
+    },
   }
 %    \end{macrocode}
 % \begin{markdown}
@@ -19111,7 +19123,7 @@ Example themes provided with the Markdown package include:
      right tail of the infostring is used as the image title.
 %    ```` tex
 %    \documentclass{article}
-%    \usepackage[theme=witiko/dot]{markdown}
+%    \usepackage[import=witiko/dot]{markdown}
 %    \setkeys{Gin}{
 %      width = \columnwidth,
 %      height = 0.65\paperheight,
@@ -19184,7 +19196,7 @@ Using a text editor, create a text document named `document.tex` with the
 following content:
 ```` tex
 \documentclass{article}
-\usepackage[theme=witiko/dot]{markdown}
+\usepackage[import=witiko/dot]{markdown}
 \setkeys{Gin}{
   width=\columnwidth,
   height=0.65\paperheight,
@@ -19251,7 +19263,7 @@ conference article:
      http or https protocol.
 %    ``` tex
 %    \documentclass{article}
-%    \usepackage[theme=witiko/graphicx/http]{markdown}
+%    \usepackage[import=witiko/graphicx/http]{markdown}
 %    \begin{document}
 %    \begin{markdown}
 %    ![img](https://github.com/witiko/markdown/raw/main/markdown.png
@@ -19277,7 +19289,7 @@ Using a text editor, create a text document named `document.tex` with the
 following content:
 ``` tex
 \documentclass{article}
-\usepackage[theme=witiko/graphicx/http]{markdown}
+\usepackage[import=witiko/graphicx/http]{markdown}
 \begin{document}
 \begin{markdown}
 ![img](https://github.com/witiko/markdown/raw/main/markdown.png
@@ -19314,7 +19326,7 @@ following image:
      when the \Opt{hybrid} Lua option is disabled.
 %    ``` tex
 %    \documentclass{article}
-%    \usepackage[theme=witiko/tilde]{markdown}
+%    \usepackage[import=witiko/tilde]{markdown}
 %    \begin{document}
 %    \begin{markdown}
 %    Bartel~Leendert van~der~Waerden
@@ -19333,7 +19345,7 @@ Using a text editor, create a text document named `document.tex` with the
 following content:
 ``` tex
 \documentclass{article}
-\usepackage[theme=witiko/tilde]{markdown}
+\usepackage[import=witiko/tilde]{markdown}
 \begin{document}
 \begin{markdown}
 Bartel~Leendert van~der~Waerden
