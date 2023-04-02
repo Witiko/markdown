@@ -88,6 +88,8 @@
   relativeReferences,
   stripPercentSigns,
   underscores = false,
+]{markdown}
+\markdownSetup{
   import = {
     witiko/dot,
     witiko/graphicx/http,
@@ -95,7 +97,7 @@
       options as lua-options
     },
   },
-]{markdown}
+}
 
 % Set up Unicode characters.
 \usepackage{newunicodechar}
@@ -18698,7 +18700,11 @@ pdflatex --shell-escape document.tex
 % <#sec:latexoptions>). Note that \meta{options} inside the `\usepackage`
 % macro may not set the `markdownRenderers` (see Section
 % <#sec:latexrenderers>) and `markdownRendererPrototypes` (see Section
-% <#sec:latexrendererprototypes>) keys. This limitation is due to the way
+% <#sec:latexrendererprototypes>) keys. Furthermore, although the
+% base variant of the `import` key that loads a single \LaTeX{} theme
+% (see Section <#sec:latexthemes>) can be used, the extended variant
+% that can load multiple themes and import snippets from them (see
+% Section <#sec:latexsnippets>). This limitation is due to the way
 % \Hologo{LaTeX2e} parses package options.
 %
 % \end{markdown}
@@ -18960,15 +18966,14 @@ interpretation of Markdown tokens. Similarly to \LaTeX{} packages, themes
 allow the authors to achieve a specific look and other high-level goals
 without low-level programming.
 
-% The \LaTeX{} option `import`=`{`\meta{comma-delimited list of theme names}`}`
-% loads a \LaTeX{} package (further referred to as *a theme*) named
-% `markdowntheme`\meta{munged theme name}`.sty`, where the *munged theme name*
-% is the *theme name* after the substitution of all forward slashes (`/`) for
-% an underscore (`_`), the theme *name* is *qualified* and contains no
-% underscores, and a value is qualified if and only if it contains at least one
-% forward slash. Themes are inspired by the Beamer \LaTeX{} package, which
-% provides similar functionality with its `\usetheme` macro [@tantau21, Section
-% 15.1].
+% The \LaTeX{} option `import`=\meta{theme name} loads a \LaTeX{} package
+% (further referred to as *a theme*) named `markdowntheme`\meta{munged theme
+% name}`.sty`, where the *munged theme name* is the *theme name* after the
+% substitution of all forward slashes (`/`) for an underscore (`_`), the theme
+% *name* is *qualified* and contains no underscores, and a value is qualified
+% if and only if it contains at least one forward slash. Themes are inspired
+% by the Beamer \LaTeX{} package, which provides similar functionality with
+% its `\usetheme` macro [@tantau21, Section 15.1].
 %
 % Theme names must be qualified to minimize naming conflicts between different
 % themes intended for a single \LaTeX{} document class or for a single \LaTeX{}
@@ -19006,10 +19011,8 @@ would use the following code in the preamble of your document:
 
 ``` tex
 \usepackage[
-  import = {
-    witiko/beamer/MU,
-    witiko/dot,
-  },
+  import=witiko/beamer/MU,
+  import=witiko/dot,
 ]{markdown}
 ```````
 
@@ -19448,8 +19451,65 @@ The following ordered list will be preceded by roman numerals:
 4. quattuor
 
 \end{markdown*}
-
 ```````
+
+If the `romanNumerals` snippet were defined in the `jdoe/lists` theme,
+we can import the theme and use the qualified name of the snippet:
+
+``` tex
+\markdownSetup{import=jdoe/lists}
+\begin{markdown*}{snippet=jdoe/lists/romanNumerals}
+
+The following ordered list will be preceded by roman numerals:
+
+3. tres
+4. quattuor
+
+\end{markdown*}
+```````
+
+Alternatively, we can use the extended variant of the `import` \LaTeX{}
+option that allows us to import the `romanNumerals` snippet to the
+current namespace, so that we can invoke the snippet with less typing:
+
+``` tex
+\markdownSetup{
+  import = {
+    jdoe/lists = romanNumerals,
+  },
+}
+\begin{markdown*}{snippet=romanNumerals}
+
+The following ordered list will be preceded by roman numerals:
+
+3. tres
+4. quattuor
+
+\end{markdown*}
+```````
+
+Furthermore, we can also specify the name of the snippet in the current 
+namespace, which is different from the name of the snippet in the
+`jdoe/lists` theme:
+
+``` tex
+\markdownSetup{
+  import = {
+    jdoe/lists = romanNumerals as roman,
+  },
+}
+\begin{markdown*}{snippet=roman}
+
+The following ordered list will be preceded by roman numerals:
+
+3. tres
+4. quattuor
+
+\end{markdown*}
+```````
+
+Several themes and/or snippets can be loaded at once using the extended
+variant of the `import` \LaTeX{} option.
 
 % \markdownEnd
 % \iffalse
