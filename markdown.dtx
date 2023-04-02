@@ -25633,7 +25633,8 @@ function M.reader.new(writer, options)
   parsers.right_flanking_delimiter_run = function(character)
     return  parsers.unicode_preceding_punctuation
           * parsers.delimiter_run(character)
-          * (parsers.unicode_following_punctuation + parsers.unicode_following_whitespace)
+          * (parsers.unicode_following_punctuation + parsers.unicode_following_whitespace
+            + parsers.eof)
           + (B(parsers.any) 
             * -(parsers.unicode_preceding_punctuation + parsers.unicode_preceding_whitespace))
           * parsers.delimiter_run(character)
