@@ -1720,6 +1720,7 @@ local walkable_syntax = {
     "Str",
     "Space",
     "Endline",
+    "EndlineBreak",
     "Emph",
     "MaybeLinkOrImage",
     "LinkOrImage",
@@ -4886,6 +4887,7 @@ be produced and contain the following text:
         "Str",
         "Space",
         "Endline",
+        "EndlineBreak",
         "Emph",
         "StrikeThrough (user-defined \"./strike-through.lua\" syntax extension)",
         "MaybeLinkOrImage",
@@ -26444,6 +26446,11 @@ function M.reader.new(writer, options)
                        and writer.hard_line_break
                         or writer.space)
 
+  parsers.EndlineBreak = parsers.backslash * parsers.Endline
+                                           / (options.hardLineBreaks
+                                             and writer.hard_line_break
+                                               or writer.space)
+  
   parsers.OptionalIndent
                      = parsers.spacechar^1 / writer.space
 
@@ -26886,6 +26893,7 @@ end
         Space                 = parsers.Space,
         OptionalIndent        = parsers.OptionalIndent,
         Endline               = parsers.Endline,
+        EndlineBreak          = parsers.EndlineBreak,
         Emph                  = parsers.Emph,
         MaybeLinkOrImage      = parsers.MaybeLinkOrImage,
         LinkOrImage           = parsers.fail,
