@@ -18770,7 +18770,7 @@ pdflatex --shell-escape document.tex
 %
 % Except for the `plain` option described in Section <#sec:latexplain>, and
 % the \LaTeX{} themes described in Section <#sec:latexthemes>, and the
-% \LaTeX{} setup snippets described in Section <#sec:latexsetupsnippets>,
+% \LaTeX{} snippets described in Section <#sec:latexsetupsnippets>,
 % \LaTeX{} options map directly to the options recognized by the plain
 % \TeX{} interface (see Section <#sec:texoptions>) and to the markdown token
 % renderers and their prototypes recognized by the plain \TeX{} interface (see
@@ -18797,10 +18797,12 @@ pdflatex --shell-escape document.tex
 %    \end{macrocode}
 % \begin{markdown}
 %
-% We may also store \LaTeX{} options as *setup snippets* and invoke them later
-% using the \mdef{markdownSetupSnippet} macro. The \mref{markdownSetupSnippet}
-% macro receives two arguments: the name of the setup snippet and the options
-% to store:
+%#### \LaTeX{} snippets {#latexsetupsnippets}
+%
+% We may also set up \LaTeX{} options as *snippets* using the
+% \mdef{markdownSetupSnippet} macro and invoke them later. The
+% \mref{markdownSetupSnippet} macro receives two arguments: the name
+% of the snippet and the options to store:
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -18808,7 +18810,7 @@ pdflatex --shell-escape document.tex
   \markdownIfSnippetExists{#1}%
     {%
       \markdownWarning
-        {Redefined setup snippet \markdownLaTeXThemeName#1}%
+        {Redefined snippet \markdownLaTeXThemeName#1}%
       \csname markdownLaTeXSetupSnippet%
         \markdownLaTeXThemeName#1\endcsname={#2}%
     }{%
@@ -18820,7 +18822,7 @@ pdflatex --shell-escape document.tex
 %    \end{macrocode}
 % \begin{markdown}
 %
-% To decide whether a setup snippet exists, we can use the
+% To decide whether a snippet exists, we can use the
 % \mdef{markdownIfSnippetExists} macro:
 %
 % \end{markdown}
@@ -18833,8 +18835,8 @@ pdflatex --shell-escape document.tex
 % \begin{markdown}
 %
 % See Section <#sec:latexthemes> for information on interactions between
-% setup snippets and \LaTeX{} themes. See Section <#sec:latexsetupsnippets>
-% for information about invoking the stored setup snippets.
+% snippets and \LaTeX{} themes. See Section <#sec:latexsnippets>
+% for information about invoking the set-up snippets.
 %
 % \end{markdown}
 % \iffalse
@@ -18845,7 +18847,7 @@ pdflatex --shell-escape document.tex
 
 \LaTeX{} options allow us to disable the redefinition of the default renderer
 prototypes from plain \TeX{}, load user-defined themes, and invoke user-defined
-setup snippets.
+set-up snippets.
 
 #### Setting Lua and plain \TeX{} options from \LaTeX{}
 
@@ -19053,13 +19055,12 @@ would use the following code in the preamble of your document:
 %    \end{macrocode}
 % \begin{markdown}
 %
-% The \LaTeX{} themes have a useful synergy with the setup snippets (see
-% Section <#sec:latexoptions>): To make it less likely that different
-% themes will define setup snippets with the same name, we will prepend
-% \meta{theme name}`/` before the snippet name and use the result as the
-% snippet name. For example, if the `witiko/dot` theme defines the `product`
-% setup snippet, the setup snippet will be available under the name
-% `witiko/dot/product`.
+% The \LaTeX{} themes have a useful synergy with snippets (see Section
+% <#sec:latexsetupsnippets>): To make it less likely that different themes
+% will set up snippets with the same name, we will prepend \meta{theme
+% name}`/` before the snippet name and use the result as the snippet name.
+% For example, if the `witiko/dot` theme sets up the `product` snippet, the
+% snippet will be available under the name `witiko/dot/product`.
 %
 % \end{markdown}
 % \iffalse
@@ -19352,15 +19353,15 @@ following text, where the middot (`·`) denotes a non-breaking space:
 % Please, see Section <#sec:latexthemesimplementation> for implementation
 % details of the example themes.
 
-#### \LaTeX{} setup snippets {#latexsetupsnippets}
+#### \LaTeX{} snippets {#latexsnippets}
 
 % \end{markdown}
 % \iffalse
 
 User-defined \LaTeX{} themes provide global control over high-level goals.
 However, it is often desirable to change only some local aspects of a document.
-\LaTeX{} setup snippets provide syntactic sugar for defining and invoking
-various options locally.
+\LaTeX{} snippets provide syntactic sugar for defining and invoking various
+options locally.
 
 % \fi
 % \begin{markdown}
@@ -19397,7 +19398,7 @@ various options locally.
 % \par
 % \markdownBegin
 
-Here is how we can use setup snippets to store options and invoke them later:
+Here is how we can use snippets to store options and invoke them later:
 
 ``` tex
 \markdownSetupSnippet{romanNumerals}{
@@ -29363,7 +29364,7 @@ end
 % \begin{markdown}
 %
 % The `code` key is used to immediately expand and execute code, which can be
-% especially useful in \LaTeX{} setup snippets.
+% especially useful in \LaTeX{} snippets.
 %
 % \end{markdown}
 %  \begin{macrocode}
