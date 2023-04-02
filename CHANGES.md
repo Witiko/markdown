@@ -1,6 +1,6 @@
 # Changes
 
-## 2.22.0
+## 2.22.0 (2023-04-03)
 
 Development:
 
@@ -26,7 +26,7 @@ Deprecation:
 - Deprecate `theme` LaTeX option in favor of the new
   `import` LaTeX option. (#107, #285)
 
-## 2.21.0 (2022-02-28)
+## 2.21.0 (2023-02-28)
 
 Development:
 
@@ -55,7 +55,7 @@ Deprecation:
   (#258, #264)
 - Deprecate `hardLineBreaks` Lua option. (#227, #263)
 
-## 2.20.0 (2022-02-01)
+## 2.20.0 (2023-02-01)
 
 Development:
 
