@@ -18816,19 +18816,27 @@ pdflatex --shell-escape document.tex
 %
 % \end{markdown}
 %  \begin{macrocode}
-\newcommand\markdownSetupSnippet[2]{%
-  \markdownIfSnippetExists{#1}%
-    {%
-      \markdownWarning
-        {Redefined snippet \markdownLaTeXThemeName#1}%
-      \csname markdownLaTeXSetupSnippet%
-        \markdownLaTeXThemeName#1\endcsname={#2}%
-    }{%
-      \newtoks\next
-        \next={#2}%
-      \expandafter\let\csname markdownLaTeXSetupSnippet%
-        \markdownLaTeXThemeName#1\endcsname=\next
-    }}%
+\ExplSyntaxOn
+\cs_new:Nn
+  \@@_latex_setup_snippet:nn
+  {
+    \markdownIfSnippetExists
+      { #1 }
+      {
+        \markdownWarning
+          {Redefined~snippet~\markdownLaTeXThemeName#1}
+        \csname markdownLaTeXSetupSnippet%
+          \markdownLaTeXThemeName#1\endcsname={#2}
+      }
+      {
+        \newtoks\next
+          \next={#2}
+        \expandafter\let\csname markdownLaTeXSetupSnippet%
+          \markdownLaTeXThemeName#1\endcsname=\next
+      }
+  }
+\let\markdownSetupSnippet=\@@_latex_setup_snippet:nn
+\ExplSyntaxOff
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -19060,11 +19068,32 @@ would use the following code in the preamble of your document:
   { markdown/latex-options }
   {
     import .code:n = {
-      \clist_map_inline:nn
+      \tl_set:Nn
+        \l_tmpa_tl
         { #1 }
-        { \@@_set_latex_theme:n { ##1 } }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% To ensure that keys containing forward slashes get passed correctly, we
+% replace all forward slashes in the input with backslash tokens with category
+% code letter and then undo the replacement. This means that if any unbraced
+% backslash tokens with category code letter exist in the input, they will be
+% replaced with forward slashes. However, this should be extremely rare.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      \tl_replace_all:NnV
+        \l_tmpa_tl
+        { / }
+        \c_backslash_str
+      \keys_set:nV
+        { markdown/latex-options/import }
+        \l_tmpa_tl
     },
   }
+\cs_generate_variant:Nn
+  \tl_replace_all:Nnn
+  { NnV }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -19516,6 +19545,106 @@ variant of the `import` \LaTeX{} option.
 %</manual-options>
 %<*latex>
 % \fi
+%  \begin{macrocode}
+\ExplSyntaxOn
+\tl_new:N
+  \l_@@_latex_import_current_theme_tl
+\keys_define:nn
+  { markdown/latex-options/import }
+  {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If a theme name is given without a list of snippets to import,
+% we assume that an empty list was given.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    unknown .default:n = {},
+    unknown .code:n = {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% To ensure that keys containing forward slashes get passed correctly, we
+% replace all forward slashes in the input with backslash tokens with category
+% code letter and then undo the replacement. This means that if any unbraced
+% backslash tokens with category code letter exist in the input, they will be
+% replaced with forward slashes. However, this should be extremely rare.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      \tl_set_eq:NN
+        \l_@@_latex_import_current_theme_tl
+        \l_keys_key_str
+      \tl_replace_all:NVn
+        \l_@@_latex_import_current_theme_tl
+        \c_backslash_str
+        { / }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Here, we load the \LaTeX{} theme.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      \@@_set_latex_theme:V
+        \l_@@_latex_import_current_theme_tl
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Here, we import the \LaTeX{} snippets.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      \clist_map_inline:nn
+        { #1 }
+        {
+          \regex_extract_once:nnNTF
+            { ^(.*?)\s+as\s+(.*?)$ }
+            { ##1 }
+            \l_tmpa_seq
+            {
+              \seq_pop:NN
+                \l_tmpa_seq
+                \l_tmpa_tl
+              \seq_pop:NN
+                \l_tmpa_seq
+                \l_tmpa_tl
+              \seq_pop:NN
+                \l_tmpa_seq
+                \l_tmpb_tl
+            }
+            {
+              \tl_set:Nn
+                \l_tmpa_tl
+                { ##1 }
+              \tl_set:Nn
+                \l_tmpb_tl
+                { ##1 }
+            }
+          \tl_put_left:Nn
+            \l_tmpa_tl
+            { / }
+          \tl_put_left:NV
+            \l_tmpa_tl
+            \l_@@_latex_import_current_theme_tl
+          \@@_latex_setup_snippet:Vx
+            \l_tmpb_tl
+            { snippet = { \l_tmpa_tl } }
+        }
+    },
+  }
+\cs_generate_variant:Nn
+  \tl_replace_all:Nnn
+  { NVn }
+\cs_generate_variant:Nn
+  \@@_set_latex_theme:n
+  { V }
+\cs_generate_variant:Nn
+  \@@_latex_setup_snippet:nn
+  { Vx }
+\ExplSyntaxOff
+%    \end{macrocode}
 % \begin{markdown}
 %
 %#### Plain \TeX{} Interface Options
@@ -29480,7 +29609,7 @@ end
 % \begin{markdown}
 %
 % To ensure that keys containing forward slashes get passed correctly, we
-% replace all forward slashes in the nput with backslash tokens with category
+% replace all forward slashes in the input with backslash tokens with category
 % code letter and then undo the replacement. This means that if any unbraced
 % backslash tokens with category code letter exist in the input, they will be
 % replaced with forward slashes. However, this should be extremely rare.
@@ -29521,12 +29650,6 @@ end
 \cs_generate_variant:Nn
   \keys_define:nn
   { nV }
-\cs_generate_variant:Nn
-  \tl_replace_all:Nnn
-  { NVn }
-\cs_generate_variant:Nn
-  \tl_replace_all:Nnn
-  { NnV }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par
