@@ -19483,7 +19483,8 @@ The following ordered list will be preceded by roman numerals:
 ```````
 
 If the `romanNumerals` snippet were defined in the `jdoe/lists` theme,
-we can import the theme and use the qualified name of the snippet:
+we could import the `jdoe/lists` theme and use the qualified name
+`jdoe/lists/romanNumerals` to invoke the snippet:
 
 ``` tex
 \markdownSetup{import=jdoe/lists}
@@ -19499,7 +19500,7 @@ The following ordered list will be preceded by roman numerals:
 
 Alternatively, we can use the extended variant of the `import` \LaTeX{}
 option that allows us to import the `romanNumerals` snippet to the
-current namespace, so that we can invoke the snippet with less typing:
+current namespace for easier access:
 
 ``` tex
 \markdownSetup{
@@ -19518,8 +19519,9 @@ The following ordered list will be preceded by roman numerals:
 ```````
 
 Furthermore, we can also specify the name of the snippet in the current 
-namespace, which is different from the name of the snippet in the
-`jdoe/lists` theme:
+namespace, which can different from the name of the snippet in the
+`jdoe/lists` theme. For example, we can make the snippet
+`jdoe/lists/romanNumerals` available under the name `roman`.
 
 ``` tex
 \markdownSetup{
@@ -19538,7 +19540,23 @@ The following ordered list will be preceded by roman numerals:
 ```````
 
 Several themes and/or snippets can be loaded at once using the extended
-variant of the `import` \LaTeX{} option.
+variant of the `import` \LaTeX{} option:
+
+``` tex
+\markdownSetup{
+  import = {
+    jdoe/longpackagename/lists = {
+      arabic as arabic1,
+      roman,
+      alphabetic,
+    },
+    jdoe/anotherlongpackagename/lists = {
+      arabic as arabic2,
+    },
+    jdoe/yetanotherlongpackagename,
+  },
+}
+```````
 
 % \markdownEnd
 % \iffalse
