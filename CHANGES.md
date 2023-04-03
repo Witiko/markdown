@@ -2,6 +2,11 @@
 
 ## 2.23.0
 
+Documentation:
+
+- Add a link to a preprint from TUGboat 44(1) to `README.md`.
+  (#234, a4d9fbf)
+
 ## 2.22.0 (2023-04-03)
 
 Development:
