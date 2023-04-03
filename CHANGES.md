@@ -11,7 +11,7 @@ Development:
   #235, #236, #270)
 - Add support for attributes on links, images, and inline
   code spans. (jgm#36, jgm#43, #50, #123, #256, #280)
-- Add `import` LaTeX option. (#107, #285)
+- Add `import` LaTeX option. (#107, #286)
 
 Documentation:
 
