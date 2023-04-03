@@ -26419,8 +26419,6 @@ function M.reader.new(writer, options)
     parsers.headerstart = parsers.fail
   else
     parsers.headerstart = parsers.nonindentspace * parsers.hash
-                        + (parsers.line * (parsers.equal^1 + parsers.dash^1)
-                        * parsers.optionalspace * parsers.newline)
   end
 
   if options.blankBeforeList then
