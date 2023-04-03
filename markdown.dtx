@@ -24105,29 +24105,40 @@ parsers.html_empty_end_condition  = parsers.linechar^0
                                     * parsers.linechar^1)^0
 
 -- attributes
-parsers.html_attribute_spacing  = parsers.spacechar^1
-                                + parsers.optionalspace
+parsers.html_attribute_spacing  = parsers.optionalspace
                                 * parsers.newline
                                 * parsers.optionalspace
+                                + parsers.spacechar^1
 
 parsers.html_attribute_name = (parsers.letter + parsers.colon + parsers.underscore)
                             * (parsers.alphanumeric + parsers.colon + parsers.underscore
                             + parsers.period + parsers.dash)^0
 
-parsers.html_attribute_value = parsers.squote * (parsers.any - parsers.squote)^0 * parsers.squote
-                             + parsers.dquote * (parsers.any - parsers.dquote)^0 * parsers.dquote
+parsers.html_attribute_value = parsers.squote * (parsers.any - parsers.newline - parsers.squote)^0 * parsers.squote
+                             + parsers.dquote * (parsers.any - parsers.newline - parsers.dquote)^0 * parsers.dquote
                              + ( parsers.any - parsers.spacechar - parsers.newline
                                - parsers.dquote - parsers.squote - parsers.backtick
                                - parsers.equal - parsers.less - parsers.more)^1
 
-parsers.html_attribute_value_specification  = parsers.spnl
+parsers.html_inline_attribute_value = parsers.squote * (parsers.any - parsers.blankline^2 - parsers.squote)^0 * parsers.squote
+                                    + parsers.dquote * (parsers.any - parsers.blankline^2 - parsers.dquote)^0 * parsers.dquote
+                                    + ( parsers.any - parsers.blankline^2
+                                      - parsers.dquote - parsers.squote - parsers.backtick
+                                      - parsers.equal - parsers.less - parsers.more)^1
+
+parsers.html_attribute_value_specification  = parsers.optionalspace
                                             * parsers.equal
-                                            * parsers.spnl
+                                            * parsers.optionalspace
                                             * parsers.html_attribute_value
+
+parsers.html_inline_attribute_value_specification = parsers.spnl
+                                                  * parsers.equal
+                                                  * parsers.spnl
+                                                  * parsers.html_inline_attribute_value
 
 parsers.html_attribute  = parsers.html_attribute_spacing
                         * parsers.html_attribute_name
-                        * parsers.html_attribute_value_specification^-1
+                        * parsers.html_inline_attribute_value_specification^-1
 
 parsers.html_non_newline_attribute  = parsers.spacechar^1
                                     * parsers.html_attribute_name
