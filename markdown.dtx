@@ -796,16 +796,18 @@ abbr {
 \ProvidesPackage{markdownthemewitiko_markdown_techdoc}[2022/02/23]
 \RequirePackage{etoolbox}
 \markdownSetup{
-  rendererPrototypes = {
-    codeSpan = {\inline{#1}},
-    headingFour = {%
+  renderers = {
+    head*Four = {%
       \paragraph{#1}\leavevmode
       \def\markdownRendererInterblockSeparator{%
         \let\markdownRendererInterblockSeparator\par
       }%
       \noindent
     },
-    jekyllDataEnd = {%
+  },
+  rendererPrototypes = {
+    codeSpan = {\inline{#1}},
+    jek*llDataEnd = {%
       \AfterEndPreamble{%
         \printtitlepage
         \tableofcontents
