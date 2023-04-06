@@ -2247,7 +2247,17 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
         \tl_tail:n { #1 }
       }
   }
-\seq_new:N \g_@@_cases_seq
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% To make it easier to support different coding styles in the interface,
+% engines, we define the \mdef{\@\@_with_various_cases:nn} function
+% that allows us to generate different variants of a string using
+% different cases.
+%
+% \end{markdown}
+%  \begin{macrocode}
 \cs_new:Nn \@@_with_various_cases:nn
   {
     \seq_clear:N
@@ -2268,6 +2278,29 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
       \l_tmpa_seq
       { #2 }
   }
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% To interrupt the \mref{\@\@_with_various_cases:nn} function
+% prematurely, use the \mdef{\@\@_with_various_cases_break:} function.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\cs_new:Nn \@@_with_various_cases_break:
+  {
+    \seq_map_break:
+  }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% By default, camelCase and snake\\\_case are supported.
+% Additional cases can be added by adding functions to the
+% \mdef{g_\@\@_cases_seq} sequence.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\seq_new:N \g_@@_cases_seq
 \cs_new:Nn \@@_camel_case:N
   {
     \regex_replace_all:nnN
