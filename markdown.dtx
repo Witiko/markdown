@@ -20015,6 +20015,8 @@ variant of the `import` \LaTeX{} option:
           \regex_set:NV
             \l_tmpa_regex
             \l_tmpa_tl
+          \int_zero:N
+            \l_tmpa_int
           \seq_map_inline:Nn
             \g_@@_renderers_seq
             {
@@ -20037,9 +20039,19 @@ variant of the `import` \LaTeX{} option:
                         \cs_set:Npn
                         \l_tmpb_tl
                         \l_@@_renderer_definition_tl
+                      \int_incr:N
+                        \l_tmpa_int
                       \@@_with_various_cases_break:
                     }
                 }
+            }
+          \int_compare:nNnT
+            { \l_tmpa_int } = { 0 }
+            {
+              \msg_error:nnV
+                { markdown }
+                { nonmatched-renderer-wildcard }
+                \l_keys_key_str
             }
         }
         {
@@ -20055,6 +20067,12 @@ variant of the `import` \LaTeX{} option:
   { undefined-renderer }
   {
     Renderer~#1~is~undefined.
+  }
+\msg_new:nnn
+  { markdown }
+  { nonmatched-renderer-wildcard }
+  {
+    Wildcard~#1~matches~no~renderers.
   }
 \cs_generate_variant:Nn
   \regex_set:Nn
@@ -20172,6 +20190,8 @@ variant of the `import` \LaTeX{} option:
           \regex_set:NV
             \l_tmpa_regex
             \l_tmpa_tl
+          \int_zero:N
+            \l_tmpa_int
           \seq_map_inline:Nn
             \g_@@_renderers_seq
             {
@@ -20194,9 +20214,19 @@ variant of the `import` \LaTeX{} option:
                         \cs_set:Npn
                         \l_tmpb_tl
                         \l_@@_renderer_prototype_definition_tl
+                      \int_incr:N
+                        \l_tmpa_int
                       \@@_with_various_cases_break:
                     }
                 }
+            }
+          \int_compare:nNnT
+            { \l_tmpa_int } = { 0 }
+            {
+              \msg_error:nnV
+                { markdown }
+                { nonmatched-renderer-prototype-wildcard }
+                \l_keys_key_str
             }
         }
         {
@@ -20212,6 +20242,12 @@ variant of the `import` \LaTeX{} option:
   { undefined-renderer-prototype }
   {
     Renderer~prototype~#1~is~undefined.
+  }
+\msg_new:nnn
+  { markdown }
+  { nonmatched-renderer-prototype-wildcard }
+  {
+    Wildcard~#1~matches~no~renderer~prototypes.
   }
 \cs_generate_variant:Nn
   \regex_set:Nn
