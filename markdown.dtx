@@ -796,16 +796,18 @@ abbr {
 \ProvidesPackage{markdownthemewitiko_markdown_techdoc}[2022/02/23]
 \RequirePackage{etoolbox}
 \markdownSetup{
-  rendererPrototypes = {
-    codeSpan = {\inline{#1}},
-    headingFour = {%
+  renderers = {
+    head*Four = {%
       \paragraph{#1}\leavevmode
       \def\markdownRendererInterblockSeparator{%
         \let\markdownRendererInterblockSeparator\par
       }%
       \noindent
     },
-    jekyllDataEnd = {%
+  },
+  rendererPrototypes = {
+    codeSpan = {\inline{#1}},
+    jek*llDataEnd = {%
       \AfterEndPreamble{%
         \printtitlepage
         \tableofcontents
@@ -2081,7 +2083,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
               }
               {
                 \msg_error:nnnV
-                  { @@ }
+                  { markdown }
                   { failed-typecheck-for-boolean-option }
                   { #1 }
                   \l_tmpa_tl
@@ -2090,7 +2092,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
       }
   }
 \msg_new:nnn
-  { @@ }
+  { markdown }
   { failed-typecheck-for-boolean-option }
   {
     Option~#1~has~value~#2,~
@@ -2139,7 +2141,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
       \l_tmpa_bool
       {
         \msg_error:nnn
-          { @@ }
+          { markdown }
           { undefined-option }
           { #1 }
       }
@@ -2148,7 +2150,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
       \l_tmpa_tl
       {
         \msg_error:nnnV
-          { @@ }
+          { markdown }
           { unknown-option-type }
           { #1 }
           \l_tmpa_tl
@@ -2158,13 +2160,13 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
       \l_tmpa_tl
   }
 \msg_new:nnn
-  { @@ }
+  { markdown }
   { unknown-option-type }
   {
     Option~#1~has~unknown~type~#2.
   }
 \msg_new:nnn
-  { @@ }
+  { markdown }
   { undefined-option }
   {
     Option~#1~is~undefined.
@@ -2191,7 +2193,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
       \l_tmpa_bool
       {
         \msg_error:nnn
-          { @@ }
+          { markdown }
           { undefined-option }
           { #1 }
       }
@@ -2247,7 +2249,17 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
         \tl_tail:n { #1 }
       }
   }
-\seq_new:N \g_@@_cases_seq
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% To make it easier to support different coding styles in the interface,
+% engines, we define the \mdef{\@\@_with_various_cases:nn} function
+% that allows us to generate different variants of a string using
+% different cases.
+%
+% \end{markdown}
+%  \begin{macrocode}
 \cs_new:Nn \@@_with_various_cases:nn
   {
     \seq_clear:N
@@ -2268,6 +2280,29 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
       \l_tmpa_seq
       { #2 }
   }
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% To interrupt the \mref{\@\@_with_various_cases:nn} function
+% prematurely, use the \mdef{\@\@_with_various_cases_break:} function.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\cs_new:Nn \@@_with_various_cases_break:
+  {
+    \seq_map_break:
+  }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% By default, camelCase and snake\\\_case are supported.
+% Additional cases can be added by adding functions to the
+% \mdef{g_\@\@_cases_seq} sequence.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\seq_new:N \g_@@_cases_seq
 \cs_new:Nn \@@_camel_case:N
   {
     \regex_replace_all:nnN
@@ -19770,7 +19805,7 @@ variant of the `import` \LaTeX{} option:
           { s }
           {
               \msg_error:nnn
-                { @@ }
+                { markdown }
                 { malformed-name-for-clist-option }
                 { #3 }
           }
@@ -19816,7 +19851,7 @@ variant of the `import` \LaTeX{} option:
   { en }
   { F }
 \msg_new:nnn
-  { @@ }
+  { markdown }
   { malformed-name-for-clist-option }
   {
     Clist~option~name~#1~does~not~end~with~-s.
@@ -19872,9 +19907,10 @@ variant of the `import` \LaTeX{} option:
 %#### Plain \TeX{} Markdown Token Renderers {#latexrenderers}
 %
 % The \LaTeX{} interface recognizes an option with the `renderers` key,
-% whose value must be a list of options that map directly to the markdown token
-% renderer macros exposed by the plain \TeX{} interface (see Section
-% <#sec:texrenderersuser>).
+% whose value must be a list of key-values, where the keys correspond
+% to the markdown token renderer macros exposed by the plain \TeX{}
+% interface (see Section <#sec:texrenderersuser>) and the values are
+% new definitions of these token renderers.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -19950,12 +19986,119 @@ variant of the `import` \LaTeX{} option:
 % }
 % ```````
 %
+% In addition to exact token renderer names, we also support wildcards
+% that match multiple token renderer names.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\tl_new:N
+  \l_@@_renderer_definition_tl
+\keys_define:nn
+  { markdown/latex-options/renderers }
+  {
+    unknown .code:n = {
+      \regex_match:nVTF
+        { \* }
+        \l_keys_key_str
+        {
+          \tl_set:Nn
+            \l_@@_renderer_definition_tl
+            { #1 }
+          \tl_set:NV
+            \l_tmpa_tl
+            \l_keys_key_str
+          \regex_replace_all:nnN
+            { \* }
+            { .* }
+            \l_tmpa_tl
+          \regex_set:NV
+            \l_tmpa_regex
+            \l_tmpa_tl
+          \int_zero:N
+            \l_tmpa_int
+          \seq_map_inline:Nn
+            \g_@@_renderers_seq
+            {
+              \@@_with_various_cases:nn
+                { ##1 }
+                {
+                  \regex_match:NnT
+                    \l_tmpa_regex
+                    { ####1 }
+                    {
+                      \@@_renderer_tl_to_csname:nN
+                        { ##1 }
+                        \l_tmpa_tl
+                      \prop_get:NnN
+                        \g_@@_renderer_arities_prop
+                        { ##1 }
+                        \l_tmpb_tl
+                      \cs_generate_from_arg_count:cNVV
+                        { \l_tmpa_tl }
+                        \cs_set:Npn
+                        \l_tmpb_tl
+                        \l_@@_renderer_definition_tl
+                      \int_incr:N
+                        \l_tmpa_int
+                      \@@_with_various_cases_break:
+                    }
+                }
+            }
+          \int_compare:nNnT
+            { \l_tmpa_int } = { 0 }
+            {
+              \msg_error:nnV
+                { markdown }
+                { nonmatched-renderer-wildcard }
+                \l_keys_key_str
+            }
+        }
+        {
+          \msg_error:nnV
+            { markdown }
+            { undefined-renderer }
+            \l_keys_key_str
+        }
+    },
+  }
+\msg_new:nnn
+  { markdown }
+  { undefined-renderer }
+  {
+    Renderer~#1~is~undefined.
+  }
+\msg_new:nnn
+  { markdown }
+  { nonmatched-renderer-wildcard }
+  {
+    Wildcard~#1~matches~no~renderers.
+  }
+\cs_generate_variant:Nn
+  \regex_set:Nn
+  { NV }
+\cs_generate_variant:Nn
+  \cs_generate_from_arg_count:NNnn
+  { cNVV }
+\cs_generate_variant:Nn
+  \msg_error:nnn
+  { nnV }
+\prg_generate_conditional_variant:Nnn
+  \regex_match:nn
+  { nV }
+  { TF }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \begin{markdown}
+%
 %#### Plain \TeX{} Markdown Token Renderer Prototypes {#latexrendererprototypes}
 %
-% The \LaTeX{} interface recognizes an option with the `rendererPrototypes`
-% key, whose value must be a list of options that map directly to the markdown
-% token renderer prototype macros exposed by the plain \TeX{} interface (see
-% Section <#sec:texrendererprototypes>).
+% The \LaTeX{} interface recognizes an option with the
+% `rendererPrototypes` key, whose value must be a list of key-values,
+% where the keys correspond to the markdown token renderer prototype
+% macros exposed by the plain \TeX{} interface (see Section
+% <#sec:texrendererprototypes>) and the values are new definitions of
+% these token renderer prototypes.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -20017,6 +20160,111 @@ variant of the `import` \LaTeX{} option:
 %   }
 % }
 % ```````
+%
+% In addition to exact token renderer prototype names, we also support
+% wildcards that match multiple token renderer prototype names.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\tl_new:N
+  \l_@@_renderer_prototype_definition_tl
+\keys_define:nn
+  { markdown/latex-options/renderer-prototypes }
+  {
+    unknown .code:n = {
+      \regex_match:nVTF
+        { \* }
+        \l_keys_key_str
+        {
+          \tl_set:Nn
+            \l_@@_renderer_prototype_definition_tl
+            { #1 }
+          \tl_set:NV
+            \l_tmpa_tl
+            \l_keys_key_str
+          \regex_replace_all:nnN
+            { \* }
+            { .* }
+            \l_tmpa_tl
+          \regex_set:NV
+            \l_tmpa_regex
+            \l_tmpa_tl
+          \int_zero:N
+            \l_tmpa_int
+          \seq_map_inline:Nn
+            \g_@@_renderers_seq
+            {
+              \@@_with_various_cases:nn
+                { ##1 }
+                {
+                  \regex_match:NnT
+                    \l_tmpa_regex
+                    { ####1 }
+                    {
+                      \@@_renderer_prototype_tl_to_csname:nN
+                        { ##1 }
+                        \l_tmpa_tl
+                      \prop_get:NnN
+                        \g_@@_renderer_arities_prop
+                        { ##1 }
+                        \l_tmpb_tl
+                      \cs_generate_from_arg_count:cNVV
+                        { \l_tmpa_tl }
+                        \cs_set:Npn
+                        \l_tmpb_tl
+                        \l_@@_renderer_prototype_definition_tl
+                      \int_incr:N
+                        \l_tmpa_int
+                      \@@_with_various_cases_break:
+                    }
+                }
+            }
+          \int_compare:nNnT
+            { \l_tmpa_int } = { 0 }
+            {
+              \msg_error:nnV
+                { markdown }
+                { nonmatched-renderer-prototype-wildcard }
+                \l_keys_key_str
+            }
+        }
+        {
+          \msg_error:nnV
+            { markdown }
+            { undefined-renderer-prototype }
+            \l_keys_key_str
+        }
+    },
+  }
+\msg_new:nnn
+  { markdown }
+  { undefined-renderer-prototype }
+  {
+    Renderer~prototype~#1~is~undefined.
+  }
+\msg_new:nnn
+  { markdown }
+  { nonmatched-renderer-prototype-wildcard }
+  {
+    Wildcard~#1~matches~no~renderer~prototypes.
+  }
+\cs_generate_variant:Nn
+  \regex_set:Nn
+  { NV }
+\cs_generate_variant:Nn
+  \cs_generate_from_arg_count:NNnn
+  { cNVV }
+\cs_generate_variant:Nn
+  \msg_error:nnn
+  { nnV }
+\prg_generate_conditional_variant:Nnn
+  \regex_match:nn
+  { nV }
+  { TF }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \begin{markdown}
 %
 % \iffalse
 %</latex>
@@ -28602,7 +28850,7 @@ end
       \c_@@_option_type_boolean_tl
       {
         \msg_error:nnxx
-          { @@ }
+          { markdown }
           { expected-boolean-option }
           { #1 }
           { \l_tmpa_tl }
@@ -28617,7 +28865,7 @@ end
       { #3 }
   }
 \msg_new:nnn
-  { @@ }
+  { markdown }
   { expected-boolean-option }
   {
     Option~#1~has~type~#2,~

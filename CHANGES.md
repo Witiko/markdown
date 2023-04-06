@@ -2,6 +2,12 @@
 
 ## 2.23.0
 
+Development:
+
+- Add support of bulk redefinition of token renderers and
+  token renderer prototypes in the `\markdownSetup` LaTeX
+  command using wildcards. (#232, #287)
+
 Documentation:
 
 - Add a link to a preprint from TUGboat 44(1) to `README.md`.
