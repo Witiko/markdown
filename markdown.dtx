@@ -23103,7 +23103,7 @@ function M.writer.new(options)
                  {"\\markdownRendererCodeSpan{", self.escape(s), "}"})
     if attributes ~= nil then
       table.insert(buf,
-                   "\n\\markdownRendererCodeSpanAttributeContextEnd ")
+                   "\\markdownRendererCodeSpanAttributeContextEnd{}")
     end
     return buf
   end
@@ -23131,7 +23131,7 @@ function M.writer.new(options)
                        "{",self.string(tit or ""),"}"})
     if attributes ~= nil then
       table.insert(buf,
-                   "\n\\markdownRendererLinkAttributeContextEnd ")
+                   "\\markdownRendererLinkAttributeContextEnd{}")
     end
     return buf
   end
@@ -23159,7 +23159,7 @@ function M.writer.new(options)
                        "{",self.string(tit or ""),"}"})
     if attributes ~= nil then
       table.insert(buf,
-                   "\n\\markdownRendererImageAttributeContextEnd ")
+                   "\\markdownRendererImageAttributeContextEnd{}")
     end
     return buf
   end
