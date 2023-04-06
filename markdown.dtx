@@ -19984,6 +19984,93 @@ variant of the `import` \LaTeX{} option:
 % }
 % ```````
 %
+% In addition to exact token renderer names, we also support wildcards
+% that match multiple token renderer names.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\tl_new:N
+  \l_@@_renderer_definition_tl
+\keys_define:nn
+  { markdown/latex-options/renderers }
+  {
+    unknown .code:n = {
+      \regex_match:nVTF
+        { \* }
+        \l_keys_key_str
+        {
+          \tl_set:Nn
+            \l_@@_renderer_definition_tl
+            { #1 }
+          \tl_set:NV
+            \l_tmpa_tl
+            \l_keys_key_str
+          \regex_replace_all:nnN
+            { \* }
+            { .* }
+            \l_tmpa_tl
+          \regex_set:NV
+            \l_tmpa_regex
+            \l_tmpa_tl
+          \seq_map_inline:Nn
+            \g_@@_renderers_seq
+            {
+              \@@_with_various_cases:nn
+                { ##1 }
+                {
+                  \regex_match:NnT
+                    \l_tmpa_regex
+                    { ####1 }
+                    {
+                      \@@_renderer_tl_to_csname:nN
+                        { ##1 }
+                        \l_tmpa_tl
+                      \prop_get:NnN
+                        \g_@@_renderer_arities_prop
+                        { ##1 }
+                        \l_tmpb_tl
+                      \cs_generate_from_arg_count:cNVV
+                        { \l_tmpa_tl }
+                        \cs_set:Npn
+                        \l_tmpb_tl
+                        \l_@@_renderer_definition_tl
+                      \@@_with_various_cases_break:
+                    }
+                }
+            }
+        }
+        {
+          \msg_error:nnV
+            { markdown }
+            { undefined-renderer }
+            \l_keys_key_str
+        }
+    },
+  }
+\msg_new:nnn
+  { markdown }
+  { undefined-renderer }
+  {
+    Renderer~#1~is~undefined.
+  }
+\cs_generate_variant:Nn
+  \regex_set:Nn
+  { NV }
+\cs_generate_variant:Nn
+  \cs_generate_from_arg_count:NNnn
+  { cNVV }
+\cs_generate_variant:Nn
+  \msg_error:nnn
+  { nnV }
+\prg_generate_conditional_variant:Nnn
+  \regex_match:nn
+  { nV }
+  { TF }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \begin{markdown}
+%
 %#### Plain \TeX{} Markdown Token Renderer Prototypes {#latexrendererprototypes}
 %
 % The \LaTeX{} interface recognizes an option with the
@@ -20053,6 +20140,93 @@ variant of the `import` \LaTeX{} option:
 %   }
 % }
 % ```````
+%
+% In addition to exact token renderer prototype names, we also support
+% wildcards that match multiple token renderer prototype names.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\tl_new:N
+  \l_@@_renderer_prototype_definition_tl
+\keys_define:nn
+  { markdown/latex-options/renderer-prototypes }
+  {
+    unknown .code:n = {
+      \regex_match:nVTF
+        { \* }
+        \l_keys_key_str
+        {
+          \tl_set:Nn
+            \l_@@_renderer_prototype_definition_tl
+            { #1 }
+          \tl_set:NV
+            \l_tmpa_tl
+            \l_keys_key_str
+          \regex_replace_all:nnN
+            { \* }
+            { .* }
+            \l_tmpa_tl
+          \regex_set:NV
+            \l_tmpa_regex
+            \l_tmpa_tl
+          \seq_map_inline:Nn
+            \g_@@_renderers_seq
+            {
+              \@@_with_various_cases:nn
+                { ##1 }
+                {
+                  \regex_match:NnT
+                    \l_tmpa_regex
+                    { ####1 }
+                    {
+                      \@@_renderer_prototype_tl_to_csname:nN
+                        { ##1 }
+                        \l_tmpa_tl
+                      \prop_get:NnN
+                        \g_@@_renderer_arities_prop
+                        { ##1 }
+                        \l_tmpb_tl
+                      \cs_generate_from_arg_count:cNVV
+                        { \l_tmpa_tl }
+                        \cs_set:Npn
+                        \l_tmpb_tl
+                        \l_@@_renderer_prototype_definition_tl
+                      \@@_with_various_cases_break:
+                    }
+                }
+            }
+        }
+        {
+          \msg_error:nnV
+            { markdown }
+            { undefined-renderer-prototype }
+            \l_keys_key_str
+        }
+    },
+  }
+\msg_new:nnn
+  { markdown }
+  { undefined-renderer-prototype }
+  {
+    Renderer~prototype~#1~is~undefined.
+  }
+\cs_generate_variant:Nn
+  \regex_set:Nn
+  { NV }
+\cs_generate_variant:Nn
+  \cs_generate_from_arg_count:NNnn
+  { cNVV }
+\cs_generate_variant:Nn
+  \msg_error:nnn
+  { nnV }
+\prg_generate_conditional_variant:Nnn
+  \regex_match:nn
+  { nV }
+  { TF }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \begin{markdown}
 %
 % \iffalse
 %</latex>
