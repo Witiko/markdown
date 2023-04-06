@@ -7,6 +7,11 @@ Documentation:
 - Add a link to a preprint from TUGboat 44(1) to `README.md`.
   (#234, a4d9fbf)
 
+Fixes:
+
+- Remove extra space after inline elements with attributes.
+  (#288)
+
 ## 2.22.0 (2023-04-02)
 
 Development:
