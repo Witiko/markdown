@@ -20,19 +20,23 @@
     bracketedSpanAttributeContextBegin = {%
       \TYPE{BEGIN bracketedSpanAttributeContext}},
     bracketedSpanAttributeContextEnd = {%
-      \TYPE{END bracketedSpanAttributeContext}},
+      \TYPE{END bracketedSpanAttributeContext}%
+      \GOBBLE},
     linkAttributeContextBegin = {%
       \TYPE{BEGIN linkAttributeContext}},
     linkAttributeContextEnd = {%
-      \TYPE{END linkAttributeContext}},
+      \TYPE{END linkAttributeContext}%
+      \GOBBLE},
     imageAttributeContextBegin = {%
       \TYPE{BEGIN imageAttributeContext}},
     imageAttributeContextEnd = {%
-      \TYPE{END imageAttributeContext}},
+      \TYPE{END imageAttributeContext}%
+      \GOBBLE},
     codeSpanAttributeContextBegin = {%
       \TYPE{BEGIN codeSpanAttributeContext}},
     codeSpanAttributeContextEnd = {%
-      \TYPE{END codeSpanAttributeContext}},
+      \TYPE{END codeSpanAttributeContext}%
+      \GOBBLE},
     documentBegin = {%
       \begingroup
       \catcode"09=12%  Prevent spaces (U+0009) from folding into a single space token
