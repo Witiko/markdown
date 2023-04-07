@@ -28839,8 +28839,9 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\cs_new:Nn
-  \@@_if_option:nTF
+\prg_new_conditional:Nnn
+  \@@_if_option:n
+  { TF, T, F }
   {
     \@@_get_option_type:nN
       { #1 }
@@ -28861,8 +28862,8 @@ end
     \str_if_eq:NNTF
       \l_tmpa_tl
       \c_@@_option_value_true_tl
-      { #2 }
-      { #3 }
+      { \prg_return_true: }
+      { \prg_return_false: }
   }
 \msg_new:nnn
   { markdown }
@@ -30967,7 +30968,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\@@_if_option:nTF
+\@@_if_option:nT
   { linkAttributes }
   {
     \RequirePackage{graphicx}
@@ -30991,7 +30992,6 @@ end
       },
     }
   }
-  { }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par
