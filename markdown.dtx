@@ -25356,7 +25356,7 @@ function M.reader.new(writer, options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  local function find_opener(t, bottom_index, latest_index, character, closing_delimiter)
+  local function find_emphasis_opener(t, bottom_index, latest_index, character, closing_delimiter)
     for i = latest_index, bottom_index, -2 do
       local value = t[i]
       if value.is_active and
@@ -25368,8 +25368,6 @@ function M.reader.new(writer, options)
         end
       end
     end
-
-    return nil
   end
 
 %  \end{macrocode}
@@ -25379,8 +25377,9 @@ function M.reader.new(writer, options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  local function process_emphasis(t)
-    for _,value in ipairs(t) do
+  local function process_emphasis(t, opening_index, closing_index)
+    for i = opening_index, closing_index do
+      local value = t[i]
       if value.type == "delimiter" and value.element == "emphasis" then
           local delimiter_length = string.len(value.content)
           value.character = string.sub(value.content, 1, 1)
@@ -25389,71 +25388,63 @@ function M.reader.new(writer, options)
       end
     end
 
-    local current_position = 1
     local openers_bottom = {
       ['*'] = { -- character
-        [true] = { -- is opening
-          1, 1, 1 -- lengths
-        },
-        [false] = {
-          1, 1, 1
-        }
+        [true] = {opening_index, opening_index, opening_index}, -- is opening
+        [false] = {opening_index, opening_index, opening_index}
       },
       ['_'] = {
-        [true] = {
-          1, 1, 1
-        },
-        [false] = {
-          1, 1, 1
-        }
+        [true] = {opening_index, opening_index, opening_index},
+        [false] = {opening_index, opening_index, opening_index}
       }
     }
 
-    while current_position <= #t do
+    local current_position = opening_index
+    local max_position = closing_index
+
+    while current_position <= max_position do
       local value = t[current_position]
-
-      if value.type == "delimiter" and value.is_active and value.element == "emphasis" then
-        local character = value.character
-        local is_opening = value.is_opening
-        local is_closing = value.is_closing
-        local closing_length_modulo_three = value.original_count % 3
-
-        local current_openers_bottom = openers_bottom[character][is_opening][closing_length_modulo_three + 1]
-
-        if is_closing and (value.current_count > 0) then
-          local opener_position = find_opener(t, current_openers_bottom, current_position - 2, character, value)
-
-          if (opener_position ~= nil) then
-
-            local opening_delimiter = t[opener_position]
-
-            local current_opening_count = opening_delimiter.current_count
-            local current_closing_count = t[current_position].current_count
-
-            if (current_opening_count >= 2) and (current_closing_count >= 2) then
-              opening_delimiter.current_count = current_opening_count - 2
-              t[current_position].current_count = current_closing_count - 2
-              fill_strong(t, opener_position, current_position)
-            else
-              opening_delimiter.current_count = current_opening_count - 1
-              t[current_position].current_count = current_closing_count - 1
-              fill_emph(t, opener_position, current_position)
-            end
-
-          else
-            openers_bottom[character][is_opening][closing_length_modulo_three + 1] = current_position
-            current_position = current_position + 2
-          end
-        else
-          current_position = current_position + 2
-        end
-      else
-        current_position = current_position + 2
+      
+      if value.type ~= "delimiter" or 
+        value.element ~= "emphasis" or 
+        not value.is_active or 
+        not value.is_closing or 
+        (value.current_count <= 0) then
+        current_position = current_position + 1
+        goto continue
       end
-    end
 
-    local final_result = collect_emphasis_content(t, 1, #t)
-    return final_result
+      local character = value.character
+      local is_opening = value.is_opening
+      local closing_length_modulo_three = value.original_count % 3
+
+      local current_openers_bottom = openers_bottom[character][is_opening][closing_length_modulo_three + 1]
+
+      local opener_position = find_emphasis_opener(t, current_openers_bottom, current_position - 2, character, value)
+
+      if (opener_position == nil) then
+        openers_bottom[character][is_opening][closing_length_modulo_three + 1] = current_position
+        current_position = current_position + 1
+        goto continue
+      end
+
+      local opening_delimiter = t[opener_position]
+
+      local current_opening_count = opening_delimiter.current_count
+      local current_closing_count = t[current_position].current_count
+
+      if (current_opening_count >= 2) and (current_closing_count >= 2) then
+        opening_delimiter.current_count = current_opening_count - 2
+        t[current_position].current_count = current_closing_count - 2
+        fill_strong(t, opener_position, current_position)
+      else
+        opening_delimiter.current_count = current_opening_count - 1
+        t[current_position].current_count = current_closing_count - 1
+        fill_emph(t, opener_position, current_position)
+      end
+      
+      ::continue::
+    end
   end
 
   local cont = lpeg.R("\128\191") -- continuation byte
@@ -25873,7 +25864,7 @@ function M.reader.new(writer, options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  local function find_opener(t, bottom_index, latest_index)
+  local function find_link_opener(t, bottom_index, latest_index)
     for i = latest_index, bottom_index, -2 do
       local value = t[i]
       if value.is_opening and 
@@ -26008,6 +25999,79 @@ function M.reader.new(writer, options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+% Parse content between two delimiters in the delimiter table `t`. Produce the respective link and image 
+% macros and resolve potential dangling parentheses and attributes. 
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function render_link_or_image(t, opening_index, closing_index)
+    local link_r = t[opening_index].reference
+    local link_content_rope = t[opening_index].rope
+
+    local url = ""
+    if (link_r.url ~= nil) then
+      url = link_r.url
+    end
+
+    local title = ""
+    if (link_r.title ~= nil) then
+      title = link_r.title
+    end
+
+    local attributes = link_r.attributes
+
+    local mapped = self.parser_functions.parse_inlines_full_link_and_image(link_content_rope)
+
+    if attributes == nil or not next(attributes) then
+      attributes = nil
+    end
+
+    local rendered = {}
+    if (t[opening_index].element == "link") then
+      rendered = writer.link(mapped, url, title, attributes)
+    end
+
+    if (t[opening_index].element == "image") then
+      rendered = writer.image(mapped, url, title, attributes)
+    end
+
+    local mapped_parentheses = {}
+    if (t[closing_index].is_direct and t[opening_index].link_type ~= "inline") then
+      local resolved_closer = resolve_inline_link_closer(t, closing_index, false)
+      mapped_parentheses = self.parser_functions.parse_inlines_full_link_and_image(resolved_closer)
+    end
+
+    t[opening_index].rendered = { rendered, mapped_parentheses }
+    delete_parsed_content_in_range(t, opening_index + 1, closing_index)
+  end
+
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Parse content between two delimiters in the delimiter table `t`. Enclose this content with literal brakcets and 
+% resolve potential dangling parentheses and attributes. 
+% In case of a image opening delimiter, an exclamation mark is also added before the brackets.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function render_link_or_image_fallback(t, opening_index, closing_index)
+    local prefix = ""
+    if (t[opening_index].rendered) then
+      prefix = "!"
+    end
+
+    local content = collect_link_content(t, opening_index + 1, closing_index - 1)
+    local content_rope = util.rope_to_string(content)
+
+    local child = self.parser_functions.parse_inlines_full_link_and_image(content_rope)
+    
+    t[opening_index].rendered = {prefix, "[",child,"]", resolve_inline_link_closer(t, closing_index, false)}
+    delete_parsed_content_in_range(t, opening_index + 1, closing_index)
+  end
+
+%    \end{macrocode}
+% \begin{markdown}
+%
 % Resolve an inline link [a](b "c") from the delimiters at `opening_index` and `closing_index` within a delimiter table `t`.
 % Here, compared to other types of links, no reference definition is needed.
 %
@@ -26134,79 +26198,6 @@ function M.reader.new(writer, options)
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Parse content between two delimiters in the delimiter table `t`. Produce the respective link and image 
-% macros and resolve potential dangling parentheses and attributes. 
-%
-% \end{markdown}
-%  \begin{macrocode}
-  local function render_link_or_image(t, opening_index, closing_index)
-    local link_r = t[opening_index].reference
-    local link_content_rope = t[opening_index].rope
-
-    local url = ""
-    if (link_r.url ~= nil) then
-      url = link_r.url
-    end
-
-    local title = ""
-    if (link_r.title ~= nil) then
-      title = link_r.title
-    end
-
-    local attributes = link_r.attributes
-
-    local mapped = self.parser_functions.parse_inlines_full_link_and_image(link_content_rope)
-
-    if attributes == nil or not next(attributes) then
-      attributes = nil
-    end
-
-    local rendered = {}
-    if (t[opening_index].element == "link") then
-      rendered = writer.link(mapped, url, title, attributes)
-    end
-
-    if (t[opening_index].element == "image") then
-      rendered = writer.image(mapped, url, title, attributes)
-    end
-
-    local mapped_parentheses = {}
-    if (t[closing_index].is_direct and t[opening_index].link_type ~= "inline") then
-      local resolved_closer = resolve_inline_link_closer(t, closing_index, false)
-      mapped_parentheses = self.parser_functions.parse_inlines_full_link_and_image(resolved_closer)
-    end
-
-    t[opening_index].rendered = { rendered, mapped_parentheses }
-    delete_parsed_content_in_range(t, opening_index + 1, closing_index)
-  end
-
-%    \end{macrocode}
-% \begin{markdown}
-%
-% Parse content between two delimiters in the delimiter table `t`. Enclose this content with literal brakcets and 
-% resolve potential dangling parentheses and attributes. 
-% In case of a image opening delimiter, an exclamation mark is also added before the brackets.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  local function render_link_or_image_fallback(t, opening_index, closing_index)
-    local prefix = ""
-    if (t[opening_index].rendered) then
-      prefix = "!"
-    end
-
-    local content = collect_link_content(t, opening_index + 1, closing_index - 1)
-    local content_rope = util.rope_to_string(content)
-
-    local child = self.parser_functions.parse_inlines_full_link_and_image(content_rope)
-    
-    t[opening_index].rendered = {prefix, "[",child,"]", resolve_inline_link_closer(t, closing_index, false)}
-    delete_parsed_content_in_range(t, opening_index + 1, closing_index)
-  end
-
-%    \end{macrocode}
-% \begin{markdown}
-%
 % Parse a table of link and emphasis delimiters `delimiter_table`.
 % Iterate over the delimiters in the delimiter table `t` in two passes. First, the delimiters either 
 % marked as links (or images) with the `is_link` property, additionally assigned a closing delimiter. 
@@ -26232,7 +26223,7 @@ function M.reader.new(writer, options)
       local value = t[current_position]
 
       if not value.is_opening and value.type == "delimiter" and (value.element == "link" or value.element == "image") then
-        local opener_position, non_active_opener_position = find_opener(t, 1, current_position - 2)
+        local opener_position, non_active_opener_position = find_link_opener(t, 1, current_position - 2)
         local end_position = current_position
 
         if (opener_position ~= nil) then
@@ -26311,8 +26302,9 @@ function M.reader.new(writer, options)
       current_position = current_position + 1
     end
 
-    local emph_t = process_emphasis(t)
-    return emph_t
+    local emph_t = process_emphasis(t, 1, #t)
+    local final_result = collect_emphasis_content(t, 1, #t)
+    return final_result
   end
 
   function defer_link_and_emphasis_processing(delimiter_table)
@@ -26432,10 +26424,6 @@ function M.reader.new(writer, options)
                                             or writer.nbsp)
                   + parsers.spacechar^1 * parsers.optionalspace
                                         / writer.nbsp
-
-  parsers.Emph  = Ct( parsers.emph_open
-                    * (parsers.emph_content * parsers.emph_open_or_close)^1
-                    ) / process_emphasis
 
 %    \end{macrocode}
 % \par
