@@ -1720,9 +1720,8 @@ local walkable_syntax = {
     "Str",
     "Space",
     "Endline",
-    "Emph",
-    "MaybeLinkOrImage",
-    "LinkOrImage",
+    "MaybeLinkAndEmph",
+    "LinkAndEmph",
     "Code",
     "AutoLinkUrl",
     "AutoLinkEmail",
@@ -4886,10 +4885,8 @@ be produced and contain the following text:
         "Str",
         "Space",
         "Endline",
-        "Emph",
-        "StrikeThrough (user-defined \"./strike-through.lua\" syntax extension)",
-        "MaybeLinkOrImage",
-        "LinkOrImage",
+        "MaybeLinkAndEmph",
+        "LinkAndEmph",
         "Code",
         "AutoLinkUrl",
         "AutoLinkEmail",
@@ -24626,6 +24623,11 @@ function M.reader.new(writer, options)
                      function()
                        return parsers.inlines_nbsp
                      end, false)
+
+  self.create_parser("parse_inlines_no_link_or_image",
+                    function()
+                      return parsers.inlines_no_link_or_image
+                    end, false)
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -25256,6 +25258,13 @@ function M.reader.new(writer, options)
 % \end{markdown}
 %  \begin{macrocode}
 
+  local function parse_content_part(content_part)
+    local rope = util.rope_to_string(content_part)
+    local parsed = self.parser_functions.parse_inlines_no_link_or_image(rope)
+    parsed.indent_info = nil
+    return parsed
+  end
+
 %  \end{macrocode}
 % \begin{markdown}
 %
@@ -25265,17 +25274,33 @@ function M.reader.new(writer, options)
 %  \begin{macrocode}
   local function collect_emphasis_content(t, opening_index, closing_index)
     local content = {}
+
+    local content_part = {}
     for i = opening_index, closing_index do
       local value = t[i]
-      if value.is_active then
-        if value.type == "delimiter_run" then
-          content[#content + 1] = writer.escape(string.rep(value.character, value.current_count))
-        else
-          content[#content + 1] = value.content
-          value.content = ''
+
+      if value.rendered ~= nil then
+        content[#content + 1] = parse_content_part(content_part)
+        content_part = {}
+        content[#content + 1] = value.rendered
+        value.rendered = nil
+      else
+        if value.is_active then
+          if value.type == "delimiter" and value.element == "emphasis" then
+            content[#content + 1] = parse_content_part(content_part)
+            content_part = {}
+            content[#content + 1] = writer.escape(string.rep(value.character, value.current_count))
+          else
+            content_part[#content_part + 1] = value.content
+            value.content = ''
+          end
+          value.is_active = false
         end
-        value.is_active = false
       end
+    end
+
+    if next(content_part) ~= nil then
+      content[#content + 1] = parse_content_part(content_part)
     end
 
     return content
@@ -25292,7 +25317,7 @@ function M.reader.new(writer, options)
   local function fill_emph(t, opening_index, closing_index)
     local content = collect_emphasis_content(t, opening_index + 1, closing_index - 1)
     t[opening_index + 1].is_active = true
-    t[opening_index + 1].content = writer.emphasis(content)
+    t[opening_index + 1].rendered = writer.emphasis(content)
   end
 
 %  \end{macrocode}
@@ -25306,7 +25331,7 @@ function M.reader.new(writer, options)
   local function fill_strong(t, opening_index, closing_index)
     local content = collect_emphasis_content(t, opening_index + 1, closing_index - 1)
     t[opening_index + 1].is_active = true
-    t[opening_index + 1].content = writer.strong(content)
+    t[opening_index + 1].rendered = writer.strong(content)
   end
 
 %  \end{macrocode}
@@ -25356,8 +25381,7 @@ function M.reader.new(writer, options)
 %  \begin{macrocode}
   local function process_emphasis(t)
     for _,value in ipairs(t) do
-      value.is_active = true
-      if value.type == "delimiter_run" then
+      if value.type == "delimiter" and value.element == "emphasis" then
           local delimiter_length = string.len(value.content)
           value.character = string.sub(value.content, 1, 1)
           value.current_count = delimiter_length
@@ -25387,35 +25411,40 @@ function M.reader.new(writer, options)
 
     while current_position <= #t do
       local value = t[current_position]
-      local character = value.character
-      local is_opening = value.is_opening
-      local is_closing = value.is_closing
-      local closing_length_modulo_three = value.original_count % 3
 
-      local current_openers_bottom = openers_bottom[character][is_opening][closing_length_modulo_three + 1]
+      if value.type == "delimiter" and value.is_active and value.element == "emphasis" then
+        local character = value.character
+        local is_opening = value.is_opening
+        local is_closing = value.is_closing
+        local closing_length_modulo_three = value.original_count % 3
 
-      if is_closing and (value.current_count > 0) then
-        local opener_position = find_opener(t, current_openers_bottom, current_position - 2, character, value)
+        local current_openers_bottom = openers_bottom[character][is_opening][closing_length_modulo_three + 1]
 
-        if (opener_position ~= nil) then
+        if is_closing and (value.current_count > 0) then
+          local opener_position = find_opener(t, current_openers_bottom, current_position - 2, character, value)
 
-          local opening_delimiter = t[opener_position]
+          if (opener_position ~= nil) then
 
-          local current_opening_count = opening_delimiter.current_count
-          local current_closing_count = t[current_position].current_count
+            local opening_delimiter = t[opener_position]
 
-          if (current_opening_count >= 2) and (current_closing_count >= 2) then
-            opening_delimiter.current_count = current_opening_count - 2
-            t[current_position].current_count = current_closing_count - 2
-            fill_strong(t, opener_position, current_position)
+            local current_opening_count = opening_delimiter.current_count
+            local current_closing_count = t[current_position].current_count
+
+            if (current_opening_count >= 2) and (current_closing_count >= 2) then
+              opening_delimiter.current_count = current_opening_count - 2
+              t[current_position].current_count = current_closing_count - 2
+              fill_strong(t, opener_position, current_position)
+            else
+              opening_delimiter.current_count = current_opening_count - 1
+              t[current_position].current_count = current_closing_count - 1
+              fill_emph(t, opener_position, current_position)
+            end
+
           else
-            opening_delimiter.current_count = current_opening_count - 1
-            t[current_position].current_count = current_closing_count - 1
-            fill_emph(t, opener_position, current_position)
+            openers_bottom[character][is_opening][closing_length_modulo_three + 1] = current_position
+            current_position = current_position + 2
           end
-
         else
-          openers_bottom[character][is_opening][closing_length_modulo_three + 1] = current_position
           current_position = current_position + 2
         end
       else
@@ -25520,7 +25549,8 @@ function M.reader.new(writer, options)
   parsers.right_flanking_delimiter_run = function(character)
     return  parsers.unicode_preceding_punctuation
           * parsers.delimiter_run(character)
-          * (parsers.unicode_following_punctuation + parsers.unicode_following_whitespace)
+          * (parsers.unicode_following_punctuation + parsers.unicode_following_whitespace
+            + parsers.eof)
           + (B(parsers.any) 
             * -(parsers.unicode_preceding_punctuation + parsers.unicode_preceding_whitespace))
           * parsers.delimiter_run(character)
@@ -25539,17 +25569,20 @@ function M.reader.new(writer, options)
                     * parsers.right_flanking_delimiter_run(parsers.underscore)
 
   parsers.emph_capturing_open_and_close = #parsers.emph_start * #parsers.emph_end
-                                        * Ct( Cg(Cc("delimiter_run"), "type")
+                                        * Ct( Cg(Cc("delimiter"), "type")
+                                            * Cg(Cc("emphasis"), "element")
                                             * Cg(C(parsers.emph_start), "content")
                                             * Cg(Cc(true), "is_opening")
                                             * Cg(Cc(true), "is_closing"))
 
-  parsers.emph_capturing_open = Ct( Cg(Cc("delimiter_run"), "type")
+  parsers.emph_capturing_open = Ct( Cg(Cc("delimiter"), "type")
+                                  * Cg(Cc("emphasis"), "element")
                                   * Cg(C(parsers.emph_start), "content")
                                   * Cg(Cc(true), "is_opening")
                                   * Cg(Cc(false), "is_closing"))
 
-  parsers.emph_capturing_close = Ct( Cg(Cc("delimiter_run"), "type")
+  parsers.emph_capturing_close = Ct( Cg(Cc("delimiter"), "type")  
+                                   * Cg(Cc("emphasis"), "element")
                                    * Cg(C(parsers.emph_end), "content")
                                    * Cg(Cc(false), "is_opening")
                                    * Cg(Cc(true), "is_closing"))
@@ -25701,7 +25734,7 @@ function M.reader.new(writer, options)
                         + #parsers.link_text
                         * Cg(Cc("link_text"), "link_type")
 
-  parsers.link_image_opening  = Ct( Cg(Cc("delim"), "type")
+  parsers.link_image_opening  = Ct( Cg(Cc("delimiter"), "type")
                                   * Cg(Cc(true), "is_opening")
                                   * ( Cg(Cc("image"), "element")
                                     * parsers.image_opening
@@ -25710,7 +25743,8 @@ function M.reader.new(writer, options)
                                     * parsers.link_opening
                                     * Cg(parsers.lbracket, "content")))
 
-  parsers.link_image_closing  = Ct( Cg(Cc("delim"), "type")
+  parsers.link_image_closing  = Ct( Cg(Cc("delimiter"), "type")
+                                  * Cg(Cc("link"), "element")
                                   * Cg(Cc(false), "is_opening")
                                   * ( Cg(Cc(true), "is_direct")
                                     * Cg(Ct(C(parsers.rbracket) * Cg(Ct(parsers.inline_direct_ref), "inline_content")), "content")
@@ -25720,13 +25754,20 @@ function M.reader.new(writer, options)
   parsers.link_image_open_or_close  = parsers.link_image_opening
                                     + parsers.link_image_closing
 
-  parsers.link_image_content  = Ct( Cg(Cc("content"), "type")
-                                  * Cg(C(((parsers.backslash^-1 / "" * parsers.any - parsers.link_image_open_or_close))^0), "content"))
+  parsers.link_emph_precedence  = parsers.inticks
+                                + parsers.autolink
 
-  parsers.link_array = C((parsers.exclamation^-1 * parsers.any_link)^1)
+  parsers.link_and_emph_content = Ct( Cg(Cc("content"), "type")
+                                  * Cg(Cs((
+                                          parsers.link_emph_precedence 
+                                          + parsers.backslash^-1 * parsers.any
+                                          - parsers.blankline^2
+                                          - parsers.link_image_open_or_close 
+                                          - parsers.emph_open_or_close)^0), "content"))
 
-  parsers.link_group = Ct( parsers.link_image_opening
-                        * (parsers.link_image_content * parsers.link_image_open_or_close)^0)
+  parsers.link_and_emph_table = Ct((parsers.link_image_opening + parsers.emph_open)
+                                  * ((parsers.link_and_emph_content)
+                                     * (parsers.link_image_open_or_close + parsers.emph_open_or_close))^1)
 
 %    \end{macrocode}
 % \begin{markdown}
@@ -25739,7 +25780,7 @@ function M.reader.new(writer, options)
 %  \begin{macrocode}
   local function resolve_inline_link_closer(t, index, include_bracket)
     local value = t[index]
-    if value.type == "delim" then
+    if value.type == "delimiter" and (value.element == "link" or value.element == "image") then
       local inline_content = value.content.inline_content
       local attribute_content = value.content.attribute_content
 
@@ -25791,7 +25832,7 @@ function M.reader.new(writer, options)
     local content = {}
     for i = opening_index, closing_index do
       local value = t[i]
-      if value.type == "delim" then
+      if value.type == "delimiter" and (value.element == "link" or value.element == "image") then
         if value.is_direct then
           content[#content + 1] = resolve_inline_link_closer(t, i, true)
         else
@@ -25863,7 +25904,7 @@ function M.reader.new(writer, options)
     for i = index, 1, -1 do
       local value = t[i]
       if value.is_active and
-         value.type == "delim" and
+         value.type == "delimiter" and
          value.is_opening and
          value.element == "link" then
         value.is_active = false
@@ -25900,6 +25941,19 @@ function M.reader.new(writer, options)
   local function delete_parsed_content_in_range(t, opening_index, closing_index)
     for i = opening_index, closing_index do
       t[i].rendered = nil
+    end
+  end
+
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Clear the parsed content between the `opening_index` and `closing_index` in the delimiter table `t`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function empty_content_in_range(t, opening_index, closing_index)
+    for i = opening_index, closing_index do
+      t[i].content = ''
     end
   end
 
@@ -26153,7 +26207,7 @@ function M.reader.new(writer, options)
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Parse an array of links `link_array` to an array of delimiters and content with the 'link_group` pattern.
+% Parse a table of link and emphasis delimiters `delimiter_table`.
 % Iterate over the delimiters in the delimiter table `t` in two passes. First, the delimiters either 
 % marked as links (or images) with the `is_link` property, additionally assigned a closing delimiter. 
 % Secondly, the content of the resolved links is parsed, with respective macros produced. 
@@ -26162,26 +26216,22 @@ function M.reader.new(writer, options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  function process_links_and_images(link_array, link_group)
-
-    -- generate a delimiter array from a array of potential links
-    local t = lpeg.match(link_group, link_array[1])
-
+  function process_links_and_emphasis(delimiter_table)
+    local t = delimiter_table[1]
     for _,value in ipairs(t) do
       value.is_active = true
-      if (value.is_opening) then
+      if (value.is_opening and value.type == "delimiter" and (value.element == "link" or value.element == "image")) then
         value.is_link = false
         value.end_position = 0
       end
     end
-
     local current_position = 1
 
     -- iterate over delimiters, marking links
     while current_position <= #t do
       local value = t[current_position]
 
-      if not value.is_opening then
+      if not value.is_opening and value.type == "delimiter" and (value.element == "link" or value.element == "image") then
         local opener_position, non_active_opener_position = find_opener(t, 1, current_position - 2)
         local end_position = current_position
 
@@ -26227,31 +26277,47 @@ function M.reader.new(writer, options)
     end
 
     current_position = 1
-
     -- iterate over found links, parsing content
     while current_position <= #t do
       local delimiter = t[current_position]
 
-      if delimiter.is_opening then
+      if delimiter.is_opening and delimiter.type == "delimiter" and delimiter.is_link then
         local end_position = delimiter.end_position
-
-        if (delimiter.is_link) then
-          render_link_or_image(t, current_position, end_position)
-        else
-          render_link_or_image_fallback(t, current_position, end_position)
-        end
+        render_link_or_image(t, current_position, end_position)
 
         current_position = end_position
       end
       current_position = current_position + 2
     end
+    current_position = 1
 
-    return collect_link_parsed_content(t, 1, #t)
+    -- iterate over content, restoring activeness
+    while current_position <= #t do
+      local item = t[current_position]
+      item.is_active = true
+
+      if item.type == "delimiter" and (item.element == "link" or item.element == "image") then
+        if item.is_opening and item.is_link then
+
+          local end_position = item.end_position
+          empty_content_in_range(t, current_position, end_position) -- remove self content too
+
+          current_position = end_position
+        end
+        if item.is_direct then
+          item.content = resolve_inline_link_closer(t, current_position, true)
+        end
+      end
+      current_position = current_position + 1
+    end
+
+    local emph_t = process_emphasis(t)
+    return emph_t
   end
 
-  function defer_link_and_image_processing(links, link_group)
+  function defer_link_and_emphasis_processing(delimiter_table)
     return writer.defer_call(function()
-      return process_links_and_images(links, link_group)
+      return process_links_and_emphasis(delimiter_table)
     end)
   end
 
@@ -26312,6 +26378,10 @@ function M.reader.new(writer, options)
                      + parsers.headerstart
                      + parsers.html_interrupting
 
+  parsers.EndlineExceptionsInside
+                     = parsers.EndlineExceptions
+                     - parsers.eof
+
   parsers.Endline   = parsers.newline
                     * (parsers.check_minimal_indent 
                       * -V("EndlineExceptions") 
@@ -26325,15 +26395,18 @@ function M.reader.new(writer, options)
   parsers.OptionalIndent
                      = parsers.spacechar^1 / writer.space
 
-  parsers.Space      = parsers.spacechar^2 * parsers.Endline / writer.hard_line_break
-                     + parsers.spacechar^1 * parsers.Endline^-1 * parsers.eof / ""
+  parsers.Space      = parsers.spacechar^2 * parsers.Endline
+                                           / (options.hardLineBreaks
+                                              and writer.hard_line_break
+                                               or writer.space)
+                     + parsers.spacechar^1 * parsers.Endline^-1 * parsers.eof / self.expandtabs
                      + parsers.spacechar^1 * parsers.Endline
                                            * parsers.optionalspace
                                            / (options.hardLineBreaks
                                               and writer.hard_line_break
                                                or writer.space)
-                     + parsers.spacechar^1 * parsers.optionalspace
-                                           / writer.space
+                     + parsers.spacechar^1 * -parsers.newline / self.expandtabs
+                     + parsers.spacechar^1 / ""
 
   parsers.NonbreakingEndline
                     = parsers.newline
@@ -26347,7 +26420,10 @@ function M.reader.new(writer, options)
                                                or writer.nbsp)
 
   parsers.NonbreakingSpace
-                  = parsers.spacechar^2 * parsers.Endline / writer.hard_line_break
+                  = parsers.spacechar^2 * parsers.Endline
+                                        / (options.hardLineBreaks
+                                              and writer.hard_line_break
+                                               or writer.nbsp)
                   + parsers.spacechar^1 * parsers.Endline^-1 * parsers.eof / ""
                   + parsers.spacechar^1 * parsers.Endline
                                         * parsers.optionalspace
@@ -26403,11 +26479,11 @@ end
                       = parsers.auto_link_relative_reference
                       / self.auto_link_url
 
-  parsers.MaybeLinkOrImage = Ct(parsers.link_array) * Cc(parsers.link_group)
-                           / defer_link_and_image_processing
+  parsers.MaybeLinkAndEmph = Ct(parsers.link_and_emph_table)
+                           / defer_link_and_emphasis_processing
 
-  parsers.LinkOrImage     = Ct(parsers.link_array) * Cc(parsers.link_group)
-                          / process_links_and_images
+  parsers.LinkAndEmph     = Ct(parsers.link_and_emph_table)
+                          / process_links_and_emphasis
 
   parsers.EscapedChar   = parsers.backslash * C(parsers.escapable) / writer.string
 
@@ -26754,9 +26830,8 @@ end
         Space                 = parsers.Space,
         OptionalIndent        = parsers.OptionalIndent,
         Endline               = parsers.Endline,
-        Emph                  = parsers.Emph,
-        MaybeLinkOrImage      = parsers.MaybeLinkOrImage,
-        LinkOrImage           = parsers.fail,
+        MaybeLinkAndEmph      = parsers.MaybeLinkAndEmph,
+        LinkAndEmph           = parsers.fail,
         Code                  = parsers.Code,
         AutoLinkUrl           = parsers.AutoLinkUrl,
         AutoLinkEmail         = parsers.AutoLinkEmail,
@@ -27055,10 +27130,16 @@ end
     inlines_nbsp_t.Space = parsers.NonbreakingSpace
     parsers.inlines_nbsp = Ct(inlines_nbsp_t)
 
-    local inlines_full_link_and_image = util.table_copy(inlines_t)
-    inlines_full_link_and_image.MaybeLinkOrImage = parsers.fail
-    inlines_full_link_and_image.LinkOrImage = parsers.LinkOrImage
-    parsers.inlines_full_link_and_image = Ct(inlines_full_link_and_image)
+    local inlines_full_link_and_image_t = util.table_copy(inlines_t)
+    inlines_full_link_and_image_t.MaybeLinkAndEmph = parsers.fail
+    inlines_full_link_and_image_t.LinkAndEmph = parsers.LinkAndEmph
+    parsers.inlines_full_link_and_image = Ct(inlines_full_link_and_image_t)
+
+    local inlines_no_link_or_image_t = util.table_copy(inlines_t)
+    inlines_no_link_or_image_t.MaybeLinkAndEmph = parsers.fail
+    inlines_no_link_or_image_t.LinkAndEmph = parsers.fail
+    inlines_no_link_or_image_t.EndlineExceptions = parsers.EndlineExceptionsInside
+    parsers.inlines_no_link_or_image = Ct(inlines_no_link_or_image_t)
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -28442,31 +28523,39 @@ M.extensions.link_attributes = function()
       local any_link  = inline_link
                       + simple_link
 
-      local link_image_closing  = Ct( Cg(Cc("delim"), "type")
-                                      * Cg(Cc(false), "is_opening")
-                                      * ( Cg(Cc(true), "is_direct")
-                                        * Cg(Ct(C(parsers.rbracket) 
-                                               * Cg(Ct(parsers.inline_direct_ref), "inline_content") 
-                                               * Cg(Ct(attributes)^-1, "attribute_content")), "content")
-                                        + Cg(Cc(false), "is_direct")
-                                        * Cg(Ct(C(parsers.rbracket) * Cg(Ct(attributes)^-1, "attribute_content")), "content")))
+      local link_image_closing  = Ct( Cg(Cc("delimiter"), "type")
+                                    * Cg(Cc("link"), "element")
+                                    * Cg(Cc(false), "is_opening")
+                                    * ( Cg(Cc(true), "is_direct")
+                                      * Cg(Ct(C(parsers.rbracket)
+                                              * Cg(Ct(parsers.inline_direct_ref), "inline_content")
+                                              * Cg(Ct(attributes)^-1, "attribute_content")), "content")
+                                      + Cg(Cc(false), "is_direct")
+                                      * Cg(Ct(C(parsers.rbracket) * Cg(Ct(attributes)^-1, "attribute_content")), "content")))
 
       local link_image_open_or_close  = parsers.link_image_opening
-                                        + link_image_closing
+                                      + link_image_closing
 
-      local link_group  = Ct( parsers.link_image_opening
-                          * (parsers.link_image_content * link_image_open_or_close)^0)
+      local link_and_emph_content = Ct( Cg(Cc("content"), "type")
+                                * Cg(Cs((
+                                        parsers.link_emph_precedence 
+                                        + parsers.backslash^-1 * parsers.any
+                                        - parsers.blankline^2
+                                        - link_image_open_or_close
+                                        - parsers.emph_open_or_close)^0), "content"))
 
-      local link_array = C((parsers.exclamation^-1 * any_link)^1)
+      local link_and_emph_table = Ct((parsers.link_image_opening + parsers.emph_open)
+                                      * ((link_and_emph_content)
+                                        * (link_image_open_or_close + parsers.emph_open_or_close))^1)
 
-      local MaybeLinkOrImageWithAttributes  = Ct(link_array) * Cc(link_group)
-                                              / defer_link_and_image_processing
+      local MaybeLinkWithAttributesAndEmph  = Ct(link_and_emph_table)
+                                              / defer_link_and_emphasis_processing
 
-      local LinkOrImageWithAttributes       = Ct(link_array) * Cc(link_group)
-                                            / process_links_and_images
+      local LinkWithAttributesAndEmph       = Ct(link_and_emph_table)
+                                            / process_links_and_emphasis
 
-      self.update_rule("MaybeLinkOrImage", MaybeLinkOrImageWithAttributes)
-      self.update_rule("LinkOrImage", LinkOrImageWithAttributes)
+      self.update_rule("MaybeLinkAndEmph", MaybeLinkWithAttributesAndEmph)
+      self.update_rule("LinkAndEmph", LinkWithAttributesAndEmph)
 
 %    \end{macrocode}
 % \begin{markdown}
