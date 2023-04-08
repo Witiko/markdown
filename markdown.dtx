@@ -24604,11 +24604,6 @@ function M.reader.new(writer, options)
                        return parsers.inlines
                      end, false)
 
-  self.create_parser("parse_inlines_full_link_and_image",
-                     function()
-                       return parsers.inlines_full_link_and_image
-                     end, false)
-
   self.create_parser("parse_inlines_no_inline_note",
                      function()
                        return parsers.inlines_no_inline_note
@@ -24624,9 +24619,9 @@ function M.reader.new(writer, options)
                        return parsers.inlines_nbsp
                      end, false)
 
-  self.create_parser("parse_inlines_no_link_or_image",
+  self.create_parser("parse_inlines_no_link_or_emphasis",
                     function()
-                      return parsers.inlines_no_link_or_image
+                      return parsers.inlines_no_link_or_emphasis
                     end, false)
 %    \end{macrocode}
 % \par
@@ -25258,9 +25253,16 @@ function M.reader.new(writer, options)
 % \end{markdown}
 %  \begin{macrocode}
 
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Parse the content of a table `content_part` with links, images and emphasis disabled.
+%
+% \end{markdown}
+%  \begin{macrocode}
   local function parse_content_part(content_part)
     local rope = util.rope_to_string(content_part)
-    local parsed = self.parser_functions.parse_inlines_no_link_or_image(rope)
+    local parsed = self.parser_functions.parse_inlines_no_link_or_emphasis(rope)
     parsed.indent_info = nil
     return parsed
   end
@@ -26959,16 +26961,11 @@ end
     inlines_nbsp_t.Space = parsers.NonbreakingSpace
     parsers.inlines_nbsp = Ct(inlines_nbsp_t)
 
-    local inlines_full_link_and_image_t = util.table_copy(inlines_t)
-    inlines_full_link_and_image_t.MaybeLinkAndEmph = parsers.fail
-    inlines_full_link_and_image_t.LinkAndEmph = parsers.LinkAndEmph
-    parsers.inlines_full_link_and_image = Ct(inlines_full_link_and_image_t)
-
-    local inlines_no_link_or_image_t = util.table_copy(inlines_t)
-    inlines_no_link_or_image_t.MaybeLinkAndEmph = parsers.fail
-    inlines_no_link_or_image_t.LinkAndEmph = parsers.fail
-    inlines_no_link_or_image_t.EndlineExceptions = parsers.EndlineExceptionsInside
-    parsers.inlines_no_link_or_image = Ct(inlines_no_link_or_image_t)
+    local inlines_no_link_or_emphasis_t = util.table_copy(inlines_t)
+    inlines_no_link_or_emphasis_t.MaybeLinkAndEmph = parsers.fail
+    inlines_no_link_or_emphasis_t.LinkAndEmph = parsers.fail
+    inlines_no_link_or_emphasis_t.EndlineExceptions = parsers.EndlineExceptionsInside
+    parsers.inlines_no_link_or_emphasis = Ct(inlines_no_link_or_emphasis_t)
 %    \end{macrocode}
 % \par
 % \begin{markdown}
