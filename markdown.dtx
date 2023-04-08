@@ -25285,17 +25285,17 @@ function M.reader.new(writer, options)
         content[#content + 1] = value.rendered
         value.rendered = nil
       else
-        if value.is_active then
-          if value.type == "delimiter" and value.element == "emphasis" then
+        if value.type == "delimiter" and value.element == "emphasis" then
+          if value.is_active then
             content[#content + 1] = parse_content_part(content_part)
             content_part = {}
             content[#content + 1] = writer.escape(string.rep(value.character, value.current_count))
-          else
-            content_part[#content_part + 1] = value.content
-            value.content = ''
           end
-          value.is_active = false
+        else
+          content_part[#content_part + 1] = value.content
+          value.content = ''
         end
+        value.is_active = false
       end
     end
 
@@ -25361,6 +25361,7 @@ function M.reader.new(writer, options)
       local value = t[i]
       if value.is_active and
          value.is_opening and
+         value.element == "emphasis" and
          (value.character == character) and
          (value.current_count > 0) then
         if not breaks_three_rule(value, closing_delimiter) then
@@ -25831,26 +25832,6 @@ function M.reader.new(writer, options)
         end
       else
         content[#content + 1] = value.content
-        t[i].is_active = false
-      end
-    end
-    return content
-  end
-
-%    \end{macrocode}
-% \begin{markdown}
-%
-% Collect the parsed content between the `opening_index` and `closing_index` in the delimiter table `t`.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  local function collect_link_parsed_content(t, opening_index, closing_index)
-    local content = {}
-    for i = opening_index, closing_index do
-      local value = t[i]
-      local rendered = value.rendered
-      if (rendered ~= nil) then
-        content[#content + 1] = rendered
       end
     end
     return content
@@ -25867,13 +25848,32 @@ function M.reader.new(writer, options)
   local function find_link_opener(t, bottom_index, latest_index)
     for i = latest_index, bottom_index, -2 do
       local value = t[i]
-      if value.is_opening and 
-         value.end_position == 0 and 
-         not value.part_of_link then
+      if value.is_opening and
+         (value.element == "link" or value.element == "image") 
+         and not value.removed then
         if value.is_active then
-          return i, i
+          return i
         end
-        return nil, i
+        t[i].removed = true
+        return nil
+      end
+    end
+  end
+
+%    \end{macrocode}
+% \begin{markdown}
+%
+% 
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function find_full_link_next_closer(t, latest_index)
+    for i = latest_index, #t do
+      local value = t[i]
+      if not value.is_opening and
+         value.element == "link" and
+         not value.removed then
+        return i
       end
     end
   end
@@ -25907,8 +25907,7 @@ function M.reader.new(writer, options)
 % \begin{markdown}
 %
 % Disable the delimiters between the `opening_index` and `closing_index` in the delimiter table `t` that are 
-% considered a part of link by marking them inactive with the `is_active` property and as a
-% `part_of_link`.
+% considered a part of link by marking them inactive with the `is_active` property.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -25917,7 +25916,9 @@ function M.reader.new(writer, options)
       local value = t[i]
       if value.is_active then
         value.is_active = false
-        value.part_of_link = true
+        if value.type == "delimiter" then
+          value.removed = true
+        end
       end
     end
   end
@@ -26004,9 +26005,8 @@ function M.reader.new(writer, options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  local function render_link_or_image(t, opening_index, closing_index)
+  local function render_link_or_image(t, opening_index, closing_index, content_end_index)
     local link_r = t[opening_index].reference
-    local link_content_rope = t[opening_index].rope
 
     local url = ""
     if (link_r.url ~= nil) then
@@ -26020,7 +26020,9 @@ function M.reader.new(writer, options)
 
     local attributes = link_r.attributes
 
-    local mapped = self.parser_functions.parse_inlines_full_link_and_image(link_content_rope)
+    process_emphasis(t, opening_index, content_end_index)
+
+    local mapped = collect_emphasis_content(t, opening_index + 1, content_end_index - 1)
 
     if attributes == nil or not next(attributes) then
       attributes = nil
@@ -26035,38 +26037,17 @@ function M.reader.new(writer, options)
       rendered = writer.image(mapped, url, title, attributes)
     end
 
-    local mapped_parentheses = {}
+    t[opening_index].rendered = rendered
+    delete_parsed_content_in_range(t, opening_index + 1, closing_index)
+    empty_content_in_range(t, opening_index + 1, closing_index - 1)
+    disable_previous_link_openers(t, opening_index)
+    disable_range(t, opening_index, closing_index)
+
     if (t[closing_index].is_direct and t[opening_index].link_type ~= "inline") then
-      local resolved_closer = resolve_inline_link_closer(t, closing_index, false)
-      mapped_parentheses = self.parser_functions.parse_inlines_full_link_and_image(resolved_closer)
+      t[closing_index].content = resolve_inline_link_closer(t, closing_index, false)
+    else
+      t[closing_index].content = ''
     end
-
-    t[opening_index].rendered = { rendered, mapped_parentheses }
-    delete_parsed_content_in_range(t, opening_index + 1, closing_index)
-  end
-
-%    \end{macrocode}
-% \begin{markdown}
-%
-% Parse content between two delimiters in the delimiter table `t`. Enclose this content with literal brakcets and 
-% resolve potential dangling parentheses and attributes. 
-% In case of a image opening delimiter, an exclamation mark is also added before the brackets.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  local function render_link_or_image_fallback(t, opening_index, closing_index)
-    local prefix = ""
-    if (t[opening_index].rendered) then
-      prefix = "!"
-    end
-
-    local content = collect_link_content(t, opening_index + 1, closing_index - 1)
-    local content_rope = util.rope_to_string(content)
-
-    local child = self.parser_functions.parse_inlines_full_link_and_image(content_rope)
-    
-    t[opening_index].rendered = {prefix, "[",child,"]", resolve_inline_link_closer(t, closing_index, false)}
-    delete_parsed_content_in_range(t, opening_index + 1, closing_index)
   end
 
 %    \end{macrocode}
@@ -26079,8 +26060,6 @@ function M.reader.new(writer, options)
 %  \begin{macrocode}
   -- compared to other link types, here no reference definition is looked up
   local function resolve_inline_link(t, opening_index, closing_index)
-    local content = collect_link_content(t, opening_index + 1, closing_index - 1)
-    local content_rope = util.rope_to_string(content)
     local parentheses_info = t[closing_index].content.inline_content
 
     local all_attributes = {}
@@ -26098,15 +26077,11 @@ function M.reader.new(writer, options)
       title = parentheses_info.title_content.title
     end
 
-    t[opening_index].is_link = true
-    t[opening_index].rope = content_rope
     t[opening_index].reference = { url = url,
                                    title = title,
-                                   attributes = all_attributes
-                                 }
+                                   attributes = all_attributes }
     
-    disable_previous_link_openers(t, opening_index)
-    disable_range(t, opening_index, closing_index)
+    render_link_or_image(t, opening_index, closing_index, closing_index)
   end
 
 %    \end{macrocode}
@@ -26123,16 +26098,12 @@ function M.reader.new(writer, options)
     local r = self.lookup_reference(content_rope)
 
     if r then 
-      t[opening_index].is_link = true
-      t[opening_index].rope = content_rope
-
       local all_attributes = join_attributes(r.attributes, t, closing_index)
 
       r.attributes = all_attributes
       t[opening_index].reference = r
 
-      disable_previous_link_openers(t, opening_index)
-      disable_range(t, opening_index, closing_index)
+      render_link_or_image(t, opening_index, closing_index, closing_index)
     end
   end
 
@@ -26146,24 +26117,21 @@ function M.reader.new(writer, options)
 %  \begin{macrocode}
   local function resolve_full_link(t, opening_index, closing_index)
     local content = collect_link_content(t, opening_index + 1, closing_index - 1)
-    local next_link_content = collect_link_content(t, closing_index + 3, closing_index + 3)
 
-    local content_rope = util.rope_to_string(content)
+    local full_index_closer = find_full_link_next_closer(t, closing_index + 4)
+    local next_link_content = collect_link_content(t, closing_index + 3, full_index_closer - 1)
+
     local next_link_content_rope = util.rope_to_string(next_link_content)
 
     local r = self.lookup_reference(next_link_content_rope)
 
     if r then 
-      t[opening_index].is_link = true
-      t[opening_index].rope = content_rope
-
-      local all_attributes = join_attributes(r.attributes, t, closing_index + 4)
+      local all_attributes = join_attributes(r.attributes, t, full_index_closer)
 
       r.attributes = all_attributes
       t[opening_index].reference = r
 
-      disable_previous_link_openers(t, opening_index)
-      disable_range(t, opening_index, closing_index + 4)
+      render_link_or_image(t, opening_index, full_index_closer, closing_index)
     end
   end
 
@@ -26181,17 +26149,13 @@ function M.reader.new(writer, options)
 
     local r = self.lookup_reference(content_rope)
 
-    if r then 
-      t[opening_index].is_link = true
-      t[opening_index].rope = content_rope
-      
+    if r then       
       local all_attributes = join_attributes(r.attributes, t, closing_index)
 
       r.attributes = all_attributes
       t[opening_index].reference = r
       
-      disable_previous_link_openers(t, opening_index)
-      disable_range(t, opening_index, closing_index)
+      render_link_or_image(t, opening_index, closing_index, closing_index)
     end
   end
 
@@ -26199,11 +26163,9 @@ function M.reader.new(writer, options)
 % \begin{markdown}
 %
 % Parse a table of link and emphasis delimiters `delimiter_table`.
-% Iterate over the delimiters in the delimiter table `t` in two passes. First, the delimiters either 
-% marked as links (or images) with the `is_link` property, additionally assigned a closing delimiter. 
-% Secondly, the content of the resolved links is parsed, with respective macros produced. 
-% Any delimiters that do not form links are returned as is (fallback), with their content also recursively
-% parsed.
+% First, iterate over the link delimiters and produce either link or image macros. 
+% Then run process emphasis over the entire delimiter table, resolving emphasis and
+% parsing any content outside of closed delimiters.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -26211,24 +26173,20 @@ function M.reader.new(writer, options)
     local t = delimiter_table[1]
     for _,value in ipairs(t) do
       value.is_active = true
-      if (value.is_opening and value.type == "delimiter" and (value.element == "link" or value.element == "image")) then
-        value.is_link = false
-        value.end_position = 0
-      end
     end
     local current_position = 1
 
-    -- iterate over delimiters, marking links
+    -- iterate over delimiters, rendering links and images
     while current_position <= #t do
       local value = t[current_position]
 
       if not value.is_opening and value.type == "delimiter" and (value.element == "link" or value.element == "image") then
-        local opener_position, non_active_opener_position = find_link_opener(t, 1, current_position - 2)
-        local end_position = current_position
+
+        local opener_position = find_link_opener(t, 1, current_position - 2)
 
         if (opener_position ~= nil) then
           local opening_delimiter = t[opener_position]
-          opening_delimiter.end_position = current_position
+          t[opener_position].removed = true
 
           local link_type = opening_delimiter.link_type
           
@@ -26240,70 +26198,26 @@ function M.reader.new(writer, options)
           end
           if (link_type == "full") then
             resolve_full_link(t, opener_position, current_position)
-
-            -- skip next label if matched
-            if (opening_delimiter.is_link) then
-              current_position = current_position + 4
-              end_position = end_position + 4
-            end
           end
           if (link_type == "collapsed") then
             resolve_collapsed_link(t, opener_position, current_position)
-
-            -- skip next label if matched
-            if (opening_delimiter.is_link) then
-              current_position = current_position + 4
-              end_position = end_position + 4
-            end
           end
+        end
 
-          opening_delimiter.end_position = end_position
-        else
-          if (non_active_opener_position ~= nil) then
-            t[non_active_opener_position].end_position = current_position
-          end
+        if not t[current_position].removed and t[current_position].is_direct then
+          t[current_position].content = resolve_inline_link_closer(t, current_position, true)
         end
       end
       current_position = current_position + 2
     end
 
-    current_position = 1
-    -- iterate over found links, parsing content
-    while current_position <= #t do
-      local delimiter = t[current_position]
 
-      if delimiter.is_opening and delimiter.type == "delimiter" and delimiter.is_link then
-        local end_position = delimiter.end_position
-        render_link_or_image(t, current_position, end_position)
+    process_emphasis(t, 1, #t)
 
-        current_position = end_position
-      end
-      current_position = current_position + 2
-    end
-    current_position = 1
 
-    -- iterate over content, restoring activeness
-    while current_position <= #t do
-      local item = t[current_position]
-      item.is_active = true
-
-      if item.type == "delimiter" and (item.element == "link" or item.element == "image") then
-        if item.is_opening and item.is_link then
-
-          local end_position = item.end_position
-          empty_content_in_range(t, current_position, end_position) -- remove self content too
-
-          current_position = end_position
-        end
-        if item.is_direct then
-          item.content = resolve_inline_link_closer(t, current_position, true)
-        end
-      end
-      current_position = current_position + 1
-    end
-
-    local emph_t = process_emphasis(t, 1, #t)
     local final_result = collect_emphasis_content(t, 1, #t)
+
+
     return final_result
   end
 
