@@ -25548,17 +25548,23 @@ function M.reader.new(writer, options)
           * parsers.delimiter_run(character)
   end
 
-  parsers.emph_start = parsers.left_flanking_delimiter_run(parsers.asterisk)
-                     + (-#parsers.right_flanking_delimiter_run(parsers.underscore)
-                        + (parsers.unicode_preceding_punctuation 
-                          * #parsers.right_flanking_delimiter_run(parsers.underscore)))
-                     * parsers.left_flanking_delimiter_run(parsers.underscore)
+  if options.underscores then
+    parsers.emph_start = parsers.left_flanking_delimiter_run(parsers.asterisk)
+                      + (-#parsers.right_flanking_delimiter_run(parsers.underscore)
+                          + (parsers.unicode_preceding_punctuation 
+                            * #parsers.right_flanking_delimiter_run(parsers.underscore)))
+                      * parsers.left_flanking_delimiter_run(parsers.underscore)
 
-  parsers.emph_end  = parsers.right_flanking_delimiter_run(parsers.asterisk)
-                    + (-#parsers.left_flanking_delimiter_run(parsers.underscore)
-                      + #(parsers.left_flanking_delimiter_run(parsers.underscore) 
-                         * parsers.unicode_following_punctuation))
-                    * parsers.right_flanking_delimiter_run(parsers.underscore)
+    parsers.emph_end  = parsers.right_flanking_delimiter_run(parsers.asterisk)
+                      + (-#parsers.left_flanking_delimiter_run(parsers.underscore)
+                        + #(parsers.left_flanking_delimiter_run(parsers.underscore) 
+                          * parsers.unicode_following_punctuation))
+                      * parsers.right_flanking_delimiter_run(parsers.underscore)
+  else
+    parsers.emph_start = parsers.left_flanking_delimiter_run(parsers.asterisk)
+
+    parsers.emph_end  = parsers.right_flanking_delimiter_run(parsers.asterisk)
+  end
 
   parsers.emph_capturing_open_and_close = #parsers.emph_start * #parsers.emph_end
                                         * Ct( Cg(Cc("delimiter"), "type")
