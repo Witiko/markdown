@@ -1720,7 +1720,6 @@ local walkable_syntax = {
     "Str",
     "Space",
     "Endline",
-    "MaybeLinkAndEmph",
     "LinkAndEmph",
     "Code",
     "AutoLinkUrl",
@@ -4885,7 +4884,6 @@ be produced and contain the following text:
         "Str",
         "Space",
         "Endline",
-        "MaybeLinkAndEmph",
         "LinkAndEmph",
         "Code",
         "AutoLinkUrl",
@@ -26271,11 +26269,8 @@ end
                       = parsers.auto_link_relative_reference
                       / self.auto_link_url
 
-  parsers.MaybeLinkAndEmph = Ct(parsers.link_and_emph_table)
-                           / defer_link_and_emphasis_processing
-
-  parsers.LinkAndEmph     = Ct(parsers.link_and_emph_table)
-                          / process_links_and_emphasis
+  parsers.LinkAndEmph = Ct(parsers.link_and_emph_table)
+                      / defer_link_and_emphasis_processing
 
   parsers.EscapedChar   = parsers.backslash * C(parsers.escapable) / writer.string
 
@@ -26622,8 +26617,7 @@ end
         Space                 = parsers.Space,
         OptionalIndent        = parsers.OptionalIndent,
         Endline               = parsers.Endline,
-        MaybeLinkAndEmph      = parsers.MaybeLinkAndEmph,
-        LinkAndEmph           = parsers.fail,
+        LinkAndEmph           = parsers.LinkAndEmph,
         Code                  = parsers.Code,
         AutoLinkUrl           = parsers.AutoLinkUrl,
         AutoLinkEmail         = parsers.AutoLinkEmail,
@@ -26923,7 +26917,6 @@ end
     parsers.inlines_nbsp = Ct(inlines_nbsp_t)
 
     local inlines_no_link_or_emphasis_t = util.table_copy(inlines_t)
-    inlines_no_link_or_emphasis_t.MaybeLinkAndEmph = parsers.fail
     inlines_no_link_or_emphasis_t.LinkAndEmph = parsers.fail
     inlines_no_link_or_emphasis_t.EndlineExceptions = parsers.EndlineExceptionsInside
     parsers.inlines_no_link_or_emphasis = Ct(inlines_no_link_or_emphasis_t)
@@ -28292,13 +28285,9 @@ M.extensions.link_attributes = function()
 % \end{markdown}
 %  \begin{macrocode}
 
-      local MaybeLinkWithAttributesAndEmph  = Ct(parsers.link_and_emph_table * Cg(Cc(true), "match_link_attributes"))
-                                              / defer_link_and_emphasis_processing
+      local LinkWithAttributesAndEmph = Ct(parsers.link_and_emph_table * Cg(Cc(true), "match_link_attributes"))
+                                      / defer_link_and_emphasis_processing
 
-      local LinkWithAttributesAndEmph       = Ct(parsers.link_and_emph_table * Cg(Cc(true), "match_link_attributes"))
-                                            / process_links_and_emphasis
-
-      self.update_rule("MaybeLinkAndEmph", MaybeLinkWithAttributesAndEmph)
       self.update_rule("LinkAndEmph", LinkWithAttributesAndEmph)
 
 %    \end{macrocode}
