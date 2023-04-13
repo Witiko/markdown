@@ -23846,7 +23846,7 @@ parsers.closeticks  = Cmt(C(parsers.backtick^1)
                           * Cb("ticks"), captures_equal_length)
 
 parsers.intickschar = (parsers.any - S("\n\r`"))
-                    + (parsers.newline * -parsers.blankline)
+                    + V("Endline")
                     + (parsers.backtick^1 - parsers.closeticks)
 
 local function process_inticks(s)
@@ -23859,7 +23859,7 @@ parsers.inticks = parsers.openticks
                 * C(parsers.space^0)
                 * parsers.closeticks
                 + parsers.openticks
-                * Cs(parsers.intickschar^0 / process_inticks)
+                * Cs(Cs(parsers.intickschar^0) / process_inticks)
                 * parsers.closeticks
 
 %    \end{macrocode}
@@ -23957,8 +23957,9 @@ parsers.link_text  = parsers.lbracket
                         + parsers.autolink
                         + ( parsers.backslash * parsers.backslash)
                         + ( parsers.backslash * (parsers.lbracket + parsers.rbracket)
-                          + parsers.any
-                          - (parsers.lbracket + parsers.rbracket + parsers.blankline^2)))^0)
+                          + V("Space") + V("Endline") 
+                          + (parsers.any
+                            - (parsers.newline + parsers.lbracket + parsers.rbracket + parsers.blankline^2))))^0)
                     * parsers.rbracket
 
 parsers.link_label  = parsers.lbracket
@@ -23969,8 +23970,9 @@ parsers.link_label  = parsers.lbracket
                         + parsers.autolink
                         + ( parsers.backslash * parsers.backslash)
                         + ( parsers.backslash * (parsers.lbracket + parsers.rbracket)
-                          + parsers.any
-                          - (parsers.lbracket + parsers.rbracket + parsers.blankline^2)))^1)
+                          + V("Space") + V("Endline") 
+                          + (parsers.any
+                            - (parsers.newline + parsers.lbracket + parsers.rbracket + parsers.blankline^2))))^1)
                     * parsers.rbracket
 
 -- url for markdown links, allowing nested brackets:
@@ -25287,14 +25289,12 @@ function M.reader.new(writer, options)
       else
         if value.type == "delimiter" and value.element == "emphasis" then
           if value.is_active then
-            content[#content + 1] = parse_content_part(content_part)
-            content_part = {}
-            content[#content + 1] = writer.escape(string.rep(value.character, value.current_count))
+            content_part[#content_part + 1] = string.rep(value.character, value.current_count)
           end
         else
           content_part[#content_part + 1] = value.content
-          value.content = ''
         end
+        value.content = ''
         value.is_active = false
       end
     end
@@ -25742,10 +25742,13 @@ function M.reader.new(writer, options)
 
   parsers.link_and_emph_content = Ct( Cg(Cc("content"), "type")
                                     * Cg(Cs(( parsers.link_emph_precedence 
-                                            + parsers.backslash^-1 * parsers.any
-                                            - parsers.blankline^2
-                                            - parsers.link_image_open_or_close 
-                                            - parsers.emph_open_or_close)^0), "content"))
+                                            + parsers.backslash * parsers.any
+                                            + V("Space")
+                                            + V("Endline") 
+                                            + (parsers.any - parsers.newline
+                                              - parsers.blankline^2
+                                              - parsers.link_image_open_or_close 
+                                              - parsers.emph_open_or_close))^0), "content"))
 
   parsers.link_and_emph_table = (parsers.link_image_opening + parsers.emph_open)
                               * parsers.link_and_emph_content
@@ -26172,10 +26175,6 @@ function M.reader.new(writer, options)
                      + parsers.headerstart
                      + parsers.html_interrupting
 
-  parsers.EndlineExceptionsInside
-                     = parsers.EndlineExceptions
-                     - parsers.eof
-
   parsers.Endline   = parsers.newline
                     * (parsers.check_minimal_indent 
                       * -V("EndlineExceptions") 
@@ -26193,14 +26192,9 @@ function M.reader.new(writer, options)
                                            / (options.hardLineBreaks
                                               and writer.hard_line_break
                                                or writer.space)
-                     + parsers.spacechar^1 * parsers.Endline^-1 * parsers.eof / self.expandtabs
                      + parsers.spacechar^1 * parsers.Endline
-                                           * parsers.optionalspace
-                                           / (options.hardLineBreaks
-                                              and writer.hard_line_break
-                                               or writer.space)
+                                           / writer.space
                      + parsers.spacechar^1 * -parsers.newline / self.expandtabs
-                     + parsers.spacechar^1 / ""
 
   parsers.NonbreakingEndline
                     = parsers.newline
@@ -26918,7 +26912,6 @@ end
 
     local inlines_no_link_or_emphasis_t = util.table_copy(inlines_t)
     inlines_no_link_or_emphasis_t.LinkAndEmph = parsers.fail
-    inlines_no_link_or_emphasis_t.EndlineExceptions = parsers.EndlineExceptionsInside
     parsers.inlines_no_link_or_emphasis = Ct(inlines_no_link_or_emphasis_t)
 %    \end{macrocode}
 % \par
