@@ -25052,6 +25052,25 @@ parsers.tagentity = parsers.ampersand * C(parsers.alphanumeric^1)
 % \par
 % \begin{markdown}
 %
+%#### Helpers for Links and Link Reference Definitions
+%
+% \end{markdown}
+%  \begin{macrocode}
+parsers.spnl_sep  = parsers.optionalspace * parsers.newline * parsers.optionalspace
+                  + parsers.spacechar^1
+
+parsers.only_blank = parsers.spacechar^0 * (parsers.newline + parsers.eof)
+
+-- parse a reference definition:  [foo]: /bar "title"
+parsers.define_reference_parser = (parsers.check_trail / "") * parsers.link_label * parsers.colon
+                                * parsers.spnl * parsers.url
+                                * ( parsers.spnl_sep * parsers.title * parsers.only_blank
+                                  + Cc("") * parsers.only_blank) 
+                                * parsers.leave_trail
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
 %#### Inline Elements
 %
 % \end{markdown}
@@ -25766,18 +25785,6 @@ function M.reader.new(writer, options)
 %  \begin{macrocode}
   -- List of references defined in the document
   local references
-
-  parsers.spnl_sep  = parsers.optionalspace * parsers.newline * parsers.optionalspace
-                    + parsers.spacechar^1
-
-  parsers.only_blank = parsers.spacechar^0 * (parsers.newline + parsers.eof)
-
-  -- parse a reference definition:  [foo]: /bar "title"
-  parsers.define_reference_parser = (parsers.check_trail / "") * parsers.link_label * parsers.colon
-                                  * parsers.spnl * parsers.url
-                                  * ( parsers.spnl_sep * parsers.title * parsers.only_blank
-                                    + Cc("") * parsers.only_blank) 
-                                  * parsers.leave_trail
 
 %    \end{macrocode}
 % \par
