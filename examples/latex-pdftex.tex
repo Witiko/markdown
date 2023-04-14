@@ -4,6 +4,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage{booktabs}
+% Load the Markdown package and set its options.
 \usepackage[
   contentBlocks,
   debugExtensions,
@@ -27,6 +28,7 @@
   texMathDoubleBackslash,
   texMathSingleBackslash,
 ]{markdown}
+% Set the document metadata using a YAML metadata block.
 \begin{markdown*}{hybrid}
 ---
 title:  An Example *Markdown* Document
@@ -48,6 +50,7 @@ date:   \today
 \catcode`\%=14\relax
 \catcode`\#=6\relax
 
+% Typeset some further examples with inline markdown text.
 \begin{markdown}
 Here are some non-ASCII characters: *ěščřžýáíé*.
 \end{markdown}
