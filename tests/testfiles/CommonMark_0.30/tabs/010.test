@@ -8,5 +8,7 @@
 #	Foo
 >>>
 documentBegin
+BEGIN section
 headingOne: Foo
+END section
 documentEnd
