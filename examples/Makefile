@@ -2,7 +2,6 @@
 
 AUXFILES=*.tmp *.tui *.tuo *.mp *.tuc *.markdown.in *.markdown.out \
   *.markdown.lua *.log *.aux *.dvi *.idv *.lg *.tmp *.xref *.4ct *.4tc \
-  latex-pdftex.tex latex-luatex.tex latex-tex4ht.tex \
   example.tex *.debug-extensions.json debug-extensions.json
 AUXDIRS=_markdown_*/
 LUACLI_OPTIONS=\
@@ -27,8 +26,9 @@ LUACLI_OPTIONS=\
   texMathDollars=true \
   texMathDoubleBackslash=true \
   texMathSingleBackslash=true
-OUTPUT=context-mkii.pdf context-mkiv.pdf latex-pdftex.pdf \
-  latex-luatex.pdf latex-tex4ht.html latex-tex4ht.css
+OUTPUT=context-mkii.pdf context-mkiv.pdf \
+  latex-pdftex.pdf latex-xetex.pdf latex-luatex.pdf \
+  latex-tex4ht.html latex-tex4ht.css
 
 # This is the default pseudo-target.
 all: $(OUTPUT)
@@ -43,20 +43,22 @@ context-mkiv.pdf: context-mkiv.tex example.tex
 	context context-mkiv.tex
 
 # This target typesets the LaTeX example using the pdfTeX engine.
-latex-pdftex.pdf: latex.tex example.tex
-	cp latex.tex latex-pdftex.tex
-	pdflatex --shell-escape latex-pdftex
-	pdflatex --shell-escape latex-pdftex
+latex-pdftex.pdf: latex-pdftex.tex example.tex
+	pdflatex --shell-escape $<
+	pdflatex --shell-escape $<
+
+# This target typesets the LaTeX example using the XeTeX engine.
+latex-xetex.pdf: latex-xetex.tex example.tex
+	xelatex --shell-escape $<
+	xelatex --shell-escape $<
 
 # This target typesets the LaTeX example using the LuaTeX engine.
-latex-luatex.pdf: latex.tex example.tex
-	cp latex.tex latex-luatex.tex
-	lualatex latex-luatex
-	lualatex latex-luatex
+latex-luatex.pdf: latex-luatex.tex example.tex
+	lualatex $<
+	lualatex $<
 
 # This target typesets the LaTeX example using TeX4ht.
-latex-tex4ht.html latex-tex4ht.css: latex.tex example.tex
-	cp latex.tex latex-tex4ht.tex
+latex-tex4ht.html latex-tex4ht.css: latex-tex4ht.tex example.tex
 	make4ht --shell-escape latex-tex4ht fn-in
 
 # This target converts the markdown example to a plain TeX representation

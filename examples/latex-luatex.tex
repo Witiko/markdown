@@ -1,19 +1,7 @@
 \documentclass{book}
-\usepackage{ifxetex,ifluatex}
-\ifxetex
-  \usepackage{polyglossia}
-  \setmainlanguage{english}
-  \usepackage{fontspec}
-\else\ifluatex
-  \usepackage{polyglossia}
-  \setmainlanguage{english}
-  \usepackage{fontspec}
-\else
-  \usepackage[english]{babel}
-  \usepackage[utf8]{inputenc}
-  \usepackage[T1]{fontenc}
-  \usepackage{lmodern}
-\fi\fi
+\usepackage{polyglossia}
+\setmainlanguage{english}
+\usepackage{fontspec}
 \usepackage{booktabs}
 \usepackage[
   contentBlocks,
@@ -62,23 +50,4 @@ date:   \today
 \begin{markdown}
 Here are some non-ASCII characters: *ěščřžýáíé*.
 \end{markdown}
-
-\begin{markdown*}{html, hybrid}
-Here is some <b>HTML code</b> mixed *with Markdown*. In \TeX, the HTML code
-will be silently ignored, whereas in \TeX 4ht, the HTML code will be passed
-through to the output:
-
-<table border="1">
-  <tr>
-    <td>Emil</td>
-    <td>Tobias</td>
-    <td>Linus</td>
-  </tr>
-  <tr>
-    <td>16</td>
-    <td>14</td>
-    <td>10</td>
-  </tr>
-</table>
-\end{markdown*}
 \end{document}

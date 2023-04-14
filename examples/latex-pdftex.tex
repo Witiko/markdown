@@ -1,0 +1,73 @@
+\documentclass{book}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{booktabs}
+\usepackage[
+  contentBlocks,
+  debugExtensions,
+  definitionLists,
+  fancy_lists,
+  fencedCode,
+  hashEnumerators,
+  inlineNotes,
+  jekyllData,
+  lineBlocks,
+  notes,
+  pipeTables,
+  rawAttribute,
+  smartEllipses,
+  strikeThrough,
+  subscripts,
+  superscripts,
+  tableCaptions,
+  taskLists,
+  texMathDollars,
+  texMathDoubleBackslash,
+  texMathSingleBackslash,
+]{markdown}
+\begin{markdown*}{hybrid}
+---
+title:  An Example *Markdown* Document
+author: Vít Novotný
+date:   \today
+---
+\end{markdown*}
+\begin{document}
+% Typeset the document `example.md` by letting the Markdown package handle
+% the conversion internally.
+\markdownInput{./example.md}
+
+% Typeset the document `example.tex` that we prepared separately using the
+% Lua command-line interface of the Markdown package and that contains a
+% plain TeX representation of the document `example.md`.
+\catcode`\%=12\relax
+\catcode`\#=12\relax
+\InputIfFileExists{./example.tex}{}{}
+\catcode`\%=14\relax
+\catcode`\#=6\relax
+
+\begin{markdown}
+Here are some non-ASCII characters: *ěščřžýáíé*.
+\end{markdown}
+
+\begin{markdown*}{html, hybrid}
+Here is some <b>HTML code</b> mixed *with Markdown*. In \TeX, the HTML code
+will be silently ignored, whereas in \TeX 4ht, the HTML code will be passed
+through to the output:
+
+<table border="1">
+  <tr>
+    <td>Emil</td>
+    <td>Tobias</td>
+    <td>Linus</td>
+  </tr>
+  <tr>
+    <td>16</td>
+    <td>14</td>
+    <td>10</td>
+  </tr>
+</table>
+\end{markdown*}
+\end{document}
