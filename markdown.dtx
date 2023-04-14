@@ -26192,6 +26192,7 @@ function M.reader.new(writer, options)
                                            / (options.hardLineBreaks
                                               and writer.hard_line_break
                                                or writer.space)
+                     + parsers.spacechar^1 * parsers.Endline^-1 * parsers.eof / self.expandtabs
                      + parsers.spacechar^1 * parsers.Endline
                                            / writer.space
                      + parsers.spacechar^1 * -parsers.newline / self.expandtabs
