@@ -18,5 +18,7 @@
 documentBegin
 emphasis: aaa
 interblockSeparator
+BEGIN section
 headingOne: aaa
+END section
 documentEnd

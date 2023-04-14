@@ -20,12 +20,16 @@
 documentBegin
 ulBeginTight
 ulItem
+BEGIN section
 headingOne: Foo
 ulItemEnd
 ulItem
+BEGIN section
 headingTwo: Bar
 interblockSeparator
 emphasis: baz
 ulItemEnd
 ulEndTight
+END section
+END section
 documentEnd

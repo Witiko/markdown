@@ -1720,6 +1720,7 @@ local walkable_syntax = {
     "Str",
     "Space",
     "Endline",
+    "EndlineBreak",
     "LinkAndEmph",
     "Code",
     "AutoLinkUrl",
@@ -4884,7 +4885,9 @@ be produced and contain the following text:
         "Str",
         "Space",
         "Endline",
+        "EndlineBreak",
         "LinkAndEmph",
+        "StrikeThrough (user-defined \"./strike-through.lua\" syntax extension)",
         "Code",
         "AutoLinkUrl",
         "AutoLinkEmail",
@@ -20565,13 +20568,13 @@ local character_entities = {
   ["Tab"] = 9,
   ["NewLine"] = 10,
   ["excl"] = 33,
-  ["quot"] = 34,
   ["QUOT"] = 34,
+  ["quot"] = 34,
   ["num"] = 35,
   ["dollar"] = 36,
   ["percnt"] = 37,
-  ["amp"] = 38,
   ["AMP"] = 38,
+  ["amp"] = 38,
   ["apos"] = 39,
   ["lpar"] = 40,
   ["rpar"] = 41,
@@ -20583,31 +20586,36 @@ local character_entities = {
   ["sol"] = 47,
   ["colon"] = 58,
   ["semi"] = 59,
-  ["lt"] = 60,
   ["LT"] = 60,
+  ["lt"] = 60,
+  ["nvlt"] = {60, 8402},
+  ["bne"] = {61, 8421},
   ["equals"] = 61,
-  ["gt"] = 62,
   ["GT"] = 62,
+  ["gt"] = 62,
+  ["nvgt"] = {62, 8402},
   ["quest"] = 63,
   ["commat"] = 64,
-  ["lsqb"] = 91,
   ["lbrack"] = 91,
+  ["lsqb"] = 91,
   ["bsol"] = 92,
-  ["rsqb"] = 93,
   ["rbrack"] = 93,
+  ["rsqb"] = 93,
   ["Hat"] = 94,
+  ["UnderBar"] = 95,
   ["lowbar"] = 95,
-  ["grave"] = 96,
   ["DiacriticalGrave"] = 96,
-  ["lcub"] = 123,
+  ["grave"] = 96,
+  ["fjlig"] = {102, 106},
   ["lbrace"] = 123,
+  ["lcub"] = 123,
+  ["VerticalLine"] = 124,
   ["verbar"] = 124,
   ["vert"] = 124,
-  ["VerticalLine"] = 124,
-  ["rcub"] = 125,
   ["rbrace"] = 125,
-  ["nbsp"] = 160,
+  ["rcub"] = 125,
   ["NonBreakingSpace"] = 160,
+  ["nbsp"] = 160,
   ["iexcl"] = 161,
   ["cent"] = 162,
   ["pound"] = 163,
@@ -20616,36 +20624,35 @@ local character_entities = {
   ["brvbar"] = 166,
   ["sect"] = 167,
   ["Dot"] = 168,
-  ["die"] = 168,
   ["DoubleDot"] = 168,
+  ["die"] = 168,
   ["uml"] = 168,
-  ["copy"] = 169,
   ["COPY"] = 169,
+  ["copy"] = 169,
   ["ordf"] = 170,
   ["laquo"] = 171,
   ["not"] = 172,
   ["shy"] = 173,
-  ["reg"] = 174,
-  ["circledR"] = 174,
   ["REG"] = 174,
+  ["circledR"] = 174,
+  ["reg"] = 174,
   ["macr"] = 175,
-  ["OverBar"] = 175,
   ["strns"] = 175,
   ["deg"] = 176,
+  ["PlusMinus"] = 177,
   ["plusmn"] = 177,
   ["pm"] = 177,
-  ["PlusMinus"] = 177,
   ["sup2"] = 178,
   ["sup3"] = 179,
-  ["acute"] = 180,
   ["DiacriticalAcute"] = 180,
+  ["acute"] = 180,
   ["micro"] = 181,
   ["para"] = 182,
-  ["middot"] = 183,
-  ["centerdot"] = 183,
   ["CenterDot"] = 183,
-  ["cedil"] = 184,
+  ["centerdot"] = 183,
+  ["middot"] = 183,
   ["Cedilla"] = 184,
+  ["cedil"] = 184,
   ["sup1"] = 185,
   ["ordm"] = 186,
   ["raquo"] = 187,
@@ -20660,6 +20667,7 @@ local character_entities = {
   ["Atilde"] = 195,
   ["Auml"] = 196,
   ["Aring"] = 197,
+  ["angst"] = 197,
   ["AElig"] = 198,
   ["Ccedil"] = 199,
   ["Egrave"] = 200,
@@ -20709,8 +20717,8 @@ local character_entities = {
   ["ocirc"] = 244,
   ["otilde"] = 245,
   ["ouml"] = 246,
-  ["divide"] = 247,
   ["div"] = 247,
+  ["divide"] = 247,
   ["oslash"] = 248,
   ["ugrave"] = 249,
   ["uacute"] = 250,
@@ -20845,20 +20853,19 @@ local character_entities = {
   ["gacute"] = 501,
   ["jmath"] = 567,
   ["circ"] = 710,
-  ["caron"] = 711,
   ["Hacek"] = 711,
-  ["breve"] = 728,
+  ["caron"] = 711,
   ["Breve"] = 728,
-  ["dot"] = 729,
+  ["breve"] = 728,
   ["DiacriticalDot"] = 729,
+  ["dot"] = 729,
   ["ring"] = 730,
   ["ogon"] = 731,
-  ["tilde"] = 732,
   ["DiacriticalTilde"] = 732,
-  ["dblac"] = 733,
+  ["tilde"] = 732,
   ["DiacriticalDoubleAcute"] = 733,
+  ["dblac"] = 733,
   ["DownBreve"] = 785,
-  ["UnderBar"] = 818,
   ["Alpha"] = 913,
   ["Beta"] = 914,
   ["Gamma"] = 915,
@@ -20883,12 +20890,12 @@ local character_entities = {
   ["Chi"] = 935,
   ["Psi"] = 936,
   ["Omega"] = 937,
+  ["ohm"] = 937,
   ["alpha"] = 945,
   ["beta"] = 946,
   ["gamma"] = 947,
   ["delta"] = 948,
-  ["epsiv"] = 949,
-  ["varepsilon"] = 949,
+  ["epsi"] = 949,
   ["epsilon"] = 949,
   ["zeta"] = 950,
   ["eta"] = 951,
@@ -20902,38 +20909,39 @@ local character_entities = {
   ["omicron"] = 959,
   ["pi"] = 960,
   ["rho"] = 961,
+  ["sigmaf"] = 962,
   ["sigmav"] = 962,
   ["varsigma"] = 962,
-  ["sigmaf"] = 962,
   ["sigma"] = 963,
   ["tau"] = 964,
   ["upsi"] = 965,
   ["upsilon"] = 965,
   ["phi"] = 966,
-  ["phiv"] = 966,
-  ["varphi"] = 966,
   ["chi"] = 967,
   ["psi"] = 968,
   ["omega"] = 969,
+  ["thetasym"] = 977,
   ["thetav"] = 977,
   ["vartheta"] = 977,
-  ["thetasym"] = 977,
   ["Upsi"] = 978,
   ["upsih"] = 978,
+  ["phiv"] = 981,
   ["straightphi"] = 981,
+  ["varphi"] = 981,
   ["piv"] = 982,
   ["varpi"] = 982,
   ["Gammad"] = 988,
-  ["gammad"] = 989,
   ["digamma"] = 989,
+  ["gammad"] = 989,
   ["kappav"] = 1008,
   ["varkappa"] = 1008,
   ["rhov"] = 1009,
   ["varrho"] = 1009,
-  ["epsi"] = 1013,
+  ["epsiv"] = 1013,
   ["straightepsilon"] = 1013,
-  ["bepsi"] = 1014,
+  ["varepsilon"] = 1013,
   ["backepsilon"] = 1014,
+  ["bepsi"] = 1014,
   ["IOcy"] = 1025,
   ["DJcy"] = 1026,
   ["GJcy"] = 1027,
@@ -21032,40 +21040,40 @@ local character_entities = {
   ["emsp14"] = 8197,
   ["numsp"] = 8199,
   ["puncsp"] = 8200,
-  ["thinsp"] = 8201,
   ["ThinSpace"] = 8201,
-  ["hairsp"] = 8202,
+  ["thinsp"] = 8201,
   ["VeryThinSpace"] = 8202,
-  ["ZeroWidthSpace"] = 8203,
-  ["NegativeVeryThinSpace"] = 8203,
-  ["NegativeThinSpace"] = 8203,
+  ["hairsp"] = 8202,
   ["NegativeMediumSpace"] = 8203,
   ["NegativeThickSpace"] = 8203,
+  ["NegativeThinSpace"] = 8203,
+  ["NegativeVeryThinSpace"] = 8203,
+  ["ZeroWidthSpace"] = 8203,
   ["zwnj"] = 8204,
   ["zwj"] = 8205,
   ["lrm"] = 8206,
   ["rlm"] = 8207,
-  ["hyphen"] = 8208,
   ["dash"] = 8208,
+  ["hyphen"] = 8208,
   ["ndash"] = 8211,
   ["mdash"] = 8212,
   ["horbar"] = 8213,
   ["Verbar"] = 8214,
   ["Vert"] = 8214,
-  ["lsquo"] = 8216,
   ["OpenCurlyQuote"] = 8216,
+  ["lsquo"] = 8216,
+  ["CloseCurlyQuote"] = 8217,
   ["rsquo"] = 8217,
   ["rsquor"] = 8217,
-  ["CloseCurlyQuote"] = 8217,
   ["lsquor"] = 8218,
   ["sbquo"] = 8218,
-  ["ldquo"] = 8220,
   ["OpenCurlyDoubleQuote"] = 8220,
+  ["ldquo"] = 8220,
+  ["CloseCurlyDoubleQuote"] = 8221,
   ["rdquo"] = 8221,
   ["rdquor"] = 8221,
-  ["CloseCurlyDoubleQuote"] = 8221,
-  ["ldquor"] = 8222,
   ["bdquo"] = 8222,
+  ["ldquor"] = 8222,
   ["dagger"] = 8224,
   ["Dagger"] = 8225,
   ["ddagger"] = 8225,
@@ -21079,10 +21087,11 @@ local character_entities = {
   ["prime"] = 8242,
   ["Prime"] = 8243,
   ["tprime"] = 8244,
-  ["bprime"] = 8245,
   ["backprime"] = 8245,
+  ["bprime"] = 8245,
   ["lsaquo"] = 8249,
   ["rsaquo"] = 8250,
+  ["OverBar"] = 8254,
   ["oline"] = 8254,
   ["caret"] = 8257,
   ["hybull"] = 8259,
@@ -21090,6 +21099,7 @@ local character_entities = {
   ["bsemi"] = 8271,
   ["qprime"] = 8279,
   ["MediumSpace"] = 8287,
+  ["ThickSpace"] = {8287, 8202},
   ["NoBreak"] = 8288,
   ["ApplyFunction"] = 8289,
   ["af"] = 8289,
@@ -21098,34 +21108,34 @@ local character_entities = {
   ["InvisibleComma"] = 8291,
   ["ic"] = 8291,
   ["euro"] = 8364,
-  ["tdot"] = 8411,
   ["TripleDot"] = 8411,
+  ["tdot"] = 8411,
   ["DotDot"] = 8412,
   ["Copf"] = 8450,
   ["complexes"] = 8450,
   ["incare"] = 8453,
   ["gscr"] = 8458,
-  ["hamilt"] = 8459,
   ["HilbertSpace"] = 8459,
   ["Hscr"] = 8459,
+  ["hamilt"] = 8459,
   ["Hfr"] = 8460,
   ["Poincareplane"] = 8460,
-  ["quaternions"] = 8461,
   ["Hopf"] = 8461,
+  ["quaternions"] = 8461,
   ["planckh"] = 8462,
-  ["planck"] = 8463,
   ["hbar"] = 8463,
-  ["plankv"] = 8463,
   ["hslash"] = 8463,
+  ["planck"] = 8463,
+  ["plankv"] = 8463,
   ["Iscr"] = 8464,
   ["imagline"] = 8464,
-  ["image"] = 8465,
-  ["Im"] = 8465,
-  ["imagpart"] = 8465,
   ["Ifr"] = 8465,
+  ["Im"] = 8465,
+  ["image"] = 8465,
+  ["imagpart"] = 8465,
+  ["Laplacetrf"] = 8466,
   ["Lscr"] = 8466,
   ["lagran"] = 8466,
-  ["Laplacetrf"] = 8466,
   ["ell"] = 8467,
   ["Nopf"] = 8469,
   ["naturals"] = 8469,
@@ -21135,40 +21145,38 @@ local character_entities = {
   ["wp"] = 8472,
   ["Popf"] = 8473,
   ["primes"] = 8473,
-  ["rationals"] = 8474,
   ["Qopf"] = 8474,
+  ["rationals"] = 8474,
   ["Rscr"] = 8475,
   ["realine"] = 8475,
-  ["real"] = 8476,
   ["Re"] = 8476,
-  ["realpart"] = 8476,
   ["Rfr"] = 8476,
-  ["reals"] = 8477,
+  ["real"] = 8476,
+  ["realpart"] = 8476,
   ["Ropf"] = 8477,
+  ["reals"] = 8477,
   ["rx"] = 8478,
-  ["trade"] = 8482,
   ["TRADE"] = 8482,
-  ["integers"] = 8484,
+  ["trade"] = 8482,
   ["Zopf"] = 8484,
-  ["ohm"] = 8486,
+  ["integers"] = 8484,
   ["mho"] = 8487,
   ["Zfr"] = 8488,
   ["zeetrf"] = 8488,
   ["iiota"] = 8489,
-  ["angst"] = 8491,
-  ["bernou"] = 8492,
   ["Bernoullis"] = 8492,
   ["Bscr"] = 8492,
-  ["Cfr"] = 8493,
+  ["bernou"] = 8492,
   ["Cayleys"] = 8493,
+  ["Cfr"] = 8493,
   ["escr"] = 8495,
   ["Escr"] = 8496,
   ["expectation"] = 8496,
-  ["Fscr"] = 8497,
   ["Fouriertrf"] = 8497,
-  ["phmmat"] = 8499,
+  ["Fscr"] = 8497,
   ["Mellintrf"] = 8499,
   ["Mscr"] = 8499,
+  ["phmmat"] = 8499,
   ["order"] = 8500,
   ["orderof"] = 8500,
   ["oscr"] = 8500,
@@ -21182,8 +21190,8 @@ local character_entities = {
   ["DifferentialD"] = 8518,
   ["dd"] = 8518,
   ["ExponentialE"] = 8519,
-  ["exponentiale"] = 8519,
   ["ee"] = 8519,
+  ["exponentiale"] = 8519,
   ["ImaginaryI"] = 8520,
   ["ii"] = 8520,
   ["frac13"] = 8531,
@@ -21198,46 +21206,47 @@ local character_entities = {
   ["frac38"] = 8540,
   ["frac58"] = 8541,
   ["frac78"] = 8542,
+  ["LeftArrow"] = 8592,
+  ["ShortLeftArrow"] = 8592,
   ["larr"] = 8592,
   ["leftarrow"] = 8592,
-  ["LeftArrow"] = 8592,
   ["slarr"] = 8592,
-  ["ShortLeftArrow"] = 8592,
+  ["ShortUpArrow"] = 8593,
+  ["UpArrow"] = 8593,
   ["uarr"] = 8593,
   ["uparrow"] = 8593,
-  ["UpArrow"] = 8593,
-  ["ShortUpArrow"] = 8593,
+  ["RightArrow"] = 8594,
+  ["ShortRightArrow"] = 8594,
   ["rarr"] = 8594,
   ["rightarrow"] = 8594,
-  ["RightArrow"] = 8594,
   ["srarr"] = 8594,
-  ["ShortRightArrow"] = 8594,
-  ["darr"] = 8595,
-  ["downarrow"] = 8595,
   ["DownArrow"] = 8595,
   ["ShortDownArrow"] = 8595,
+  ["darr"] = 8595,
+  ["downarrow"] = 8595,
+  ["LeftRightArrow"] = 8596,
   ["harr"] = 8596,
   ["leftrightarrow"] = 8596,
-  ["LeftRightArrow"] = 8596,
-  ["varr"] = 8597,
-  ["updownarrow"] = 8597,
   ["UpDownArrow"] = 8597,
-  ["nwarr"] = 8598,
+  ["updownarrow"] = 8597,
+  ["varr"] = 8597,
   ["UpperLeftArrow"] = 8598,
+  ["nwarr"] = 8598,
   ["nwarrow"] = 8598,
-  ["nearr"] = 8599,
   ["UpperRightArrow"] = 8599,
+  ["nearr"] = 8599,
   ["nearrow"] = 8599,
+  ["LowerRightArrow"] = 8600,
   ["searr"] = 8600,
   ["searrow"] = 8600,
-  ["LowerRightArrow"] = 8600,
+  ["LowerLeftArrow"] = 8601,
   ["swarr"] = 8601,
   ["swarrow"] = 8601,
-  ["LowerLeftArrow"] = 8601,
   ["nlarr"] = 8602,
   ["nleftarrow"] = 8602,
   ["nrarr"] = 8603,
   ["nrightarrow"] = 8603,
+  ["nrarrw"] = {8605, 824},
   ["rarrw"] = 8605,
   ["rightsquigarrow"] = 8605,
   ["Larr"] = 8606,
@@ -21254,27 +21263,27 @@ local character_entities = {
   ["mapstoleft"] = 8612,
   ["UpTeeArrow"] = 8613,
   ["mapstoup"] = 8613,
-  ["map"] = 8614,
   ["RightTeeArrow"] = 8614,
+  ["map"] = 8614,
   ["mapsto"] = 8614,
   ["DownTeeArrow"] = 8615,
   ["mapstodown"] = 8615,
-  ["larrhk"] = 8617,
   ["hookleftarrow"] = 8617,
-  ["rarrhk"] = 8618,
+  ["larrhk"] = 8617,
   ["hookrightarrow"] = 8618,
+  ["rarrhk"] = 8618,
   ["larrlp"] = 8619,
   ["looparrowleft"] = 8619,
-  ["rarrlp"] = 8620,
   ["looparrowright"] = 8620,
+  ["rarrlp"] = 8620,
   ["harrw"] = 8621,
   ["leftrightsquigarrow"] = 8621,
   ["nharr"] = 8622,
   ["nleftrightarrow"] = 8622,
-  ["lsh"] = 8624,
   ["Lsh"] = 8624,
-  ["rsh"] = 8625,
+  ["lsh"] = 8624,
   ["Rsh"] = 8625,
+  ["rsh"] = 8625,
   ["ldsh"] = 8626,
   ["rdsh"] = 8627,
   ["crarr"] = 8629,
@@ -21282,456 +21291,505 @@ local character_entities = {
   ["curvearrowleft"] = 8630,
   ["curarr"] = 8631,
   ["curvearrowright"] = 8631,
-  ["olarr"] = 8634,
   ["circlearrowleft"] = 8634,
-  ["orarr"] = 8635,
+  ["olarr"] = 8634,
   ["circlearrowright"] = 8635,
-  ["lharu"] = 8636,
+  ["orarr"] = 8635,
   ["LeftVector"] = 8636,
   ["leftharpoonup"] = 8636,
-  ["lhard"] = 8637,
-  ["leftharpoondown"] = 8637,
+  ["lharu"] = 8636,
   ["DownLeftVector"] = 8637,
+  ["leftharpoondown"] = 8637,
+  ["lhard"] = 8637,
+  ["RightUpVector"] = 8638,
   ["uharr"] = 8638,
   ["upharpoonright"] = 8638,
-  ["RightUpVector"] = 8638,
+  ["LeftUpVector"] = 8639,
   ["uharl"] = 8639,
   ["upharpoonleft"] = 8639,
-  ["LeftUpVector"] = 8639,
-  ["rharu"] = 8640,
   ["RightVector"] = 8640,
+  ["rharu"] = 8640,
   ["rightharpoonup"] = 8640,
+  ["DownRightVector"] = 8641,
   ["rhard"] = 8641,
   ["rightharpoondown"] = 8641,
-  ["DownRightVector"] = 8641,
-  ["dharr"] = 8642,
   ["RightDownVector"] = 8642,
+  ["dharr"] = 8642,
   ["downharpoonright"] = 8642,
-  ["dharl"] = 8643,
   ["LeftDownVector"] = 8643,
+  ["dharl"] = 8643,
   ["downharpoonleft"] = 8643,
-  ["rlarr"] = 8644,
-  ["rightleftarrows"] = 8644,
   ["RightArrowLeftArrow"] = 8644,
-  ["udarr"] = 8645,
+  ["rightleftarrows"] = 8644,
+  ["rlarr"] = 8644,
   ["UpArrowDownArrow"] = 8645,
-  ["lrarr"] = 8646,
-  ["leftrightarrows"] = 8646,
+  ["udarr"] = 8645,
   ["LeftArrowRightArrow"] = 8646,
-  ["llarr"] = 8647,
+  ["leftrightarrows"] = 8646,
+  ["lrarr"] = 8646,
   ["leftleftarrows"] = 8647,
-  ["uuarr"] = 8648,
+  ["llarr"] = 8647,
   ["upuparrows"] = 8648,
-  ["rrarr"] = 8649,
+  ["uuarr"] = 8648,
   ["rightrightarrows"] = 8649,
+  ["rrarr"] = 8649,
   ["ddarr"] = 8650,
   ["downdownarrows"] = 8650,
-  ["lrhar"] = 8651,
   ["ReverseEquilibrium"] = 8651,
   ["leftrightharpoons"] = 8651,
-  ["rlhar"] = 8652,
-  ["rightleftharpoons"] = 8652,
+  ["lrhar"] = 8651,
   ["Equilibrium"] = 8652,
-  ["nlArr"] = 8653,
+  ["rightleftharpoons"] = 8652,
+  ["rlhar"] = 8652,
   ["nLeftarrow"] = 8653,
-  ["nhArr"] = 8654,
+  ["nlArr"] = 8653,
   ["nLeftrightarrow"] = 8654,
-  ["nrArr"] = 8655,
+  ["nhArr"] = 8654,
   ["nRightarrow"] = 8655,
-  ["lArr"] = 8656,
-  ["Leftarrow"] = 8656,
+  ["nrArr"] = 8655,
   ["DoubleLeftArrow"] = 8656,
-  ["uArr"] = 8657,
-  ["Uparrow"] = 8657,
+  ["Leftarrow"] = 8656,
+  ["lArr"] = 8656,
   ["DoubleUpArrow"] = 8657,
-  ["rArr"] = 8658,
-  ["Rightarrow"] = 8658,
-  ["Implies"] = 8658,
+  ["Uparrow"] = 8657,
+  ["uArr"] = 8657,
   ["DoubleRightArrow"] = 8658,
-  ["dArr"] = 8659,
-  ["Downarrow"] = 8659,
+  ["Implies"] = 8658,
+  ["Rightarrow"] = 8658,
+  ["rArr"] = 8658,
   ["DoubleDownArrow"] = 8659,
-  ["hArr"] = 8660,
-  ["Leftrightarrow"] = 8660,
+  ["Downarrow"] = 8659,
+  ["dArr"] = 8659,
   ["DoubleLeftRightArrow"] = 8660,
+  ["Leftrightarrow"] = 8660,
+  ["hArr"] = 8660,
   ["iff"] = 8660,
-  ["vArr"] = 8661,
-  ["Updownarrow"] = 8661,
   ["DoubleUpDownArrow"] = 8661,
+  ["Updownarrow"] = 8661,
+  ["vArr"] = 8661,
   ["nwArr"] = 8662,
   ["neArr"] = 8663,
   ["seArr"] = 8664,
   ["swArr"] = 8665,
-  ["lAarr"] = 8666,
   ["Lleftarrow"] = 8666,
-  ["rAarr"] = 8667,
+  ["lAarr"] = 8666,
   ["Rrightarrow"] = 8667,
+  ["rAarr"] = 8667,
   ["zigrarr"] = 8669,
-  ["larrb"] = 8676,
   ["LeftArrowBar"] = 8676,
-  ["rarrb"] = 8677,
+  ["larrb"] = 8676,
   ["RightArrowBar"] = 8677,
-  ["duarr"] = 8693,
+  ["rarrb"] = 8677,
   ["DownArrowUpArrow"] = 8693,
+  ["duarr"] = 8693,
   ["loarr"] = 8701,
   ["roarr"] = 8702,
   ["hoarr"] = 8703,
-  ["forall"] = 8704,
   ["ForAll"] = 8704,
+  ["forall"] = 8704,
   ["comp"] = 8705,
   ["complement"] = 8705,
-  ["part"] = 8706,
   ["PartialD"] = 8706,
-  ["exist"] = 8707,
+  ["npart"] = {8706, 824},
+  ["part"] = 8706,
   ["Exists"] = 8707,
-  ["nexist"] = 8708,
+  ["exist"] = 8707,
   ["NotExists"] = 8708,
+  ["nexist"] = 8708,
   ["nexists"] = 8708,
   ["empty"] = 8709,
   ["emptyset"] = 8709,
   ["emptyv"] = 8709,
   ["varnothing"] = 8709,
-  ["nabla"] = 8711,
   ["Del"] = 8711,
-  ["isin"] = 8712,
-  ["isinv"] = 8712,
+  ["nabla"] = 8711,
   ["Element"] = 8712,
   ["in"] = 8712,
-  ["notin"] = 8713,
+  ["isin"] = 8712,
+  ["isinv"] = 8712,
   ["NotElement"] = 8713,
+  ["notin"] = 8713,
   ["notinva"] = 8713,
-  ["niv"] = 8715,
   ["ReverseElement"] = 8715,
-  ["ni"] = 8715,
   ["SuchThat"] = 8715,
+  ["ni"] = 8715,
+  ["niv"] = 8715,
+  ["NotReverseElement"] = 8716,
   ["notni"] = 8716,
   ["notniva"] = 8716,
-  ["NotReverseElement"] = 8716,
-  ["prod"] = 8719,
   ["Product"] = 8719,
-  ["coprod"] = 8720,
+  ["prod"] = 8719,
   ["Coproduct"] = 8720,
-  ["sum"] = 8721,
+  ["coprod"] = 8720,
   ["Sum"] = 8721,
+  ["sum"] = 8721,
   ["minus"] = 8722,
+  ["MinusPlus"] = 8723,
   ["mnplus"] = 8723,
   ["mp"] = 8723,
-  ["MinusPlus"] = 8723,
-  ["plusdo"] = 8724,
   ["dotplus"] = 8724,
-  ["setmn"] = 8726,
-  ["setminus"] = 8726,
+  ["plusdo"] = 8724,
   ["Backslash"] = 8726,
-  ["ssetmn"] = 8726,
+  ["setminus"] = 8726,
+  ["setmn"] = 8726,
   ["smallsetminus"] = 8726,
+  ["ssetmn"] = 8726,
   ["lowast"] = 8727,
-  ["compfn"] = 8728,
   ["SmallCircle"] = 8728,
-  ["radic"] = 8730,
+  ["compfn"] = 8728,
   ["Sqrt"] = 8730,
+  ["radic"] = 8730,
+  ["Proportional"] = 8733,
   ["prop"] = 8733,
   ["propto"] = 8733,
-  ["Proportional"] = 8733,
-  ["vprop"] = 8733,
   ["varpropto"] = 8733,
+  ["vprop"] = 8733,
   ["infin"] = 8734,
   ["angrt"] = 8735,
   ["ang"] = 8736,
   ["angle"] = 8736,
+  ["nang"] = {8736, 8402},
   ["angmsd"] = 8737,
   ["measuredangle"] = 8737,
   ["angsph"] = 8738,
-  ["mid"] = 8739,
   ["VerticalBar"] = 8739,
-  ["smid"] = 8739,
+  ["mid"] = 8739,
   ["shortmid"] = 8739,
-  ["nmid"] = 8740,
+  ["smid"] = 8739,
   ["NotVerticalBar"] = 8740,
-  ["nsmid"] = 8740,
+  ["nmid"] = 8740,
   ["nshortmid"] = 8740,
+  ["nsmid"] = 8740,
+  ["DoubleVerticalBar"] = 8741,
   ["par"] = 8741,
   ["parallel"] = 8741,
-  ["DoubleVerticalBar"] = 8741,
-  ["spar"] = 8741,
   ["shortparallel"] = 8741,
+  ["spar"] = 8741,
+  ["NotDoubleVerticalBar"] = 8742,
   ["npar"] = 8742,
   ["nparallel"] = 8742,
-  ["NotDoubleVerticalBar"] = 8742,
-  ["nspar"] = 8742,
   ["nshortparallel"] = 8742,
+  ["nspar"] = 8742,
   ["and"] = 8743,
   ["wedge"] = 8743,
   ["or"] = 8744,
   ["vee"] = 8744,
   ["cap"] = 8745,
+  ["caps"] = {8745, 65024},
   ["cup"] = 8746,
-  ["int"] = 8747,
+  ["cups"] = {8746, 65024},
   ["Integral"] = 8747,
+  ["int"] = 8747,
   ["Int"] = 8748,
-  ["tint"] = 8749,
   ["iiint"] = 8749,
+  ["tint"] = 8749,
+  ["ContourIntegral"] = 8750,
   ["conint"] = 8750,
   ["oint"] = 8750,
-  ["ContourIntegral"] = 8750,
   ["Conint"] = 8751,
   ["DoubleContourIntegral"] = 8751,
   ["Cconint"] = 8752,
   ["cwint"] = 8753,
-  ["cwconint"] = 8754,
   ["ClockwiseContourIntegral"] = 8754,
-  ["awconint"] = 8755,
+  ["cwconint"] = 8754,
   ["CounterClockwiseContourIntegral"] = 8755,
+  ["awconint"] = 8755,
+  ["Therefore"] = 8756,
   ["there4"] = 8756,
   ["therefore"] = 8756,
-  ["Therefore"] = 8756,
+  ["Because"] = 8757,
   ["becaus"] = 8757,
   ["because"] = 8757,
-  ["Because"] = 8757,
   ["ratio"] = 8758,
   ["Colon"] = 8759,
   ["Proportion"] = 8759,
-  ["minusd"] = 8760,
   ["dotminus"] = 8760,
+  ["minusd"] = 8760,
   ["mDDot"] = 8762,
   ["homtht"] = 8763,
-  ["sim"] = 8764,
   ["Tilde"] = 8764,
-  ["thksim"] = 8764,
+  ["nvsim"] = {8764, 8402},
+  ["sim"] = 8764,
   ["thicksim"] = 8764,
-  ["bsim"] = 8765,
+  ["thksim"] = 8764,
   ["backsim"] = 8765,
+  ["bsim"] = 8765,
+  ["race"] = {8765, 817},
   ["ac"] = 8766,
+  ["acE"] = {8766, 819},
   ["mstpos"] = 8766,
   ["acd"] = 8767,
-  ["wreath"] = 8768,
   ["VerticalTilde"] = 8768,
   ["wr"] = 8768,
-  ["nsim"] = 8769,
+  ["wreath"] = 8768,
   ["NotTilde"] = 8769,
-  ["esim"] = 8770,
+  ["nsim"] = 8769,
   ["EqualTilde"] = 8770,
+  ["NotEqualTilde"] = {8770, 824},
   ["eqsim"] = 8770,
-  ["sime"] = 8771,
+  ["esim"] = 8770,
+  ["nesim"] = {8770, 824},
   ["TildeEqual"] = 8771,
+  ["sime"] = 8771,
   ["simeq"] = 8771,
+  ["NotTildeEqual"] = 8772,
   ["nsime"] = 8772,
   ["nsimeq"] = 8772,
-  ["NotTildeEqual"] = 8772,
-  ["cong"] = 8773,
   ["TildeFullEqual"] = 8773,
+  ["cong"] = 8773,
   ["simne"] = 8774,
-  ["ncong"] = 8775,
   ["NotTildeFullEqual"] = 8775,
-  ["asymp"] = 8776,
-  ["ap"] = 8776,
+  ["ncong"] = 8775,
   ["TildeTilde"] = 8776,
+  ["ap"] = 8776,
   ["approx"] = 8776,
-  ["thkap"] = 8776,
+  ["asymp"] = 8776,
   ["thickapprox"] = 8776,
-  ["nap"] = 8777,
+  ["thkap"] = 8776,
   ["NotTildeTilde"] = 8777,
+  ["nap"] = 8777,
   ["napprox"] = 8777,
   ["ape"] = 8778,
   ["approxeq"] = 8778,
   ["apid"] = 8779,
-  ["bcong"] = 8780,
+  ["napid"] = {8779, 824},
   ["backcong"] = 8780,
-  ["asympeq"] = 8781,
+  ["bcong"] = 8780,
   ["CupCap"] = 8781,
-  ["bump"] = 8782,
-  ["HumpDownHump"] = 8782,
+  ["asympeq"] = 8781,
+  ["nvap"] = {8781, 8402},
   ["Bumpeq"] = 8782,
-  ["bumpe"] = 8783,
+  ["HumpDownHump"] = 8782,
+  ["NotHumpDownHump"] = {8782, 824},
+  ["bump"] = 8782,
+  ["nbump"] = {8782, 824},
   ["HumpEqual"] = 8783,
+  ["NotHumpEqual"] = {8783, 824},
+  ["bumpe"] = 8783,
   ["bumpeq"] = 8783,
-  ["esdot"] = 8784,
+  ["nbumpe"] = {8783, 824},
   ["DotEqual"] = 8784,
   ["doteq"] = 8784,
-  ["eDot"] = 8785,
+  ["esdot"] = 8784,
+  ["nedot"] = {8784, 824},
   ["doteqdot"] = 8785,
+  ["eDot"] = 8785,
   ["efDot"] = 8786,
   ["fallingdotseq"] = 8786,
   ["erDot"] = 8787,
   ["risingdotseq"] = 8787,
+  ["Assign"] = 8788,
   ["colone"] = 8788,
   ["coloneq"] = 8788,
-  ["Assign"] = 8788,
   ["ecolon"] = 8789,
   ["eqcolon"] = 8789,
   ["ecir"] = 8790,
   ["eqcirc"] = 8790,
-  ["cire"] = 8791,
   ["circeq"] = 8791,
+  ["cire"] = 8791,
   ["wedgeq"] = 8793,
   ["veeeq"] = 8794,
-  ["trie"] = 8796,
   ["triangleq"] = 8796,
+  ["trie"] = 8796,
   ["equest"] = 8799,
   ["questeq"] = 8799,
-  ["ne"] = 8800,
   ["NotEqual"] = 8800,
-  ["equiv"] = 8801,
+  ["ne"] = 8800,
   ["Congruent"] = 8801,
-  ["nequiv"] = 8802,
+  ["bnequiv"] = {8801, 8421},
+  ["equiv"] = 8801,
   ["NotCongruent"] = 8802,
+  ["nequiv"] = 8802,
   ["le"] = 8804,
   ["leq"] = 8804,
-  ["ge"] = 8805,
+  ["nvle"] = {8804, 8402},
   ["GreaterEqual"] = 8805,
+  ["ge"] = 8805,
   ["geq"] = 8805,
-  ["lE"] = 8806,
+  ["nvge"] = {8805, 8402},
   ["LessFullEqual"] = 8806,
+  ["lE"] = 8806,
   ["leqq"] = 8806,
-  ["gE"] = 8807,
+  ["nlE"] = {8806, 824},
+  ["nleqq"] = {8806, 824},
   ["GreaterFullEqual"] = 8807,
+  ["NotGreaterFullEqual"] = {8807, 824},
+  ["gE"] = 8807,
   ["geqq"] = 8807,
+  ["ngE"] = {8807, 824},
+  ["ngeqq"] = {8807, 824},
   ["lnE"] = 8808,
   ["lneqq"] = 8808,
+  ["lvertneqq"] = {8808, 65024},
+  ["lvnE"] = {8808, 65024},
   ["gnE"] = 8809,
   ["gneqq"] = 8809,
+  ["gvertneqq"] = {8809, 65024},
+  ["gvnE"] = {8809, 65024},
   ["Lt"] = 8810,
   ["NestedLessLess"] = 8810,
+  ["NotLessLess"] = {8810, 824},
   ["ll"] = 8810,
+  ["nLt"] = {8810, 8402},
+  ["nLtv"] = {8810, 824},
   ["Gt"] = 8811,
   ["NestedGreaterGreater"] = 8811,
+  ["NotGreaterGreater"] = {8811, 824},
   ["gg"] = 8811,
-  ["twixt"] = 8812,
+  ["nGt"] = {8811, 8402},
+  ["nGtv"] = {8811, 824},
   ["between"] = 8812,
+  ["twixt"] = 8812,
   ["NotCupCap"] = 8813,
-  ["nlt"] = 8814,
   ["NotLess"] = 8814,
   ["nless"] = 8814,
-  ["ngt"] = 8815,
+  ["nlt"] = 8814,
   ["NotGreater"] = 8815,
+  ["ngt"] = 8815,
   ["ngtr"] = 8815,
-  ["nle"] = 8816,
   ["NotLessEqual"] = 8816,
+  ["nle"] = 8816,
   ["nleq"] = 8816,
-  ["nge"] = 8817,
   ["NotGreaterEqual"] = 8817,
+  ["nge"] = 8817,
   ["ngeq"] = 8817,
-  ["lsim"] = 8818,
   ["LessTilde"] = 8818,
   ["lesssim"] = 8818,
+  ["lsim"] = 8818,
+  ["GreaterTilde"] = 8819,
   ["gsim"] = 8819,
   ["gtrsim"] = 8819,
-  ["GreaterTilde"] = 8819,
-  ["nlsim"] = 8820,
   ["NotLessTilde"] = 8820,
-  ["ngsim"] = 8821,
+  ["nlsim"] = 8820,
   ["NotGreaterTilde"] = 8821,
-  ["lg"] = 8822,
-  ["lessgtr"] = 8822,
+  ["ngsim"] = 8821,
   ["LessGreater"] = 8822,
+  ["lessgtr"] = 8822,
+  ["lg"] = 8822,
+  ["GreaterLess"] = 8823,
   ["gl"] = 8823,
   ["gtrless"] = 8823,
-  ["GreaterLess"] = 8823,
-  ["ntlg"] = 8824,
   ["NotLessGreater"] = 8824,
-  ["ntgl"] = 8825,
+  ["ntlg"] = 8824,
   ["NotGreaterLess"] = 8825,
-  ["pr"] = 8826,
+  ["ntgl"] = 8825,
   ["Precedes"] = 8826,
+  ["pr"] = 8826,
   ["prec"] = 8826,
-  ["sc"] = 8827,
   ["Succeeds"] = 8827,
+  ["sc"] = 8827,
   ["succ"] = 8827,
-  ["prcue"] = 8828,
   ["PrecedesSlantEqual"] = 8828,
+  ["prcue"] = 8828,
   ["preccurlyeq"] = 8828,
-  ["sccue"] = 8829,
   ["SucceedsSlantEqual"] = 8829,
+  ["sccue"] = 8829,
   ["succcurlyeq"] = 8829,
-  ["prsim"] = 8830,
-  ["precsim"] = 8830,
   ["PrecedesTilde"] = 8830,
+  ["precsim"] = 8830,
+  ["prsim"] = 8830,
+  ["NotSucceedsTilde"] = {8831, 824},
+  ["SucceedsTilde"] = 8831,
   ["scsim"] = 8831,
   ["succsim"] = 8831,
-  ["SucceedsTilde"] = 8831,
+  ["NotPrecedes"] = 8832,
   ["npr"] = 8832,
   ["nprec"] = 8832,
-  ["NotPrecedes"] = 8832,
+  ["NotSucceeds"] = 8833,
   ["nsc"] = 8833,
   ["nsucc"] = 8833,
-  ["NotSucceeds"] = 8833,
+  ["NotSubset"] = {8834, 8402},
+  ["nsubset"] = {8834, 8402},
   ["sub"] = 8834,
   ["subset"] = 8834,
+  ["vnsub"] = {8834, 8402},
+  ["NotSuperset"] = {8835, 8402},
+  ["Superset"] = 8835,
+  ["nsupset"] = {8835, 8402},
   ["sup"] = 8835,
   ["supset"] = 8835,
-  ["Superset"] = 8835,
+  ["vnsup"] = {8835, 8402},
   ["nsub"] = 8836,
   ["nsup"] = 8837,
-  ["sube"] = 8838,
   ["SubsetEqual"] = 8838,
+  ["sube"] = 8838,
   ["subseteq"] = 8838,
+  ["SupersetEqual"] = 8839,
   ["supe"] = 8839,
   ["supseteq"] = 8839,
-  ["SupersetEqual"] = 8839,
+  ["NotSubsetEqual"] = 8840,
   ["nsube"] = 8840,
   ["nsubseteq"] = 8840,
-  ["NotSubsetEqual"] = 8840,
+  ["NotSupersetEqual"] = 8841,
   ["nsupe"] = 8841,
   ["nsupseteq"] = 8841,
-  ["NotSupersetEqual"] = 8841,
   ["subne"] = 8842,
   ["subsetneq"] = 8842,
+  ["varsubsetneq"] = {8842, 65024},
+  ["vsubne"] = {8842, 65024},
   ["supne"] = 8843,
   ["supsetneq"] = 8843,
+  ["varsupsetneq"] = {8843, 65024},
+  ["vsupne"] = {8843, 65024},
   ["cupdot"] = 8845,
-  ["uplus"] = 8846,
   ["UnionPlus"] = 8846,
-  ["sqsub"] = 8847,
+  ["uplus"] = 8846,
+  ["NotSquareSubset"] = {8847, 824},
   ["SquareSubset"] = 8847,
+  ["sqsub"] = 8847,
   ["sqsubset"] = 8847,
-  ["sqsup"] = 8848,
+  ["NotSquareSuperset"] = {8848, 824},
   ["SquareSuperset"] = 8848,
+  ["sqsup"] = 8848,
   ["sqsupset"] = 8848,
-  ["sqsube"] = 8849,
   ["SquareSubsetEqual"] = 8849,
+  ["sqsube"] = 8849,
   ["sqsubseteq"] = 8849,
-  ["sqsupe"] = 8850,
   ["SquareSupersetEqual"] = 8850,
+  ["sqsupe"] = 8850,
   ["sqsupseteq"] = 8850,
-  ["sqcap"] = 8851,
   ["SquareIntersection"] = 8851,
-  ["sqcup"] = 8852,
+  ["sqcap"] = 8851,
+  ["sqcaps"] = {8851, 65024},
   ["SquareUnion"] = 8852,
-  ["oplus"] = 8853,
+  ["sqcup"] = 8852,
+  ["sqcups"] = {8852, 65024},
   ["CirclePlus"] = 8853,
-  ["ominus"] = 8854,
+  ["oplus"] = 8853,
   ["CircleMinus"] = 8854,
-  ["otimes"] = 8855,
+  ["ominus"] = 8854,
   ["CircleTimes"] = 8855,
+  ["otimes"] = 8855,
   ["osol"] = 8856,
-  ["odot"] = 8857,
   ["CircleDot"] = 8857,
-  ["ocir"] = 8858,
+  ["odot"] = 8857,
   ["circledcirc"] = 8858,
-  ["oast"] = 8859,
+  ["ocir"] = 8858,
   ["circledast"] = 8859,
-  ["odash"] = 8861,
+  ["oast"] = 8859,
   ["circleddash"] = 8861,
-  ["plusb"] = 8862,
+  ["odash"] = 8861,
   ["boxplus"] = 8862,
-  ["minusb"] = 8863,
+  ["plusb"] = 8862,
   ["boxminus"] = 8863,
-  ["timesb"] = 8864,
+  ["minusb"] = 8863,
   ["boxtimes"] = 8864,
-  ["sdotb"] = 8865,
+  ["timesb"] = 8864,
   ["dotsquare"] = 8865,
-  ["vdash"] = 8866,
+  ["sdotb"] = 8865,
   ["RightTee"] = 8866,
-  ["dashv"] = 8867,
+  ["vdash"] = 8866,
   ["LeftTee"] = 8867,
-  ["top"] = 8868,
+  ["dashv"] = 8867,
   ["DownTee"] = 8868,
-  ["bottom"] = 8869,
-  ["bot"] = 8869,
-  ["perp"] = 8869,
+  ["top"] = 8868,
   ["UpTee"] = 8869,
+  ["bot"] = 8869,
+  ["bottom"] = 8869,
+  ["perp"] = 8869,
   ["models"] = 8871,
-  ["vDash"] = 8872,
   ["DoubleRightTee"] = 8872,
+  ["vDash"] = 8872,
   ["Vdash"] = 8873,
   ["Vvdash"] = 8874,
   ["VDash"] = 8875,
@@ -21740,22 +21798,24 @@ local character_entities = {
   ["nVdash"] = 8878,
   ["nVDash"] = 8879,
   ["prurel"] = 8880,
-  ["vltri"] = 8882,
-  ["vartriangleleft"] = 8882,
   ["LeftTriangle"] = 8882,
-  ["vrtri"] = 8883,
-  ["vartriangleright"] = 8883,
+  ["vartriangleleft"] = 8882,
+  ["vltri"] = 8882,
   ["RightTriangle"] = 8883,
-  ["ltrie"] = 8884,
-  ["trianglelefteq"] = 8884,
+  ["vartriangleright"] = 8883,
+  ["vrtri"] = 8883,
   ["LeftTriangleEqual"] = 8884,
+  ["ltrie"] = 8884,
+  ["nvltrie"] = {8884, 8402},
+  ["trianglelefteq"] = 8884,
+  ["RightTriangleEqual"] = 8885,
+  ["nvrtrie"] = {8885, 8402},
   ["rtrie"] = 8885,
   ["trianglerighteq"] = 8885,
-  ["RightTriangleEqual"] = 8885,
   ["origof"] = 8886,
   ["imof"] = 8887,
-  ["mumap"] = 8888,
   ["multimap"] = 8888,
+  ["mumap"] = 8888,
   ["hercon"] = 8889,
   ["intcal"] = 8890,
   ["intercal"] = 8890,
@@ -21763,39 +21823,39 @@ local character_entities = {
   ["barvee"] = 8893,
   ["angrtvb"] = 8894,
   ["lrtri"] = 8895,
-  ["xwedge"] = 8896,
   ["Wedge"] = 8896,
   ["bigwedge"] = 8896,
-  ["xvee"] = 8897,
+  ["xwedge"] = 8896,
   ["Vee"] = 8897,
   ["bigvee"] = 8897,
-  ["xcap"] = 8898,
+  ["xvee"] = 8897,
   ["Intersection"] = 8898,
   ["bigcap"] = 8898,
-  ["xcup"] = 8899,
+  ["xcap"] = 8898,
   ["Union"] = 8899,
   ["bigcup"] = 8899,
+  ["xcup"] = 8899,
+  ["Diamond"] = 8900,
   ["diam"] = 8900,
   ["diamond"] = 8900,
-  ["Diamond"] = 8900,
   ["sdot"] = 8901,
-  ["sstarf"] = 8902,
   ["Star"] = 8902,
-  ["divonx"] = 8903,
+  ["sstarf"] = 8902,
   ["divideontimes"] = 8903,
+  ["divonx"] = 8903,
   ["bowtie"] = 8904,
   ["ltimes"] = 8905,
   ["rtimes"] = 8906,
-  ["lthree"] = 8907,
   ["leftthreetimes"] = 8907,
-  ["rthree"] = 8908,
+  ["lthree"] = 8907,
   ["rightthreetimes"] = 8908,
-  ["bsime"] = 8909,
+  ["rthree"] = 8908,
   ["backsimeq"] = 8909,
-  ["cuvee"] = 8910,
+  ["bsime"] = 8909,
   ["curlyvee"] = 8910,
-  ["cuwed"] = 8911,
+  ["cuvee"] = 8910,
   ["curlywedge"] = 8911,
+  ["cuwed"] = 8911,
   ["Sub"] = 8912,
   ["Subset"] = 8912,
   ["Sup"] = 8913,
@@ -21805,49 +21865,53 @@ local character_entities = {
   ["fork"] = 8916,
   ["pitchfork"] = 8916,
   ["epar"] = 8917,
-  ["ltdot"] = 8918,
   ["lessdot"] = 8918,
+  ["ltdot"] = 8918,
   ["gtdot"] = 8919,
   ["gtrdot"] = 8919,
   ["Ll"] = 8920,
+  ["nLl"] = {8920, 824},
   ["Gg"] = 8921,
   ["ggg"] = 8921,
-  ["leg"] = 8922,
+  ["nGg"] = {8921, 824},
   ["LessEqualGreater"] = 8922,
+  ["leg"] = 8922,
+  ["lesg"] = {8922, 65024},
   ["lesseqgtr"] = 8922,
-  ["gel"] = 8923,
-  ["gtreqless"] = 8923,
   ["GreaterEqualLess"] = 8923,
+  ["gel"] = 8923,
+  ["gesl"] = {8923, 65024},
+  ["gtreqless"] = 8923,
   ["cuepr"] = 8926,
   ["curlyeqprec"] = 8926,
   ["cuesc"] = 8927,
   ["curlyeqsucc"] = 8927,
-  ["nprcue"] = 8928,
   ["NotPrecedesSlantEqual"] = 8928,
-  ["nsccue"] = 8929,
+  ["nprcue"] = 8928,
   ["NotSucceedsSlantEqual"] = 8929,
-  ["nsqsube"] = 8930,
+  ["nsccue"] = 8929,
   ["NotSquareSubsetEqual"] = 8930,
-  ["nsqsupe"] = 8931,
+  ["nsqsube"] = 8930,
   ["NotSquareSupersetEqual"] = 8931,
+  ["nsqsupe"] = 8931,
   ["lnsim"] = 8934,
   ["gnsim"] = 8935,
-  ["prnsim"] = 8936,
   ["precnsim"] = 8936,
+  ["prnsim"] = 8936,
   ["scnsim"] = 8937,
   ["succnsim"] = 8937,
+  ["NotLeftTriangle"] = 8938,
   ["nltri"] = 8938,
   ["ntriangleleft"] = 8938,
-  ["NotLeftTriangle"] = 8938,
+  ["NotRightTriangle"] = 8939,
   ["nrtri"] = 8939,
   ["ntriangleright"] = 8939,
-  ["NotRightTriangle"] = 8939,
+  ["NotLeftTriangleEqual"] = 8940,
   ["nltrie"] = 8940,
   ["ntrianglelefteq"] = 8940,
-  ["NotLeftTriangleEqual"] = 8940,
+  ["NotRightTriangleEqual"] = 8941,
   ["nrtrie"] = 8941,
   ["ntrianglerighteq"] = 8941,
-  ["NotRightTriangleEqual"] = 8941,
   ["vellip"] = 8942,
   ["ctdot"] = 8943,
   ["utdot"] = 8944,
@@ -21856,9 +21920,11 @@ local character_entities = {
   ["isinsv"] = 8947,
   ["isins"] = 8948,
   ["isindot"] = 8949,
+  ["notindot"] = {8949, 824},
   ["notinvc"] = 8950,
   ["notinvb"] = 8951,
   ["isinE"] = 8953,
+  ["notinE"] = {8953, 824},
   ["nisd"] = 8954,
   ["xnis"] = 8955,
   ["nis"] = 8956,
@@ -21868,14 +21934,14 @@ local character_entities = {
   ["barwedge"] = 8965,
   ["Barwed"] = 8966,
   ["doublebarwedge"] = 8966,
-  ["lceil"] = 8968,
   ["LeftCeiling"] = 8968,
-  ["rceil"] = 8969,
+  ["lceil"] = 8968,
   ["RightCeiling"] = 8969,
-  ["lfloor"] = 8970,
+  ["rceil"] = 8969,
   ["LeftFloor"] = 8970,
-  ["rfloor"] = 8971,
+  ["lfloor"] = 8970,
   ["RightFloor"] = 8971,
+  ["rfloor"] = 8971,
   ["drcrop"] = 8972,
   ["dlcrop"] = 8973,
   ["urcrop"] = 8974,
@@ -21907,10 +21973,10 @@ local character_entities = {
   ["lmoustache"] = 9136,
   ["rmoust"] = 9137,
   ["rmoustache"] = 9137,
-  ["tbrk"] = 9140,
   ["OverBracket"] = 9140,
-  ["bbrk"] = 9141,
+  ["tbrk"] = 9140,
   ["UnderBracket"] = 9141,
+  ["bbrk"] = 9141,
   ["bbrktbrk"] = 9142,
   ["OverParenthesis"] = 9180,
   ["UnderParenthesis"] = 9181,
@@ -21919,10 +21985,10 @@ local character_entities = {
   ["trpezium"] = 9186,
   ["elinters"] = 9191,
   ["blank"] = 9251,
-  ["oS"] = 9416,
   ["circledS"] = 9416,
-  ["boxh"] = 9472,
+  ["oS"] = 9416,
   ["HorizontalLine"] = 9472,
+  ["boxh"] = 9472,
   ["boxv"] = 9474,
   ["boxdr"] = 9484,
   ["boxdl"] = 9488,
@@ -21968,50 +22034,50 @@ local character_entities = {
   ["blk14"] = 9617,
   ["blk12"] = 9618,
   ["blk34"] = 9619,
+  ["Square"] = 9633,
   ["squ"] = 9633,
   ["square"] = 9633,
-  ["Square"] = 9633,
-  ["squf"] = 9642,
-  ["squarf"] = 9642,
-  ["blacksquare"] = 9642,
   ["FilledVerySmallSquare"] = 9642,
+  ["blacksquare"] = 9642,
+  ["squarf"] = 9642,
+  ["squf"] = 9642,
   ["EmptyVerySmallSquare"] = 9643,
   ["rect"] = 9645,
   ["marker"] = 9646,
   ["fltns"] = 9649,
-  ["xutri"] = 9651,
   ["bigtriangleup"] = 9651,
-  ["utrif"] = 9652,
+  ["xutri"] = 9651,
   ["blacktriangle"] = 9652,
-  ["utri"] = 9653,
+  ["utrif"] = 9652,
   ["triangle"] = 9653,
-  ["rtrif"] = 9656,
+  ["utri"] = 9653,
   ["blacktriangleright"] = 9656,
+  ["rtrif"] = 9656,
   ["rtri"] = 9657,
   ["triangleright"] = 9657,
-  ["xdtri"] = 9661,
   ["bigtriangledown"] = 9661,
-  ["dtrif"] = 9662,
+  ["xdtri"] = 9661,
   ["blacktriangledown"] = 9662,
+  ["dtrif"] = 9662,
   ["dtri"] = 9663,
   ["triangledown"] = 9663,
-  ["ltrif"] = 9666,
   ["blacktriangleleft"] = 9666,
+  ["ltrif"] = 9666,
   ["ltri"] = 9667,
   ["triangleleft"] = 9667,
   ["loz"] = 9674,
   ["lozenge"] = 9674,
   ["cir"] = 9675,
   ["tridot"] = 9708,
-  ["xcirc"] = 9711,
   ["bigcirc"] = 9711,
+  ["xcirc"] = 9711,
   ["ultri"] = 9720,
   ["urtri"] = 9721,
   ["lltri"] = 9722,
   ["EmptySmallSquare"] = 9723,
   ["FilledSmallSquare"] = 9724,
-  ["starf"] = 9733,
   ["bigstar"] = 9733,
+  ["starf"] = 9733,
   ["star"] = 9734,
   ["phone"] = 9742,
   ["female"] = 9792,
@@ -22022,8 +22088,8 @@ local character_entities = {
   ["clubsuit"] = 9827,
   ["hearts"] = 9829,
   ["heartsuit"] = 9829,
-  ["diams"] = 9830,
   ["diamondsuit"] = 9830,
+  ["diams"] = 9830,
   ["sung"] = 9834,
   ["flat"] = 9837,
   ["natur"] = 9838,
@@ -22038,51 +22104,53 @@ local character_entities = {
   ["VerticalSeparator"] = 10072,
   ["lbbrk"] = 10098,
   ["rbbrk"] = 10099,
-  ["lobrk"] = 10214,
+  ["bsolhsub"] = 10184,
+  ["suphsol"] = 10185,
   ["LeftDoubleBracket"] = 10214,
-  ["robrk"] = 10215,
+  ["lobrk"] = 10214,
   ["RightDoubleBracket"] = 10215,
-  ["lang"] = 10216,
+  ["robrk"] = 10215,
   ["LeftAngleBracket"] = 10216,
+  ["lang"] = 10216,
   ["langle"] = 10216,
-  ["rang"] = 10217,
   ["RightAngleBracket"] = 10217,
+  ["rang"] = 10217,
   ["rangle"] = 10217,
   ["Lang"] = 10218,
   ["Rang"] = 10219,
   ["loang"] = 10220,
   ["roang"] = 10221,
-  ["xlarr"] = 10229,
-  ["longleftarrow"] = 10229,
   ["LongLeftArrow"] = 10229,
-  ["xrarr"] = 10230,
-  ["longrightarrow"] = 10230,
+  ["longleftarrow"] = 10229,
+  ["xlarr"] = 10229,
   ["LongRightArrow"] = 10230,
-  ["xharr"] = 10231,
-  ["longleftrightarrow"] = 10231,
+  ["longrightarrow"] = 10230,
+  ["xrarr"] = 10230,
   ["LongLeftRightArrow"] = 10231,
-  ["xlArr"] = 10232,
-  ["Longleftarrow"] = 10232,
+  ["longleftrightarrow"] = 10231,
+  ["xharr"] = 10231,
   ["DoubleLongLeftArrow"] = 10232,
-  ["xrArr"] = 10233,
-  ["Longrightarrow"] = 10233,
+  ["Longleftarrow"] = 10232,
+  ["xlArr"] = 10232,
   ["DoubleLongRightArrow"] = 10233,
-  ["xhArr"] = 10234,
-  ["Longleftrightarrow"] = 10234,
+  ["Longrightarrow"] = 10233,
+  ["xrArr"] = 10233,
   ["DoubleLongLeftRightArrow"] = 10234,
-  ["xmap"] = 10236,
+  ["Longleftrightarrow"] = 10234,
+  ["xhArr"] = 10234,
   ["longmapsto"] = 10236,
+  ["xmap"] = 10236,
   ["dzigrarr"] = 10239,
   ["nvlArr"] = 10498,
   ["nvrArr"] = 10499,
   ["nvHarr"] = 10500,
   ["Map"] = 10501,
   ["lbarr"] = 10508,
-  ["rbarr"] = 10509,
   ["bkarow"] = 10509,
+  ["rbarr"] = 10509,
   ["lBarr"] = 10510,
-  ["rBarr"] = 10511,
   ["dbkarow"] = 10511,
+  ["rBarr"] = 10511,
   ["RBarr"] = 10512,
   ["drbkarow"] = 10512,
   ["DDotrahd"] = 10513,
@@ -22099,16 +22167,17 @@ local character_entities = {
   ["rarrbfs"] = 10528,
   ["nwarhk"] = 10531,
   ["nearhk"] = 10532,
-  ["searhk"] = 10533,
   ["hksearow"] = 10533,
-  ["swarhk"] = 10534,
+  ["searhk"] = 10533,
   ["hkswarow"] = 10534,
+  ["swarhk"] = 10534,
   ["nwnear"] = 10535,
   ["nesear"] = 10536,
   ["toea"] = 10536,
   ["seswar"] = 10537,
   ["tosa"] = 10537,
   ["swnwar"] = 10538,
+  ["nrarrc"] = {10547, 824},
   ["rarrc"] = 10547,
   ["cudarrr"] = 10549,
   ["ldca"] = 10550,
@@ -22154,10 +22223,10 @@ local character_entities = {
   ["llhard"] = 10603,
   ["rharul"] = 10604,
   ["lrhard"] = 10605,
-  ["udhar"] = 10606,
   ["UpEquilibrium"] = 10606,
-  ["duhar"] = 10607,
+  ["udhar"] = 10606,
   ["ReverseUpEquilibrium"] = 10607,
+  ["duhar"] = 10607,
   ["RoundImplies"] = 10608,
   ["erarr"] = 10609,
   ["simrarr"] = 10610,
@@ -22224,30 +22293,31 @@ local character_entities = {
   ["trisb"] = 10701,
   ["rtriltri"] = 10702,
   ["LeftTriangleBar"] = 10703,
+  ["NotLeftTriangleBar"] = {10703, 824},
+  ["NotRightTriangleBar"] = {10704, 824},
   ["RightTriangleBar"] = 10704,
-  ["race"] = 10714,
   ["iinfin"] = 10716,
   ["infintie"] = 10717,
   ["nvinfin"] = 10718,
   ["eparsl"] = 10723,
   ["smeparsl"] = 10724,
   ["eqvparsl"] = 10725,
-  ["lozf"] = 10731,
   ["blacklozenge"] = 10731,
+  ["lozf"] = 10731,
   ["RuleDelayed"] = 10740,
   ["dsol"] = 10742,
-  ["xodot"] = 10752,
   ["bigodot"] = 10752,
-  ["xoplus"] = 10753,
+  ["xodot"] = 10752,
   ["bigoplus"] = 10753,
-  ["xotime"] = 10754,
+  ["xoplus"] = 10753,
   ["bigotimes"] = 10754,
-  ["xuplus"] = 10756,
+  ["xotime"] = 10754,
   ["biguplus"] = 10756,
-  ["xsqcup"] = 10758,
+  ["xuplus"] = 10756,
   ["bigsqcup"] = 10758,
-  ["qint"] = 10764,
+  ["xsqcup"] = 10758,
   ["iiiint"] = 10764,
+  ["qint"] = 10764,
   ["fpartint"] = 10765,
   ["cirfnint"] = 10768,
   ["awint"] = 10769,
@@ -22279,8 +22349,8 @@ local character_entities = {
   ["triplus"] = 10809,
   ["triminus"] = 10810,
   ["tritime"] = 10811,
-  ["iprod"] = 10812,
   ["intprod"] = 10812,
+  ["iprod"] = 10812,
   ["amalg"] = 10815,
   ["capdot"] = 10816,
   ["ncup"] = 10818,
@@ -22310,27 +22380,35 @@ local character_entities = {
   ["sdote"] = 10854,
   ["simdot"] = 10858,
   ["congdot"] = 10861,
+  ["ncongdot"] = {10861, 824},
   ["easter"] = 10862,
   ["apacir"] = 10863,
   ["apE"] = 10864,
+  ["napE"] = {10864, 824},
   ["eplus"] = 10865,
   ["pluse"] = 10866,
   ["Esim"] = 10867,
   ["Colone"] = 10868,
   ["Equal"] = 10869,
-  ["eDDot"] = 10871,
   ["ddotseq"] = 10871,
+  ["eDDot"] = 10871,
   ["equivDD"] = 10872,
   ["ltcir"] = 10873,
   ["gtcir"] = 10874,
   ["ltquest"] = 10875,
   ["gtquest"] = 10876,
-  ["les"] = 10877,
   ["LessSlantEqual"] = 10877,
+  ["NotLessSlantEqual"] = {10877, 824},
   ["leqslant"] = 10877,
-  ["ges"] = 10878,
+  ["les"] = 10877,
+  ["nleqslant"] = {10877, 824},
+  ["nles"] = {10877, 824},
   ["GreaterSlantEqual"] = 10878,
+  ["NotGreaterSlantEqual"] = {10878, 824},
   ["geqslant"] = 10878,
+  ["ges"] = 10878,
+  ["ngeqslant"] = {10878, 824},
+  ["nges"] = {10878, 824},
   ["lesdot"] = 10879,
   ["gesdot"] = 10880,
   ["lesdoto"] = 10881,
@@ -22374,7 +22452,9 @@ local character_entities = {
   ["simlE"] = 10911,
   ["simgE"] = 10912,
   ["LessLess"] = 10913,
+  ["NotNestedLessLess"] = {10913, 824},
   ["GreaterGreater"] = 10914,
+  ["NotNestedGreaterGreater"] = {10914, 824},
   ["glj"] = 10916,
   ["gla"] = 10917,
   ["ltcc"] = 10918,
@@ -22384,26 +22464,34 @@ local character_entities = {
   ["smt"] = 10922,
   ["lat"] = 10923,
   ["smte"] = 10924,
+  ["smtes"] = {10924, 65024},
   ["late"] = 10925,
+  ["lates"] = {10925, 65024},
   ["bumpE"] = 10926,
+  ["NotPrecedesEqual"] = {10927, 824},
+  ["PrecedesEqual"] = 10927,
+  ["npre"] = {10927, 824},
+  ["npreceq"] = {10927, 824},
   ["pre"] = 10927,
   ["preceq"] = 10927,
-  ["PrecedesEqual"] = 10927,
+  ["NotSucceedsEqual"] = {10928, 824},
+  ["SucceedsEqual"] = 10928,
+  ["nsce"] = {10928, 824},
+  ["nsucceq"] = {10928, 824},
   ["sce"] = 10928,
   ["succeq"] = 10928,
-  ["SucceedsEqual"] = 10928,
   ["prE"] = 10931,
   ["scE"] = 10932,
-  ["prnE"] = 10933,
   ["precneqq"] = 10933,
+  ["prnE"] = 10933,
   ["scnE"] = 10934,
   ["succneqq"] = 10934,
   ["prap"] = 10935,
   ["precapprox"] = 10935,
   ["scap"] = 10936,
   ["succapprox"] = 10936,
-  ["prnap"] = 10937,
   ["precnapprox"] = 10937,
+  ["prnap"] = 10937,
   ["scnap"] = 10938,
   ["succnapprox"] = 10938,
   ["Pr"] = 10939,
@@ -22416,16 +22504,24 @@ local character_entities = {
   ["supmult"] = 10946,
   ["subedot"] = 10947,
   ["supedot"] = 10948,
+  ["nsubE"] = {10949, 824},
+  ["nsubseteqq"] = {10949, 824},
   ["subE"] = 10949,
   ["subseteqq"] = 10949,
+  ["nsupE"] = {10950, 824},
+  ["nsupseteqq"] = {10950, 824},
   ["supE"] = 10950,
   ["supseteqq"] = 10950,
   ["subsim"] = 10951,
   ["supsim"] = 10952,
   ["subnE"] = 10955,
   ["subsetneqq"] = 10955,
+  ["varsubsetneqq"] = {10955, 65024},
+  ["vsubnE"] = {10955, 65024},
   ["supnE"] = 10956,
   ["supsetneqq"] = 10956,
+  ["varsupsetneqq"] = {10956, 65024},
+  ["vsupnE"] = {10956, 65024},
   ["csub"] = 10959,
   ["csup"] = 10960,
   ["csube"] = 10961,
@@ -22454,6 +22550,7 @@ local character_entities = {
   ["topcir"] = 10993,
   ["nhpar"] = 10994,
   ["parsim"] = 10995,
+  ["nparsl"] = {11005, 8421},
   ["parsl"] = 11005,
   ["fflig"] = 64256,
   ["filig"] = 64257,
@@ -22655,11 +22752,18 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 function entities.char_entity(s)
-  local n = character_entities[s]
-  if n == nil then
+  local code_points = character_entities[s]
+  if code_points == nil then
     return "&" .. s .. ";"
   end
-  return unicode.utf8.char(n)
+  if type(code_points) ~= 'table' then
+    code_points = {code_points}
+  end
+  local char_table = {}
+    for _, code_point in ipairs(code_points) do
+        table.insert(char_table, unicode.utf8.char(code_point))
+    end
+  return table.concat(char_table)
 end
 %    \end{macrocode}
 % \par
@@ -23673,6 +23777,664 @@ parsers.spnl                   = parsers.optionalspace
 parsers.line                   = parsers.linechar^0 * parsers.newline
 parsers.nonemptyline           = parsers.line - parsers.blankline
 %    \end{macrocode}
+%   \par
+% \begin{markdown}
+%
+%#### Parsers Used for Indentation (local)
+%
+% \end{markdown}
+%  \begin{macrocode}
+
+parsers.leader      = parsers.space^-3
+
+parsers.blockquote_start = parsers.leader * parsers.more * parsers.space^-1
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Check if a trail exists and is non-empty in the indent table `indent_table`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+function has_trail(indent_table)
+  return indent_table ~= nil and indent_table.trail ~= nil and next(indent_table.trail) ~= nil
+end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Check if indent table `indent_table` has any indents.
+%
+% \end{markdown}
+%  \begin{macrocode}
+function has_indents(indent_table)
+  return indent_table ~= nil and indent_table.indents ~= nil and next(indent_table.indents) ~= nil
+end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Add a trail `trail_info` to the indent table `indent_table`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function add_trail(indent_table, trail_info)
+  indent_table.trail = trail_info
+  return indent_table
+end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Remove a trail `trail_info` from the indent table `indent_table`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function remove_trail(indent_table)
+  indent_table.trail = nil
+  return indent_table
+end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Leave the current trail of the indent table `indent_table`
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function leave_trail(s, i, indent_table)
+  indent_table = remove_trail(indent_table)
+  return true, indent_table
+end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Update the indent table `indent_table` by adding or removing a new
+% indent `add`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function update_indent_table(indent_table, new_indent, add)
+  indent_table = remove_trail(indent_table)
+
+  if not has_indents(indent_table) then
+    indent_table.indents = {}
+  end
+
+  local indent_table_indents = indent_table.indents
+
+  if add then
+    indent_table_indents[#indent_table_indents + 1] = new_indent
+  else
+    if indent_table_indents[#indent_table_indents].name == new_indent.name then
+      indent_table_indents[#indent_table_indents] = nil
+    end
+  end
+
+  return indent_table
+end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Remove an indent by its name `name`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function remove_indent(name)
+  local function remove_indent_level(s, i, indent_table)
+    indent_table = update_indent_table(indent_table, {name=name}, false)
+    return true, indent_table
+  end
+
+  return Cg(Cmt( Cb("indent_info"), remove_indent_level), "indent_info")
+end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Process the spacing of a string of spaces and tabs `spacing` with preceding indent width from
+% the start of the line `indent` and strip up to `left_strip_length` spaces. Return the remainder
+% `remainder` and whether there is enough spaces to produce a code `is_code`. Return how many 
+% spaces were stripped, as well as if the minimum was met `is_minimum` and what remainder it 
+% left `minimum_remainder`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function process_starter_spacing(indent, spacing, minimum, left_strip_length)
+  left_strip_length = left_strip_length or 0
+
+  local count = 0
+  local tab_value = 4 - (indent) % 4
+
+  local code_started, minimum_found = false, false
+  local code_start, minimum_remainder = "", ""
+
+  local left_total_stripped = 0
+
+  if spacing ~= nil then
+    for i = 1, #spacing do
+      local character = spacing:sub(i, i)
+
+      if character == "\t" then
+        count = count + tab_value
+        tab_value = 4
+      elseif character == " " then
+        count = count + 1
+        tab_value = 4 - (1 - tab_value) % 4
+      end
+
+      if (left_strip_length ~= 0) then
+        local possible_to_strip = math.min(count, left_strip_length)
+        count = count - possible_to_strip
+        left_strip_length = left_strip_length - possible_to_strip
+        left_total_stripped = left_total_stripped + possible_to_strip
+      end
+
+      if (minimum_found) then
+        minimum_remainder = minimum_remainder .. character
+      elseif (count >= minimum) then
+        minimum_found = true
+        minimum_remainder = minimum_remainder .. string.rep(" ", count - minimum)
+      end
+      
+      if (code_started) then
+        code_start = code_start .. character
+      elseif (count >= minimum + 4) then
+        code_started = true
+        code_start = code_start .. string.rep(" ", count - (minimum + 4))
+      end
+    end
+  end
+
+  local remainder = ""
+  if (code_started) then
+    remainder = code_start
+  else
+    remainder = string.rep(" ", count - minimum)
+  end
+
+  local is_minimum = count >= minimum
+  return {
+    is_code = code_started,
+    remainder = remainder,
+    left_total_stripped = left_total_stripped,
+    is_minimum = is_minimum,
+    minimum_remainder = minimum_remainder
+  }
+end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Count the total width of all indents in the indent table `indent_table`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function count_indent_tab_level(indent_table)
+  local count = 0
+  if not has_indents(indent_table) then
+    return count
+  end
+
+  for i=1, #indent_table.indents do
+    count = count + indent_table.indents[i].length
+  end
+  return count
+end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Count the total width of a delimiter `delimiter`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function total_delimiter_length(delimiter)
+  local count = 0
+  if type(delimiter) == "string" then return #delimiter end
+  for _, value in pairs(delimiter) do
+    count = count + total_delimiter_length(value)
+  end
+  return count
+end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Process the container starter `starter` of a type `indent_type`. Adjust the width of the indent
+% if the delimiter is followed only by whitespaces `is_blank`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function process_starter_indent(s, i, indent_table, starter, is_blank, indent_type)
+  local last_trail = starter[1]
+  local delimiter = starter[2]
+  local raw_new_trail = starter[3]
+
+  if has_trail(indent_table) then
+    local trail = indent_table.trail
+    if trail.is_code then
+      return false
+    end
+    last_trail = trail.remainder
+  else
+    local sp = process_starter_spacing(0, last_trail, 0, 0)
+
+    if sp.is_code then
+      return false
+    end
+    last_trail = sp.remainder
+  end
+
+  local preceding_indentation = count_indent_tab_level(indent_table) % 4
+  local last_trail_length = #last_trail
+  local delimiter_length = total_delimiter_length(delimiter)
+
+  local total_indent_level = preceding_indentation + last_trail_length + delimiter_length
+
+  local sp = {}
+  if not is_blank then
+    sp = process_starter_spacing(total_indent_level, raw_new_trail, 0, 1)
+  end
+
+  local del_trail_length = sp.left_total_stripped
+  if is_blank then
+    del_trail_length = 1
+  elseif not sp.is_code then
+    del_trail_length = del_trail_length + #sp.remainder
+  end
+
+  local indent_length = last_trail_length + delimiter_length + del_trail_length
+  local new_indent_info = {name=indent_type, length=indent_length}
+
+  indent_table = update_indent_table(indent_table, new_indent_info, true)
+  indent_table = add_trail(indent_table, {is_code=sp.is_code, remainder=sp.remainder})
+
+  return true, indent_table
+end
+
+parsers.blockquote_opening_condition = C(parsers.leader) * C(parsers.more) * C(parsers.spacechar^0)
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Return the pattern corresponding with the indent name `name`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function decode_pattern(name)
+  local delimeter = parsers.succeed
+  if name == "bq" then
+    delimeter = parsers.more
+  end
+
+  return C(parsers.optionalspace) * C(delimeter) * C(parsers.optionalspace) * Cp()
+end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Find the first blank-only indent of the indent table `indent_table` followed
+% by blank-only indents.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function left_blank_starter(indent_table)
+  local blank_starter_index
+
+  if not has_indents(indent_table) then
+    return
+  end
+
+  for i = #indent_table.indents,1,-1 do
+    local value = indent_table.indents[i]
+    if value.name == "li" then
+      blank_starter_index = i
+    else
+      break
+    end
+  end
+
+  return blank_starter_index
+end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Apply the patterns decoded from the indents of the indent table `indent_table`
+% iteratively starting at position `index` of the string `s`. If the `is_optional`
+% mode is selected, match as many patterns as possible, else match all or fail. 
+% With the option `is_blank`, the parsing behaves as optional after the position 
+% of a blank-only indent has been surpassed.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function traverse_indent(s, index, indent_table, is_optional, blank_end)
+  local new_index = index
+
+  local preceding_indentation = 0
+  local current_trail
+
+  if not has_indents(indent_table) then
+    return true, new_index, current_trail
+  end
+
+  local blank_starter = left_blank_starter(indent_table)
+
+  for i = 1,#indent_table.indents do
+    local value = indent_table.indents[i]
+    local pattern = decode_pattern(value.name)
+
+    -- match decoded pattern
+    local new_indent_info = lpeg.match(Ct(pattern), s, new_index)
+    if new_indent_info == nil then
+      return is_optional, new_index, current_trail
+    end
+
+    local raw_last_trail = new_indent_info[1]
+    local delimiter = new_indent_info[2]
+    local raw_new_trail = new_indent_info[3]
+    local next_index = new_indent_info[4]
+
+    local space_only = delimiter == ""
+
+    -- check previous trail
+    if not space_only and current_trail == nil then
+      local sp = process_starter_spacing(0, raw_last_trail, 0, 0)
+      current_trail = {is_code = sp.is_code, remainder = sp.remainder}
+    end
+
+    if current_trail ~= nil then
+      if not space_only and current_trail.is_code then
+        return is_optional, new_index, current_trail
+      end
+      if current_trail.internal_remainder ~= nil then
+        raw_last_trail = current_trail.internal_remainder
+      end
+    end
+
+    local raw_last_trail_length = 0
+    local delimiter_length = 0
+
+    if not space_only then
+      delimiter_length = #delimiter
+      raw_last_trail_length = #raw_last_trail
+    end
+
+    local total_indent_level = preceding_indentation + raw_last_trail_length + delimiter_length
+
+    local spacing_to_process = ""
+    local minimum = 0
+    local left_strip_length = 0
+
+    if not space_only then
+      spacing_to_process = raw_new_trail
+      left_strip_length = 1
+    else
+      spacing_to_process = raw_last_trail
+      minimum = value.length
+    end
+
+    local sp = process_starter_spacing(total_indent_level, spacing_to_process, minimum, left_strip_length)
+
+    if space_only and not sp.is_minimum then
+      return is_optional or (blank_end and blank_starter <= i), new_index, current_trail
+    end
+
+    local indent_length = raw_last_trail_length + delimiter_length + sp.left_total_stripped
+
+    -- update info for the next pattern
+    if not space_only then
+      preceding_indentation = preceding_indentation + indent_length
+    else
+      preceding_indentation = preceding_indentation + value.length
+    end
+
+    current_trail = {is_code=sp.is_code, remainder=sp.remainder, internal_remainder=sp.minimum_remainder}
+    new_index = next_index
+  end
+
+  return true, new_index, current_trail
+end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+%  Check if a code trail is expected.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function check_trail(expect_code, is_code)
+  return (expect_code and is_code) or (not expect_code and not is_code)
+end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Check if the current trail of the `indent_table` would produce code if it is expected `expect_code` 
+% or it would not if it is not. If there is no trail, process and check the current spacing `spacing`. 
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function check_trail_joined(s, i, indent_table, spacing, expect_code, omit_remainder)
+  local is_code = false
+  local remainder
+
+  if has_trail(indent_table) then
+    local trail = indent_table.trail
+    is_code = trail.is_code
+    remainder = trail.remainder
+  else
+    local sp = process_starter_spacing(0, spacing, 0, 0)
+    is_code = sp.is_code
+    remainder = sp.remainder
+  end
+
+  local result = check_trail(expect_code, is_code)
+  if omit_remainder then
+    return result
+  end
+  return result, remainder
+end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Check the indentation of the continuation line, optionally with 
+% the mode `is_optional` selected. Check blank line exclusively with `is_blank`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function check_continuation_indentation(s, i, indent_table, is_optional, is_blank)
+  if not has_indents(indent_table) then
+    return true
+  end
+
+  local passes, new_index, current_trail = traverse_indent(s, i, indent_table, is_optional, is_blank)
+
+  if passes then
+    indent_table = add_trail(indent_table, current_trail)
+    return new_index, indent_table
+  end
+  return false
+end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Get name of the last indent from the `indent_table`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function get_last_indent_name(indent_table)
+  if has_indents(indent_table) then
+    return indent_table.indents[#indent_table.indents].name
+  end
+  return
+end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Remove the remainder altogether if the last indent from the `indent_table`
+% is blank-only.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function remove_remainder_if_blank(indent_table, remainder)
+  if get_last_indent_name(indent_table) == "li" then
+    return ""
+  end
+  return remainder
+end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Take the trail `trail` or create a new one from `spacing` and comapre it 
+% with the expected `trail_type`. On success return the index `i` and the
+% remainder of the trail.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function check_trail_type(s, i, trail, spacing, trail_type)
+  if trail == nil then
+    trail = process_starter_spacing(0, spacing, 0, 0)
+  end
+
+  if trail_type == "non-code" then
+    return check_trail(false, trail.is_code)
+  end
+  if trail_type == "code" then
+    return check_trail(true, trail.is_code)
+  end
+  if trail_type == "full-code" then
+    if (trail.is_code) then
+      return i, trail.remainder
+    end
+    return i, ""
+  end
+  if trail_type == "full-any" then
+    return i, trail.internal_remainder
+  end
+end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Check the indentation of the continuation line, optionally with 
+% the mode `is_optional` selected. Check blank line specifically with `is_blank`. 
+% Additionally, also directly check the new trail with a type `trail_type`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function check_continuation_indentation_and_trail(s, i, indent_table, is_optional, is_blank, trail_type, reset_rem, omit_remainder)
+  if not has_indents(indent_table) then
+    local spacing, new_index = lpeg.match(C(parsers.spacechar^0) * Cp(), s, i)
+    local result, remainder = check_trail_type(s, i, indent_table.trail, spacing, trail_type)
+    if remainder == nil then
+      if result then 
+        return new_index
+      end
+      return false
+    end
+    if result then 
+      return new_index, remainder 
+    end
+    return false
+  end
+
+  local passes, new_index, current_trail = traverse_indent(s, i, indent_table, is_optional, is_blank)
+
+  if passes then
+    local spacing
+    if current_trail == nil then
+      local newer_spacing, newer_index = lpeg.match(C(parsers.spacechar^0) * Cp(), s, i)
+      current_trail = process_starter_spacing(0, spacing, 0, 0)
+      new_index = newer_index
+      spacing = newer_spacing
+    else
+      spacing = current_trail.remainder
+    end
+    local result, remainder = check_trail_type(s, new_index, current_trail, spacing, trail_type)
+    if remainder == nil or omit_remainder then
+      if result then 
+        return new_index 
+      end
+      return false
+    end
+    
+    if is_blank and reset_rem then
+      remainder = remove_remainder_if_blank(indent_table, remainder)
+    end
+    if result then 
+      return new_index, remainder 
+    end
+    return false
+  end
+  return false
+end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% The following patterns check whitespace indentation at the start of a block.
+%
+% \end{markdown}
+%  \begin{macrocode}
+parsers.leave_trail = Cg(Cmt(Cb("indent_info"), leave_trail), "indent_info")
+
+parsers.check_trail = Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(false), check_trail_joined)
+
+parsers.check_trail_no_rem = Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(false) * Cc(true), check_trail_joined)
+
+parsers.check_code_trail  = Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(true), check_trail_joined)
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% The following patterns check indentation in continuation lines as defined by the container start.
+%
+% \end{markdown}
+%  \begin{macrocode}
+parsers.check_minimal_indent = Cmt(Cb("indent_info") * Cc(false), check_continuation_indentation)
+
+parsers.check_optional_indent = Cmt(Cb("indent_info") * Cc(true), check_continuation_indentation)
+
+parsers.check_minimal_blank_indent = Cmt(Cb("indent_info") * Cc(false) * Cc(true), check_continuation_indentation)
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% The following patterns check indentation in continuation lines as defined by the container start.
+% Additionally the subsequent trail is also directly checked.
+%
+% \end{markdown}
+%  \begin{macrocode}
+
+parsers.check_minimal_indent_and_trail = Cmt( Cb("indent_info")
+                                          * Cc(false) * Cc(false) * Cc("non-code") * Cc(true),
+                                            check_continuation_indentation_and_trail)
+
+parsers.check_minimal_indent_and_code_trail = Cmt( Cb("indent_info")
+                                                * Cc(false) * Cc(false) * Cc("code") * Cc(false),
+                                                check_continuation_indentation_and_trail)
+
+parsers.check_minimal_blank_indent_and_full_code_trail = Cmt( Cb("indent_info")
+                                                          * Cc(false) * Cc(true) * Cc("full-code") * Cc(true),
+                                                            check_continuation_indentation_and_trail)
+
+parsers.check_minimal_indent_and_any_trail = Cmt( Cb("indent_info")
+                                                  * Cc(false) * Cc(false) * Cc("full-any") * Cc(true) * Cc(false), 
+                                                  check_continuation_indentation_and_trail)
+
+parsers.check_minimal_blank_indent_and_any_trail = Cmt( Cb("indent_info")
+                                                  * Cc(false) * Cc(true) * Cc("full-any") * Cc(true) * Cc(false), 
+                                                    check_continuation_indentation_and_trail)
+
+%   \end{macrocode}
 % \begin{figure}
 % \hspace*{-0.1\textwidth}
 % \begin{minipage}{1.2\textwidth}
@@ -23805,8 +24567,6 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-parsers.leader      = parsers.space^-3
-
 parsers.bullet = function(bullet_char, interrupting)
   local allowed_end
   if interrupting then
@@ -23986,15 +24746,15 @@ parsers.url         = parsers.less * Cs((parsers.anyescaped
 
 -- quoted text:
 parsers.title_s     = parsers.squote
-                    * Cs(((parsers.anyescaped - parsers.squote - parsers.blankline^2))^0)
+                    * Cs((V("HtmlEntity") + (parsers.anyescaped - parsers.squote - parsers.blankline^2))^0)
                     * parsers.squote
 
 parsers.title_d     = parsers.dquote
-                    * Cs(((parsers.anyescaped - parsers.dquote - parsers.blankline^2))^0)
+                    * Cs((V("HtmlEntity") + (parsers.anyescaped - parsers.dquote - parsers.blankline^2))^0)
                     * parsers.dquote
 
 parsers.title_p     = parsers.lparent
-                    * Cs((parsers.inparens + (parsers.anyescaped - parsers.rparent - parsers.blankline^2))^0)
+                    * Cs((V("HtmlEntity") + parsers.inparens + (parsers.anyescaped - parsers.rparent - parsers.blankline^2))^0)
                     * parsers.rparent
 
 parsers.title       = parsers.title_d + parsers.title_s + parsers.title_p
@@ -24091,38 +24851,65 @@ parsers.block_keyword =
     parsers.keyword_exact("track") +
     parsers.keyword_exact("ul")
 
+parsers.html_newline_indent = parsers.newline 
+                            * (parsers.check_minimal_blank_indent_and_any_trail * #parsers.blankline
+                              + parsers.check_minimal_indent_and_any_trail)
+
 -- end conditions
 parsers.html_blankline_end_condition  = parsers.linechar^0
-                                      * (parsers.newline * parsers.linechar^1)^0
+                                      * (parsers.html_newline_indent * parsers.linechar^1)^0
 
 parsers.html_empty_end_condition  = parsers.linechar^0
-                                  * ((parsers.optionalspace * parsers.newline)^0
-                                    * parsers.linechar^1)^0
+                                  * (parsers.optionalspace * parsers.newline
+                                    * (parsers.check_minimal_blank_indent_and_any_trail * parsers.optionalspace * parsers.newline)^0
+                                    * parsers.check_minimal_indent_and_any_trail * parsers.linechar^1)^0
 
 -- attributes
-parsers.html_attribute_spacing  = parsers.spacechar^1
-                                + parsers.optionalspace
-                                * parsers.newline
+parsers.html_attribute_spacing  = parsers.optionalspace
+                                * V("Endline")
                                 * parsers.optionalspace
+                                + parsers.spacechar^1
 
 parsers.html_attribute_name = (parsers.letter + parsers.colon + parsers.underscore)
                             * (parsers.alphanumeric + parsers.colon + parsers.underscore
                             + parsers.period + parsers.dash)^0
 
-parsers.html_attribute_value = parsers.squote * (parsers.any - parsers.squote)^0 * parsers.squote
-                             + parsers.dquote * (parsers.any - parsers.dquote)^0 * parsers.dquote
-                             + ( parsers.any - parsers.spacechar - parsers.newline
-                               - parsers.dquote - parsers.squote - parsers.backtick
-                               - parsers.equal - parsers.less - parsers.more)^1
+parsers.html_attribute_value  = parsers.squote 
+                              * (parsers.any - parsers.newline - parsers.squote)^0 
+                              * parsers.squote
+                              + parsers.dquote 
+                              * (parsers.any - parsers.newline - parsers.dquote)^0 
+                              * parsers.dquote
+                              + ( parsers.any - parsers.spacechar - parsers.newline
+                                - parsers.dquote - parsers.squote - parsers.backtick
+                                - parsers.equal - parsers.less - parsers.more)^1
 
-parsers.html_attribute_value_specification  = parsers.spnl
+parsers.html_inline_attribute_value = parsers.squote 
+                                    * (V("Endline") + parsers.any - parsers.blankline^2 - parsers.squote)^0 
+                                    * parsers.squote
+                                    + parsers.dquote 
+                                    * (V("Endline") + parsers.any - parsers.blankline^2 - parsers.dquote)^0 
+                                    * parsers.dquote
+                                    + (parsers.any - parsers.spacechar - parsers.newline
+                                      - parsers.dquote - parsers.squote - parsers.backtick
+                                      - parsers.equal - parsers.less - parsers.more)^1
+
+parsers.html_attribute_value_specification  = parsers.optionalspace
                                             * parsers.equal
-                                            * parsers.spnl
+                                            * parsers.optionalspace
                                             * parsers.html_attribute_value
+
+parsers.html_spnl = parsers.optionalspace
+                  * (V("Endline") * parsers.optionalspace)^-1
+
+parsers.html_inline_attribute_value_specification = parsers.html_spnl
+                                                  * parsers.equal
+                                                  * parsers.html_spnl
+                                                  * parsers.html_inline_attribute_value
 
 parsers.html_attribute  = parsers.html_attribute_spacing
                         * parsers.html_attribute_name
-                        * parsers.html_attribute_value_specification^-1
+                        * parsers.html_inline_attribute_value_specification^-1
 
 parsers.html_non_newline_attribute  = parsers.spacechar^1
                                     * parsers.html_attribute_name
@@ -24132,17 +24919,26 @@ parsers.html_comment_start = P("<!--")
 
 parsers.html_comment_end = P("-->")
 
+-- TODO add to other
 parsers.html_comment = parsers.nonindentspace
-                     * parsers.html_comment_start
-                     * ((parsers.any - parsers.html_comment_end)^0
-                       * parsers.html_comment_end
-                       * parsers.linechar^0
-                       + parsers.html_empty_end_condition)
-
-parsers.html_inline_comment = parsers.html_comment_start
-                            * -P(">") * -P("->")
-                            * Cs((parsers.any - P("--"))^0)
+                     * Cs(parsers.html_comment_start
+                         * Cs(Cs( parsers.newline 
+                                * (parsers.check_minimal_blank_indent_and_any_trail * #parsers.blankline
+                                  + parsers.check_minimal_indent_and_any_trail)
+                              + parsers.any - parsers.html_comment_end)^0
                             * parsers.html_comment_end
+                            * parsers.linechar^0
+                            + Cs(parsers.html_empty_end_condition) * (parsers.newline^-1 / "")))
+
+parsers.nested_breaking_blank = parsers.newline
+                              * parsers.check_minimal_blank_indent 
+                              * parsers.blankline
+
+parsers.html_inline_comment = (parsers.html_comment_start / "")
+                            * -P(">") * -P("->")
+                            * Cs((V("Endline") + parsers.any - P("--") 
+                                - parsers.nested_breaking_blank - parsers.html_comment_end)^0)
+                            * (parsers.html_comment_end / "")
 
 parsers.html_cdatasection_start = P("<![CDATA[")
 
@@ -24157,7 +24953,8 @@ parsers.html_cdatasection = parsers.nonindentspace
                             
 parsers.html_inline_cdatasection  = parsers.nonindentspace
                                   * parsers.html_cdatasection_start
-                                  * (parsers.any - parsers.html_cdatasection_end)^0
+                                  * Cs(V("Endline") + parsers.any
+                                      - parsers.nested_breaking_blank - parsers.html_cdatasection_end)^0
                                   * parsers.html_cdatasection_end
 
 parsers.html_declaration_start = P("<!")
@@ -24175,7 +24972,8 @@ parsers.html_declaration  = parsers.nonindentspace
 parsers.html_inline_declaration = parsers.nonindentspace
                                 * parsers.html_declaration_start
                                 * parsers.letter
-                                * (parsers.any - parsers.html_declaration_end)^0
+                                * Cs(V("Endline") + parsers.any 
+                                    - parsers.nested_breaking_blank - parsers.html_declaration_end)^0
                                 * parsers.html_declaration_end
 
 parsers.html_instruction_start = P("<?")
@@ -24191,7 +24989,8 @@ parsers.html_instruction  = parsers.nonindentspace
 
 parsers.html_inline_instruction = parsers.nonindentspace
                                 * parsers.html_instruction_start
-                                * (parsers.any - parsers.html_instruction_end)^0
+                                * Cs(V("Endline") + parsers.any 
+                                    - parsers.nested_breaking_blank - parsers.html_instruction_end)^0
                                 * parsers.html_instruction_end
 
 parsers.html_blankline  = parsers.newline
@@ -24292,7 +25091,7 @@ parsers.html_blankline_ending_special_block_opening = (parsers.html_close_specia
                                                        * (parsers.newline + parsers.eof))
 
 parsers.html_blankline_ending_special_block = parsers.html_blankline_ending_special_block_opening
-                                            * parsers.html_blankline_end_condition
+                                            * parsers.html_blankline_end_condition * (parsers.newline^-1 / "")
 
 parsers.html_special_block_opening  = parsers.html_incomplete_open_special_tag
                                     - parsers.html_empty_special_tag
@@ -24313,7 +25112,7 @@ parsers.html_block_opening  = (parsers.html_incomplete_open_tag
                             - parsers.html_incomplete_close_special_tag)
 
 parsers.html_block  = parsers.html_block_opening
-                    * parsers.html_blankline_end_condition
+                    * parsers.html_blankline_end_condition * (parsers.newline^-1 / "")
 
 -- parse any html blocks
 parsers.html_any_block_opening  = (parsers.html_any_open_tag
@@ -24322,7 +25121,7 @@ parsers.html_any_block_opening  = (parsers.html_any_open_tag
                                 * #(parsers.optionalspace * (parsers.newline + parsers.eof))
 
 parsers.html_any_block  = parsers.html_any_block_opening
-                        * parsers.html_blankline_end_condition
+                        * parsers.html_blankline_end_condition * (parsers.newline^-1 / "")
 
 parsers.html_interrupting = parsers.html_incomplete_open_tag
                           + parsers.html_incomplete_close_tag
@@ -24348,6 +25147,25 @@ parsers.decentity = parsers.ampersand * parsers.hash
                   * C(repeat_between(parsers.digit, 1, 7)) * parsers.semicolon
 parsers.tagentity = parsers.ampersand * C(parsers.alphanumeric^1)
                   * parsers.semicolon
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+%#### Helpers for Links and Link Reference Definitions
+%
+% \end{markdown}
+%  \begin{macrocode}
+parsers.spnl_sep  = parsers.optionalspace * parsers.newline * parsers.optionalspace
+                  + parsers.spacechar^1
+
+parsers.only_blank = parsers.spacechar^0 * (parsers.newline + parsers.eof)
+
+-- parse a reference definition:  [foo]: /bar "title"
+parsers.define_reference_parser = (parsers.check_trail / "") * parsers.link_label * parsers.colon
+                                * parsers.spnl * parsers.url
+                                * ( parsers.spnl_sep * parsers.title * parsers.only_blank
+                                  + Cc("") * parsers.only_blank) 
+                                * parsers.leave_trail
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -24618,7 +25436,6 @@ function M.reader.new(writer, options)
                      function()
                        return parsers.inlines_nbsp
                      end, false)
-
   self.create_parser("parse_inlines_no_link_or_emphasis",
                     function()
                       return parsers.inlines_no_link_or_emphasis
@@ -24632,514 +25449,13 @@ function M.reader.new(writer, options)
 % \end{markdown}
 %  \begin{macrocode}
 
-  parsers.blockquote_start = parsers.leader * parsers.more * parsers.space^-1
-
 %  \end{macrocode}
 % \begin{markdown}
 %
-% Check if a trail exists and is non-empty in the indent table `indent_table`.
+% The following patterns represent basic building blocks of indented content.
 %
 % \end{markdown}
 %  \begin{macrocode}
-  function has_trail(indent_table)
-    return indent_table ~= nil and indent_table.trail ~= nil and next(indent_table.trail) ~= nil
-  end
-
-%  \end{macrocode}
-% \begin{markdown}
-%
-% Check if indent table `indent_table` has any indents.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  function has_indents(indent_table)
-    return indent_table ~= nil and indent_table.indents ~= nil and next(indent_table.indents) ~= nil
-  end
-
-%  \end{macrocode}
-% \begin{markdown}
-%
-% Add a trail `trail_info` to the indent table `indent_table`.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  local function add_trail(indent_table, trail_info)
-    indent_table.trail = trail_info
-    return indent_table
-  end
-
-%  \end{macrocode}
-% \begin{markdown}
-%
-% Remove a trail `trail_info` from the indent table `indent_table`.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  local function remove_trail(indent_table)
-    indent_table.trail = nil
-    return indent_table
-  end
-
-%  \end{macrocode}
-% \begin{markdown}
-%
-% Leave the current trail of the indent table `indent_table`
-%
-% \end{markdown}
-%  \begin{macrocode}
-  local function leave_trail(s, i, indent_table)
-    indent_table = remove_trail(indent_table)
-    return true, indent_table
-  end
-
-%  \end{macrocode}
-% \begin{markdown}
-%
-% Update the indent table `indent_table` by adding or removing a new
-% indent `add`.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  local function update_indent_table(indent_table, new_indent, add)
-    indent_table = remove_trail(indent_table)
-
-    if not has_indents(indent_table) then
-      indent_table.indents = {}
-    end
-
-    local indent_table_indents = indent_table.indents
-
-    if add then
-      indent_table_indents[#indent_table_indents + 1] = new_indent
-    else
-      if indent_table_indents[#indent_table_indents].name == new_indent.name then
-        indent_table_indents[#indent_table_indents] = nil
-      end
-    end
-
-    return indent_table
-  end
-
-%  \end{macrocode}
-% \begin{markdown}
-%
-% Remove an indent by its name `name`.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  local function remove_indent(name)
-    local function remove_indent_level(s, i, indent_table)
-      indent_table = update_indent_table(indent_table, {name=name}, false)
-      return true, indent_table
-    end
-
-    return Cg(Cmt( Cb("indent_info"), remove_indent_level), "indent_info")
-  end
-
-%  \end{macrocode}
-% \begin{markdown}
-%
-% Process the spacing of a string of spaces and tabs `spacing` with preceding indent width from
-% the start of the line `indent` and strip up to `left_strip_length` spaces. Return the remainder
-% `remainder` and whether there is enough spaces to produce a code `is_code`. Return how many 
-% spaces were stripped, as well as if the minimum was met `is_minimum` and what remainder it 
-% left `minimum_remainder`.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  local function process_starter_spacing(indent, spacing, minimum, left_strip_length)
-    left_strip_length = left_strip_length or 0
-
-    local count = 0
-    local tab_value = 4 - (indent) % 4
-
-    local code_started, minimum_found = false, false
-    local code_start, minimum_remainder = "", ""
-
-    local left_total_stripped = 0
-
-    if spacing ~= nil then
-      for i = 1, #spacing do
-        local character = spacing:sub(i, i)
-
-        if character == "\t" then
-          count = count + tab_value
-          tab_value = 4
-        elseif character == " " then
-          count = count + 1
-          tab_value = 4 - (1 - tab_value) % 4
-        end
-
-        if (left_strip_length ~= 0) then
-          local possible_to_strip = math.min(count, left_strip_length)
-          count = count - possible_to_strip
-          left_strip_length = left_strip_length - possible_to_strip
-          left_total_stripped = left_total_stripped + possible_to_strip
-        end
-
-        if (minimum_found) then
-          minimum_remainder = minimum_remainder .. character
-        elseif (count >= minimum) then
-          minimum_found = true
-          minimum_remainder = minimum_remainder .. string.rep(" ", count - minimum)
-        end
-        
-        if (code_started) then
-          code_start = code_start .. character
-        elseif (count >= minimum + 4) then
-          code_started = true
-          code_start = code_start .. string.rep(" ", count - (minimum + 4))
-        end
-      end
-    end
-
-    local remainder = ""
-    if (code_started) then
-      remainder = code_start
-    else
-      remainder = string.rep(" ", count - minimum)
-    end
-
-    local is_minimum = count >= minimum
-    return {
-      is_code = code_started,
-      remainder = remainder,
-      left_total_stripped = left_total_stripped,
-      is_minimum = is_minimum,
-      minimum_remainder = minimum_remainder
-    }
-  end
-
-%  \end{macrocode}
-% \begin{markdown}
-%
-% Count the total width of all indents in the indent table `indent_table`.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  local function count_indent_tab_level(indent_table)
-    local count = 0
-    if not has_indents(indent_table) then
-      return count
-    end
-
-    for i=1, #indent_table.indents do
-      count = count + indent_table.indents[i].length
-    end
-    return count
-  end
-
-%  \end{macrocode}
-% \begin{markdown}
-%
-% Count the total width of a delimiter `delimiter`.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  local function total_delimiter_length(delimiter)
-    local count = 0
-    if type(delimiter) == "string" then return #delimiter end
-    for _, value in pairs(delimiter) do
-      count = count + total_delimiter_length(value)
-    end
-    return count
-  end
-
-%  \end{macrocode}
-% \begin{markdown}
-%
-% Process the container starter `starter` of a type `indent_type`. Adjust the width of the indent
-% if the delimiter is followed only by whitespaces `is_blank`.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  local function process_starter_indent(s, i, indent_table, starter, is_blank, indent_type)
-    local last_trail = starter[1]
-    local delimiter = starter[2]
-    local raw_new_trail = starter[3]
-
-    if has_trail(indent_table) then
-      local trail = indent_table.trail
-      if trail.is_code then
-        return false
-      end
-      last_trail = trail.remainder
-    else
-      local sp = process_starter_spacing(0, last_trail, 0, 0)
-
-      if sp.is_code then
-        return false
-      end
-      last_trail = sp.remainder
-    end
-
-    local preceding_indentation = count_indent_tab_level(indent_table) % 4
-    local last_trail_length = #last_trail
-    local delimiter_length = total_delimiter_length(delimiter)
-
-    local total_indent_level = preceding_indentation + last_trail_length + delimiter_length
-
-    local sp = {}
-    if not is_blank then
-      sp = process_starter_spacing(total_indent_level, raw_new_trail, 0, 1)
-    end
-
-    local del_trail_length = sp.left_total_stripped
-    if is_blank then
-      del_trail_length = 1
-    elseif not sp.is_code then
-      del_trail_length = del_trail_length + #sp.remainder
-    end
-
-    local indent_length = last_trail_length + delimiter_length + del_trail_length
-    local new_indent_info = {name=indent_type, length=indent_length}
-
-    indent_table = update_indent_table(indent_table, new_indent_info, true)
-    indent_table = add_trail(indent_table, {is_code=sp.is_code, remainder=sp.remainder})
-
-    return true, indent_table
-  end
-
-  parsers.blockquote_opening_condition = C(parsers.leader) * C(parsers.more) * C(parsers.spacechar^0)
-
-%  \end{macrocode}
-% \begin{markdown}
-%
-% Return the pattern corresponding with the indent name `name`.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  local function decode_pattern(name)
-    local delimeter = parsers.succeed
-    if name == "bq" then
-      delimeter = parsers.more
-    end
-
-    return C(parsers.optionalspace) * C(delimeter) * C(parsers.optionalspace) * Cp()
-  end
-
-%  \end{macrocode}
-% \begin{markdown}
-%
-% Find the first blank-only indent of the indent table `indent_table` followed
-% by blank-only indents.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  local function left_blank_starter(indent_table)
-    local blank_starter_index
-
-    if not has_indents(indent_table) then
-      return
-    end
-
-    for i = #indent_table.indents,1,-1 do
-      local value = indent_table.indents[i]
-      if value.name == "li" then
-        blank_starter_index = i
-      else
-        break
-      end
-    end
-
-    return blank_starter_index
-  end
-
-%  \end{macrocode}
-% \begin{markdown}
-%
-% Apply the patterns decoded from the indents of the indent table `indent_table`
-% iteratively starting at position `index` of the string `s`. If the `is_optional`
-% mode is selected, match as many patterns as possible, else match all or fail. 
-% With the option `is_blank`, the parsing behaves as optional after the position 
-% of a blank-only indent has been surpassed.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  local function traverse_indent(s, index, indent_table, is_optional, blank_end)
-    local new_index = index
-
-    local preceding_indentation = 0
-    local current_trail
-
-    if not has_indents(indent_table) then
-      return true, new_index, current_trail
-    end
-
-    local blank_starter = left_blank_starter(indent_table)
-
-    for i = 1,#indent_table.indents do
-      local value = indent_table.indents[i]
-      local pattern = decode_pattern(value.name)
-
-      -- match decoded pattern
-      local new_indent_info = lpeg.match(Ct(pattern), s, new_index)
-      if new_indent_info == nil then
-        return is_optional, new_index, current_trail
-      end
-
-      local raw_last_trail = new_indent_info[1]
-      local delimiter = new_indent_info[2]
-      local raw_new_trail = new_indent_info[3]
-      local next_index = new_indent_info[4]
-
-      local space_only = delimiter == ""
-
-      -- check previous trail
-      if not space_only and current_trail == nil then
-        local sp = process_starter_spacing(0, raw_last_trail, 0, 0)
-        current_trail = {is_code = sp.is_code, remainder = sp.remainder}
-      end
-
-      if current_trail ~= nil then
-        if not space_only and current_trail.is_code then
-          return is_optional, new_index, current_trail
-        end
-        if current_trail.internal_remainder ~= nil then
-          raw_last_trail = current_trail.internal_remainder
-        end
-      end
-
-      local raw_last_trail_length = 0
-      local delimiter_length = 0
-
-      if not space_only then
-        delimiter_length = #delimiter
-        raw_last_trail_length = #raw_last_trail
-      end
-
-      local total_indent_level = preceding_indentation + raw_last_trail_length + delimiter_length
-
-      local spacing_to_process = ""
-      local minimum = 0
-      local left_strip_length = 0
-
-      if not space_only then
-        spacing_to_process = raw_new_trail
-        left_strip_length = 1
-      else
-        spacing_to_process = raw_last_trail
-        minimum = value.length
-      end
-
-      local sp = process_starter_spacing(total_indent_level, spacing_to_process, minimum, left_strip_length)
-
-      if space_only and not sp.is_minimum then
-        return is_optional or (blank_end and blank_starter <= i), new_index, current_trail
-      end
-
-      local indent_length = raw_last_trail_length + delimiter_length + sp.left_total_stripped
-
-      -- update info for the next pattern
-      if not space_only then
-        preceding_indentation = preceding_indentation + indent_length
-      else
-        preceding_indentation = preceding_indentation + value.length
-      end
-
-      current_trail = {is_code=sp.is_code, remainder=sp.remainder, internal_remainder=sp.minimum_remainder}
-      new_index = next_index
-    end
-
-    return true, new_index, current_trail
-  end
-
-%  \end{macrocode}
-% \begin{markdown}
-%
-% Start traversing and checking the indents for a continuation line, optionally with 
-% the mode `is_optional` selected.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  local function start_traverse_indent(s, i, indent_table, is_optional)
-    if not has_indents(indent_table) then
-      return true
-    end
-
-    local passes, new_index, current_trail = traverse_indent(s, i, indent_table, is_optional, false)
-
-    if passes then
-      indent_table = add_trail(indent_table, current_trail)
-      return new_index, indent_table
-    end
-    return false
-  end
-
-%  \end{macrocode}
-% \begin{markdown}
-%
-% Start traversing and checking the indents for a continuation blank line, optionally with 
-% the mode `is_optional` selected.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  local function start_blank_indent(s, i, indent_table, is_optional)
-    if not has_indents(indent_table) then
-      return true
-    end
-
-    local passes, new_index, current_trail = traverse_indent(s, i, indent_table, is_optional, true)
-
-    if passes then
-      indent_table = add_trail(indent_table, current_trail)
-      return new_index, indent_table
-    end
-    return false
-  end
-
-%  \end{macrocode}
-% \begin{markdown}
-%
-% Check if the current trail of the `indent_table` would produce code if it is expected `expect_code` 
-% or it would not if it is not. If there is no trail, process and check the current spacing `spacing`. 
-%
-% \end{markdown}
-%  \begin{macrocode}
-  local function check_trail_joined(s, i, indent_table, spacing, expect_code)
-    local is_code = false
-    local remainder
-
-    if has_trail(indent_table) then
-      local trail = indent_table.trail
-      is_code = trail.is_code
-      remainder = trail.remainder
-    else
-      local sp = process_starter_spacing(0, spacing, 0, 0)
-      is_code = sp.is_code
-      remainder = sp.remainder
-    end
-
-    local result = (expect_code and is_code) or (not expect_code and not is_code)
-    return result, remainder
-  end
-
-%  \end{macrocode}
-% \begin{markdown}
-%
-% The following patterns check whitespace indentation at the start of a block.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  parsers.leave_trail = Cg(Cmt(Cb("indent_info"), leave_trail), "indent_info")
-
-  parsers.check_trail = Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(false), check_trail_joined)
-
-  parsers.check_code_trail  = Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(true), check_trail_joined)
-
-%  \end{macrocode}
-% \begin{markdown}
-%
-% The following patterns check indentation in continuation lines as defined by the container start.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  parsers.check_minimal_indent = Cmt(Cb("indent_info") * Cc(false), start_traverse_indent)
-
-  parsers.check_optional_indent = Cmt(Cb("indent_info") * Cc(true), start_traverse_indent)
-
-  parsers.check_minimal_blank_indent = Cmt(Cb("indent_info") * Cc(false), start_blank_indent)
-
   parsers.minimally_indented_blank = parsers.check_minimal_indent * (parsers.blankline / "")
 
   parsers.minimally_indented_block = parsers.check_minimal_indent * V("Block")
@@ -25148,9 +25464,9 @@ function M.reader.new(writer, options)
 
   parsers.conditionally_indented_blank = parsers.check_minimal_blank_indent * (parsers.blankline / "")
 
-  parsers.minimally_indented_ref_or_block  = parsers.minimally_indented_ref
-                                           + parsers.minimally_indented_block
-                                           - parsers.minimally_indented_blank
+  parsers.minimally_indented_ref_or_block = parsers.minimally_indented_ref
+                                          + parsers.minimally_indented_block
+                                          - parsers.minimally_indented_blank
 
   parsers.minimally_indented_separated_ref_or_block = parsers.minimally_indented_ref
                                                     + parsers.check_minimal_indent / writer.interblocksep
@@ -25607,16 +25923,6 @@ function M.reader.new(writer, options)
 %  \begin{macrocode}
   -- List of references defined in the document
   local references
-
-  parsers.spnl_sep  = parsers.optionalspace * parsers.newline * parsers.optionalspace
-                    + parsers.spacechar^1
-
-  -- parse a reference definition:  [foo]: /bar "title"
-  parsers.define_reference_parser = (parsers.check_trail / "") * parsers.link_label * parsers.colon
-                                  * parsers.spnl * parsers.url
-                                  * (parsers.spnl_sep * parsers.title + Cc("")) 
-                                  * parsers.spacechar^0 * (parsers.newline + parsers.eof)
-                                  * parsers.leave_trail
 
 %    \end{macrocode}
 % \par
@@ -26148,8 +26454,6 @@ function M.reader.new(writer, options)
     parsers.headerstart = parsers.fail
   else
     parsers.headerstart = parsers.nonindentspace * parsers.hash
-                        + (parsers.line * (parsers.equal^1 + parsers.dash^1)
-                        * parsers.optionalspace * parsers.newline)
   end
 
   if options.blankBeforeList then
@@ -26182,9 +26486,15 @@ function M.reader.new(writer, options)
                       * -V("EndlineExceptions") 
                       * -parsers.starter)
                     * parsers.spacechar^0
-                    / (options.hardLineBreaks and writer.hard_line_break
-                                               or writer.space)
+                    / (options.hardLineBreaks 
+                       and writer.hard_line_break
+                        or writer.space)
 
+  parsers.EndlineBreak = parsers.backslash * parsers.Endline
+                                           / (options.hardLineBreaks
+                                             and writer.hard_line_break
+                                               or writer.space)
+  
   parsers.OptionalIndent
                      = parsers.spacechar^1 / writer.space
 
@@ -26205,14 +26515,15 @@ function M.reader.new(writer, options)
                       * -V("EndlineExceptions") 
                       * -parsers.starter)
                     * parsers.spacechar^0
-                    / (options.hardLineBreaks and writer.hard_line_break
-                                               or writer.nbsp)
+                    / (options.hardLineBreaks 
+                       and writer.hard_line_break
+                        or writer.nbsp)
 
   parsers.NonbreakingSpace
-                  = parsers.spacechar^2 * parsers.Endline
+                  = parsers.spacechar^2 * parsers.Endline 
                                         / (options.hardLineBreaks
-                                              and writer.hard_line_break
-                                               or writer.nbsp)
+                                           and writer.hard_line_break
+                                            or writer.nbsp)
                   + parsers.spacechar^1 * parsers.Endline^-1 * parsers.eof / ""
                   + parsers.spacechar^1 * parsers.Endline
                                         * parsers.optionalspace
@@ -26269,13 +26580,14 @@ end
 
   parsers.EscapedChar   = parsers.backslash * C(parsers.escapable) / writer.string
 
-  parsers.InlineHtml    = parsers.html_inline_comment       / writer.inline_html_comment
-                        + parsers.html_any_empty_inline_tag / writer.inline_html_tag
-                        + parsers.html_inline_instruction   / writer.inline_html_tag
-                        + parsers.html_inline_cdatasection  / writer.inline_html_tag
-                        + parsers.html_inline_declaration   / writer.inline_html_tag
-                        + parsers.html_any_open_inline_tag  / writer.inline_html_tag
-                        + parsers.html_any_close_tag        / writer.inline_html_tag
+  parsers.InlineHtml    = Cs(parsers.html_inline_comment) / writer.inline_html_comment
+                        + Cs(parsers.html_any_empty_inline_tag
+                            + parsers.html_inline_instruction
+                            + parsers.html_inline_cdatasection
+                            + parsers.html_inline_declaration
+                            + parsers.html_any_open_inline_tag
+                            + parsers.html_any_close_tag)
+                          / writer.inline_html_tag
 
   parsers.HtmlEntity    = parsers.hexentity / entities.hex_entity_with_x_char / writer.string
                         + parsers.decentity / entities.dec_entity             / writer.string
@@ -26288,20 +26600,21 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-  parsers.DisplayHtml  = parsers.html_comment       / writer.block_html_element
-                       + parsers.html_special_block / writer.block_html_element
-                       + parsers.html_block         / writer.block_html_element
-                       + parsers.html_any_block     / writer.block_html_element
-                       + parsers.html_instruction   / writer.block_html_element
-                       + parsers.html_cdatasection  / writer.block_html_element
-                       + parsers.html_declaration   / writer.block_html_element
+  parsers.DisplayHtml = Cs(parsers.html_comment    
+                          + parsers.html_special_block 
+                          + parsers.html_block         
+                          + parsers.html_any_block     
+                          + parsers.html_instruction   
+                          + parsers.html_cdatasection  
+                          + parsers.html_declaration)
+                        / writer.block_html_element
 
   parsers.indented_non_blank_line = parsers.indentedline - parsers.blankline
 
   parsers.Verbatim  = Cs( 
                         parsers.check_code_trail 
                       * (parsers.line - parsers.blankline)
-                      * (((parsers.check_minimal_blank_indent / "") * parsers.blankline)^0
+                      * ((parsers.check_minimal_blank_indent_and_full_code_trail * parsers.blankline)^0
                         * ((parsers.check_minimal_indent / "") * parsers.check_code_trail * (parsers.line - parsers.blankline))^1)^0
                       ) / self.expandtabs / writer.verbatim
 
@@ -26388,7 +26701,8 @@ end
     local bullet = parsers.bullet(bullet_type)
     return  ( Ct( parsers.TightListItem(bullet) 
                 * ((parsers.check_minimal_indent / "") * parsers.TightListItem(bullet))^0) * Cc(true)
-                * -#((parsers.conditionally_indented_blank^0 / "") * parsers.check_minimal_indent * bullet)
+                * -#((parsers.conditionally_indented_blank^0 / "") 
+                    * parsers.check_minimal_indent * (bullet - parsers.ThematicBreak))
                + Ct(parsers.LooseListItem(bullet) 
                  * ((parsers.conditionally_indented_blank^0 / "") 
                    * (parsers.check_minimal_indent / "") * parsers.LooseListItem(bullet))^0) * Cc(false))
@@ -26449,7 +26763,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
   -- parse atx header
-  parsers.AtxHeading = parsers.nonindentspace
+  parsers.AtxHeading = parsers.check_trail_no_rem
                      * Cg(parsers.heading_start, "level")
                      * ((C( parsers.optionalspace
                           * parsers.hash^0 
@@ -26460,6 +26774,7 @@ end
                        / strip_atx_end
                        / self.parser_functions.parse_inlines)
                      * Cb("level")
+                     * parsers.leave_trail
                      / writer.heading
 
   local function remove_enclosing_whitespaces(o)
@@ -26474,13 +26789,14 @@ end
                         - parsers.thematic_break_lines
 
   parsers.heading_text = parsers.heading_line
-                       * (parsers.heading_line - parsers.heading_level)^0
+                       * ((parsers.check_optional_indent / "") * (parsers.heading_line - parsers.heading_level))^0
 
-  parsers.SetextHeading = #(parsers.heading_text * parsers.heading_level)
-                        * Ct(parsers.heading_text / remove_enclosing_whitespaces
+  parsers.SetextHeading = #(parsers.heading_text * parsers.check_minimal_indent * parsers.check_trail * parsers.heading_level)
+                        * Ct(Cs(parsers.heading_text) / remove_enclosing_whitespaces
                             / self.parser_functions.parse_inlines )
-                        * parsers.heading_level
+                        * parsers.check_minimal_indent_and_trail * parsers.heading_level
                         * parsers.newline
+                        * parsers.leave_trail
                         / writer.heading
 
   parsers.Heading = parsers.AtxHeading + parsers.SetextHeading
@@ -26612,6 +26928,7 @@ end
         Space                 = parsers.Space,
         OptionalIndent        = parsers.OptionalIndent,
         Endline               = parsers.Endline,
+        EndlineBreak          = parsers.EndlineBreak,
         LinkAndEmph           = parsers.LinkAndEmph,
         Code                  = parsers.Code,
         AutoLinkUrl           = parsers.AutoLinkUrl,
@@ -27775,14 +28092,16 @@ M.extensions.fenced_code = function(blank_before_code_fence,
         return str:gsub("^%s*(.-)%s*$", "%1")
       end
 
-      local tilde_infostring = Cs(( parsers.anyescaped 
-                                  - parsers.newline)^0 
+      local tilde_infostring = Cs(Cs((V("HtmlEntity") 
+                                     + parsers.anyescaped 
+                                     - parsers.newline)^0)
                                  / strip_enclosing_whitespaces)
 
-      local backtick_infostring = Cs(((-#(parsers.backslash * parsers.backtick) * parsers.anyescaped)
-                                      - parsers.newline
-                                      - parsers.backtick)^0 
-                                     / strip_enclosing_whitespaces)
+      local backtick_infostring = Cs(Cs((V("HtmlEntity") 
+                                        + (-#(parsers.backslash * parsers.backtick) * parsers.anyescaped)
+                                         - parsers.newline
+                                         - parsers.backtick)^0)
+                                    / strip_enclosing_whitespaces)
 
       local fenceindent
 
@@ -27812,19 +28131,23 @@ M.extensions.fenced_code = function(blank_before_code_fence,
       end
 
       local fencetail      = function(char)
-        return               parsers.nonindentspace
+        return               parsers.check_trail_no_rem
                            * Cmt(C(char^3) * Cb("fencelength"), captures_geq_length)
                            * parsers.optionalspace * (parsers.newline + parsers.eof)
                            + parsers.eof
       end
 
-      local function process_fenced_line(s, i, indent_table, line_content)
-        local trail = ""
+      local function process_fenced_line(s, i, indent_table, line_content, is_blank)
+        local remainder = ""
         if has_trail(indent_table) then
-          trail = indent_table.trail.internal_remainder
+          remainder = indent_table.trail.internal_remainder
         end
 
-        local str = trail .. line_content
+        if is_blank and get_last_indent_name(indent_table) == "li" then
+          remainder = ""
+        end
+
+        local str = remainder .. line_content
         local index = 1
         local remaining = fenceindent
 
@@ -27845,19 +28168,21 @@ M.extensions.fenced_code = function(blank_before_code_fence,
       end
 
       local fencedline = function(char)
-        return Cmt(Cb("indent_info") * C(parsers.line - fencetail(char)), process_fenced_line)
+        return Cmt(Cb("indent_info") * C(parsers.line - fencetail(char)) * Cc(false), process_fenced_line)
       end
+
+      local blankfencedline = Cmt(Cb("indent_info") * C(parsers.blankline) * Cc(true), process_fenced_line)
 
       local TildeFencedCode
              = fencehead(parsers.tilde, tilde_infostring)
-             * Cs(((parsers.check_minimal_blank_indent / "") * parsers.blankline 
-                  + (parsers.check_minimal_indent / "") * fencedline(parsers.tilde))^0)
+             * Cs(((parsers.check_minimal_blank_indent / "") * blankfencedline
+                   + (parsers.check_minimal_indent / "") * fencedline(parsers.tilde))^0)
              * ((parsers.check_minimal_indent / "") * fencetail(parsers.tilde) + parsers.succeed)
 
       local BacktickFencedCode
              = fencehead(parsers.backtick, backtick_infostring)
-             * Cs(((parsers.check_minimal_blank_indent / "") * parsers.blankline 
-                  + (parsers.check_minimal_indent / "") * fencedline(parsers.backtick))^0)
+             * Cs(((parsers.check_minimal_blank_indent / "") * blankfencedline
+                   + (parsers.check_minimal_indent / "") * fencedline(parsers.backtick))^0)
              * ((parsers.check_minimal_indent / "") * fencetail(parsers.backtick) + parsers.succeed)
 
       local infostring_with_attributes
@@ -28260,10 +28585,10 @@ M.extensions.link_attributes = function()
 
       local define_reference_parser = (parsers.check_trail / "") * parsers.link_label * parsers.colon
                                     * parsers.spnl * parsers.url
-                                    * (parsers.spnl_sep * parsers.title + Cc(""))
-                                    * ( parsers.spnl
-                                      * Ct(parsers.attributes))^-1
-                                    * parsers.optionalspace * (parsers.newline + parsers.eof)
+                                    * ( parsers.spnl_sep * parsers.title * (parsers.spnl * Ct(parsers.attributes)) * parsers.only_blank
+                                      + parsers.spnl_sep * parsers.title * parsers.only_blank
+                                      + Cc("") * (parsers.spnl * Ct(parsers.attributes)) * parsers.only_blank
+                                      + Cc("") * parsers.only_blank)
                                     * parsers.leave_trail
 
       local ReferenceWithAttributes = define_reference_parser

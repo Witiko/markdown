@@ -11,6 +11,5 @@
 >>>
 documentBegin
 emphasis: aaa
-lineBreak
 emphasis: bbb
 documentEnd
