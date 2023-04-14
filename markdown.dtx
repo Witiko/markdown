@@ -24563,6 +24563,28 @@ end
 % \par
 % \begin{markdown}
 %
+%#### Parsers Used for HTML Entities
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function repeat_between(pattern, min, max)
+  return -pattern^(max + 1) * pattern^min
+end
+
+parsers.hexentity = parsers.ampersand * parsers.hash * C(S("Xx"))
+                  * C(repeat_between(parsers.hexdigit, 1, 6)) * parsers.semicolon
+parsers.decentity = parsers.ampersand * parsers.hash
+                  * C(repeat_between(parsers.digit, 1, 7)) * parsers.semicolon
+parsers.tagentity = parsers.ampersand * C(parsers.alphanumeric^1)
+                  * parsers.semicolon
+
+parsers.html_entities = parsers.hexentity / entities.hex_entity_with_x_char
+                      + parsers.decentity / entities.dec_entity
+                      + parsers.tagentity / entities.char_entity
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
 %#### Parsers Used for Markdown Lists
 %
 % \end{markdown}
@@ -24746,15 +24768,15 @@ parsers.url         = parsers.less * Cs((parsers.anyescaped
 
 -- quoted text:
 parsers.title_s     = parsers.squote
-                    * Cs((V("HtmlEntity") + (parsers.anyescaped - parsers.squote - parsers.blankline^2))^0)
+                    * Cs((parsers.html_entities + (parsers.anyescaped - parsers.squote - parsers.blankline^2))^0)
                     * parsers.squote
 
 parsers.title_d     = parsers.dquote
-                    * Cs((V("HtmlEntity") + (parsers.anyescaped - parsers.dquote - parsers.blankline^2))^0)
+                    * Cs((parsers.html_entities + (parsers.anyescaped - parsers.dquote - parsers.blankline^2))^0)
                     * parsers.dquote
 
 parsers.title_p     = parsers.lparent
-                    * Cs((V("HtmlEntity") + parsers.inparens + (parsers.anyescaped - parsers.rparent - parsers.blankline^2))^0)
+                    * Cs((parsers.html_entities + parsers.inparens + (parsers.anyescaped - parsers.rparent - parsers.blankline^2))^0)
                     * parsers.rparent
 
 parsers.title       = parsers.title_d + parsers.title_s + parsers.title_p
@@ -25129,24 +25151,6 @@ parsers.html_interrupting = parsers.html_incomplete_open_tag
                           - parsers.html_close_special_tag
                           - parsers.html_empty_special_tag
 
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-%#### Parsers Used for HTML Entities
-%
-% \end{markdown}
-%  \begin{macrocode}
-local function repeat_between(pattern, min, max)
-  return -pattern^(max + 1) * pattern^min
-end
-
-parsers.hexentity = parsers.ampersand * parsers.hash * C(S("Xx"))
-                  * C(repeat_between(parsers.hexdigit, 1, 6)) * parsers.semicolon
-parsers.decentity = parsers.ampersand * parsers.hash
-                  * C(repeat_between(parsers.digit, 1, 7)) * parsers.semicolon
-parsers.tagentity = parsers.ampersand * C(parsers.alphanumeric^1)
-                  * parsers.semicolon
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -26589,9 +26593,7 @@ end
                             + parsers.html_any_close_tag)
                           / writer.inline_html_tag
 
-  parsers.HtmlEntity    = parsers.hexentity / entities.hex_entity_with_x_char / writer.string
-                        + parsers.decentity / entities.dec_entity             / writer.string
-                        + parsers.tagentity / entities.char_entity            / writer.string
+  parsers.HtmlEntity    = parsers.html_entities / writer.string
 %    \end{macrocode}
 % \par
 % \begin{markdown}
