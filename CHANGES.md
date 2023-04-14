@@ -2,6 +2,10 @@
 
 ## 3.0.0
 
+Development:
+
+- Support OpTeX. (contributed by @olsak, #215, 109c1b5, #292)
+
 ## 2.23.0 (2023-04-27)
 
 Development:
