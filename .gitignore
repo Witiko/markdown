@@ -1,12 +1,3 @@
-examples/context-mkii.log
-examples/context-mkii.markdown.in
-examples/context-mkii.markdown.lua
-examples/context-mkii.markdown.out
-examples/context-mkii-mpgraph.mp
-examples/context-mkii.pdf
-examples/context-mkii.tmp
-examples/context-mkii.tui
-examples/context-mkii.tuo
 examples/context-mkiv.log
 examples/context-mkiv.markdown.in
 examples/context-mkiv.pdf
@@ -28,7 +19,6 @@ examples/latex-xetex.markdown.in
 examples/latex-xetex.markdown.lua
 examples/latex-xetex.markdown.out
 examples/latex-xetex.pdf
-examples/_markdown_context-mkii/
 examples/_markdown_context-mkiv/
 examples/_markdown_example/
 examples/_markdown_latex-luatex/
