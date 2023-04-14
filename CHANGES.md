@@ -18,7 +18,7 @@ Documentation:
 - Add a link to a preprint from TUGboat 44(1) to `README.md`.
   (#234, a4d9fbf)
 - Separate example files for pdfLaTeX, XeLaTeX, LuaLaTeX, and
-  TeX4ht. (#291)
+  TeX4ht. (daccaa8)
 
 Refactoring:
 
