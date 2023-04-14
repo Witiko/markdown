@@ -7,9 +7,14 @@ Development:
 - Add support of bulk redefinition of token renderers and
   token renderer prototypes in the `\markdownSetup` LaTeX
   command using wildcards. (#232, #287)
+- Add support for TeX Live 2023. (#281, #282)
 
 Fixes:
 
+- Drop support for ConTeXt Mark II, since the MkII files are
+  no longer installed in TeX Live 2023, see the article by
+  [Hans Hagen](https://tug.org/texlive/files/tb136hagen-texlive.pdf).
+  (#281, #282)
 - Remove extra space after inline elements with attributes.
   (#288)
 - Make our implementation of attributes compatible with jgm/pandoc.

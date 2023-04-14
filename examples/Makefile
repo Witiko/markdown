@@ -26,17 +26,14 @@ LUACLI_OPTIONS=\
   texMathDollars=true \
   texMathDoubleBackslash=true \
   texMathSingleBackslash=true
-OUTPUT=context-mkii.pdf context-mkiv.pdf \
+OUTPUT=\
+  context-mkiv.pdf \
   latex-pdftex.pdf latex-xetex.pdf latex-luatex.pdf \
   latex-tex4ht.html latex-tex4ht.css
 
 # This is the default pseudo-target.
 all: $(OUTPUT)
 	$(MAKE) clean
-
-# This target typesets the ConTeXt example using the Mark II format.
-context-mkii.pdf: context-mkii.tex example.tex
-	texexec --passon="--shell-escape --8bit" context-mkii.tex
 
 # This target typesets the ConTeXt example using the Mark IV format.
 context-mkiv.pdf: context-mkiv.tex example.tex

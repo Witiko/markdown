@@ -1632,10 +1632,7 @@ Next, invoke LuaTeX from the terminal:
 context document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the text “Hello
-*world*!” Invoking pdfTeX should have the same effect:
-``` sh
-texexec --passon=--shell-escape document.tex
-``````
+*world*!”
 
 ***
 
@@ -2918,7 +2915,7 @@ Hi *world*!
 ```````
 Last, invoke pdfTeX without shell access from the terminal:
 ``` sh
-texexec --passon=--no-shell-escape frozen-document.tex
+context frozen-document.tex
 ``````
 A PDF document named `frozen-document.pdf` should be produced and contain the
 text “Hello *world*!” Since we used the contents of the frozen cache using
@@ -5894,7 +5891,7 @@ Hi *world*!
 ```````
 Last, invoke pdfTeX without shell access from the terminal:
 ``` sh
-texexec --passon=--no-shell-escape document.tex
+context document.tex
 ``````
 A new PDF document named `document.pdf` should be produced and contain the
 same text “Hello *world*!” Since we used the contents of the frozen cache using
@@ -20319,11 +20316,6 @@ following text:
 > <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
 > *equals*
 > <math><mi>i</mi></math>.
-
-Invoking pdfTeX should have the same effect:
-``` sh
-texexec --passon=--shell-escape document.tex
-``````
 
 %</manual-interfaces>
 %<*context>
