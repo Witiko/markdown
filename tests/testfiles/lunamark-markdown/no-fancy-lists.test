@@ -3,28 +3,25 @@ This test ensures that the Lua `fancyLists` option is disabled by default.
 
 Fancy list (*roman, lower*)
 
- i. item
- i. item
+ iv. item
 
-Fancy list (*roman, upper*)
-
- I. item
- I. item
+ v. item
 
 Fancy list (*alpha, lower*)
 
- a. item
- a. item
+ d. item
 
-Fancy list (*alpha, upper*)
+ e. item
 
- A. item
- A. item
+Fancy list (*alpha, lower*)
+
+ v. item
 
 Fancy list (*paren*)
 
- 1) item
- 1) item
+ 4) item
+
+ 5) item
 >>>
 documentBegin
 codeSpan: fancyLists
@@ -32,15 +29,20 @@ interblockSeparator
 emphasis: roman, lower
 interblockSeparator
 interblockSeparator
-emphasis: roman, upper
+interblockSeparator
+emphasis: alpha, lower
+interblockSeparator
 interblockSeparator
 interblockSeparator
 emphasis: alpha, lower
 interblockSeparator
 interblockSeparator
-emphasis: alpha, upper
-interblockSeparator
-interblockSeparator
 emphasis: paren
 interblockSeparator
+olBegin
+olItemWithNumber: 4
+olItemEnd
+olItemWithNumber: 5
+olItemEnd
+olEnd
 documentEnd

@@ -21,10 +21,9 @@ Fancy list (*alpha, lower*)
 
  e. item
 
-Fancy list (*alpha, upper, tight*)
+Fancy list (*alpha, lower*)
 
- D. item
- E. item
+ v. item
 
 Fancy list (*paren*)
 
@@ -73,15 +72,13 @@ fancyOlItemWithNumber: 5
 fancyOlItemEnd
 fancyOlEnd
 interblockSeparator
-emphasis: alpha, upper, tight
+emphasis: alpha, lower
 interblockSeparator
 BEGIN fancyOlBeginTight
-- numstyle: UpperAlpha
+- numstyle: LowerAlpha
 - numdelim: Period
 END fancyOlBeginTight
-fancyOlItemWithNumber: 4
-fancyOlItemEnd
-fancyOlItemWithNumber: 5
+fancyOlItemWithNumber: 22
 fancyOlItemEnd
 fancyOlEndTight
 interblockSeparator

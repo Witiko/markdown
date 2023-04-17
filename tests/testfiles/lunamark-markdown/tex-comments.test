@@ -36,15 +36,15 @@ documentBegin
 codeSpan: texComments
 interblockSeparator
 emphasis: emphasized text
-emphasis: emphasi(percentSign) another one zed text
+emphasis: emphasi(percentSign)  another one zed text
 interblockSeparator
 interblockSeparator
+interblockSeparator
+emphasis: end of  a line
 interblockSeparator
 emphasis: end of (backslash) a line
 interblockSeparator
 emphasis: end of (backslash) a line
-interblockSeparator
-emphasis: end of (backslash)(backslash) a line
 interblockSeparator
 codeSpan: (backslash)
 codeSpan: (backslash)(percentSign)

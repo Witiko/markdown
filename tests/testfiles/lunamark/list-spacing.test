@@ -18,8 +18,11 @@ ulBeginTight
 ulItem
 ulItemEnd
 ulItem
-ulItemEnd
+interblockSeparator
+ulBeginTight
 ulItem
+ulItemEnd
+ulEndTight
 ulItemEnd
 ulItem
 ulItemEnd

@@ -14,7 +14,7 @@ bar
 documentBegin
 codeSpan: fencedCode
 interblockSeparator
-codeSpan: foo bar 
+codeSpan: foo bar
 interblockSeparator
 tilde
 tilde

@@ -181,6 +181,7 @@ BEGIN fencedDivAttributeContext
 attributeIdentifier: some-identifier
 interblockSeparator
 blockQuoteBegin
+interblockSeparator
 blockQuoteEnd
 interblockSeparator
 END fencedDivAttributeContext
@@ -189,7 +190,7 @@ interblockSeparator
 interblockSeparator
 leftBrace
 rightBrace
-codeSpan:  ::: 
+codeSpan: :::
 interblockSeparator
 BEGIN fencedDivAttributeContext
 attributeClassName: some-classname

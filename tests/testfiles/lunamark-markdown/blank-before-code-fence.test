@@ -34,7 +34,7 @@ codeSpan: fencedCode
 codeSpan: blankBeforeCodeFence
 interblockSeparator
 interblockSeparator
-codeSpan: foo bar 
+codeSpan: foo bar
 interblockSeparator
 tilde
 tilde
