@@ -23727,7 +23727,6 @@ parsers.tilde                  = P("~")
 parsers.backslash              = P("\\")
 parsers.tab                    = P("\t")
 parsers.newline                = P("\n")
-parsers.tightblocksep          = P("\001")
 
 parsers.digit                  = R("09")
 parsers.hexdigit               = R("09","af","AF")
@@ -23756,8 +23755,7 @@ parsers.nonspacechar           = parsers.any - parsers.spacing
 parsers.optionalspace          = parsers.spacechar^0
 
 parsers.normalchar             = parsers.any - (V("SpecialChar")
-                                                + parsers.spacing
-                                                + parsers.tightblocksep)
+                                                + parsers.spacing)
 parsers.eof                    = -parsers.any
 parsers.nonindentspace         = parsers.space^-3 * - parsers.spacechar
 parsers.indent                 = parsers.space^-3 * parsers.tab
@@ -24443,6 +24441,25 @@ parsers.check_minimal_indent_and_any_trail = Cmt( Cb("indent_info")
 parsers.check_minimal_blank_indent_and_any_trail = Cmt( Cb("indent_info")
                                                       * Cc(false) * Cc(true) * Cc("full-any") * Cc(true) * Cc(false), 
                                                        check_continuation_indentation_and_trail)
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% The following patterns specify behaviour around newlines.
+%
+% \end{markdown}
+%  \begin{macrocode}
+
+parsers.spnlc_noexc = parsers.optionalspace
+                    * (parsers.newline * parsers.check_minimal_indent_and_any_trail)^-1
+
+parsers.spnlc = parsers.optionalspace
+              * (V("EndlineNoSub"))^-1
+
+parsers.spnlc_sep  = parsers.optionalspace * V("EndlineNoSub")
+                   + parsers.spacechar^1
+
+parsers.only_blank = parsers.spacechar^0 * (parsers.newline + parsers.eof)
 
 %   \end{macrocode}
 % \begin{figure}
@@ -25173,7 +25190,7 @@ parsers.title_p     = parsers.lparent
 parsers.title       = parsers.title_d + parsers.title_s + parsers.title_p
 
 parsers.optionaltitle
-                    = parsers.spnl * parsers.title * parsers.spacechar^0
+                    = parsers.spnlc * parsers.title * parsers.spacechar^0
                     + Cc("")
 
 %    \end{macrocode}
@@ -25184,15 +25201,10 @@ parsers.optionaltitle
 %
 % \end{markdown}
 %  \begin{macrocode}
-parsers.spnl_sep  = parsers.optionalspace * parsers.newline * parsers.optionalspace
-                  + parsers.spacechar^1
-
-parsers.only_blank = parsers.spacechar^0 * (parsers.newline + parsers.eof)
-
 -- parse a reference definition:  [foo]: /bar "title"
 parsers.define_reference_parser = (parsers.check_trail / "") * parsers.link_label * parsers.colon
-                                * parsers.spnl * parsers.url
-                                * ( parsers.spnl_sep * parsers.title * parsers.only_blank
+                                * parsers.spnlc * parsers.url
+                                * ( parsers.spnlc_sep * parsers.title * parsers.only_blank
                                   + Cc("") * parsers.only_blank) 
                                 * parsers.leave_trail
 %    \end{macrocode}
@@ -26475,7 +26487,7 @@ function M.reader.new(writer, options)
   parsers.Str      = (parsers.normalchar * (parsers.normalchar + parsers.at)^0)
                    / writer.string
 
-  parsers.Symbol   = (parsers.backtick^1 + V("SpecialChar") - parsers.tightblocksep)
+  parsers.Symbol   = (parsers.backtick^1 + V("SpecialChar"))
                    / writer.string
 
   parsers.Ellipsis = P("...") / writer.ellipsis
@@ -26520,7 +26532,6 @@ function M.reader.new(writer, options)
 
   parsers.EndlineExceptions
                      = parsers.blankline -- paragraph break
-                     + parsers.tightblocksep  -- nested list
                      + parsers.eof       -- end of document
                      + parsers.bqstart
                      + parsers.thematic_break_lines
@@ -26531,16 +26542,20 @@ function M.reader.new(writer, options)
 
   parsers.CodeEndlineExceptions = parsers.EndlineExceptions
 
-  parsers.Endline   = parsers.newline
+  parsers.endline   = parsers.newline
                     * (parsers.check_minimal_indent 
                       * -V("EndlineExceptions") 
                       + parsers.check_optional_indent 
                       * -V("EndlineExceptions") 
                       * -parsers.starter)
                     * parsers.spacechar^0
-                    / (options.hardLineBreaks 
+
+  parsers.Endline = parsers.endline
+                  / (options.hardLineBreaks 
                        and writer.hard_line_break
                         or writer.space)
+
+  parsers.EndlineNoSub = parsers.endline
 
   parsers.CodeEndline   = parsers.newline
                         * (parsers.check_minimal_indent 
@@ -26812,7 +26827,6 @@ end
 %  \begin{macrocode}
   parsers.Blank        = parsers.blankline / ""
                        + V("Reference")
-                       + (parsers.tightblocksep / "\n")
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -26988,6 +27002,7 @@ end
         Space                 = parsers.Space,
         OptionalIndent        = parsers.OptionalIndent,
         Endline               = parsers.Endline,
+        EndlineNoSub          = parsers.EndlineNoSub,
         CodeEndline           = parsers.CodeEndline,
         EndlineBreak          = parsers.EndlineBreak,
         LinkAndEmph           = parsers.LinkAndEmph,
@@ -27433,7 +27448,6 @@ M.extensions.bracketed_spans = function()
       local parsers = self.parsers
       local writer = self.writer
 
-      -- TODO ignore endline exceptions
       local span_label  = parsers.lbracket
                           * (Cs((parsers.alphanumeric^1
                               + parsers.inticks
@@ -28702,11 +28716,11 @@ M.extensions.link_attributes = function()
 % \end{markdown}
 %  \begin{macrocode}
       local define_reference_parser = (parsers.check_trail / "") * parsers.link_label * parsers.colon
-                                    * parsers.spnl * parsers.url
-                                    * ( parsers.spnl_sep * parsers.title * (parsers.spnl * Ct(parsers.attributes)) 
+                                    * parsers.spnlc * parsers.url
+                                    * ( parsers.spnlc_sep * parsers.title * (parsers.spnlc * Ct(parsers.attributes)) 
                                       * parsers.only_blank
-                                      + parsers.spnl_sep * parsers.title * parsers.only_blank
-                                      + Cc("") * (parsers.spnl * Ct(parsers.attributes)) * parsers.only_blank
+                                      + parsers.spnlc_sep * parsers.title * parsers.only_blank
+                                      + Cc("") * (parsers.spnlc * Ct(parsers.attributes)) * parsers.only_blank
                                       + Cc("") * parsers.only_blank)
                                     * parsers.leave_trail
 
@@ -28855,7 +28869,6 @@ M.extensions.notes = function(notes, inline_notes)
 
         local Blank = NoteBlock + parsers.Blank
         self.update_rule("Blank", Blank)
-
         self.insert_pattern("Inline after LinkAndEmph",
                             NoteRef, "NoteRef")
       end
@@ -29247,7 +29260,7 @@ M.extensions.tex_math = function(tex_math_dollars,
       local writer = self.writer
 
       local function between(p, starter, ender)
-        return (starter * C(p * (p - ender)^0) * ender)
+        return (starter * Cs(p * (p - ender)^0) * ender)
       end
 
       local allowed_before_closing = B( parsers.backslash * parsers.any
@@ -29259,8 +29272,9 @@ M.extensions.tex_math = function(tex_math_dollars,
 %
 % \end{markdown}
 %  \begin{macrocode}
-      local dollar_math_content = parsers.backslash^-1
-                                * parsers.any
+      local dollar_math_content = (parsers.newline * (parsers.check_optional_indent / "")
+                                + parsers.backslash^-1
+                                * (parsers.any - parsers.newline))
                                 - parsers.blankline^2
                                 - parsers.dollar
 
@@ -29271,7 +29285,7 @@ M.extensions.tex_math = function(tex_math_dollars,
                                         * parsers.dollar
                                         * -#(parsers.digit)
 
-      local inline_math_dollars = between(C( dollar_math_content),
+      local inline_math_dollars = between(Cs( dollar_math_content),
                                           inline_math_opening_dollars,
                                           inline_math_closing_dollars)
 
@@ -29281,7 +29295,7 @@ M.extensions.tex_math = function(tex_math_dollars,
       local display_math_closing_dollars  = parsers.dollar
                                           * parsers.dollar
 
-      local display_math_dollars = between(C( dollar_math_content),
+      local display_math_dollars = between(Cs( dollar_math_content),
                                            display_math_opening_dollars,
                                            display_math_closing_dollars)
 %    \end{macrocode}
@@ -29292,7 +29306,8 @@ M.extensions.tex_math = function(tex_math_dollars,
 %
 % \end{markdown}
 %  \begin{macrocode}
-      local backslash_math_content  = parsers.any 
+      local backslash_math_content  = (parsers.newline * (parsers.check_optional_indent / "")
+                                    + (parsers.any - parsers.newline))
                                     - parsers.blankline^2
 %    \end{macrocode}
 % \begin{markdown}
@@ -29311,7 +29326,7 @@ M.extensions.tex_math = function(tex_math_dollars,
                                         * parsers.backslash
                                         * parsers.rparent
 
-      local inline_math_double  = between(C( backslash_math_content),
+      local inline_math_double  = between(Cs( backslash_math_content),
                                           inline_math_opening_double,
                                           inline_math_closing_double)
 
@@ -29324,7 +29339,7 @@ M.extensions.tex_math = function(tex_math_dollars,
                                         * parsers.backslash
                                         * parsers.rbracket
 
-      local display_math_double = between(C( backslash_math_content),
+      local display_math_double = between(Cs( backslash_math_content),
                                           display_math_opening_double,
                                           display_math_closing_double)
 %    \end{macrocode}
@@ -29342,7 +29357,7 @@ M.extensions.tex_math = function(tex_math_dollars,
                                         * parsers.backslash
                                         * parsers.rparent
 
-      local inline_math_single  = between(C( backslash_math_content),
+      local inline_math_single  = between(Cs( backslash_math_content),
                                           inline_math_opening_single,
                                           inline_math_closing_single)
 
@@ -29353,7 +29368,7 @@ M.extensions.tex_math = function(tex_math_dollars,
                                         * parsers.backslash
                                         * parsers.rbracket
 
-      local display_math_single = between(C( backslash_math_content),
+      local display_math_single = between(Cs( backslash_math_content),
                                           display_math_opening_single,
                                           display_math_closing_single)
 
