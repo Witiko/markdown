@@ -21,15 +21,20 @@ Fancy list (*alpha, lower*)
 
  e. item
 
-Fancy list (*alpha, lower*)
+Fancy list (*alpha, upper, tight*)
 
- v. item
+ V. item
 
 Fancy list (*paren*)
 
  4) item
 
  5) item
+
+Fancy list (*alpha, lower, tight and paren, alpha, lower, tight*)
+
+ a. item
+ b) item
 >>>
 documentBegin
 codeSpan: fancyLists
@@ -72,10 +77,10 @@ fancyOlItemWithNumber: 5
 fancyOlItemEnd
 fancyOlEnd
 interblockSeparator
-emphasis: alpha, lower
+emphasis: alpha, upper, tight
 interblockSeparator
 BEGIN fancyOlBeginTight
-- numstyle: LowerAlpha
+- numstyle: UpperAlpha
 - numdelim: Period
 END fancyOlBeginTight
 fancyOlItemWithNumber: 22
@@ -93,4 +98,22 @@ fancyOlItemEnd
 fancyOlItemWithNumber: 5
 fancyOlItemEnd
 fancyOlEnd
+interblockSeparator
+emphasis: alpha, lower, tight and paren, alpha, lower, tight
+interblockSeparator
+BEGIN fancyOlBeginTight
+- numstyle: LowerAlpha
+- numdelim: Period
+END fancyOlBeginTight
+fancyOlItemWithNumber: 1
+fancyOlItemEnd
+fancyOlEndTight
+interblockSeparator
+BEGIN fancyOlBeginTight
+- numstyle: LowerAlpha
+- numdelim: OneParen
+END fancyOlBeginTight
+fancyOlItemWithNumber: 2
+fancyOlItemEnd
+fancyOlEndTight
 documentEnd
