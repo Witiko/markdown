@@ -16,8 +16,8 @@ note (as with list items).
 
 This paragraph should not be part of the note, as it is not indented.
 
-  [^1]: Here is the note.  It can go anywhere after the note
-  reference.  It need not be placed at the end of the document.
+  [^1]: Here is the note. It can go anywhere after the note
+  reference. It need not be placed at the end of the document.
 
 >>>
 documentBegin

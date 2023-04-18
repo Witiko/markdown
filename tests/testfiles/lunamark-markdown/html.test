@@ -4,11 +4,11 @@ This test ensures that the Lua `html` option correctly propagates through
 the plain TeX interface.
 
 <div>
-*There is block tag support.*
+*There is no block tag support.*
 </div>
 *There is <inline tag="value"></inline> support.<br/>*
-_There is <!-- *comment* --> support._
-_There is <? *HTML instruction* ?> support._
+_There is no <!-- *comment* --> support._
+_There is no <? *HTML instruction* ?> support._
 
 <!--
 
@@ -36,8 +36,21 @@ codeSpan: html
 interblockSeparator
 emphasis: There is no block tag support.
 emphasis: There is <inline tag="value"></inline> support.<br/>
-emphasis: There is no <!-- comment --> support.
-emphasis: There is no <? HTML instruction ?> support.
+emphasis: There is no <!-- (emphasis: comment) --> support.
+emphasis: There is no <? (emphasis: HTML instruction) ?> support.
+interblockSeparator
+interblockSeparator
+emphasis: block comment
+interblockSeparator
+olBeginTight
+olItemWithNumber: 1
+olItemEnd
+olItemWithNumber: 2
+olItemEnd
+olItemWithNumber: 3
+olItemEnd
+olEndTight
+interblockSeparator
 interblockSeparator
 interblockSeparator
 ulBeginTight

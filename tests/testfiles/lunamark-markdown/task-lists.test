@@ -57,12 +57,9 @@ emphasis: a loose nested item with a ticked box
 olItemEnd
 olItemWithNumber: 2
 emphasis: a loose nested item without a tickbox
-olItemEnd
-olEnd
 interblockSeparator
 emphasis: here is a new paragraph, but still no tickbox
-interblockSeparator
-olBegin
+olItemEnd
 olItemWithNumber: 3
 tickedBox
 emphasis: here is loose nested item with a ticked box
