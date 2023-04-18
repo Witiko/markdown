@@ -23795,8 +23795,10 @@ parsers.blockquote_start = parsers.leader * parsers.more * parsers.space^-1
 %
 % \end{markdown}
 %  \begin{macrocode}
-function has_trail(indent_table)
-  return indent_table ~= nil and indent_table.trail ~= nil and next(indent_table.trail) ~= nil
+local function has_trail(indent_table)
+  return indent_table ~= nil and 
+    indent_table.trail ~= nil and 
+    next(indent_table.trail) ~= nil
 end
 
 %  \end{macrocode}
@@ -23806,8 +23808,10 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-function has_indents(indent_table)
-  return indent_table ~= nil and indent_table.indents ~= nil and next(indent_table.indents) ~= nil
+local function has_indents(indent_table)
+  return indent_table ~= nil and 
+    indent_table.indents ~= nil and 
+    next(indent_table.indents) ~= nil
 end
 
 %  \end{macrocode}
@@ -24227,7 +24231,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 local function check_trail_joined(s, i, indent_table, spacing, expect_code, omit_remainder) -- luacheck: ignore s i
-  local is_code = false
+  local is_code
   local remainder
 
   if has_trail(indent_table) then
@@ -28246,6 +28250,18 @@ M.extensions.fenced_code = function(blank_before_code_fence,
                                     / strip_enclosing_whitespaces)
 
       local fenceindent
+
+      local function has_trail(indent_table)
+        return indent_table ~= nil and 
+          indent_table.trail ~= nil and 
+          next(indent_table.trail) ~= nil
+      end
+
+      local function has_indents(indent_table)
+        return indent_table ~= nil and 
+          indent_table.indents ~= nil and 
+          next(indent_table.indents) ~= nil
+      end
 
       local function get_last_indent_name(indent_table)
         if has_indents(indent_table) then
