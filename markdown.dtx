@@ -23951,7 +23951,7 @@ local function process_starter_spacing(indent, spacing, minimum, left_strip_leng
     end
   end
 
-  local remainder = ""
+  local remainder
   if (code_started) then
     remainder = code_start
   else
@@ -24011,7 +24011,7 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-local function process_starter_indent(s, i, indent_table, starter, is_blank, indent_type, breakable) -- luacheck: ignore s i
+local function process_starter_indent(_, _, indent_table, starter, is_blank, indent_type, breakable)
   local last_trail = starter[1]
   local delimiter = starter[2]
   local raw_new_trail = starter[3]
@@ -24122,11 +24122,7 @@ local function traverse_indent(s, i, indent_table, is_optional, is_blank)
   local new_index = i
 
   local preceding_indentation = 0
-  local current_trail
-
-  if not has_indents(indent_table) then
-    return true, new_index, current_trail
-  end
+  local current_trail = {}
 
   local blank_starter = left_blank_starter(indent_table)
 
@@ -24153,12 +24149,12 @@ local function traverse_indent(s, i, indent_table, is_optional, is_blank)
     local space_only = delimiter == ""
 
     -- check previous trail
-    if not space_only and current_trail == nil then
+    if not space_only and next(current_trail) == nil then
       local sp = process_starter_spacing(0, raw_last_trail, 0, 0)
       current_trail = {is_code = sp.is_code, remainder = sp.remainder}
     end
 
-    if current_trail ~= nil then
+    if next(current_trail) ~= nil then
       if not space_only and current_trail.is_code then
         return is_optional, new_index, current_trail
       end
@@ -24343,7 +24339,7 @@ end
 %  \begin{macrocode}
 local function check_continuation_indentation_and_trail(s, i, indent_table, is_optional, is_blank, trail_type,
                                                         reset_rem, omit_remainder)  
-    if not has_indents(indent_table) then
+  if not has_indents(indent_table) then
     local spacing, new_index = lpeg.match(C(parsers.spacechar^0) * Cp(), s, i)
     local result, remainder = check_trail_type(s, i, indent_table.trail, spacing, trail_type)
     if remainder == nil then
@@ -25548,7 +25544,7 @@ function M.reader.new(writer, options)
                 + parsers.minimally_indented_separated_ref_or_block)^0)
   end
 
-  function add_indent(pattern, name, breakable)
+  parsers.add_indent = function(pattern, name, breakable)
     return  Cg(Cmt( Cb("indent_info")
                   * Ct(pattern)
                   * (#parsers.linechar * Cc(false) + Cc(true)) -- check if starter is blank
@@ -25601,12 +25597,12 @@ function M.reader.new(writer, options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  parsers.blockquote_body = add_indent(parsers.blockquote_opening_condition, "bq", true)
+  parsers.blockquote_body = parsers.add_indent(parsers.blockquote_opening_condition, "bq", true)
                           * parsers.indented_content()
                           * remove_indent("bq")
 
   if not options.breakableBlockquotes then
-    parsers.blockquote_body = add_indent(parsers.blockquote_opening_condition, "bq", false)
+    parsers.blockquote_body = parsers.add_indent(parsers.blockquote_opening_condition, "bq", false)
                             * parsers.indented_content()
                             * remove_indent("bq")
   end
@@ -26396,7 +26392,8 @@ function M.reader.new(writer, options)
     local r = self.lookup_reference(next_link_content)
 
     if r then
-      local inline_content = resolve_inline_following_content(t, next_link_closing_index, false, t.match_link_attributes)
+      local inline_content = resolve_inline_following_content(t, next_link_closing_index, false, 
+                                                              t.match_link_attributes)
       r.attributes = join_attributes(r.attributes, inline_content.attributes)
       render_link_or_image(t, opening_index, next_link_closing_index, closing_index, r)
     end
@@ -26764,13 +26761,13 @@ end
 
   parsers.TightListItem = function(starter)
     return  -parsers.ThematicBreak
-            * add_indent(starter, "li")
+            * parsers.add_indent(starter, "li")
             * parsers.indented_content_tight
   end
 
   parsers.LooseListItem = function(starter)
     return  -parsers.ThematicBreak
-            * add_indent(starter, "li")
+            * parsers.add_indent(starter, "li")
             * parsers.indented_content_loose
             * remove_indent("li")
   end
@@ -28055,12 +28052,12 @@ M.extensions.fancy_lists = function()
       local starter = apply_function_to_pairs(enumerator, starter_pairs)
 
       local TightListItem = function(starter)
-        return  add_indent(starter, "li")
+        return  parsers.add_indent(starter, "li")
                 * parsers.indented_content_tight
       end
 
       local LooseListItem = function(starter)
-        return  add_indent(starter, "li")
+        return  parsers.add_indent(starter, "li")
                 * parsers.indented_content_loose
                 * remove_indent("li")
       end
@@ -28269,7 +28266,7 @@ M.extensions.fenced_code = function(blank_before_code_fence,
         end
       end
 
-      local function count_fenced_start_indent(s, i, indent_table, trail)
+      local function count_fenced_start_indent(_, _, indent_table, trail)
         local last_indent_name = get_last_indent_name(indent_table)
         fenceindent = 0
         if last_indent_name ~= "li" then
