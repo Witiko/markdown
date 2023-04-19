@@ -24442,6 +24442,10 @@ parsers.check_minimal_blank_indent_and_any_trail = Cmt( Cb("indent_info")
                                                       * Cc(false) * Cc(true) * Cc("full-any") * Cc(true) * Cc(false), 
                                                        check_continuation_indentation_and_trail)
 
+parsers.check_minimal_blank_indent_and_any_trail_no_rem = Cmt( Cb("indent_info")
+                                                        * Cc(false) * Cc(true) * Cc("full-any") * Cc(true) * Cc(true),
+                                                        check_continuation_indentation_and_trail)
+
 %  \end{macrocode}
 % \begin{markdown}
 %
@@ -28489,6 +28493,9 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
                  , "div_level")
       end
 
+      local non_fenced_div_block  = parsers.check_minimal_indent * V("Block") 
+                                  - parsers.check_minimal_indent_and_trail * fenced_div_end
+
       local FencedDiv = fenced_div_begin
                       / function (infostring)
                           local attr = lpeg.match(Ct(parsers.attributes), infostring)
@@ -28500,13 +28507,13 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
                       / writer.div_begin
                       * increment_div_level(1)
                       * parsers.skipblanklines
-                      * Ct( (parsers.check_minimal_indent * (V("Block") - fenced_div_end))^-1
-                          * ( parsers.blanklines
+                      * Ct( non_fenced_div_block^-1
+                          * ( parsers.minimally_indented_blank^0
                             / function()
                                 return writer.interblocksep
                               end
-                            * (parsers.check_minimal_indent * (V("Block") - fenced_div_end)))^0)
-                      * parsers.skipblanklines
+                            * non_fenced_div_block)^0)
+                      * parsers.minimally_indented_blank^0
                       * parsers.check_minimal_indent_and_trail * fenced_div_end * increment_div_level(-1)
                       * (Cc("") / writer.div_end)
 
@@ -29019,8 +29026,9 @@ M.extensions.pipe_tables = function(table_captions)
                                         , table_hline_separator
                                         , table_hline_column)
 
-      local table_caption_beginning = parsers.skipblanklines
-                                    * parsers.nonindentspace
+      local table_caption_beginning = (parsers.check_minimal_blank_indent_and_any_trail_no_rem 
+                                      * parsers.optionalspace * parsers.newline)^0
+                                    * parsers.check_minimal_indent_and_trail
                                     * (P("Table")^-1 * parsers.colon)
                                     * parsers.optionalspace
 
@@ -29047,9 +29055,9 @@ M.extensions.pipe_tables = function(table_captions)
         table_caption = parsers.fail
       end
 
-      local PipeTable = Ct(table_row * parsers.newline
-                        * table_hline
-                        * (parsers.newline * table_row)^0)
+      local PipeTable = Ct(table_row * parsers.newline * parsers.check_minimal_indent_and_trail
+                        * table_hline * parsers.newline
+                        * (parsers.check_minimal_indent_and_trail * table_row * parsers.newline)^0)
                       / make_pipe_table_rectangular
                       * table_caption^-1
                       / writer.table
