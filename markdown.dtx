@@ -26085,21 +26085,18 @@ function M.reader.new(writer, options)
   parsers.inline_link = parsers.link_text
                       * parsers.inline_direct_ref
 
-  parsers.full_reference_link = parsers.link_text
-                              * parsers.link_label
-
-  parsers.collapsed_link  = parsers.link_label
-                          * parsers.empty_link
+  parsers.full_link = parsers.link_text
+                    * parsers.link_label
 
   parsers.shortcut_link = parsers.link_label
                         * -(parsers.empty_link + parsers.link_label)
 
-  parsers.any_link  = parsers.inline_link
-                    + parsers.link_text
+  parsers.collapsed_link  = parsers.link_label
+                          * parsers.empty_link
 
   parsers.image_opening = #(parsers.exclamation * parsers.inline_link)
                         * Cg(Cc("inline"), "link_type")
-                        + #(parsers.exclamation * parsers.full_reference_link)
+                        + #(parsers.exclamation * parsers.full_link)
                         * Cg(Cc("full"), "link_type")
                         + #(parsers.exclamation * parsers.collapsed_link)
                         * Cg(Cc("collapsed"), "link_type")
@@ -26110,7 +26107,7 @@ function M.reader.new(writer, options)
 
   parsers.link_opening  = #parsers.inline_link
                         * Cg(Cc("inline"), "link_type")
-                        + #parsers.full_reference_link
+                        + #parsers.full_link
                         * Cg(Cc("full"), "link_type")
                         + #parsers.collapsed_link
                         * Cg(Cc("collapsed"), "link_type")
