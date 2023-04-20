@@ -24946,17 +24946,30 @@ parsers.html_open_special_tag = parsers.html_tag_start
                               * parsers.html_tag_end
 
 -- incomplete tags
+parsers.incomplete_tag_following  = parsers.spacechar
+                                  + parsers.more
+                                  + parsers.slash * parsers.more
+                                  + #(parsers.newline + parsers.eof)
+
+parsers.incomplete_special_tag_following  = parsers.spacechar
+                                          + parsers.more
+                                          + #(parsers.newline + parsers.eof)
+
 parsers.html_incomplete_open_tag  = parsers.html_tag_start
                                   * parsers.block_keyword
+                                  * parsers.incomplete_tag_following
 
 parsers.html_incomplete_open_special_tag  = parsers.html_tag_start
                                           * parsers.special_block_keyword
+                                          * parsers.incomplete_special_tag_following
 
 parsers.html_incomplete_close_tag = parsers.html_tag_closing_start
                                   * parsers.block_keyword
+                                  * parsers.incomplete_tag_following
 
 parsers.html_incomplete_close_special_tag = parsers.html_tag_closing_start
                                           * parsers.special_block_keyword
+                                          * parsers.incomplete_tag_following
 
 -- closing tags
 parsers.html_close_tag  = parsers.html_tag_closing_start
@@ -25011,7 +25024,9 @@ parsers.html_special_block_opening  = parsers.html_incomplete_open_special_tag
                                     - parsers.html_empty_special_tag
 
 parsers.html_closing_special_block  = parsers.html_special_block_opening
-                                    * ((parsers.any - parsers.html_close_special_tag)^0
+                                    * ((parsers.html_newline_indent + 
+                                       (parsers.any - parsers.newline)
+                                       - parsers.html_close_special_tag)^0
                                       * parsers.html_close_special_tag
                                       * parsers.linechar^0
                                       + parsers.html_empty_end_condition)
