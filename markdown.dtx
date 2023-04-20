@@ -29080,7 +29080,7 @@ M.extensions.pipe_tables = function(table_captions)
 
       local PipeTable = Ct(table_row * parsers.newline * parsers.check_minimal_indent_and_trail
                         * table_hline * parsers.newline
-                        * (parsers.check_minimal_indent_and_trail * table_row * parsers.newline)^0)
+                        * (parsers.check_minimal_indent * table_row * parsers.newline)^0)
                       / make_pipe_table_rectangular
                       * table_caption^-1
                       / writer.table
