@@ -23964,7 +23964,8 @@ local function process_starter_spacing(indent, spacing, minimum, left_strip_leng
     remainder = remainder,
     left_total_stripped = left_total_stripped,
     is_minimum = is_minimum,
-    minimum_remainder = minimum_remainder
+    minimum_remainder = minimum_remainder,
+    total_length = count,
   }
 end
 
@@ -24057,7 +24058,7 @@ local function process_starter_indent(_, _, indent_table, starter, is_blank, ind
   local new_indent_info = {name=indent_type, length=indent_length}
 
   indent_table = update_indent_table(indent_table, new_indent_info, true)
-  indent_table = add_trail(indent_table, {is_code=sp.is_code, remainder=sp.remainder})
+  indent_table = add_trail(indent_table, {is_code=sp.is_code, remainder=sp.remainder, total_length=sp.total_length})
 
   return true, indent_table
 end
@@ -24151,7 +24152,7 @@ local function traverse_indent(s, i, indent_table, is_optional, is_blank)
     -- check previous trail
     if not space_only and next(current_trail) == nil then
       local sp = process_starter_spacing(0, raw_last_trail, 0, 0)
-      current_trail = {is_code = sp.is_code, remainder = sp.remainder}
+      current_trail = {is_code = sp.is_code, remainder = sp.remainder, total_length=sp.total_length}
     end
 
     if next(current_trail) ~= nil then
@@ -24200,7 +24201,8 @@ local function traverse_indent(s, i, indent_table, is_optional, is_blank)
       preceding_indentation = preceding_indentation + value.length
     end
 
-    current_trail = {is_code=sp.is_code, remainder=sp.remainder, internal_remainder=sp.minimum_remainder}
+    current_trail = {is_code=sp.is_code, remainder=sp.remainder, internal_remainder=sp.minimum_remainder,
+                     total_length=sp.total_length}
     new_index = next_index
   end
 
@@ -24245,6 +24247,31 @@ local function check_trail_joined(s, i, indent_table, spacing, expect_code, omit
     return result
   end
   return result, remainder
+end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Check if the current trail of the `indent_table` is of length between `min` and `max`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function check_trail_length(s, i, indent_table, spacing, min, max) -- luacheck: ignore s i
+  local trail
+
+  if has_trail(indent_table) then
+    trail = indent_table.trail
+  else
+    trail = process_starter_spacing(0, spacing, 0, 0)
+  end
+
+  local total_length = trail.total_length
+  if total_length == nil then
+    --print("NIL")
+    return false
+  end
+
+  return max <= total_length and total_length <= total_length
 end
 
 %  \end{macrocode}
@@ -24399,6 +24426,14 @@ parsers.check_trail = Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(false)
 parsers.check_trail_no_rem = Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(false) * Cc(true), check_trail_joined)
 
 parsers.check_code_trail  = Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(true), check_trail_joined)
+
+parsers.check_trail_length_range  = function(min, max)
+  return Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(min) * Cc(max), check_trail_length)
+end
+
+parsers.check_trail_length = function(n)
+  return parsers.check_trail_length_range(n, n)
+end
 
 %  \end{macrocode}
 % \begin{markdown}
@@ -27873,18 +27908,27 @@ M.extensions.definition_lists = function(tight_lists)
 
       local defstartchar = S("~:")
 
-      local defstart = ( defstartchar * #parsers.spacing
+      local defstart  = parsers.check_trail_length(0) * defstartchar * #parsers.spacing
                                       * (parsers.tab + parsers.space^-3)
-                       + parsers.space * defstartchar * #parsers.spacing
+                      + parsers.check_trail_length(1) * defstartchar * #parsers.spacing
                                        * (parsers.tab + parsers.space^-2)
-                       + parsers.space * parsers.space * defstartchar
-                                       * #parsers.spacing
+                      + parsers.check_trail_length(2) * defstartchar * #parsers.spacing
                                        * (parsers.tab + parsers.space^-1)
-                       + parsers.space * parsers.space * parsers.space
-                                       * defstartchar * #parsers.spacing
-                       )
+                      + parsers.check_trail_length(3) * defstartchar * #parsers.spacing
 
-      local dlchunk = Cs(parsers.line * (parsers.indentedline - parsers.blankline)^0)
+      local indented_line = (parsers.check_minimal_indent / "") * parsers.check_code_trail * parsers.line
+
+      local blank = parsers.check_minimal_blank_indent_and_any_trail * parsers.optionalspace * parsers.newline
+
+      local dlchunk = Cs(parsers.line * (indented_line - blank)^0)
+
+      -- TODO use in notes
+      local indented_blocks = function(bl)
+        return Cs( bl
+              * (blank^1 * (parsers.check_minimal_indent / "") * parsers.check_code_trail * -parsers.blankline * bl)^0
+              * (blank^1 + parsers.eof) 
+            )
+      end
 
       local function definition_list_item(term, defs, _)
         return { term = self.parser_functions.parse_inlines(term),
@@ -27892,22 +27936,22 @@ M.extensions.definition_lists = function(tight_lists)
       end
 
       local DefinitionListItemLoose
-                    = C(parsers.line) * parsers.skipblanklines
-                    * Ct((defstart
-                         * parsers.indented_blocks(dlchunk)
-                         / self.parser_functions.parse_blocks_nested)^1)
+                    = C(parsers.line) * blank^0
+                    * Ct((parsers.check_minimal_indent * (defstart
+                         * indented_blocks(dlchunk)
+                         / self.parser_functions.parse_blocks_nested))^1)
                     * Cc(false) / definition_list_item
 
       local DefinitionListItemTight
                     = C(parsers.line)
-                    * Ct((defstart * dlchunk
-                         / self.parser_functions.parse_blocks_nested)^1)
+                    * Ct((parsers.check_minimal_indent * (defstart * dlchunk
+                         / self.parser_functions.parse_blocks_nested))^1)
                     * Cc(true) / definition_list_item
 
       local DefinitionList
                     = ( Ct(DefinitionListItemLoose^1) * Cc(false)
                       + Ct(DefinitionListItemTight^1)
-                      * (parsers.skipblanklines
+                      * (blank^0
                         * -DefinitionListItemLoose * Cc(true))
                       ) / writer.definitionlist
 
