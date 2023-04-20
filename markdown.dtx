@@ -28097,6 +28097,14 @@ M.extensions.fancy_lists = function()
         end
 
         local num
+        num = numstr:match("^([I])$")
+        if num then
+          return roman2number(num), "UpperRoman", numdelim
+        end
+        num = numstr:match("^([i])$")
+        if num then
+          return roman2number(string.upper(num)), "LowerRoman", numdelim
+        end
         num = numstr:match("^([A-Z])$")
         if num then
           return string.byte(num) - string.byte("A") + 1, "UpperAlpha", numdelim
