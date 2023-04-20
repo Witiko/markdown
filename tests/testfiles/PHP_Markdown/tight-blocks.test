@@ -1,27 +1,15 @@
 <<<
-Paragraph and no space:
-* ciao
-
-Paragraph and 1 space:
- * ciao
-
-Paragraph and 3 spaces:
-  * ciao
-
 Paragraph and 4 spaces:
-   * ciao
+    * ciao
 
 Paragraph before header:
-#Header
+# Header
 
 Paragraph before blockquote:
->Some quote.
+> Some quote.
 
 >>>
 documentBegin
-interblockSeparator
-interblockSeparator
-interblockSeparator
 interblockSeparator
 interblockSeparator
 BEGIN section
