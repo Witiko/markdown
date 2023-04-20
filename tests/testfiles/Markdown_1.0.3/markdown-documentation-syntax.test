@@ -40,8 +40,8 @@ Readability, however, is emphasized above all else. A Markdown-formatted
 document should be publishable as-is, as plain text, without looking
 like it's been marked up with tags or formatting instructions. While
 Markdown's syntax has been influenced by several existing text-to-HTML
-filters -- including [Setext] [1], [atx] [2], [Textile] [3], [reStructuredText] [4],
-[Grutatext] [5], and [EtText] [6] -- the single biggest source of
+filters -- including [Setext][1], [atx][2], [Textile][3], [reStructuredText][4],
+[Grutatext][5], and [EtText][6] -- the single biggest source of
 inspiration for Markdown's syntax is the format of plain text email.
 
   [1]: http://docutils.sourceforge.net/mirror/setext.html
@@ -201,7 +201,7 @@ work best -- and look better -- when you format them with hard breaks.
 
 ### Headers
 
-Markdown supports two styles of headers, [Setext] [1] and [atx] [2].
+Markdown supports two styles of headers, [Setext][1] and [atx][2].
 
 Setext-style headers are "underlined" using equal signs (for first-level
 headers) and dashes (for second-level headers). For example:
@@ -570,7 +570,7 @@ which you place a label of your choosing to identify the link:
 
 You can optionally use a space to separate the sets of brackets:
 
-    This is [an example] [id] reference-style link.
+    This is [an example][id] reference-style link.
 
 Then, anywhere in the document, you define your link label like this,
 on a line by itself:
@@ -634,8 +634,8 @@ document, sort of like notes.
 
 Here's an example of reference links in action:
 
-    I get 10 times more traffic from [Google] [1] than from
-    [Yahoo] [2] or [MSN] [3].
+    I get 10 times more traffic from [Google][1] than from
+    [Yahoo][2] or [MSN][3].
 
       [1]: http://google.com/        "Google"
       [2]: http://search.yahoo.com/  "Yahoo Search"
@@ -1366,7 +1366,7 @@ interblockSeparator
 inputVerbatim: ./_markdown_test/e8ed523d328f169e9c316bb7fbd06958.verbatim
 interblockSeparator
 interblockSeparator
-inputVerbatim: ./_markdown_test/dcf9d38ebd2cb8d039f1de6c828b6068.verbatim
+inputVerbatim: ./_markdown_test/e8ed523d328f169e9c316bb7fbd06958.verbatim
 interblockSeparator
 interblockSeparator
 inputVerbatim: ./_markdown_test/a50cb4ac3eab31bb831dcbd4c831ae62.verbatim
@@ -1412,7 +1412,7 @@ inputVerbatim: ./_markdown_test/38cc80423dbab73df7a044929fa4e7c6.verbatim
 interblockSeparator
 interblockSeparator
 interblockSeparator
-inputVerbatim: ./_markdown_test/2c85dae2ac45e0746fec35d919a0743e.verbatim
+inputVerbatim: ./_markdown_test/b80b78ea17b5f6bf7dea31172752c9c9.verbatim
 interblockSeparator
 interblockSeparator
 inputVerbatim: ./_markdown_test/cde06eeab7bc71d2bfaba4158cb3c294.verbatim
@@ -1553,7 +1553,7 @@ interblockSeparator
 inputVerbatim: ./_markdown_test/48f8d6f10d4f5f67fd448d4d52284296.verbatim
 interblockSeparator
 interblockSeparator
-inputVerbatim: ./_markdown_test/04418d019c77b632c835de3e798283f7.verbatim
+inputVerbatim: ./_markdown_test/7a40c43d62d88235d1e9b3ee88fad7e3.verbatim
 END section
 END section
 END section
