@@ -24267,11 +24267,10 @@ local function check_trail_length(s, i, indent_table, spacing, min, max) -- luac
 
   local total_length = trail.total_length
   if total_length == nil then
-    --print("NIL")
     return false
   end
 
-  return max <= total_length and total_length <= total_length
+  return min <= total_length and total_length <= max
 end
 
 %  \end{macrocode}
