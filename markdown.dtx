@@ -1711,8 +1711,8 @@ local walkable_syntax = {
     "ThematicBreak",
     "BulletList",
     "OrderedList",
-    "Heading",
     "DisplayHtml",
+    "Heading",
     "Paragraph",
     "Plain",
   },
@@ -4876,8 +4876,8 @@ be produced and contain the following text:
         "ThematicBreak",
         "BulletList",
         "OrderedList",
-        "Heading",
         "DisplayHtml",
+        "Heading",
         "Paragraph",
         "Plain"
     ],
@@ -24357,6 +24357,22 @@ end
 %  \end{macrocode}
 % \begin{markdown}
 %
+% Stores or restores `is_storing` a trail from indent table `indent_table`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function trail_backup(s, i, indent_table, is_storing) -- luacheck: ignore s i
+  if is_storing then
+    indent_table.trail_backup = indent_table.trail
+  else
+    indent_table.trail = indent_table.trail_backup
+  end
+  return true, indent_table
+end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
 % Check the indentation of the continuation line, optionally with 
 % the mode `is_optional` selected. Check blank line specifically with `is_blank`. 
 % Additionally, also directly check the new trail with a type `trail_type`.
@@ -24433,6 +24449,10 @@ end
 parsers.check_trail_length = function(n)
   return parsers.check_trail_length_range(n, n)
 end
+
+parsers.store_trail = Cg(Cmt(Cb("indent_info") * Cc(true), trail_backup), "indent_info")
+
+parsers.restore_trail = Cg(Cmt(Cb("indent_info") * Cc(false), trail_backup), "indent_info")
 
 %  \end{macrocode}
 % \begin{markdown}
@@ -24823,10 +24843,10 @@ parsers.html_attribute_name = (parsers.letter + parsers.colon + parsers.undersco
                             + parsers.period + parsers.dash)^0
 
 parsers.html_attribute_value  = parsers.squote 
-                              * (parsers.any - parsers.newline - parsers.squote)^0 
+                              * (parsers.linechar - parsers.squote)^0 
                               * parsers.squote
                               + parsers.dquote 
-                              * (parsers.any - parsers.newline - parsers.dquote)^0 
+                              * (parsers.linechar - parsers.dquote)^0 
                               * parsers.dquote
                               + ( parsers.any - parsers.spacechar - parsers.newline
                                 - parsers.dquote - parsers.squote - parsers.backtick
@@ -24863,24 +24883,26 @@ parsers.html_non_newline_attribute  = parsers.spacechar^1
                                     * parsers.html_attribute_name
                                     * parsers.html_attribute_value_specification^-1
 
-parsers.html_comment_start = P("<!--")
-
-parsers.html_comment_end = P("-->")
-
--- TODO add to other
-parsers.html_comment = parsers.nonindentspace
-                     * Cs(parsers.html_comment_start
-                         * Cs(Cs( parsers.newline 
-                                * (parsers.check_minimal_blank_indent_and_any_trail * #parsers.blankline
-                                  + parsers.check_minimal_indent_and_any_trail)
-                              + parsers.any - parsers.html_comment_end)^0
-                            * parsers.html_comment_end
-                            * parsers.linechar^0
-                            + Cs(parsers.html_empty_end_condition) * (parsers.newline^-1 / "")))
-
 parsers.nested_breaking_blank = parsers.newline
                               * parsers.check_minimal_blank_indent 
                               * parsers.blankline
+
+parsers.html_comment_start = parsers.check_trail * P("<!--")
+
+parsers.html_comment_end = P("-->")
+
+parsers.end_marker_condition = function(end_marker)
+  return Cs( parsers.newline 
+           * (parsers.check_minimal_blank_indent_and_any_trail * #parsers.blankline
+             + parsers.check_minimal_indent_and_any_trail)
+           + parsers.linechar - end_marker)^0
+         * end_marker
+         * parsers.linechar^0
+end
+
+parsers.html_comment = Cs(parsers.html_comment_start
+                         * Cs(parsers.end_marker_condition(parsers.html_comment_end)
+                             + Cs(parsers.html_empty_end_condition) * (parsers.newline^-1 / "")))
 
 parsers.html_inline_comment = (parsers.html_comment_start / "")
                             * -P(">") * -P("->")
@@ -24888,55 +24910,41 @@ parsers.html_inline_comment = (parsers.html_comment_start / "")
                                 - parsers.nested_breaking_blank - parsers.html_comment_end)^0)
                             * (parsers.html_comment_end / "")
 
-parsers.html_cdatasection_start = P("<![CDATA[")
+parsers.html_cdatasection_start = parsers.check_trail * P("<![CDATA[")
 
 parsers.html_cdatasection_end = P("]]>")
 
-parsers.html_cdatasection = parsers.nonindentspace
-                          * parsers.html_cdatasection_start
-                          * ((parsers.any - parsers.html_cdatasection_end)^0
-                            * parsers.html_cdatasection_end
-                            * parsers.linechar^0
-                            + parsers.html_empty_end_condition)
+parsers.html_cdatasection = Cs(parsers.html_cdatasection_start
+                              * Cs(parsers.end_marker_condition(parsers.html_cdatasection_end)
+                                  + Cs(parsers.html_empty_end_condition) * (parsers.newline^-1 / "")))
                             
-parsers.html_inline_cdatasection  = parsers.nonindentspace
-                                  * parsers.html_cdatasection_start
+parsers.html_inline_cdatasection  = parsers.html_cdatasection_start
                                   * Cs(V("Endline") + parsers.any
                                       - parsers.nested_breaking_blank - parsers.html_cdatasection_end)^0
                                   * parsers.html_cdatasection_end
 
-parsers.html_declaration_start = P("<!")
+parsers.html_declaration_start = parsers.check_trail * P("<!") * parsers.letter
 
 parsers.html_declaration_end = P(">")
 
-parsers.html_declaration  = parsers.nonindentspace
-                          * parsers.html_declaration_start
-                          * parsers.letter
-                          * ((parsers.any - parsers.html_declaration_end)^0
-                            * parsers.html_declaration_end
-                            * parsers.linechar^0
-                            + parsers.html_empty_end_condition)
+parsers.html_declaration  = Cs(parsers.html_declaration_start
+                              * Cs(parsers.end_marker_condition(parsers.html_declaration_end)
+                                  + Cs(parsers.html_empty_end_condition) * (parsers.newline^-1 / "")))
 
-parsers.html_inline_declaration = parsers.nonindentspace
-                                * parsers.html_declaration_start
-                                * parsers.letter
+parsers.html_inline_declaration = parsers.html_declaration_start
                                 * Cs(V("Endline") + parsers.any 
                                     - parsers.nested_breaking_blank - parsers.html_declaration_end)^0
                                 * parsers.html_declaration_end
 
-parsers.html_instruction_start = P("<?")
+parsers.html_instruction_start = parsers.check_trail * P("<?")
 
 parsers.html_instruction_end = P("?>")
 
-parsers.html_instruction  = parsers.nonindentspace
-                          * parsers.html_instruction_start
-                          * ((parsers.any - parsers.html_instruction_end)^0
-                            * parsers.html_instruction_end
-                            * parsers.linechar^0
-                            + parsers.html_empty_end_condition)
+parsers.html_instruction  = Cs(parsers.html_instruction_start
+                              * Cs(parsers.end_marker_condition(parsers.html_instruction_end)
+                                  + Cs(parsers.html_empty_end_condition) * (parsers.newline^-1 / "")))
 
-parsers.html_inline_instruction = parsers.nonindentspace
-                                * parsers.html_instruction_start
+parsers.html_inline_instruction = parsers.html_instruction_start
                                 * Cs(V("Endline") + parsers.any 
                                     - parsers.nested_breaking_blank - parsers.html_instruction_end)^0
                                 * parsers.html_instruction_end
@@ -25059,7 +25067,7 @@ parsers.html_special_block_opening  = parsers.html_incomplete_open_special_tag
 
 parsers.html_closing_special_block  = parsers.html_special_block_opening
                                     * ((parsers.html_newline_indent + 
-                                       (parsers.any - parsers.newline)
+                                       parsers.linechar
                                        - parsers.html_close_special_tag)^0
                                       * parsers.html_close_special_tag
                                       * parsers.linechar^0
@@ -25299,7 +25307,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 parsers.lineof = function(c)
-    return (parsers.leader * (P(c) * parsers.optionalspace)^3
+    return (parsers.check_trail_no_rem * (P(c) * parsers.optionalspace)^3
            * (parsers.newline + parsers.eof))
 end
 
@@ -26179,7 +26187,7 @@ function M.reader.new(writer, options)
                                             + parsers.backslash * parsers.any
                                             + V("Space")
                                             + V("Endline") 
-                                            + (parsers.any - parsers.newline
+                                            + (parsers.linechar
                                               - parsers.blankline^2
                                               - parsers.link_image_open_or_close 
                                               - parsers.emph_open_or_close))^0), "content"))
@@ -26601,6 +26609,10 @@ function M.reader.new(writer, options)
     parsers.html_interrupting = parsers.html_incomplete_open_tag
                               + parsers.html_incomplete_close_tag
                               + parsers.html_incomplete_open_special_tag
+                              + parsers.html_comment_start
+                              + parsers.html_cdatasection_start
+                              + parsers.html_declaration_start
+                              + parsers.html_instruction_start
                               - parsers.html_close_special_tag
                               - parsers.html_empty_special_tag
   else
@@ -26626,6 +26638,7 @@ function M.reader.new(writer, options)
                       * -V("EndlineExceptions") 
                       * -parsers.starter)
                     * parsers.spacechar^0
+                    * parsers.leave_trail
 
   parsers.Endline = parsers.endline
                   / (options.hardLineBreaks 
@@ -26935,13 +26948,16 @@ end
     return heading_content
   end
 
-  parsers.heading_line  = parsers.nonemptyline 
+  parsers.heading_line  = parsers.linechar^1
                         - parsers.thematic_break_lines
 
-  parsers.heading_text = parsers.heading_line
-                       * ((parsers.check_optional_indent / "") * (parsers.heading_line - parsers.heading_level))^0
+  parsers.heading_text = (parsers.heading_line)
+                       * ((V("Endline") / "\n" + parsers.restore_trail) 
+                         * (parsers.heading_line - parsers.heading_level))^0
+                       * parsers.newline^-1
 
-  parsers.SetextHeading = #(parsers.heading_text 
+  parsers.SetextHeading = parsers.store_trail
+                        * #(parsers.heading_text 
                            * parsers.check_minimal_indent * parsers.check_trail * parsers.heading_level)
                         * Ct(Cs(parsers.heading_text) / remove_enclosing_whitespaces
                             / self.parser_functions.parse_inlines )
@@ -27067,8 +27083,8 @@ end
         ThematicBreak         = parsers.ThematicBreak,
         BulletList            = parsers.BulletList,
         OrderedList           = parsers.OrderedList,
-        Heading               = parsers.Heading,
         DisplayHtml           = parsers.DisplayHtml,
+        Heading               = parsers.Heading,
         Paragraph             = parsers.Paragraph,
         Plain                 = parsers.Plain,
 
@@ -29385,7 +29401,7 @@ M.extensions.tex_math = function(tex_math_dollars,
 %  \begin{macrocode}
       local dollar_math_content = (parsers.newline * (parsers.check_optional_indent / "")
                                 + parsers.backslash^-1
-                                * (parsers.any - parsers.newline))
+                                * parsers.linechar)
                                 - parsers.blankline^2
                                 - parsers.dollar
 
@@ -29418,7 +29434,7 @@ M.extensions.tex_math = function(tex_math_dollars,
 % \end{markdown}
 %  \begin{macrocode}
       local backslash_math_content  = (parsers.newline * (parsers.check_optional_indent / "")
-                                    + (parsers.any - parsers.newline))
+                                    + parsers.linechar)
                                     - parsers.blankline^2
 %    \end{macrocode}
 % \begin{markdown}
