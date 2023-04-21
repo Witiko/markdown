@@ -1,7 +1,7 @@
 \fontfam[lm]
 \hyperlinks\Blue\Blue
 
-% Set options of the Markdown module.
+% Set options of the Markdown module
 \_def \markdownOptions {
   contentBlocks=true,
   debugExtensions=true,
@@ -25,7 +25,8 @@
   texMathSingleBackslash=true
 }
 
-% Set renderers of the Markdown module.
+% Set renderers of the Markdown module
+%% Special Character Renderers
 \_edef \markdownRendererAmpersand   #1{\_csstring\&}
 \_edef \markdownRendererBackslash   #1{\_csstring\\}
 \_edef \markdownRendererCircumflex  #1{\_csstring\^}
@@ -33,41 +34,99 @@
 \_edef \markdownRendererHash        #1{\_csstring\#}
 \_edef \markdownRendererLeftBrace   #1{\_csstring\{}
 \_edef \markdownRendererPercentSign #1{\_csstring\%}
-\_edef \markdownRendererPipe        #1{|}
+\_def  \markdownRendererPipe        #1{|}
 \_edef \markdownRendererRightBrace  #1{\_csstring\}}
 \_edef \markdownRendererTilde       #1{\_csstring\~}
-\_edef \markdownRendererUnderscore  #1{_}
+\_def  \markdownRendererUnderscore  #1{_}
 
-\_def\markdownRendererLink  #1#2#3#4{\_ea\_ulink\_ea[\_expanded{#3}]{#1}}
+%% Ellipsis Renderer
+\_def  \markdownRendererEllipsis      {$\_ldots$}
 
-\_def \markdownRendererAttributeIdentifier #1{}
-\_def \markdownRendererAttributeClassName  #1{}
-\_def \markdownRendererAttributeKeyValue   #1#2{}
+%% Thematic Break Renderer
+\_def  \markdownRendererThematicBreak {\_hrule}
 
-\_def \markdownRendererUlBegin      {\_begitems}
-\_def \markdownRendererUlBeginTight {\_begitems \_novspaces}
-\_def \markdownRendererUlEnd        {\_enditems}
-\_def \markdownRendererUlEndTight   {\_enditems}
-\_def \markdownRendererUlItem       {\_startitem}
-\_def \markdownRendererUlItemEnd    {\_par}
+%% Link Renderer
+\_def  \markdownRendererLink  #1#2#3#4{\_ea\_ulink\_ea[\_expanded{#3}]{#1}}
 
-\_def \markdownRendererInterblockSeparator {\_par}
+%% Image Renderer
+\_def  \markdownRendererImage #1#2#3#4{\_inspic{#3}}
 
-\_def \markdownRendererInputVerbatim    #1{\_verbinput (-) {#1} }
-\_def \markdownRendererInputFencedCode  #1#2{\_verbinput \hisyntax{#2} (-) {#1} }
+%% Bullet List Renderers
+\_def  \markdownRendererUlBegin       {\_begitems}
+\_def  \markdownRendererUlBeginTight  {\_begitems \_novspaces}
+\_def  \markdownRendererUlEnd         {\_enditems}
+\_def  \markdownRendererUlEndTight    {\_enditems}
+\_def  \markdownRendererUlItem        {\_startitem}
+\_def  \markdownRendererUlItemEnd     {\_par}
 
-\_def \markdownRendererCodeSpan         #1{{\_ttfont #1}}
+%% Ordered List Renderers
+\_def  \markdownRendererOlBegin       {\_begitems \style n}
+\_def  \markdownRendererOlBeginTight  {\_begitems \style n \_novspaces}
+\_def  \markdownRendererOlEnd         {\_enditems}
+\_def  \markdownRendererOlEndTight    {\_enditems}
+\_def  \markdownRendererOlItem        {\_startitem}
+\_def  \markdownRendererOlItemWithNumber #1{\_itemnum=#1\_relax \_startitem}
+\_def  \markdownRendererOlItemEnd     {\_par}
+\_def  \markdownRendererFancyOlBegin #1#2{\markdownRendererOlBegin}
+\_def  \markdownRendererFancyOlBeginTight #1#2{\markdownRendererOlBeginTight}
+\_let  \markdownRendererFancyOlEnd   \markdownRendererOlEnd
+\_let  \markdownRendererFancyOlEndTight \markdownRendererOlEndTight
+\_let  \markdownRendererFancyOlItemWithNumber \markdownRendererOlItemWithNumber
+\_let  \markdownRendererFancyOlItem   \markdownRendererOlItem
+\_let  \markdownRendererFancyOlItemEnd \markdownRendererOlItemEnd
 
-\_let \markdownRendererDocumentBegin   \_relax
-\_let \markdownRendererDocumentEnd     \_relax
-\_def \markdownRendererBlockQuoteBegin {\_begblock}
-\_def \markdownRendererBlockQuoteEnd   {\_endblock}
+%% Interblock Separator Renderer
+\_def  \markdownRendererInterblockSeparator {\_par}
 
-\_def \markdownRendererEmphasis        #1{{\_em #1}}
+%% Code Block Renderers
+\_def  \markdownRendererInputVerbatim #1{\_verbinput (-) {#1} }
+\_def  \markdownRendererInputFencedCode #1#2{\_verbinput \hisyntax{#2} (-) {#1} }
 
-% Load the Markdown module and set TeX macros for the Markdown module.
+%% Code Span Renderer
+\_def  \markdownRendererCodeSpan    #1{{\_ttfont #1}}
+
+%% Markdown Document Renderers
+\_let  \markdownRendererDocumentBegin \_relax
+\_let  \markdownRendererDocumentEnd   \_relax
+
+%% Content Block Renderers
+\_def  \markdownRendererContentBlock #1#2#3#4{}
+
+%% YAML Metadata Renderers
+\_let  \markdownRendererJekyllDataBegin \_relax
+\_let  \markdownRendererJekyllDataEnd \_relax
+\_def  \markdownRendererJekyllDataMappingBegin #1#2{}
+\_let  \markdownRendererJekyllDataMappingEnd \_relax
+\_def  \markdownRendererJekyllDataSequenceBegin #1#2{}
+\_let  \markdownRendererJekyllDataSequenceEnd \_relax
+\_def  \markdownRendererJekyllDataBoolean #1#2{}
+\_def  \markdownRendererJekyllDataNumber #1#2{}
+\_def  \markdownRendererJekyllDataString #1#2{}
+\_def  \markdownRendererJekyllDataEmpty #1{}
+
+%% Heading Renderers
+\_def  \markdownRendererHeadingOne  #1{\_printtit{#1}}
+\_def  \markdownRendererHeadingTwo  #1{\_inchap{#1}}
+\_def  \markdownRendererHeadingThree #1{\_insec{#1}}
+\_def  \markdownRendererHeadingFour #1{\_insecc{#1}}
+\_def  \markdownRendererHeadingFive #1{{\_bf #1}\_firstnoindent}
+\_def  \markdownRendererHeadingSix  #1{#1\_firstnoindent}
+
+%% Section Renderers
+\_let  \markdownRendererSectionBegin  \_relax
+\_let  \markdownRendererSectionEnd    \_relax
+
+%% Block Quote Renderers
+\_def  \markdownRendererBlockQuoteBegin {\_begblock}
+\_def  \markdownRendererBlockQuoteEnd {\_endblock}
+
+%% Emphasis Renderers
+\_def  \markdownRendererEmphasis    #1{{\_em #1}}
+\_def  \markdownRendererStrongEmphasis #1{{\_bf #1}}
+
+% Load the Markdown module and set TeX macros for the Markdown module
 \_directlua{
-  kpse = pcall(require, "kpse")
+  kpse = require("kpse")
   kpse.set_program_name("luatex")
   markdown = require("markdown")
 }
@@ -80,7 +139,7 @@
   \_egroup
 }
 
-\_def \markdownInput #1{% #1 contains the filename of the Markdown document.
+\_def \markdownInput #1{% #1 contains the filename of the Markdown document
   \_def \_tmpa {
     local file = assert(io.open("\_luaescapestring{#1}", "r"))
     local input = assert(file:read("*a"))
@@ -101,6 +160,7 @@
 \_ea\_def \_ea\_markdownBeginA \_ea#\_ea1\_csstring\\markdownEnd#2^^J{%
   \_restoremathsb \_egroup
   \_def \_tmpa {
+    local input = "\_luaescapestring{#1}"
     local defaultOptions = {\markdownOptions}
     local options = {\_markdownParams}
     setmetatable(
@@ -119,8 +179,8 @@
   \_ea\_markdownInput\_ea{\_tmpa}%
 }
 
-% Set the document metadata using a YAML metadata block.
-\markdownBegin hybrid=true
+% Set the document metadata using a YAML metadata block
+\markdownBegin hybrid=true,jekyllData=true
 ---
 title:  An Example *Markdown* Document
 author: Vít Novotný
@@ -134,7 +194,7 @@ date:   \today
 
 % Typeset the document `example.tex` that we prepared separately using the
 % Lua command-line interface of the Markdown package and that contains a
-% plain TeX representation of the document `example.md`.
+% plain TeX representation of the document `example.md`
 \_bgroup
 \_catcode`\%=12\_relax
 \_catcode`\#=12\_relax
@@ -142,7 +202,7 @@ date:   \today
 \_directlua{#1}%
 \_egroup
 
-% Typeset some further examples with inline markdown text.
+% Typeset some further examples with inline markdown text
 \markdownBegin
 Here are some non-ASCII characters: *ěščřžýáíé*.
 \markdownEnd
