@@ -23786,8 +23786,6 @@ parsers.nonemptyline           = parsers.line - parsers.blankline
 
 parsers.leader      = parsers.space^-3
 
-parsers.blockquote_start = parsers.leader * parsers.more * parsers.space^-1
-
 %  \end{macrocode}
 % \begin{markdown}
 %
@@ -24067,8 +24065,6 @@ local function process_starter_indent(_, _, indent_table, starter, is_blank, ind
 
   return true, indent_table
 end
-
-parsers.blockquote_opening_condition = C(parsers.leader) * C(parsers.more) * C(parsers.spacechar^0)
 
 %  \end{macrocode}
 % \begin{markdown}
@@ -24695,7 +24691,7 @@ parsers.bullet = function(bullet_char, interrupting)
   else
     allowed_end = C(parsers.spacechar^1) + #(parsers.newline + parsers.eof)
   end
-  return C(parsers.leader)
+  return parsers.check_trail
         * Ct(C(bullet_char) * Cc(""))
         * allowed_end
 end
@@ -25665,7 +25661,7 @@ function M.reader.new(writer, options)
       allowed_end = C(parsers.spacechar^1) + #(parsers.newline + parsers.eof)
     end
 
-    return C(parsers.leader)
+    return parsers.check_trail
              * Ct(C(delimiter_range) * C(delimiter_type))
              * allowed_end
   end
@@ -25684,12 +25680,14 @@ function M.reader.new(writer, options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  parsers.blockquote_body = parsers.add_indent(parsers.blockquote_opening_condition, "bq", true)
+  parsers.blockquote_start = parsers.check_trail * C(parsers.more) * C(parsers.spacechar^0)
+
+  parsers.blockquote_body = parsers.add_indent(parsers.blockquote_start, "bq", true)
                           * parsers.indented_content()
                           * remove_indent("bq")
 
   if not options.breakableBlockquotes then
-    parsers.blockquote_body = parsers.add_indent(parsers.blockquote_opening_condition, "bq", false)
+    parsers.blockquote_body = parsers.add_indent(parsers.blockquote_start, "bq", false)
                             * parsers.indented_content()
                             * remove_indent("bq")
   end
@@ -28161,7 +28159,7 @@ M.extensions.fancy_lists = function()
           allowed_end = C(parsers.spacechar^1) + #(parsers.newline + parsers.eof)
         end
 
-        return C(parsers.leader)
+        return parsers.check_trail
                 * Ct(C(delimiter_range) * C(delimiter_type))
                 * allowed_end
       end
