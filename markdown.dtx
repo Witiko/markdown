@@ -23915,6 +23915,7 @@ local function process_starter_spacing(indent, spacing, minimum, left_strip_leng
   local code_start, minimum_remainder = "", ""
 
   local left_total_stripped = 0
+  local full_remainder = ""
 
   if spacing ~= nil then
     for i = 1, #spacing do
@@ -23933,6 +23934,8 @@ local function process_starter_spacing(indent, spacing, minimum, left_strip_leng
         count = count - possible_to_strip
         left_strip_length = left_strip_length - possible_to_strip
         left_total_stripped = left_total_stripped + possible_to_strip
+      else
+        full_remainder =  full_remainder .. character
       end
 
       if (minimum_found) then
@@ -23966,6 +23969,7 @@ local function process_starter_spacing(indent, spacing, minimum, left_strip_leng
     is_minimum = is_minimum,
     minimum_remainder = minimum_remainder,
     total_length = count,
+    full_remainder = full_remainder
   }
 end
 
@@ -24058,7 +24062,8 @@ local function process_starter_indent(_, _, indent_table, starter, is_blank, ind
   local new_indent_info = {name=indent_type, length=indent_length}
 
   indent_table = update_indent_table(indent_table, new_indent_info, true)
-  indent_table = add_trail(indent_table, {is_code=sp.is_code, remainder=sp.remainder, total_length=sp.total_length})
+  indent_table = add_trail(indent_table, {is_code=sp.is_code, remainder=sp.remainder, total_length=sp.total_length,
+                                          full_remainder=sp.full_remainder})
 
   return true, indent_table
 end
@@ -24152,7 +24157,8 @@ local function traverse_indent(s, i, indent_table, is_optional, is_blank)
     -- check previous trail
     if not space_only and next(current_trail) == nil then
       local sp = process_starter_spacing(0, raw_last_trail, 0, 0)
-      current_trail = {is_code = sp.is_code, remainder = sp.remainder, total_length=sp.total_length}
+      current_trail = {is_code=sp.is_code, remainder=sp.remainder, total_length=sp.total_length, 
+                       full_remainder=sp.full_remainder}
     end
 
     if next(current_trail) ~= nil then
@@ -24202,7 +24208,7 @@ local function traverse_indent(s, i, indent_table, is_optional, is_blank)
     end
 
     current_trail = {is_code=sp.is_code, remainder=sp.remainder, internal_remainder=sp.minimum_remainder,
-                     total_length=sp.total_length}
+                     total_length=sp.total_length, full_remainder=sp.full_remainder}
     new_index = next_index
   end
 
@@ -24235,11 +24241,19 @@ local function check_trail_joined(s, i, indent_table, spacing, expect_code, omit
   if has_trail(indent_table) then
     local trail = indent_table.trail
     is_code = trail.is_code
-    remainder = trail.remainder
+    if is_code then 
+      remainder = trail.remainder
+    else
+      remainder = trail.full_remainder
+    end
   else
     local sp = process_starter_spacing(0, spacing, 0, 0)
     is_code = sp.is_code
-    remainder = sp.remainder
+    if is_code then 
+      remainder = sp.remainder
+    else
+      remainder = sp.full_remainder
+    end
   end
 
   local result = check_trail(expect_code, is_code)
@@ -24887,7 +24901,7 @@ parsers.nested_breaking_blank = parsers.newline
                               * parsers.check_minimal_blank_indent 
                               * parsers.blankline
 
-parsers.html_comment_start = parsers.check_trail * P("<!--")
+parsers.html_comment_start = P("<!--")
 
 parsers.html_comment_end = P("-->")
 
@@ -24910,7 +24924,7 @@ parsers.html_inline_comment = (parsers.html_comment_start / "")
                                 - parsers.nested_breaking_blank - parsers.html_comment_end)^0)
                             * (parsers.html_comment_end / "")
 
-parsers.html_cdatasection_start = parsers.check_trail * P("<![CDATA[")
+parsers.html_cdatasection_start = P("<![CDATA[")
 
 parsers.html_cdatasection_end = P("]]>")
 
@@ -24923,7 +24937,7 @@ parsers.html_inline_cdatasection  = parsers.html_cdatasection_start
                                       - parsers.nested_breaking_blank - parsers.html_cdatasection_end)^0
                                   * parsers.html_cdatasection_end
 
-parsers.html_declaration_start = parsers.check_trail * P("<!") * parsers.letter
+parsers.html_declaration_start = P("<!") * parsers.letter
 
 parsers.html_declaration_end = P(">")
 
@@ -24936,7 +24950,7 @@ parsers.html_inline_declaration = parsers.html_declaration_start
                                     - parsers.nested_breaking_blank - parsers.html_declaration_end)^0
                                 * parsers.html_declaration_end
 
-parsers.html_instruction_start = parsers.check_trail * P("<?")
+parsers.html_instruction_start = P("<?")
 
 parsers.html_instruction_end = P("?>")
 
@@ -24953,10 +24967,9 @@ parsers.html_blankline  = parsers.newline
                         * parsers.optionalspace
                         * parsers.newline
 
-parsers.html_tag_start = parsers.nonindentspace
-                       * parsers.less
+parsers.html_tag_start = parsers.less
 
-parsers.html_tag_closing_start  = parsers.html_tag_start
+parsers.html_tag_closing_start  = parsers.less
                                 * parsers.slash
 
 parsers.html_tag_end  = parsers.spnl
@@ -26486,7 +26499,8 @@ function M.reader.new(writer, options)
 %  \end{macrocode}
 % \begin{markdown}
 %
-% Resolve a collapsed link [a][] from the delimiters at `opening_index` and `closing_index` within a delimiter table `t`.
+% Resolve a collapsed link [a][] from the delimiters at `opening_index` and `closing_index` 
+% within a delimiter table `t`.
 % Continue if a tag `a` is not found in the references. 
 %
 % \end{markdown}
@@ -26606,15 +26620,16 @@ function M.reader.new(writer, options)
   end
 
   if options.html then
-    parsers.html_interrupting = parsers.html_incomplete_open_tag
-                              + parsers.html_incomplete_close_tag
-                              + parsers.html_incomplete_open_special_tag
-                              + parsers.html_comment_start
-                              + parsers.html_cdatasection_start
-                              + parsers.html_declaration_start
-                              + parsers.html_instruction_start
-                              - parsers.html_close_special_tag
-                              - parsers.html_empty_special_tag
+    parsers.html_interrupting = parsers.check_trail
+                              * ( parsers.html_incomplete_open_tag
+                                + parsers.html_incomplete_close_tag
+                                + parsers.html_incomplete_open_special_tag
+                                + parsers.html_comment_start
+                                + parsers.html_cdatasection_start
+                                + parsers.html_declaration_start
+                                + parsers.html_instruction_start
+                                - parsers.html_close_special_tag
+                                - parsers.html_empty_special_tag)
   else
     parsers.html_interrupting = parsers.fail
   end
@@ -26766,13 +26781,13 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-  parsers.DisplayHtml = Cs(parsers.html_comment    
+  parsers.DisplayHtml = Cs(parsers.check_trail * (parsers.html_comment    
                           + parsers.html_special_block 
                           + parsers.html_block         
                           + parsers.html_any_block     
                           + parsers.html_instruction   
                           + parsers.html_cdatasection  
-                          + parsers.html_declaration)
+                          + parsers.html_declaration))
                         / writer.block_html_element
 
   parsers.indented_non_blank_line = parsers.indentedline - parsers.blankline
