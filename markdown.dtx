@@ -27644,42 +27644,51 @@ M.extensions.citations = function(citation_nbsps)
                     = Cs((parsers.alphanumeric^1
                          + parsers.bracketed
                          + parsers.inticks
+                         + parsers.autolink
+                        + V("InlineHtml")
+                         + V("Space") + V("Endline")
                          + (parsers.anyescaped
-                           - (parsers.rbracket + parsers.blankline^2))
+                           - (parsers.newline + parsers.rbracket + parsers.blankline^2))
                          - (parsers.spnl * parsers.dash^-1 * parsers.at))^0)
 
       local citation_body_postnote
                     = Cs((parsers.alphanumeric^1
                          + parsers.bracketed
                          + parsers.inticks
+                         + parsers.autolink
+                         + V("InlineHtml")
+                         + V("Space") + V("Endline")
                          + (parsers.anyescaped
-                           - (parsers.rbracket + parsers.semicolon
+                           - (parsers.newline + parsers.rbracket + parsers.semicolon
                              + parsers.blankline^2))
                          - (parsers.spnl * parsers.rbracket))^0)
 
       local citation_body_chunk
                     = citation_body_prenote
-                    * parsers.spnl * citation_name
+                    * parsers.spnlc * citation_name
                     * (parsers.internal_punctuation - parsers.semicolon)^-1
-                    * parsers.spnl * citation_body_postnote
+                    * parsers.spnlc * citation_body_postnote
 
       local citation_body
                     = citation_body_chunk
-                    * (parsers.semicolon * parsers.spnl
+                    * (parsers.semicolon * parsers.spnlc
                       * citation_body_chunk)^0
 
       local citation_headless_body_postnote
                     = Cs((parsers.alphanumeric^1
                          + parsers.bracketed
                          + parsers.inticks
+                         + parsers.autolink
+                         + V("InlineHtml")
+                         + V("Space") + V("Endline")
                          + (parsers.anyescaped
-                           - (parsers.rbracket + parsers.at
+                           - (parsers.newline + parsers.rbracket + parsers.at
                              + parsers.semicolon + parsers.blankline^2))
                          - (parsers.spnl * parsers.rbracket))^0)
 
       local citation_headless_body
                     = citation_headless_body_postnote
-                    * (parsers.sp * parsers.semicolon * parsers.spnl
+                    * (parsers.sp * parsers.semicolon * parsers.spnlc
                       * citation_body_chunk)^0
 
       local citations
@@ -27708,10 +27717,10 @@ M.extensions.citations = function(citation_nbsps)
       end
 
       local TextCitations
-                    = Ct((parsers.spnl
+                    = Ct((parsers.spnlc
                     * Cc("")
                     * citation_name
-                    * ((parsers.spnl
+                    * ((parsers.spnlc
                         * parsers.lbracket
                         * citation_headless_body
                         * parsers.rbracket) + Cc("")))^1)
@@ -27720,7 +27729,7 @@ M.extensions.citations = function(citation_nbsps)
                       end
 
       local ParenthesizedCitations
-                    = Ct((parsers.spnl
+                    = Ct((parsers.spnlc
                     * parsers.lbracket
                     * citation_body
                     * parsers.rbracket)^1)
