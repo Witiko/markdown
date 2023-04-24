@@ -25,6 +25,11 @@ Refactoring:
 - Use `\prg_new_conditional:Nnn` to define `\@@_if_option:n`.
   (#289)
 
+Libraries:
+
+- Make tinyyaml a standalone CTAN package. (contributed by
+  @zepinglee, #218, #294)
+
 ## 2.22.0 (2023-04-02)
 
 Development:
