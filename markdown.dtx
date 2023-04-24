@@ -23839,18 +23839,6 @@ end
 %  \end{macrocode}
 % \begin{markdown}
 %
-% Leave the current trail of the indent table `indent_table`
-%
-% \end{markdown}
-%  \begin{macrocode}
-local function leave_trail(s, i, indent_table) -- luacheck: ignore s i
-  indent_table = remove_trail(indent_table)
-  return true, indent_table
-end
-
-%  \end{macrocode}
-% \begin{markdown}
-%
 % Update the indent table `indent_table` by adding or removing a new
 % indent `add`.
 %
@@ -24367,15 +24355,21 @@ end
 %  \end{macrocode}
 % \begin{markdown}
 %
-% Stores or restores `is_storing` a trail from indent table `indent_table`.
+% Stores or restores `is_freezing` a trail from indent table `indent_table`.
 %
 % \end{markdown}
 %  \begin{macrocode}
-local function trail_backup(s, i, indent_table, is_storing) -- luacheck: ignore s i
-  if is_storing then
-    indent_table.trail_backup = indent_table.trail
+local function trail_freezing(s, i, indent_table, is_freezing) -- luacheck: ignore s i
+  if is_freezing then
+    if indent_table.is_trail_frozen then
+      indent_table.trail = indent_table.frozen_trail
+    else
+      indent_table.frozen_trail = indent_table.trail
+      indent_table.is_trail_frozen = true
+    end
   else
-    indent_table.trail = indent_table.trail_backup
+    indent_table.frozen_trail = nil
+    indent_table.is_trail_frozen = false
   end
   return true, indent_table
 end
@@ -24444,8 +24438,6 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-parsers.leave_trail = Cg(Cmt(Cb("indent_info"), leave_trail), "indent_info")
-
 parsers.check_trail = Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(false), check_trail_joined)
 
 parsers.check_trail_no_rem = Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(false) * Cc(true), check_trail_joined)
@@ -24460,9 +24452,17 @@ parsers.check_trail_length = function(n)
   return parsers.check_trail_length_range(n, n)
 end
 
-parsers.store_trail = Cg(Cmt(Cb("indent_info") * Cc(true), trail_backup), "indent_info")
+%  \end{macrocode}
+% \begin{markdown}
+%
+% The following patterns handle trail backup, to prevent a failing pattern to modify it before
+% passing it to the next.
+%
+% \end{markdown}
+%  \begin{macrocode}
+parsers.freeze_trail = Cg(Cmt(Cb("indent_info") * Cc(true), trail_freezing), "indent_info")
 
-parsers.restore_trail = Cg(Cmt(Cb("indent_info") * Cc(false), trail_backup), "indent_info")
+parsers.unfreeze_trail = Cg(Cmt(Cb("indent_info") * Cc(false), trail_freezing), "indent_info")
 
 %  \end{macrocode}
 % \begin{markdown}
@@ -25288,8 +25288,7 @@ parsers.optionaltitle
 parsers.define_reference_parser = (parsers.check_trail / "") * parsers.link_label * parsers.colon
                                 * parsers.spnlc * parsers.url
                                 * ( parsers.spnlc_sep * parsers.title * parsers.only_blank
-                                  + Cc("") * parsers.only_blank) 
-                                * parsers.leave_trail
+                                  + Cc("") * parsers.only_blank)
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -26651,7 +26650,6 @@ function M.reader.new(writer, options)
                       * -V("EndlineExceptions") 
                       * -parsers.starter)
                     * parsers.spacechar^0
-                    * parsers.leave_trail
 
   parsers.Endline = parsers.endline
                   / (options.hardLineBreaks 
@@ -26807,10 +26805,10 @@ end
   parsers.Reference    = parsers.define_reference_parser
                        / self.register_link
 
-  parsers.Paragraph   = (parsers.check_trail / "")
+  parsers.Paragraph   = parsers.freeze_trail * (parsers.check_trail / "")
                       * (Ct((parsers.Inline)^1)
                       * (parsers.newline + parsers.eof)
-                      * parsers.leave_trail
+                      * parsers.unfreeze_trail
                       / writer.paragraph)
 
   parsers.Plain        = parsers.nonindentspace * Ct(parsers.Inline^1)
@@ -26950,7 +26948,6 @@ end
                        / strip_atx_end
                        / self.parser_functions.parse_inlines)
                      * Cb("level")
-                     * parsers.leave_trail
                      / writer.heading
 
   local function remove_enclosing_whitespaces(o)
@@ -26964,19 +26961,18 @@ end
   parsers.heading_line  = parsers.linechar^1
                         - parsers.thematic_break_lines
 
-  parsers.heading_text = (parsers.heading_line)
-                       * ((V("Endline") / "\n" + parsers.restore_trail) 
-                         * (parsers.heading_line - parsers.heading_level))^0
+  parsers.heading_text = parsers.heading_line
+                       * ((V("Endline") / "\n") * (parsers.heading_line - parsers.heading_level))^0
                        * parsers.newline^-1
 
-  parsers.SetextHeading = parsers.store_trail
+  parsers.SetextHeading = parsers.freeze_trail * parsers.check_trail_no_rem
                         * #(parsers.heading_text 
                            * parsers.check_minimal_indent * parsers.check_trail * parsers.heading_level)
                         * Ct(Cs(parsers.heading_text) / remove_enclosing_whitespaces
                             / self.parser_functions.parse_inlines )
                         * parsers.check_minimal_indent_and_trail * parsers.heading_level
                         * parsers.newline
-                        * parsers.leave_trail
+                        * parsers.unfreeze_trail
                         / writer.heading
 
   parsers.Heading = parsers.AtxHeading + parsers.SetextHeading
@@ -28413,7 +28409,6 @@ M.extensions.fenced_code = function(blank_before_code_fence,
                            * parsers.optionalspace
                            * infostring
                            * (parsers.newline + parsers.eof)
-                           * parsers.leave_trail
       end
 
       local fencetail      = function(char)
@@ -28501,7 +28496,6 @@ M.extensions.fenced_code = function(blank_before_code_fence,
                    end
                    return writer.fencedCode(expanded_code, infostring, attr)
                  end)
-               * parsers.leave_trail
 
       self.insert_pattern("Block after Verbatim",
                           FencedCode, "FencedCode")
@@ -28735,9 +28729,15 @@ M.extensions.header_attributes = function()
                           - parsers.thematic_break_lines
 
       local heading_text  = heading_line
-                          * ((parsers.check_optional_indent / "") * (heading_line - parsers.heading_level))^0
+                          * ((V("Endline") / "\n") * (heading_line - parsers.heading_level))^0
 
-      local SetextHeading  = Ct(Cs(heading_text) / remove_enclosing_whitespaces
+      local SetextHeading  = parsers.freeze_trail * parsers.check_trail_no_rem
+                           * #(heading_text 
+                              * (parsers.attributes
+                                * parsers.optionalspace
+                                * parsers.newline)^-1
+                              * parsers.check_minimal_indent * parsers.check_trail * parsers.heading_level)
+                           * Ct(Cs(heading_text) / remove_enclosing_whitespaces
                                 / self.parser_functions.parse_inlines )
                            * Cg(Ct((parsers.attributes
                                  * parsers.optionalspace
@@ -28745,7 +28745,7 @@ M.extensions.header_attributes = function()
                             * parsers.check_minimal_indent_and_trail * parsers.heading_level
                             * Cb("attributes")
                             * parsers.newline
-                            * parsers.leave_trail
+                            * parsers.unfreeze_trail
                             / writer.heading
 
       local Heading = AtxHeading + SetextHeading
@@ -28870,7 +28870,6 @@ M.extensions.link_attributes = function()
                                       + parsers.spnlc_sep * parsers.title * parsers.only_blank
                                       + Cc("") * (parsers.spnlc * Ct(parsers.attributes)) * parsers.only_blank
                                       + Cc("") * parsers.only_blank)
-                                    * parsers.leave_trail
 
       local ReferenceWithAttributes = define_reference_parser
                                     / self.register_link
