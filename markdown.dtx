@@ -27127,7 +27127,7 @@ end
         Smart                 = parsers.Smart,
         Symbol                = parsers.Symbol,
         SpecialChar           = parsers.fail,
-        InitializeState       = parsers.succeed * Cg(Ct(""), "indent_info"), --temporary initialization
+        InitializeState       = parsers.succeed,
       }
 %    \end{macrocode}
 % \par
@@ -27221,6 +27221,15 @@ end
       syntax.InitializeState = syntax.InitializeState
                              * Cg(Ct("") / value, name)
     end
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Add a named group for indentation.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    syntax.InitializeState = syntax.InitializeState * Cg(Ct(""), "indent_info")
 %    \end{macrocode}
 % \par
 % \begin{markdown}
