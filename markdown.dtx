@@ -12673,8 +12673,8 @@ list is not tight). The macro receives no arguments.
 % \begin{markdown}
 
 The \mdef{markdownRendererDlBeginTight} macro represents the beginning of a
-definition list that contains an item with several paragraphs of text (the
-list is not tight). This macro will only be produced, when the
+definition list that contains no item with several paragraphs of text (the
+list is tight). This macro will only be produced, when the
 \Opt{tightLists} option is disabled. The macro receives no arguments.
 
 % \end{markdown}
@@ -30010,8 +30010,25 @@ end
         { #2 }
     }
   \markdownSetup{rendererPrototypes={
-    ulBeginTight = {\begin{compactitem}},
-    ulEndTight = {\end{compactitem}},
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Make tight bullet lists a little less compact by adding extra vertical space
+% above and below them.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    ulBeginTight = {%
+      \group_begin:
+      \pltopsep=\topsep
+      \plpartopsep=\partopsep
+      \begin{compactitem}
+    },
+    ulEndTight = {
+      \end{compactitem}
+      \group_end:
+    },
     fancyOlBegin = {
       \group_begin:
       \tl_set:Nn
@@ -30035,8 +30052,25 @@ end
       \end{enumerate}
       \group_end:
     },
-    olBeginTight = {\begin{compactenum}},
-    olEndTight = {\end{compactenum}},
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Make tight ordered lists a little less compact by adding extra vertical
+% space above and below them.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    olBeginTight = {%
+      \group_begin:
+      \plpartopsep=\partopsep
+      \pltopsep=\topsep
+      \begin{compactenum}
+    },
+    olEndTight = {
+      \end{compactenum}
+      \group_end:
+    },
     fancyOlBeginTight = {
       \group_begin:
       \tl_set:Nn
@@ -30047,7 +30081,11 @@ end
         { #2 }
       \tl_set:Nn
         \l_tmpa_tl
-        { \begin{compactenum}[ }
+        {
+          \plpartopsep=\partopsep
+          \pltopsep=\topsep
+          \begin{compactenum}[
+        }
       \tl_put_right:Nx
         \l_tmpa_tl
         { \@@_latex_paralist_style:nn { #1 } { #2 } }
@@ -30069,8 +30107,25 @@ end
             { #1 }
         ]
     },
-    dlBeginTight = {\begin{compactdesc}},
-    dlEndTight = {\end{compactdesc}}}}
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Make tight definition lists a little less compact by adding extra
+% vertical space above and below them.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    dlBeginTight = {
+      \group_begin:
+      \plpartopsep=\partopsep
+      \pltopsep=\topsep
+      \begin{compactdesc}
+    },
+    dlEndTight = {
+      \end{compactdesc}
+      \group_end:
+    }}}
   \cs_generate_variant:Nn
     \@@_latex_fancy_list_item_label:nnn
     { VVn }
