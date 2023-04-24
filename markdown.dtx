@@ -24510,6 +24510,14 @@ parsers.check_minimal_blank_indent_and_any_trail_no_rem = Cmt( Cb("indent_info")
                                                         * Cc(false) * Cc(true) * Cc("full-any") * Cc(true) * Cc(true),
                                                         check_continuation_indentation_and_trail)
 
+parsers.check_optional_indent_and_any_trail = Cmt( Cb("indent_info")
+                                                * Cc(true) * Cc(false) * Cc("full-any") * Cc(true) * Cc(false), 
+                                                check_continuation_indentation_and_trail)
+
+parsers.check_optional_blank_indent_and_any_trail = Cmt( Cb("indent_info")
+                                                      * Cc(true) * Cc(true) * Cc("full-any") * Cc(true) * Cc(false), 
+                                                       check_continuation_indentation_and_trail)
+
 %  \end{macrocode}
 % \begin{markdown}
 %
@@ -26840,21 +26848,21 @@ end
   parsers.indented_content_tight  = Ct( (parsers.blankline / "")
                                       * #parsers.conditionally_indented_blank
                                       * remove_indent("li")
-                                      + ( (parsers.Reference + (parsers.blankline / ""))
+                                      + ( (V("Reference") + (parsers.blankline / ""))
                                         * (parsers.minimally_indented_ref_or_block)
                                         * (parsers.minimally_indented_separated_ref_or_block)^0
-                                        + (parsers.Reference + (parsers.blankline / ""))
+                                        + (V("Reference") + (parsers.blankline / ""))
                                         + (parsers.tickbox^-1 / writer.escape) * V("Block")
                                         * (parsers.minimally_indented_separated_ref_or_block)^0) 
                                         * parsers.list_item_tightness_condition) 
   
   parsers.indented_content_loose  = Ct( (parsers.blankline / "")
                                       * #parsers.conditionally_indented_blank
-                                      + ( (parsers.Reference + (parsers.blankline / ""))
+                                      + ( (V("Reference") + (parsers.blankline / ""))
                                         * (parsers.minimally_indented_ref_or_block)
                                         * ( parsers.conditionally_indented_blank^0
                                           * parsers.minimally_indented_separated_ref_or_block^1)^0
-                                        + (parsers.Reference + (parsers.blankline / ""))
+                                        + (V("Reference") + (parsers.blankline / ""))
                                         + (parsers.tickbox^-1 / writer.escape) * V("Block")
                                         * ( parsers.conditionally_indented_blank^0
                                           * parsers.minimally_indented_separated_ref_or_block^1)^0))
@@ -27979,12 +27987,11 @@ M.extensions.definition_lists = function(tight_lists)
 
       local dlchunk = Cs(parsers.line * (indented_line - blank)^0)
 
-      -- TODO use in notes
       local indented_blocks = function(bl)
         return Cs( bl
-              * (blank^1 * (parsers.check_minimal_indent / "") * parsers.check_code_trail * -parsers.blankline * bl)^0
-              * (blank^1 + parsers.eof) 
-            )
+              * (blank^1 * (parsers.check_minimal_indent / "") 
+                * parsers.check_code_trail * -parsers.blankline * bl)^0
+              * (blank^1 + parsers.eof))
       end
 
       local function definition_list_item(term, defs, _)
@@ -29009,14 +29016,27 @@ M.extensions.notes = function(notes, inline_notes)
 
         local NoteRef = RawNoteRef / lookup_note
 
+        local optionally_indented_line = parsers.check_optional_indent_and_any_trail * parsers.line
+
+        local blank = parsers.check_optional_blank_indent_and_any_trail * parsers.optionalspace * parsers.newline
+
+        local chunk = Cs(parsers.line * (optionally_indented_line - blank)^0)
+
+        local indented_blocks = function(bl)
+          return Cs( bl
+                * (blank^1 * (parsers.check_optional_indent / "") 
+                  * parsers.check_code_trail * -parsers.blankline * bl)^0)
+        end
+
         local NoteBlock
-                    = parsers.leader * RawNoteRef * parsers.colon
-                    * parsers.spnl * parsers.indented_blocks(parsers.chunk)
+                    = parsers.check_trail_no_rem * RawNoteRef * parsers.colon
+                    * parsers.spnlc * indented_blocks(chunk)
                     / register_note
 
-        local Blank = NoteBlock + parsers.Blank
-        self.update_rule("Blank", Blank)
-        self.insert_pattern("Inline after LinkAndEmph",
+        local Reference = NoteBlock + parsers.Reference
+
+        self.update_rule("Reference", Reference)
+        self.insert_pattern("Inline before LinkAndEmph",
                             NoteRef, "NoteRef")
       end
 
