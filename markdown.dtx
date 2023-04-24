@@ -1203,7 +1203,8 @@ end)()
 %     (subset) parser that is used to read \acro{yaml} metadata when the
 %     \Opt{jekyllData} option is enabled. We carry a copy of the library
 %     in file `markdown-tinyyaml.lua` distributed together with the Markdown
-%     package.
+%     package. <!-- TODO: Stop carrying the copy of the library in TeX Live
+%     2023. -->
 %
 % \end{markdown}
 % \iffalse
@@ -27878,6 +27879,7 @@ M.extensions.jekyll_data = function(expect_jekyll_data)
                          , function(s, i, text) -- luacheck: ignore s i
                              local data
                              local ran_ok, _ = pcall(function()
+                               -- TODO: Replace with `require("tinyyaml")` in TeX Live 2023
                                local tinyyaml = require("markdown-tinyyaml")
                                data = tinyyaml.parse(text, {timestamps=false})
                              end)
