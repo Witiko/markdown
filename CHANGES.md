@@ -20,6 +20,10 @@ Documentation:
 - Separate example files for pdfLaTeX, XeLaTeX, LuaLaTeX, and
   TeX4ht. (daccaa8)
 
+Docker:
+
+- Add TeX Live 2022 historical image. (#285, #295)
+
 Refactoring:
 
 - Use `\prg_new_conditional:Nnn` to define `\@@_if_option:n`.
