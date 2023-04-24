@@ -23,7 +23,8 @@ Fancy list (*alpha, lower*)
 
 Fancy list (*alpha, upper, tight*)
 
- V. item
+ D. item
+ E. item
 
 Fancy list (*paren*)
 
@@ -83,7 +84,9 @@ BEGIN fancyOlBeginTight
 - numstyle: UpperAlpha
 - numdelim: Period
 END fancyOlBeginTight
-fancyOlItemWithNumber: 22
+fancyOlItemWithNumber: 4
+fancyOlItemEnd
+fancyOlItemWithNumber: 5
 fancyOlItemEnd
 fancyOlEndTight
 interblockSeparator

@@ -11,7 +11,7 @@ break].
 [line break]: /foo
 
 
-[this] [that] and the [other]
+[this][that] and the [other]
 
 [this]: /this
 [that]: /that

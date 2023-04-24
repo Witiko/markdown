@@ -1713,8 +1713,8 @@ local walkable_syntax = {
     "ThematicBreak",
     "BulletList",
     "OrderedList",
-    "Heading",
     "DisplayHtml",
+    "Heading",
     "Paragraph",
     "Plain",
   },
@@ -4878,8 +4878,8 @@ be produced and contain the following text:
         "ThematicBreak",
         "BulletList",
         "OrderedList",
-        "Heading",
         "DisplayHtml",
+        "Heading",
         "Paragraph",
         "Plain"
     ],
@@ -23792,8 +23792,6 @@ parsers.nonemptyline           = parsers.line - parsers.blankline
 
 parsers.leader      = parsers.space^-3
 
-parsers.blockquote_start = parsers.leader * parsers.more * parsers.space^-1
-
 %  \end{macrocode}
 % \begin{markdown}
 %
@@ -23842,18 +23840,6 @@ end
 local function remove_trail(indent_table)
   indent_table.trail = nil
   return indent_table
-end
-
-%  \end{macrocode}
-% \begin{markdown}
-%
-% Leave the current trail of the indent table `indent_table`
-%
-% \end{markdown}
-%  \begin{macrocode}
-local function leave_trail(s, i, indent_table) -- luacheck: ignore s i
-  indent_table = remove_trail(indent_table)
-  return true, indent_table
 end
 
 %  \end{macrocode}
@@ -23921,6 +23907,7 @@ local function process_starter_spacing(indent, spacing, minimum, left_strip_leng
   local code_start, minimum_remainder = "", ""
 
   local left_total_stripped = 0
+  local full_remainder = ""
 
   if spacing ~= nil then
     for i = 1, #spacing do
@@ -23939,6 +23926,8 @@ local function process_starter_spacing(indent, spacing, minimum, left_strip_leng
         count = count - possible_to_strip
         left_strip_length = left_strip_length - possible_to_strip
         left_total_stripped = left_total_stripped + possible_to_strip
+      else
+        full_remainder =  full_remainder .. character
       end
 
       if (minimum_found) then
@@ -23970,7 +23959,9 @@ local function process_starter_spacing(indent, spacing, minimum, left_strip_leng
     remainder = remainder,
     left_total_stripped = left_total_stripped,
     is_minimum = is_minimum,
-    minimum_remainder = minimum_remainder
+    minimum_remainder = minimum_remainder,
+    total_length = count,
+    full_remainder = full_remainder
   }
 end
 
@@ -24063,12 +24054,11 @@ local function process_starter_indent(_, _, indent_table, starter, is_blank, ind
   local new_indent_info = {name=indent_type, length=indent_length}
 
   indent_table = update_indent_table(indent_table, new_indent_info, true)
-  indent_table = add_trail(indent_table, {is_code=sp.is_code, remainder=sp.remainder})
+  indent_table = add_trail(indent_table, {is_code=sp.is_code, remainder=sp.remainder, total_length=sp.total_length,
+                                          full_remainder=sp.full_remainder})
 
   return true, indent_table
 end
-
-parsers.blockquote_opening_condition = C(parsers.leader) * C(parsers.more) * C(parsers.spacechar^0)
 
 %  \end{macrocode}
 % \begin{markdown}
@@ -24157,7 +24147,8 @@ local function traverse_indent(s, i, indent_table, is_optional, is_blank)
     -- check previous trail
     if not space_only and next(current_trail) == nil then
       local sp = process_starter_spacing(0, raw_last_trail, 0, 0)
-      current_trail = {is_code = sp.is_code, remainder = sp.remainder}
+      current_trail = {is_code=sp.is_code, remainder=sp.remainder, total_length=sp.total_length, 
+                       full_remainder=sp.full_remainder}
     end
 
     if next(current_trail) ~= nil then
@@ -24206,7 +24197,8 @@ local function traverse_indent(s, i, indent_table, is_optional, is_blank)
       preceding_indentation = preceding_indentation + value.length
     end
 
-    current_trail = {is_code=sp.is_code, remainder=sp.remainder, internal_remainder=sp.minimum_remainder}
+    current_trail = {is_code=sp.is_code, remainder=sp.remainder, internal_remainder=sp.minimum_remainder,
+                     total_length=sp.total_length, full_remainder=sp.full_remainder}
     new_index = next_index
   end
 
@@ -24239,11 +24231,19 @@ local function check_trail_joined(s, i, indent_table, spacing, expect_code, omit
   if has_trail(indent_table) then
     local trail = indent_table.trail
     is_code = trail.is_code
-    remainder = trail.remainder
+    if is_code then 
+      remainder = trail.remainder
+    else
+      remainder = trail.full_remainder
+    end
   else
     local sp = process_starter_spacing(0, spacing, 0, 0)
     is_code = sp.is_code
-    remainder = sp.remainder
+    if is_code then 
+      remainder = sp.remainder
+    else
+      remainder = sp.full_remainder
+    end
   end
 
   local result = check_trail(expect_code, is_code)
@@ -24251,6 +24251,30 @@ local function check_trail_joined(s, i, indent_table, spacing, expect_code, omit
     return result
   end
   return result, remainder
+end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Check if the current trail of the `indent_table` is of length between `min` and `max`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function check_trail_length(s, i, indent_table, spacing, min, max) -- luacheck: ignore s i
+  local trail
+
+  if has_trail(indent_table) then
+    trail = indent_table.trail
+  else
+    trail = process_starter_spacing(0, spacing, 0, 0)
+  end
+
+  local total_length = trail.total_length
+  if total_length == nil then
+    return false
+  end
+
+  return min <= total_length and total_length <= max
 end
 
 %  \end{macrocode}
@@ -24337,6 +24361,28 @@ end
 %  \end{macrocode}
 % \begin{markdown}
 %
+% Stores or restores `is_freezing` a trail from indent table `indent_table`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function trail_freezing(s, i, indent_table, is_freezing) -- luacheck: ignore s i
+  if is_freezing then
+    if indent_table.is_trail_frozen then
+      indent_table.trail = indent_table.frozen_trail
+    else
+      indent_table.frozen_trail = indent_table.trail
+      indent_table.is_trail_frozen = true
+    end
+  else
+    indent_table.frozen_trail = nil
+    indent_table.is_trail_frozen = false
+  end
+  return true, indent_table
+end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
 % Check the indentation of the continuation line, optionally with 
 % the mode `is_optional` selected. Check blank line specifically with `is_blank`. 
 % Additionally, also directly check the new trail with a type `trail_type`.
@@ -24398,13 +24444,31 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-parsers.leave_trail = Cg(Cmt(Cb("indent_info"), leave_trail), "indent_info")
-
 parsers.check_trail = Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(false), check_trail_joined)
 
 parsers.check_trail_no_rem = Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(false) * Cc(true), check_trail_joined)
 
 parsers.check_code_trail  = Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(true), check_trail_joined)
+
+parsers.check_trail_length_range  = function(min, max)
+  return Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(min) * Cc(max), check_trail_length)
+end
+
+parsers.check_trail_length = function(n)
+  return parsers.check_trail_length_range(n, n)
+end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% The following patterns handle trail backup, to prevent a failing pattern to modify it before
+% passing it to the next.
+%
+% \end{markdown}
+%  \begin{macrocode}
+parsers.freeze_trail = Cg(Cmt(Cb("indent_info") * Cc(true), trail_freezing), "indent_info")
+
+parsers.unfreeze_trail = Cg(Cmt(Cb("indent_info") * Cc(false), trail_freezing), "indent_info")
 
 %  \end{macrocode}
 % \begin{markdown}
@@ -24446,6 +24510,18 @@ parsers.check_minimal_indent_and_any_trail = Cmt( Cb("indent_info")
 
 parsers.check_minimal_blank_indent_and_any_trail = Cmt( Cb("indent_info")
                                                       * Cc(false) * Cc(true) * Cc("full-any") * Cc(true) * Cc(false), 
+                                                       check_continuation_indentation_and_trail)
+
+parsers.check_minimal_blank_indent_and_any_trail_no_rem = Cmt( Cb("indent_info")
+                                                        * Cc(false) * Cc(true) * Cc("full-any") * Cc(true) * Cc(true),
+                                                        check_continuation_indentation_and_trail)
+
+parsers.check_optional_indent_and_any_trail = Cmt( Cb("indent_info")
+                                                * Cc(true) * Cc(false) * Cc("full-any") * Cc(true) * Cc(false), 
+                                                check_continuation_indentation_and_trail)
+
+parsers.check_optional_blank_indent_and_any_trail = Cmt( Cb("indent_info")
+                                                      * Cc(true) * Cc(true) * Cc("full-any") * Cc(true) * Cc(false), 
                                                        check_continuation_indentation_and_trail)
 
 %  \end{macrocode}
@@ -24629,7 +24705,7 @@ parsers.bullet = function(bullet_char, interrupting)
   else
     allowed_end = C(parsers.spacechar^1) + #(parsers.newline + parsers.eof)
   end
-  return C(parsers.leader)
+  return parsers.check_trail
         * Ct(C(bullet_char) * Cc(""))
         * allowed_end
 end
@@ -24791,10 +24867,10 @@ parsers.html_attribute_name = (parsers.letter + parsers.colon + parsers.undersco
                             + parsers.period + parsers.dash)^0
 
 parsers.html_attribute_value  = parsers.squote 
-                              * (parsers.any - parsers.newline - parsers.squote)^0 
+                              * (parsers.linechar - parsers.squote)^0 
                               * parsers.squote
                               + parsers.dquote 
-                              * (parsers.any - parsers.newline - parsers.dquote)^0 
+                              * (parsers.linechar - parsers.dquote)^0 
                               * parsers.dquote
                               + ( parsers.any - parsers.spacechar - parsers.newline
                                 - parsers.dquote - parsers.squote - parsers.backtick
@@ -24831,24 +24907,26 @@ parsers.html_non_newline_attribute  = parsers.spacechar^1
                                     * parsers.html_attribute_name
                                     * parsers.html_attribute_value_specification^-1
 
+parsers.nested_breaking_blank = parsers.newline
+                              * parsers.check_minimal_blank_indent 
+                              * parsers.blankline
+
 parsers.html_comment_start = P("<!--")
 
 parsers.html_comment_end = P("-->")
 
--- TODO add to other
-parsers.html_comment = parsers.nonindentspace
-                     * Cs(parsers.html_comment_start
-                         * Cs(Cs( parsers.newline 
-                                * (parsers.check_minimal_blank_indent_and_any_trail * #parsers.blankline
-                                  + parsers.check_minimal_indent_and_any_trail)
-                              + parsers.any - parsers.html_comment_end)^0
-                            * parsers.html_comment_end
-                            * parsers.linechar^0
-                            + Cs(parsers.html_empty_end_condition) * (parsers.newline^-1 / "")))
+parsers.end_marker_condition = function(end_marker)
+  return Cs( parsers.newline 
+           * (parsers.check_minimal_blank_indent_and_any_trail * #parsers.blankline
+             + parsers.check_minimal_indent_and_any_trail)
+           + parsers.linechar - end_marker)^0
+         * end_marker
+         * parsers.linechar^0
+end
 
-parsers.nested_breaking_blank = parsers.newline
-                              * parsers.check_minimal_blank_indent 
-                              * parsers.blankline
+parsers.html_comment = Cs(parsers.html_comment_start
+                         * Cs(parsers.end_marker_condition(parsers.html_comment_end)
+                             + Cs(parsers.html_empty_end_condition) * (parsers.newline^-1 / "")))
 
 parsers.html_inline_comment = (parsers.html_comment_start / "")
                             * -P(">") * -P("->")
@@ -24860,34 +24938,24 @@ parsers.html_cdatasection_start = P("<![CDATA[")
 
 parsers.html_cdatasection_end = P("]]>")
 
-parsers.html_cdatasection = parsers.nonindentspace
-                          * parsers.html_cdatasection_start
-                          * ((parsers.any - parsers.html_cdatasection_end)^0
-                            * parsers.html_cdatasection_end
-                            * parsers.linechar^0
-                            + parsers.html_empty_end_condition)
+parsers.html_cdatasection = Cs(parsers.html_cdatasection_start
+                              * Cs(parsers.end_marker_condition(parsers.html_cdatasection_end)
+                                  + Cs(parsers.html_empty_end_condition) * (parsers.newline^-1 / "")))
                             
-parsers.html_inline_cdatasection  = parsers.nonindentspace
-                                  * parsers.html_cdatasection_start
+parsers.html_inline_cdatasection  = parsers.html_cdatasection_start
                                   * Cs(V("Endline") + parsers.any
                                       - parsers.nested_breaking_blank - parsers.html_cdatasection_end)^0
                                   * parsers.html_cdatasection_end
 
-parsers.html_declaration_start = P("<!")
+parsers.html_declaration_start = P("<!") * parsers.letter
 
 parsers.html_declaration_end = P(">")
 
-parsers.html_declaration  = parsers.nonindentspace
-                          * parsers.html_declaration_start
-                          * parsers.letter
-                          * ((parsers.any - parsers.html_declaration_end)^0
-                            * parsers.html_declaration_end
-                            * parsers.linechar^0
-                            + parsers.html_empty_end_condition)
+parsers.html_declaration  = Cs(parsers.html_declaration_start
+                              * Cs(parsers.end_marker_condition(parsers.html_declaration_end)
+                                  + Cs(parsers.html_empty_end_condition) * (parsers.newline^-1 / "")))
 
-parsers.html_inline_declaration = parsers.nonindentspace
-                                * parsers.html_declaration_start
-                                * parsers.letter
+parsers.html_inline_declaration = parsers.html_declaration_start
                                 * Cs(V("Endline") + parsers.any 
                                     - parsers.nested_breaking_blank - parsers.html_declaration_end)^0
                                 * parsers.html_declaration_end
@@ -24896,15 +24964,11 @@ parsers.html_instruction_start = P("<?")
 
 parsers.html_instruction_end = P("?>")
 
-parsers.html_instruction  = parsers.nonindentspace
-                          * parsers.html_instruction_start
-                          * ((parsers.any - parsers.html_instruction_end)^0
-                            * parsers.html_instruction_end
-                            * parsers.linechar^0
-                            + parsers.html_empty_end_condition)
+parsers.html_instruction  = Cs(parsers.html_instruction_start
+                              * Cs(parsers.end_marker_condition(parsers.html_instruction_end)
+                                  + Cs(parsers.html_empty_end_condition) * (parsers.newline^-1 / "")))
 
-parsers.html_inline_instruction = parsers.nonindentspace
-                                * parsers.html_instruction_start
+parsers.html_inline_instruction = parsers.html_instruction_start
                                 * Cs(V("Endline") + parsers.any 
                                     - parsers.nested_breaking_blank - parsers.html_instruction_end)^0
                                 * parsers.html_instruction_end
@@ -24913,10 +24977,9 @@ parsers.html_blankline  = parsers.newline
                         * parsers.optionalspace
                         * parsers.newline
 
-parsers.html_tag_start = parsers.nonindentspace
-                       * parsers.less
+parsers.html_tag_start = parsers.less
 
-parsers.html_tag_closing_start  = parsers.html_tag_start
+parsers.html_tag_closing_start  = parsers.less
                                 * parsers.slash
 
 parsers.html_tag_end  = parsers.spnl
@@ -24948,17 +25011,30 @@ parsers.html_open_special_tag = parsers.html_tag_start
                               * parsers.html_tag_end
 
 -- incomplete tags
+parsers.incomplete_tag_following  = parsers.spacechar
+                                  + parsers.more
+                                  + parsers.slash * parsers.more
+                                  + #(parsers.newline + parsers.eof)
+
+parsers.incomplete_special_tag_following  = parsers.spacechar
+                                          + parsers.more
+                                          + #(parsers.newline + parsers.eof)
+
 parsers.html_incomplete_open_tag  = parsers.html_tag_start
                                   * parsers.block_keyword
+                                  * parsers.incomplete_tag_following
 
 parsers.html_incomplete_open_special_tag  = parsers.html_tag_start
                                           * parsers.special_block_keyword
+                                          * parsers.incomplete_special_tag_following
 
 parsers.html_incomplete_close_tag = parsers.html_tag_closing_start
                                   * parsers.block_keyword
+                                  * parsers.incomplete_tag_following
 
 parsers.html_incomplete_close_special_tag = parsers.html_tag_closing_start
                                           * parsers.special_block_keyword
+                                          * parsers.incomplete_tag_following
 
 -- closing tags
 parsers.html_close_tag  = parsers.html_tag_closing_start
@@ -25013,7 +25089,9 @@ parsers.html_special_block_opening  = parsers.html_incomplete_open_special_tag
                                     - parsers.html_empty_special_tag
 
 parsers.html_closing_special_block  = parsers.html_special_block_opening
-                                    * ((parsers.any - parsers.html_close_special_tag)^0
+                                    * ((parsers.html_newline_indent + 
+                                       parsers.linechar
+                                       - parsers.html_close_special_tag)^0
                                       * parsers.html_close_special_tag
                                       * parsers.linechar^0
                                       + parsers.html_empty_end_condition)
@@ -25167,30 +25245,43 @@ parsers.link_label  = parsers.lbracket
                             - (parsers.newline + parsers.lbracket + parsers.rbracket + parsers.blankline^2))))^1)
                     * parsers.rbracket
 
+parsers.inparens_url  = P{ parsers.lparent
+                         * ((parsers.anyescaped - (parsers.lparent
+                                                  + parsers.rparent
+                                                  + parsers.spacing)
+                            ) + V(1))^0
+                         * parsers.rparent }
+
 -- url for markdown links, allowing nested brackets:
 parsers.url         = parsers.less * Cs((parsers.anyescaped
-                                        - parsers.newline - parsers.more)^0)
+                                        - parsers.newline
+                                        - parsers.less
+                                        - parsers.more)^0)
                                    * parsers.more
                     + -parsers.less
-                    * Cs((parsers.inparens + (parsers.anyescaped
-                                             - parsers.spacing
-                                             - parsers.rparent))^1)
+                    * Cs((parsers.inparens_url + (parsers.anyescaped
+                                                 - parsers.spacing
+                                                 - parsers.lparent
+                                                 - parsers.rparent))^1)
 
 -- quoted text:
 parsers.title_s     = parsers.squote
-                    * Cs((parsers.html_entities 
-                         + (parsers.anyescaped - parsers.squote - parsers.blankline^2))^0)
+                    * Cs((parsers.html_entities
+                         + V("Space") + V("Endline")
+                         + (parsers.anyescaped - parsers.newline - parsers.squote - parsers.blankline^2))^0)
                     * parsers.squote
 
 parsers.title_d     = parsers.dquote
-                    * Cs((parsers.html_entities 
-                         + (parsers.anyescaped - parsers.dquote - parsers.blankline^2))^0)
+                    * Cs((parsers.html_entities
+                         + V("Space") + V("Endline")
+                         + (parsers.anyescaped - parsers.newline - parsers.dquote - parsers.blankline^2))^0)
                     * parsers.dquote
 
 parsers.title_p     = parsers.lparent
-                    * Cs((parsers.html_entities 
-                         + parsers.inparens 
-                         + (parsers.anyescaped - parsers.rparent - parsers.blankline^2))^0)
+                    * Cs((parsers.html_entities
+                         + V("Space") + V("Endline")
+                         + (parsers.anyescaped - parsers.newline - parsers.lparent - parsers.rparent
+                           - parsers.blankline^2))^0)
                     * parsers.rparent
 
 parsers.title       = parsers.title_d + parsers.title_s + parsers.title_p
@@ -25211,8 +25302,7 @@ parsers.optionaltitle
 parsers.define_reference_parser = (parsers.check_trail / "") * parsers.link_label * parsers.colon
                                 * parsers.spnlc * parsers.url
                                 * ( parsers.spnlc_sep * parsers.title * parsers.only_blank
-                                  + Cc("") * parsers.only_blank) 
-                                * parsers.leave_trail
+                                  + Cc("") * parsers.only_blank)
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -25239,7 +25329,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 parsers.lineof = function(c)
-    return (parsers.leader * (P(c) * parsers.optionalspace)^3
+    return (parsers.check_trail_no_rem * (P(c) * parsers.optionalspace)^3
            * (parsers.newline + parsers.eof))
 end
 
@@ -25584,7 +25674,7 @@ function M.reader.new(writer, options)
       allowed_end = C(parsers.spacechar^1) + #(parsers.newline + parsers.eof)
     end
 
-    return C(parsers.leader)
+    return parsers.check_trail
              * Ct(C(delimiter_range) * C(delimiter_type))
              * allowed_end
   end
@@ -25603,12 +25693,14 @@ function M.reader.new(writer, options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  parsers.blockquote_body = parsers.add_indent(parsers.blockquote_opening_condition, "bq", true)
+  parsers.blockquote_start = parsers.check_trail * C(parsers.more) * C(parsers.spacechar^0)
+
+  parsers.blockquote_body = parsers.add_indent(parsers.blockquote_start, "bq", true)
                           * parsers.indented_content()
                           * remove_indent("bq")
 
   if not options.breakableBlockquotes then
-    parsers.blockquote_body = parsers.add_indent(parsers.blockquote_opening_condition, "bq", false)
+    parsers.blockquote_body = parsers.add_indent(parsers.blockquote_start, "bq", false)
                             * parsers.indented_content()
                             * remove_indent("bq")
   end
@@ -26013,23 +26105,36 @@ function M.reader.new(writer, options)
     return references[self.normalize_tag(tag)]
   end
 
-  parsers.link_destination  = parsers.less
-                            * Cs(( parsers.anyescaped
-                                    - parsers.newline
-                                    - parsers.less
-                                    - parsers.more)^0)
-                            * parsers.more
-                            + -parsers.less
-                            * Cs(( parsers.inparens
-                                + ( parsers.anyescaped
-                                  - parsers.spacing
-                                  - parsers.rparent))^1)
+  parsers.title_s_direct_ref  = parsers.squote
+                              * Cs((parsers.html_entities
+                                  + (parsers.anyescaped - parsers.squote - parsers.blankline^2))^0)
+                              * parsers.squote
 
-  parsers.inline_direct_ref = parsers.lparent * parsers.spnl
-                            * Cg(parsers.link_destination + Cc(""), "url")
-                            * parsers.spnl
+  parsers.title_d_direct_ref  = parsers.dquote
+                              * Cs((parsers.html_entities
+                                  + (parsers.anyescaped - parsers.dquote - parsers.blankline^2))^0)
+                              * parsers.dquote
+
+  parsers.title_p_direct_ref  = parsers.lparent
+                              * Cs((parsers.html_entities
+                                  + (parsers.anyescaped - parsers.lparent - parsers.rparent - parsers.blankline^2))^0)
+                              * parsers.rparent
+
+  parsers.title_direct_ref  = parsers.title_s_direct_ref
+                            + parsers.title_d_direct_ref
+                            + parsers.title_p_direct_ref
+
+  parsers.inline_direct_ref_inside  = parsers.lparent * parsers.spnl
+                                    * Cg(parsers.url + Cc(""), "url")
+                                    * parsers.spnl
+                                    * Cg(parsers.title_direct_ref + Cc(""), "title")
+                                    * parsers.spnl * parsers.rparent
+
+  parsers.inline_direct_ref = parsers.lparent * parsers.spnlc
+                            * Cg(parsers.url + Cc(""), "url")
+                            * parsers.spnlc
                             * Cg(parsers.title + Cc(""), "title")
-                            * parsers.spnl * parsers.rparent
+                            * parsers.spnlc * parsers.rparent
 
   parsers.empty_link  = parsers.lbracket
                       * parsers.rbracket
@@ -26037,21 +26142,18 @@ function M.reader.new(writer, options)
   parsers.inline_link = parsers.link_text
                       * parsers.inline_direct_ref
 
-  parsers.full_reference_link = parsers.link_text
-                              * parsers.link_label
-
-  parsers.collapsed_link  = parsers.link_label
-                          * parsers.empty_link
+  parsers.full_link = parsers.link_text
+                    * parsers.link_label
 
   parsers.shortcut_link = parsers.link_label
                         * -(parsers.empty_link + parsers.link_label)
 
-  parsers.any_link  = parsers.inline_link
-                    + parsers.link_text
+  parsers.collapsed_link  = parsers.link_label
+                          * parsers.empty_link
 
   parsers.image_opening = #(parsers.exclamation * parsers.inline_link)
                         * Cg(Cc("inline"), "link_type")
-                        + #(parsers.exclamation * parsers.full_reference_link)
+                        + #(parsers.exclamation * parsers.full_link)
                         * Cg(Cc("full"), "link_type")
                         + #(parsers.exclamation * parsers.collapsed_link)
                         * Cg(Cc("collapsed"), "link_type")
@@ -26062,7 +26164,7 @@ function M.reader.new(writer, options)
 
   parsers.link_opening  = #parsers.inline_link
                         * Cg(Cc("inline"), "link_type")
-                        + #parsers.full_reference_link
+                        + #parsers.full_link
                         * Cg(Cc("full"), "link_type")
                         + #parsers.collapsed_link
                         * Cg(Cc("collapsed"), "link_type")
@@ -26109,7 +26211,7 @@ function M.reader.new(writer, options)
                                             + parsers.backslash * parsers.any
                                             + V("Space")
                                             + V("Endline") 
-                                            + (parsers.any - parsers.newline
+                                            + (parsers.linechar
                                               - parsers.blankline^2
                                               - parsers.link_image_open_or_close 
                                               - parsers.emph_open_or_close))^0), "content"))
@@ -26315,7 +26417,7 @@ function M.reader.new(writer, options)
     local matching_content = parsers.succeed
 
     if match_reference then
-      matching_content = matching_content * parsers.inline_direct_ref
+      matching_content = matching_content * parsers.inline_direct_ref_inside
     end
 
     if match_link_attributes then
@@ -26408,7 +26510,8 @@ function M.reader.new(writer, options)
 %  \end{macrocode}
 % \begin{markdown}
 %
-% Resolve a collapsed link [a][] from the delimiters at `opening_index` and `closing_index` within a delimiter table `t`.
+% Resolve a collapsed link [a][] from the delimiters at `opening_index` and `closing_index` 
+% within a delimiter table `t`.
 % Continue if a tag `a` is not found in the references. 
 %
 % \end{markdown}
@@ -26528,11 +26631,16 @@ function M.reader.new(writer, options)
   end
 
   if options.html then
-    parsers.html_interrupting = parsers.html_incomplete_open_tag
-                              + parsers.html_incomplete_close_tag
-                              + parsers.html_incomplete_open_special_tag
-                              - parsers.html_close_special_tag
-                              - parsers.html_empty_special_tag
+    parsers.html_interrupting = parsers.check_trail
+                              * ( parsers.html_incomplete_open_tag
+                                + parsers.html_incomplete_close_tag
+                                + parsers.html_incomplete_open_special_tag
+                                + parsers.html_comment_start
+                                + parsers.html_cdatasection_start
+                                + parsers.html_declaration_start
+                                + parsers.html_instruction_start
+                                - parsers.html_close_special_tag
+                                - parsers.html_empty_special_tag)
   else
     parsers.html_interrupting = parsers.fail
   end
@@ -26683,13 +26791,13 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-  parsers.DisplayHtml = Cs(parsers.html_comment    
+  parsers.DisplayHtml = Cs(parsers.check_trail * (parsers.html_comment    
                           + parsers.html_special_block 
                           + parsers.html_block         
                           + parsers.html_any_block     
                           + parsers.html_instruction   
                           + parsers.html_cdatasection  
-                          + parsers.html_declaration)
+                          + parsers.html_declaration))
                         / writer.block_html_element
 
   parsers.indented_non_blank_line = parsers.indentedline - parsers.blankline
@@ -26711,10 +26819,10 @@ end
   parsers.Reference    = parsers.define_reference_parser
                        / self.register_link
 
-  parsers.Paragraph   = (parsers.check_trail / "")
+  parsers.Paragraph   = parsers.freeze_trail * (parsers.check_trail / "")
                       * (Ct((parsers.Inline)^1)
                       * (parsers.newline + parsers.eof)
-                      * parsers.leave_trail
+                      * parsers.unfreeze_trail
                       / writer.paragraph)
 
   parsers.Plain        = parsers.nonindentspace * Ct(parsers.Inline^1)
@@ -26746,21 +26854,21 @@ end
   parsers.indented_content_tight  = Ct( (parsers.blankline / "")
                                       * #parsers.conditionally_indented_blank
                                       * remove_indent("li")
-                                      + ( (parsers.Reference + (parsers.blankline / ""))
+                                      + ( (V("Reference") + (parsers.blankline / ""))
                                         * (parsers.minimally_indented_ref_or_block)
                                         * (parsers.minimally_indented_separated_ref_or_block)^0
-                                        + (parsers.Reference + (parsers.blankline / ""))
+                                        + (V("Reference") + (parsers.blankline / ""))
                                         + (parsers.tickbox^-1 / writer.escape) * V("Block")
                                         * (parsers.minimally_indented_separated_ref_or_block)^0) 
                                         * parsers.list_item_tightness_condition) 
   
   parsers.indented_content_loose  = Ct( (parsers.blankline / "")
                                       * #parsers.conditionally_indented_blank
-                                      + ( (parsers.Reference + (parsers.blankline / ""))
+                                      + ( (V("Reference") + (parsers.blankline / ""))
                                         * (parsers.minimally_indented_ref_or_block)
                                         * ( parsers.conditionally_indented_blank^0
                                           * parsers.minimally_indented_separated_ref_or_block^1)^0
-                                        + (parsers.Reference + (parsers.blankline / ""))
+                                        + (V("Reference") + (parsers.blankline / ""))
                                         + (parsers.tickbox^-1 / writer.escape) * V("Block")
                                         * ( parsers.conditionally_indented_blank^0
                                           * parsers.minimally_indented_separated_ref_or_block^1)^0))
@@ -26854,7 +26962,6 @@ end
                        / strip_atx_end
                        / self.parser_functions.parse_inlines)
                      * Cb("level")
-                     * parsers.leave_trail
                      / writer.heading
 
   local function remove_enclosing_whitespaces(o)
@@ -26865,19 +26972,21 @@ end
     return heading_content
   end
 
-  parsers.heading_line  = parsers.nonemptyline 
+  parsers.heading_line  = parsers.linechar^1
                         - parsers.thematic_break_lines
 
   parsers.heading_text = parsers.heading_line
-                       * ((parsers.check_optional_indent / "") * (parsers.heading_line - parsers.heading_level))^0
+                       * ((V("Endline") / "\n") * (parsers.heading_line - parsers.heading_level))^0
+                       * parsers.newline^-1
 
-  parsers.SetextHeading = #(parsers.heading_text 
+  parsers.SetextHeading = parsers.freeze_trail * parsers.check_trail_no_rem
+                        * #(parsers.heading_text 
                            * parsers.check_minimal_indent * parsers.check_trail * parsers.heading_level)
                         * Ct(Cs(parsers.heading_text) / remove_enclosing_whitespaces
                             / self.parser_functions.parse_inlines )
                         * parsers.check_minimal_indent_and_trail * parsers.heading_level
                         * parsers.newline
-                        * parsers.leave_trail
+                        * parsers.unfreeze_trail
                         / writer.heading
 
   parsers.Heading = parsers.AtxHeading + parsers.SetextHeading
@@ -26997,8 +27106,8 @@ end
         ThematicBreak         = parsers.ThematicBreak,
         BulletList            = parsers.BulletList,
         OrderedList           = parsers.OrderedList,
-        Heading               = parsers.Heading,
         DisplayHtml           = parsers.DisplayHtml,
+        Heading               = parsers.Heading,
         Paragraph             = parsers.Paragraph,
         Plain                 = parsers.Plain,
 
@@ -27545,42 +27654,51 @@ M.extensions.citations = function(citation_nbsps)
                     = Cs((parsers.alphanumeric^1
                          + parsers.bracketed
                          + parsers.inticks
+                         + parsers.autolink
+                        + V("InlineHtml")
+                         + V("Space") + V("Endline")
                          + (parsers.anyescaped
-                           - (parsers.rbracket + parsers.blankline^2))
+                           - (parsers.newline + parsers.rbracket + parsers.blankline^2))
                          - (parsers.spnl * parsers.dash^-1 * parsers.at))^0)
 
       local citation_body_postnote
                     = Cs((parsers.alphanumeric^1
                          + parsers.bracketed
                          + parsers.inticks
+                         + parsers.autolink
+                         + V("InlineHtml")
+                         + V("Space") + V("Endline")
                          + (parsers.anyescaped
-                           - (parsers.rbracket + parsers.semicolon
+                           - (parsers.newline + parsers.rbracket + parsers.semicolon
                              + parsers.blankline^2))
                          - (parsers.spnl * parsers.rbracket))^0)
 
       local citation_body_chunk
                     = citation_body_prenote
-                    * parsers.spnl * citation_name
+                    * parsers.spnlc * citation_name
                     * (parsers.internal_punctuation - parsers.semicolon)^-1
-                    * parsers.spnl * citation_body_postnote
+                    * parsers.spnlc * citation_body_postnote
 
       local citation_body
                     = citation_body_chunk
-                    * (parsers.semicolon * parsers.spnl
+                    * (parsers.semicolon * parsers.spnlc
                       * citation_body_chunk)^0
 
       local citation_headless_body_postnote
                     = Cs((parsers.alphanumeric^1
                          + parsers.bracketed
                          + parsers.inticks
+                         + parsers.autolink
+                         + V("InlineHtml")
+                         + V("Space") + V("Endline")
                          + (parsers.anyescaped
-                           - (parsers.rbracket + parsers.at
+                           - (parsers.newline + parsers.rbracket + parsers.at
                              + parsers.semicolon + parsers.blankline^2))
                          - (parsers.spnl * parsers.rbracket))^0)
 
       local citation_headless_body
                     = citation_headless_body_postnote
-                    * (parsers.sp * parsers.semicolon * parsers.spnl
+                    * (parsers.sp * parsers.semicolon * parsers.spnlc
                       * citation_body_chunk)^0
 
       local citations
@@ -27609,10 +27727,10 @@ M.extensions.citations = function(citation_nbsps)
       end
 
       local TextCitations
-                    = Ct((parsers.spnl
+                    = Ct((parsers.spnlc
                     * Cc("")
                     * citation_name
-                    * ((parsers.spnl
+                    * ((parsers.spnlc
                         * parsers.lbracket
                         * citation_headless_body
                         * parsers.rbracket) + Cc("")))^1)
@@ -27621,7 +27739,7 @@ M.extensions.citations = function(citation_nbsps)
                       end
 
       local ParenthesizedCitations
-                    = Ct((parsers.spnl
+                    = Ct((parsers.spnlc
                     * parsers.lbracket
                     * citation_body
                     * parsers.rbracket)^1)
@@ -27761,6 +27879,7 @@ M.extensions.content_blocks = function(language_map)
                     = (parsers.less
                       * Cs((parsers.anyescaped
                            - parsers.more
+                           - parsers.spacing
                            - #(parsers.period
                               * onlineimagesuffix
                               * parsers.more
@@ -27860,18 +27979,26 @@ M.extensions.definition_lists = function(tight_lists)
 
       local defstartchar = S("~:")
 
-      local defstart = ( defstartchar * #parsers.spacing
+      local defstart  = parsers.check_trail_length(0) * defstartchar * #parsers.spacing
                                       * (parsers.tab + parsers.space^-3)
-                       + parsers.space * defstartchar * #parsers.spacing
+                      + parsers.check_trail_length(1) * defstartchar * #parsers.spacing
                                        * (parsers.tab + parsers.space^-2)
-                       + parsers.space * parsers.space * defstartchar
-                                       * #parsers.spacing
+                      + parsers.check_trail_length(2) * defstartchar * #parsers.spacing
                                        * (parsers.tab + parsers.space^-1)
-                       + parsers.space * parsers.space * parsers.space
-                                       * defstartchar * #parsers.spacing
-                       )
+                      + parsers.check_trail_length(3) * defstartchar * #parsers.spacing
 
-      local dlchunk = Cs(parsers.line * (parsers.indentedline - parsers.blankline)^0)
+      local indented_line = (parsers.check_minimal_indent / "") * parsers.check_code_trail * parsers.line
+
+      local blank = parsers.check_minimal_blank_indent_and_any_trail * parsers.optionalspace * parsers.newline
+
+      local dlchunk = Cs(parsers.line * (indented_line - blank)^0)
+
+      local indented_blocks = function(bl)
+        return Cs( bl
+              * (blank^1 * (parsers.check_minimal_indent / "") 
+                * parsers.check_code_trail * -parsers.blankline * bl)^0
+              * (blank^1 + parsers.eof))
+      end
 
       local function definition_list_item(term, defs, _)
         return { term = self.parser_functions.parse_inlines(term),
@@ -27879,22 +28006,22 @@ M.extensions.definition_lists = function(tight_lists)
       end
 
       local DefinitionListItemLoose
-                    = C(parsers.line) * parsers.skipblanklines
-                    * Ct((defstart
-                         * parsers.indented_blocks(dlchunk)
-                         / self.parser_functions.parse_blocks_nested)^1)
+                    = C(parsers.line) * blank^0
+                    * Ct((parsers.check_minimal_indent * (defstart
+                         * indented_blocks(dlchunk)
+                         / self.parser_functions.parse_blocks_nested))^1)
                     * Cc(false) / definition_list_item
 
       local DefinitionListItemTight
                     = C(parsers.line)
-                    * Ct((defstart * dlchunk
-                         / self.parser_functions.parse_blocks_nested)^1)
+                    * Ct((parsers.check_minimal_indent * (defstart * dlchunk
+                         / self.parser_functions.parse_blocks_nested))^1)
                     * Cc(true) / definition_list_item
 
       local DefinitionList
                     = ( Ct(DefinitionListItemLoose^1) * Cc(false)
                       + Ct(DefinitionListItemTight^1)
-                      * (parsers.skipblanklines
+                      * (blank^0
                         * -DefinitionListItemLoose * Cc(true))
                       ) / writer.definitionlist
 
@@ -28050,7 +28177,7 @@ M.extensions.fancy_lists = function()
           allowed_end = C(parsers.spacechar^1) + #(parsers.newline + parsers.eof)
         end
 
-        return C(parsers.leader)
+        return parsers.check_trail
                 * Ct(C(delimiter_range) * C(delimiter_type))
                 * allowed_end
       end
@@ -28099,6 +28226,14 @@ M.extensions.fancy_lists = function()
         end
 
         local num
+        num = numstr:match("^([I])$")
+        if num then
+          return roman2number(num), "UpperRoman", numdelim
+        end
+        num = numstr:match("^([i])$")
+        if num then
+          return roman2number(string.upper(num)), "LowerRoman", numdelim
+        end
         num = numstr:match("^([A-Z])$")
         if num then
           return string.byte(num) - string.byte("A") + 1, "UpperAlpha", numdelim
@@ -28287,7 +28422,6 @@ M.extensions.fenced_code = function(blank_before_code_fence,
                            * parsers.optionalspace
                            * infostring
                            * (parsers.newline + parsers.eof)
-                           * parsers.leave_trail
       end
 
       local fencetail      = function(char)
@@ -28375,7 +28509,6 @@ M.extensions.fenced_code = function(blank_before_code_fence,
                    end
                    return writer.fencedCode(expanded_code, infostring, attr)
                  end)
-               * parsers.leave_trail
 
       self.insert_pattern("Block after Verbatim",
                           FencedCode, "FencedCode")
@@ -28495,6 +28628,9 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
                  , "div_level")
       end
 
+      local non_fenced_div_block  = parsers.check_minimal_indent * V("Block") 
+                                  - parsers.check_minimal_indent_and_trail * fenced_div_end
+
       local FencedDiv = fenced_div_begin
                       / function (infostring)
                           local attr = lpeg.match(Ct(parsers.attributes), infostring)
@@ -28506,13 +28642,13 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
                       / writer.div_begin
                       * increment_div_level(1)
                       * parsers.skipblanklines
-                      * Ct( (parsers.check_minimal_indent * (V("Block") - fenced_div_end))^-1
-                          * ( parsers.blanklines
+                      * Ct( non_fenced_div_block^-1
+                          * ( parsers.minimally_indented_blank^0
                             / function()
                                 return writer.interblocksep
                               end
-                            * (parsers.check_minimal_indent * (V("Block") - fenced_div_end)))^0)
-                      * parsers.skipblanklines
+                            * non_fenced_div_block)^0)
+                      * parsers.minimally_indented_blank^0
                       * parsers.check_minimal_indent_and_trail * fenced_div_end * increment_div_level(-1)
                       * (Cc("") / writer.div_end)
 
@@ -28606,9 +28742,15 @@ M.extensions.header_attributes = function()
                           - parsers.thematic_break_lines
 
       local heading_text  = heading_line
-                          * ((parsers.check_optional_indent / "") * (heading_line - parsers.heading_level))^0
+                          * ((V("Endline") / "\n") * (heading_line - parsers.heading_level))^0
 
-      local SetextHeading  = Ct(Cs(heading_text) / remove_enclosing_whitespaces
+      local SetextHeading  = parsers.freeze_trail * parsers.check_trail_no_rem
+                           * #(heading_text 
+                              * (parsers.attributes
+                                * parsers.optionalspace
+                                * parsers.newline)^-1
+                              * parsers.check_minimal_indent * parsers.check_trail * parsers.heading_level)
+                           * Ct(Cs(heading_text) / remove_enclosing_whitespaces
                                 / self.parser_functions.parse_inlines )
                            * Cg(Ct((parsers.attributes
                                  * parsers.optionalspace
@@ -28616,7 +28758,7 @@ M.extensions.header_attributes = function()
                             * parsers.check_minimal_indent_and_trail * parsers.heading_level
                             * Cb("attributes")
                             * parsers.newline
-                            * parsers.leave_trail
+                            * parsers.unfreeze_trail
                             / writer.heading
 
       local Heading = AtxHeading + SetextHeading
@@ -28741,7 +28883,6 @@ M.extensions.link_attributes = function()
                                       + parsers.spnlc_sep * parsers.title * parsers.only_blank
                                       + Cc("") * (parsers.spnlc * Ct(parsers.attributes)) * parsers.only_blank
                                       + Cc("") * parsers.only_blank)
-                                    * parsers.leave_trail
 
       local ReferenceWithAttributes = define_reference_parser
                                     / self.register_link
@@ -28881,14 +29022,27 @@ M.extensions.notes = function(notes, inline_notes)
 
         local NoteRef = RawNoteRef / lookup_note
 
+        local optionally_indented_line = parsers.check_optional_indent_and_any_trail * parsers.line
+
+        local blank = parsers.check_optional_blank_indent_and_any_trail * parsers.optionalspace * parsers.newline
+
+        local chunk = Cs(parsers.line * (optionally_indented_line - blank)^0)
+
+        local indented_blocks = function(bl)
+          return Cs( bl
+                * (blank^1 * (parsers.check_optional_indent / "") 
+                  * parsers.check_code_trail * -parsers.blankline * bl)^0)
+        end
+
         local NoteBlock
-                    = parsers.leader * RawNoteRef * parsers.colon
-                    * parsers.spnl * parsers.indented_blocks(parsers.chunk)
+                    = parsers.check_trail_no_rem * RawNoteRef * parsers.colon
+                    * parsers.spnlc * indented_blocks(chunk)
                     / register_note
 
-        local Blank = NoteBlock + parsers.Blank
-        self.update_rule("Blank", Blank)
-        self.insert_pattern("Inline after LinkAndEmph",
+        local Reference = NoteBlock + parsers.Reference
+
+        self.update_rule("Reference", Reference)
+        self.insert_pattern("Inline before LinkAndEmph",
                             NoteRef, "NoteRef")
       end
 
@@ -29025,8 +29179,9 @@ M.extensions.pipe_tables = function(table_captions)
                                         , table_hline_separator
                                         , table_hline_column)
 
-      local table_caption_beginning = parsers.skipblanklines
-                                    * parsers.nonindentspace
+      local table_caption_beginning = (parsers.check_minimal_blank_indent_and_any_trail_no_rem 
+                                      * parsers.optionalspace * parsers.newline)^0
+                                    * parsers.check_minimal_indent_and_trail
                                     * (P("Table")^-1 * parsers.colon)
                                     * parsers.optionalspace
 
@@ -29053,9 +29208,9 @@ M.extensions.pipe_tables = function(table_captions)
         table_caption = parsers.fail
       end
 
-      local PipeTable = Ct(table_row * parsers.newline
-                        * table_hline
-                        * (parsers.newline * table_row)^0)
+      local PipeTable = Ct(table_row * parsers.newline * parsers.check_minimal_indent_and_trail
+                        * table_hline * parsers.newline
+                        * (parsers.check_minimal_indent * table_row * parsers.newline)^0)
                       / make_pipe_table_rectangular
                       * table_caption^-1
                       / writer.table
@@ -29293,7 +29448,7 @@ M.extensions.tex_math = function(tex_math_dollars,
 %  \begin{macrocode}
       local dollar_math_content = (parsers.newline * (parsers.check_optional_indent / "")
                                 + parsers.backslash^-1
-                                * (parsers.any - parsers.newline))
+                                * parsers.linechar)
                                 - parsers.blankline^2
                                 - parsers.dollar
 
@@ -29326,7 +29481,7 @@ M.extensions.tex_math = function(tex_math_dollars,
 % \end{markdown}
 %  \begin{macrocode}
       local backslash_math_content  = (parsers.newline * (parsers.check_optional_indent / "")
-                                    + (parsers.any - parsers.newline))
+                                    + parsers.linechar)
                                     - parsers.blankline^2
 %    \end{macrocode}
 % \begin{markdown}

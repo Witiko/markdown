@@ -249,8 +249,6 @@ interblockSeparator
 olBegin
 olItemWithNumber: 1
 interblockSeparator
-ampersand
-hash
 olItemEnd
 olItemWithNumber: 2
 olItemEnd
@@ -277,8 +275,6 @@ ulEndTight
 ulItemEnd
 ulEndTight
 interblockSeparator
-ampersand
-hash
 interblockSeparator
 olBeginTight
 olItemWithNumber: 1

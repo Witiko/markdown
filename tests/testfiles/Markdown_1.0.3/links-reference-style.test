@@ -1,15 +1,10 @@
 <<<
-Foo [bar] [1].
-
 Foo [bar][1].
-
-Foo [bar]
-[1].
 
 [1]: /url/  "Title"
 
 
-With [embedded [brackets]] [b].
+With [embedded [brackets]][b].
 
 
 Indented [once][].
@@ -33,19 +28,13 @@ Indented [four][] times.
 
 * * *
 
-[this] [this] should work
-
-So should [this][this].
-
-And [this] [].
+[this][this] should work
 
 And [this][].
 
 And [this].
 
-But not [that] [].
-
-Nor [that][].
+But not [that][].
 
 Nor [that].
 
@@ -69,18 +58,6 @@ breaks] across lines.
 
 >>>
 documentBegin
-BEGIN link
-- label: bar
-- URI: /url/
-- title: Title
-END link
-interblockSeparator
-BEGIN link
-- label: bar
-- URI: /url/
-- title: Title
-END link
-interblockSeparator
 BEGIN link
 - label: bar
 - URI: /url/
@@ -133,19 +110,6 @@ BEGIN link
 - URI: foo
 - title: 
 END link
-interblockSeparator
-BEGIN link
-- label: this
-- URI: foo
-- title: 
-END link
-interblockSeparator
-BEGIN link
-- label: this
-- URI: foo
-- title: 
-END link
-interblockSeparator
 interblockSeparator
 interblockSeparator
 interblockSeparator
