@@ -25714,11 +25714,8 @@ function M.reader.new(writer, options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  local function parse_content_part(t, i, content_part)
+  local function parse_content_part(content_part)
     local rope = util.rope_to_string(content_part)
-    if #t == i then
-      rope = rope:gsub("%s*$","") 
-    end
     local parsed = self.parser_functions.parse_inlines_no_link_or_emphasis(rope) 
     parsed.indent_info = nil
     return parsed
@@ -25739,7 +25736,7 @@ function M.reader.new(writer, options)
       local value = t[i]
 
       if value.rendered ~= nil then
-        content[#content + 1] = parse_content_part(t, i, content_part)
+        content[#content + 1] = parse_content_part(content_part)
         content_part = {}
         content[#content + 1] = value.rendered
         value.rendered = nil
@@ -25757,7 +25754,7 @@ function M.reader.new(writer, options)
     end
 
     if next(content_part) ~= nil then
-      content[#content + 1] = parse_content_part(t, closing_index, content_part)
+      content[#content + 1] = parse_content_part(content_part)
     end
 
     return content
@@ -26579,6 +26576,8 @@ function M.reader.new(writer, options)
       ::continue::
     end
 
+    t[#t].content = t[#t].content:gsub("%s*$","") 
+
     process_emphasis(t, 1, #t)
     local final_result = collect_emphasis_content(t, 1, #t)
     return final_result
@@ -26703,13 +26702,7 @@ function M.reader.new(writer, options)
                      + parsers.spacechar^1 * -parsers.newline / self.expandtabs
 
   parsers.NonbreakingEndline
-                    = parsers.newline
-                    * (parsers.check_minimal_indent 
-                      * -V("EndlineExceptions") 
-                      + parsers.check_optional_indent 
-                      * -V("EndlineExceptions") 
-                      * -parsers.starter)
-                    * parsers.spacechar^0
+                    = parsers.endline
                     / (options.hardLineBreaks 
                        and writer.hard_line_break
                         or writer.nbsp)
