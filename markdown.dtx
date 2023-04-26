@@ -23662,7 +23662,7 @@ function M.writer.new(options)
     local key_value_regex = "([^= ]+)%s*=%s*(.*)"
     local key, value
     for _, attribute in ipairs(attributes) do
-      if attribute:sub(1, 1) == "#" or attr[i]:sub(1, 1) == "." then
+      if attribute:sub(1, 1) == "#" or attribute:sub(1, 1) == "." then
         table.insert(expanded_attributes, attribute)
       else
         key, value = attribute:match(key_value_regex)
@@ -23673,7 +23673,7 @@ function M.writer.new(options)
         if key:lower() == "id" then
           table.insert(expanded_attributes, "#" .. value)
         elseif key:lower() == "class" then
-          classes = {}
+          local classes = {}
           for class in value:gmatch("%S+") do
             table.insert(classes, class)
           end
@@ -23694,16 +23694,16 @@ function M.writer.new(options)
       if seen[attribute] ~= nil then
         goto continue  -- prevent duplicate attributes
       else
-        seen[attr[i]] = true
+        seen[attribute] = true
       end
-      if attr[i]:sub(1, 1) == "#" then
+      if attribute:sub(1, 1) == "#" then
         table.insert(buf, {"\\markdownRendererAttributeIdentifier{",
                            attribute:sub(2), "}"})
-      elseif attr[i]:sub(1, 1) == "." then
+      elseif attribute:sub(1, 1) == "." then
         table.insert(buf, {"\\markdownRendererAttributeClassName{",
                            attribute:sub(2), "}"})
       else
-        key, value = attr[i]:match(key_value_regex)
+        key, value = attribute:match(key_value_regex)
         if value:sub(1, 1) == '"' or value:sub(1, 1) == "'" then
           assert(value:sub(1, 1) == value:sub(-1, -1))
           value = value:sub(2, -2)  -- strip ASCII quotes/apostrophes
