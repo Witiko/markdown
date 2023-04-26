@@ -15,6 +15,8 @@ A level two heading {#fourth4-id .2not-a-class}
 #### A level four heading {#-6not-the-sixth-id}
 ##### A level five heading ## {#--not-7the-seventh-id}
 ###### A level six heading {#the-eighth-id attribute=value}
+
+# Attributes {#should #appear .in .alphabetical order=ing and="not" #the .order of='typing'}
 >>>
 documentBegin
 codeSpan: headerAttributes
@@ -49,5 +51,8 @@ END section
 END section
 END section
 END section
+END section
+BEGIN section
+headingOne: Attributes (leftBrace)(hash)should (hash)appear .in .alphabetical order=ing and="not" (hash)the .order of='typing'(rightBrace)
 END section
 documentEnd
