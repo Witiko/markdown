@@ -23677,8 +23677,13 @@ function M.writer.new(options)
                            attr[i]:sub(2), "}"})
       else
         key, value = attr[i]:match("([^= ]+)%s*=%s*(.*)")
-        table.insert(buf, {"\\markdownRendererAttributeKeyValue{",
-                           key, "}{", value, "}"})
+        if key:lower() == "id" then
+          table.insert(buf, {"\\markdownRendererAttributeIdentifier{",
+                             value, "}"})
+        else
+          table.insert(buf, {"\\markdownRendererAttributeKeyValue{",
+                             key, "}{", value, "}"})
+        end
       end
       ::continue::
     end

@@ -8,7 +8,7 @@ A level one heading {#second:id2 - some_key =  "some quoted value with escaped q
 
 ## A level two heading ### {#third.3id .a-class}
 
-A level two heading {#fourth4-id .2not-a-class}
+A level two heading {iD=fourth4-id .2not-a-class}
 -----------------------------------------------
 
 ### A level three heading ## {#5not-the-fifth-id}
@@ -33,7 +33,7 @@ headingTwo: A level two heading (hash)(hash)(hash) (leftBrace)(hash)third.3id .a
 interblockSeparator
 END section
 BEGIN section
-headingTwo: A level two heading (leftBrace)(hash)fourth4-id .2not-a-class(rightBrace)
+headingTwo: A level two heading (leftBrace)iD=fourth4-id .2not-a-class(rightBrace)
 interblockSeparator
 BEGIN section
 headingThree: A level three heading (hash)(hash) (leftBrace)(hash)5not-the-fifth-id(rightBrace)
