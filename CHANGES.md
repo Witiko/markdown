@@ -12,6 +12,8 @@ Fixes:
 
 - Remove extra space after inline elements with attributes.
   (#288)
+- Make our implementation of attributes compatible with jgm/pandoc.
+  (#279, #297, f7c701b)
 
 Documentation:
 
