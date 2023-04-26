@@ -50,7 +50,7 @@ interblockSeparator
 END headerAttributeContext
 END section
 BEGIN section
-headingTwo: A level two heading (leftBrace)(hash)fourth4-id .2not-a-class(rightBrace)
+headingTwo: A level two heading (leftBrace)iD=fourth4-id .2not-a-class(rightBrace)
 interblockSeparator
 BEGIN section
 headingThree: A level three heading (hash)(hash) (leftBrace)(hash)5not-the-fifth-id(rightBrace)
