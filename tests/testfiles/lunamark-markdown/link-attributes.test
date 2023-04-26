@@ -10,7 +10,7 @@ an <https://auto/>{.link}.
 An inline ![image](foo.jpg){#id .class width=30 height=20px}
 and a reference ![image][ref]{.another-class} with attributes.
 
-[ref]: foo.jpg "optional title" {#id .class key=val}
+[ref]: foo.jpg "optional title" {#id .class key="val 2"}
 >>>
 documentBegin
 codeSpan: linkAttributes
@@ -38,7 +38,7 @@ attributeClassName: another-class
 attributeClassName: class
 BEGIN attributeKeyValue
 - key: key
-- value: val
+- value: val 2
 END attributeKeyValue
 BEGIN link
 - label: link
@@ -78,7 +78,7 @@ attributeClassName: another-class
 attributeClassName: class
 BEGIN attributeKeyValue
 - key: key
-- value: val
+- value: val 2
 END attributeKeyValue
 BEGIN image
 - label: image
