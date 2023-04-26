@@ -14,7 +14,7 @@ A level two heading {iD=fourth4-id .2not-a-class}
 ### A level three heading ## {#5not-the-fifth-id}
 #### A level four heading {#-6not-the-sixth-id}
 ##### A level five heading ## {#--not-7the-seventh-id}
-###### A level six heading {#the-eighth-id attribute=value}
+###### A level six heading {#the-eighth-id ClAsS = 'a dddd ccc bb'}
 
 # Attributes {#should #appear .in .alphabetical order=ing and="not" #the .order of='typing'}
 >>>
@@ -45,7 +45,7 @@ BEGIN section
 headingFive: A level five heading (hash)(hash) (leftBrace)(hash)--not-7the-seventh-id(rightBrace)
 interblockSeparator
 BEGIN section
-headingSix: A level six heading (leftBrace)(hash)the-eighth-id attribute=value(rightBrace)
+headingSix: A level six heading (leftBrace)(hash)the-eighth-id  ClAsS = 'a dddd ccc bb'(rightBrace)
 END section
 END section
 END section

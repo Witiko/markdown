@@ -23653,41 +23653,63 @@ function M.writer.new(options)
 % \begin{markdown}
 %
 % Define \luamdef{writer->attributes} as a function that will transform
-% input attributes `attr` to the output format.
+% input attributes `attrs` to the output format.
 %
 % \end{markdown}
 %  \begin{macrocode}
-  function self.attributes(attr)
-    local buf = {}
-
-    table.sort(attr)
-    local seen = {}
+  function self.attributes(attributes)
+    local expanded_attributes = {}
+    local key_value_regex = "([^= ]+)%s*=%s*(.*)"
     local key, value
-    for i = 1, #attr do
-      if seen[attr[i]] ~= nil then
+    for _, attribute in ipairs(attributes) do
+      if attribute:sub(1, 1) == "#" or attr[i]:sub(1, 1) == "." then
+        table.insert(expanded_attributes, attribute)
+      else
+        key, value = attribute:match(key_value_regex)
+        if value:sub(1, 1) == '"' or value:sub(1, 1) == "'" then
+          assert(value:sub(1, 1) == value:sub(-1, -1))
+          value = value:sub(2, -2)  -- strip ASCII quotes/apostrophes
+        end
+        if key:lower() == "id" then
+          table.insert(expanded_attributes, "#" .. value)
+        elseif key:lower() == "class" then
+          classes = {}
+          for class in value:gmatch("%S+") do
+            table.insert(classes, class)
+          end
+          table.sort(classes)
+          for _, class in ipairs(classes) do
+            table.insert(expanded_attributes, "." .. class)
+          end
+        else
+          table.insert(expanded_attributes, attribute)
+        end
+      end
+    end
+    table.sort(expanded_attributes)
+
+    local buf = {}
+    local seen = {}
+    for _, attribute in ipairs(expanded_attributes) do
+      if seen[attribute] ~= nil then
         goto continue  -- prevent duplicate attributes
       else
         seen[attr[i]] = true
       end
       if attr[i]:sub(1, 1) == "#" then
         table.insert(buf, {"\\markdownRendererAttributeIdentifier{",
-                           attr[i]:sub(2), "}"})
+                           attribute:sub(2), "}"})
       elseif attr[i]:sub(1, 1) == "." then
         table.insert(buf, {"\\markdownRendererAttributeClassName{",
-                           attr[i]:sub(2), "}"})
+                           attribute:sub(2), "}"})
       else
-        key, value = attr[i]:match("([^= ]+)%s*=%s*(.*)")
+        key, value = attr[i]:match(key_value_regex)
         if value:sub(1, 1) == '"' or value:sub(1, 1) == "'" then
           assert(value:sub(1, 1) == value:sub(-1, -1))
-          value = value:sub(2, -2)
+          value = value:sub(2, -2)  -- strip ASCII quotes/apostrophes
         end
-        if key:lower() == "id" then
-          table.insert(buf, {"\\markdownRendererAttributeIdentifier{",
-                             value, "}"})
-        else
-          table.insert(buf, {"\\markdownRendererAttributeKeyValue{",
-                             key, "}{", value, "}"})
-        end
+        table.insert(buf, {"\\markdownRendererAttributeKeyValue{",
+                           key, "}{", value, "}"})
       end
       ::continue::
     end
