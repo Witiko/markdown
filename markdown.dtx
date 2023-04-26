@@ -23666,10 +23666,6 @@ function M.writer.new(options)
         table.insert(expanded_attributes, attribute)
       else
         key, value = attribute:match(key_value_regex)
-        if value:sub(1, 1) == '"' or value:sub(1, 1) == "'" then
-          assert(value:sub(1, 1) == value:sub(-1, -1))
-          value = value:sub(2, -2)  -- strip ASCII quotes/apostrophes
-        end
         if key:lower() == "id" then
           table.insert(expanded_attributes, "#" .. value)
         elseif key:lower() == "class" then
@@ -23704,10 +23700,6 @@ function M.writer.new(options)
                            attribute:sub(2), "}"})
       else
         key, value = attribute:match(key_value_regex)
-        if value:sub(1, 1) == '"' or value:sub(1, 1) == "'" then
-          assert(value:sub(1, 1) == value:sub(-1, -1))
-          value = value:sub(2, -2)  -- strip ASCII quotes/apostrophes
-        end
         table.insert(buf, {"\\markdownRendererAttributeKeyValue{",
                            key, "}{", value, "}"})
       end
