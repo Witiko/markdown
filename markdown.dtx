@@ -24141,6 +24141,9 @@ parsers.attribute_key          = (parsers.attribute_key_char
 parsers.attribute_value        = ( (parsers.dquote / "")
                                  * (parsers.anyescaped - parsers.dquote)^0
                                  * (parsers.dquote / ""))
+                               + ( (parsers.squote / "")
+                                 * (parsers.anyescaped - parsers.squote)^0
+                                 * (parsers.squote / ""))
                                + ( parsers.anyescaped - parsers.dquote - parsers.rbrace
                                  - parsers.space)^0
 
