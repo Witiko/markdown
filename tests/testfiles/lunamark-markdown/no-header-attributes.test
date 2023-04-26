@@ -46,6 +46,7 @@ headingFive: A level five heading (hash)(hash) (leftBrace)(hash)--not-7the-seven
 interblockSeparator
 BEGIN section
 headingSix: A level six heading (leftBrace)(hash)the-eighth-id  ClAsS = 'a dddd ccc bb'(rightBrace)
+interblockSeparator
 END section
 END section
 END section
