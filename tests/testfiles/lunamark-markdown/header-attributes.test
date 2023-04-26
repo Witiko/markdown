@@ -5,10 +5,10 @@ through the plain TeX interface.
 
 # A level one heading { - #first-id   }
 
-A level one heading {#second_id2 - some_key =  "some quoted value with escaped quotes and Unicode: \"ěščřžýáíé\""}
+A level one heading {#second:id2 - some_key =  "some quoted value with escaped quotes and Unicode: \"ěščřžýáíé\""}
 ==================================================================================================================
 
-## A level two heading ### {#third-3id .a-class}
+## A level two heading ### {#third.3id .a-class}
 
 A level two heading {#fourth4-id .2not-a-class}
 -----------------------------------------------
@@ -33,7 +33,7 @@ END headerAttributeContext
 END section
 BEGIN section
 BEGIN headerAttributeContext
-attributeIdentifier: second_id2
+attributeIdentifier: second:id2
 attributeClassName: unnumbered
 BEGIN attributeKeyValue
 - key: some_key
@@ -43,7 +43,7 @@ headingOne: A level one heading
 interblockSeparator
 BEGIN section
 BEGIN headerAttributeContext
-attributeIdentifier: third-3id
+attributeIdentifier: third.3id
 attributeClassName: a-class
 headingTwo: A level two heading
 interblockSeparator

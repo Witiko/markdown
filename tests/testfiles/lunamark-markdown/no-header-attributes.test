@@ -3,10 +3,10 @@ This test ensures that the Lua `headerAttributes` option is disabled by default.
 
 # A level one heading { - #first-id   }
 
-A level one heading {#second_id2 - some_key =  "some quoted value with escaped quotes and Unicode: \"ěščřžýáíé\""}
+A level one heading {#second:id2 - some_key =  "some quoted value with escaped quotes and Unicode: \"ěščřžýáíé\""}
 ==================================================================================================================
 
-## A level two heading ### {#third-3id .a-class}
+## A level two heading ### {#third.3id .a-class}
 
 A level two heading {#fourth4-id .2not-a-class}
 -----------------------------------------------
@@ -24,10 +24,10 @@ headingOne: A level one heading (leftBrace) - (hash)first-id (rightBrace)
 interblockSeparator
 END section
 BEGIN section
-headingOne: A level one heading (leftBrace)(hash)second(emphasis: id2 - some)key = "some quoted value with escaped quotes and Unicode: "ěščřžýáíé""(rightBrace)
+headingOne: A level one heading (leftBrace)(hash)second:id2 - some(underscore)key = "some quoted value with escaped quotes and Unicode: "ěščřžýáíé""(rightBrace)
 interblockSeparator
 BEGIN section
-headingTwo: A level two heading (hash)(hash)(hash) (leftBrace)(hash)third-3id .a-class(rightBrace)
+headingTwo: A level two heading (hash)(hash)(hash) (leftBrace)(hash)third.3id .a-class(rightBrace)
 interblockSeparator
 END section
 BEGIN section
