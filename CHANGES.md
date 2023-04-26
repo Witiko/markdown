@@ -13,11 +13,6 @@ Fixes:
 - Remove extra space after inline elements with attributes.
   (#288)
 
-Default Renderer Prototypes:
-
-- Make the default LaTeX renderer prototypes for tight lists produce
-  surrounding spaces. (#290, #296)
-
 Documentation:
 
 - Add a link to a preprint from TUGboat 44(1) to `README.md`.
@@ -38,6 +33,11 @@ Libraries:
 
 - Make tinyyaml a standalone CTAN package. (contributed by
   @zepinglee, #218, #294)
+
+Default Renderer Prototypes:
+
+- Make the default LaTeX renderer prototypes for tight lists produce
+  surrounding spaces. (#290, #296)
 
 ## 2.22.0 (2023-04-02)
 
