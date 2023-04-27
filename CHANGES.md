@@ -10,6 +10,10 @@ Development:
 
 Fixes:
 
+- Drop support for ConTeXt Mark II, since the MkII files are
+  no longer installed in TeX Live 2023, see the article by
+  [Hans Hagen](https://tug.org/texlive/files/tb136hagen-texlive.pdf).
+  (#281, #282)
 - Remove extra space after inline elements with attributes.
   (#288)
 - Make our implementation of attributes compatible with jgm/pandoc.
@@ -25,6 +29,8 @@ Documentation:
 Docker:
 
 - Add TeX Live 2022 historical image. (#285, #295)
+- Add support for TeX Live 2023. (contributed by @gucci-on-fleek,
+  #281, #282)
 
 Refactoring:
 

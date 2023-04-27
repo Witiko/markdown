@@ -1,1 +1,1 @@
-context                                              --nonstopmode  TEST_FILENAME
+context                                     --luatex --nonstopmode  TEST_FILENAME
