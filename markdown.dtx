@@ -1629,7 +1629,7 @@ Hello *world*!
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the text “Hello
 *world*!”
@@ -1641,13 +1641,13 @@ the Markdown package:
 ``` sh
 git clone https://github.com/witiko/markdown
 cd markdown/examples
-context context.tex
+context --luatex context.tex
 ``````
 A PDF document named `context.pdf` should be produced. Open the text documents
 `context.tex` and `example.md` in a text editor to see how the example documents
 are structured. Try changing the documents and typesetting them as follows:
 ``` sh
-context context.tex
+context --luatex context.tex
 ``````
 to see the effect of your changes.
 
@@ -2469,7 +2469,7 @@ Hello *world*!
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the text “Hello
 *world*!” A directory named `cache` containing several cache files of the
@@ -2621,7 +2621,7 @@ Create also a text document named `document.tex` with the following content:
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -2891,7 +2891,7 @@ Hello *world*!
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the text
 “Hello *world*!” A frozen cache will also be produced in the `cache.tex`
@@ -2913,9 +2913,9 @@ Hi *world*!
 \stopmarkdown
 \stoptext
 ```````
-Last, invoke pdfTeX without shell access from the terminal:
+Last, invoke LuaTeX from the terminal:
 ``` sh
-context frozen-document.tex
+context --luatex frozen-document.tex
 ``````
 A PDF document named `frozen-document.pdf` should be produced and contain the
 text “Hello *world*!” Since we used the contents of the frozen cache using
@@ -3136,7 +3136,7 @@ A paragraph.
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -3383,7 +3383,7 @@ Not a fenced code.
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -3699,7 +3699,7 @@ Not a heading.
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -4020,7 +4020,7 @@ following content:
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -4437,7 +4437,7 @@ following content:
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -4601,7 +4601,7 @@ Create also a text document named `document.tex` with the following content:
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -4893,7 +4893,7 @@ Term 2 with *inline markup*
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -5379,7 +5379,7 @@ c) third item
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -5534,7 +5534,7 @@ if (a > 3) {
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -5873,7 +5873,7 @@ Hello *world*!
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the text
 “Hello *world*!” A frozen cache will also be produced in the `cache.tex`
@@ -5889,9 +5889,9 @@ Hi *world*!
 \stopmarkdown
 \stoptext
 ```````
-Last, invoke pdfTeX without shell access from the terminal:
+Last, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A new PDF document named `document.pdf` should be produced and contain the
 same text “Hello *world*!” Since we used the contents of the frozen cache using
@@ -6170,7 +6170,7 @@ following content:
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -6485,7 +6485,7 @@ _There is <? HTML instruction ?> support._
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -6707,7 +6707,7 @@ $\sqrt{-1}$ *equals* $i$.
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -6906,7 +6906,7 @@ move down to type the note.]
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -7086,7 +7086,7 @@ age:  99
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -7315,7 +7315,7 @@ following content:
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -7473,7 +7473,7 @@ isn't indented.
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -7605,7 +7605,7 @@ following content:
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -7971,7 +7971,7 @@ following content:
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -8181,7 +8181,7 @@ following content:
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -8396,7 +8396,7 @@ These are just three regular dots ...
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -8524,7 +8524,7 @@ The following list respects the numbers specified in the markup:
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -8656,7 +8656,7 @@ This is ~~a lunar roving vehicle~~ strike-through text.
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -8771,7 +8771,7 @@ following content:
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 text “Hello *world*!”
@@ -8861,7 +8861,7 @@ H~2~O is a liquid.
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -8953,7 +8953,7 @@ following content:
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -9077,7 +9077,7 @@ following content:
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -9194,7 +9194,7 @@ following content:
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -9314,7 +9314,7 @@ Hel%  this is a comment
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 text “Hello *world*!”
@@ -9513,7 +9513,7 @@ $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -9716,7 +9716,7 @@ following content:
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -9919,7 +9919,7 @@ following content:
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -10182,7 +10182,7 @@ This is *emphasized text* and this is a math subscript: $m_n$.
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -11468,7 +11468,7 @@ A quote from William Shakespeare's King Lear:
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -11946,7 +11946,7 @@ This is a loose list
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -12248,7 +12248,7 @@ $\sqrt{-1}$ *equals* $i$
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -12593,7 +12593,7 @@ content:
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -13187,7 +13187,7 @@ Milk
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -13311,7 +13311,7 @@ The secret word is ...
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -13433,7 +13433,7 @@ This is **strong emphasis**.
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -14096,7 +14096,7 @@ following content:
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -14601,7 +14601,7 @@ _Foo_ bar!
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -14722,7 +14722,7 @@ following content:
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -15009,7 +15009,7 @@ Please visit [the link][ctan].
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -15450,7 +15450,7 @@ This is some text[^1] and this is some other text[^2].
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -16223,7 +16223,7 @@ This is a loose list
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -16648,7 +16648,7 @@ Bartel~Leendert van~der~Waerden
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text, where the middot (`·`) denotes a non-breaking space:
@@ -16868,7 +16868,7 @@ This is ~~a lunar roving vehicle~~ strike-through text.
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -16976,7 +16976,7 @@ H~2~O is a liquid.
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -17083,7 +17083,7 @@ following content:
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -17329,7 +17329,7 @@ $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -17558,7 +17558,7 @@ This is the second page.
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -17695,7 +17695,7 @@ following content:
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -18182,7 +18182,7 @@ age:  99
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -18294,7 +18294,7 @@ following content:
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -18416,7 +18416,7 @@ age:  99
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -20306,7 +20306,7 @@ $\sqrt{-1}$ *equals* $i$.
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
