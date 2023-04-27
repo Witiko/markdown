@@ -7,7 +7,6 @@ Development:
 - Add support of bulk redefinition of token renderers and
   token renderer prototypes in the `\markdownSetup` LaTeX
   command using wildcards. (#232, #287)
-- Add support for TeX Live 2023. (#281, #282)
 
 Fixes:
 
@@ -30,6 +29,8 @@ Documentation:
 Docker:
 
 - Add TeX Live 2022 historical image. (#285, #295)
+- Add support for TeX Live 2023. (contributed by @gucci-on-fleek,
+  #281, #282)
 
 Refactoring:
 
