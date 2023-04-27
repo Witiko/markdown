@@ -37,7 +37,7 @@ all: $(OUTPUT)
 
 # This target typesets the ConTeXt example using the Mark IV format.
 context-mkiv.pdf: context-mkiv.tex example.tex
-	context context-mkiv.tex
+	context --luatex context-mkiv.tex
 
 # This target typesets the LaTeX example using the pdfTeX engine.
 latex-pdftex.pdf: latex-pdftex.tex example.tex
