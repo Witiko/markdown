@@ -24850,13 +24850,13 @@ local function remove_trailing_blank_lines(s)
 end
 
 parsers.html_until_end = function(end_marker)
-  return Cs((parsers.newline 
+  return Cs(Cs((parsers.newline 
           * (parsers.check_minimal_blank_indent_and_any_trail 
             * #parsers.blankline
             + parsers.check_minimal_indent_and_any_trail)  
           + parsers.linechar - end_marker)^0
           * parsers.linechar^0 * parsers.newline^-1)
-         / remove_trailing_blank_lines
+         / remove_trailing_blank_lines)
 end
 
 -- attributes
@@ -25085,10 +25085,8 @@ parsers.html_special_block  = parsers.html_blankline_ending_special_block
                             + parsers.html_closing_special_block
 
 -- parse html blocks
-parsers.html_block_opening  = (parsers.html_incomplete_open_tag
+parsers.html_block_opening  = parsers.html_incomplete_open_tag
                             + parsers.html_incomplete_close_tag
-                            - parsers.html_incomplete_open_special_tag
-                            - parsers.html_incomplete_close_special_tag)
 
 parsers.html_block  = parsers.html_block_opening
                     * parsers.html_blankline_end_condition
