@@ -24836,23 +24836,27 @@ parsers.block_keyword =
     parsers.keyword_exact("track") +
     parsers.keyword_exact("ul")
 
-parsers.html_newline_indent = parsers.newline 
-                            * (parsers.check_minimal_blank_indent_and_any_trail * #parsers.blankline
-                              + parsers.check_minimal_indent_and_any_trail)
-
 -- end conditions
 parsers.html_blankline_end_condition  = parsers.linechar^0
-                                      * (parsers.html_newline_indent * parsers.linechar^1)^0
+                                      * ( parsers.newline 
+                                        * (parsers.check_minimal_blank_indent_and_any_trail 
+                                          * #parsers.blankline
+                                          + parsers.check_minimal_indent_and_any_trail) 
+                                        * parsers.linechar^1)^0
                                       * (parsers.newline^-1 / "")
 
+local function remove_trailing_blank_lines(s)
+  return s:gsub("[\n\r]+%s*$", "")
+end
+
 parsers.html_until_end = function(end_marker)
-  return  Cs((parsers.linechar - end_marker)^0
-            * (parsers.optionalspace * parsers.newline
-              * (parsers.check_minimal_blank_indent_and_any_trail 
-                * parsers.optionalspace * parsers.newline)^0
-              * parsers.check_minimal_indent_and_any_trail 
-              * ((parsers.linechar - end_marker)^1 + #end_marker))^0
-          * (parsers.linechar^0 * (parsers.newline^-1 / "")))
+  return Cs((parsers.newline 
+          * (parsers.check_minimal_blank_indent_and_any_trail 
+            * #parsers.blankline
+            + parsers.check_minimal_indent_and_any_trail)  
+          + parsers.linechar - end_marker)^0
+          * parsers.linechar^0 * parsers.newline^-1)
+         / remove_trailing_blank_lines
 end
 
 -- attributes
@@ -26771,13 +26775,14 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-  parsers.DisplayHtml = Cs(parsers.check_trail * (parsers.html_comment    
-                          + parsers.html_special_block 
-                          + parsers.html_block         
-                          + parsers.html_any_block     
-                          + parsers.html_instruction   
-                          + parsers.html_cdatasection  
-                          + parsers.html_declaration))
+  parsers.DisplayHtml = Cs(parsers.check_trail 
+                          * ( parsers.html_comment    
+                            + parsers.html_special_block 
+                            + parsers.html_block         
+                            + parsers.html_any_block     
+                            + parsers.html_instruction   
+                            + parsers.html_cdatasection  
+                            + parsers.html_declaration))
                         / writer.block_html_element
 
   parsers.indented_non_blank_line = parsers.indentedline - parsers.blankline
