@@ -25148,8 +25148,8 @@ parsers.email_address_local_part_char = parsers.alphanumeric
 parsers.email_address_local_part = parsers.email_address_local_part_char^1
 
 parsers.email_address_dns_label = parsers.alphanumeric
-                                * ((parsers.alphanumeric + parsers.dash)^-62
-                                  * B(parsers.alphanumeric))^-1
+                                * (parsers.alphanumeric + parsers.dash)^-62
+                                * B(parsers.alphanumeric)
 
 parsers.email_address_domain  = parsers.email_address_dns_label
                               * (parsers.period * parsers.email_address_dns_label)^0
@@ -28711,6 +28711,10 @@ M.extensions.header_attributes = function()
                        * Cb("attributes")
                        / writer.heading
 
+      local function strip_trailing_spaces(s)
+        return s:gsub("%s*$","")
+      end
+
       local heading_line  = (parsers.linechar 
                             - (parsers.attributes
                               * parsers.optionalspace
@@ -28727,7 +28731,7 @@ M.extensions.header_attributes = function()
                                 * parsers.optionalspace
                                 * parsers.newline)^-1
                               * parsers.check_minimal_indent * parsers.check_trail * parsers.heading_level)
-                           * Ct(Cs(heading_text)
+                           * Ct(Cs(heading_text) / strip_trailing_spaces
                                 / self.parser_functions.parse_inlines )
                            * Cg(Ct((parsers.attributes
                                  * parsers.optionalspace
