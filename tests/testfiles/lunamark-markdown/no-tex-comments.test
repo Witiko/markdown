@@ -14,5 +14,5 @@ interblockSeparator
 emphasis: emphasi(percentSign)  this is a comment zed text
 emphasis: emphasi(percentSign)  another one zed text
 interblockSeparator
-emphasis: end of  a line
+emphasis: end of (hardLineBreak)a line
 documentEnd

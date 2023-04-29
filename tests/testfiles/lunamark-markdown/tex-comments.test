@@ -40,11 +40,11 @@ emphasis: emphasi(percentSign)  another one zed text
 interblockSeparator
 interblockSeparator
 interblockSeparator
-emphasis: end of  a line
+emphasis: end of (hardLineBreak)a line
 interblockSeparator
 emphasis: end of (backslash) a line
 interblockSeparator
-emphasis: end of (backslash) a line
+emphasis: end of (backslash)(hardLineBreak)a line
 interblockSeparator
 codeSpan: (backslash)
 codeSpan: (backslash)(percentSign)
