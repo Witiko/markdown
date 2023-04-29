@@ -13,9 +13,10 @@ CTANARCHIVE=markdown.ctan.zip
 DISTARCHIVE=markdown.zip
 ARCHIVES=$(TDSARCHIVE) $(CTANARCHIVE) $(DISTARCHIVE)
 EXAMPLES_RESOURCES=examples/example.md examples/scientists.csv
-EXAMPLES_SOURCES=examples/context-mkii.tex examples/context-mkiv.tex examples/latex.tex
-EXAMPLES=examples/context-mkii.pdf examples/context-mkiv.pdf \
-  examples/latex-pdftex.pdf examples/latex-luatex.pdf \
+EXAMPLES_SOURCES=examples/context-mkiv.tex \
+  examples/latex-pdftex.tex examples/latex-xetex.tex examples/latex-luatex.tex
+EXAMPLES=examples/context-mkiv.pdf \
+  examples/latex-pdftex.pdf examples/latex-xetex.pdf examples/latex-luatex.pdf \
   examples/latex-tex4ht.html examples/latex-tex4ht.css
 TESTS=tests/test.sh tests/support/*.tex tests/templates/*/*.tex.m4 \
   tests/templates/*/COMMANDS.m4 tests/testfiles/*/*.test
@@ -172,25 +173,25 @@ $(TDSARCHIVE): $(DTXARCHIVE) $(INSTALLER) $(INSTALLABLES) $(DOCUMENTATION) $(EXA
 	mkdir -p doc/generic/markdown doc/latex/markdown/examples \
 	  doc/context/third/markdown/examples
 	cp $(DOCUMENTATION) doc/generic/markdown/
-	cp examples/context-mkii.tex examples/context-mkiv.tex $(EXAMPLES_RESOURCES) \
+	cp examples/context-mkiv.tex $(EXAMPLES_RESOURCES) \
 	  doc/context/third/markdown/examples/
-	cp examples/latex.tex $(EXAMPLES_RESOURCES) doc/latex/markdown/examples/
+	cp -L examples/latex-*.tex $(EXAMPLES_RESOURCES) doc/latex/markdown/examples/
 	@# Installing the sources.
 	mkdir -p source/generic/markdown
 	cp $(DTXARCHIVE) $(INSTALLER) source/generic/markdown
-	zip -r -v -nw $@ doc scripts source tex
+	zip -MM -r -v -nw $@ doc scripts source tex
 	rm -rf doc scripts source tex
 
 # This target produces the distribution archive.
 $(DISTARCHIVE): $(EVERYTHING) $(TDSARCHIVE)
 	-ln -s . markdown
-	zip -MM -r -v -nw $@ $(addprefix markdown/,$(EVERYTHING)) $(TDSARCHIVE)
+	zip -MM -r -v -nw --symlinks $@ $(addprefix markdown/,$(EVERYTHING)) $(TDSARCHIVE)
 	rm -f markdown
 
 # This target produces the CTAN archive.
 $(CTANARCHIVE): $(DTXARCHIVE) $(INSTALLER) $(DOCUMENTATION) $(EXAMPLES_RESOURCES) $(EXAMPLES_SOURCES) $(LIBRARIES) $(TDSARCHIVE)
 	-ln -s . markdown
-	zip -MM -r -v -nw $@ $(addprefix markdown/,$(DTXARCHIVE) $(INSTALLER) $(DOCUMENTATION) $(EXAMPLES_RESOURCES) $(EXAMPLES_SOURCES) $(LIBRARIES)) $(TDSARCHIVE)
+	zip -MM -r -v -nw --symlinks $@ $(addprefix markdown/,$(DTXARCHIVE) $(INSTALLER) $(DOCUMENTATION) $(EXAMPLES_RESOURCES) $(EXAMPLES_SOURCES) $(LIBRARIES)) $(TDSARCHIVE)
 	rm -f markdown
 
 # This pseudo-target removes any existing auxiliary files and directories.

@@ -88,10 +88,16 @@
   relativeReferences,
   stripPercentSigns,
   underscores = false,
-  theme = witiko/dot,
-  theme = witiko/graphicx/http,
-  theme = witiko/markdown/techdoc,
 ]{markdown}
+\markdownSetup{
+  import = {
+    witiko/dot,
+    witiko/graphicx/http,
+    witiko/markdown/techdoc = {
+      options as lua-options
+    },
+  },
+}
 
 % Set up Unicode characters.
 \usepackage{newunicodechar}
@@ -790,16 +796,18 @@ abbr {
 \ProvidesPackage{markdownthemewitiko_markdown_techdoc}[2022/02/23]
 \RequirePackage{etoolbox}
 \markdownSetup{
-  rendererPrototypes = {
-    codeSpan = {\inline{#1}},
-    headingFour = {%
+  renderers = {
+    head*Four = {%
       \paragraph{#1}\leavevmode
       \def\markdownRendererInterblockSeparator{%
         \let\markdownRendererInterblockSeparator\par
       }%
       \noindent
     },
-    jekyllDataEnd = {%
+  },
+  rendererPrototypes = {
+    codeSpan = {\inline{#1}},
+    jek*llDataEnd = {%
       \AfterEndPreamble{%
         \printtitlepage
         \tableofcontents
@@ -1039,10 +1047,11 @@ a directory named `markdown` due to [issue #74][issue-74].
 %
 % This section gives an overview of all resources required by the package.
 %
-%### Lua Requirements {#luaprerequisites}
+%### Lua Requirements {#lua-prerequisites}
 %
 % The Lua part of the package requires that the following Lua modules are
-% available from within the Lua\TeX{} engine:
+% available from within the Lua\TeX{} engine (though not necessarily in the
+% LuaMeta\TeX{} engine).
 %
 % \pkg{LPeg${}\geq{}$0.10}
 %
@@ -1075,8 +1084,9 @@ local unicode
 %    \end{macrocode}
 % \begin{markdown}
 %
-% If the Selene Unicode library is unavailable and we are using
-% Lua${}\geq{}$5.3, we will use the built-in support for Unicode.
+% If the Selene Unicode library is unavailable (could be because we are using
+% LuaMeta\TeX) and we are using Lua${}\geq{}$5.3, we will use the built-in
+% support for Unicode.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -1097,7 +1107,49 @@ end)()
 %
 % \end{markdown}
 %  \begin{macrocode}
-local md5 = require("md5")
+local md5 = require("md5");
+%    \end{macrocode}
+% \begin{markdown}
+%
+% \pkg{Kpathsea}
+%
+%:    A package that implements the loading of third-party Lua libraries
+%     and looking up files in the \TeX{} directory structure.
+%
+% \end{markdown}
+%  \begin{macrocode}
+(function()
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If \pkg{Kpathsea} has not been loaded before or if Lua\TeX{} has not yet
+% been initialized, configure \pkg{Kpathsea} on top of loading it. Since
+% \Hologo{ConTeXt} MkIV provides a `kpse` global that acts as a
+% stub for \pkg{Kpathsea} and the \pkg{lua-uni-case} library expects that
+% `kpse` is a reference to the full \pkg{Kpathsea} library, we load
+% \pkg{Kpathsea} to the `kpse` global.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local should_initialize = package.loaded.kpse == nil
+                       or tex.initialize ~= nil
+  local ran_ok
+  ran_ok, kpse = pcall(require, "kpse")
+  if ran_ok and should_initialize then
+    kpse.set_program_name("luatex")
+  end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If the \pkg{Kpathsea} library is unavailable, we will look up files only
+% in the current working directory.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  if not ran_ok then
+    kpse = {lookup = function(f, _) return f end}
+  end
+end)()
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -1115,14 +1167,7 @@ local md5 = require("md5")
 local uni_case
 (function()
   local ran_ok
-  -- TODO: Stop loading kpse module to a global kpse variable
-  -- after https://github.com/latex3/lua-uni-algos/issues/3 has been fixed.
-  -- Remove kpse global also from file .luacheckrc.
-  ran_ok, kpse = pcall(require, "kpse")
-  if ran_ok then
-    kpse.set_program_name("luatex")
-    ran_ok, uni_case = pcall(require, "lua-uni-case")
-  end
+  ran_ok, uni_case = pcall(require, "lua-uni-case")
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -1158,7 +1203,8 @@ end)()
 %     (subset) parser that is used to read \acro{yaml} metadata when the
 %     \Opt{jekyllData} option is enabled. We carry a copy of the library
 %     in file `markdown-tinyyaml.lua` distributed together with the Markdown
-%     package.
+%     package. <!-- TODO: Stop carrying the copy of the library in TeX Live
+%     2023. -->
 %
 % \end{markdown}
 % \iffalse
@@ -1168,11 +1214,11 @@ end)()
 % \par
 % \begin{markdown}
 %
-%### Plain \TeX{} Requirements {#texprerequisites}
+%### Plain \TeX{} Requirements {#tex-prerequisites}
 %
 % The plain \TeX{} part of the package requires that the plain \TeX{}
 % format (or its superset) is loaded, all the Lua prerequisites (see
-% Section <#sec:luaprerequisites>), and the following packages:
+% Section <#sec:lua-prerequisites>), and the following packages:
 %
 % \pkg{expl3}
 %
@@ -1232,7 +1278,7 @@ end)()
 % \par
 % \begin{markdown}
 %
-%### \LaTeX{} Requirements {#latexprerequisites}
+%### \LaTeX{} Requirements {#latex-prerequisites}
 %
 % The \LaTeX{} part of the package requires that the \Hologo{LaTeX2e} format is
 % loaded,
@@ -1248,12 +1294,12 @@ end)()
 % \fi
 % \begin{markdown}
 % a \TeX{} engine that extends \Hologo{eTeX}, and all the plain \TeX{}
-% prerequisites (see Section <#sec:texprerequisites>):
+% prerequisites (see Section <#sec:tex-prerequisites>):
 %
 % The following packages are soft prerequisites. They are only used to provide
 % default token renderer prototypes (see sections
 % <#sec:texrendererprototypes> and
-% <#sec:latexdefaultrendererprototypes>) or \LaTeX{} themes (see Section
+% <#sec:latex-default-renderer-prototypes>) or \LaTeX{} themes (see Section
 % <#sec:latexthemes>) and will not be loaded if the `plain` package option
 % has been enabled (see Section <#sec:latexplain>):
 %
@@ -1326,7 +1372,7 @@ end)()
 %
 %:    A package that is used to polyfill the general hook management system in
 %     the default renderer prototypes for \acro{yaml} metadata, see Section
-%     <#sec:latexyamlmetadata>, and also in the default renderer prototype
+%     <#sec:latex-yaml-metadata>, and also in the default renderer prototype
 %     for identifier attributes.
 %
 % \pkg{soulutf8}
@@ -1359,7 +1405,7 @@ end)()
 %### \Hologo{ConTeXt} Prerequisites
 % The \Hologo{ConTeXt} part of the package requires that either the Mark II or
 % the Mark IV format is loaded, all the plain \TeX{} prerequisites (see
-% Section <#sec:texprerequisites>), and the following \Hologo{ConTeXt}
+% Section <#sec:tex-prerequisites>), and the following \Hologo{ConTeXt}
 % modules:
 %
 % \pkg{m-database}
@@ -1558,13 +1604,14 @@ the Markdown package:
 ``` sh
 git clone https://github.com/witiko/markdown
 cd markdown/examples
-lualatex latex.tex
+lualatex latex-luatex.tex
 ``````
-A PDF document named `latex.pdf` should be produced. Open the text documents
-`latex.tex` and `example.md` in a text editor to see how the example documents
-are structured. Try changing the documents and typesetting them as follows:
+A PDF document named `latex-luatex.pdf` should be produced. Open the text
+documents `latex-luatex.tex` and `example.md` in a text editor to see how the
+example documents are structured. Try changing the documents and typesetting
+them as follows:
 ``` sh
-lualatex latex.tex
+lualatex latex-luatex.tex
 ``````
 to see the effect of your changes.
 
@@ -1582,13 +1629,10 @@ Hello *world*!
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the text “Hello
-*world*!” Invoking pdfTeX should have the same effect:
-``` sh
-texexec --passon=--shell-escape document.tex
-``````
+*world*!”
 
 ***
 
@@ -1597,13 +1641,13 @@ the Markdown package:
 ``` sh
 git clone https://github.com/witiko/markdown
 cd markdown/examples
-context context.tex
+context --luatex context.tex
 ``````
 A PDF document named `context.pdf` should be produced. Open the text documents
 `context.tex` and `example.md` in a text editor to see how the example documents
 are structured. Try changing the documents and typesetting them as follows:
 ``` sh
-context context.tex
+context --luatex context.tex
 ``````
 to see the effect of your changes.
 
@@ -1673,12 +1717,12 @@ local M = {metadata = metadata}
 % \par
 % \begin{markdown}
 %
-%### Conversion from Markdown to Plain \TeX{} {#luaconversion}
+%### Conversion from Markdown to Plain \TeX{} {#lua-conversion}
 %
 % The Lua interface exposes the \luamdef{new}`(options)` function.  This
 % function returns a conversion function from markdown to plain \TeX{} according
 % to the table `options` that contains options recognized by the Lua interface
-% (see Section <#sec:luaoptions>). The `options` parameter is optional; when
+% (see Section <#sec:lua-options>). The `options` parameter is optional; when
 % unspecified, the behaviour will be the same as if `options` were an empty
 % table.
 %
@@ -1691,7 +1735,7 @@ local M = {metadata = metadata}
 % print(convert("Hello *world*!"))
 % ```````
 %
-%### User-Defined Syntax Extensions {#luauserextensions}
+%### User-Defined Syntax Extensions {#lua-user-extensions}
 %
 % For the purpose of user-defined syntax extensions, the Lua interface also
 % exposes the \luamdef{reader} object, which performs the lexical and
@@ -1922,7 +1966,7 @@ pdftex document.tex
 % \fi
 % \begin{markdown}
 %
-%### Options {#luaoptions}
+%### Options {#lua-options}
 %
 % The Lua interface recognizes the following options. When unspecified, the
 % value of a key is taken from the \luamdef{defaultOptions} table.
@@ -1944,7 +1988,7 @@ package.
 local defaultOptions = {}
 %    \end{macrocode}
 % \begingroup
-% \markdownSetup{snippet=witiko/markdown/techdoc/options}
+% \markdownSetup{snippet=lua-options}
 % \par
 % \iffalse
 %</lua,lua-cli>
@@ -2037,7 +2081,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
               }
               {
                 \msg_error:nnnV
-                  { @@ }
+                  { markdown }
                   { failed-typecheck-for-boolean-option }
                   { #1 }
                   \l_tmpa_tl
@@ -2046,7 +2090,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
       }
   }
 \msg_new:nnn
-  { @@ }
+  { markdown }
   { failed-typecheck-for-boolean-option }
   {
     Option~#1~has~value~#2,~
@@ -2095,7 +2139,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
       \l_tmpa_bool
       {
         \msg_error:nnn
-          { @@ }
+          { markdown }
           { undefined-option }
           { #1 }
       }
@@ -2104,7 +2148,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
       \l_tmpa_tl
       {
         \msg_error:nnnV
-          { @@ }
+          { markdown }
           { unknown-option-type }
           { #1 }
           \l_tmpa_tl
@@ -2114,13 +2158,13 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
       \l_tmpa_tl
   }
 \msg_new:nnn
-  { @@ }
+  { markdown }
   { unknown-option-type }
   {
     Option~#1~has~unknown~type~#2.
   }
 \msg_new:nnn
-  { @@ }
+  { markdown }
   { undefined-option }
   {
     Option~#1~is~undefined.
@@ -2147,7 +2191,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
       \l_tmpa_bool
       {
         \msg_error:nnn
-          { @@ }
+          { markdown }
           { undefined-option }
           { #1 }
       }
@@ -2203,7 +2247,17 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
         \tl_tail:n { #1 }
       }
   }
-\seq_new:N \g_@@_cases_seq
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% To make it easier to support different coding styles in the interface,
+% engines, we define the \mdef{\@\@_with_various_cases:nn} function
+% that allows us to generate different variants of a string using
+% different cases.
+%
+% \end{markdown}
+%  \begin{macrocode}
 \cs_new:Nn \@@_with_various_cases:nn
   {
     \seq_clear:N
@@ -2224,6 +2278,29 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
       \l_tmpa_seq
       { #2 }
   }
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% To interrupt the \mref{\@\@_with_various_cases:nn} function
+% prematurely, use the \mdef{\@\@_with_various_cases_break:} function.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\cs_new:Nn \@@_with_various_cases_break:
+  {
+    \seq_map_break:
+  }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% By default, camelCase and snake\\\_case are supported.
+% Additional cases can be added by adding functions to the
+% \mdef{g_\@\@_cases_seq} sequence.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\seq_new:N \g_@@_cases_seq
 \cs_new:Nn \@@_camel_case:N
   {
     \regex_replace_all:nnN
@@ -2391,7 +2468,7 @@ Hello *world*!
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the text “Hello
 *world*!” A directory named `cache` containing several cache files of the
@@ -2543,7 +2620,7 @@ Create also a text document named `document.tex` with the following content:
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -2597,13 +2674,13 @@ defaultOptions.contentBlocksLanguageMap = "markdown-languages.json"
      extensible subset of the \acro{peg} grammar of markdown
 %    (see the \luamref{walkable_syntax} hash table)
      after built-in syntax extensions
-%    (see Section <#sec:luabuiltinextensions>)
+%    (see Section <#sec:lua-built-in-extensions>)
 %    \iffalse
      (see options \Opt{citations}, \Opt{contentBlocks}, \Opt{definitionLists},
      etc.)
 %    \fi
      and user-defined syntax extensions
-%    (see Section <#sec:luauserextensions>)
+%    (see Section <#sec:lua-user-extensions>)
 %    \iffalse
      (see option \Opt{extensions})
 %    \fi
@@ -2813,7 +2890,7 @@ Hello *world*!
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the text
 “Hello *world*!” A frozen cache will also be produced in the `cache.tex`
@@ -2835,9 +2912,9 @@ Hi *world*!
 \stopmarkdown
 \stoptext
 ```````
-Last, invoke pdfTeX without shell access from the terminal:
+Last, invoke LuaTeX from the terminal:
 ``` sh
-texexec --passon=--no-shell-escape frozen-document.tex
+context --luatex frozen-document.tex
 ``````
 A PDF document named `frozen-document.pdf` should be produced and contain the
 text “Hello *world*!” Since we used the contents of the frozen cache using
@@ -3058,7 +3135,7 @@ A paragraph.
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -3305,7 +3382,7 @@ Not a fenced code.
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -3621,7 +3698,7 @@ Not a heading.
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -3883,15 +3960,17 @@ defaultOptions.blankBeforeList = false
 %
 :    true
 
-     :  Enable the Pandoc bracketed spans extension:
+     :  Enable the Pandoc [bracketed span syntax extension][pandoc-bracketed-spans]:
 
         ``` md
-        [This is *some text*]{.class key="val"}
+        [This is *some text*]{.class key=val}
         ``````
 
 :    false
 
-     :  Disable the Pandoc bracketed spans extension:
+     :  Disable the Pandoc bracketed span syntax extension.
+
+ [pandoc-bracketed-spans]: https://pandoc.org/MANUAL.html#extension-bracketed_spans
 
 % \end{markdown}
 % \iffalse
@@ -4160,7 +4239,7 @@ following content:
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -4297,7 +4376,7 @@ defaultOptions.citationNbsps = true
 %
 :    true
 
-     :  Enable the Pandoc citation syntax extension:
+     :  Enable the Pandoc [citation syntax extension][pandoc-citations]:
 
         ``` md
         Here is a simple parenthetical citation [@doe99] and here
@@ -4318,6 +4397,8 @@ defaultOptions.citationNbsps = true
 :    false
 
      :  Disable the Pandoc citation syntax extension.
+
+ [pandoc-citations]: https://pandoc.org/MANUAL.html#extension-citations
 
 % \end{markdown}
 % \iffalse
@@ -4575,7 +4656,7 @@ following content:
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -4739,7 +4820,7 @@ Create also a text document named `document.tex` with the following content:
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -4794,13 +4875,13 @@ defaultOptions.contentBlocks = false
          extensible subset of the \acro{peg} grammar of markdown
 %        (see the \luamref{walkable_syntax} hash table)
          after built-in syntax extensions
-%        (see Section <#sec:luabuiltinextensions>)
+%        (see Section <#sec:lua-built-in-extensions>)
 %        \iffalse
          (see options \Opt{citations}, \Opt{contentBlocks},
          \Opt{definitionLists}, etc.)
 %        \fi
          and user-defined syntax extensions
-%        (see Section <#sec:luauserextensions>)
+%        (see Section <#sec:lua-user-extensions>)
 %        \iffalse
          (see option \Opt{extensions})
 %        \fi
@@ -5028,7 +5109,7 @@ Term 2 with *inline markup*
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -5363,7 +5444,7 @@ metadata.grammar_version = 2
 %    markdown using the interface of a Lua \luamref{reader} object, such as
 %    the \luamref{reader->insert_pattern} and
 %    \luamref{reader->add_special_character} methods,
-%    see Section <#luauserextensions>.
+%    see Section <#lua-user-extensions>.
 %
 % \end{markdown}
 % \iffalse
@@ -5453,7 +5534,7 @@ defaultOptions.extensions = {}
 %
 :    true
 
-     :  Enable the Pandoc fancy list extension:
+     :  Enable the Pandoc [fancy list syntax extension][pandoc-fancy-lists]:
 
         ``` md
         a) first item
@@ -5463,7 +5544,9 @@ defaultOptions.extensions = {}
 
 :    false
 
-     :  Disable the Pandoc fancy list extension.
+     :  Disable the Pandoc fancy list syntax extension.
+
+ [pandoc-fancy-lists]: https://pandoc.org/MANUAL.html#org-fancy-lists
 
 % \end{markdown}
 % \iffalse
@@ -5512,7 +5595,7 @@ c) third item
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -5666,7 +5749,7 @@ if (a > 3) {
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -5720,10 +5803,10 @@ defaultOptions.fencedCode = true
 %
 :    true
 
-     :  Enable the Pandoc fenced code attribute extension:
+     :  Enable the Pandoc [fenced code attribute syntax extension][pandoc-fenced-code-attributes]:
 
         ```````` md
-        ~~~~ {#mycode .haskell .numberLines startFrom="100"}
+        ~~~~ {#mycode .haskell .numberLines startFrom=100}
         qsort []     = []
         qsort (x:xs) = qsort (filter (< x) xs) ++ [x] ++
                        qsort (filter (>= x) xs)
@@ -5732,7 +5815,9 @@ defaultOptions.fencedCode = true
 
 :    false
 
-     :  Disable the Pandoc fenced code attribute extension.
+     :  Disable the Pandoc fenced code attribute syntax extension.
+
+ [pandoc-fenced-code-attributes]: https://pandoc.org/MANUAL.html#extension-fenced_code_attributes
 
 % \end{markdown}
 % \iffalse
@@ -5765,11 +5850,11 @@ following content:
 }
 \begin{document}
 \begin{markdown}
-``` js {linenos=true}
+~~~ js {linenos=true}
 if (a > 3) {
     moveShip(5 * gravity, DOWN);
 }
-``````
+~~~~~~
 \end{markdown}
 \end{document}
 ```````
@@ -5818,7 +5903,7 @@ defaultOptions.fencedCodeAttributes = false
 %
 :    true
 
-     :  Enable the Pandoc fenced divs extension:
+     :  Enable the Pandoc [fenced div syntax extension][pandoc-fenced-divs]:
 
         ``` md
         ::::: {#special .sidebar}
@@ -5830,7 +5915,9 @@ defaultOptions.fencedCodeAttributes = false
 
 :    false
 
-     :  Disable the Pandoc fenced divs extension:
+     :  Disable the Pandoc fenced div syntax extension.
+
+ [pandoc-fenced-divs]: https://pandoc.org/MANUAL.html#extension-fenced_divs
 
 % \end{markdown}
 % \iffalse
@@ -6001,7 +6088,7 @@ Hello *world*!
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the text
 “Hello *world*!” A frozen cache will also be produced in the `cache.tex`
@@ -6017,9 +6104,9 @@ Hi *world*!
 \stopmarkdown
 \stoptext
 ```````
-Last, invoke pdfTeX without shell access from the terminal:
+Last, invoke LuaTeX from the terminal:
 ``` sh
-texexec --passon=--no-shell-escape document.tex
+context --luatex document.tex
 ``````
 A new PDF document named `document.pdf` should be produced and contain the
 same text “Hello *world*!” Since we used the contents of the frozen cache using
@@ -6298,7 +6385,7 @@ following content:
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -6615,7 +6702,7 @@ _There is <? HTML instruction ?> support._
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -6837,7 +6924,7 @@ $\sqrt{-1}$ *equals* $i$.
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -6880,7 +6967,7 @@ defaultOptions.hybrid = false
 %
 :    true
 
-     :  Enable the Pandoc inline code span attribute extension:
+     :  Enable the Pandoc [inline code span attribute extension][pandoc-inline-code-attributes]:
 
         ``` md
         `<$>`{.haskell}
@@ -6889,6 +6976,8 @@ defaultOptions.hybrid = false
 :    false
 
      :  Enable the Pandoc inline code span attribute extension.
+
+ [pandoc-inline-code-attributes]: https://pandoc.org/MANUAL.html#extension-inline_code_attributes
 
 % \end{markdown}
 % \iffalse
@@ -6974,7 +7063,7 @@ defaultOptions.inlineCodeAttributes = false
 %
 :    true
 
-     :  Enable the Pandoc inline note syntax extension:
+     :  Enable the Pandoc [inline note syntax extension][pandoc-inline-notes]:
 
         ``` md
         Here is an inline note.^[Inlines notes are easier to
@@ -6985,6 +7074,8 @@ defaultOptions.inlineCodeAttributes = false
 :    false
 
      :  Disable the Pandoc inline note syntax extension.
+
+ [pandoc-inline-notes]: https://pandoc.org/MANUAL.html#extension-inline_notes
 
 % \end{markdown}
 % \iffalse
@@ -7032,7 +7123,7 @@ move down to type the note.]
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -7084,7 +7175,8 @@ defaultOptions.inlineNotes = false
 %
 :    true
 
-     :  Enable the Pandoc `yaml_metadata_block` syntax extension for entering
+     :  Enable the Pandoc [\acro{yaml} metadata block syntax
+        extension][pandoc-yaml-metadata-block] for entering
         metadata in \acro{yaml}:
 
         ~~~~~~ yaml
@@ -7103,8 +7195,10 @@ defaultOptions.inlineNotes = false
 
 :    false
 
-     :  Disable the Pandoc `yaml_metadata_block` syntax extension for entering
-        metadata in \acro{yaml}.
+     :  Disable the Pandoc \acro{yaml} metadata block syntax extension
+        for entering metadata in \acro{yaml}.
+
+ [pandoc-yaml-metadata-block]: https://pandoc.org/MANUAL.html#extension-yaml_metadata_block
 
 % \end{markdown}
 % \iffalse
@@ -7209,7 +7303,7 @@ age:  99
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -7248,18 +7342,21 @@ defaultOptions.jekyllData = false
 %
 :    true
 
-     :  Enable the Pandoc link and image attribute extension:
+     :  Enable the Pandoc [link and image attribute syntax
+        extension][pandoc-link-attributes]:
 
         ``` md
         An inline ![image](foo.jpg){#id .class width=30 height=20px}
         and a reference ![image][ref] with attributes.
 
-        [ref]: foo.jpg "optional title" {#id .class key=val key2="val 2"}
+        [ref]: foo.jpg "optional title" {#id .class key=val key2=val2}
         ``````
 
 :    false
 
-     :  Enable the Pandoc link and image attribute extension.
+     :  Enable the Pandoc link and image attribute syntax extension.
+
+ [pandoc-link-attributes]: https://pandoc.org/MANUAL.html#extension-link_attributes
 
 % \end{markdown}
 % \iffalse
@@ -7342,7 +7439,8 @@ defaultOptions.linkAttributes = false
 %
 :    true
 
-     :  Enable the Pandoc line block syntax extension:
+     :  Enable the Pandoc [line block syntax
+        extension][pandoc-line-blocks]:
 
         ``` md
         | this is a line block that
@@ -7355,6 +7453,8 @@ defaultOptions.linkAttributes = false
 :    false
 
      :  Disable the Pandoc line block syntax extension.
+
+ [pandoc-line-blocks]: https://pandoc.org/MANUAL.html#extension-line_blocks
 
 % \end{markdown}
 % \iffalse
@@ -7432,7 +7532,7 @@ following content:
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -7474,7 +7574,7 @@ defaultOptions.lineBlocks = false
 %
 :    true
 
-     :  Enable the Pandoc note syntax extension:
+     :  Enable the Pandoc [note syntax extension][pandoc-footnotes]:
 
         ``` md
         Here is a note reference,[^1] and another.[^longnote]
@@ -7499,6 +7599,8 @@ defaultOptions.lineBlocks = false
 :    false
 
      :  Disable the Pandoc note syntax extension.
+
+ [pandoc-footnotes]: https://pandoc.org/MANUAL.html#extension-footnotes
 
 % \end{markdown}
 % \iffalse
@@ -7588,7 +7690,7 @@ isn't indented.
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -7720,7 +7822,7 @@ following content:
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -7803,13 +7905,15 @@ defaultOptions.preserveTabs = true
 %
 :    true
 
-     :  Enable the Pandoc raw attribute syntax extension:
+     :  Enable the Pandoc [raw attribute syntax
+        extension][pandoc-raw-attribute]:
 
         ``` md
         `$H_2 O$`{=tex} is a liquid.
         ```
 
-        To enable raw blocks, the \Opt{fencedCode} option must also be enabled:
+        To enable raw blocks, the \Opt{fencedCode} option must also
+        be enabled:
 
         ~~~~~~~~ md
         Here is a mathematical formula:
@@ -7831,6 +7935,8 @@ defaultOptions.preserveTabs = true
 :    false
 
      :  Disable the Pandoc raw attribute syntax extension.
+
+ [pandoc-raw-attribute]: https://pandoc.org/MANUAL.html#extension-raw_attribute
 
 % \end{markdown}
 % \iffalse
@@ -8082,7 +8188,7 @@ following content:
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -8292,7 +8398,7 @@ following content:
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -8507,7 +8613,7 @@ These are just three regular dots ...
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -8635,7 +8741,7 @@ The following list respects the numbers specified in the markup:
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -8684,7 +8790,8 @@ defaultOptions.startNumber = true
 %
 :    true
 
-     :  Enable the Pandoc strike-through syntax extension:
+     :  Enable the Pandoc [strike-through syntax
+        extension][pandoc-strikeout]:
 
         ``` md
         This ~~is deleted text.~~
@@ -8693,6 +8800,8 @@ defaultOptions.startNumber = true
 :    false
 
      :  Disable the Pandoc strike-through syntax extension.
+
+ [pandoc-strikeout]: https://pandoc.org/MANUAL.html#extension-strikeout
 
 % \end{markdown}
 % \iffalse
@@ -8764,7 +8873,7 @@ This is ~~a lunar roving vehicle~~ strike-through text.
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -8879,7 +8988,7 @@ following content:
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 text “Hello *world*!”
@@ -8916,7 +9025,8 @@ defaultOptions.stripIndent = false
 %
 :    true
 
-     :  Enable the Pandoc subscript syntax extension:
+     :  Enable the Pandoc [subscript syntax
+        extension][pandoc-subscript]:
 
         ``` md
         H~2~O is a liquid.
@@ -8925,6 +9035,8 @@ defaultOptions.stripIndent = false
 :    false
 
      :  Disable the Pandoc subscript syntax extension.
+
+ [pandoc-subscript]: https://pandoc.org/MANUAL.html#extension-superscript-subscript
 
 % \end{markdown}
 % \iffalse
@@ -8966,7 +9078,7 @@ H~2~O is a liquid.
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -9005,7 +9117,8 @@ defaultOptions.subscripts = false
 %
 :    true
 
-     :  Enable the Pandoc superscript syntax extension:
+     :  Enable the Pandoc [superscript syntax
+        extension][pandoc-superscript]:
 
         ``` md
         2^10^ is 1024.
@@ -9014,6 +9127,8 @@ defaultOptions.subscripts = false
 :    false
 
      :  Disable the Pandoc superscript syntax extension.
+
+ [pandoc-superscript]: https://pandoc.org/MANUAL.html#extension-superscript-subscript
 
 % \end{markdown}
 % \iffalse
@@ -9055,7 +9170,7 @@ following content:
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -9094,7 +9209,8 @@ defaultOptions.superscripts = false
 %
 :    true
 
-     :  Enable the Pandoc `table_captions` syntax extension for
+     :  Enable the Pandoc [table caption syntax
+        extension][pandoc-table-captions] for
 %       pipe tables (see the \Opt{pipeTables} option).
 %       \iffalse
         [pipe tables](#pipe-tables).
@@ -9112,7 +9228,9 @@ defaultOptions.superscripts = false
 
 :    false
 
-     :  Disable the Pandoc `table_captions` syntax extension.
+     :  Disable the Pandoc table caption syntax extension.
+
+ [pandoc-table-captions]: https://pandoc.org/MANUAL.html#extension-table_captions
 
 % \end{markdown}
 % \iffalse
@@ -9176,7 +9294,7 @@ following content:
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -9221,7 +9339,8 @@ defaultOptions.tableCaptions = false
 %
 :    true
 
-     :  Enable the Pandoc `task_lists` syntax extension:
+     :  Enable the Pandoc [task list syntax
+        extension][pandoc-task-lists]:
 
 
         ``` md
@@ -9232,7 +9351,9 @@ defaultOptions.tableCaptions = false
 
 :    false
 
-     :  Disable the Pandoc `task_lists` syntax extension.
+     :  Disable the Pandoc task list syntax extension.
+
+ [pandoc-task-lists]: https://pandoc.org/MANUAL.html#extension-task_lists
 
 % \end{markdown}
 % \iffalse
@@ -9290,7 +9411,7 @@ following content:
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -9410,7 +9531,7 @@ Hel%  this is a comment
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 text “Hello *world*!”
@@ -9447,7 +9568,8 @@ defaultOptions.texComments = false
 %
 :    true
 
-     :  Enable the Pandoc `tex_math_dollars` syntax extension:
+     :  Enable the Pandoc [dollar math syntax
+        extension][pandoc-tex-math-dollars]:
 
         ``` md
         inline math: $E=mc^2$
@@ -9457,7 +9579,9 @@ defaultOptions.texComments = false
 
 :    false
 
-     :  Disable the Pandoc `tex_math_dollars` syntax extension.
+     :  Disable the Pandoc dollar math syntax extension.
+
+ [pandoc-tex-math-dollars]: https://pandoc.org/MANUAL.html#extension-tex_math_dollars
 
 % \end{markdown}
 % \iffalse
@@ -9606,7 +9730,7 @@ $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -9647,7 +9771,8 @@ defaultOptions.texMathDollars = false
 %
 :    true
 
-     :  Enable the Pandoc `tex_math_double_backslash` syntax extension:
+     :  Enable the Pandoc [double backslash math syntax
+        extension][pandoc-tex-math-double-backslash]:
 
         ``` md
         inline math: \\(E=mc^2\\)
@@ -9657,7 +9782,9 @@ defaultOptions.texMathDollars = false
 
 :    false
 
-     :  Disable the Pandoc `tex_math_double_backslash` syntax extension.
+     :  Disable the Pandoc double backslash math syntax extension.
+
+ [pandoc-tex-math-double-backslash]: https://pandoc.org/MANUAL.html#extension-tex_math_double_backslash
 
 % \end{markdown}
 % \iffalse
@@ -9806,7 +9933,7 @@ following content:
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -9847,7 +9974,8 @@ defaultOptions.texMathDoubleBackslash = false
 %
 :    true
 
-     :  Enable the Pandoc `tex_math_single_backslash` syntax extension:
+     :  Enable the Pandoc [single backslash math syntax
+        extension][pandoc-tex-math-single-backslash]:
 
         ``` md
         inline math: \(E=mc^2\)
@@ -9857,7 +9985,9 @@ defaultOptions.texMathDoubleBackslash = false
 
 :    false
 
-     :  Disable the Pandoc `tex_math_single_backslash` syntax extension.
+     :  Disable the Pandoc single backslash math syntax extension.
+
+ [pandoc-tex-math-single-backslash]: https://pandoc.org/MANUAL.html#extension-tex_math_single_backslash
 
 % \end{markdown}
 % \iffalse
@@ -10006,7 +10136,7 @@ following content:
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -10269,7 +10399,7 @@ This is *emphasized text* and this is a math subscript: $m_n$.
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -10444,7 +10574,7 @@ for i = 1, #arg do
 % Unless the `-`{}`-` argument has been specified before, an argument
 % containing the equals sign (`=`) is assumed to be an option specification in
 % a \meta{key}`=`\meta{value} format. The available options are listed in
-% Section <#sec:luaoptions>.
+% Section <#sec:lua-options>.
 % \end{markdown}
 %  \begin{macrocode}
     elseif arg[i]:match("=") then
@@ -10614,7 +10744,7 @@ pdftex --shell-escape document.tex
 %
 % The plain \TeX{} interface provides macros for the typesetting of markdown
 % input from within plain \TeX{}, for setting the Lua interface options (see
-% Section <#sec:luaoptions>) used during the conversion from markdown to
+% Section <#sec:lua-options>) used during the conversion from markdown to
 % plain \TeX{} and for changing the way markdown the tokens are rendered.
 %
 % \end{markdown}
@@ -10633,7 +10763,7 @@ pdftex --shell-escape document.tex
 % \noindent It is expected that the special plain \TeX{} characters have the
 % expected category codes, when `\input`ting the file.
 %
-%### Typesetting Markdown {#textypesetting}
+%### Typesetting Markdown {#tex-typesetting}
 %
 % The interface exposes the \mdef{markdownBegin}, \mdef{markdownEnd},
 % \mdef{markdownInput}, and \mdef{markdownEscape} macros.
@@ -10730,11 +10860,11 @@ pdftex --shell-escape document.tex
 % \par
 % \begin{markdown}
 %
-%### Options {#texoptions}
+%### Options {#tex-options}
 %
 % The plain \TeX{} options are represented by \TeX{} commands. Some of them map
 % directly to the options recognized by the Lua interface (see
-% Section <#sec:luaoptions>), while some of them are specific to the plain
+% Section <#sec:lua-options>), while some of them are specific to the plain
 % \TeX{} interface.
 %
 % To enable the enumeration of plain \TeX{} options, we will maintain the
@@ -11003,7 +11133,7 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 %
 % Furthemore, we also define macros that map directly to the options recognized
 % by the Lua interface, such as \mdef{markdownOptionHybrid} for the
-% \Opt{hybrid} Lua option (see Section <#sec:luaoptions>), which are not
+% \Opt{hybrid} Lua option (see Section <#sec:lua-options>), which are not
 % processed by the plain \TeX{} implementation, only passed along to Lua.
 %
 % For the macros that correspond to the non-boolean options recognized by the
@@ -11248,7 +11378,7 @@ In this section, I will describe the individual token renderers.
 %
 % The following \TeX{} macros may occur inside the output of the
 % converter functions exposed by the Lua interface (see Section
-% <#sec:luaconversion>) and represent the parsed markdown tokens. These
+% <#sec:lua-conversion>) and represent the parsed markdown tokens. These
 % macros are intended to be redefined by the user who is typesetting a
 % document. By default, they point to the corresponding prototypes (see Section
 % <#sec:texrendererprototypes>).
@@ -11557,7 +11687,7 @@ A quote from William Shakespeare's King Lear:
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -12035,7 +12165,7 @@ This is a loose list
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -12339,7 +12469,7 @@ $\sqrt{-1}$ *equals* $i$
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -12684,7 +12814,7 @@ content:
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -12762,8 +12892,8 @@ list is not tight). The macro receives no arguments.
 % \begin{markdown}
 
 The \mdef{markdownRendererDlBeginTight} macro represents the beginning of a
-definition list that contains an item with several paragraphs of text (the
-list is not tight). This macro will only be produced, when the
+definition list that contains no item with several paragraphs of text (the
+list is tight). This macro will only be produced, when the
 \Opt{tightLists} option is disabled. The macro receives no arguments.
 
 % \end{markdown}
@@ -13278,7 +13408,7 @@ Milk
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -13402,7 +13532,7 @@ The secret word is ...
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -13524,7 +13654,7 @@ This is **strong emphasis**.
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -13633,11 +13763,11 @@ following content:
 }
 \begin{document}
 \begin{markdown}
-``` js {linenos=true}
+~~~ js {linenos=true}
 if (a > 3) {
     moveShip(5 * gravity, DOWN);
 }
-``````
+~~~~~~
 \end{markdown}
 \end{document}
 ```````
@@ -14187,7 +14317,7 @@ following content:
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -14649,7 +14779,7 @@ _Foo_ bar!
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -14770,7 +14900,7 @@ following content:
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -15057,7 +15187,7 @@ Please visit [the link][ctan].
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -15498,7 +15628,7 @@ This is some text[^1] and this is some other text[^2].
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -16271,7 +16401,7 @@ This is a loose list
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -16696,7 +16826,7 @@ Bartel~Leendert van~der~Waerden
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text, where the middot (`·`) denotes a non-breaking space:
@@ -16916,7 +17046,7 @@ This is ~~a lunar roving vehicle~~ strike-through text.
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -17024,7 +17154,7 @@ H~2~O is a liquid.
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -17131,7 +17261,7 @@ following content:
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -17377,7 +17507,7 @@ $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -17606,7 +17736,7 @@ This is the second page.
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -17743,7 +17873,7 @@ following content:
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 `````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -18230,7 +18360,7 @@ age:  99
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -18342,7 +18472,7 @@ following content:
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -18464,7 +18594,7 @@ age:  99
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -18618,7 +18748,7 @@ following text:
 % \begin{markdown}
 % The macro is exposed in the interface, so that the user can create their own
 % markdown environments. Due to the way the arguments are passed to Lua (see
-% Section <#sec:directlua>), the first argument may not contain the
+% Section <#sec:direct-lua>), the first argument may not contain the
 % string `]]` (regardless of the category code of the bracket symbol (`]`)).
 %
 % The \mdef{markdownMode} macro specifies how the plain \TeX{} implementation
@@ -18755,7 +18885,7 @@ pdflatex --shell-escape document.tex
 % Section <#sec:texinterface>).
 %
 % The \LaTeX{} implementation redefines the plain \TeX{} logging macros (see
-% Section <#sec:texinterfacelogging>) to use the \LaTeX{} `\PackageInfo`,
+% Section <#sec:tex-interface-logging>) to use the \LaTeX{} `\PackageInfo`,
 % `\PackageWarning`, and `\PackageError` macros.
 %
 % \end{markdown}
@@ -18775,10 +18905,14 @@ pdflatex --shell-escape document.tex
 % \end{Verbatim}
 % \begin{markdown}
 % where \meta{options} are the \LaTeX{} interface options (see Section
-% <#sec:latexoptions>). Note that \meta{options} inside the `\usepackage`
+% <#sec:latex-options>). Note that \meta{options} inside the `\usepackage`
 % macro may not set the `markdownRenderers` (see Section
-% <#sec:latexrenderers>) and `markdownRendererPrototypes` (see Section
-% <#sec:latexrendererprototypes>) keys. This limitation is due to the way
+% <#sec:latex-renderers>) and `markdownRendererPrototypes` (see Section
+% <#sec:latex-renderer-prototypes>) keys. Furthermore, although the
+% base variant of the `import` key that loads a single \LaTeX{} theme
+% (see Section <#sec:latexthemes>) can be used, the extended variant
+% that can load multiple themes and import snippets from them (see
+% Section <#sec:latexsnippets>). This limitation is due to the way
 % \Hologo{LaTeX2e} parses package options.
 %
 % \end{markdown}
@@ -18792,7 +18926,7 @@ pdflatex --shell-escape document.tex
 % The \envmref{markdown} and \envmref{markdown*} \LaTeX{} environments are used to
 % typeset markdown document fragments. The starred version of the
 % \envmref{markdown} environment accepts \LaTeX{} interface options (see
-% Section <#sec:latexoptions>) as its only argument. These options will
+% Section <#sec:latex-options>) as its only argument. These options will
 % only influence this markdown document fragment.
 %
 % \end{markdown}
@@ -18829,7 +18963,7 @@ pdflatex --shell-escape document.tex
 % the filename of a markdown document and expands to the result of the
 % conversion of the input markdown document to plain \TeX{}.  Unlike the
 % \mref{markdownInput} macro provided by the plain \TeX{} interface, this macro
-% also accepts \LaTeX{} interface options (see Section <#sec:latexoptions>)
+% also accepts \LaTeX{} interface options (see Section <#sec:latex-options>)
 % as its optional argument. These options will only influnce this markdown
 % document.
 %
@@ -18845,7 +18979,7 @@ pdflatex --shell-escape document.tex
 % \end{document}
 % ```````
 %
-%### Options {#latexoptions}
+%### Options {#latex-options}
 %
 % The \LaTeX{} options are represented by a comma-delimited list of
 % \meta{key}`=`\meta{value} pairs. For boolean options, the `=`\meta{value}
@@ -18854,9 +18988,9 @@ pdflatex --shell-escape document.tex
 %
 % Except for the `plain` option described in Section <#sec:latexplain>, and
 % the \LaTeX{} themes described in Section <#sec:latexthemes>, and the
-% \LaTeX{} setup snippets described in Section <#sec:latexsetupsnippets>,
+% \LaTeX{} snippets described in Section <#sec:latex-setup-snippets>,
 % \LaTeX{} options map directly to the options recognized by the plain
-% \TeX{} interface (see Section <#sec:texoptions>) and to the markdown token
+% \TeX{} interface (see Section <#sec:tex-options>) and to the markdown token
 % renderers and their prototypes recognized by the plain \TeX{} interface (see
 % Sections <#sec:texrenderersuser> and <#sec:texrendererprototypes>).
 %
@@ -18881,30 +19015,40 @@ pdflatex --shell-escape document.tex
 %    \end{macrocode}
 % \begin{markdown}
 %
-% We may also store \LaTeX{} options as *setup snippets* and invoke them later
-% using the \mdef{markdownSetupSnippet} macro. The \mref{markdownSetupSnippet}
-% macro receives two arguments: the name of the setup snippet and the options
-% to store:
+%#### \LaTeX{} snippets {#latex-setup-snippets}
+%
+% We may also set up \LaTeX{} options as *snippets* using the
+% \mdef{markdownSetupSnippet} macro and invoke them later. The
+% \mref{markdownSetupSnippet} macro receives two arguments: the name
+% of the snippet and the options to store:
 %
 % \end{markdown}
 %  \begin{macrocode}
-\newcommand\markdownSetupSnippet[2]{%
-  \markdownIfSnippetExists{#1}%
-    {%
-      \markdownWarning
-        {Redefined setup snippet \markdownLaTeXThemeName#1}%
-      \csname markdownLaTeXSetupSnippet%
-        \markdownLaTeXThemeName#1\endcsname={#2}%
-    }{%
-      \newtoks\next
-        \next={#2}%
-      \expandafter\let\csname markdownLaTeXSetupSnippet%
-        \markdownLaTeXThemeName#1\endcsname=\next
-    }}%
+\ExplSyntaxOn
+\cs_new:Nn
+  \@@_latex_setup_snippet:nn
+  {
+    \markdownIfSnippetExists
+      { #1 }
+      {
+        \markdownWarning
+          {Redefined~snippet~\markdownLaTeXThemeName#1}
+        \csname markdownLaTeXSetupSnippet%
+          \markdownLaTeXThemeName#1\endcsname={#2}
+      }
+      {
+        \newtoks\next
+          \next={#2}
+        \expandafter\let\csname markdownLaTeXSetupSnippet%
+          \markdownLaTeXThemeName#1\endcsname=\next
+      }
+  }
+\let\markdownSetupSnippet=\@@_latex_setup_snippet:nn
+\ExplSyntaxOff
 %    \end{macrocode}
 % \begin{markdown}
 %
-% To decide whether a setup snippet exists, we can use the
+% To decide whether a snippet exists, we can use the
 % \mdef{markdownIfSnippetExists} macro:
 %
 % \end{markdown}
@@ -18917,8 +19061,8 @@ pdflatex --shell-escape document.tex
 % \begin{markdown}
 %
 % See Section <#sec:latexthemes> for information on interactions between
-% setup snippets and \LaTeX{} themes. See Section <#sec:latexsetupsnippets>
-% for information about invoking the stored setup snippets.
+% snippets and \LaTeX{} themes. See Section <#sec:latexsnippets>
+% for information about invoking the set-up snippets.
 %
 % \end{markdown}
 % \iffalse
@@ -18929,7 +19073,7 @@ pdflatex --shell-escape document.tex
 
 \LaTeX{} options allow us to disable the redefinition of the default renderer
 prototypes from plain \TeX{}, load user-defined themes, and invoke user-defined
-setup snippets.
+set-up snippets.
 
 #### Setting Lua and plain \TeX{} options from \LaTeX{}
 
@@ -19003,9 +19147,9 @@ other packages used in a document.  Additionally, if we redefine token
 renderers and renderer prototypes ourselves, the default definitions will bring
 no benefit to us. Using the `plain` package option, we can keep the default
 definitions from the plain \TeX{} implementation
-% (see Section <#sec:textokenrendererprototypes>)
+% (see Section <#sec:tex-token-renderer-prototypes>)
 and prevent the soft \LaTeX{} prerequisites
-% in Section <#sec:latexprerequisites>
+% in Section <#sec:latex-prerequisites>
 from being loaded: The plain option must be set before or when loading the
 package. Setting the option after loading the package will have no effect.
 
@@ -19038,14 +19182,14 @@ interpretation of Markdown tokens. Similarly to \LaTeX{} packages, themes
 allow the authors to achieve a specific look and other high-level goals
 without low-level programming.
 
-% The \LaTeX{} option `theme`=\meta{theme name} loads a \LaTeX{} package
+% The \LaTeX{} option `import`=\meta{theme name} loads a \LaTeX{} package
 % (further referred to as *a theme*) named `markdowntheme`\meta{munged theme
 % name}`.sty`, where the *munged theme name* is the *theme name* after the
 % substitution of all forward slashes (`/`) for an underscore (`_`), the theme
 % *name* is *qualified* and contains no underscores, and a value is qualified
-% if and only if it contains at least one forward slash. Themes are inspired by
-% the Beamer \LaTeX{} package, which provides similar functionality with its
-% `\usetheme` macro [@tantau21, Section 15.1].
+% if and only if it contains at least one forward slash. Themes are inspired
+% by the Beamer \LaTeX{} package, which provides similar functionality with
+% its `\usetheme` macro [@tantau21, Section 15.1].
 %
 % Theme names must be qualified to minimize naming conflicts between different
 % themes intended for a single \LaTeX{} document class or for a single \LaTeX{}
@@ -19083,8 +19227,8 @@ would use the following code in the preamble of your document:
 
 ``` tex
 \usepackage[
-  theme = witiko/beamer/MU,
-  theme = witiko/dot,
+  import=witiko/beamer/MU,
+  import=witiko/dot,
 ]{markdown}
 ```````
 
@@ -19131,19 +19275,56 @@ would use the following code in the preamble of your document:
 \keys_define:nn
   { markdown/latex-options }
   {
+    import .code:n = {
+      \tl_set:Nn
+        \l_tmpa_tl
+        { #1 }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% To ensure that keys containing forward slashes get passed correctly, we
+% replace all forward slashes in the input with backslash tokens with category
+% code letter and then undo the replacement. This means that if any unbraced
+% backslash tokens with category code letter exist in the input, they will be
+% replaced with forward slashes. However, this should be extremely rare.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      \tl_replace_all:NnV
+        \l_tmpa_tl
+        { / }
+        \c_backslash_str
+      \keys_set:nV
+        { markdown/latex-options/import }
+        \l_tmpa_tl
+    },
+  }
+\cs_generate_variant:Nn
+  \tl_replace_all:Nnn
+  { NnV }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The \LaTeX{} option `theme` has been deprecated and will be removed in
+% Markdown 3.0.0.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\keys_define:nn
+  { markdown/latex-options }
+  {
     theme .code:n = { \@@_set_latex_theme:n { #1 } },
   }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \begin{markdown}
 %
-% The \LaTeX{} themes have a useful synergy with the setup snippets (see
-% Section <#sec:latexoptions>): To make it less likely that different
-% themes will define setup snippets with the same name, we will prepend
-% \meta{theme name}`/` before the snippet name and use the result as the
-% snippet name. For example, if the `witiko/dot` theme defines the `product`
-% setup snippet, the setup snippet will be available under the name
-% `witiko/dot/product`.
+% The \LaTeX{} themes have a useful synergy with snippets (see Section
+% <#sec:latex-setup-snippets>): To make it less likely that different themes
+% will set up snippets with the same name, we will prepend \meta{theme
+% name}`/` before the snippet name and use the result as the snippet name.
+% For example, if the `witiko/dot` theme sets up the `product` snippet, the
+% snippet will be available under the name `witiko/dot/product`.
 %
 % \end{markdown}
 % \iffalse
@@ -19182,7 +19363,7 @@ Example themes provided with the Markdown package include:
      right tail of the infostring is used as the image title.
 %    ```` tex
 %    \documentclass{article}
-%    \usepackage[theme=witiko/dot]{markdown}
+%    \usepackage[import=witiko/dot]{markdown}
 %    \setkeys{Gin}{
 %      width = \columnwidth,
 %      height = 0.65\paperheight,
@@ -19255,7 +19436,7 @@ Using a text editor, create a text document named `document.tex` with the
 following content:
 ```` tex
 \documentclass{article}
-\usepackage[theme=witiko/dot]{markdown}
+\usepackage[import=witiko/dot]{markdown}
 \setkeys{Gin}{
   width=\columnwidth,
   height=0.65\paperheight,
@@ -19322,7 +19503,7 @@ conference article:
      http or https protocol.
 %    ``` tex
 %    \documentclass{article}
-%    \usepackage[theme=witiko/graphicx/http]{markdown}
+%    \usepackage[import=witiko/graphicx/http]{markdown}
 %    \begin{document}
 %    \begin{markdown}
 %    ![img](https://github.com/witiko/markdown/raw/main/markdown.png
@@ -19348,7 +19529,7 @@ Using a text editor, create a text document named `document.tex` with the
 following content:
 ``` tex
 \documentclass{article}
-\usepackage[theme=witiko/graphicx/http]{markdown}
+\usepackage[import=witiko/graphicx/http]{markdown}
 \begin{document}
 \begin{markdown}
 ![img](https://github.com/witiko/markdown/raw/main/markdown.png
@@ -19385,7 +19566,7 @@ following image:
      when the \Opt{hybrid} Lua option is disabled.
 %    ``` tex
 %    \documentclass{article}
-%    \usepackage[theme=witiko/tilde]{markdown}
+%    \usepackage[import=witiko/tilde]{markdown}
 %    \begin{document}
 %    \begin{markdown}
 %    Bartel~Leendert van~der~Waerden
@@ -19404,7 +19585,7 @@ Using a text editor, create a text document named `document.tex` with the
 following content:
 ``` tex
 \documentclass{article}
-\usepackage[theme=witiko/tilde]{markdown}
+\usepackage[import=witiko/tilde]{markdown}
 \begin{document}
 \begin{markdown}
 Bartel~Leendert van~der~Waerden
@@ -19433,18 +19614,18 @@ following text, where the middot (`·`) denotes a non-breaking space:
 % \par
 % \begin{markdown}
 %
-% Please, see Section <#sec:latexthemesimplementation> for implementation
+% Please, see Section <#sec:latex-themes-implementation> for implementation
 % details of the example themes.
 
-#### \LaTeX{} setup snippets {#latexsetupsnippets}
+#### \LaTeX{} snippets {#latexsnippets}
 
 % \end{markdown}
 % \iffalse
 
 User-defined \LaTeX{} themes provide global control over high-level goals.
 However, it is often desirable to change only some local aspects of a document.
-\LaTeX{} setup snippets provide syntactic sugar for defining and invoking
-various options locally.
+\LaTeX{} snippets provide syntactic sugar for defining and invoking various
+options locally.
 
 % \fi
 % \begin{markdown}
@@ -19481,7 +19662,7 @@ various options locally.
 % \par
 % \markdownBegin
 
-Here is how we can use setup snippets to store options and invoke them later:
+Here is how we can use snippets to store options and invoke them later:
 
 ``` tex
 \markdownSetupSnippet{romanNumerals}{
@@ -19507,7 +19688,82 @@ The following ordered list will be preceded by roman numerals:
 4. quattuor
 
 \end{markdown*}
+```````
 
+If the `romanNumerals` snippet were defined in the `jdoe/lists` theme,
+we could import the `jdoe/lists` theme and use the qualified name
+`jdoe/lists/romanNumerals` to invoke the snippet:
+
+``` tex
+\markdownSetup{import=jdoe/lists}
+\begin{markdown*}{snippet=jdoe/lists/romanNumerals}
+
+The following ordered list will be preceded by roman numerals:
+
+3. tres
+4. quattuor
+
+\end{markdown*}
+```````
+
+Alternatively, we can use the extended variant of the `import` \LaTeX{}
+option that allows us to import the `romanNumerals` snippet to the
+current namespace for easier access:
+
+``` tex
+\markdownSetup{
+  import = {
+    jdoe/lists = romanNumerals,
+  },
+}
+\begin{markdown*}{snippet=romanNumerals}
+
+The following ordered list will be preceded by roman numerals:
+
+3. tres
+4. quattuor
+
+\end{markdown*}
+```````
+
+Furthermore, we can also specify the name of the snippet in the current 
+namespace, which can be different from the name of the snippet in the
+`jdoe/lists` theme. For example, we can make the snippet
+`jdoe/lists/romanNumerals` available under the name `roman`.
+
+``` tex
+\markdownSetup{
+  import = {
+    jdoe/lists = romanNumerals as roman,
+  },
+}
+\begin{markdown*}{snippet=roman}
+
+The following ordered list will be preceded by roman numerals:
+
+3. tres
+4. quattuor
+
+\end{markdown*}
+```````
+
+Several themes and/or snippets can be loaded at once using the extended
+variant of the `import` \LaTeX{} option:
+
+``` tex
+\markdownSetup{
+  import = {
+    jdoe/longpackagename/lists = {
+      arabic as arabic1,
+      roman,
+      alphabetic,
+    },
+    jdoe/anotherlongpackagename/lists = {
+      arabic as arabic2,
+    },
+    jdoe/yetanotherlongpackagename,
+  },
+}
 ```````
 
 % \markdownEnd
@@ -19515,6 +19771,106 @@ The following ordered list will be preceded by roman numerals:
 %</manual-options>
 %<*latex>
 % \fi
+%  \begin{macrocode}
+\ExplSyntaxOn
+\tl_new:N
+  \l_@@_latex_import_current_theme_tl
+\keys_define:nn
+  { markdown/latex-options/import }
+  {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If a theme name is given without a list of snippets to import,
+% we assume that an empty list was given.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    unknown .default:n = {},
+    unknown .code:n = {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% To ensure that keys containing forward slashes get passed correctly, we
+% replace all forward slashes in the input with backslash tokens with category
+% code letter and then undo the replacement. This means that if any unbraced
+% backslash tokens with category code letter exist in the input, they will be
+% replaced with forward slashes. However, this should be extremely rare.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      \tl_set_eq:NN
+        \l_@@_latex_import_current_theme_tl
+        \l_keys_key_str
+      \tl_replace_all:NVn
+        \l_@@_latex_import_current_theme_tl
+        \c_backslash_str
+        { / }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Here, we load the \LaTeX{} theme.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      \@@_set_latex_theme:V
+        \l_@@_latex_import_current_theme_tl
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Here, we import the \LaTeX{} snippets.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      \clist_map_inline:nn
+        { #1 }
+        {
+          \regex_extract_once:nnNTF
+            { ^(.*?)\s+as\s+(.*?)$ }
+            { ##1 }
+            \l_tmpa_seq
+            {
+              \seq_pop:NN
+                \l_tmpa_seq
+                \l_tmpa_tl
+              \seq_pop:NN
+                \l_tmpa_seq
+                \l_tmpa_tl
+              \seq_pop:NN
+                \l_tmpa_seq
+                \l_tmpb_tl
+            }
+            {
+              \tl_set:Nn
+                \l_tmpa_tl
+                { ##1 }
+              \tl_set:Nn
+                \l_tmpb_tl
+                { ##1 }
+            }
+          \tl_put_left:Nn
+            \l_tmpa_tl
+            { / }
+          \tl_put_left:NV
+            \l_tmpa_tl
+            \l_@@_latex_import_current_theme_tl
+          \@@_latex_setup_snippet:Vx
+            \l_tmpb_tl
+            { snippet = { \l_tmpa_tl } }
+        }
+    },
+  }
+\cs_generate_variant:Nn
+  \tl_replace_all:Nnn
+  { NVn }
+\cs_generate_variant:Nn
+  \@@_set_latex_theme:n
+  { V }
+\cs_generate_variant:Nn
+  \@@_latex_setup_snippet:nn
+  { Vx }
+\ExplSyntaxOff
+%    \end{macrocode}
 % \begin{markdown}
 %
 %#### Plain \TeX{} Interface Options
@@ -19622,7 +19978,7 @@ The following ordered list will be preceded by roman numerals:
           { s }
           {
               \msg_error:nnn
-                { @@ }
+                { markdown }
                 { malformed-name-for-clist-option }
                 { #3 }
           }
@@ -19668,7 +20024,7 @@ The following ordered list will be preceded by roman numerals:
   { en }
   { F }
 \msg_new:nnn
-  { @@ }
+  { markdown }
   { malformed-name-for-clist-option }
   {
     Clist~option~name~#1~does~not~end~with~-s.
@@ -19721,12 +20077,13 @@ The following ordered list will be preceded by roman numerals:
 % }
 % ```````
 %
-%#### Plain \TeX{} Markdown Token Renderers {#latexrenderers}
+%#### Plain \TeX{} Markdown Token Renderers {#latex-renderers}
 %
 % The \LaTeX{} interface recognizes an option with the `renderers` key,
-% whose value must be a list of options that map directly to the markdown token
-% renderer macros exposed by the plain \TeX{} interface (see Section
-% <#sec:texrenderersuser>).
+% whose value must be a list of key-values, where the keys correspond
+% to the markdown token renderer macros exposed by the plain \TeX{}
+% interface (see Section <#sec:texrenderersuser>) and the values are
+% new definitions of these token renderers.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -19802,12 +20159,119 @@ The following ordered list will be preceded by roman numerals:
 % }
 % ```````
 %
-%#### Plain \TeX{} Markdown Token Renderer Prototypes {#latexrendererprototypes}
+% In addition to exact token renderer names, we also support wildcards
+% that match multiple token renderer names.
 %
-% The \LaTeX{} interface recognizes an option with the `rendererPrototypes`
-% key, whose value must be a list of options that map directly to the markdown
-% token renderer prototype macros exposed by the plain \TeX{} interface (see
-% Section <#sec:texrendererprototypes>).
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\tl_new:N
+  \l_@@_renderer_definition_tl
+\keys_define:nn
+  { markdown/latex-options/renderers }
+  {
+    unknown .code:n = {
+      \regex_match:nVTF
+        { \* }
+        \l_keys_key_str
+        {
+          \tl_set:Nn
+            \l_@@_renderer_definition_tl
+            { #1 }
+          \tl_set:NV
+            \l_tmpa_tl
+            \l_keys_key_str
+          \regex_replace_all:nnN
+            { \* }
+            { .* }
+            \l_tmpa_tl
+          \regex_set:NV
+            \l_tmpa_regex
+            \l_tmpa_tl
+          \int_zero:N
+            \l_tmpa_int
+          \seq_map_inline:Nn
+            \g_@@_renderers_seq
+            {
+              \@@_with_various_cases:nn
+                { ##1 }
+                {
+                  \regex_match:NnT
+                    \l_tmpa_regex
+                    { ####1 }
+                    {
+                      \@@_renderer_tl_to_csname:nN
+                        { ##1 }
+                        \l_tmpa_tl
+                      \prop_get:NnN
+                        \g_@@_renderer_arities_prop
+                        { ##1 }
+                        \l_tmpb_tl
+                      \cs_generate_from_arg_count:cNVV
+                        { \l_tmpa_tl }
+                        \cs_set:Npn
+                        \l_tmpb_tl
+                        \l_@@_renderer_definition_tl
+                      \int_incr:N
+                        \l_tmpa_int
+                      \@@_with_various_cases_break:
+                    }
+                }
+            }
+          \int_compare:nNnT
+            { \l_tmpa_int } = { 0 }
+            {
+              \msg_error:nnV
+                { markdown }
+                { nonmatched-renderer-wildcard }
+                \l_keys_key_str
+            }
+        }
+        {
+          \msg_error:nnV
+            { markdown }
+            { undefined-renderer }
+            \l_keys_key_str
+        }
+    },
+  }
+\msg_new:nnn
+  { markdown }
+  { undefined-renderer }
+  {
+    Renderer~#1~is~undefined.
+  }
+\msg_new:nnn
+  { markdown }
+  { nonmatched-renderer-wildcard }
+  {
+    Wildcard~#1~matches~no~renderers.
+  }
+\cs_generate_variant:Nn
+  \regex_set:Nn
+  { NV }
+\cs_generate_variant:Nn
+  \cs_generate_from_arg_count:NNnn
+  { cNVV }
+\cs_generate_variant:Nn
+  \msg_error:nnn
+  { nnV }
+\prg_generate_conditional_variant:Nnn
+  \regex_match:nn
+  { nV }
+  { TF }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \begin{markdown}
+%
+%#### Plain \TeX{} Markdown Token Renderer Prototypes {#latex-renderer-prototypes}
+%
+% The \LaTeX{} interface recognizes an option with the
+% `rendererPrototypes` key, whose value must be a list of key-values,
+% where the keys correspond to the markdown token renderer prototype
+% macros exposed by the plain \TeX{} interface (see Section
+% <#sec:texrendererprototypes>) and the values are new definitions of
+% these token renderer prototypes.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -19870,6 +20334,111 @@ The following ordered list will be preceded by roman numerals:
 % }
 % ```````
 %
+% In addition to exact token renderer prototype names, we also support
+% wildcards that match multiple token renderer prototype names.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\tl_new:N
+  \l_@@_renderer_prototype_definition_tl
+\keys_define:nn
+  { markdown/latex-options/renderer-prototypes }
+  {
+    unknown .code:n = {
+      \regex_match:nVTF
+        { \* }
+        \l_keys_key_str
+        {
+          \tl_set:Nn
+            \l_@@_renderer_prototype_definition_tl
+            { #1 }
+          \tl_set:NV
+            \l_tmpa_tl
+            \l_keys_key_str
+          \regex_replace_all:nnN
+            { \* }
+            { .* }
+            \l_tmpa_tl
+          \regex_set:NV
+            \l_tmpa_regex
+            \l_tmpa_tl
+          \int_zero:N
+            \l_tmpa_int
+          \seq_map_inline:Nn
+            \g_@@_renderers_seq
+            {
+              \@@_with_various_cases:nn
+                { ##1 }
+                {
+                  \regex_match:NnT
+                    \l_tmpa_regex
+                    { ####1 }
+                    {
+                      \@@_renderer_prototype_tl_to_csname:nN
+                        { ##1 }
+                        \l_tmpa_tl
+                      \prop_get:NnN
+                        \g_@@_renderer_arities_prop
+                        { ##1 }
+                        \l_tmpb_tl
+                      \cs_generate_from_arg_count:cNVV
+                        { \l_tmpa_tl }
+                        \cs_set:Npn
+                        \l_tmpb_tl
+                        \l_@@_renderer_prototype_definition_tl
+                      \int_incr:N
+                        \l_tmpa_int
+                      \@@_with_various_cases_break:
+                    }
+                }
+            }
+          \int_compare:nNnT
+            { \l_tmpa_int } = { 0 }
+            {
+              \msg_error:nnV
+                { markdown }
+                { nonmatched-renderer-prototype-wildcard }
+                \l_keys_key_str
+            }
+        }
+        {
+          \msg_error:nnV
+            { markdown }
+            { undefined-renderer-prototype }
+            \l_keys_key_str
+        }
+    },
+  }
+\msg_new:nnn
+  { markdown }
+  { undefined-renderer-prototype }
+  {
+    Renderer~prototype~#1~is~undefined.
+  }
+\msg_new:nnn
+  { markdown }
+  { nonmatched-renderer-prototype-wildcard }
+  {
+    Wildcard~#1~matches~no~renderer~prototypes.
+  }
+\cs_generate_variant:Nn
+  \regex_set:Nn
+  { NV }
+\cs_generate_variant:Nn
+  \cs_generate_from_arg_count:NNnn
+  { cNVV }
+\cs_generate_variant:Nn
+  \msg_error:nnn
+  { nnV }
+\prg_generate_conditional_variant:Nnn
+  \regex_match:nn
+  { nV }
+  { TF }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \begin{markdown}
+%
 % \iffalse
 %</latex>
 %<*context>
@@ -19912,7 +20481,7 @@ $\sqrt{-1}$ *equals* $i$.
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-context document.tex
+context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -19922,11 +20491,6 @@ following text:
 > <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
 > *equals*
 > <math><mi>i</mi></math>.
-
-Invoking pdfTeX should have the same effect:
-``` sh
-texexec --passon=--shell-escape document.tex
-``````
 
 %</manual-interfaces>
 %<*context>
@@ -19949,7 +20513,7 @@ texexec --passon=--shell-escape document.tex
 % \begin{markdown}
 %
 % The \Hologo{ConTeXt} implementation redefines the plain \TeX{} logging macros
-% (see Section <#sec:texinterfacelogging>) to use the \Hologo{ConTeXt}
+% (see Section <#sec:tex-interface-logging>) to use the \Hologo{ConTeXt}
 % `\writestatus` macro.
 %
 % \end{markdown}
@@ -20009,7 +20573,7 @@ texexec --passon=--shell-escape document.tex
 % the conversion of the input markdown document to plain \TeX{}. Unlike the
 % \mref{markdownInput} macro provided by the plain \TeX{} interface, this macro
 % also accepts \Hologo{ConTeXt} interface options (see Section
-% <#sec:contextoptions>) as its optional argument. These options will only
+% <#sec:context-options>) as its optional argument. These options will only
 % influnce this markdown document.
 %
 % The following example \LaTeX{} code showcases the usage of the
@@ -20023,7 +20587,7 @@ texexec --passon=--shell-escape document.tex
 % \stoptext
 % ```````
 %
-%### Options {#contextoptions}
+%### Options {#context-options}
 %
 % The \Hologo{ConTeXt} options are represented by a comma-delimited list of
 % \meta{key}`=`\meta{value} pairs. For boolean options, the `=`\meta{value}
@@ -20032,7 +20596,7 @@ texexec --passon=--shell-escape document.tex
 % omitted.
 %
 % \Hologo{ConTeXt} options map directly to the options recognized by the plain
-% \TeX{} interface (see Section <#sec:texoptions>).
+% \TeX{} interface (see Section <#sec:tex-options>).
 %
 % The \Hologo{ConTeXt} options may be specified when using the
 % \mref{inputmarkdown} macro (see Section <#sec:contextinterface>), or via the
@@ -20303,27 +20867,14 @@ end
 % \begin{markdown}
 %
 % The \luamdef{util.lookup_files} method looks up files with filename `f`
-% and returns its path. If the \pkg{kpathsea} library is available, it will
-% search for files not only in the current working directory but also in the
-% \TeX{} directory structure. Further options for \pkg{kpathsea} can be
-% specified in table `options`. [@luatex21, Section 10.7.4]
+% and returns their paths. Further options for the \pkg{Kpathsea} library
+% can be specified in table `options`. [@luatex21, Section 10.7.4]
 %
 % \end{markdown}
 %  \begin{macrocode}
-util.lookup_files = (function()
-  local ran_ok, kpse = pcall(require, "kpse")
-  if ran_ok then
-    kpse.set_program_name("luatex")
-  else
-    kpse = { lookup = function(f, _) return f end }
-  end
-
-  local function lookup_files(f, options)
-    return kpse.lookup(f, options)
-  end
-
-  return lookup_files
-end)()
+function util.lookup_files(f, options)
+  return kpse.lookup(f, options)
+end
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -22775,7 +23326,7 @@ end
 % \par
 % \begin{markdown}
 %
-%### Plain \TeX{} Writer {#texwriter}
+%### Plain \TeX{} Writer {#tex-writer}
 %
 % This section documents the \luamref{writer} object, which implements the
 % routines for producing the \TeX{} output. The object is an amalgamate of the
@@ -22798,7 +23349,7 @@ M.writer = {}
 %
 % The \luamdef{writer.new} method creates and returns a new \TeX{} writer
 % object associated with the Lua interface options (see Section
-% <#sec:luaoptions>) `options`. When `options` are unspecified, it is
+% <#sec:lua-options>) `options`. When `options` are unspecified, it is
 % assumed that an empty table was passed to the method.
 %
 % The objects produced by the \luamref{writer.new} method expose instance methods
@@ -23099,7 +23650,7 @@ function M.writer.new(options)
                  {"\\markdownRendererCodeSpan{", self.escape(s), "}"})
     if attributes ~= nil then
       table.insert(buf,
-                   "\n\\markdownRendererCodeSpanAttributeContextEnd ")
+                   "\\markdownRendererCodeSpanAttributeContextEnd{}")
     end
     return buf
   end
@@ -23127,7 +23678,7 @@ function M.writer.new(options)
                        "{",self.string(tit or ""),"}"})
     if attributes ~= nil then
       table.insert(buf,
-                   "\n\\markdownRendererLinkAttributeContextEnd ")
+                   "\\markdownRendererLinkAttributeContextEnd{}")
     end
     return buf
   end
@@ -23155,7 +23706,7 @@ function M.writer.new(options)
                        "{",self.string(tit or ""),"}"})
     if attributes ~= nil then
       table.insert(buf,
-                   "\n\\markdownRendererImageAttributeContextEnd ")
+                   "\\markdownRendererImageAttributeContextEnd{}")
     end
     return buf
   end
@@ -23388,30 +23939,53 @@ function M.writer.new(options)
 % \begin{markdown}
 %
 % Define \luamdef{writer->attributes} as a function that will transform
-% input attributes `attr` to the output format.
+% input attributes `attrs` to the output format.
 %
 % \end{markdown}
 %  \begin{macrocode}
-  function self.attributes(attr)
-    local buf = {}
-
-    table.sort(attr)
-    local seen = {}
+  function self.attributes(attributes)
+    local expanded_attributes = {}
+    local key_value_regex = "([^= ]+)%s*=%s*(.*)"
     local key, value
-    for i = 1, #attr do
-      if seen[attr[i]] ~= nil then
+    for _, attribute in ipairs(attributes) do
+      if attribute:sub(1, 1) == "#" or attribute:sub(1, 1) == "." then
+        table.insert(expanded_attributes, attribute)
+      else
+        key, value = attribute:match(key_value_regex)
+        if key:lower() == "id" then
+          table.insert(expanded_attributes, "#" .. value)
+        elseif key:lower() == "class" then
+          local classes = {}
+          for class in value:gmatch("%S+") do
+            table.insert(classes, class)
+          end
+          table.sort(classes)
+          for _, class in ipairs(classes) do
+            table.insert(expanded_attributes, "." .. class)
+          end
+        else
+          table.insert(expanded_attributes, attribute)
+        end
+      end
+    end
+    table.sort(expanded_attributes)
+
+    local buf = {}
+    local seen = {}
+    for _, attribute in ipairs(expanded_attributes) do
+      if seen[attribute] ~= nil then
         goto continue  -- prevent duplicate attributes
       else
-        seen[attr[i]] = true
+        seen[attribute] = true
       end
-      if attr[i]:sub(1, 1) == "#" then
+      if attribute:sub(1, 1) == "#" then
         table.insert(buf, {"\\markdownRendererAttributeIdentifier{",
-                           attr[i]:sub(2), "}"})
-      elseif attr[i]:sub(1, 1) == "." then
+                           attribute:sub(2), "}"})
+      elseif attribute:sub(1, 1) == "." then
         table.insert(buf, {"\\markdownRendererAttributeClassName{",
-                           attr[i]:sub(2), "}"})
+                           attribute:sub(2), "}"})
       else
-        key, value = attr[i]:match("([^= ]+)%s*=%s*(.*)")
+        key, value = attribute:match(key_value_regex)
         table.insert(buf, {"\\markdownRendererAttributeKeyValue{",
                            key, "}{", value, "}"})
       end
@@ -24629,13 +25203,16 @@ parsers.commented_line         = Cg(Cc(""), "backslashes")
 parsers.chunk                  = parsers.line * (parsers.optionallyindentedline
                                                 - parsers.blankline)^0
 
-parsers.attribute_key_char     = parsers.alphanumeric + S("_-")
+parsers.attribute_key_char     = parsers.alphanumeric + S("-_:.")
 parsers.attribute_key          = (parsers.attribute_key_char
                                  - parsers.dash - parsers.digit)
                                * parsers.attribute_key_char^0
 parsers.attribute_value        = ( (parsers.dquote / "")
                                  * (parsers.anyescaped - parsers.dquote)^0
                                  * (parsers.dquote / ""))
+                               + ( (parsers.squote / "")
+                                 * (parsers.anyescaped - parsers.squote)^0
+                                 * (parsers.squote / ""))
                                + ( parsers.anyescaped - parsers.dquote - parsers.rbrace
                                  - parsers.space)^0
 
@@ -25368,7 +25945,7 @@ parsers.atx_heading = parsers.check_trail_no_rem
 % \par
 % \begin{markdown}
 %
-%### Markdown Reader {#markdownreader}
+%### Markdown Reader {#markdown-reader}
 %
 % This section documents the \luamref{reader} object, which implements the
 % routines for parsing the markdown input. The object corresponds to the
@@ -25377,7 +25954,7 @@ parsers.atx_heading = parsers.check_trail_no_rem
 %
 % The \luamdef{reader.new} method creates and returns a new \TeX{} reader
 % object associated with the Lua interface options (see Section
-% <#sec:luaoptions>) `options` and with a writer object `writer`. When
+% <#sec:lua-options>) `options` and with a writer object `writer`. When
 % `options` are unspecified, it is assumed that an empty table was passed to
 % the method.
 %
@@ -27331,7 +27908,7 @@ end
 % \begin{markdown}
 %
 % Although the interface of the \luamref{reader->insert_pattern} method does
-% document this (see Section <#sec:luauserextensions>), we allow the
+% document this (see Section <#sec:lua-user-extensions>), we allow the
 % \luamref{reader->insert_pattern} and \luamref{reader->update_rule}
 % methods to insert not just \acro{peg} patterns, but also rule names that
 % reference the \acro{peg} grammar of Markdown.
@@ -27448,7 +28025,7 @@ end
 % \begin{markdown}
 % When determining the name of the cache file, create salt for the hashing
 % function out of the package version and the passed options recognized by the
-% Lua interface (see Section <#sec:luaoptions>). The \Opt{cacheDir} option
+% Lua interface (see Section <#sec:lua-options>). The \Opt{cacheDir} option
 % is disregarded.
 % \end{markdown}
 %  \begin{macrocode}
@@ -27519,7 +28096,7 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-%### Built-In Syntax Extensions {#luabuiltinextensions}
+%### Built-In Syntax Extensions {#lua-built-in-extensions}
 %
 % Create \luamref{extensions} hash table that contains built-in syntax
 % extensions. Syntax extensions are functions that produce objects with two
@@ -27537,7 +28114,7 @@ M.extensions = {}
 %#### Bracketed Spans
 %
 % The \luamdef{extensions.bracketed_spans} function implements the Pandoc
-% bracketed spans syntax extension.
+% bracketed span syntax extension.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -28307,7 +28884,7 @@ end
 % When the `allow_attributes` option is `true`, the syntax extension permits
 % attributes following the infostring. When the `allow_raw_blocks` option is
 % `true`, the syntax extension permits the specification of raw blocks using
-% Pandoc's raw attribute syntax extension.
+% the Pandoc raw attribute syntax extension.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -28539,7 +29116,7 @@ end
 %#### Fenced Divs
 %
 % The \luamdef{extensions.fenced_divs} function implements the Pandoc fenced
-% divs syntax extension. When the `blank_before_div_fence` parameter is `true`,
+% div syntax extension. When the `blank_before_div_fence` parameter is `true`,
 % the syntax extension requires a blank line between a paragraph and the
 % following fenced code block.
 %
@@ -28692,7 +29269,7 @@ end
 %#### Header Attributes
 %
 % The \luamdef{extensions.header_attributes} function implements the Pandoc
-% header attributes syntax extension.
+% header attribute syntax extension.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -28772,7 +29349,7 @@ end
 %#### Inline Code Attributes
 %
 % The \luamdef{extensions.inline_code_attributes} function implements the
-% Pandoc inline code attributes syntax extension.
+% Pandoc inline code attribute syntax extension.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -28798,7 +29375,7 @@ end
 %
 %#### Line Blocks
 %
-% The \luamdef{extensions.line_blocks} function implements the Pandoc line blocks
+% The \luamdef{extensions.line_blocks} function implements the Pandoc line block
 % syntax extension.
 %
 % \end{markdown}
@@ -28857,7 +29434,7 @@ end
 %#### Link Attributes
 %
 % The \luamdef{extensions.link_attributes} function implements the Pandoc
-% link attributes syntax extension.
+% link attribute syntax extension.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -29058,7 +29635,7 @@ end
 % The \luamdef{extensions.pipe_table} function implements the \acro{PHP}
 % Markdown table syntax extension (also known as pipe tables in Pandoc). When
 % the `table_captions` parameter is `true`, the function also implements the
-% Pandoc `table_captions` syntax extension for table captions.
+% Pandoc table caption syntax extension for table captions.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -29392,8 +29969,7 @@ end
 %
 %#### Tex Math
 %
-% The \luamdef{extensions.tex_math} function implements the Pandoc
-% `tex_math_dollars`, `tex_math_single_backslash` and `tex_math_double_backslash`
+% The \luamdef{extensions.tex_math} function implements the Pandoc math
 % syntax extensions.
 %
 % \end{markdown}
@@ -29442,7 +30018,7 @@ M.extensions.tex_math = function(tex_math_dollars,
 %    \end{macrocode}
 % \begin{markdown}
 %
-% The following patterns implement the Pandoc `tex_math_dollars` syntax extension.
+% The following patterns implement the Pandoc dollar math syntax extension.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -29475,8 +30051,8 @@ M.extensions.tex_math = function(tex_math_dollars,
 %    \end{macrocode}
 % \begin{markdown}
 %
-% The following patterns implement the Pandoc `tex_math_single_backslash` and
-% `tex_math_double_backslash` syntax extensions.
+% The following patterns implement the Pandoc single and double
+% backslash math syntax extensions.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -29486,7 +30062,8 @@ M.extensions.tex_math = function(tex_math_dollars,
 %    \end{macrocode}
 % \begin{markdown}
 %
-% The following patterns implement the Pandoc `tex_math_double_backslash` syntax extension.
+% The following patterns implement the Pandoc double backslash math
+% syntax extension.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -29519,7 +30096,8 @@ M.extensions.tex_math = function(tex_math_dollars,
 %    \end{macrocode}
 % \begin{markdown}
 %
-% The following patterns implement the Pandoc `tex_math_single_backslash` syntax extension.
+% The following patterns implement the Pandoc single backslash math
+% syntax extension.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -29591,9 +30169,10 @@ end
 %#### YAML Metadata
 %
 % The \luamdef{extensions.jekyll_data} function implements the Pandoc
-% `yaml_metadata_block` syntax extension. When the `expect_jekyll_data`
-% parameter is `true`, then a markdown document may begin directly with
-% \acro{yaml} metadata and may contain nothing but \acro{yaml} metadata.
+% \acro{yaml} metadata block syntax extension. When the
+% `expect_jekyll_data` parameter is `true`, then a markdown document
+% may begin directly with \acro{yaml} metadata and may contain nothing
+% but \acro{yaml} metadata.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -29705,6 +30284,7 @@ M.extensions.jekyll_data = function(expect_jekyll_data)
                          , function(s, i, text) -- luacheck: ignore s i
                              local data
                              local ran_ok, _ = pcall(function()
+                               -- TODO: Replace with `require("tinyyaml")` in TeX Live 2023
                                local tinyyaml = require("markdown-tinyyaml")
                                data = tinyyaml.parse(text, {timestamps=false})
                              end)
@@ -29748,7 +30328,7 @@ end
 %
 % The \luamref{new} function returns a conversion function that takes a
 % markdown string and turns it into a plain \TeX{} output. See Section
-% <#sec:luaconversion>.
+% <#sec:lua-conversion>.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -29977,7 +30557,7 @@ function M.new(options)
 %
 % Finally, cast the user-defined syntax extension to the internal format
 % of user extensions used by the Markdown package (see Section
-% <#sec:luabuiltinextensions>.)
+% <#sec:lua-built-in-extensions>.)
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -30041,9 +30621,24 @@ local lfs = require("lfs")
 if options.cacheDir and not lfs.isdir(options.cacheDir) then
   assert(lfs.mkdir(options["cacheDir"]))
 end
-
-local ran_ok, kpse = pcall(require, "kpse")
-if ran_ok then kpse.set_program_name("luatex") end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If \pkg{Kpathsea} has not been loaded before or if Lua\TeX{} has not yet
+% been initialized, configure \pkg{Kpathsea} on top of loading it.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local kpse
+(function()
+  local should_initialize = package.loaded.kpse == nil
+                       or tex.initialize ~= nil
+  local ran_ok
+  ran_ok, kpse = pcall(require, "kpse")
+  if ran_ok and should_initialize then
+    kpse.set_program_name("luatex")
+  end
+end)()
 local md = require("markdown")
 %    \end{macrocode}
 % \begin{markdown}
@@ -30083,7 +30678,7 @@ end
 % used to implement the macros for the conversion from markdown to plain \TeX{}
 % exposed by the plain \TeX{} interface (see Section <#sec:texinterface>).
 %
-%### Logging Facilities {#texinterfacelogging}
+%### Logging Facilities {#tex-interface-logging}
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -30104,7 +30699,7 @@ end
 % \par
 % \begin{markdown}
 %
-%### Token Renderer Prototypes {#textokenrendererprototypes}
+%### Token Renderer Prototypes {#tex-token-renderer-prototypes}
 %
 % The following definitions should be considered placeholder.
 %
@@ -30284,7 +30879,7 @@ end
 % \par
 % \begin{markdown}
 %
-%#### YAML Metadata Renderer Prototypes {#expl3yamlmetadataimplementation}
+%#### YAML Metadata Renderer Prototypes {#expl3-yaml-metadata-implementation}
 %
 % To keep track of the current type of structure we inhabit when we are
 % traversing a \acro{yaml} document, we will maintain the
@@ -30524,8 +31119,8 @@ end
 %### Lua Snippets
 % After the \mdef{markdownPrepareLuaOptions} macro has been fully expanded,
 % the \mdef{markdownLuaOptions} macro will expands to a Lua table that
-% contains the plain \TeX{} options (see Section <#sec:texoptions>) in a
-% format recognized by Lua (see Section <#sec:luaoptions>).
+% contains the plain \TeX{} options (see Section <#sec:tex-options>) in a
+% format recognized by Lua (see Section <#sec:lua-options>).
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -30652,8 +31247,9 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\cs_new:Nn
-  \@@_if_option:nTF
+\prg_new_conditional:Nnn
+  \@@_if_option:n
+  { TF, T, F }
   {
     \@@_get_option_type:nN
       { #1 }
@@ -30663,7 +31259,7 @@ end
       \c_@@_option_type_boolean_tl
       {
         \msg_error:nnxx
-          { @@ }
+          { markdown }
           { expected-boolean-option }
           { #1 }
           { \l_tmpa_tl }
@@ -30674,11 +31270,11 @@ end
     \str_if_eq:NNTF
       \l_tmpa_tl
       \c_@@_option_value_true_tl
-      { #2 }
-      { #3 }
+      { \prg_return_true: }
+      { \prg_return_false: }
   }
 \msg_new:nnn
-  { @@ }
+  { markdown }
   { expected-boolean-option }
   {
     Option~#1~has~type~#2,~
@@ -30891,14 +31487,14 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-%### Lua Shell Escape Bridge {#luabridge}
+%### Lua Shell Escape Bridge {#lua-bridge}
 %
 % The following \TeX{} code is intended for \TeX{} engines that do not provide
 % direct access to Lua, but expose the shell of the operating system. This
 % corresponds to the \mref{markdownMode} values of `0` and `1`.
 %
 % The \mref{markdownLuaExecute} macro defined here and in Section
-% <#sec:directlua> are meant to be indistinguishable to the remaining code.
+% <#sec:direct-lua> are meant to be indistinguishable to the remaining code.
 %
 % The package assumes that although the user is not using the Lua\TeX{} engine,
 % their \TeX{} distribution contains it, and uses shell access to produce and
@@ -31015,8 +31611,24 @@ end
       "|markdownOptionHelperScriptFileName"}%
     |immediate|write|markdownOutputFileStream{%
       local ran_ok, error = pcall(function()
-        local ran_ok, kpse = pcall(require, "kpse")
-        if ran_ok then kpse.set_program_name("luatex") end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If \pkg{Kpathsea} has not been loaded before or if Lua\TeX{} has not yet
+% been initialized, configure \pkg{Kpathsea} on top of loading it.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        local kpse
+        (function()
+          local should_initialize = package.loaded.kpse == nil
+                               or tex.initialize
+          local ran_ok
+          ran_ok, kpse = pcall(require, "kpse")
+          if ran_ok and should_initialize then
+            kpse.set_program_name("luatex")
+          end
+        end)()
         #1
       end)
 %    \end{macrocode}
@@ -31064,11 +31676,11 @@ end
 % \par
 % \begin{markdown}
 %
-%### Direct Lua Access {#directlua}
+%### Direct Lua Access {#direct-lua}
 %
 % The following \TeX{} code is intended for \TeX{} engines that provide
 % direct access to Lua (Lua\TeX{}). The macro \mref{markdownLuaExecute} defined
-% here and in Section <#sec:luabridge> are meant to be indistinguishable to
+% here and in Section <#sec:lua-bridge> are meant to be indistinguishable to
 % the remaining code. This corresponds to the \mref{markdownMode} value of `2`.
 %
 % \end{markdown}
@@ -31084,7 +31696,7 @@ end
 % The direct Lua access version of the \mref{markdownLuaExecute} macro is defined
 % in terms of the `\directlua` primitive. The `print` function is set as
 % an alias to the `tex.print` method in order to mimic the behaviour of the
-% \mref{markdownLuaExecute} definition from Section <#sec:luabridge>,
+% \mref{markdownLuaExecute} definition from Section <#sec:lua-bridge>,
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -31262,7 +31874,7 @@ end
 %
 %### Logging Facilities
 % The \LaTeX{} implementation redefines the plain \TeX{} logging macros (see
-% Section <#sec:texinterfacelogging>) to use the \LaTeX{} `\PackageInfo`,
+% Section <#sec:tex-interface-logging>) to use the \LaTeX{} `\PackageInfo`,
 % `\PackageWarning`, and `\PackageError` macros.
 %
 % \end{markdown}
@@ -31275,7 +31887,7 @@ end
 % The \mdef{markdownInputPlainTeX} macro is used to store the original plain
 % \TeX{} implementation of the \mref{markdownInput} macro. The \mref{markdownInput}
 % is then redefined to accept an optional argument with options recognized by
-% the \LaTeX{} interface (see Section <#sec:latexoptions>).
+% the \LaTeX{} interface (see Section <#sec:latex-options>).
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -31321,7 +31933,7 @@ end
 % \par
 % \begin{markdown}
 %
-%#### \LaTeX{} Themes {#latexthemesimplementation}
+%#### \LaTeX{} Themes {#latex-themes-implementation}
 %
 % This section implements the theme-loading mechanism and the example themes
 % provided with the Markdown package.
@@ -31383,7 +31995,7 @@ end
 % \begin{markdown}
 %
 % We load the \pkg{ifthen} and \pkg{grffile} packages, see also
-% Section <#sec:latexprerequisites>:
+% Section <#sec:latex-prerequisites>:
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -31457,7 +32069,7 @@ end
 % \begin{markdown}
 %
 % We load the \pkg{catchfile} and \pkg{grffile} packages, see also
-% Section <#sec:latexprerequisites>:
+% Section <#sec:latex-prerequisites>:
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -31640,7 +32252,7 @@ end
 % \begin{markdown}
 %
 % The `code` key is used to immediately expand and execute code, which can be
-% especially useful in \LaTeX{} setup snippets.
+% especially useful in \LaTeX{} snippets.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -31672,7 +32284,7 @@ end
 % \begin{markdown}
 %
 % To ensure that keys containing forward slashes get passed correctly, we
-% replace all forward slashes in the nput with backslash tokens with category
+% replace all forward slashes in the input with backslash tokens with category
 % code letter and then undo the replacement. This means that if any unbraced
 % backslash tokens with category code letter exist in the input, they will be
 % replaced with forward slashes. However, this should be extremely rare.
@@ -31713,18 +32325,12 @@ end
 \cs_generate_variant:Nn
   \keys_define:nn
   { nV }
-\cs_generate_variant:Nn
-  \tl_replace_all:Nnn
-  { NVn }
-\cs_generate_variant:Nn
-  \tl_replace_all:Nnn
-  { NnV }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par
 % \begin{markdown}
 %
-%### Token Renderer Prototypes {#latexdefaultrendererprototypes}
+%### Token Renderer Prototypes {#latex-default-renderer-prototypes}
 %
 % The following configuration should be considered placeholder. If the `plain`
 % package option has been enabled (see Section <#sec:latexplain>), none of
@@ -31811,8 +32417,25 @@ end
         { #2 }
     }
   \markdownSetup{rendererPrototypes={
-    ulBeginTight = {\begin{compactitem}},
-    ulEndTight = {\end{compactitem}},
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Make tight bullet lists a little less compact by adding extra vertical space
+% above and below them.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    ulBeginTight = {%
+      \group_begin:
+      \pltopsep=\topsep
+      \plpartopsep=\partopsep
+      \begin{compactitem}
+    },
+    ulEndTight = {
+      \end{compactitem}
+      \group_end:
+    },
     fancyOlBegin = {
       \group_begin:
       \tl_set:Nn
@@ -31836,8 +32459,25 @@ end
       \end{enumerate}
       \group_end:
     },
-    olBeginTight = {\begin{compactenum}},
-    olEndTight = {\end{compactenum}},
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Make tight ordered lists a little less compact by adding extra vertical
+% space above and below them.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    olBeginTight = {%
+      \group_begin:
+      \plpartopsep=\partopsep
+      \pltopsep=\topsep
+      \begin{compactenum}
+    },
+    olEndTight = {
+      \end{compactenum}
+      \group_end:
+    },
     fancyOlBeginTight = {
       \group_begin:
       \tl_set:Nn
@@ -31848,7 +32488,11 @@ end
         { #2 }
       \tl_set:Nn
         \l_tmpa_tl
-        { \begin{compactenum}[ }
+        {
+          \plpartopsep=\partopsep
+          \pltopsep=\topsep
+          \begin{compactenum}[
+        }
       \tl_put_right:Nx
         \l_tmpa_tl
         { \@@_latex_paralist_style:nn { #1 } { #2 } }
@@ -31870,8 +32514,25 @@ end
             { #1 }
         ]
     },
-    dlBeginTight = {\begin{compactdesc}},
-    dlEndTight = {\end{compactdesc}}}}
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Make tight definition lists a little less compact by adding extra
+% vertical space above and below them.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    dlBeginTight = {
+      \group_begin:
+      \plpartopsep=\partopsep
+      \pltopsep=\topsep
+      \begin{compactdesc}
+    },
+    dlEndTight = {
+      \end{compactdesc}
+      \group_end:
+    }}}
   \cs_generate_variant:Nn
     \@@_latex_fancy_list_item_label:nnn
     { VVn }
@@ -32664,7 +33325,7 @@ end
 % \par
 % \begin{markdown}
 %
-%#### YAML Metadata {#latexyamlmetadata}
+%#### YAML Metadata {#latex-yaml-metadata}
 %
 % The default setup of \acro{yaml} metadata will invoke the `\title`,
 % `\author`, and `\date` macros when scalar values for keys that
@@ -32770,7 +33431,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\@@_if_option:nTF
+\@@_if_option:nT
   { linkAttributes }
   {
     \RequirePackage{graphicx}
@@ -32794,7 +33455,6 @@ end
       },
     }
   }
-  { }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par
@@ -32915,7 +33575,7 @@ end
 %### Typesetting Markdown
 % The \mref{inputmarkdown} is defined to accept an optional argument with
 % options recognized by the \Hologo{ConTeXt} interface (see Section
-% <#sec:contextoptions>).
+% <#sec:context-options>).
 %
 % \end{markdown}
 %  \begin{macrocode}

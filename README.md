@@ -185,8 +185,9 @@ For further information, consult one of the following:
     - [Markdown 2.7.0: Towards lightweight markup in TeX][tb124],
     - [Making Markdown into a Microwave Meal][tb129],
     - [Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX][tb131],
-    - [Markdown 2.15.0: What's New?][tb133], and
-    - [Markdown 2.17.1: What's New, What's Next?][tb135].
+    - [Markdown 2.15.0: What's New?][tb133],
+    - [Markdown 2.17.1: What's New, What's Next?][tb135], and
+    - [Attributes in Markdown][tb136].
 5. Journal articles of me and my students published by [CSTUG Bulletin][csbul] (in Czech and Slovak):
     - [Rendering Markdown inside TeX Documents][10.5300/2016-1-4/78],
     - [Markdown 2.8.1: Boldly Unto the Throne of Lightweight Markup in TeX][10.5300/2020-1-2/48],
@@ -213,6 +214,7 @@ For further information, consult one of the following:
  [tb131]: https://www.tug.org/TUGboat/tb42-2/tb131novotny-markdown.pdf  "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"
  [tb133]: https://www.tug.org/TUGboat/tb43-1/tb133novotny-markdown.pdf  "Markdown 2.15.0: What's New?"
  [tb135]: https://www.overleaf.com/read/pgwrhhskmgfm                    "Markdown 2.17.1: What's New, What's Next?"
+ [tb136]: https://www.overleaf.com/read/dshtsnnmtshs                    "Attributes in Markdown"
 
  [tb131-slides]:  https://tug.org/tug2021/assets/pdf/tug2021-novotny-slides.pdf           "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"
  [tb131-video]:   https://youtu.be/THmPkAncMnc                                            "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"

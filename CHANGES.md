@@ -1,16 +1,81 @@
 # Changes
 
-## 2.22.0
+## 3.0.0
+
+## 2.23.0 (2023-04-27)
+
+Development:
+
+- Add support of bulk redefinition of token renderers and
+  token renderer prototypes in the `\markdownSetup` LaTeX
+  command using wildcards. (#232, #287)
+
+Fixes:
+
+- Drop support for ConTeXt Mark II, since the MkII files are
+  no longer installed in TeX Live 2023, see the article by
+  [Hans Hagen](https://tug.org/texlive/files/tb136hagen-texlive.pdf).
+  (#281, #282)
+- Remove extra space after inline elements with attributes.
+  (#288)
+- Make our implementation of attributes compatible with jgm/pandoc.
+  (#279, #297, f7c701b)
+
+Documentation:
+
+- Add a link to a preprint from TUGboat 44(1) to `README.md`.
+  (#234, a4d9fbf)
+- Separate example files for pdfLaTeX, XeLaTeX, LuaLaTeX, and
+  TeX4ht. (daccaa8)
+
+Docker:
+
+- Add TeX Live 2022 historical image. (#285, #295)
+- Add support for TeX Live 2023. (contributed by @gucci-on-fleek,
+  #281, #282)
+
+Refactoring:
+
+- Use `\prg_new_conditional:Nnn` to define `\@@_if_option:n`.
+  (#289)
+
+Libraries:
+
+- Make tinyyaml a standalone CTAN package. (contributed by
+  @zepinglee, #218, #294)
+
+Default Renderer Prototypes:
+
+- Make the default LaTeX renderer prototypes for tight lists produce
+  surrounding spaces. (#290, #296)
+
+## 2.22.0 (2023-04-02)
 
 Development:
 
 - Add support for TeX math surrounded by backslash-escaped
   parens and brackets. (contributed by @lostenderman, #61,
   #235, #236, #270)
-- Add support for attributes on links, images, and inline
-  code spans. (jgm#36, jgm#43, #50, #123, #256, #280)
+- Add support for attributes on links, images, fenced code,
+  and inline code spans. (jgm#36, jgm#43, #50, #123, #256, #280)
+- Add `import` LaTeX option. (#107, #286)
 
-## 2.21.0 (2022-02-28)
+Documentation:
+
+- Unify how Pandoc syntax extensions are named and cited in
+  documentation. (#274, #284)
+
+Refactoring:
+
+- Only configure the Kpathsea library if it has not already
+  been configured. (#268, #283)
+
+Deprecation:
+
+- Deprecate `theme` LaTeX option in favor of the new
+  `import` LaTeX option. (#107, #285)
+
+## 2.21.0 (2023-02-28)
 
 Development:
 
@@ -37,9 +102,9 @@ Deprecation:
 
 - Deprecate the current semantics of header attribute contexts.
   (#258, #264)
-- Deprecate `hardLineBreaks` option. (#227, #263)
+- Deprecate `hardLineBreaks` Lua option. (#227, #263)
 
-## 2.20.0 (2022-02-01)
+## 2.20.0 (2023-02-01)
 
 Development:
 

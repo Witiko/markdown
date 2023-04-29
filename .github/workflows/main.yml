@@ -69,6 +69,7 @@ jobs:
         texlive:
           - TL2020-historic
           - TL2021-historic
+          - TL2022-historic
           - latest
     steps:
       - name: Checkout repository

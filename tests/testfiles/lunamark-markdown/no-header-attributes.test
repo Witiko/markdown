@@ -3,18 +3,20 @@ This test ensures that the Lua `headerAttributes` option is disabled by default.
 
 # A level one heading { - #first-id   }
 
-A level one heading {#second_id2 - some_key =  "some quoted value with escaped quotes and Unicode: \"ěščřžýáíé\""}
+A level one heading {#second:id2 - some_key =  "some quoted value with escaped quotes and Unicode: \"ěščřžýáíé\""}
 ==================================================================================================================
 
-## A level two heading ### {#third-3id .a-class}
+## A level two heading ### {#third.3id .a-class}
 
-A level two heading {#fourth4-id .2not-a-class}
+A level two heading {iD=fourth4-id .2not-a-class}
 -----------------------------------------------
 
 ### A level three heading ## {#5not-the-fifth-id}
 #### A level four heading {#-6not-the-sixth-id}
 ##### A level five heading ## {#--not-7the-seventh-id}
-###### A level six heading {#the-eighth-id attribute=value}
+###### A level six heading {#the-eighth-id ClAsS = 'a dddd ccc bb'}
+
+# Attributes {#should #appear .in .alphabetical order=ing and="not" #the .order of='typing'}
 >>>
 documentBegin
 codeSpan: headerAttributes
@@ -24,14 +26,14 @@ headingOne: A level one heading (leftBrace) - (hash)first-id   (rightBrace)
 interblockSeparator
 END section
 BEGIN section
-headingOne: A level one heading (leftBrace)(hash)second(underscore)id2 - some(underscore)key =  "some quoted value with escaped quotes and Unicode: "ěščřžýáíé""(rightBrace)
+headingOne: A level one heading (leftBrace)(hash)second:id2 - some(underscore)key = "some quoted value with escaped quotes and Unicode: "ěščřžýáíé""(rightBrace)
 interblockSeparator
 BEGIN section
-headingTwo: A level two heading (hash)(hash)(hash) (leftBrace)(hash)third-3id .a-class(rightBrace)
+headingTwo: A level two heading (hash)(hash)(hash) (leftBrace)(hash)third.3id .a-class(rightBrace)
 interblockSeparator
 END section
 BEGIN section
-headingTwo: A level two heading (leftBrace)(hash)fourth4-id .2not-a-class(rightBrace)
+headingTwo: A level two heading (leftBrace)iD=fourth4-id .2not-a-class(rightBrace)
 interblockSeparator
 BEGIN section
 headingThree: A level three heading (hash)(hash) (leftBrace)(hash)5not-the-fifth-id(rightBrace)
@@ -43,11 +45,15 @@ BEGIN section
 headingFive: A level five heading (hash)(hash) (leftBrace)(hash)--not-7the-seventh-id(rightBrace)
 interblockSeparator
 BEGIN section
-headingSix: A level six heading (leftBrace)(hash)the-eighth-id attribute=value(rightBrace)
+headingSix: A level six heading (leftBrace)(hash)the-eighth-id ClAsS = 'a dddd ccc bb'(rightBrace)
+interblockSeparator
 END section
 END section
 END section
 END section
 END section
+END section
+BEGIN section
+headingOne: Attributes (leftBrace)(hash)should (hash)appear .in .alphabetical order=ing and="not" (hash)the .order of='typing'(rightBrace)
 END section
 documentEnd
