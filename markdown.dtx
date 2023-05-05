@@ -27090,13 +27090,14 @@ function M.reader.new(writer, options)
 % \end{markdown}
 %  \begin{macrocode}
   local function resolve_collapsed_link(t, opening_index, closing_index)
+    local next_link_closing_index = find_next_link_closing_index(t, closing_index + 4)
     local content = collect_link_content(t, opening_index + 1, closing_index - 1)
     local r = self.lookup_reference(content)
 
     if r then
       local inline_content = resolve_inline_following_content(t, closing_index, false, t.match_link_attributes)
       r.attributes = join_attributes(r.attributes, inline_content.attributes)
-      render_link_or_image(t, opening_index, closing_index, closing_index, r)
+      render_link_or_image(t, opening_index, next_link_closing_index, closing_index, r)
     end
   end
 
