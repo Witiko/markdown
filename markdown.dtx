@@ -25705,8 +25705,6 @@ parsers.html_inline_tags  = parsers.html_inline_comment_full
 %
 % \end{markdown}
 %  \begin{macrocode}
-parsers.leader = parsers.space^-3
-
 parsers.urlchar = parsers.anyescaped
                 - parsers.newline
                 - parsers.more
@@ -28481,7 +28479,7 @@ M.extensions.content_blocks = function(language_map)
                     * Cc("localfile")
 
       local ContentBlock
-                    = parsers.leader
+                    = parsers.check_trail_no_rem
                     * (localfilepath + onlineimageurl)
                     * contentblock_tail
                     / writer.contentblock
