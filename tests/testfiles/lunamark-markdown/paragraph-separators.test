@@ -1,0 +1,20 @@
+<<<
+This test ensures that paragraph separators and interblock separators
+are produced where appropriate.
+
+Two markdown *paragraphs* are
+
+*always separated by a paragraph separator*
+
+
+*no matter how many blank lines* in between.
+
+>>>
+documentBegin
+paragraphSeparator
+emphasis: paragraphs
+paragraphSeparator
+emphasis: always separated by a paragraph separator
+paragraphSeparator
+emphasis: no matter how many blank lines
+documentEnd
