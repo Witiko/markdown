@@ -14504,9 +14504,10 @@ following text:
 %
 % \begin{markdown}
 
-#### Interblock Separator Renderer
-The \mdef{markdownRendererInterblockSeparator} macro represents a separator
-between two markdown block elements. The macro receives no arguments.
+#### Interblock Separator Renderers
+The \mdef{markdownRendererInterblockSeparator} macro represents an interblock
+separator between two markdown block elements. The macro receives no
+arguments.
 
 % \end{markdown}
 %
@@ -14524,7 +14525,7 @@ following content:
   \par
 }
 \markdownBegin
-Hello *world*!
+- Hello *world*!
 
 _Foo_ bar!
 \markdownEnd
@@ -14537,7 +14538,7 @@ luatex document.tex
 A PDF document named `document.pdf` should be produced and contain the
 following text:
 
-> Hello *world*!
+> - Hello *world*!
 >
 > *(The end of a block)*
 > 
@@ -14561,7 +14562,7 @@ following content:
 }
 \begin{document}
 \begin{markdown}
-Hello *world*!
+- Hello *world*!
 
 _Foo_ bar!
 \end{markdown}
@@ -14574,7 +14575,7 @@ lualatex document.tex
 A PDF document named `document.pdf` should be produced and contain the
 following text:
 
-> Hello *world*!
+> - Hello *world*!
 >
 > *(The end of a block)*
 > 
@@ -14593,7 +14594,7 @@ following content:
 }
 \starttext
 \startmarkdown
-Hello *world*!
+- Hello *world*!
 
 _Foo_ bar!
 \stopmarkdown
@@ -14606,7 +14607,7 @@ context --luatex document.tex
 A PDF document named `document.pdf` should be produced and contain the
 following text:
 
-> Hello *world*!
+> - Hello *world*!
 >
 > *(The end of a block)*
 > 
@@ -14626,6 +14627,80 @@ following text:
 \prop_gput:Nnn
   \g_@@_renderer_arities_prop
   { interblockSeparator }
+  { 0 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
+Users can use more than one blank line to delimit two block to indicate the
+end of a series of blocks that make up a logical paragraph. This produces a
+paragraph separator instead of an interblock separator. Between some blocks,
+such as markdown paragraphs, a paragraph separator is always produced.
+  
+The \mdef{markdownRendererParagraphSeparator} macro represents a paragraph separator. The macro receives no arguments.
+
+% \end{markdown}
+%
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage{markdown}
+\markdownSetup{
+  renderers = {
+    paragraphSeparator = {%
+      \par
+      \emph{(The end of a paragraph)}%
+      \par
+    },
+  },
+}
+\begin{document}
+\begin{markdown}
+Hello *world*!
+
+_Foo_ bar!
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> Hello *world*!
+>
+> *(The end of a paragraph)*
+>
+> _Foo_ bar!
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererParagraphSeparator{%
+  \markdownRendererParagraphSeparatorPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { paragraphSeparator }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { paragraphSeparator }
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
