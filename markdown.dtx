@@ -23191,6 +23191,21 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \par
 % \begin{markdown}
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define \luamdef{writer->paragraphsep} as the output format of a paragraph
+% separator. Users can use more than one blank line to delimit two blocks to
+% indicate the end of a series of blocks that make up a paragraph. This
+% produces a paragraph separator instead of an interblock separator.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  function self.paragraphsep()
+    if not self.is_writing then return "" end
+    return "\\markdownRendererParagraphSeparator\n{}"
+  end
 %
 % Define \luamdef{writer->hard_line_break} as the output format of a forced
 % line break.
