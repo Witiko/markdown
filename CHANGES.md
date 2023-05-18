@@ -7,6 +7,10 @@ Default Renderer Prototypes:
 - Do not force line breaks after high-level headings in LaTeX,
   but allow the text to follow the heading on the same line. (df8562c)
 
+Fixes:
+
+- Allow refences in fenced divs. (#307)
+
 ## 2.23.0 (2023-04-27)
 
 Development:
