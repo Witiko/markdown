@@ -98,7 +98,9 @@ I am a _fenced_ div
 
 ::: {.cit custom-style=raggedleft}
 
-I am a _fenced_ div
+I am a _fenced_ div with [a reference][1]
+
+ [1]: https://foo.bar/
 
 :::
 
@@ -222,6 +224,11 @@ BEGIN attributeKeyValue
 - value: raggedleft
 END attributeKeyValue
 emphasis: fenced
+BEGIN link
+- label: a reference
+- URI: https://foo.bar/
+- title: 
+END link
 END fencedDivAttributeContext
 interblockSeparator
 leftBrace
