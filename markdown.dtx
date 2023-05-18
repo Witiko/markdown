@@ -25457,7 +25457,8 @@ end
                                 * (V("Blank")^0 / writer.interblocksep))^-1
                               * V("Blank")^0
                               * V("Block")^-1
-                              * ( V("Blank")^0 / writer.interblocksep
+                              * ( ( V("Blank")^1 / writer.paragraphsep
+                                  + V("Blank")^0 / writer.interblocksep)
                                 * V("Block"))^0
                               * V("Blank")^0 * parsers.eof,
 
