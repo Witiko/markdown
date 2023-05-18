@@ -26773,7 +26773,10 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
                       * increment_div_level(1)
                       * parsers.skipblanklines
                       * Ct( (V("Block") - fenced_div_end)^-1
-                          * ( V("Blank")^0 / writer.interblocksep
+                          * ( V("Blank")^0
+                            / function()
+                                return writer.interblocksep
+                              end
                             * (V("Block") - fenced_div_end))^0)
                       * V("Blank")^0
                       * fenced_div_end * increment_div_level(-1)
