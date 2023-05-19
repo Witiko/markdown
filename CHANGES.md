@@ -9,7 +9,7 @@ Default Renderer Prototypes:
 
 Fixes:
 
-- Allow refences in fenced divs. (#307)
+- Allow refences in fenced divs. (#307, jgm#69)
 
 ## 2.23.0 (2023-04-27)
 
