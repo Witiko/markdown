@@ -26,6 +26,137 @@
 }
 
 % Set renderers of the Markdown module
+%% Attribute Renderers
+%%% TODO
+
+%% Block Quote Renderers
+\_def  \markdownRendererBlockQuoteBegin {\_begblock}
+\_def  \markdownRendererBlockQuoteEnd {\_endblock}
+
+%% Bracketed Spans Attribute Context Renderers
+%%% TODO
+
+%% Bullet List Renderers
+\_def  \markdownRendererUlBegin       {\_begitems}
+\_def  \markdownRendererUlBeginTight  {\_begitems \_novspaces}
+\_def  \markdownRendererUlItem        {\_startitem}
+\_def  \markdownRendererUlItemEnd     {\_par}
+\_def  \markdownRendererUlEnd         {\_enditems}
+\_def  \markdownRendererUlEndTight    {\_enditems}
+
+%% Citations Renderers
+%%% TODO
+
+%% Code Block Renderers
+\_def  \markdownRendererInputVerbatim #1{\_verbinput (-) {#1} }
+\_def  \markdownRendererInputFencedCode #1#2{\_verbinput \_hisyntax{#2} (-) {#1} }
+
+%% Code Span Renderer
+\_def  \markdownRendererCodeSpan    #1{{\_ttfont #1}}
+
+%% Code Span Attribute Context Renderers
+%%% TODO
+
+%% Content Block Renderers
+%%% TODO
+
+%% Definition List Renderers
+\_def  \markdownRendererDlBegin       {\_begitems \_style d}
+\_def  \markdownRendererDlBeginTight  {\_begitems \_style d \_novspaces}
+\_def  \markdownRendererDlItem        {\_startitem}
+\_def  \markdownRendererDlItemEnd     {\_endgroup\_par}
+\_def  \markdownRendererDlDefinitionBegin {\_endgroup}
+\_def  \markdownRendererDlDefinitionEnd {\_begingroup \_nl}
+\_def  \markdownRendererDlEnd         {\_enditems}
+\_def  \markdownRendererDlEndTight    {\_enditems}
+
+%% Ellipsis Renderer
+\_def  \markdownRendererEllipsis      {$\_ldots$}
+
+%% Emphasis Renderers
+\_def  \markdownRendererEmphasis    #1{{\_em #1}}
+\_def  \markdownRendererStrongEmphasis #1{{\_bf #1}}
+
+%% Fenced Code Attribute Context Renderers
+%%% TODO
+
+%% Fenced Div Attribute Context Renderers
+%%% TODO
+
+%% Header Attribute Context Renderers
+%%% TODO
+
+%% Heading Renderers
+\_def  \markdownRendererHeadingOne  #1{\_printtit{#1}}
+\_def  \markdownRendererHeadingTwo  #1{\_inchap{#1}}
+\_def  \markdownRendererHeadingThree #1{\_insec{#1}}
+\_def  \markdownRendererHeadingFour #1{\_insecc{#1}}
+\_def  \markdownRendererHeadingFive #1{{\_bf #1}\_firstnoindent}
+\_def  \markdownRendererHeadingSix  #1{#1\_firstnoindent}
+
+%% HTML Comment Renderers
+%%% TODO
+
+%% HTML Tag and Element Renderers
+%%% TODO
+
+%% Image Renderer
+\_def  \markdownRendererImage #1#2#3#4{\_inspic{#3}}
+
+%% Image Attribute Context Renderers
+%%% TODO
+
+%% Interblock Separator Renderer
+\_def  \markdownRendererInterblockSeparator {\_par}
+
+%% Line Block Renderers
+%%% TODO
+
+%% Line Break Renderer
+\_def  \markdownRendererHardLineBreak {\_nl}
+
+%% Link Renderer
+\_def  \markdownRendererLink  #1#2#3#4{\_ea\_ulink\_ea[\_expanded{#3}]{#1}}
+
+%% Link Attribute Context Renderers
+%%% TODO
+
+%% Markdown Document Renderers
+\_let  \markdownRendererDocumentBegin \_relax
+\_let  \markdownRendererDocumentEnd   \_relax
+
+%% Non-Breaking Space Renderer
+\_def  \markdownRendererNbsp          {~}
+
+%% Note Renderer
+%%% TODO
+
+%% Ordered List Renderers
+\_def  \markdownRendererOlBegin       {\_begitems \_style n}
+\_def  \markdownRendererOlBeginTight  {\_begitems \_style n \_novspaces}
+\_def  \markdownRendererFancyOlBegin #1#2{\markdownRendererOlBegin}
+\_def  \markdownRendererFancyOlBeginTight #1#2{\markdownRendererOlBeginTight}
+\_def  \markdownRendererOlItem        {\_startitem}
+\_def  \markdownRendererOlItemEnd     {\_par}
+\_def  \markdownRendererOlItemWithNumber #1{\_itemnum=#1\_relax \_startitem}
+\_let  \markdownRendererFancyOlItem   \markdownRendererOlItem
+\_let  \markdownRendererFancyOlItemEnd \markdownRendererOlItemEnd
+\_let  \markdownRendererFancyOlItemWithNumber \markdownRendererOlItemWithNumber
+\_def  \markdownRendererOlEnd         {\_enditems}
+\_def  \markdownRendererOlEndTight    {\_enditems}
+\_let  \markdownRendererFancyOlEndTight \markdownRendererOlEndTight
+\_let  \markdownRendererFancyOlEnd   \markdownRendererOlEnd
+
+%% Raw Content Renderers
+%%% TODO
+
+%% Section Renderers
+\_let  \markdownRendererSectionBegin  \_relax
+\_let  \markdownRendererSectionEnd    \_relax
+
+%% Replacement Character Renderers
+\_def  \markdownRendererReplacementCharacter {^^^^fffd}
+
 %% Special Character Renderers
 \_edef \markdownRendererAmpersand   #1{\_csstring\&}
 \_edef \markdownRendererBackslash   #1{\_csstring\\}
@@ -39,70 +170,26 @@
 \_edef \markdownRendererTilde       #1{\_csstring\~}
 \_def  \markdownRendererUnderscore  #1{_}
 
-%% Ellipsis Renderer
-\_def  \markdownRendererEllipsis      {$\_ldots$}
+%% Strike-Through Renderer
+%%% TODO
+
+%% Subscript Renderer
+%%% TODO
+
+%% Superscript Renderer
+%%% TODO
+
+%% Table Renderer
+%%% TODO
+
+%% TeX Math Renderers
+%%% TODO
 
 %% Thematic Break Renderer
 \_def  \markdownRendererThematicBreak {\_hrule}
 
-%% Link Renderer
-\_def  \markdownRendererLink  #1#2#3#4{\_ea\_ulink\_ea[\_expanded{#3}]{#1}}
-
-%% Image Renderer
-\_def  \markdownRendererImage #1#2#3#4{\_inspic{#3}}
-
-%% Bullet List Renderers
-\_def  \markdownRendererUlBegin       {\_begitems}
-\_def  \markdownRendererUlBeginTight  {\_begitems \_novspaces}
-\_def  \markdownRendererUlEnd         {\_enditems}
-\_def  \markdownRendererUlEndTight    {\_enditems}
-\_def  \markdownRendererUlItem        {\_startitem}
-\_def  \markdownRendererUlItemEnd     {\_par}
-
-%% Ordered List Renderers
-\_def  \markdownRendererOlBegin       {\_begitems \style n}
-\_def  \markdownRendererOlBeginTight  {\_begitems \style n \_novspaces}
-\_def  \markdownRendererOlEnd         {\_enditems}
-\_def  \markdownRendererOlEndTight    {\_enditems}
-\_def  \markdownRendererOlItem        {\_startitem}
-\_def  \markdownRendererOlItemWithNumber #1{\_itemnum=#1\_relax \_startitem}
-\_def  \markdownRendererOlItemEnd     {\_par}
-\_def  \markdownRendererFancyOlBegin #1#2{\markdownRendererOlBegin}
-\_def  \markdownRendererFancyOlBeginTight #1#2{\markdownRendererOlBeginTight}
-\_let  \markdownRendererFancyOlEnd   \markdownRendererOlEnd
-\_let  \markdownRendererFancyOlEndTight \markdownRendererOlEndTight
-\_let  \markdownRendererFancyOlItemWithNumber \markdownRendererOlItemWithNumber
-\_let  \markdownRendererFancyOlItem   \markdownRendererOlItem
-\_let  \markdownRendererFancyOlItemEnd \markdownRendererOlItemEnd
-
-%% Definition List Renderers
-\sdef{_item:d}{\aftergroup\dword}
-\def\dword#1{\begingroup\bf}
-\_def  \markdownRendererDlBegin       {\_begitems \style d}
-\_def  \markdownRendererDlBeginTight  {\_begitems \style d \_novspaces}
-\_def  \markdownRendererDlEnd         {\_enditems}
-\_def  \markdownRendererDlEndTight    {\_enditems}
-\_def  \markdownRendererDlItem        {\_startitem}
-\_def  \markdownRendererDlItemEnd     {\endgroup\_par}
-\_def  \markdownRendererDlDefinitionBegin {\endgroup}
-\_def  \markdownRendererDlDefinitionEnd {\begingroup \nl}
-
-%% Interblock Separator Renderer
-\_def  \markdownRendererInterblockSeparator {\_par}
-
-%% Code Block Renderers
-\_def  \markdownRendererInputVerbatim #1{\_verbinput (-) {#1} }
-\_def  \markdownRendererInputFencedCode #1#2{\_verbinput \hisyntax{#2} (-) {#1} }
-
-%% Code Span Renderer
-\_def  \markdownRendererCodeSpan    #1{{\_ttfont #1}}
-
-%% Markdown Document Renderers
-\_let  \markdownRendererDocumentBegin \_relax
-\_let  \markdownRendererDocumentEnd   \_relax
-
-%% Content Block Renderers
-\_def  \markdownRendererContentBlock #1#2#3#4{}
+%% Tickbox Renderers
+%%% TODO
 
 %% YAML Metadata Renderers
 \_let  \markdownRendererJekyllDataBegin \_relax
@@ -115,26 +202,6 @@
 \_def  \markdownRendererJekyllDataNumber #1#2{}
 \_def  \markdownRendererJekyllDataString #1#2{}
 \_def  \markdownRendererJekyllDataEmpty #1{}
-
-%% Heading Renderers
-\_def  \markdownRendererHeadingOne  #1{\_printtit{#1}}
-\_def  \markdownRendererHeadingTwo  #1{\_inchap{#1}}
-\_def  \markdownRendererHeadingThree #1{\_insec{#1}}
-\_def  \markdownRendererHeadingFour #1{\_insecc{#1}}
-\_def  \markdownRendererHeadingFive #1{{\_bf #1}\_firstnoindent}
-\_def  \markdownRendererHeadingSix  #1{#1\_firstnoindent}
-
-%% Section Renderers
-\_let  \markdownRendererSectionBegin  \_relax
-\_let  \markdownRendererSectionEnd    \_relax
-
-%% Block Quote Renderers
-\_def  \markdownRendererBlockQuoteBegin {\_begblock}
-\_def  \markdownRendererBlockQuoteEnd {\_endblock}
-
-%% Emphasis Renderers
-\_def  \markdownRendererEmphasis    #1{{\_em #1}}
-\_def  \markdownRendererStrongEmphasis #1{{\_bf #1}}
 
 % Load the Markdown module and set TeX macros for the Markdown module
 \_directlua{
@@ -210,7 +277,7 @@ date:   \today
 \_bgroup
 \_catcode`\%=12\_relax
 \_catcode`\#=12\_relax
-\_input example.tex\relax
+\_input example.tex\_relax
 \_directlua{#1}%
 \_egroup
 
