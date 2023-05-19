@@ -9,7 +9,7 @@ Default Renderer Prototypes:
 
 Fixes:
 
-- Allow refences in fenced divs. (#307, jgm/lunamark#69)
+- Allow references in fenced divs. (#307, jgm/lunamark#69)
 
 ## 2.23.0 (2023-04-27)
 
