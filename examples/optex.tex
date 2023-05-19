@@ -75,6 +75,18 @@
 \_let  \markdownRendererFancyOlItem   \markdownRendererOlItem
 \_let  \markdownRendererFancyOlItemEnd \markdownRendererOlItemEnd
 
+%% Definition List Renderers
+\sdef{_item:d}{\aftergroup\dword}
+\def\dword#1{\begingroup\bf}
+\_def  \markdownRendererDlBegin       {\_begitems \style d}
+\_def  \markdownRendererDlBeginTight  {\_begitems \style d \_novspaces}
+\_def  \markdownRendererDlEnd         {\_enditems}
+\_def  \markdownRendererDlEndTight    {\_enditems}
+\_def  \markdownRendererDlItem        {\_startitem}
+\_def  \markdownRendererDlItemEnd     {\endgroup\_par}
+\_def  \markdownRendererDlDefinitionBegin {\endgroup}
+\_def  \markdownRendererDlDefinitionEnd {\begingroup \nl}
+
 %% Interblock Separator Renderer
 \_def  \markdownRendererInterblockSeparator {\_par}
 
