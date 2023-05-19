@@ -30965,25 +30965,10 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-% TODO: Remove the command definition in TeX Live 2021.
-\providecommand\IfFormatAtLeastTF{\@ifl@t@r\fmtversion}
 \markdownSetup{
   rendererPrototypes = {
     jekyllDataEnd = {
-%     TODO: Remove the else branch in TeX Live 2021.
-      \IfFormatAtLeastTF
-        { 2020-10-01 }
-        { \AddToHook{begindocument/end}{\maketitle} }
-        {
-          \ifx\@onlypreamble\@notprerr
-            % We are in the document
-            \maketitle
-          \else
-            % We are in the preamble
-            \RequirePackage{etoolbox}
-            \AfterEndPreamble{\maketitle}
-          \fi
-        }
+      \AddToHook{begindocument/end}{\maketitle}
     },
   },
 }
