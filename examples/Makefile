@@ -61,7 +61,7 @@ latex-tex4ht.html latex-tex4ht.css: latex-tex4ht.tex example.tex
 	make4ht --shell-escape $< fn-in
 
 # This target typesets the OpTeX example.
-optex.pdf: optex.tex example.tex
+optex.pdf: optex.tex
 	optex $<
 
 # This target converts the markdown example to a plain TeX representation

@@ -210,35 +210,18 @@
   markdown = require("markdown")
 }
 
-\_def \_markdownInput #1{
-  \_bgroup
-  \_catcode`\%=12\_relax
-  \_catcode`\#=12\_relax
-  \_directlua{#1}%
-  \_egroup
-}
-
-\_def \markdownInput #1{% #1 contains the filename of the Markdown document
-  \_def \_tmpa {
-    local file = assert(io.open("\_luaescapestring{#1}", "r"))
-    local input = assert(file:read("*a"))
-    assert(file:close())
-    local options = {\markdownOptions}
-    local convert = markdown.new(options)
-    local output = convert(input)
-    tex.print(output)
-  }%
-  \_ea\_markdownInput\_ea{\_tmpa}%
-}
-
 \_eoldef \markdownBegin #1{% #1 includes the end of the current line, parameters can be here
    \_def\_markdownParams{#1}%
    \_bgroup \_setverb \_savemathsb \_endlinechar=`\^^J
    \_markdownBeginA
 }
+
 \_ea\_def \_ea\_markdownBeginA \_ea#\_ea1\_csstring\\markdownEnd#2^^J{%
   \_restoremathsb \_egroup
-  \_def \_tmpa {
+  \_bgroup
+  \_catcode`\%=12\_relax
+  \_catcode`\#=12\_relax
+  \_directlua {
     local input = "\_luaescapestring{#1}"
     local defaultOptions = {\markdownOptions}
     local options = {\_markdownParams}
@@ -255,7 +238,7 @@
     local output = convert(input)
     tex.print(output)
   }%
-  \_ea\_markdownInput\_ea{\_tmpa}%
+  \_egroup
 }
 
 % Set the document metadata using a YAML metadata block
@@ -265,25 +248,6 @@ title:  An Example *Markdown* Document
 author: Vít Novotný
 date:   \today
 ---
-\markdownEnd
-
-% Typeset the document `example.md` by letting the Markdown package handle
-% the conversion internally.
-\markdownInput{./example.md}
-
-% Typeset the document `example.tex` that we prepared separately using the
-% Lua command-line interface of the Markdown package and that contains a
-% plain TeX representation of the document `example.md`
-\_bgroup
-\_catcode`\%=12\_relax
-\_catcode`\#=12\_relax
-\_input example.tex\_relax
-\_directlua{#1}%
-\_egroup
-
-% Typeset some further examples with inline markdown text
-\markdownBegin
-Here are some non-ASCII characters: *ěščřžýáíé*.
 \markdownEnd
 
 \bye
