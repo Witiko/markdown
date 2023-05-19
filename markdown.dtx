@@ -13356,6 +13356,39 @@ span of text.
 % \end{markdown}
 %
 % \iffalse
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererEmphasis{%
+  \markdownRendererEmphasisPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { emphasis }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { emphasis }
+  { 1 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
+The \mdef{markdownRendererStrongEmphasis} macro represents a strongly
+emphasized span of text. The macro receives a single argument that
+corresponds to the emphasized span of text.
+
+% \end{markdown}
+%
+% \iffalse
 
 ##### Plain \TeX{} Example {.unnumbered}
 
@@ -13442,39 +13475,6 @@ following text:
 >
 > This is **strong emphasis**.
 
-%</manual-tokens>
-%<*tex>
-% \fi
-%
-%  \begin{macrocode}
-\def\markdownRendererEmphasis{%
-  \markdownRendererEmphasisPrototype}%
-\ExplSyntaxOn
-\seq_gput_right:Nn
-  \g_@@_renderers_seq
-  { emphasis }
-\prop_gput:Nnn
-  \g_@@_renderer_arities_prop
-  { emphasis }
-  { 1 }
-\ExplSyntaxOff
-%    \end{macrocode}
-% \par
-%
-% \iffalse
-%</tex>
-%<*manual-tokens>
-% \fi
-%
-% \begin{markdown}
-
-The \mdef{markdownRendererStrongEmphasis} macro represents a strongly
-emphasized span of text. The macro receives a single argument that
-corresponds to the emphasized span of text.
-
-% \end{markdown}
-%
-% \iffalse
 %</manual-tokens>
 %<*tex>
 % \fi
