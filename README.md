@@ -200,6 +200,7 @@ For further information, consult one of the following:
     - [A Gentle Introduction to Markdown for Writers][tb134-video] ([slides][tb134-slides], [example][tb134-example]).
 7. Theses by my students:
     - [Generic TeX Writer for the Pandoc Document Converter][thesis-umhg5]
+    - [An implementation of the CommonMark standard into the Markdown package for TeX][thesis-r7z7l]
 
  [overleaf-1]: https://www.overleaf.com/learn/latex/Articles/How_to_write_in_Markdown_on_Overleaf       "How to write in Markdown on Overleaf"
  [overleaf-2]: https://www.overleaf.com/learn/latex/Articles/Markdown_into_LaTeX_with_Style             "Markdown into LaTeX with Style"
@@ -243,6 +244,7 @@ For further information, consult one of the following:
  [techdoc-tex-live]:  https://mirrors.ctan.org/macros/generic/markdown/markdown.pdf             "A Markdown Interpreter for TeX"
 
  [thesis-umhg5]: https://is.muni.cz/th/umhg5/?lang=en "Generic TeX Writer for the Pandoc Document Converter"
+ [thesis-r7z7l]: https://is.muni.cz/th/r7z7l/?lang=en "An implementation of the CommonMark standard into the Markdown package for TeX"
 
 Acknowledgements
 ----------------
