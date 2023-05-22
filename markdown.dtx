@@ -17421,10 +17421,10 @@ following text:
 %
 % \begin{markdown}
 
-#### Tex Math Renderers
+#### \TeX{} Math Renderers
 The \mdef{markdownRendererInlineMath} and \mdef{markdownRendererDisplayMath} macros
 represent inline and display \TeX{} math.
-Both macros receive a single argument that corresponds to the tex math content.
+Both macros receive a single argument that corresponds to the \TeX{} math content.
 These macros will only be produced, when the \Opt{texMathDollars},
 \Opt{texMathSingleBackslash}, or \Opt{texMathDoubleBackslash} option are enabled.
 
@@ -29953,7 +29953,7 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-%#### Tex Math
+%#### \TeX{} Math
 %
 % The \luamdef{extensions.tex_math} function implements the Pandoc math
 % syntax extensions.
@@ -32792,16 +32792,16 @@ end
     headingOne = {\section{#1}},
     headingTwo = {\subsection{#1}},
     headingThree = {\subsubsection{#1}},
-    headingFour = {\paragraph{#1}\leavevmode},
-    headingFive = {\subparagraph{#1}\leavevmode}}}
+    headingFour = {\paragraph{#1}},
+    headingFive = {\subparagraph{#1}}}}
 }{%
   \markdownSetup{rendererPrototypes = {
     headingOne = {\chapter{#1}},
     headingTwo = {\section{#1}},
     headingThree = {\subsection{#1}},
     headingFour = {\subsubsection{#1}},
-    headingFive = {\paragraph{#1}\leavevmode},
-    headingSix = {\subparagraph{#1}\leavevmode}}}
+    headingFive = {\paragraph{#1}},
+    headingSix = {\subparagraph{#1}}}}
 }%
 %    \end{macrocode}
 % \par

@@ -2,6 +2,15 @@
 
 ## 3.0.0
 
+Default Renderer Prototypes:
+
+- Do not force line breaks after high-level headings in LaTeX,
+  but allow the text to follow the heading on the same line. (df8562c)
+
+Fixes:
+
+- Allow references in fenced divs. (#307, jgm/lunamark#69)
+
 ## 2.23.0 (2023-04-27)
 
 Development:
@@ -57,7 +66,8 @@ Development:
   parens and brackets. (contributed by @lostenderman, #61,
   #235, #236, #270)
 - Add support for attributes on links, images, fenced code,
-  and inline code spans. (jgm#36, jgm#43, #50, #123, #256, #280)
+  and inline code spans. (jgm/lunamark#36, jgm/lunamark#43,
+  #50, #123, #256, #280)
 - Add `import` LaTeX option. (#107, #286)
 
 Documentation:
@@ -109,9 +119,10 @@ Deprecation:
 Development:
 
 - Add support for line blocks.
-  (contributed by @Omikhleia and @lostenderman, jgm#41, #209, #248)
+  (contributed by @Omikhleia and @lostenderman, jgm/lunamark#41,
+  #209, #248)
 - Add support for attributes on fenced code blocks.
-  (contributed by @Omikhleia, jgm#36, #123, #211)
+  (contributed by @Omikhleia, jgm/lunamark#36, #123, #211)
 
 Documentation:
 
@@ -128,7 +139,8 @@ Fixes:
 - Fix input normalization and move it from Lua CLI and plain TeX
   layers directly to the `convert()` Lua method. (#246, #253)
 - Allow fenced div closing tag to break out of a blockquote.
-  (contributed by @Omikhleia, jgm#60, jgm#61, #230, #259)
+  (contributed by @Omikhleia, jgm/lunamark#60, jgm/lunamark#61,
+  #230, #259)
 
 Default Renderer Prototypes:
 

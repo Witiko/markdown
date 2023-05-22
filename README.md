@@ -13,15 +13,13 @@ Markdown
  [matrix]:   https://matrix.to/#/#witiko-markdown:matrix.org    "The Matrix Chat Space for the Markdown package"
  [discord]:  https://discord.gg/8xJsPghzSH                      "The Discord Chat Space for the Markdown package"
 
-The Markdown package converts [markdown][] markup to TeX commands. The
+The Markdown package converts markdown markup to TeX commands. The
 functionality is provided both as a Lua module, and as plain TeX, LaTeX, and
 ConTeXt macro packages that can be used to directly typeset TeX documents
-containing markdown markup. Unlike other convertors, the Markdown package
-does not require any external programs, and makes it easy to redefine how each
-and every markdown element is rendered. Creative abuse of the markdown syntax
-is encouraged. 😉
-
- [markdown]: https://daringfireball.net/projects/markdown/basics "Daring Fireball: Markdown Basics"
+containing markdown markup. Unlike other convertors, the Markdown package does
+not require any external programs, and makes it easy to redefine how each and
+every markdown element is rendered. Creative abuse of the markdown syntax is
+encouraged. 😉
 
 Your first Markdown document
 ----------------------------
