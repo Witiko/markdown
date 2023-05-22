@@ -26166,22 +26166,24 @@ function M.reader.new(writer, options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  parsers.minimally_indented_blank = parsers.check_minimal_indent * (parsers.blankline / "")
+  parsers.minimally_indented_blankline = parsers.check_minimal_indent * (parsers.blankline / "")
 
   parsers.minimally_indented_block = parsers.check_minimal_indent * V("Block")
 
   parsers.minimally_indented_ref = parsers.check_minimal_indent * V("Reference")
 
-  parsers.conditionally_indented_blank = parsers.check_minimal_blank_indent * (parsers.blankline / "")
+  parsers.minimally_indented_blank = parsers.check_minimal_indent * V("Blank")
+
+  parsers.conditionally_indented_blankline = parsers.check_minimal_blank_indent * (parsers.blankline / "")
 
   parsers.minimally_indented_ref_or_block = parsers.minimally_indented_ref
                                           + parsers.minimally_indented_block
-                                          - parsers.minimally_indented_blank
+                                          - parsers.minimally_indented_blankline
 
   parsers.minimally_indented_separated_ref_or_block = parsers.minimally_indented_ref
                                                     + parsers.check_minimal_indent / writer.interblocksep
                                                     * V("Block")
-                                                    - parsers.minimally_indented_blank
+                                                    - parsers.minimally_indented_blankline
 
 %  \end{macrocode}
 % \begin{markdown}
@@ -26191,7 +26193,7 @@ function M.reader.new(writer, options)
 % \end{markdown}
 %  \begin{macrocode}
   parsers.indented_content = function()
-    local blank = parsers.minimally_indented_blank
+    local blank = parsers.minimally_indented_blankline
     return  Ct( (V("Reference") + (parsers.blankline / ""))
               * blank^0
               * parsers.minimally_indented_ref_or_block
@@ -27410,14 +27412,14 @@ end
      parsers.tickbox = parsers.fail
   end
 
-  parsers.list_item_tightness_condition = -#( parsers.conditionally_indented_blank^0
+  parsers.list_item_tightness_condition = -#( parsers.conditionally_indented_blankline^0
                                             * parsers.minimally_indented_ref_or_block)
                                         * remove_indent("li")
                                         + remove_indent("li")
                                         * parsers.fail
 
   parsers.indented_content_tight  = Ct( (parsers.blankline / "")
-                                      * #parsers.conditionally_indented_blank
+                                      * #parsers.conditionally_indented_blankline
                                       * remove_indent("li")
                                       + ( (V("Reference") + (parsers.blankline / ""))
                                         * (parsers.minimally_indented_ref_or_block)
@@ -27428,14 +27430,14 @@ end
                                         * parsers.list_item_tightness_condition) 
   
   parsers.indented_content_loose  = Ct( (parsers.blankline / "")
-                                      * #parsers.conditionally_indented_blank
+                                      * #parsers.conditionally_indented_blankline
                                       + ( (V("Reference") + (parsers.blankline / ""))
                                         * (parsers.minimally_indented_ref_or_block)
-                                        * ( parsers.conditionally_indented_blank^0
+                                        * ( parsers.conditionally_indented_blankline^0
                                           * parsers.minimally_indented_separated_ref_or_block^1)^0
                                         + (V("Reference") + (parsers.blankline / ""))
                                         + (parsers.tickbox^-1 / writer.escape) * V("Block")
-                                        * ( parsers.conditionally_indented_blank^0
+                                        * ( parsers.conditionally_indented_blankline^0
                                           * parsers.minimally_indented_separated_ref_or_block^1)^0))
 
   parsers.TightListItem = function(starter)
@@ -27455,10 +27457,10 @@ end
     local bullet = parsers.bullet(bullet_type)
     return  ( Ct( parsers.TightListItem(bullet) 
                 * ((parsers.check_minimal_indent / "") * parsers.TightListItem(bullet))^0) * Cc(true)
-                * -#((parsers.conditionally_indented_blank^0 / "") 
+                * -#((parsers.conditionally_indented_blankline^0 / "") 
                     * parsers.check_minimal_indent * (bullet - parsers.ThematicBreak))
                + Ct(parsers.LooseListItem(bullet) 
-                 * ((parsers.conditionally_indented_blank^0 / "") 
+                 * ((parsers.conditionally_indented_blankline^0 / "") 
                    * (parsers.check_minimal_indent / "") * parsers.LooseListItem(bullet))^0) * Cc(false))
             / writer.bulletlist
   end
@@ -27486,10 +27488,10 @@ end
           * (Ct( parsers.TightListItem(Cb("listtype"))
                * ((parsers.check_minimal_indent / "") * parsers.TightListItem(enumerator))^0)
           * Cc(true) 
-          * -#((parsers.conditionally_indented_blank^0 / "") 
+          * -#((parsers.conditionally_indented_blankline^0 / "") 
               * parsers.check_minimal_indent * enumerator)
           + Ct( parsers.LooseListItem(Cb("listtype"))
-              * ((parsers.conditionally_indented_blank^0 / "") 
+              * ((parsers.conditionally_indented_blankline^0 / "") 
                 * (parsers.check_minimal_indent / "") * parsers.LooseListItem(enumerator))^0)
           * Cc(false)
           ) * Ct(Cb("listtype")) / ordered_list
@@ -28834,10 +28836,10 @@ M.extensions.fancy_lists = function()
              * (Ct( TightListItem(Cb("listtype"))
                  * ((parsers.check_minimal_indent / "") * TightListItem(enumerator))^0)
              * Cc(true) 
-             * -#((parsers.conditionally_indented_blank^0 / "") 
+             * -#((parsers.conditionally_indented_blankline^0 / "") 
                  * parsers.check_minimal_indent * enumerator)
              + Ct( LooseListItem(Cb("listtype"))
-                 * ((parsers.conditionally_indented_blank^0 / "") 
+                 * ((parsers.conditionally_indented_blankline^0 / "") 
                    * (parsers.check_minimal_indent / "") * LooseListItem(enumerator))^0)
              * Cc(false)
              ) * Ct(Cb("listtype")) / fancylist
