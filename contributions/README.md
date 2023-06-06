@@ -5,9 +5,11 @@ been contributed to the Markdown package:
 - [doctoral-thesis][] from [witiko][]: A doctoral thesis written using the Markdown package
 - [pandoc-to-markdown][] from [drehak][]: A proof-of-concept that shows how Pandoc can be integrated with the Markdown package
   - For more information, see also [the bachelor's thesis][thesis-umhg5] of [drehak][].
+- [istbq_latex][] from [danopolan][]: Document templates for the International Software Testing Qualifications Board (ISTBQ) syllabi
 
  [book-templates]: https://github.com/xvrabcov/md-templates
  [doctoral-thesis]: https://github.com/witiko/doctoral-thesis
+ [istbq_latex]: https://github.com/danopolan/istqb_latex
  [pandoc-to-markdown]: https://github.com/drehak/pandoc-to-markdown
 
  [thesis-umhg5]: https://is.muni.cz/th/umhg5/?lang=en "Generic TeX Writer for the Pandoc Document Converter"
@@ -19,6 +21,7 @@ package but cannot be directly included as Git submodules:
 
  [l4070]: https://gitlab.com/l4070
 
+ [danopolan]: https://github.com/danopolan
  [drehak]: https://github.com/drehak
  [TeXhackse]: https://github.com/TeXhackse
  [witiko]: https://github.com/witiko
