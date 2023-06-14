@@ -4,7 +4,8 @@
 
 Development:
 
-- Support OpTeX. (contributed by @olsak, #215, 109c1b5, #292)
+- Add a demo of using the Markdown package in OpTeX.
+  (contributed by @olsak, #215, 109c1b5, #292)
 
 Default Renderer Prototypes:
 

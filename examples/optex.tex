@@ -3,10 +3,12 @@
 
 % Set options of the Markdown module
 \_def \markdownOptions {
+  cacheDir="_markdown_example",
   definitionLists=true,
   fencedCode=true,
   hashEnumerators=true,
   smartEllipses=true,
+  strikeThrough=true,
 }
 
 % Set renderers of the Markdown module
@@ -21,8 +23,8 @@
 %%% TODO
 
 %% Bullet List Renderers
-\_def  \markdownRendererUlBegin       {\_begitems}
-\_def  \markdownRendererUlBeginTight  {\_begitems \_novspaces}
+\_def  \markdownRendererUlBegin       {\_begitems \_itemskipamount=\_olistskipamount}
+\_def  \markdownRendererUlBeginTight  {\_begitems}
 \_def  \markdownRendererUlItem        {\_startitem}
 \_def  \markdownRendererUlItemEnd     {\_par}
 \_def  \markdownRendererUlEnd         {\_enditems}
@@ -45,12 +47,32 @@
 %%% TODO
 
 %% Definition List Renderers
-\_def  \markdownRendererDlBegin       {\_begitems \_style d}
-\_def  \markdownRendererDlBeginTight  {\_begitems \_style d \_novspaces}
-\_def  \markdownRendererDlItem        {\_startitem}
-\_def  \markdownRendererDlItemEnd     {\_endgroup\_par}
-\_def  \markdownRendererDlDefinitionBegin {\_endgroup}
-\_def  \markdownRendererDlDefinitionEnd {\_begingroup \_nl}
+\_sdef{_item:d}{\_aftergroup\dword}
+\_def  \dword                     #1#2{{\bf#2 }\ignorespaces}
+\_def  \markdownRendererDlBegin       {\_begitems \_style d \_itemskipamount=\_olistskipamount}
+\_def  \markdownRendererDlBeginTight  {\_begitems \_style d}
+\_def  \markdownRendererDlItem        {%
+  \_begingroup
+  \_def \markdownRendererInterblockSeparator {%
+    \_par
+    \_advance\_leftskip by\_iindent
+    \_def \markdownRendererInterblockSeparator {\_par}%
+  }%
+  \_startitem
+}
+\_def  \markdownRendererDlItemEnd     {%
+  \_par
+  \_endgroup
+}
+\_def  \markdownRendererDlDefinitionBegin {}
+\_def  \markdownRendererDlDefinitionEnd #1{%
+  \_ifx #1\markdownRendererDlDefinitionBegin
+    \_firstnoindent
+    \markdownRendererInterblockSeparator
+    \_vskip\_itemskipamount
+  \_fi
+  #1%
+}
 \_def  \markdownRendererDlEnd         {\_enditems}
 \_def  \markdownRendererDlEndTight    {\_enditems}
 
@@ -85,7 +107,14 @@
 %%% TODO
 
 %% Image Renderer
-\_def  \markdownRendererImage #1#2#3#4{\_inspic{#3}}
+\_def  \markdownRendererImage #1#2#3#4{%
+  \_topinsert
+  \_centerline{\_inspic{#3}}%
+  \_cskip
+  \_caption/f #4%
+  \_par
+  \_endinsert
+}
 
 %% Image Attribute Context Renderers
 %%% TODO
@@ -116,13 +145,13 @@
 %%% TODO
 
 %% Ordered List Renderers
-\_def  \markdownRendererOlBegin       {\_begitems \_style n}
-\_def  \markdownRendererOlBeginTight  {\_begitems \_style n \_novspaces}
+\_def  \markdownRendererOlBegin       {\_begitems \_style n \_itemskipamount=\_olistskipamount}
+\_def  \markdownRendererOlBeginTight  {\_begitems \_style n}
 \_def  \markdownRendererFancyOlBegin #1#2{\markdownRendererOlBegin}
 \_def  \markdownRendererFancyOlBeginTight #1#2{\markdownRendererOlBeginTight}
 \_def  \markdownRendererOlItem        {\_startitem}
 \_def  \markdownRendererOlItemEnd     {\_par}
-\_def  \markdownRendererOlItemWithNumber #1{\_itemnum=#1\_relax \_startitem}
+\_def  \markdownRendererOlItemWithNumber #1{\_itemnum=#1 \_advance\_itemnum by -1 \_startitem}
 \_let  \markdownRendererFancyOlItem   \markdownRendererOlItem
 \_let  \markdownRendererFancyOlItemEnd \markdownRendererOlItemEnd
 \_let  \markdownRendererFancyOlItemWithNumber \markdownRendererOlItemWithNumber
@@ -155,7 +184,12 @@
 \_def  \markdownRendererUnderscore  #1{_}
 
 %% Strike-Through Renderer
-%%% TODO
+\_def  \markdownRendererStrikeThrough #1{%
+  \_setbox0=\_hbox {#1}%
+  \_leavevmode
+  \_rlap {\raise.5ex \_hbox to \_wd0 {\_hfil \_hrulefill \_hfil}}%
+  \_box0
+}
 
 %% Subscript Renderer
 %%% TODO
@@ -170,7 +204,13 @@
 %%% TODO
 
 %% Thematic Break Renderer
-\_def  \markdownRendererThematicBreak {\_hrule}
+\_def  \markdownRendererThematicBreak {%
+  \_vskip 0.5\_baselineskip
+  \_hrule
+  \_par
+  \_vskip 0.5\_baselineskip
+  \_firstnoindent
+}
 
 %% Tickbox Renderers
 %%% TODO
@@ -206,19 +246,22 @@
   \_catcode`\%=12\_relax
   \_catcode`\#=12\_relax
   \_directlua {
-    local input = "\_luaescapestring{#1}"
+    % Prepare a table of options.
     local defaultOptions = {\markdownOptions}
-    local options = {\_markdownParams}
-    setmetatable(
-      options,
-      {
-        __index__ = function(_, key)
-          local value = defaultOptions[key]
-          return value
-        end
-      }
-    )
+    local currentOptions = {\_markdownParams}
+    local options = {}
+    for k,v in pairs(defaultOptions) do options[k] = v end
+    for k,v in pairs(currentOptions) do options[k] = v end
+    % Ensure that the cache directory exists.
+    if options.cacheDir then
+      local lfs = require("lfs")
+      if not lfs.isdir(options.cacheDir) then
+        assert(lfs.mkdir(options.cacheDir))
+      end
+    end
+    % Convert Markdown to TeX and print it.
     local convert = markdown.new(options)
+    local input = "\_luaescapestring{#1}"
     local output = convert(input)
     tex.print(output)
   }%
@@ -265,9 +308,7 @@ Hello World! \bye
 
 This is a bullet list:
 
-* The first item of a bullet list
-
-  that spans several paragraphs,
+* The first item of a bullet list,
 
 * the second item of a bullet list,
 
@@ -281,29 +322,15 @@ This is a compact bullet list:
 
 This is an ordered list:
 
-5. The first item of an ordered list
-
-   that spans several paragraphs,
+5. The first item of an ordered list,
 
 6. the second item of an ordered list,
 
 7. the third item of an ordered list.
 
-This is a fancy ordered list:
-
-e) The first item of an ordered list
-
-   that spans several paragraphs,
-
-f) the second item of an ordered list,
-
-g) the third item of an ordered list.
-
 This is an ordered list using hash enumerators:
 
-#. The first item of an ordered list
-
-   that spans several paragraphs,
+#. The first item of an ordered list,
 
 #. the second item of an ordered list,
 
@@ -320,12 +347,6 @@ This is a compact ordered list using hash enumerators:
 #. The first item of an ordered list,
 #. the second item of an ordered list,
 #. the third item of an ordered list.
-
-This is a compact fancy ordered list using hash enumerators:
-
-#) The first item of an ordered list,
-#) the second item of an ordered list,
-#) the third item of an ordered list.
 
 This is a definition list:
 
