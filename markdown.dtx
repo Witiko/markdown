@@ -11994,6 +11994,194 @@ following text:
 %
 % \begin{markdown}
 
+#### Citation Renderers
+The \mdef{markdownRendererCite} macro represents a string of one or more
+parenthetical citations. This macro will only be produced, when the
+\Opt{citations} option is enabled. The macro receives the parameter
+`{`\meta{number of citations}`}` followed by \meta{suppress author}
+`{`\meta{prenote}`}{`\meta{postnote}`}{`\meta{name}`}` repeated
+\meta{number of citations} times. The \meta{suppress author} parameter is
+either the token `-`, when the author's name is to be suppressed, or `+`
+otherwise.
+
+% \end{markdown}
+%
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[citations]{markdown}
+\newcount\citationsCounter
+\newcount\citationsTotal
+\makeatletter
+\def\citations#1#2#3#4{%
+  a parenthesized citation \emph{#4}
+  \advance\citationsCounter by 1\relax
+  \ifx\relax#2\relax
+    \ifx\relax#3\relax\else
+      with a postfix \emph{#3}%
+    \fi
+  \else
+    with a prefix \emph{#2}%
+    \ifx\relax#3\relax\else
+      \ and a postfix \emph{#3}%
+    \fi
+  \fi
+  \ifnum\citationsCounter>\citationsTotal\relax
+    .%
+    \expandafter\@gobble
+  \else
+    , and
+  \fi\citations}
+\makeatother
+\markdownSetup{
+  renderers = {
+    cite = {%
+      \citationsCounter=1%
+      \citationsTotal=#1%
+      This is
+      \expandafter\citations
+    },
+  },
+}
+\begin{document}
+\begin{markdown}
+[see @abrahams90, pp. 12; @eijkhout91, pp. 34]
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> This is a parenthesized citation *abrahams90* with a prefix see
+> and a postfix *pp. 12*, and a citation *eijkhout91* with a
+> postfix *pp. 34*.
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererCite{%
+  \markdownRendererCitePrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { cite }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { cite }
+  { 1 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
+The \mdef{markdownRendererTextCite} macro represents a string of one or more
+text citations. This macro will only be produced, when the
+\Opt{citations} option is enabled. The macro receives parameters in the same 
+format as the \mref{markdownRendererCite} macro.
+
+% \end{markdown}
+%
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[citations]{markdown}
+\newcount\citationsCounter
+\newcount\citationsTotal
+\makeatletter
+\def\citations#1#2#3#4{%
+  a text citation \emph{#4}
+  \advance\citationsCounter by 1\relax
+  \ifx\relax#2\relax
+    \ifx\relax#3\relax\else
+      with a postfix \emph{#3}%
+    \fi
+  \else
+    with a prefix \emph{#2}%
+    \ifx\relax#3\relax\else
+      \ and a postfix \emph{#3}%
+    \fi
+  \fi
+  \ifnum\citationsCounter>\citationsTotal\relax
+    .%
+    \expandafter\@gobble
+  \else
+    , and
+  \fi\citations}
+\makeatother
+\markdownSetup{
+  renderers = {
+    textCite = {%
+      \citationsCounter=1%
+      \citationsTotal=#1%
+      This is
+      \expandafter\citations
+    },
+  },
+}
+\begin{document}
+\begin{markdown}
+@abrahams90 [pp. 12; also @eijkhout91]
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> This is a text citation *abrahams90* with a postfix *pp. 12*,
+> and a citation *eijkhout91* with a prefix *also*.
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererTextCite{%
+  \markdownRendererTextCitePrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { textCite }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { textCite }
+  { 1 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
 #### Code Block Renderers
 The \mdef{markdownRendererInputVerbatim} macro represents a code
 block. The macro receives a single argument that corresponds to the
@@ -13363,6 +13551,39 @@ span of text.
 % \end{markdown}
 %
 % \iffalse
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererEmphasis{%
+  \markdownRendererEmphasisPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { emphasis }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { emphasis }
+  { 1 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
+The \mdef{markdownRendererStrongEmphasis} macro represents a strongly
+emphasized span of text. The macro receives a single argument that
+corresponds to the emphasized span of text.
+
+% \end{markdown}
+%
+% \iffalse
 
 ##### Plain \TeX{} Example {.unnumbered}
 
@@ -13449,39 +13670,6 @@ following text:
 >
 > This is **strong emphasis**.
 
-%</manual-tokens>
-%<*tex>
-% \fi
-%
-%  \begin{macrocode}
-\def\markdownRendererEmphasis{%
-  \markdownRendererEmphasisPrototype}%
-\ExplSyntaxOn
-\seq_gput_right:Nn
-  \g_@@_renderers_seq
-  { emphasis }
-\prop_gput:Nnn
-  \g_@@_renderer_arities_prop
-  { emphasis }
-  { 1 }
-\ExplSyntaxOff
-%    \end{macrocode}
-% \par
-%
-% \iffalse
-%</tex>
-%<*manual-tokens>
-% \fi
-%
-% \begin{markdown}
-
-The \mdef{markdownRendererStrongEmphasis} macro represents a strongly
-emphasized span of text. The macro receives a single argument that
-corresponds to the emphasized span of text.
-
-% \end{markdown}
-%
-% \iffalse
 %</manual-tokens>
 %<*tex>
 % \fi
@@ -14645,7 +14833,7 @@ following text:
 %
 % \begin{markdown}
 
-#### Line Block Renderer
+#### Line Block Renderers
 The following macros are only produced, when the \Opt{lineBlocks} option
 is enabled.
 
@@ -16271,103 +16459,6 @@ following text:
 %
 % \begin{markdown}
 
-#### Parenthesized Citations Renderer
-The \mdef{markdownRendererCite} macro represents a string of one or more
-parenthetical citations. This macro will only be produced, when the
-\Opt{citations} option is enabled. The macro receives the parameter
-`{`\meta{number of citations}`}` followed by \meta{suppress author}
-`{`\meta{prenote}`}{`\meta{postnote}`}{`\meta{name}`}` repeated
-\meta{number of citations} times. The \meta{suppress author} parameter is
-either the token `-`, when the author's name is to be suppressed, or `+`
-otherwise.
-
-% \end{markdown}
-%
-% \iffalse
-
-##### \LaTeX{} Example {.unnumbered}
-
-Using a text editor, create a text document named `document.tex` with the
-following content:
-``` tex
-\documentclass{article}
-\usepackage[citations]{markdown}
-\newcount\citationsCounter
-\newcount\citationsTotal
-\makeatletter
-\def\citations#1#2#3#4{%
-  a parenthesized citation \emph{#4}
-  \advance\citationsCounter by 1\relax
-  \ifx\relax#2\relax
-    \ifx\relax#3\relax\else
-      with a postfix \emph{#3}%
-    \fi
-  \else
-    with a prefix \emph{#2}%
-    \ifx\relax#3\relax\else
-      \ and a postfix \emph{#3}%
-    \fi
-  \fi
-  \ifnum\citationsCounter>\citationsTotal\relax
-    .%
-    \expandafter\@gobble
-  \else
-    , and
-  \fi\citations}
-\makeatother
-\markdownSetup{
-  renderers = {
-    cite = {%
-      \citationsCounter=1%
-      \citationsTotal=#1%
-      This is
-      \expandafter\citations
-    },
-  },
-}
-\begin{document}
-\begin{markdown}
-[see @abrahams90, pp. 12; @eijkhout91, pp. 34]
-\end{markdown}
-\end{document}
-```````
-Next, invoke LuaTeX from the terminal:
-``` sh
-lualatex document.tex
-``````
-A PDF document named `document.pdf` should be produced and contain the
-following text:
-
-> This is a parenthesized citation *abrahams90* with a prefix see
-> and a postfix *pp. 12*, and a citation *eijkhout91* with a
-> postfix *pp. 34*.
-
-%</manual-tokens>
-%<*tex>
-% \fi
-%
-%  \begin{macrocode}
-\def\markdownRendererCite{%
-  \markdownRendererCitePrototype}%
-\ExplSyntaxOn
-\seq_gput_right:Nn
-  \g_@@_renderers_seq
-  { cite }
-\prop_gput:Nnn
-  \g_@@_renderer_arities_prop
-  { cite }
-  { 1 }
-\ExplSyntaxOff
-%    \end{macrocode}
-% \par
-%
-% \iffalse
-%</tex>
-%<*manual-tokens>
-% \fi
-%
-% \begin{markdown}
-
 #### Raw Content Renderers
 The \mdef{markdownRendererInputRawInline} macro represents an inline raw span.
 The macro receives two arguments: the filename of a file contaning the inline
@@ -17370,98 +17461,6 @@ following text:
 \prop_gput:Nnn
   \g_@@_renderer_arities_prop
   { displayMath }
-  { 1 }
-\ExplSyntaxOff
-%    \end{macrocode}
-% \par
-%
-% \iffalse
-%</tex>
-%<*manual-tokens>
-% \fi
-%
-% \begin{markdown}
-
-#### Text Citations Renderer
-The \mdef{markdownRendererTextCite} macro represents a string of one or more
-text citations. This macro will only be produced, when the
-\Opt{citations} option is enabled. The macro receives parameters in the same 
-format as the \mref{markdownRendererCite} macro.
-
-% \end{markdown}
-%
-% \iffalse
-
-##### \LaTeX{} Example {.unnumbered}
-
-Using a text editor, create a text document named `document.tex` with the
-following content:
-``` tex
-\documentclass{article}
-\usepackage[citations]{markdown}
-\newcount\citationsCounter
-\newcount\citationsTotal
-\makeatletter
-\def\citations#1#2#3#4{%
-  a text citation \emph{#4}
-  \advance\citationsCounter by 1\relax
-  \ifx\relax#2\relax
-    \ifx\relax#3\relax\else
-      with a postfix \emph{#3}%
-    \fi
-  \else
-    with a prefix \emph{#2}%
-    \ifx\relax#3\relax\else
-      \ and a postfix \emph{#3}%
-    \fi
-  \fi
-  \ifnum\citationsCounter>\citationsTotal\relax
-    .%
-    \expandafter\@gobble
-  \else
-    , and
-  \fi\citations}
-\makeatother
-\markdownSetup{
-  renderers = {
-    textCite = {%
-      \citationsCounter=1%
-      \citationsTotal=#1%
-      This is
-      \expandafter\citations
-    },
-  },
-}
-\begin{document}
-\begin{markdown}
-@abrahams90 [pp. 12; also @eijkhout91]
-\end{markdown}
-\end{document}
-```````
-Next, invoke LuaTeX from the terminal:
-``` sh
-lualatex document.tex
-``````
-A PDF document named `document.pdf` should be produced and contain the
-following text:
-
-> This is a text citation *abrahams90* with a postfix *pp. 12*,
-> and a citation *eijkhout91* with a prefix *also*.
-
-%</manual-tokens>
-%<*tex>
-% \fi
-%
-%  \begin{macrocode}
-\def\markdownRendererTextCite{%
-  \markdownRendererTextCitePrototype}%
-\ExplSyntaxOn
-\seq_gput_right:Nn
-  \g_@@_renderers_seq
-  { textCite }
-\prop_gput:Nnn
-  \g_@@_renderer_arities_prop
-  { textCite }
   { 1 }
 \ExplSyntaxOff
 %    \end{macrocode}
@@ -30973,25 +30972,10 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-% TODO: Remove the command definition in TeX Live 2021.
-\providecommand\IfFormatAtLeastTF{\@ifl@t@r\fmtversion}
 \markdownSetup{
   rendererPrototypes = {
     jekyllDataEnd = {
-%     TODO: Remove the else branch in TeX Live 2021.
-      \IfFormatAtLeastTF
-        { 2020-10-01 }
-        { \AddToHook{begindocument/end}{\maketitle} }
-        {
-          \ifx\@onlypreamble\@notprerr
-            % We are in the document
-            \maketitle
-          \else
-            % We are in the preamble
-            \RequirePackage{etoolbox}
-            \AfterEndPreamble{\maketitle}
-          \fi
-        }
+      \AddToHook{begindocument/end}{\maketitle}
     },
   },
 }

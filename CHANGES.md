@@ -2,10 +2,16 @@
 
 ## 3.0.0
 
+Development:
+
+- Add a demo of using the Markdown package in OpTeX.
+  (contributed by @olsak, #215, 109c1b5, #292)
+
 Default Renderer Prototypes:
 
 - Do not force line breaks after high-level headings in LaTeX,
-  but allow the text to follow the heading on the same line. (df8562c)
+  but allow the text to follow the heading on the same line.
+  (df8562c)
 
 Fixes:
 

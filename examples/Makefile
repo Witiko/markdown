@@ -30,7 +30,8 @@ LUACLI_OPTIONS=\
 OUTPUT=\
   context-mkiv.pdf \
   latex-pdftex.pdf latex-xetex.pdf latex-luatex.pdf \
-  latex-tex4ht.html latex-tex4ht.css
+  latex-tex4ht.html latex-tex4ht.css \
+  optex.pdf
 
 # This is the default pseudo-target.
 all: $(OUTPUT)
@@ -57,7 +58,11 @@ latex-luatex.pdf: latex-luatex.tex example.tex
 
 # This target typesets the LaTeX example using TeX4ht.
 latex-tex4ht.html latex-tex4ht.css: latex-tex4ht.tex example.tex
-	make4ht --shell-escape latex-tex4ht fn-in
+	make4ht --shell-escape $< fn-in
+
+# This target typesets the OpTeX example.
+optex.pdf: optex.tex
+	optex $<
 
 # This target converts the markdown example to a plain TeX representation
 # using the Lua command-line interface for the Markdown package.
