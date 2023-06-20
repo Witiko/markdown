@@ -41,9 +41,7 @@ This is a table:
 
 This is a bullet list:
 
-* The first item of a bullet list
-
-  that spans several paragraphs,
+* The first item of a bullet list,
 
 * the second item of a bullet list,
 
@@ -57,9 +55,7 @@ This is a compact bullet list:
 
 This is an ordered list:
 
-5. The first item of an ordered list
-
-   that spans several paragraphs,
+5. The first item of an ordered list,
 
 6. the second item of an ordered list,
 
@@ -67,9 +63,7 @@ This is an ordered list:
 
 This is a fancy ordered list:
 
-e) The first item of an ordered list
-
-   that spans several paragraphs,
+e) The first item of an ordered list,
 
 f) the second item of an ordered list,
 
@@ -77,9 +71,7 @@ g) the third item of an ordered list.
 
 This is an ordered list using hash enumerators:
 
-#. The first item of an ordered list
-
-   that spans several paragraphs,
+#. The first item of an ordered list,
 
 #. the second item of an ordered list,
 

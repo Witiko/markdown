@@ -13,3 +13,6 @@
 [submodule "contributions/MarkX"]
 	path = contributions/MarkX
 	url = https://github.com/lostenderman/MarkX
+[submodule "contributions/istqb_latex"]
+	path = contributions/istqb_latex
+	url = https://github.com/danopolan/istqb_latex.git
