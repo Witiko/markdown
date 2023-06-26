@@ -2455,7 +2455,7 @@ defaultOptions.eagerCache = true
 %
 :    true
 
-     :  Conversion functions produced by the function \luamdef{new}`(options)`
+     :  Conversion functions produced by the function \luamref{new}`(options)`
         will be cached in an LRU cache of size 1 keyed by `options`. This is
         more time- and space-efficient than always producing a new conversion
         function but may expose bugs related to the idempotence of conversion
@@ -2466,7 +2466,7 @@ defaultOptions.eagerCache = true
 
 :    false
 
-     :  Every call to the function \luamdef{new}`(options)` will produce a new
+     :  Every call to the function \luamref{new}`(options)` will produce a new
         conversion function that will not be cached. This is slower than
         caching conversion functions and may expose bugs related to memory
         leaks in the creation of conversion functions, see also issue [#226][1].
