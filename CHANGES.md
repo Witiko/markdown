@@ -6,6 +6,8 @@ Development:
 
 - Add a demo of using the Markdown package in OpTeX.
   (contributed by @olsak, #215, 109c1b5, #292)
+- Comply with CommonMark and increment `grammar_version` to `3`.
+  (contributed by @lostenderman, #226)
 
 Default Renderer Prototypes:
 
@@ -218,8 +220,7 @@ Development:
   - Rename the `footnotes` and `inlineFootnotes` options to `notes` and
     `inlineNotes`.
   - Rename the `HorizontalRule` rule to `ThematicBreak` and increment
-    `grammar_version` to `2`. This change is not backwards-compatible with the
-    `grammar_version` of `1`.
+    `grammar_version` to `2`.
 - Add `\markdownEscape` macro that inputs a TeX document in the middle of a
   markdown document fragment. (1478f7b)
 - Add support for raw attributes. (#173, #202)
