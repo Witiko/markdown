@@ -30453,17 +30453,20 @@ function M.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   if options.singletonCache and singletonCache.convert then
-    local singletonCacheHit = true
-    for k, _ in pairs(defaultOptions) do
-      if singletonCache.options[k] ~= options[k] then
-        singletonCacheHit = false
-        break
+    for k, v in pairs(defaultOptions) do
+      if type(v) == "table" then
+        for i = 1, math.max(#singletonCache.options[k], #options[k]) do
+          if singletonCache.options[k][i] ~= options[k][i] then
+            goto miss
+          end
+        end
+      elseif singletonCache.options[k] ~= options[k] then
+        goto miss
       end
     end
-    if singletonCacheHit then
-      return singletonCache.convert
-    end
+    return singletonCache.convert
   end
+  ::miss::
 %    \end{macrocode}
 % \par
 % \begin{markdown}
