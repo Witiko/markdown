@@ -14,6 +14,8 @@ on:
     - cron: '30 4 * * MON'
 env:
   DEBIAN_FRONTEND: noninteractive
+permissions:
+  contents: write
 jobs:
   shellcheck:
     name: Shellcheck
