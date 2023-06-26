@@ -97,6 +97,7 @@ jobs:
       - name: Run unit tests
         run: docker run --rm -v "$PWD":/git-repo -w /git-repo witiko/markdown:${{ matrix.texlive }} make test
       - name: Build distribution archives
+        if: matrix.texlive == 'latest'
         run: docker run --rm -v "$PWD":/git-repo -w /git-repo witiko/markdown:${{ matrix.texlive }} make dist gh-pages
       - name: Upload artifact markdown.tds.zip
         if: matrix.texlive == 'latest'
