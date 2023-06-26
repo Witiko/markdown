@@ -2337,6 +2337,209 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
 % \fi
 % \begin{markdown}
 %
+%### General Behavior
+%
+% \end{markdown}
+% \par
+% \iffalse
+
+#### Option `eagerCache`
+
+`eagerCache` (default value: `true`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[true]{eagerCache}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Converted markdown documents will be cached in \Opt{cacheDir}. This can be
+        useful for post-processing the converted documents and for recovering
+        historical versions of the documents from the cache.  However, it also
+        produces a large number of auxiliary files on the disk and obscures the
+        output of the Lua command-line interface when it is used for plumbing.
+
+        This behavior will always be used if the \Opt{finalizeCache} option is
+        enabled.
+
+:    false
+
+     :  Converted markdown documents will not be cached. This decreases the number
+        of auxiliary files that we produce and makes it easier to use the Lua
+        command-line interface for plumbing.
+
+        This behavior will only be used when the \Opt{finalizeCache} option is
+        disabled. Recursive nesting of markdown document fragments is undefined
+        behavior when \Opt{eagerCache} is disabled.
+
+% \end{markdown}
+% \iffalse
+
+##### Lua CLI Example {.unnumbered}
+
+Using a text editor, create a text document named `hello.md` with the
+following content:
+``` md
+Hello *world*!
+``````
+Next, invoke LuaTeX from the terminal with the \Opt{eagerCache} option
+disabled:
+``` sh
+texlua ⟨CLI pathname⟩ eagerCache=false -- hello.md hello.tex
+```````
+where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
+such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
+`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
+systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
+script file using [Kpathsea][].
+
+A \TeX{} document named `hello.tex` should be produced and contain the
+following code:
+``` tex
+Hello \markdownRendererEmphasis{world}!\relax
+```
+
+***
+
+Invoke LuaTeX from the terminal again, this time with the \Opt{eagerCache}
+option enabled:
+
+``` tex
+texlua ⟨CLI pathname⟩ eagerCache=true -- hello.md hello.tex
+```
+
+A \TeX{} document named `hello.tex` should be produced and contain the
+following code:
+
+``` tex
+\input ./⟨hash⟩.md.tex\relax
+```
+
+Additionally, a \TeX{} document named `⟨hash⟩.md.tex` should be produced and
+contain the following code:
+
+``` tex
+Hello \markdownRendererEmphasis{world}!\relax
+```
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { eagerCache }
+  { boolean }
+  { true }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.eagerCache = true
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
+#### Option `singletonCache`
+
+`singletonCache` (default value: `true`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[true]{singletonCache}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Conversion functions produced by the function \luamdef{new}`(options)`
+        will be cached in an LRU cache of size 1 keyed by `options`. This is
+        more time- and space-efficient than always producing a new conversion
+        function but may expose bugs related to the idempotence of conversion
+        functions.
+
+        This has been the default behavior since version 3.0.0 of the Markdown
+        package.
+
+:    false
+
+     :  Every call to the function \luamdef{new}`(options)` will produce a new
+        conversion function that will not be cached. This is slower than
+        caching conversion functions and may expose bugs related to memory
+        leaks in the creation of conversion functions, see also issue [#226][1].
+
+        This was the default behavior until version 3.0.0 of the Markdown package.
+
+ [1]: https://github.com/witiko/markdown/pull/226#issuecomment-1599641634
+
+% \end{markdown}
+% \iffalse
+
+##### Lua Module Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\input markdown
+\directlua{
+  local markdown = require("markdown")
+  local convert1 = markdown.new({})
+  local convert2 = markdown.new({singletonCache=false})
+  local convert3 = markdown.new({singletonCache=true})
+  local newline = [[^^J^^J]]
+  tex.print(tostring(convert1) .. ", ")
+  tex.print(tostring(convert2) .. ", ")
+  tex.print(tostring(convert3))
+}
+\bye
+```````
+Then, invoke LuaTeX from the terminal:
+``` sh
+luatex document.tex
+```````
+A PDF document named `document.pdf` should be produced and contain the following text:
+
+> function: 0x1a4a038, function: 0x1a52b18, function: 0x1a4a038
+
+As you can see, the caching causes `convert1` and `convert3` to be the same
+conversion function.
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { singletonCache }
+  { boolean }
+  { true }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.singletonCache = true
+%    \end{macrocode}
+% \iffalse
+%</lua,lua-cli>
+%<*lua>
+% \fi
+%  \begin{macrocode}
+local singletonCache = {
+  convert = nil,
+  options = nil,
+}
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua>
+%<*manual-options>
+% \fi
+% \begin{markdown}
+%
 %### File and Directory Names
 %
 % \end{markdown}
@@ -5148,107 +5351,6 @@ following text:
 % \fi
 %  \begin{macrocode}
 defaultOptions.definitionLists = false
-%    \end{macrocode}
-% \par
-% \iffalse
-%</lua,lua-cli>
-%<*manual-options>
-
-#### Option `eagerCache`
-
-`eagerCache` (default value: `true`)
-
-% \fi
-% \begin{markdown}
-%
-% \Optitem[true]{eagerCache}{\opt{true}, \opt{false}}
-%
-:    true
-
-     :  Converted markdown documents will be cached in \Opt{cacheDir}. This can be
-        useful for post-processing the converted documents and for recovering
-        historical versions of the documents from the cache.  However, it also
-        produces a large number of auxiliary files on the disk and obscures the
-        output of the Lua command-line interface when it is used for plumbing.
-
-        This behavior will always be used if the \Opt{finalizeCache} option is
-        enabled.
-
-:    false
-
-     :  Converted markdown documents will not be cached. This decreases the number
-        of auxiliary files that we produce and makes it easier to use the Lua
-        command-line interface for plumbing.
-
-        This behavior will only be used when the \Opt{finalizeCache} option is
-        disabled. Recursive nesting of markdown document fragments is undefined
-        behavior when \Opt{eagerCache} is disabled.
-
-% \end{markdown}
-% \iffalse
-
-##### Lua Module Example {.unnumbered}
-
-Using a text editor, create a text document named `hello.md` with the
-following content:
-``` md
-Hello *world*!
-``````
-Next, invoke LuaTeX from the terminal with the \Opt{eagerCache} option
-disabled:
-``` sh
-texlua ⟨CLI pathname⟩ eagerCache=false -- hello.md hello.tex
-```````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
-
-A \TeX{} document named `hello.tex` should be produced and contain the
-following code:
-``` tex
-Hello \markdownRendererEmphasis{world}!\relax
-```
-
-***
-
-Invoke LuaTeX from the terminal again, this time with the \Opt{eagerCache}
-option enabled:
-
-``` tex
-texlua ⟨CLI pathname⟩ eagerCache=true -- hello.md hello.tex
-```
-
-A \TeX{} document named `hello.tex` should be produced and contain the
-following code:
-
-``` tex
-\input ./⟨hash⟩.md.tex\relax
-```
-
-Additionally, a \TeX{} document named `⟨hash⟩.md.tex` should be produced and
-contain the following code:
-
-``` tex
-Hello \markdownRendererEmphasis{world}!\relax
-```
-
-%</manual-options>
-%<*tex>
-% \fi
-%  \begin{macrocode}
-\@@_add_lua_option:nnn
-  { eagerCache }
-  { boolean }
-  { true }
-%    \end{macrocode}
-% \iffalse
-%</tex>
-%<*lua,lua-cli>
-% \fi
-%  \begin{macrocode}
-defaultOptions.eagerCache = true
 %    \end{macrocode}
 % \par
 % \iffalse
@@ -30342,6 +30444,27 @@ function M.new(options)
 % \par
 % \begin{markdown}
 %
+% If the singleton cache contains a conversion function for the same `options`,
+% reuse it.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  if options.singletonCache and singletonCache.convert then
+    local singletonCacheHit = true
+    for k, _ in pairs(defaultOptions) do
+      if singletonCache.options[k] ~= options[k] then
+        singletonCacheHit = false
+        break
+      end
+    end
+    if singletonCacheHit then
+      return singletonCache.convert
+    end
+  end
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
 % Apply built-in syntax extensions based on `options`.
 %
 % \end{markdown}
@@ -30568,14 +30691,40 @@ function M.new(options)
 % \par
 % \begin{markdown}
 %
-% Produce and return a conversion function from markdown to plain \TeX.
+% Produce a conversion function from markdown to plain \TeX.
 %
 % \end{markdown}
 %  \begin{macrocode}
   local writer = M.writer.new(options)
   local reader = M.reader.new(writer, options)
   local convert = reader.finalize_grammar(extensions)
-
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Update the singleton cache.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  if options.singletonCache then
+    local singletonCacheOptions = {}
+    for k, v in pairs(options) do
+      singletonCacheOptions[k] = v
+    end
+    setmetatable(singletonCacheOptions,
+      { __index = function (_, key)
+        return defaultOptions[key] end })
+    singletonCache.options = singletonCacheOptions
+    singletonCache.convert = convert
+  end
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Return the conversion function from markdown to plain \TeX.
+%
+% \end{markdown}
+%  \begin{macrocode}
   return convert
 end
 
