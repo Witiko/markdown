@@ -76,7 +76,7 @@ jobs:
           fetch-depth: 0
           submodules: true
       - name: Use only LuaTeX to unit-test pull requests
-        if: github.ref != 'refs/heads/main'
+        # if: github.ref != 'refs/heads/main'
         run: |
           set -ex
           shopt -s extglob
