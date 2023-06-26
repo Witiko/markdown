@@ -1084,23 +1084,7 @@ local lpeg = require("lpeg")
 %
 % \end{markdown}
 %  \begin{macrocode}
-local unicode
-(function()
-  local ran_ok
-  ran_ok, unicode = pcall(require, "unicode")
-%    \end{macrocode}
-% \begin{markdown}
-%
-% If the Selene Unicode library is unavailable (could be because we are using
-% LuaMeta\TeX) and we are using Lua${}\geq{}$5.3, we will use the built-in
-% support for Unicode.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  if not ran_ok then
-    unicode = {utf8 = {char=utf8.char}}
-  end
-end)()
+local unicode = require("unicode")
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -1140,21 +1124,9 @@ local md5 = require("md5");
 %  \begin{macrocode}
   local should_initialize = package.loaded.kpse == nil
                        or tex.initialize ~= nil
-  local ran_ok
-  ran_ok, kpse = pcall(require, "kpse")
-  if ran_ok and should_initialize then
+  kpse = require("kpse")
+  if should_initialize then
     kpse.set_program_name("luatex")
-  end
-%    \end{macrocode}
-% \begin{markdown}
-%
-% If the \pkg{Kpathsea} library is unavailable, we will look up files only
-% in the current working directory.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  if not ran_ok then
-    kpse = {lookup = function(f, _) return f end}
   end
 end)()
 %    \end{macrocode}
@@ -1171,35 +1143,7 @@ end)()
 %
 % \end{markdown}
 %  \begin{macrocode}
-local uni_case
-(function()
-  local ran_ok
-  ran_ok, uni_case = pcall(require, "lua-uni-case")
-%    \end{macrocode}
-% \begin{markdown}
-%
-% If the lua-uni-algos library is unavailable but the Selene Unicode library
-% is available, we will use its Unicode lower-casing support instead of
-% the more proper case-folding.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  if not ran_ok then
-    if unicode.utf8.lower then
-      uni_case = {casefold = unicode.utf8.lower}
-    else
-%    \end{macrocode}
-% \begin{markdown}
-%
-% If the Selene Unicode library is also unavailable, we will defer to using
-% ASCII lower-casing.
-%
-% \end{markdown}
-%  \begin{macrocode}
-      uni_case = {casefold = string.lower}
-    end
-  end
-end)()
+local uni_case = require("lua-uni-case")
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -1515,8 +1459,8 @@ Using a text editor, create a text document named `hello.lua` with the
 following content:
 ``` lua
 #!/usr/bin/env texlua
-local ran_ok, kpse = pcall(require, "kpse")
-if ran_ok then kpse.set_program_name("luatex") end
+local kpse = require("kpse")
+kpse.set_program_name("luatex")
 local markdown = require("markdown")
 local convert = markdown.new()
 print(convert("Hello *world*!"))
@@ -1837,8 +1781,8 @@ Using a text editor, create a text document named `example.lua` with the
 following content:
 ``` lua
 #!/usr/bin/env texlua
-local ran_ok, kpse = pcall(require, "kpse")
-if ran_ok then kpse.set_program_name("luatex") end
+local kpse = require("kpse")
+kpse.set_program_name("luatex")
 local markdown = require("markdown")
 local input, convert_safe, convert_unsafe, paragraph
 
@@ -30782,9 +30726,8 @@ local kpse
 (function()
   local should_initialize = package.loaded.kpse == nil
                        or tex.initialize ~= nil
-  local ran_ok
-  ran_ok, kpse = pcall(require, "kpse")
-  if ran_ok and should_initialize then
+  kpse = require("kpse")
+  if should_initialize then
     kpse.set_program_name("luatex")
   end
 end)()
@@ -31772,9 +31715,8 @@ end
         (function()
           local should_initialize = package.loaded.kpse == nil
                                or tex.initialize
-          local ran_ok
-          ran_ok, kpse = pcall(require, "kpse")
-          if ran_ok and should_initialize then
+          kpse = require("kpse")
+          if should_initialize then
             kpse.set_program_name("luatex")
           end
         end)()

@@ -13,6 +13,10 @@ Default Renderer Prototypes:
   but allow the text to follow the heading on the same line.
   (df8562c)
 
+Deprecation:
+
+- Remove support for LuaMetaTeX. (#226)
+
 Fixes:
 
 - Allow references in fenced divs. (#307, jgm/lunamark#69)
