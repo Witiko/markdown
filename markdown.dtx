@@ -31956,10 +31956,11 @@ end
         print(convert(input))}%
 %    \end{macrocode}
 % \begin{markdown}
-% In case we were finalizing the frozen cache, increment \Opt{frozenCacheCounter}.
+% If we are finalizing the frozen cache, increment \Opt{frozenCacheCounter}.
 % \end{markdown}
 %  \begin{macrocode}
-      |global|advance|markdownOptionFrozenCacheCounter by 1|relax
+      |markdownIfOption{finalizeCache}{%
+        |global|advance|markdownOptionFrozenCacheCounter by 1|relax}{}%
     }%
     |endgroup
   }%
