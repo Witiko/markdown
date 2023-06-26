@@ -4288,7 +4288,7 @@ following content:
   local newline = [[^^J^^J]]
   local convert, input
 
-  convert = markdown.new(breakableBlockquotes = false)
+  convert = markdown.new({breakableBlockquotes = false})
   input = "> A single"     .. newline .. newline ..
           "> block quote." .. newline
   tex.sprint(convert(input))
@@ -12540,8 +12540,8 @@ filename of a file contaning the code block contents.
 The \mdef{markdownRendererInputFencedCode} macro represents a fenced code
 block. This macro will only be produced, when the \Opt{fencedCode} option is
 enabled. The macro receives three arguments that correspond to the filename of
-a file contaning the code block contents, the fully escaped code fence info string 
-that can be directly typeset, and the raw code fence info string that can be used 
+a file contaning the code block contents, the fully escaped code fence infostring 
+that can be directly typeset, and the raw code fence infostring that can be used 
 outside typesetting.
 
 % \end{markdown}
@@ -23720,7 +23720,7 @@ function M.writer.new(options)
 % - \luamdef{writer->math} transforms a math span.
 % - \luamdef{writer->identifier} transforms an input programmatic identifier.
 % - \luamdef{writer->uri} transforms an input \acro{uri}.
-% - \luamdef{writer->infostring} transforms a fence code info string.
+% - \luamdef{writer->infostring} transforms a fence code infostring.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -24539,13 +24539,12 @@ local function update_indent_table(indent_table, new_indent, add)
     indent_table.indents = {}
   end
 
-  local indent_table_indents = indent_table.indents
 
   if add then
-    indent_table_indents[#indent_table_indents + 1] = new_indent
+    indent_table.indents[#indent_table.indents + 1] = new_indent
   else
-    if indent_table_indents[#indent_table_indents].name == new_indent.name then
-      indent_table_indents[#indent_table_indents] = nil
+    if indent_table.indents[#indent_table.indents].name == new_indent.name then
+      indent_table.indents[#indent_table.indents] = nil
     end
   end
 
@@ -24565,7 +24564,7 @@ local function remove_indent(name)
     return true, indent_table
   end
 
-  return Cg(Cmt( Cb("indent_info"), remove_indent_level), "indent_info")
+  return Cg(Cmt(Cb("indent_info"), remove_indent_level), "indent_info")
 end
 
 %  \end{macrocode}
@@ -25043,7 +25042,7 @@ end
 %  \end{macrocode}
 % \begin{markdown}
 %
-% Stores or restores `is_freezing` a trail from indent table `indent_table`.
+% Stores or restores an `is_freezing` trail from indent table `indent_table`.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -27891,8 +27890,12 @@ end
 % \end{markdown}
 %  \begin{macrocode}
     self.initialize_named_group = function(name, value)
+      local pattern = Ct("")
+      if value ~= nil then
+        pattern = pattern / value
+      end
       syntax.InitializeState = syntax.InitializeState
-                             * Cg(Ct("") / value, name)
+                             * Cg(pattern, name)
     end
 %    \end{macrocode}
 % \par
@@ -27902,7 +27905,7 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-    syntax.InitializeState = syntax.InitializeState * Cg(Ct(""), "indent_info")
+    self.initialize_named_group("indent_info")
 %    \end{macrocode}
 % \par
 % \begin{markdown}
