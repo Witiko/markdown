@@ -112,7 +112,7 @@ In fact, this is how we automatically produce
 Peek under the hood
 -------------------
 
-Remember how we said that the Markdown package converts [markdown][] markup to
+Remember how we said that the Markdown package converts markdown markup to
 TeX commands? Let's see what that means and what we can do with this knowledge.
 
 Using a text editor, create an empty text document named `document.md` with
