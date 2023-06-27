@@ -17597,51 +17597,10 @@ following text:
 %</manual-tokens>
 %<*tex>
 % \fi
-% \begin{markdown}
-%
-% The \mdef{markdownRendererHorizontalRule} and
-% \mdef{markdownRendererHorizontalRulePrototype} macros have been deprecated
-% and will be removed in Markdown 3.0.0.
-%
-% \end{markdown}
 %  \begin{macrocode}
+\def\markdownRendererThematicBreak{%
+  \markdownRendererThematicBreakPrototype}%
 \ExplSyntaxOn
-\cs_new:Npn
-  \markdownRendererThematicBreak
-  {
-    \cs_if_exist:NTF
-      \markdownRendererHorizontalRule
-      {
-        \markdownWarning
-          {
-            Horizontal~rule~renderer~has~been~deprecated,~
-            to~be~removed~in~Markdown~3.0.0
-          }
-        \markdownRendererHorizontalRule
-      }
-      {
-        \cs_if_exist:NTF
-          \markdownRendererHorizontalRulePrototype
-          {
-            \markdownWarning
-              {
-                Horizontal~rule~renderer~prototype~has~been~deprecated,~
-                to~be~removed~in~Markdown~3.0.0
-              }
-            \markdownRendererHorizontalRulePrototype
-          }
-          {
-            \markdownRendererThematicBreakPrototype
-          }
-      }
-  }
-\seq_gput_right:Nn
-  \g_@@_renderers_seq
-  { horizontalRule }
-\prop_gput:Nnn
-  \g_@@_renderer_arities_prop
-  { horizontalRule }
-  { 0 }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { thematicBreak }
@@ -18475,17 +18434,6 @@ following text:
     \seq_map_function:NN
       \g_@@_renderers_seq
       \@@_plaintex_define_renderer_prototype:n
-%    \end{macrocode}
-% \begin{markdown}
-%
-% The \mref{markdownRendererHorizontalRule} and
-% \mref{markdownRendererHorizontalRulePrototype} macros have been deprecated
-% and will be removed in Markdown 3.0.0.
-%
-% \end{markdown}
-%  \begin{macrocode}
-    \cs_undefine:N \markdownRendererHorizontalRule
-    \cs_undefine:N \markdownRendererHorizontalRulePrototype
   }
 \cs_new:Nn \@@_plaintex_define_renderer_prototype:n
   {
