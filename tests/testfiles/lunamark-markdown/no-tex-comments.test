@@ -11,8 +11,8 @@ a line* should be allowed by the preprocessor.
 documentBegin
 codeSpan: texComments
 interblockSeparator
-emphasis: emphasi(percentSign)  this is a comment zed text
-emphasis: emphasi(percentSign)  another one zed text
+emphasis: emphasi(percentSign)  this is a comment(softLineBreak)zed text
+emphasis: emphasi(percentSign)  another one(softLineBreak)zed text
 interblockSeparator
 emphasis: end of (hardLineBreak)a line
 documentEnd

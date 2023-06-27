@@ -10,6 +10,7 @@ Paragraph before blockquote:
 
 >>>
 documentBegin
+softLineBreak
 interblockSeparator
 interblockSeparator
 BEGIN section

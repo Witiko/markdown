@@ -13,5 +13,6 @@ Foo
 [bar]
 >>>
 documentBegin
+softLineBreak
 interblockSeparator
 documentEnd

@@ -16,8 +16,10 @@
 >>>
 documentBegin
 emphasis: aaa
+softLineBreak
 emphasis: bbb
 interblockSeparator
 emphasis: ccc
+softLineBreak
 emphasis: ddd
 documentEnd

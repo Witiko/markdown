@@ -16,6 +16,7 @@ following special characters should be processed by lunamark.
 >>>
 documentBegin
 codeSpan: hybrid
+softLineBreak
 interblockSeparator
 ulBeginTight
 ulItem

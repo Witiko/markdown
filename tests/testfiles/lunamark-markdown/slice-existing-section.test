@@ -144,6 +144,7 @@ BEGIN section
 BEGIN headerAttributeContext
 attributeIdentifier: first-h2
 headingTwo: This is an H2
+END headerAttributeContext
 interblockSeparator
 BEGIN section
 headingThree: This is an H3
@@ -192,7 +193,6 @@ END section
 END section
 END section
 END section
-END headerAttributeContext
 END section
 END section
 documentEnd

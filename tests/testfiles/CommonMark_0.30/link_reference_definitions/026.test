@@ -22,11 +22,13 @@ BEGIN link
 - URI: /foo-url
 - title: foo
 END link
+softLineBreak
 BEGIN link
 - label: bar
 - URI: /bar-url
 - title: bar
 END link
+softLineBreak
 BEGIN link
 - label: baz
 - URI: /baz-url

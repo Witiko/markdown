@@ -11,6 +11,7 @@ reference. It need *not* be placed at the end of the document.]
 documentBegin
 codeSpan: notes
 codeSpan: inlineNotes
+softLineBreak
 interblockSeparator
 note: Here is the note. It can go anywhere after the note reference. It need (emphasis: not) be placed at the end of the document.
 interblockSeparator

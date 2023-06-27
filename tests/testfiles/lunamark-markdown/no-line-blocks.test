@@ -23,14 +23,22 @@ interblockSeparator
 interblockSeparator
 pipe
 emphasis: limerick
+softLineBreak
 pipe
+softLineBreak
 pipe
 strongEmphasis: good
+softLineBreak
 pipe
+softLineBreak
 pipe
 interblockSeparator
 interblockSeparator
 pipe
+softLineBreak
+softLineBreak
 pipe
+softLineBreak
 pipe
+softLineBreak
 documentEnd

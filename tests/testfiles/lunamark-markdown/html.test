@@ -33,10 +33,16 @@ Unrecognized character entities are ignored: &nonsense;
 >>>
 documentBegin
 codeSpan: html
+softLineBreak
 interblockSeparator
+softLineBreak
 emphasis: There is no block tag support.
+softLineBreak
+softLineBreak
 emphasis: There is <inline tag="value"></inline> support.<br/>
+softLineBreak
 emphasis: There is no <!-- (emphasis: comment) --> support.
+softLineBreak
 emphasis: There is no <? (emphasis: HTML instruction) ?> support.
 interblockSeparator
 interblockSeparator

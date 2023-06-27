@@ -20,6 +20,7 @@ blockQuoteBegin
 blockQuoteBegin
 blockQuoteBegin
 emphasis: foo
+softLineBreak
 emphasis: bar
 blockQuoteEnd
 blockQuoteEnd

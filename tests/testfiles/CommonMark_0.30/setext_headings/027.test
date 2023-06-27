@@ -14,4 +14,7 @@ bar
 baz
 >>>
 documentBegin
+softLineBreak
+softLineBreak
+softLineBreak
 documentEnd

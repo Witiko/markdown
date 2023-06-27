@@ -39,8 +39,10 @@ Fancy list (*alpha, lower, tight and paren, alpha, lower, tight*)
 >>>
 documentBegin
 codeSpan: fancyLists
+softLineBreak
 codeSpan: startNumber
 codeSpan: tightLists
+softLineBreak
 interblockSeparator
 emphasis: roman, lower
 interblockSeparator

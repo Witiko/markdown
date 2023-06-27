@@ -12,6 +12,7 @@ foo bar__
 documentBegin
 underscore
 underscore
+softLineBreak
 underscore
 underscore
 documentEnd

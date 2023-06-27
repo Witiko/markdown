@@ -11,6 +11,9 @@ commands, where both the labels and the URLs are escaped even though the
 >>>
 documentBegin
 codeSpan: hybrid
+softLineBreak
+softLineBreak
+softLineBreak
 codeSpan: hybrid
 interblockSeparator
 BEGIN link

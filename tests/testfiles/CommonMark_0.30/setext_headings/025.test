@@ -16,6 +16,7 @@ bar
 baz
 >>>
 documentBegin
+softLineBreak
 interblockSeparator
 thematicBreak
 interblockSeparator

@@ -249,6 +249,7 @@ interblockSeparator
 olBegin
 olItemWithNumber: 1
 interblockSeparator
+softLineBreak
 olItemEnd
 olItemWithNumber: 2
 olItemEnd

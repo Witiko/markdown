@@ -12,6 +12,6 @@ baz*
 >>>
 documentBegin
 BEGIN section
-headingOne: Foo (emphasis: bar baz)
+headingOne: Foo (emphasis: bar(softLineBreak)baz)
 END section
 documentEnd

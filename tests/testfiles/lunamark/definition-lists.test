@@ -134,6 +134,7 @@ dlBegin
 dlItem: (emphasis: apple)
 dlDefinitionBegin
 interblockSeparator
+softLineBreak
 dlDefinitionEnd
 dlItemEnd
 dlItem: (emphasis: orange)

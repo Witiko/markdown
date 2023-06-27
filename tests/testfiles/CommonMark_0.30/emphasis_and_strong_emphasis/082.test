@@ -10,5 +10,5 @@
 bim* bop**
 >>>
 documentBegin
-strongEmphasis: foo (emphasis: bar (strongEmphasis: baz) bim) bop
+strongEmphasis: foo (emphasis: bar (strongEmphasis: baz)(softLineBreak)bim) bop
 documentEnd

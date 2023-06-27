@@ -12,6 +12,7 @@
 [bar]: /url "title"
 >>>
 documentBegin
+softLineBreak
 BEGIN link
 - label: bar
 - URI: /url

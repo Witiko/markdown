@@ -17,4 +17,5 @@ BEGIN image
 - URI: /url
 - title: title
 END image
+softLineBreak
 documentEnd

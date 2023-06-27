@@ -24,10 +24,13 @@ Test with tabs for `_Detab`:
 
 >>>
 documentBegin
+softLineBreak
 codeSpan: preg(underscore)replace
 codeSpan: /e
+softLineBreak
 codeSpan: (underscore)UnslashQuotes
 interblockSeparator
+softLineBreak
 interblockSeparator
 BEGIN section
 headingOne: Header "quoted" again (backslash)""

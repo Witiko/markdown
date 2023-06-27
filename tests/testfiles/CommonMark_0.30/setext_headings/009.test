@@ -15,6 +15,7 @@ Foo
 --- -
 >>>
 documentBegin
+softLineBreak
 interblockSeparator
 interblockSeparator
 thematicBreak

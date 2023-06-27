@@ -10,5 +10,6 @@ foo
     # bar
 >>>
 documentBegin
+softLineBreak
 hash
 documentEnd

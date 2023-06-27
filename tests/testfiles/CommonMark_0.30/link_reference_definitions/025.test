@@ -11,6 +11,7 @@
 [foo]
 >>>
 documentBegin
+softLineBreak
 BEGIN link
 - label: foo
 - URI: /url

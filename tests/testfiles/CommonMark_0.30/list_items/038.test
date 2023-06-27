@@ -25,7 +25,7 @@ with two lines._
 documentBegin
 olBegin
 olItemWithNumber: 1
-emphasis: A paragraph with two lines.
+emphasis: A paragraph(softLineBreak)with two lines.
 interblockSeparator
 inputVerbatim: ./_markdown_test/bf995e3b2610078e871b00000c1fb65f.verbatim
 interblockSeparator

@@ -18,6 +18,8 @@ processed by lunamark in any way.
 >>>
 documentBegin
 codeSpan: hybrid
+softLineBreak
+softLineBreak
 interblockSeparator
 ulBeginTight
 ulItem

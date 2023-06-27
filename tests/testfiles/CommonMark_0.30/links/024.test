@@ -17,11 +17,13 @@ BEGIN link
 - URI: /url
 - title: title
 END link
+softLineBreak
 BEGIN link
 - label: link
 - URI: /url
 - title: title
 END link
+softLineBreak
 BEGIN link
 - label: link
 - URI: /url

@@ -11,5 +11,6 @@ _&#42;foo&#42;_
 >>>
 documentBegin
 emphasis: *foo*
+softLineBreak
 emphasis: foo
 documentEnd

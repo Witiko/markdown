@@ -135,7 +135,7 @@ interblockSeparator
 thematicBreak
 interblockSeparator
 BEGIN link
-- label: link breaks
+- label: link(softLineBreak)breaks
 - URI: /url/
 - title: 
 END link

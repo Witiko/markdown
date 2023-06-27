@@ -6,4 +6,8 @@ middle of a paragraph looked like a
 list item.
 >>>
 documentBegin
+softLineBreak
+softLineBreak
+softLineBreak
+softLineBreak
 documentEnd

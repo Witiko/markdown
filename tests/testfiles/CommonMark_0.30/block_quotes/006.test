@@ -16,7 +16,9 @@
 documentBegin
 blockQuoteBegin
 emphasis: bar
+softLineBreak
 emphasis: baz
+softLineBreak
 emphasis: foo
 blockQuoteEnd
 documentEnd

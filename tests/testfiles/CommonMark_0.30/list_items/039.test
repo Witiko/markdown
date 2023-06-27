@@ -14,7 +14,7 @@
 documentBegin
 olBeginTight
 olItemWithNumber: 1
-emphasis: A paragraph with two lines.
+emphasis: A paragraph(softLineBreak)with two lines.
 olItemEnd
 olEndTight
 documentEnd

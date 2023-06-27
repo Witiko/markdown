@@ -14,4 +14,7 @@ foo><bar/ >
 bim!bop />
 >>>
 documentBegin
+softLineBreak
+softLineBreak
+softLineBreak
 documentEnd

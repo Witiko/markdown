@@ -22,7 +22,9 @@ blockQuoteBegin
 blockQuoteBegin
 blockQuoteBegin
 emphasis: foo
+softLineBreak
 emphasis: bar
+softLineBreak
 emphasis: baz
 blockQuoteEnd
 blockQuoteEnd

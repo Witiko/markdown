@@ -143,6 +143,7 @@ belong to the previous note.
 >>>
 documentBegin
 codeSpan: slice
+softLineBreak
 interblockSeparator
 BEGIN section
 headingOne: This is an H1

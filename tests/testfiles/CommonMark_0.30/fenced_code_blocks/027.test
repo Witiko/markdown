@@ -11,4 +11,5 @@ foo
 >>>
 documentBegin
 codeSpan: aa
+softLineBreak
 documentEnd

@@ -9,6 +9,7 @@ default.
 >>>
 documentBegin
 codeSpan: breakableBlockquotes
+softLineBreak
 interblockSeparator
 blockQuoteBegin
 emphasis: quote 1

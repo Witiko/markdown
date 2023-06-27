@@ -10,5 +10,5 @@
 bar**
 >>>
 documentBegin
-strongEmphasis: foo bar
+strongEmphasis: foo(softLineBreak)bar
 documentEnd

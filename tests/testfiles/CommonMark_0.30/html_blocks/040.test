@@ -12,5 +12,7 @@ Foo
 baz
 >>>
 documentBegin
+softLineBreak
 inlineHtmlTag: <a href="bar">
+softLineBreak
 documentEnd

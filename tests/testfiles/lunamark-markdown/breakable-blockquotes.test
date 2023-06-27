@@ -10,9 +10,11 @@ propagates through the plain TeX interface.
 >>>
 documentBegin
 codeSpan: breakableBlockquotes
+softLineBreak
 interblockSeparator
 blockQuoteBegin
 emphasis: quote 1
+softLineBreak
 emphasis: quote 2
 blockQuoteEnd
 documentEnd

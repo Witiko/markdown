@@ -15,7 +15,10 @@
 >>>
 documentBegin
 emphasis: (ampersand)nbsp (ampersand)x; (ampersand)(hash); (ampersand)(hash)x;
+softLineBreak
 emphasis: (ampersand)(hash)87654321;
+softLineBreak
 emphasis: (ampersand)(hash)abcdef0;
+softLineBreak
 emphasis: (ampersand)ThisIsNotDefined; (ampersand)hi?;
 documentEnd

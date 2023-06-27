@@ -13,6 +13,7 @@ and a reference ![image][ref]{.another-class} with attributes.
 >>>
 documentBegin
 codeSpan: linkAttributes
+softLineBreak
 interblockSeparator
 BEGIN link
 - label: link
@@ -22,8 +23,10 @@ END link
 leftBrace
 hash
 rightBrace
+softLineBreak
 leftBrace
 rightBrace
+softLineBreak
 BEGIN link
 - label: https://auto/
 - URI: https://auto/
@@ -40,6 +43,7 @@ END image
 leftBrace
 hash
 rightBrace
+softLineBreak
 leftBrace
 rightBrace
 interblockSeparator

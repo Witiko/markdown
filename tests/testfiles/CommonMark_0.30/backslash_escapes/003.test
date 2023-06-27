@@ -24,6 +24,14 @@
 \&ouml; not a character entity
 >>>
 documentBegin
+softLineBreak
+softLineBreak
+softLineBreak
+softLineBreak
+softLineBreak
+softLineBreak
 hash
+softLineBreak
+softLineBreak
 ampersand
 documentEnd

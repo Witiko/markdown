@@ -12,5 +12,7 @@
 [a](<b>c)
 >>>
 documentBegin
+softLineBreak
+softLineBreak
 inlineHtmlTag: <b>
 documentEnd

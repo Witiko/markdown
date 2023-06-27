@@ -17,18 +17,24 @@ htt(p:/)/exam(ple.c)om/m\(inard.jpg (Napoleon's disastrous Russian campaign of 1
 >>>
 documentBegin
 codeSpan: contentBlocks
+softLineBreak
 interblockSeparator
+softLineBreak
 interblockSeparator
 BEGIN link
 - label: http://example.com/minard.jpg
 - URI: http://example.com/minard.jpg
 - title: 
 END link
+softLineBreak
 BEGIN link
 - label: http://example.com/minard.jpg
 - URI: http://example.com/minard.jpg
 - title: 
 END link
 interblockSeparator
+softLineBreak
 interblockSeparator
+softLineBreak
+softLineBreak
 documentEnd

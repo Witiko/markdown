@@ -179,6 +179,7 @@ codeSpan: (backslash)+
 interblockSeparator
 codeSpan: (backslash)-
 interblockSeparator
+softLineBreak
 interblockSeparator
 interblockSeparator
 underscore

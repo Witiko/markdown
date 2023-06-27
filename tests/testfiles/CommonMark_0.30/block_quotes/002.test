@@ -19,6 +19,7 @@ BEGIN section
 headingOne: Foo
 interblockSeparator
 emphasis: bar
+softLineBreak
 emphasis: baz
 blockQuoteEnd
 END section

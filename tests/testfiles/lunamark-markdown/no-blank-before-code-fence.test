@@ -28,6 +28,7 @@ bar
 >>>
 documentBegin
 codeSpan: fencedCode
+softLineBreak
 codeSpan: blankBeforeCodeFence
 interblockSeparator
 interblockSeparator

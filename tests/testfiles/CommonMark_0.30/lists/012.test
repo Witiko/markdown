@@ -30,6 +30,7 @@ emphasis: c
 ulItemEnd
 ulItem
 emphasis: d
+softLineBreak
 emphasis: e
 ulItemEnd
 ulEndTight

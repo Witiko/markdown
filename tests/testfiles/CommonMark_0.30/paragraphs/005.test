@@ -13,6 +13,8 @@
 >>>
 documentBegin
 emphasis: aaa
+softLineBreak
 emphasis: bbb
+softLineBreak
 emphasis: ccc
 documentEnd

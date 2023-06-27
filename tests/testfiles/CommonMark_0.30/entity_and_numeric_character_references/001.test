@@ -13,6 +13,8 @@
 >>>
 documentBegin
 emphasis: (nbsp) (ampersand) © Æ Ď
+softLineBreak
 emphasis: ¾ ℋ ⅆ
+softLineBreak
 emphasis: ∲ ≧̸
 documentEnd

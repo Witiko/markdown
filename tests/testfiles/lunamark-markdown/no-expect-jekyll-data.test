@@ -35,18 +35,25 @@ abstract: |
 ---
 >>>
 documentBegin
+softLineBreak
 interblockSeparator
 ulBeginTight
 ulItem
 emphasis: One
+softLineBreak
 ulItemEnd
 ulItem
 strongEmphasis: Two
+softLineBreak
+softLineBreak
+softLineBreak
 ulItemEnd
 ulEndTight
 interblockSeparator
 codeSpan: jekyllData
+softLineBreak
 codeSpan: expectJekyllData
+softLineBreak
 interblockSeparator
 emphasis: multiple
 interblockSeparator

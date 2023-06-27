@@ -15,5 +15,7 @@ bar
 >>>
 documentBegin
 blockQuoteBegin
+softLineBreak
+softLineBreak
 blockQuoteEnd
 documentEnd

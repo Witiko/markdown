@@ -10,5 +10,5 @@ _foo
 baz_
 >>>
 documentBegin
-emphasis: foo baz
+emphasis: foo(softLineBreak)baz
 documentEnd

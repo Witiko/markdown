@@ -19,6 +19,7 @@ This is `<a>html</a>`{=html}
 >>>
 documentBegin
 codeSpan: fencedCode
+softLineBreak
 codeSpan: rawAttribute
 interblockSeparator
 interblockSeparator
@@ -27,6 +28,7 @@ BEGIN fencedCode
 - infostring: (leftBrace)=openxml(rightBrace)
 END fencedCode
 interblockSeparator
+softLineBreak
 interblockSeparator
 codeSpan: <a>html</a>
 leftBrace

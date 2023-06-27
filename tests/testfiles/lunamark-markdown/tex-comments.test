@@ -34,15 +34,16 @@ Here is a corner case: `\\` separated by a comment: `\\%
 >>>
 documentBegin
 codeSpan: texComments
+softLineBreak
 interblockSeparator
 emphasis: emphasized text
-emphasis: emphasi(percentSign)  another one zed text
+emphasis: emphasi(percentSign)  another one(softLineBreak)zed text
 interblockSeparator
 interblockSeparator
 interblockSeparator
 emphasis: end of (hardLineBreak)a line
 interblockSeparator
-emphasis: end of (backslash) a line
+emphasis: end of (backslash)(softLineBreak)a line
 interblockSeparator
 emphasis: end of (backslash)(hardLineBreak)a line
 interblockSeparator
@@ -50,7 +51,9 @@ codeSpan: (backslash)
 codeSpan: (backslash)(percentSign)
 codeSpan: (backslash)(backslash)
 codeSpan: (backslash)(backslash)(percentSign)
+softLineBreak
 interblockSeparator
+softLineBreak
 codeSpan: (backslash)text(leftBrace)Hello world(rightBrace)!(backslash)(backslash)
 interblockSeparator
 codeSpan: (backslash)(backslash)

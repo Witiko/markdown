@@ -32,13 +32,18 @@ bar
 documentBegin
 codeSpan: fencedCode
 codeSpan: blankBeforeCodeFence
+softLineBreak
 interblockSeparator
 interblockSeparator
+softLineBreak
 codeSpan: foo bar
 interblockSeparator
+softLineBreak
 tilde
 tilde
 tilde
+softLineBreak
+softLineBreak
 tilde
 tilde
 tilde

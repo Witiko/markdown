@@ -43,6 +43,7 @@ interblockSeparator
 interblockSeparator
 emphasis: roman, upper, tight
 interblockSeparator
+softLineBreak
 interblockSeparator
 emphasis: alpha, lower
 interblockSeparator
@@ -50,6 +51,7 @@ interblockSeparator
 interblockSeparator
 emphasis: alpha, upper, tight
 interblockSeparator
+softLineBreak
 interblockSeparator
 emphasis: paren
 interblockSeparator
@@ -62,4 +64,5 @@ olEnd
 interblockSeparator
 emphasis: alpha, lower, tight and paren, alpha, lower, tight
 interblockSeparator
+softLineBreak
 documentEnd

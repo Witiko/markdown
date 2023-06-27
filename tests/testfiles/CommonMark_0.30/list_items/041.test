@@ -22,7 +22,7 @@ blockQuoteBegin
 olBeginTight
 olItemWithNumber: 1
 blockQuoteBegin
-emphasis: Blockquote continued here.
+emphasis: Blockquote(softLineBreak)continued here.
 blockQuoteEnd
 olItemEnd
 olEndTight
