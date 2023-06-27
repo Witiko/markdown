@@ -814,28 +814,24 @@ abbr {
         {\def\addcontentsline##1##2##3{}\listoffigures}%
       }%
     },
-    headerAttributeContextBegin = {
+    headerAttributeContextBegin = {%
+      \begingroup
       \markdownSetup{
         rendererPrototypes = {
           attributeIdentifier = {%
-            \begingroup
-            \def\next####1{%
-              \def####1########1{%
-                \endgroup
-                ####1{########1}%
-                \label{sec:##1}%
-              }%
+            \markdownSetup{
+              rendererPrototypes = {
+                headerAttributeContextEnd = {%
+                  \endgroup
+                  \label{sec:##1}%
+                },
+              }
             }%
-            \next\markdownRendererHeadingOne
-            \next\markdownRendererHeadingTwo
-            \next\markdownRendererHeadingThree
-            \next\markdownRendererHeadingFour
-            \next\markdownRendererHeadingFive
-            \next\markdownRendererHeadingSix
           },
         },
       }%
     },
+    headerAttributeContextEnd = {\endgroup},
   },
   jekyllDataRenderers = {
     /authors/* = {%
@@ -13969,7 +13965,7 @@ is enabled.
 
 The \mdef{markdownRendererHeaderAttributeContextBegin} and
 \mdef{markdownRendererHeaderAttributeContextEnd} macros represent the beginning
-and the end of a section in which the attributes of a heading apply. The macros
+and the end of a heading in which the attributes of a heading apply. The macros
 receive no arguments.
 
 % \end{markdown}
@@ -14033,13 +14029,6 @@ following text:
 %</manual-tokens>
 %<*tex>
 % \fi
-% \begin{markdown}
-%
-% These semantics have been deprecated and will be changed in Markdown 3.0.0.
-% From then on, header attribute contexts will only span headings, not the
-% surrounding sections.
-%
-% \end{markdown}
 %  \begin{macrocode}
 \def\markdownRendererHeaderAttributeContextBegin{%
   \markdownRendererHeaderAttributeContextBeginPrototype}%
@@ -23927,7 +23916,6 @@ function M.writer.new(options)
     end
     if attributes["#" .. self.slice_begin_identifier] ~= nil and
        self.slice_begin_type == "^" then
-      self.is_writing = true
       table.insert(buf, apply_attributes())
       self.is_writing = true
     end
@@ -24017,13 +24005,6 @@ function M.writer.new(options)
     local start_output = {}
     local end_output = {}
     table.insert(start_output, "\\markdownRendererSectionBegin\n")
-    if options.headerAttributes and attributes ~= nil and #attributes > 0 then
-      table.insert(start_output,
-                   "\\markdownRendererHeaderAttributeContextBegin\n")
-      table.insert(start_output, self.attributes(attributes))
-      table.insert(end_output,
-                   "\n\\markdownRendererHeaderAttributeContextEnd ")
-    end
     table.insert(end_output, "\n\\markdownRendererSectionEnd ")
 
     table.insert(buf, self.push_attributes("heading",
@@ -24033,7 +24014,13 @@ function M.writer.new(options)
     current_heading_level = current_heading_level + 1
     assert(current_heading_level == level)
 
-    -- produce the renderer
+    -- render the heading and its attributes
+    if self.is_writing and options.headerAttributes
+       and attributes ~= nil and #attributes > 0 then
+      table.insert(buf, "\\markdownRendererHeaderAttributeContextBegin\n")
+      table.insert(buf, self.attributes(attributes))
+    end
+
     local cmd
     level = level + options.shiftHeadings
     if level <= 1 then
@@ -24053,6 +24040,11 @@ function M.writer.new(options)
     end
     if self.is_writing then
       table.insert(buf, {cmd, "{", s, "}"})
+    end
+
+    if self.is_writing and options.headerAttributes
+       and attributes ~= nil and #attributes > 0 then
+      table.insert(buf, "\n\\markdownRendererHeaderAttributeContextEnd ")
     end
 
     return buf
@@ -32558,34 +32550,29 @@ end
 % \par
 % \begin{markdown}
 %
-% If identifier attributes appear at the beginning of a section, we make the
-% next heading produce the `\label` macro.
+% If identifier attributes appear at the beginning of a section, we make them
+% produce the `\label` macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
   headerAttributeContextBegin = {%
+    \begingroup
     \markdownSetup{
       rendererPrototypes = {
         attributeIdentifier = {%
-          \begingroup
-          \def\next####1{%
-            \def####1########1{%
-              \endgroup
-              ####1{########1}%
-              \label{##1}%
-            }%
+          \markdownSetup{
+            rendererPrototypes = {
+              headerAttributeContextEnd = {%
+                \endgroup
+                \label{##1}%
+              },
+            }
           }%
-          \next\markdownRendererHeadingOne
-          \next\markdownRendererHeadingTwo
-          \next\markdownRendererHeadingThree
-          \next\markdownRendererHeadingFour
-          \next\markdownRendererHeadingFive
-          \next\markdownRendererHeadingSix
         },
       },
     }%
   },
-  headerAttributeContextEnd = {},
+  headerAttributeContextEnd = {\endgroup},
   superscript = {\textsuperscript{#1}},
   subscript = {\textsubscript{#1}},
   displayMath = {\begin{displaymath}#1\end{displaymath}},
