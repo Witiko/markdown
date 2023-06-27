@@ -1178,7 +1178,7 @@ local uni_case = require("lua-uni-case")
 %  \begin{macrocode}
 %<@@=markdown>
 \ifx\ExplSyntaxOn\undefined
-  \input expl3-generic\relax
+  \input expl3-generic
 \fi
 %    \end{macrocode}
 % \begin{markdown}
@@ -1211,11 +1211,10 @@ local uni_case = require("lua-uni-case")
 % \TeX{} part of the package will require that either the Lua\TeX{}
 % `\directlua` primitive or the shell access file stream 18 is available in
 % your \TeX{} engine. If only the shell access file stream is available in your
-% \TeX{} engine (as is the case with \hologo{pdfTeX} and \Hologo{XeTeX}) or if
-% you enforce the use of shell using the \mref{markdownMode} macro, then unless
-% your \TeX{} engine is globally configured to enable shell access, you will
-% need to provide the `-shell-escape` parameter to your engine when typesetting
-% a document.
+% \TeX{} engine (as is the case with \hologo{pdfTeX} and \Hologo{XeTeX}), then
+% unless your \TeX{} engine is globally configured to enable shell access, you
+% will need to provide the `-shell-escape` parameter to your engine when
+% typesetting a document.
 %
 % \end{markdown}
 % \iffalse
@@ -18531,71 +18530,11 @@ following text:
 %    \end{macrocode}
 % \begin{markdown}
 % The macro is exposed in the interface, so that the user can create their own
-% markdown environments. Due to the way the arguments are passed to Lua (see
-% Section <#sec:direct-lua>), the first argument may not contain the
-% string `]]` (regardless of the category code of the bracket symbol (`]`)).
-%
-% The \mdef{markdownMode} macro specifies how the plain \TeX{} implementation
-% interfaces with the Lua interface. The valid values and their meaning are
-% as follows:
-%
-% - `0` – Shell escape via the 18 output file stream
-% - `1` – Shell escape via the Lua `os.execute` method
-% - `2` – Direct Lua access
-% - `3` – The \pkg{lt3luabridge} Lua package
-%
-% By defining the macro, the user can coerce the package to use a specific mode.
-% If the user does not define the macro prior to loading the plain \TeX{}
-% implementation, the correct value will be automatically detected. The outcome
-% of changing the value of \mref{markdownMode} after the implementation has been
-% loaded is undefined.
-%
-% The \mref{markdownMode} macro has been deprecated and will be removed in
-% Markdown 3.0.0. The code that corresponds to \mref{markdownMode} value of `3`
-% will be the only implementation.
+% markdown environments. Due to the way the arguments are passed to Lua, the
+% first argument may not contain the string `]]` (regardless of the category
+% code of the bracket symbol (`]`)).
 %
 % \end{markdown}
-%  \begin{macrocode}
-\ExplSyntaxOn
-\cs_if_exist:NF
-  \markdownMode
-  {
-    \file_if_exist:nTF
-      { lt3luabridge.tex }
-      {
-        \cs_new:Npn
-          \markdownMode
-          { 3 }
-      }
-      {
-        \cs_if_exist:NTF
-          \directlua
-          {
-            \cs_new:Npn
-              \markdownMode
-              { 2 }
-          }
-          {
-            \cs_new:Npn
-              \markdownMode
-              { 0 }
-          }
-      }
-  }
-\ExplSyntaxOff
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% The \mdef{markdownLuaRegisterIBCallback} and
-% \mdef{markdownLuaUnregisterIBCallback} macros have been deprecated and will
-% be removed in Markdown 3.0.0:
-%
-% \end{markdown}
-%  \begin{macrocode}
-\def\markdownLuaRegisterIBCallback#1{\relax}%
-\def\markdownLuaUnregisterIBCallback#1{\relax}%
-%    \end{macrocode}
 % \iffalse
 %</tex>
 % \fi
@@ -31306,263 +31245,17 @@ end
 % \par
 % \begin{markdown}
 %
-% The following two sections of the implementation have been deprecated and
-% will be removed in Markdown 3.0.0. The code that corresponds to
-% \mref{markdownMode} value of `3` will be the only implementation.
+% Load the Lua shell escape bridge.
 %
 % \end{markdown}
 %  \begin{macrocode}
+\input lt3luabridge.tex
 \ExplSyntaxOn
-\int_compare:nT
-  { \markdownMode = 3 }
-  {
-    \markdownInfo{Using~mode~3:~The~lt3luabridge~package}
-    \file_input:n { lt3luabridge.tex }
-    \cs_new:Npn
-      \markdownLuaExecute
-      { \luabridgeExecute }
-  }
+\cs_new:Npn
+  \markdownLuaExecute
+  { \luabridgeExecute }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \begin{markdown}
-%
-%### Lua Shell Escape Bridge {#lua-bridge}
-%
-% The following \TeX{} code is intended for \TeX{} engines that do not provide
-% direct access to Lua, but expose the shell of the operating system. This
-% corresponds to the \mref{markdownMode} values of `0` and `1`.
-%
-% The \mref{markdownLuaExecute} macro defined here and in Section
-% <#sec:direct-lua> are meant to be indistinguishable to the remaining code.
-%
-% The package assumes that although the user is not using the Lua\TeX{} engine,
-% their \TeX{} distribution contains it, and uses shell access to produce and
-% execute Lua scripts using the \TeX{}Lua interpreter~[@luatex21, Section
-% 4.1.1].
-%
-% \end{markdown}
-%  \begin{macrocode}
-\ifnum\markdownMode<2\relax
-\ifnum\markdownMode=0\relax
-  \markdownWarning{Using mode 0: Shell escape via write18
-                   (deprecated, to be removed in Markdown 3.0.0)}%
-\else
-  \markdownWarning{Using mode 1: Shell escape via os.execute
-                   (deprecated, to be removed in Markdown 3.0.0)}%
-\fi
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% The \mdef{markdownExecuteShellEscape} macro contains the numeric value indicating
-% whether the shell access is enabled (`1`), disabled (`0`), or restricted
-% (`2`).
-%
-% Inherit the value of the `\pdfshellescape` (Lua\TeX{}, \Hologo{pdfTeX})
-% or the `\shellescape` (\Hologo{XeTeX}) commands. If neither of these
-% commands is defined and Lua is available, attempt to access the
-% `status.shell_escape` configuration item.
-%
-% If you cannot detect, whether the shell access is enabled, act as if it were.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\ifx\pdfshellescape\undefined
-  \ifx\shellescape\undefined
-    \ifnum\markdownMode=0\relax
-      \def\markdownExecuteShellEscape{1}%
-    \else
-      \def\markdownExecuteShellEscape{%
-        \directlua{tex.sprint(status.shell_escape or "1")}}%
-    \fi
-  \else
-    \let\markdownExecuteShellEscape\shellescape
-  \fi
-\else
-  \let\markdownExecuteShellEscape\pdfshellescape
-\fi
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% The \mdef{markdownExecuteDirect} macro executes the code it has received as
-% its first argument by writing it to the output file stream 18, if Lua is
-% unavailable, or by using the Lua `os.execute` method otherwise.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\ifnum\markdownMode=0\relax
-  \def\markdownExecuteDirect#1{\immediate\write18{#1}}%
-\else
-  \def\markdownExecuteDirect#1{%
-    \directlua{os.execute("\luaescapestring{#1}")}}%
-\fi
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% The \mdef{markdownExecute} macro is a wrapper on top of
-% \mref{markdownExecuteDirect} that checks the value of
-% \mref{markdownExecuteShellEscape} and prints an error message if the shell is
-% inaccessible.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\def\markdownExecute#1{%
-  \ifnum\markdownExecuteShellEscape=1\relax
-    \markdownExecuteDirect{#1}%
-  \else
-    \markdownError{I can not access the shell}{Either run the TeX
-      compiler with the --shell-escape or the --enable-write18 flag,
-      or set shell_escape=t in the texmf.cnf file}%
-  \fi}%
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% The \mdef{markdownLuaExecute} macro executes the Lua code it has received as
-% its first argument. The Lua code may not directly interact with the \TeX{}
-% engine, but it can use the `print` function in the same manner it
-% would use the `tex.print` method.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\begingroup
-%    \end{macrocode}
-% \begin{markdown}
-% Swap the category code of the backslash symbol and the pipe symbol, so that
-% we may use the backslash symbol freely inside the Lua code.
-% \end{markdown}
-%  \begin{macrocode}
-  \catcode`|=0%
-  \catcode`\\=12%
-  |gdef|markdownLuaExecute#1{%
-%    \end{macrocode}
-% \begin{markdown}
-% Create the file \Opt{helperScriptFileName} and fill it with the
-% input Lua code prepended with \pkg{kpathsea} initialization, so that Lua
-% modules from the \TeX{} distribution are available.
-% \end{markdown}
-%  \begin{macrocode}
-    |immediate|openout|markdownOutputFileStream=%
-      |markdownOptionHelperScriptFileName
-    |markdownInfo{Writing a helper Lua script to the file
-      "|markdownOptionHelperScriptFileName"}%
-    |immediate|write|markdownOutputFileStream{%
-      local ran_ok, error = pcall(function()
-%    \end{macrocode}
-% \begin{markdown}
-%
-% If \pkg{Kpathsea} has not been loaded before or if Lua\TeX{} has not yet
-% been initialized, configure \pkg{Kpathsea} on top of loading it.
-%
-% \end{markdown}
-%  \begin{macrocode}
-        local kpse
-        (function()
-          local should_initialize = package.loaded.kpse == nil
-                               or tex.initialize
-          kpse = require("kpse")
-          if should_initialize then
-            kpse.set_program_name("luatex")
-          end
-        end)()
-        #1
-      end)
-%    \end{macrocode}
-% \begin{markdown}
-% If there was an error, use the file \Opt{errorTempFileName} to
-% store the error message.
-% \end{markdown}
-%  \begin{macrocode}
-      if not ran_ok then
-        local file = io.open("%
-          |markdownOptionOutputDir
-          /|markdownOptionErrorTempFileName", "w")
-        if file then
-          file:write(error .. "\n")
-          file:close()
-        end
-        print('\\markdownError{An error was encountered while executing
-               Lua code}{For further clues, examine the file
-               "|markdownOptionOutputDir
-               /|markdownOptionErrorTempFileName"}')
-      end}%
-    |immediate|closeout|markdownOutputFileStream
-%    \end{macrocode}
-% \begin{markdown}
-% Execute the generated \Opt{helperScriptFileName} Lua script using
-% the \TeX{}Lua binary and store the output in the
-% \Opt{outputTempFileName} file.
-% \end{markdown}
-%  \begin{macrocode}
-    |markdownInfo{Executing a helper Lua script from the file
-      "|markdownOptionHelperScriptFileName" and storing the result in the
-      file "|markdownOptionOutputTempFileName"}%
-    |markdownExecute{texlua "|markdownOptionOutputDir
-      /|markdownOptionHelperScriptFileName" > %
-      "|markdownOptionOutputDir
-      /|markdownOptionOutputTempFileName"}%
-%    \end{macrocode}
-% \begin{markdown}
-% `\input` the generated \Opt{outputTempFileName} file.
-% \end{markdown}
-%  \begin{macrocode}
-    |input|markdownOptionOutputTempFileName|relax}%
-|endgroup
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-%### Direct Lua Access {#direct-lua}
-%
-% The following \TeX{} code is intended for \TeX{} engines that provide
-% direct access to Lua (Lua\TeX{}). The macro \mref{markdownLuaExecute} defined
-% here and in Section <#sec:lua-bridge> are meant to be indistinguishable to
-% the remaining code. This corresponds to the \mref{markdownMode} value of `2`.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\fi
-\ifnum\markdownMode=2\relax
-  \markdownWarning{Using mode 2: Direct Lua access
-                   (deprecated, to be removed in Markdown 3.0.0)}%
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% The direct Lua access version of the \mref{markdownLuaExecute} macro is defined
-% in terms of the `\directlua` primitive. The `print` function is set as
-% an alias to the `tex.print` method in order to mimic the behaviour of the
-% \mref{markdownLuaExecute} definition from Section <#sec:lua-bridge>,
-%
-% \end{markdown}
-%  \begin{macrocode}
-\begingroup
-%    \end{macrocode}
-% \begin{markdown}
-% Swap the category code of the backslash symbol and the pipe symbol, so that
-% we may use the backslash symbol freely inside the Lua code.
-% \end{markdown}
-%  \begin{macrocode}
-  \catcode`|=0%
-  \catcode`\\=12%
-  |gdef|markdownLuaExecute#1{%
-    |directlua{%
-      local function print(input)
-        local output = {}
-        for line in input:gmatch("[^\r\n]+") do
-          table.insert(output, line)
-        end
-        tex.print(output)
-      end
-      #1
-    }%
-  }%
-|endgroup
-\fi
-%    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %### Typesetting Markdown
