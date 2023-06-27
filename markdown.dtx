@@ -15075,7 +15075,114 @@ following text:
 %
 % \begin{markdown}
 
-#### Line Break Renderer
+#### Line Break Renderers
+
+The \mdef{markdownRendererSoftLineBreak} macro represents a soft line break.
+The macro receives no arguments.
+
+% \end{markdown}
+%
+% \iffalse
+
+##### Plain \TeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\input markdown
+\def\markdownRendererSoftLineBreak{%
+  \par
+  {\it(A soft line break)}%
+  \par
+}
+\markdownInput{example.md}
+\bye
+```````
+Using a text editor, create a text document named `example.md` with the
+following content:
+
+``` md
+Hello world!
+_Foo_ bar!
+``````
+Next, invoke LuaTeX from the terminal:
+``` sh
+luatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> Hello *world*!
+>
+> *(A soft line break)*
+>
+> _Foo_ bar!
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage{markdown}
+\markdownSetup{
+  renderers = {
+    softLineBreak = {%
+      \par
+      \emph{(A soft line break)}%
+      \par
+    },
+  },
+}
+\begin{document}
+\markdownInput{example.md}
+\end{document}
+```````
+Using a text editor, create a text document named `example.md` with the
+following content:
+
+``` md
+Hello world!
+_Foo_ bar!
+``````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> Hello *world*!
+>
+> *(A soft line break)*
+>
+> _Foo_ bar!
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\def\markdownRendererSoftLineBreak{%
+  \markdownRendererSoftLineBreakPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { softLineBreak }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { softLineBreak }
+  { 0 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
 The \mdef{markdownRendererHardLineBreak} macro represents a hard line break.
 The macro receives no arguments.
 
@@ -23340,7 +23447,17 @@ function M.writer.new(options)
 % \par
 % \begin{markdown}
 %
-% Define \luamdef{writer->hard_line_break} as the output format of a forced
+% Define \luamdef{writer->soft_line_break} as the output format of a soft
+% line break.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  self.soft_line_break = "\\markdownRendererSoftLineBreak\n{}"
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define \luamdef{writer->hard_line_break} as the output format of a hard
 % line break.
 %
 % \end{markdown}
@@ -25159,7 +25276,7 @@ parsers.closeticks  = Cmt(C(parsers.backtick^1)
                           * Cb("ticks"), captures_equal_length)
 
 parsers.intickschar = (parsers.any - S("\n\r`"))
-                    + V("CodeEndline")
+                    + V("NoSoftLineBreakEndline")
                     + (parsers.backtick^1 - parsers.closeticks)
 
 local function process_inticks(s)
@@ -25289,7 +25406,7 @@ end
 
 -- attributes
 parsers.html_attribute_spacing  = parsers.optionalspace
-                                * V("Endline")
+                                * V("NoSoftLineBreakEndline")
                                 * parsers.optionalspace
                                 + parsers.spacechar^1
 
@@ -25308,10 +25425,16 @@ parsers.html_attribute_value  = parsers.squote
                                 - parsers.equal - parsers.less - parsers.more)^1
 
 parsers.html_inline_attribute_value = parsers.squote 
-                                    * (V("Endline") + parsers.any - parsers.blankline^2 - parsers.squote)^0 
+                                    * (V("NoSoftLineBreakEndline")
+                                      + parsers.any
+                                      - parsers.blankline^2
+                                      - parsers.squote)^0 
                                     * parsers.squote
                                     + parsers.dquote 
-                                    * (V("Endline") + parsers.any - parsers.blankline^2 - parsers.dquote)^0 
+                                    * (V("NoSoftLineBreakEndline")
+                                      + parsers.any
+                                      - parsers.blankline^2
+                                      - parsers.dquote)^0 
                                     * parsers.dquote
                                     + (parsers.any - parsers.spacechar - parsers.newline
                                       - parsers.dquote - parsers.squote - parsers.backtick
@@ -25323,7 +25446,7 @@ parsers.html_attribute_value_specification  = parsers.optionalspace
                                             * parsers.html_attribute_value
 
 parsers.html_spnl = parsers.optionalspace
-                  * (V("Endline") * parsers.optionalspace)^-1
+                  * (V("NoSoftLineBreakEndline") * parsers.optionalspace)^-1
 
 parsers.html_inline_attribute_value_specification = parsers.html_spnl
                                                   * parsers.equal
@@ -25351,7 +25474,7 @@ parsers.html_comment = Cs( parsers.html_comment_start
  
 parsers.html_inline_comment = (parsers.html_comment_start / "")
                             * -P(">") * -P("->")
-                            * Cs((V("Endline") + parsers.any - P("--") 
+                            * Cs((V("NoSoftLineBreakEndline") + parsers.any - P("--") 
                                 - parsers.nested_breaking_blank - parsers.html_comment_end)^0)
                             * (parsers.html_comment_end / "")
 
@@ -25363,7 +25486,7 @@ parsers.html_cdatasection = Cs( parsers.html_cdatasection_start
                               * parsers.html_until_end(parsers.html_cdatasection_end))
 
 parsers.html_inline_cdatasection  = parsers.html_cdatasection_start
-                                  * Cs(V("Endline") + parsers.any
+                                  * Cs(V("NoSoftLineBreakEndline") + parsers.any
                                       - parsers.nested_breaking_blank - parsers.html_cdatasection_end)^0
                                   * parsers.html_cdatasection_end
 
@@ -25375,7 +25498,7 @@ parsers.html_declaration  = Cs( parsers.html_declaration_start
                               * parsers.html_until_end(parsers.html_declaration_end))
 
 parsers.html_inline_declaration = parsers.html_declaration_start
-                                * Cs(V("Endline") + parsers.any 
+                                * Cs(V("NoSoftLineBreakEndline") + parsers.any 
                                     - parsers.nested_breaking_blank - parsers.html_declaration_end)^0
                                 * parsers.html_declaration_end
 
@@ -25387,7 +25510,7 @@ parsers.html_instruction  = Cs( parsers.html_instruction_start
                               * parsers.html_until_end(parsers.html_instruction_end))
 
 parsers.html_inline_instruction = parsers.html_instruction_start
-                                * Cs(V("Endline") + parsers.any 
+                                * Cs(V("NoSoftLineBreakEndline") + parsers.any 
                                     - parsers.nested_breaking_blank - parsers.html_instruction_end)^0
                                 * parsers.html_instruction_end
 
@@ -25530,7 +25653,7 @@ parsers.html_any_block  = parsers.html_any_block_opening
 
 parsers.html_inline_comment_full  = parsers.html_comment_start
                                   * -P(">") * -P("->")
-                                  * Cs((V("Endline") + parsers.any - P("--") 
+                                  * Cs((V("NoSoftLineBreakEndline") + parsers.any - P("--") 
                                       - parsers.nested_breaking_blank - parsers.html_comment_end)^0)
                                   * parsers.html_comment_end
 
@@ -25635,7 +25758,8 @@ parsers.link_text  = parsers.lbracket
                         + V("InlineHtml")
                         + ( parsers.backslash * parsers.backslash)
                         + ( parsers.backslash * (parsers.lbracket + parsers.rbracket)
-                          + V("Space") + V("Endline") 
+                          + V("NoSoftLineBreakSpace")
+                          + V("NoSoftLineBreakEndline")
                           + (parsers.any
                             - (parsers.newline + parsers.lbracket + parsers.rbracket + parsers.blankline^2))))^0)
                     * parsers.rbracket
@@ -25649,7 +25773,8 @@ parsers.link_label  = parsers.lbracket
                         + V("InlineHtml")
                         + ( parsers.backslash * parsers.backslash)
                         + ( parsers.backslash * (parsers.lbracket + parsers.rbracket)
-                          + V("Space") + V("Endline") 
+                          + V("NoSoftLineBreakSpace")
+                          + V("NoSoftLineBreakEndline")
                           + (parsers.any
                             - (parsers.newline + parsers.lbracket + parsers.rbracket + parsers.blankline^2))))^1)
                     * parsers.rbracket
@@ -25676,19 +25801,22 @@ parsers.url         = parsers.less * Cs((parsers.anyescaped
 -- quoted text:
 parsers.title_s     = parsers.squote
                     * Cs((parsers.html_entities
-                         + V("Space") + V("Endline")
+                         + V("NoSoftLineBreakSpace")
+                         + V("NoSoftLineBreakEndline")
                          + (parsers.anyescaped - parsers.newline - parsers.squote - parsers.blankline^2))^0)
                     * parsers.squote
 
 parsers.title_d     = parsers.dquote
                     * Cs((parsers.html_entities
-                         + V("Space") + V("Endline")
+                         + V("NoSoftLineBreakSpace")
+                         + V("NoSoftLineBreakEndline")
                          + (parsers.anyescaped - parsers.newline - parsers.dquote - parsers.blankline^2))^0)
                     * parsers.dquote
 
 parsers.title_p     = parsers.lparent
                     * Cs((parsers.html_entities
-                         + V("Space") + V("Endline")
+                         + V("NoSoftLineBreakSpace")
+                         + V("NoSoftLineBreakEndline")
                          + (parsers.anyescaped - parsers.newline - parsers.lparent - parsers.rparent
                            - parsers.blankline^2))^0)
                     * parsers.rparent
@@ -27076,7 +27204,7 @@ function M.reader.new(writer, options)
                      + parsers.headerstart
                      + parsers.html_interrupting
 
-  parsers.CodeEndlineExceptions = parsers.EndlineExceptions
+  parsers.NoSoftLineBreakEndlineExceptions = parsers.EndlineExceptions
 
   parsers.endline = parsers.newline
                   * (parsers.check_minimal_indent
@@ -27087,22 +27215,19 @@ function M.reader.new(writer, options)
                   * parsers.spacechar^0
 
   parsers.Endline = parsers.endline
-                  / (options.hardLineBreaks 
-                       and writer.hard_line_break
-                        or writer.space)
+                  / writer.soft_line_break
 
   parsers.EndlineNoSub = parsers.endline
 
-  parsers.CodeEndline   = parsers.newline
+  parsers.NoSoftLineBreakEndline
+                        = parsers.newline
                         * (parsers.check_minimal_indent 
-                          * -V("CodeEndlineExceptions") 
+                          * -V("NoSoftLineBreakEndlineExceptions") 
                           + parsers.check_optional_indent 
-                          * -V("CodeEndlineExceptions") 
+                          * -V("NoSoftLineBreakEndlineExceptions") 
                           * -parsers.starter)
                         * parsers.spacechar^0
-                        / (options.hardLineBreaks 
-                            and writer.hard_line_break
-                            or writer.space)
+                        / writer.space
 
   parsers.EndlineBreak = parsers.backslash * parsers.Endline
                                            / writer.hard_line_break
@@ -27114,16 +27239,20 @@ function M.reader.new(writer, options)
                                            / writer.hard_line_break
                      + parsers.spacechar^1 * parsers.Endline^-1 * parsers.eof / self.expandtabs
                      + parsers.spacechar^1 * parsers.Endline
-                                           / (options.hardLineBreaks
-                                             and writer.hard_line_break
-                                               or writer.space)
+                                           / writer.soft_line_break
+                     + parsers.spacechar^1 * -parsers.newline / self.expandtabs
+
+  parsers.NoSoftLineBreakSpace
+                     = parsers.spacechar^2 * parsers.Endline
+                                           / writer.hard_line_break
+                     + parsers.spacechar^1 * parsers.Endline^-1 * parsers.eof / self.expandtabs
+                     + parsers.spacechar^1 * parsers.Endline
+                                           / writer.soft_line_break
                      + parsers.spacechar^1 * -parsers.newline / self.expandtabs
 
   parsers.NonbreakingEndline
                     = parsers.endline
-                    / (options.hardLineBreaks 
-                       and writer.hard_line_break
-                        or writer.nbsp)
+                    / writer.soft_line_break
 
   parsers.NonbreakingSpace
                   = parsers.spacechar^2 * parsers.Endline 
@@ -27131,9 +27260,7 @@ function M.reader.new(writer, options)
                   + parsers.spacechar^1 * parsers.Endline^-1 * parsers.eof / ""
                   + parsers.spacechar^1 * parsers.Endline
                                         * parsers.optionalspace
-                                        / (options.hardLineBreaks
-                                           and writer.hard_line_break
-                                            or writer.nbsp)
+                                        / writer.soft_line_break
                   + parsers.spacechar^1 * parsers.optionalspace
                                         / writer.nbsp
 
@@ -27516,14 +27643,17 @@ end
         Plain                 = parsers.Plain,
 
         EndlineExceptions     = parsers.EndlineExceptions,
-        CodeEndlineExceptions  = parsers.CodeEndlineExceptions,
+        NoSoftLineBreakEndlineExceptions
+                              = parsers.NoSoftLineBreakEndlineExceptions,
 
         Str                   = parsers.Str,
         Space                 = parsers.Space,
+        NoSoftLineBreakSpace  = parsers.NoSoftLineBreakSpace,
         OptionalIndent        = parsers.OptionalIndent,
         Endline               = parsers.Endline,
         EndlineNoSub          = parsers.EndlineNoSub,
-        CodeEndline           = parsers.CodeEndline,
+        NoSoftLineBreakEndline
+                              = parsers.NoSoftLineBreakEndline,
         EndlineBreak          = parsers.EndlineBreak,
         LinkAndEmph           = parsers.LinkAndEmph,
         Code                  = parsers.Code,
@@ -28703,9 +28833,7 @@ M.extensions.fancy_lists = function()
                         * -parsers.EndlineExceptions 
                         * -starter)
                       * parsers.spacechar^0
-                      / (options.hardLineBreaks 
-                          and writer.hard_line_break
-                          or writer.space)
+                      / writer.soft_line_break
 
       self.update_rule("OrderedList", FancyList)
       self.update_rule("Endline", Endline)
@@ -30583,6 +30711,7 @@ end
 %  \begin{macrocode}
 \def\markdownRendererInterblockSeparatorPrototype{\par}%
 \def\markdownRendererHardLineBreakPrototype{\hfil\break}%
+\def\markdownRendererSoftLineBreakPrototype{ }%
 \let\markdownRendererEllipsisPrototype\dots
 \def\markdownRendererNbspPrototype{~}%
 \def\markdownRendererLeftBracePrototype{\char`\{}%
