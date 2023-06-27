@@ -7188,17 +7188,7 @@ following text:
 %</manual-options>
 %<*tex>
 % \fi
-% \begin{markdown}
-%
-% The inlineFootnotes option has been deprecated and will be removed in
-% Markdown 3.0.0.
-%
-% \end{markdown}
 %  \begin{macrocode}
-\@@_add_lua_option:nnn
-  { inlineFootnotes }
-  { boolean }
-  { false }
 \@@_add_lua_option:nnn
   { inlineNotes }
   { boolean }
@@ -7209,7 +7199,6 @@ following text:
 %<*lua,lua-cli>
 % \fi
 %  \begin{macrocode}
-defaultOptions.inlineFootnotes = false
 defaultOptions.inlineNotes = false
 %    \end{macrocode}
 % \par
@@ -30516,19 +30505,9 @@ function M.new(options)
     table.insert(extensions, tex_math_extension)
   end
 
-%    \end{macrocode}
-% \begin{markdown}
-%
-% The footnotes and inlineFootnotes option has been deprecated and will be
-% removed in Markdown 3.0.0.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  if options.footnotes or options.inlineFootnotes or
-     options.notes or options.inlineNotes then
+  if options.notes or options.inlineNotes then
     local notes_extension = M.extensions.notes(
-      options.footnotes or options.notes,
-      options.inlineFootnotes or options.inlineNotes)
+      options.notes, options.inlineNotes)
     table.insert(extensions, notes_extension)
   end
 
