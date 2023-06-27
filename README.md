@@ -93,6 +93,8 @@ jobs:
       - uses: actions/checkout@v2
       - run: latexmk -lualatex document.tex
       - uses: marvinpinto/action-automatic-releases@latest
+        permissions:
+          contents: write
         with:
           title: The latest typeset book
           automatic_release_tag: latest
