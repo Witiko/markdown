@@ -15162,51 +15162,10 @@ following text:
 %</manual-tokens>
 %<*tex>
 % \fi
-% \begin{markdown}
-%
-% The \mdef{markdownRendererLineBreak} and
-% \mdef{markdownRendererLineBreakPrototype} macros have been deprecated
-% and will be removed in Markdown 3.0.0.
-%
-% \end{markdown}
 %  \begin{macrocode}
+\def\markdownRendererHardLineBreak{%
+  \markdownRendererHardLineBreakPrototype}%
 \ExplSyntaxOn
-\cs_new:Npn
-  \markdownRendererHardLineBreak
-  {
-    \cs_if_exist:NTF
-      \markdownRendererLineBreak
-      {
-        \markdownWarning
-          {
-            Line~break~renderer~has~been~deprecated,~
-            to~be~removed~in~Markdown~3.0.0
-          }
-        \markdownRendererLineBreak
-      }
-      {
-        \cs_if_exist:NTF
-          \markdownRendererLineBreakPrototype
-          {
-            \markdownWarning
-              {
-                Line~break~renderer~prototype~has~been~deprecated,~
-                to~be~removed~in~Markdown~3.0.0
-              }
-            \markdownRendererLineBreakPrototype
-          }
-          {
-            \markdownRendererHardLineBreakPrototype
-          }
-      }
-  }
-\seq_gput_right:Nn
-  \g_@@_renderers_seq
-  { lineBreak }
-\prop_gput:Nnn
-  \g_@@_renderer_arities_prop
-  { lineBreak }
-  { 0 }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { hardLineBreak }
