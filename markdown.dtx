@@ -10954,67 +10954,6 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 % \par
 % \begin{markdown}
 %
-% The \mdef{markdownOptionOutputTempFileName} macro sets the filename of the
-% temporary output file that is created during the conversion from markdown to
-% plain \TeX{} in \mref{markdownMode} other than `2` It defaults to
-% `\jobname.markdown.out`. The same limitations apply here as in the case
-% of the \Opt{inputTempFileName} macro.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\@@_add_plain_tex_option:nnn
-  { outputTempFileName }
-  { path }
-  { \jobname.markdown.out }
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% The \Opt{outputTempFileName} macro has been deprecated and
-% will be removed in Markdown 3.0.0.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\str_new:N
-  \g_luabridge_standard_output_filename_str
-\tl_gset:Nn
-  \g_luabridge_standard_output_filename_str
-  { \markdownOptionOutputTempFileName }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% The \mdef{markdownOptionErrorTempFileName} macro sets the filename of the
-% temporary output file that is created when a Lua error is encountered during
-% the conversion from markdown to plain \TeX{} in \mref{markdownMode} other than
-% `2`. It defaults to `\jobname.markdown.err`. The same limitations
-% apply here as in the case of the \Opt{inputTempFileName}
-% macro.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\@@_add_plain_tex_option:nnn
-  { errorTempFileName }
-  { path }
-  { \jobname.markdown.err }
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% The \Opt{errorTempFileName} macro has been deprecated and
-% will be removed in Markdown 3.0.0. To control the filename of the temporary
-% file for Lua errors, use the `\g_luabridge_error_output_filename_str` macro
-% from the \pkg{lt3luabridge} package.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\str_new:N
-  \g_luabridge_error_output_filename_str
-\tl_gset:Nn
-  \g_luabridge_error_output_filename_str
-  { \markdownOptionErrorTempFileName }
-%    \end{macrocode}
-% \begin{markdown}
-%
 % The \mdef{markdownOptionOutputDir} macro sets the path to the directory that
 % will contain the auxiliary cache files produced by the Lua implementation and
 % also the auxiliary files produced by the plain \TeX{} implementation. The
@@ -11138,8 +11077,6 @@ specify the location of temporary files produced during the conversion from
 Markdown to \TeX{}:
 
 - `\markdownOptionInputTempFileName`,
-- `\markdownOptionOutputTempFileName`,
-- `\markdownOptionErrorTempFileName`,
 - `\markdownOptionOutputDir`,
 - `\markdownOptionCacheDir`, and
 - `\markdownOptionFrozenCacheFileName`.
@@ -11153,11 +11090,10 @@ document named `document.tex` with the following content:
 \input lmfonts
 \input markdown
 \def\markdownOptionInputTempFileName{temporary-input.md}
-\def\markdownOptionOutputTempFileName{temporary-output.tex}
-\def\markdownOptionErrorTempFileName{error-output.txt}
 \def\markdownOptionOutputDir{output-directory}
 \def\markdownOptionCacheDir{output-directory/cache-directory}
-\markdownOptionFinalizeCachetrue
+\def\markdownOptionEagerCache{true}
+\def\markdownOptionFinalizeCache{true}
 \def\markdownOptionFrozenCacheFileName{output-directory/cache-directory/frozen-cache.tex}
 \markdownBegin
 Hello *world*!
@@ -11183,11 +11119,6 @@ pdftex --output-directory output-directory --shell-escape document.tex
 Text document named `temporary-output.md` should be produced in the folder
 named `output-directory`.  The document will contain the input markdown
 document converted to \TeX{}.
-
-No document named `error-output.txt` should be produced in the folder named
-`output-directory`. This document would only be produced if an error had occured
-while executing the Lua code. If this happens, please [file a
-bug](https://github.com/witiko/markdown/issues).
 
 #### Package Documentation
 
