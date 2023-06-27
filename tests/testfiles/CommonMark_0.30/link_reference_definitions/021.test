@@ -1,0 +1,22 @@
+%   ---RESULT--- "example": 212,
+%   
+%   <pre><code>[foo]: /url
+%   </code></pre>
+%   <p>[foo]</p>
+%   
+%   ---\RESULT---
+
+<<<
+```
+[foo]: /url
+```
+
+[foo]
+>>>
+documentBegin
+BEGIN fencedCode
+- src: ./_markdown_test/f8cf8952bb008c52acda57a307e2d70f.verbatim
+- infostring: 
+END fencedCode
+interblockSeparator
+documentEnd

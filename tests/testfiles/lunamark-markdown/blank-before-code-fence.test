@@ -1,4 +1,3 @@
-\def\markdownOptionFencedCode{true}
 \def\markdownOptionBlankBeforeCodeFence{true}
 <<<
 This test ensures that the Lua `fencedCode` and `blankBeforeCodeFence` options
@@ -33,13 +32,18 @@ bar
 documentBegin
 codeSpan: fencedCode
 codeSpan: blankBeforeCodeFence
+softLineBreak
 interblockSeparator
 interblockSeparator
-codeSpan: foo bar 
+softLineBreak
+codeSpan: foo bar
 interblockSeparator
+softLineBreak
 tilde
 tilde
 tilde
+softLineBreak
+softLineBreak
 tilde
 tilde
 tilde

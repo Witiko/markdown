@@ -1,0 +1,16 @@
+%   ---RESULT--- "example": 596,
+%   
+%   <p><a href="MAILTO:FOO@BAR.BAZ">MAILTO:FOO@BAR.BAZ</a></p>
+%   
+%   ---\RESULT---
+
+<<<
+<MAILTO:FOO@BAR.BAZ>
+>>>
+documentBegin
+BEGIN link
+- label: MAILTO:FOO@BAR.BAZ
+- URI: MAILTO:FOO@BAR.BAZ
+- title: 
+END link
+documentEnd

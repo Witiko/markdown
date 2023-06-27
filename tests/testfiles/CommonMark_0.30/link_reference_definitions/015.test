@@ -1,0 +1,18 @@
+%   ---RESULT--- "example": 206,
+%   
+%   <p><a href="/%CF%86%CE%BF%CF%85">αγω</a></p>
+%   
+%   ---\RESULT---
+
+<<<
+[ΑΓΩ]: /φου
+
+[αγω]
+>>>
+documentBegin
+BEGIN link
+- label: αγω
+- URI: /φου
+- title: 
+END link
+documentEnd

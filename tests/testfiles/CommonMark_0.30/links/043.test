@@ -1,0 +1,12 @@
+%   ---RESULT--- "example": 523,
+%   
+%   <p>[foo <bar attr="](baz)"></p>
+%   
+%   ---\RESULT---
+
+<<<
+[foo <bar attr="](baz)">
+>>>
+documentBegin
+inlineHtmlTag: <bar attr="](baz)">
+documentEnd

@@ -1,0 +1,15 @@
+%   ---RESULT--- "example": 626,
+%   
+%   <p>foo &lt;!--&gt; foo --&gt;</p>
+%   <p>foo &lt;!-- foo---&gt;</p>
+%   
+%   ---\RESULT---
+
+<<<
+foo <!--> foo -->
+
+foo <!-- foo--->
+>>>
+documentBegin
+interblockSeparator
+documentEnd

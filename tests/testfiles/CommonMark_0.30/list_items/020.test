@@ -1,0 +1,23 @@
+%   ---RESULT--- "example": 272,
+%   
+%   <pre><code>indented code
+%   </code></pre>
+%   <p>paragraph</p>
+%   <pre><code>more code
+%   </code></pre>
+%   
+%   ---\RESULT---
+
+<<<
+    indented code
+
+paragraph
+
+    more code
+>>>
+documentBegin
+inputVerbatim: ./_markdown_test/bf995e3b2610078e871b00000c1fb65f.verbatim
+interblockSeparator
+interblockSeparator
+inputVerbatim: ./_markdown_test/edf19530665eedd599d1228679ec3a65.verbatim
+documentEnd

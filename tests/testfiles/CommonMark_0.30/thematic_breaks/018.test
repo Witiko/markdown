@@ -1,0 +1,30 @@
+%   ---RESULT--- "example": 60,
+%   
+%   <ul>
+%   <li>Foo</li>
+%   </ul>
+%   <hr />
+%   <ul>
+%   <li>Bar</li>
+%   </ul>
+%   
+%   ---\RESULT---
+
+<<<
+* Foo
+* * *
+* Bar
+>>>
+documentBegin
+ulBeginTight
+ulItem
+ulItemEnd
+ulEndTight
+interblockSeparator
+thematicBreak
+interblockSeparator
+ulBeginTight
+ulItem
+ulItemEnd
+ulEndTight
+documentEnd

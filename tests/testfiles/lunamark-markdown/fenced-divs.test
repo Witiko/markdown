@@ -116,7 +116,10 @@ This is not a div
 documentBegin
 codeSpan: fencedDivs
 codeSpan: fencedCode
+softLineBreak
 interblockSeparator
+softLineBreak
+softLineBreak
 interblockSeparator
 BEGIN fencedDivAttributeContext
 attributeClassName: myclass
@@ -183,6 +186,7 @@ BEGIN fencedDivAttributeContext
 attributeIdentifier: some-identifier
 interblockSeparator
 blockQuoteBegin
+interblockSeparator
 blockQuoteEnd
 interblockSeparator
 END fencedDivAttributeContext
@@ -191,7 +195,8 @@ interblockSeparator
 interblockSeparator
 leftBrace
 rightBrace
-codeSpan:  ::: 
+softLineBreak
+codeSpan: :::
 interblockSeparator
 BEGIN fencedDivAttributeContext
 attributeClassName: some-classname
@@ -205,6 +210,7 @@ interblockSeparator
 BEGIN fencedDivAttributeContext
 attributeIdentifier: another-identifier
 blockQuoteBegin
+softLineBreak
 blockQuoteEnd
 END fencedDivAttributeContext
 interblockSeparator
@@ -233,6 +239,7 @@ END fencedDivAttributeContext
 interblockSeparator
 leftBrace
 rightBrace
+softLineBreak
 interblockSeparator
 BEGIN fencedCode
 - src: ./_markdown_test/e441fcf4a7686817fe868bf38a5c2c07.verbatim
@@ -241,4 +248,5 @@ END fencedCode
 interblockSeparator
 leftBrace
 rightBrace
+softLineBreak
 documentEnd

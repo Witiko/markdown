@@ -18,6 +18,7 @@ Loose:
 >>>
 documentBegin
 codeSpan: startNumber
+softLineBreak
 interblockSeparator
 interblockSeparator
 olBeginTight

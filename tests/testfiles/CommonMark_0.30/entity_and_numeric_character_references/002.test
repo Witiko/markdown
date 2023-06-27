@@ -1,0 +1,12 @@
+%   ---RESULT--- "example": 26,
+%   
+%   <p><em># Ӓ Ϡ �</em></p>
+%   
+%   ---\RESULT---
+
+<<<
+*&#35; &#1234; &#992; &#0;*
+>>>
+documentBegin
+emphasis: (hash) Ӓ Ϡ (replacementCharacter)
+documentEnd

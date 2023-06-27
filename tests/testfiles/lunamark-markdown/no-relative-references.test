@@ -6,6 +6,7 @@ Here is a <#relative-reference> and <?here=is> another <./one>.
 >>>
 documentBegin
 codeSpan: relativeReferences
+softLineBreak
 interblockSeparator
 hash
 documentEnd

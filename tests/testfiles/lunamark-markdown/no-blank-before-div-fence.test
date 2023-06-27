@@ -18,7 +18,9 @@ bar
 >>>
 documentBegin
 codeSpan: fencedDivs
+softLineBreak
 codeSpan: blankBeforeDivFence
+softLineBreak
 interblockSeparator
 interblockSeparator
 BEGIN fencedDivAttributeContext

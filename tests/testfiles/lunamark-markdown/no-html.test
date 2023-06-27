@@ -1,12 +1,22 @@
 <<<
-This test ensures that the Lua `html` option is disabled by default.
+This test ensures that the Lua `html` option is enabled by default.
 
 <div>
-*There is no block tag support.*
+*There is block tag support.*
 </div>
 *There is <inline tag="value"></inline> support.<br/>*
-_There is no <!-- comment --> support._
-_There is no <? HTML instruction ?> support._
+_There is <!-- *comment* --> support._
+_There is <? *HTML instruction* ?> support._
+
+<!--
+
+Here is a *block comment*:
+
+1. item
+2. item
+3. item
+
+-->
 
 Here are several ways to write a pipe:
 
@@ -22,10 +32,9 @@ Unrecognized character entities are ignored: &nonsense;
 documentBegin
 codeSpan: html
 interblockSeparator
-emphasis: There is no block tag support.
-emphasis: There is <inline tag="value"></inline> support.<br/>
-emphasis: There is no <!-- comment --> support.
-emphasis: There is no <? HTML instruction ?> support.
+inputBlockHtmlElement: ./_markdown_test/34d8e769cc46adbf7aeb7c22322cce98.verbatim
+interblockSeparator
+inputBlockHtmlElement: ./_markdown_test/39d398563da05b15636873d96cc50e51.verbatim
 interblockSeparator
 interblockSeparator
 ulBeginTight
@@ -33,21 +42,19 @@ ulItem
 pipe
 ulItemEnd
 ulItem
-ampersand
+pipe
 ulItemEnd
 ulItem
-ampersand
+pipe
 ulItemEnd
 ulItem
-ampersand
+pipe
 ulItemEnd
 ulItem
-ampersand
-hash
+pipe
 ulItemEnd
 ulItem
-ampersand
-hash
+pipe
 ulItemEnd
 ulEndTight
 interblockSeparator

@@ -6,18 +6,18 @@ Getting the Gist of Markdown's Formatting Syntax
 ------------------------------------------------
 
 This page offers a brief overview of what it's like to use Markdown.
-The [syntax page] [s] provides complete, detailed documentation for
+The [syntax page][s] provides complete, detailed documentation for
 every feature, but Markdown should be very easy to pick up simply by
 looking at a few examples of it in action. The examples on this page
 are written in a before/after style, showing example syntax and the
 HTML output produced by Markdown.
 
-It's also helpful to simply try Markdown out; the [Dingus] [d] is a
+It's also helpful to simply try Markdown out; the [Dingus][d] is a
 web application that allows you type your own Markdown-formatted text
 and translate it to XHTML.
 
 **Note:** This document is itself written using Markdown; you
-can [see the source for it by adding '.text' to the URL] [src].
+can [see the source for it by adding '.text' to the URL][src].
 
   [s]: /projects/markdown/syntax  "Markdown Syntax"
   [d]: /projects/markdown/dingus  "Markdown Dingus"
@@ -298,19 +298,27 @@ interblockSeparator
 BEGIN section
 headingTwo: Getting the Gist of Markdown's Formatting Syntax
 interblockSeparator
+softLineBreak
 BEGIN link
 - label: syntax page
 - URI: /projects/markdown/syntax
 - title: Markdown Syntax
 END link
+softLineBreak
+softLineBreak
+softLineBreak
+softLineBreak
 interblockSeparator
 BEGIN link
 - label: Dingus
 - URI: /projects/markdown/dingus
 - title: Markdown Dingus
 END link
+softLineBreak
+softLineBreak
 interblockSeparator
 strongEmphasis: Note:
+softLineBreak
 BEGIN link
 - label: see the source for it by adding '.text' to the URL
 - URI: /projects/markdown/basics.text
@@ -321,14 +329,22 @@ END section
 BEGIN section
 headingTwo: Paragraphs, Headers, Blockquotes
 interblockSeparator
+softLineBreak
+softLineBreak
+softLineBreak
 interblockSeparator
 emphasis: Setext
 emphasis: atx
+softLineBreak
 codeSpan: <h1>
 codeSpan: <h2>
+softLineBreak
 codeSpan: =
 codeSpan: -
+softLineBreak
 codeSpan: (hash)
+softLineBreak
+softLineBreak
 interblockSeparator
 codeSpan: >
 interblockSeparator
@@ -336,7 +352,7 @@ interblockSeparator
 inputVerbatim: ./_markdown_test/007582f01fded3ea3889f0fed011a810.verbatim
 interblockSeparator
 interblockSeparator
-inputVerbatim: ./_markdown_test/a88786d5556201bd842f795fd43bf808.verbatim
+inputVerbatim: ./_markdown_test/e4da8d88f0474a4d3458d7dcd41e29b7.verbatim
 interblockSeparator
 BEGIN section
 headingThree: Phrase Emphasis
@@ -354,8 +370,10 @@ BEGIN section
 headingTwo: Lists
 interblockSeparator
 codeSpan: *
+softLineBreak
 codeSpan: +
 codeSpan: -
+softLineBreak
 interblockSeparator
 inputVerbatim: ./_markdown_test/f3b0f0a652c54f7cb98b28a2a27fef63.verbatim
 interblockSeparator
@@ -368,6 +386,7 @@ interblockSeparator
 interblockSeparator
 inputVerbatim: ./_markdown_test/50ea57274a1552580aead14f3801f56e.verbatim
 interblockSeparator
+softLineBreak
 interblockSeparator
 inputVerbatim: ./_markdown_test/1f488a715120c6148a3f072c1b645d47.verbatim
 interblockSeparator
@@ -375,6 +394,8 @@ interblockSeparator
 inputVerbatim: ./_markdown_test/985eca391e41a2a3ccdab55280d3a3f8.verbatim
 interblockSeparator
 codeSpan: <p>
+softLineBreak
+softLineBreak
 interblockSeparator
 inputVerbatim: ./_markdown_test/cd730c2ae38e0ecdca4257c7c746a795.verbatim
 interblockSeparator
@@ -385,8 +406,11 @@ BEGIN section
 headingThree: Links
 interblockSeparator
 emphasis: inline
+softLineBreak
 emphasis: reference
+softLineBreak
 interblockSeparator
+softLineBreak
 interblockSeparator
 inputVerbatim: ./_markdown_test/54e51df8ec7f096d54a4d8e8c4ce19a5.verbatim
 interblockSeparator
@@ -399,12 +423,14 @@ interblockSeparator
 interblockSeparator
 inputVerbatim: ./_markdown_test/e9cc46f11760cca16092e28cced5b000.verbatim
 interblockSeparator
+softLineBreak
 interblockSeparator
 inputVerbatim: ./_markdown_test/98fdff32518489fb16e81ac2e0a299d2.verbatim
 interblockSeparator
 interblockSeparator
 inputVerbatim: ./_markdown_test/ddb7929e8788e38eed2e5f9af95100b4.verbatim
 interblockSeparator
+softLineBreak
 emphasis: not
 interblockSeparator
 inputVerbatim: ./_markdown_test/142bd9b225d4b58eaa93b4e488bf21a6.verbatim
@@ -430,17 +456,22 @@ END section
 BEGIN section
 headingThree: Code
 interblockSeparator
+softLineBreak
 codeSpan: (ampersand)
 codeSpan: <
+softLineBreak
 codeSpan: >
+softLineBreak
 interblockSeparator
 inputVerbatim: ./_markdown_test/ac7a815a53ea2f17b27ffdc2475c5c30.verbatim
 interblockSeparator
 interblockSeparator
 inputVerbatim: ./_markdown_test/843be4cf12e1ca8628dbcc50c6e455ee.verbatim
 interblockSeparator
+softLineBreak
 codeSpan: (ampersand)
 codeSpan: <
+softLineBreak
 codeSpan: >
 interblockSeparator
 interblockSeparator

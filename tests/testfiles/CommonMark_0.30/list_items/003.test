@@ -1,0 +1,23 @@
+%   ---RESULT--- "example": 255,
+%   
+%   <ul>
+%   <li><em>one</em></li>
+%   </ul>
+%   <p><em>two</em></p>
+%   
+%   ---\RESULT---
+
+<<<
+- _one_
+
+ _two_
+>>>
+documentBegin
+ulBeginTight
+ulItem
+emphasis: one
+ulItemEnd
+ulEndTight
+interblockSeparator
+emphasis: two
+documentEnd

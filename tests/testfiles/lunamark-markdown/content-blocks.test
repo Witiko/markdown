@@ -19,7 +19,10 @@ htt(p:/)/exam(ple.c)om/m\(inard.jpg (Napoleon's disastrous Russian campaign of 1
 >>>
 documentBegin
 codeSpan: contentBlocks
+softLineBreak
+softLineBreak
 interblockSeparator
+softLineBreak
 interblockSeparator
 BEGIN contentBlockOnlineImage
 - suffix: jpg

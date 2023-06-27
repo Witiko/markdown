@@ -1,0 +1,13 @@
+%   ---RESULT--- "example": 210,
+%   
+%   <p>&quot;title&quot; <em>ok</em></p>
+%   
+%   ---\RESULT---
+
+<<<
+[foo]: /*url*
+"title" *ok*
+>>>
+documentBegin
+emphasis: ok
+documentEnd

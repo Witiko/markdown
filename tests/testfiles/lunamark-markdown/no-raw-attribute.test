@@ -1,8 +1,6 @@
-\def\markdownOptionFencedCode{true}
 <<<
-This test ensures that the Lua `fencedCode` option correctly propagates through
-the plain TeX interface and that the `rawAttribute` option is disabled by
-default.
+This test ensures that the Lua `fencedCode` option is enabled by default and
+that the `rawAttribute` option is disabled by default.
 
 The following fenced code block should resolve to a fenced code block:
 
@@ -21,6 +19,7 @@ This is `<a>html</a>`{=html}
 >>>
 documentBegin
 codeSpan: fencedCode
+softLineBreak
 codeSpan: rawAttribute
 interblockSeparator
 interblockSeparator
@@ -29,6 +28,7 @@ BEGIN fencedCode
 - infostring: (leftBrace)=openxml(rightBrace)
 END fencedCode
 interblockSeparator
+softLineBreak
 interblockSeparator
 codeSpan: <a>html</a>
 leftBrace

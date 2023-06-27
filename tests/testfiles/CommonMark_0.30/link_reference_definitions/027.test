@@ -1,0 +1,23 @@
+%   ---RESULT--- "example": 218,
+%   
+%   <p><a href="/url">foo</a></p>
+%   <blockquote>
+%   </blockquote>
+%   
+%   ---\RESULT---
+
+<<<
+[foo]
+
+> [foo]: /url
+>>>
+documentBegin
+BEGIN link
+- label: foo
+- URI: /url
+- title: 
+END link
+interblockSeparator
+blockQuoteBegin
+blockQuoteEnd
+documentEnd

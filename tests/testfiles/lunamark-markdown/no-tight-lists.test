@@ -9,6 +9,7 @@ through the plain TeX interface. The following list should be regular.
 >>>
 documentBegin
 codeSpan: tightLists
+softLineBreak
 interblockSeparator
 olBegin
 olItemWithNumber: 3

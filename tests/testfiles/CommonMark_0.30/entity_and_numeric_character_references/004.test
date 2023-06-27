@@ -1,0 +1,24 @@
+%   ---RESULT--- "example": 28,
+%   
+%   <p><em>&amp;nbsp &amp;x; &amp;#; &amp;#x;</em>
+%   <em>&amp;#87654321;</em>
+%   <em>&amp;#abcdef0;</em>
+%   <em>&amp;ThisIsNotDefined; &amp;hi?;</em></p>
+%   
+%   ---\RESULT---
+
+<<<
+*&nbsp &x; &#; &#x;*
+*&#87654321;*
+*&#abcdef0;*
+*&ThisIsNotDefined; &hi?;*
+>>>
+documentBegin
+emphasis: (ampersand)nbsp (ampersand)x; (ampersand)(hash); (ampersand)(hash)x;
+softLineBreak
+emphasis: (ampersand)(hash)87654321;
+softLineBreak
+emphasis: (ampersand)(hash)abcdef0;
+softLineBreak
+emphasis: (ampersand)ThisIsNotDefined; (ampersand)hi?;
+documentEnd

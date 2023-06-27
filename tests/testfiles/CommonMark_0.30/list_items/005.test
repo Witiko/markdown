@@ -1,0 +1,24 @@
+%   ---RESULT--- "example": 257,
+%   
+%   <ul>
+%   <li><em>one</em></li>
+%   </ul>
+%   <pre><code> _two_
+%   </code></pre>
+%   
+%   ---\RESULT---
+
+<<<
+ -    _one_
+
+     _two_
+>>>
+documentBegin
+ulBeginTight
+ulItem
+emphasis: one
+ulItemEnd
+ulEndTight
+interblockSeparator
+inputVerbatim: ./_markdown_test/c2bbcf3f6ee0ac1874f9dc52a648500a.verbatim
+documentEnd

@@ -1,4 +1,5 @@
 \def\markdownOptionStripIndent{true}
+\def\markdownOptionPreserveTabs{false}
 <<<
     This test ensures that the Lua `stripIndent` option correctly propagates
   	through the plain TeX interface. This indented block should have its indent
@@ -7,4 +8,7 @@
 >>>
 documentBegin
 codeSpan: stripIndent
+softLineBreak
+softLineBreak
+softLineBreak
 documentEnd

@@ -1,17 +1,22 @@
 # Changes
 
-## 3.0.0
+## 3.0.0-alpha (2023-06-27)
 
 Development:
 
+- Comply with CommonMark 0.30 and increment `grammar_version` to `3`.
+  (contributed by @lostenderman, #29, #129, #210, #212, #226, #309)
 - Add a demo of using the Markdown package in OpTeX.
   (contributed by @olsak, #215, 109c1b5, #292)
 
 Default Renderer Prototypes:
 
-- Do not force line breaks after high-level headings in LaTeX,
-  but allow the text to follow the heading on the same line.
-  (df8562c)
+- Do not force line breaks after high-level headings in LaTeX.
+  Allow the text to follow the heading on the same line. (df8562c)
+
+Deprecation:
+
+- Remove support for LuaMetaTeX. (#226)
 
 Fixes:
 
@@ -214,8 +219,7 @@ Development:
   - Rename the `footnotes` and `inlineFootnotes` options to `notes` and
     `inlineNotes`.
   - Rename the `HorizontalRule` rule to `ThematicBreak` and increment
-    `grammar_version` to `2`. This change is not backwards-compatible with the
-    `grammar_version` of `1`.
+    `grammar_version` to `2`.
 - Add `\markdownEscape` macro that inputs a TeX document in the middle of a
   markdown document fragment. (1478f7b)
 - Add support for raw attributes. (#173, #202)

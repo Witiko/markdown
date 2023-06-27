@@ -1,0 +1,13 @@
+%   ---RESULT--- "example": 613,
+%   
+%   <p><a/><b2/></p>
+%   
+%   ---\RESULT---
+
+<<<
+<a/><b2/>
+>>>
+documentBegin
+inlineHtmlTag: <a/>
+inlineHtmlTag: <b2/>
+documentEnd

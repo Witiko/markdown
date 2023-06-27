@@ -1,0 +1,17 @@
+%   ---RESULT--- "example": 102,
+%   
+%   <h2>&gt; foo</h2>
+%   
+%   ---\RESULT---
+
+<<<
+\> foo
+------
+>>>
+documentBegin
+BEGIN section
+BEGIN section
+headingTwo: > foo
+END section
+END section
+documentEnd

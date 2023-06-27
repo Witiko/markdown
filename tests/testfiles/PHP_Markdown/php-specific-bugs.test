@@ -24,10 +24,13 @@ Test with tabs for `_Detab`:
 
 >>>
 documentBegin
+softLineBreak
 codeSpan: preg(underscore)replace
 codeSpan: /e
+softLineBreak
 codeSpan: (underscore)UnslashQuotes
 interblockSeparator
+softLineBreak
 interblockSeparator
 BEGIN section
 headingOne: Header "quoted" again (backslash)""
@@ -40,7 +43,7 @@ headingThree: Header "quoted" again (backslash)""
 interblockSeparator
 codeSpan: (underscore)Detab
 interblockSeparator
-inputVerbatim: ./_markdown_test/57e7cfa9cb0dc4b666bfe415c968fe70.verbatim
+inputVerbatim: ./_markdown_test/49593f3a94665fea149e78f87b7e1b70.verbatim
 END section
 END section
 END section

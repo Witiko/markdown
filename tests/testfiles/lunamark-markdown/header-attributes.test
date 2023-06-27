@@ -22,14 +22,15 @@ A level two heading {iD=fourth4-id .2not-a-class}
 >>>
 documentBegin
 codeSpan: headerAttributes
+softLineBreak
 interblockSeparator
 BEGIN section
 BEGIN headerAttributeContext
 attributeIdentifier: first-id
 attributeClassName: unnumbered
 headingOne: A level one heading
-interblockSeparator
 END headerAttributeContext
+interblockSeparator
 END section
 BEGIN section
 BEGIN headerAttributeContext
@@ -40,14 +41,15 @@ BEGIN attributeKeyValue
 - value: some quoted value with escaped quotes and Unicode: "ěščřžýáíé"
 END attributeKeyValue
 headingOne: A level one heading
+END headerAttributeContext
 interblockSeparator
 BEGIN section
 BEGIN headerAttributeContext
 attributeIdentifier: third.3id
 attributeClassName: a-class
 headingTwo: A level two heading
-interblockSeparator
 END headerAttributeContext
+interblockSeparator
 END section
 BEGIN section
 headingTwo: A level two heading (leftBrace)iD=fourth4-id .2not-a-class(rightBrace)
@@ -69,14 +71,13 @@ attributeClassName: bb
 attributeClassName: ccc
 attributeClassName: dddd
 headingSix: A level six heading
+END headerAttributeContext
 interblockSeparator
-END headerAttributeContext
 END section
 END section
 END section
 END section
 END section
-END headerAttributeContext
 END section
 BEGIN section
 BEGIN headerAttributeContext

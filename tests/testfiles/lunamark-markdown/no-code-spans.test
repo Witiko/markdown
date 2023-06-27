@@ -7,5 +7,7 @@ the plain TeX interface.
 ``This is another one.''
 >>>
 documentBegin
+softLineBreak
 interblockSeparator
+softLineBreak
 documentEnd

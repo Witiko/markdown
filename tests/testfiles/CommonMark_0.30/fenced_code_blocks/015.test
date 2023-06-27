@@ -1,0 +1,22 @@
+%   ---RESULT--- "example": 133,
+%   
+%   <pre><code>aaa
+%    aaa
+%   aaa
+%   </code></pre>
+%   
+%   ---\RESULT---
+
+<<<
+   ```
+   aaa
+    aaa
+  aaa
+   ```
+>>>
+documentBegin
+BEGIN fencedCode
+- src: ./_markdown_test/f1fe132d6a6e58bc96d83aceb392c3b4.verbatim
+- infostring: 
+END fencedCode
+documentEnd

@@ -20,6 +20,7 @@ BEGIN section
 BEGIN headerAttributeContext
 attributeIdentifier: section-with-deferred-content
 headingOne: This is another section
+END headerAttributeContext
 interblockSeparator
 note: This is the text of the note.
 BEGIN link
@@ -33,6 +34,5 @@ BEGIN image
 - title: This is the title of the image.
 END image
 interblockSeparator
-END headerAttributeContext
 END section
 documentEnd

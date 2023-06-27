@@ -1,0 +1,12 @@
+%   ---RESULT--- "example": 627,
+%   
+%   <p>foo <?php echo $a; ?></p>
+%   
+%   ---\RESULT---
+
+<<<
+foo <?php echo $a; ?>
+>>>
+documentBegin
+inlineHtmlTag: <?php echo (dollarSign)a; ?>
+documentEnd

@@ -1,0 +1,14 @@
+%   ---RESULT--- "example": 49,
+%   
+%   <p>Foo
+%   ***</p>
+%   
+%   ---\RESULT---
+
+<<<
+Foo
+    ***
+>>>
+documentBegin
+softLineBreak
+documentEnd

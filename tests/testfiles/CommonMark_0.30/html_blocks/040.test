@@ -1,0 +1,18 @@
+%   ---RESULT--- "example": 187,
+%   
+%   <p>Foo
+%   <a href="bar">
+%   baz</p>
+%   
+%   ---\RESULT---
+
+<<<
+Foo
+<a href="bar">
+baz
+>>>
+documentBegin
+softLineBreak
+inlineHtmlTag: <a href="bar">
+softLineBreak
+documentEnd

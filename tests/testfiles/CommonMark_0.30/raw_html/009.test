@@ -1,0 +1,20 @@
+%   ---RESULT--- "example": 620,
+%   
+%   <p>&lt; a&gt;&lt;
+%   foo&gt;&lt;bar/ &gt;
+%   &lt;foo bar=baz
+%   bim!bop /&gt;</p>
+%   
+%   ---\RESULT---
+
+<<<
+< a><
+foo><bar/ >
+<foo bar=baz
+bim!bop />
+>>>
+documentBegin
+softLineBreak
+softLineBreak
+softLineBreak
+documentEnd

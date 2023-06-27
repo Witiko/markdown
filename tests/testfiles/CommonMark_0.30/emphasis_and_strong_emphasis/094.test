@@ -1,0 +1,12 @@
+%   ---RESULT--- "example": 443,
+%   
+%   <p>*<strong>foo</strong></p>
+%   
+%   ---\RESULT---
+
+<<<
+***foo**
+>>>
+documentBegin
+strongEmphasis: foo
+documentEnd

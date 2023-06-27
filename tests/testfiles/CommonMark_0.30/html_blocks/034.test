@@ -1,0 +1,12 @@
+%   ---RESULT--- "example": 181,
+%   
+%   <!DOCTYPE html>
+%   
+%   ---\RESULT---
+
+<<<
+<!DOCTYPE html>
+>>>
+documentBegin
+inputBlockHtmlElement: ./_markdown_test/fe364450e1391215f596d043488f989f.verbatim
+documentEnd

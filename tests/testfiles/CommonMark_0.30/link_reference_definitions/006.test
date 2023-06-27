@@ -1,0 +1,19 @@
+%   ---RESULT--- "example": 197,
+%   
+%   <p>[foo]: /url 'title</p>
+%   <p>with blank line'</p>
+%   <p>[foo]</p>
+%   
+%   ---\RESULT---
+
+<<<
+[foo]: /url 'title
+
+with blank line'
+
+[foo]
+>>>
+documentBegin
+interblockSeparator
+interblockSeparator
+documentEnd

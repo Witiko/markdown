@@ -1,0 +1,19 @@
+%   ---RESULT--- "example": 95,
+%   
+%   <h2>Foo
+%   Bar</h2>
+%   
+%   ---\RESULT---
+
+<<<
+Foo
+Bar
+---
+>>>
+documentBegin
+BEGIN section
+BEGIN section
+headingTwo: Foo(softLineBreak)Bar
+END section
+END section
+documentEnd

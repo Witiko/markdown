@@ -1,0 +1,13 @@
+%   ---RESULT--- "example": 362,
+%   
+%   <p>aa_&quot;bb&quot;_cc</p>
+%   
+%   ---\RESULT---
+
+<<<
+aa_"bb"_cc
+>>>
+documentBegin
+underscore
+underscore
+documentEnd

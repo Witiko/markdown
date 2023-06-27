@@ -13,6 +13,7 @@ bar
 documentBegin
 codeSpan: fencedCode
 codeSpan: fencedCodeAttributes
+softLineBreak
 interblockSeparator
 interblockSeparator
 BEGIN fencedCodeAttributeContext

@@ -1,0 +1,21 @@
+%   ---RESULT--- "example": 93,
+%   
+%   <blockquote>
+%   <p>foo
+%   bar
+%   ===</p>
+%   </blockquote>
+%   
+%   ---\RESULT---
+
+<<<
+> foo
+bar
+===
+>>>
+documentBegin
+blockQuoteBegin
+softLineBreak
+softLineBreak
+blockQuoteEnd
+documentEnd

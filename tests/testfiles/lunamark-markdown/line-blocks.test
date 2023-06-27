@@ -21,6 +21,7 @@ Line blocks with continuation
 >>>
 documentBegin
 codeSpan: lineBlocks
+softLineBreak
 interblockSeparator
 interblockSeparator
 lineBlockBegin

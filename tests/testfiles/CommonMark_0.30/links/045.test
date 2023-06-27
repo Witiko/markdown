@@ -1,0 +1,16 @@
+%   ---RESULT--- "example": 525,
+%   
+%   <p>[foo<a href="http://example.com/?search=%5D(uri)">http://example.com/?search=](uri)</a></p>
+%   
+%   ---\RESULT---
+
+<<<
+[foo<http://example.com/?search=](uri)>
+>>>
+documentBegin
+BEGIN link
+- label: http://example.com/?search=](uri)
+- URI: http://example.com/?search=](uri)
+- title: 
+END link
+documentEnd

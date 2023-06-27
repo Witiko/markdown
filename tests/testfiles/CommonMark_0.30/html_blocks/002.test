@@ -1,0 +1,28 @@
+%   ---RESULT--- "example": 149,
+%   
+%   <table>
+%     <tr>
+%       <td>
+%              hi
+%       </td>
+%     </tr>
+%   </table>
+%   <p>okay.</p>
+%   
+%   ---\RESULT---
+
+<<<
+<table>
+  <tr>
+    <td>
+           hi
+    </td>
+  </tr>
+</table>
+
+okay.
+>>>
+documentBegin
+inputBlockHtmlElement: ./_markdown_test/aa7fdd73acc96e799e78ba0f4775fd89.verbatim
+interblockSeparator
+documentEnd

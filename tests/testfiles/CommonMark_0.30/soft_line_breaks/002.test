@@ -1,0 +1,14 @@
+%   ---RESULT--- "example": 649,
+%   
+%   <p>foo
+%   baz</p>
+%   
+%   ---\RESULT---
+
+<<<
+_foo 
+ baz_
+>>>
+documentBegin
+emphasis: foo(softLineBreak)baz
+documentEnd

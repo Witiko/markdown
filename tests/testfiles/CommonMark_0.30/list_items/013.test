@@ -1,0 +1,18 @@
+%   ---RESULT--- "example": 265,
+%   
+%   <ol start="123456789">
+%   <li><em>ok</em></li>
+%   </ol>
+%   
+%   ---\RESULT---
+
+<<<
+123456789. _ok_
+>>>
+documentBegin
+olBeginTight
+olItemWithNumber: 123456789
+emphasis: ok
+olItemEnd
+olEndTight
+documentEnd

@@ -13,13 +13,15 @@ Markdown
  [matrix]:   https://matrix.to/#/#witiko-markdown:matrix.org    "The Matrix Chat Space for the Markdown package"
  [discord]:  https://discord.gg/8xJsPghzSH                      "The Discord Chat Space for the Markdown package"
 
-The Markdown package converts markdown markup to TeX commands. The
+The Markdown package converts [CommonMark][] markup to TeX commands. The
 functionality is provided both as a Lua module, and as plain TeX, LaTeX, and
 ConTeXt macro packages that can be used to directly typeset TeX documents
 containing markdown markup. Unlike other convertors, the Markdown package does
 not require any external programs, and makes it easy to redefine how each and
 every markdown element is rendered. Creative abuse of the markdown syntax is
 encouraged. 😉
+
+ [commonmark]: https://commonmark.org/ "CommonMark: A strongly defined, highly compatible specification of Markdown"
 
 Your first Markdown document
 ----------------------------
@@ -200,6 +202,7 @@ For further information, consult one of the following:
     - [A Gentle Introduction to Markdown for Writers][tb134-video] ([slides][tb134-slides], [example][tb134-example]).
 7. Theses by my students:
     - [Generic TeX Writer for the Pandoc Document Converter][thesis-umhg5]
+    - [An implementation of the CommonMark standard into the Markdown package for TeX][thesis-r7z7l]
 
  [overleaf-1]: https://www.overleaf.com/learn/latex/Articles/How_to_write_in_Markdown_on_Overleaf       "How to write in Markdown on Overleaf"
  [overleaf-2]: https://www.overleaf.com/learn/latex/Articles/Markdown_into_LaTeX_with_Style             "Markdown into LaTeX with Style"
@@ -243,6 +246,7 @@ For further information, consult one of the following:
  [techdoc-tex-live]:  https://mirrors.ctan.org/macros/generic/markdown/markdown.pdf             "A Markdown Interpreter for TeX"
 
  [thesis-umhg5]: https://is.muni.cz/th/umhg5/?lang=en "Generic TeX Writer for the Pandoc Document Converter"
+ [thesis-r7z7l]: https://is.muni.cz/th/r7z7l/?lang=en "An implementation of the CommonMark standard into the Markdown package for TeX"
 
 Acknowledgements
 ----------------

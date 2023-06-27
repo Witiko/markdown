@@ -1,0 +1,12 @@
+%   ---RESULT--- "example": 616,
+%   
+%   <p>Foo <responsive-image src="foo.jpg" /></p>
+%   
+%   ---\RESULT---
+
+<<<
+Foo <responsive-image src="foo.jpg" />
+>>>
+documentBegin
+inlineHtmlTag: <responsive-image src="foo.jpg" />
+documentEnd

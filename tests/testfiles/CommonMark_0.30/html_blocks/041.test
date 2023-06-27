@@ -1,0 +1,22 @@
+%   ---RESULT--- "example": 188,
+%   
+%   <div>
+%   <p><em>Emphasized</em> text.</p>
+%   </div>
+%   
+%   ---\RESULT---
+
+<<<
+<div>
+
+*Emphasized* text.
+
+</div>
+>>>
+documentBegin
+inputBlockHtmlElement: ./_markdown_test/32125540a649ecc646413c37c588775d.verbatim
+interblockSeparator
+emphasis: Emphasized
+interblockSeparator
+inputBlockHtmlElement: ./_markdown_test/0a3a0b592b9c285e050805307cee87c2.verbatim
+documentEnd

@@ -6,6 +6,7 @@ disabled by default.
 >>>
 documentBegin
 codeSpan: inlineCodeAttributes
+softLineBreak
 interblockSeparator
 codeSpan: <(dollarSign)>
 leftBrace

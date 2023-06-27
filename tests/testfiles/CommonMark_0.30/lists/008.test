@@ -1,0 +1,44 @@
+%   ---RESULT--- "example": 308,
+%   
+%   <ul>
+%   <li><em>foo</em></li>
+%   <li><em>bar</em></li>
+%   </ul>
+%   <!-- -->
+%   <ul>
+%   <li><em>baz</em></li>
+%   <li><em>bim</em></li>
+%   </ul>
+%   
+%   ---\RESULT---
+
+<<<
+- _foo_
+- _bar_
+
+<!-- -->
+
+- _baz_
+- _bim_
+>>>
+documentBegin
+ulBeginTight
+ulItem
+emphasis: foo
+ulItemEnd
+ulItem
+emphasis: bar
+ulItemEnd
+ulEndTight
+interblockSeparator
+inputBlockHtmlElement: ./_markdown_test/bd8768ad057df0a9dda8e50a0507b3ed.verbatim
+interblockSeparator
+ulBeginTight
+ulItem
+emphasis: baz
+ulItemEnd
+ulItem
+emphasis: bim
+ulItemEnd
+ulEndTight
+documentEnd

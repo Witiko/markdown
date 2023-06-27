@@ -1,5 +1,5 @@
 <<<
-This test ensures that the Lua `fencedCode` option is disabled by default. The
+This test ensures that the Lua `fencedCode` option is enabled by default. The
 following fenced code block should resolve to code spans.
 
 ``` foo
@@ -12,13 +12,15 @@ bar
 >>>
 documentBegin
 codeSpan: fencedCode
+softLineBreak
 interblockSeparator
-codeSpan: foo bar 
+BEGIN fencedCode
+- src: ./_markdown_test/37b51d194a7513e45b56f6524f2d51f2.verbatim
+- infostring: foo
+END fencedCode
 interblockSeparator
-tilde
-tilde
-tilde
-tilde
-tilde
-tilde
+BEGIN fencedCode
+- src: ./_markdown_test/37b51d194a7513e45b56f6524f2d51f2.verbatim
+- infostring: foo
+END fencedCode
 documentEnd

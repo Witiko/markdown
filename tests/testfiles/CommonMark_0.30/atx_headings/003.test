@@ -1,0 +1,17 @@
+%   ---RESULT--- "example": 64,
+%   
+%   <p>#5 bolt</p>
+%   <p>#hashtag</p>
+%   
+%   ---\RESULT---
+
+<<<
+#5 bolt
+
+#hashtag
+>>>
+documentBegin
+hash
+interblockSeparator
+hash
+documentEnd

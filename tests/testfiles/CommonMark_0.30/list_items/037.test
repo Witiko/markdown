@@ -1,0 +1,23 @@
+%   ---RESULT--- "example": 289,
+%   
+%   <pre><code>1.  A paragraph
+%       with two lines.
+%   
+%           indented code
+%   
+%       &gt; A block quote.
+%   </code></pre>
+%   
+%   ---\RESULT---
+
+<<<
+    1.  A paragraph
+        with two lines.
+
+            indented code
+
+        > A block quote.
+>>>
+documentBegin
+inputVerbatim: ./_markdown_test/b1fdfe7d092508ebd2932e4da0968c70.verbatim
+documentEnd

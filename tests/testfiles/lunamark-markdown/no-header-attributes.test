@@ -22,11 +22,11 @@ documentBegin
 codeSpan: headerAttributes
 interblockSeparator
 BEGIN section
-headingOne: A level one heading (leftBrace) - (hash)first-id (rightBrace)
+headingOne: A level one heading (leftBrace) - (hash)first-id   (rightBrace)
 interblockSeparator
 END section
 BEGIN section
-headingOne: A level one heading (leftBrace)(hash)second:id2 - some(underscore)key = "some quoted value with escaped quotes and Unicode: "ěščřžýáíé""(rightBrace)
+headingOne: A level one heading (leftBrace)(hash)second:id2 - some(underscore)key =  "some quoted value with escaped quotes and Unicode: "ěščřžýáíé""(rightBrace)
 interblockSeparator
 BEGIN section
 headingTwo: A level two heading (hash)(hash)(hash) (leftBrace)(hash)third.3id .a-class(rightBrace)

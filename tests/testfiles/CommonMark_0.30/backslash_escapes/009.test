@@ -1,0 +1,16 @@
+%   ---RESULT--- "example": 20,
+%   
+%   <p><a href="http://example.com?find=%5C*">http://example.com?find=\*</a></p>
+%   
+%   ---\RESULT---
+
+<<<
+<http://example.com?find=\*>
+>>>
+documentBegin
+BEGIN link
+- label: http://example.com?find=(backslash)*
+- URI: http://example.com?find=(backslash)*
+- title: 
+END link
+documentEnd

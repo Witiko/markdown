@@ -1,0 +1,25 @@
+%   ---RESULT--- "example": 169,
+%   
+%   <pre language="haskell"><code>
+%   import Text.HTML.TagSoup
+%   
+%   main :: IO ()
+%   main = print $ parseTags tags
+%   </code></pre>
+%   <p>okay</p>
+%   
+%   ---\RESULT---
+
+<<<
+<pre language="haskell"><code>
+import Text.HTML.TagSoup
+
+main :: IO ()
+main = print $ parseTags tags
+</code></pre>
+okay
+>>>
+documentBegin
+inputBlockHtmlElement: ./_markdown_test/83889e8427e2b847ebe0b01d91a34fbf.verbatim
+interblockSeparator
+documentEnd

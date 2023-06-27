@@ -20,6 +20,7 @@ through the plain TeX interface.
 documentBegin
 codeSpan: texMathDoubleBackslash
 codeSpan: texMathSingleBackslash
+softLineBreak
 interblockSeparator
 backslash
 interblockSeparator

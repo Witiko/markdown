@@ -11,7 +11,7 @@ break].
 [line break]: /foo
 
 
-[this] [that] and the [other]
+[this][that] and the [other]
 
 [this]: /this
 [that]: /that
@@ -26,7 +26,7 @@ BEGIN link
 END link
 interblockSeparator
 BEGIN link
-- label: line break
+- label: line(softLineBreak)break
 - URI: /foo
 - title: 
 END link

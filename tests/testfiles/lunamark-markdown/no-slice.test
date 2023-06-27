@@ -133,6 +133,7 @@ belong to the previous note.
 >>>
 documentBegin
 codeSpan: slice
+softLineBreak
 interblockSeparator
 BEGIN section
 headingOne: This is an H1
@@ -141,6 +142,7 @@ BEGIN section
 BEGIN headerAttributeContext
 attributeIdentifier: first-h2
 headingTwo: This is an H2
+END headerAttributeContext
 interblockSeparator
 BEGIN section
 headingThree: This is an H3
@@ -174,18 +176,21 @@ END image
 interblockSeparator
 interblockSeparator
 interblockSeparator
-codeSpan: latex (backslash)documentclass(leftBrace)article(rightBrace) (backslash)begin(leftBrace)document(rightBrace)   Hello world! (backslash)end(leftBrace)document(rightBrace) 
+BEGIN fencedCode
+- src: ./_markdown_test/4b6b6e5629f4aa0fcfcb9164fca2efa3.verbatim
+- infostring: latex
+END fencedCode
 interblockSeparator
 END section
 END section
 END section
 END section
-END headerAttributeContext
 END section
 BEGIN section
 BEGIN headerAttributeContext
 attributeIdentifier: second-h2
 headingTwo: This is an H2
+END headerAttributeContext
 interblockSeparator
 interblockSeparator
 ulBegin
@@ -225,6 +230,7 @@ interblockSeparator
 inputVerbatim: ./_markdown_test/a0fd6fe345e26edf18c330d18cdf4d52.verbatim
 interblockSeparator
 hash
+softLineBreak
 hash
 interblockSeparator
 interblockSeparator
@@ -239,7 +245,9 @@ olEndTight
 interblockSeparator
 interblockSeparator
 hash
+softLineBreak
 hash
+softLineBreak
 hash
 interblockSeparator
 interblockSeparator
@@ -252,9 +260,12 @@ inputVerbatim: ./_markdown_test/c268833f99a7a4a12803144b445357da.verbatim
 interblockSeparator
 interblockSeparator
 interblockSeparator
+softLineBreak
+softLineBreak
 emphasis: Term 2
+softLineBreak
+softLineBreak
 interblockSeparator
-END headerAttributeContext
 END section
 BEGIN section
 headingTwo: This is an H2
@@ -269,7 +280,10 @@ blockQuoteEnd
 interblockSeparator
 circumflex
 circumflex
+softLineBreak
 circumflex
+softLineBreak
+softLineBreak
 interblockSeparator
 circumflex
 interblockSeparator

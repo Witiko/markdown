@@ -1,0 +1,18 @@
+%   ---RESULT--- "example": 173,
+%   
+%   <style
+%     type="text/css">
+%   
+%   foo
+%   
+%   ---\RESULT---
+
+<<<
+<style
+  type="text/css">
+
+foo
+>>>
+documentBegin
+inputBlockHtmlElement: ./_markdown_test/708213f29f7362440aab99ba28df7c5a.verbatim
+documentEnd

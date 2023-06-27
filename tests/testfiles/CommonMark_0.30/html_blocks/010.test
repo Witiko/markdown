@@ -1,0 +1,14 @@
+%   ---RESULT--- "example": 157,
+%   
+%   <div class
+%   foo
+%   
+%   ---\RESULT---
+
+<<<
+<div class
+foo
+>>>
+documentBegin
+inputBlockHtmlElement: ./_markdown_test/ed6f44f52e344dd6061d149a442bca56.verbatim
+documentEnd

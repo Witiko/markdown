@@ -116,9 +116,9 @@ other Markdown constructs:
 
 This is a code span with a literal backslash-backtick sequence: `` \` ``
 
-This is a tag with unescaped backticks <span attr='`ticks`'>bar</span>.
+This is a tag with unescaped backticks <span attr='`ticks`'>
 
-This is a tag with backslashes <span attr='\\backslashes\\'>bar</span>.
+This is a tag with backslashes <span attr='\\backslashes\\'>
 >>>
 documentBegin
 interblockSeparator
@@ -179,6 +179,7 @@ codeSpan: (backslash)+
 interblockSeparator
 codeSpan: (backslash)-
 interblockSeparator
+softLineBreak
 interblockSeparator
 interblockSeparator
 underscore
@@ -187,8 +188,7 @@ interblockSeparator
 interblockSeparator
 codeSpan: (backslash)`
 interblockSeparator
-codeSpan: ticks
+inlineHtmlTag: <span attr='`ticks`'>
 interblockSeparator
-backslash
-backslash
+inlineHtmlTag: <span attr='(backslash)(backslash)backslashes(backslash)(backslash)'>
 documentEnd

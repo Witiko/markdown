@@ -1,0 +1,15 @@
+%   ---RESULT--- "example": 107,
+%   
+%   <pre><code>a simple
+%     indented code block
+%   </code></pre>
+%   
+%   ---\RESULT---
+
+<<<
+    a simple
+      indented code block
+>>>
+documentBegin
+inputVerbatim: ./_markdown_test/5595b0aa623c80a8d8043e5a03a584fb.verbatim
+documentEnd

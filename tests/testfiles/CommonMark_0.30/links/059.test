@@ -1,0 +1,18 @@
+%   ---RESULT--- "example": 539,
+%   
+%   <p><a href="/url">ẞ</a></p>
+%   
+%   ---\RESULT---
+
+<<<
+[ẞ]
+
+[SS]: /url
+>>>
+documentBegin
+BEGIN link
+- label: ẞ
+- URI: /url
+- title: 
+END link
+documentEnd

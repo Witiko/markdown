@@ -1,0 +1,23 @@
+%   ---RESULT--- "example": 180,
+%   
+%   <?php
+%   
+%     echo '>';
+%   
+%   ?>
+%   <p>okay</p>
+%   
+%   ---\RESULT---
+
+<<<
+<?php
+
+  echo '>';
+
+?>
+okay
+>>>
+documentBegin
+inputBlockHtmlElement: ./_markdown_test/08cc067346b74531aab299eab5e63222.verbatim
+interblockSeparator
+documentEnd

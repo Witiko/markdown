@@ -1,0 +1,12 @@
+%   ---RESULT--- "example": 21,
+%   
+%   <a href="/bar\/)">
+%   
+%   ---\RESULT---
+
+<<<
+<a href="/bar\/)">
+>>>
+documentBegin
+inputBlockHtmlElement: ./_markdown_test/a40d946dc39fc782b3e55b166809bdff.verbatim
+documentEnd

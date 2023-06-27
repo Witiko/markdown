@@ -1,0 +1,16 @@
+%   ---RESULT--- "example": 472,
+%   
+%   <p>*<a href="/url">bar*</a></p>
+%   
+%   ---\RESULT---
+
+<<<
+*[bar*](/url)
+>>>
+documentBegin
+BEGIN link
+- label: bar*
+- URI: /url
+- title: 
+END link
+documentEnd

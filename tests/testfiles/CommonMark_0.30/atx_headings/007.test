@@ -1,0 +1,30 @@
+%   ---RESULT--- "example": 68,
+%   
+%   <h3>foo</h3>
+%   <h2>foo</h2>
+%   <h1>foo</h1>
+%   
+%   ---\RESULT---
+
+<<<
+ ### foo
+  ## foo
+   # foo
+>>>
+documentBegin
+BEGIN section
+BEGIN section
+BEGIN section
+headingThree: foo
+interblockSeparator
+END section
+END section
+BEGIN section
+headingTwo: foo
+interblockSeparator
+END section
+END section
+BEGIN section
+headingOne: foo
+END section
+documentEnd

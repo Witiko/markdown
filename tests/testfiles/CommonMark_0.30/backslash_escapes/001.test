@@ -1,0 +1,22 @@
+%   ---RESULT--- "example": 12,
+%   
+%   <p>!&quot;#$%&amp;'()*+,-./:;&lt;=&gt;?@[\]^_`{|}~</p>
+%   
+%   ---\RESULT---
+
+<<<
+\!\"\#\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\\\]\^\_\`\{\|\}\~
+>>>
+documentBegin
+hash
+dollarSign
+percentSign
+ampersand
+backslash
+circumflex
+underscore
+leftBrace
+pipe
+rightBrace
+tilde
+documentEnd

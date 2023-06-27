@@ -21,8 +21,11 @@ bar
 documentBegin
 codeSpan: fencedDivs
 codeSpan: blankBeforeDivFence
+softLineBreak
 interblockSeparator
 interblockSeparator
+softLineBreak
+softLineBreak
 interblockSeparator
 interblockSeparator
 BEGIN fencedDivAttributeContext

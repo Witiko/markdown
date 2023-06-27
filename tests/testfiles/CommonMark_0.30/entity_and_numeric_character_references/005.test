@@ -1,0 +1,12 @@
+%   ---RESULT--- "example": 29,
+%   
+%   <p><em>&amp;copy</em></p>
+%   
+%   ---\RESULT---
+
+<<<
+*&copy*
+>>>
+documentBegin
+emphasis: (ampersand)copy
+documentEnd

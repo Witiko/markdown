@@ -1,0 +1,11 @@
+%   ---RESULT--- "example": 652,
+%   
+%   <p>Multiple     spaces</p>
+%   
+%   ---\RESULT---
+
+<<<
+Multiple     spaces
+>>>
+documentBegin
+documentEnd

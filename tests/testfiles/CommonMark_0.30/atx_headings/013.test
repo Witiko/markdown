@@ -1,0 +1,18 @@
+%   ---RESULT--- "example": 74,
+%   
+%   <h3>foo ### b</h3>
+%   
+%   ---\RESULT---
+
+<<<
+### foo ### b
+>>>
+documentBegin
+BEGIN section
+BEGIN section
+BEGIN section
+headingThree: foo (hash)(hash)(hash) b
+END section
+END section
+END section
+documentEnd

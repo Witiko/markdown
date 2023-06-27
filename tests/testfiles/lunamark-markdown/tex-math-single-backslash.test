@@ -45,6 +45,7 @@ The following is inline math with two backslashes:
 >>>
 documentBegin
 codeSpan: texMathSingleBackslash
+softLineBreak
 interblockSeparator
 inlineMath: E=mc^2
 interblockSeparator
