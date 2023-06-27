@@ -7758,17 +7758,7 @@ following text:
 %</manual-options>
 %<*tex>
 % \fi
-% \begin{markdown}
-%
-% The footnotes option has been deprecated and will be removed in
-% Markdown 3.0.0.
-%
-% \end{markdown}
 %  \begin{macrocode}
-\@@_add_lua_option:nnn
-  { footnotes }
-  { boolean }
-  { false }
 \@@_add_lua_option:nnn
   { notes }
   { boolean }
@@ -7779,7 +7769,6 @@ following text:
 %<*lua,lua-cli>
 % \fi
 %  \begin{macrocode}
-defaultOptions.footnotes = false
 defaultOptions.notes = false
 %    \end{macrocode}
 % \par
@@ -15869,51 +15858,10 @@ following text:
 %</manual-tokens>
 %<*tex>
 % \fi
-% \begin{markdown}
-%
-% The \mdef{markdownRendererFootnote} and
-% \mdef{markdownRendererFootnotePrototype} macros have been deprecated
-% and will be removed in Markdown 3.0.0.
-%
-% \end{markdown}
 %  \begin{macrocode}
+\def\markdownRendererNote{%
+  \markdownRendererNotePrototype}%
 \ExplSyntaxOn
-\cs_new:Npn
-  \markdownRendererNote
-  {
-    \cs_if_exist:NTF
-      \markdownRendererFootnote
-      {
-        \markdownWarning
-          {
-            Footnote~renderer~has~been~deprecated,~
-            to~be~removed~in~Markdown~3.0.0
-          }
-        \markdownRendererFootnote
-      }
-      {
-        \cs_if_exist:NTF
-          \markdownRendererFootnotePrototype
-          {
-            \markdownWarning
-              {
-                Footnote~renderer~prototype~has~been~deprecated,~
-                to~be~removed~in~Markdown~3.0.0
-              }
-            \markdownRendererFootnotePrototype
-          }
-          {
-            \markdownRendererNotePrototype
-          }
-      }
-  }
-\seq_gput_right:Nn
-  \g_@@_renderers_seq
-  { footnote }
-\prop_gput:Nnn
-  \g_@@_renderer_arities_prop
-  { footnote }
-  { 1 }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { note }
@@ -18669,17 +18617,6 @@ following text:
     \seq_map_function:NN
       \g_@@_renderers_seq
       \@@_plaintex_define_renderer_prototype:n
-%    \end{macrocode}
-% \begin{markdown}
-%
-% The \mref{markdownRendererFootnote} and
-% \mref{markdownRendererFootnotePrototype} macros have been deprecated
-% and will be removed in Markdown 3.0.0.
-%
-% \end{markdown}
-%  \begin{macrocode}
-    \cs_undefine:N \markdownRendererFootnote
-    \cs_undefine:N \markdownRendererFootnotePrototype
 %    \end{macrocode}
 % \begin{markdown}
 %
