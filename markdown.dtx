@@ -10936,46 +10936,13 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 % \fi
 % \begin{markdown}
 %
-% The \mdef{markdownOptionHelperScriptFileName} macro sets the filename of the
-% helper Lua script file that is created during the conversion from markdown to
-% plain \TeX{} in \TeX{} engines without the `\directlua` primitive. It
-% defaults to `\jobname.markdown.lua`, where `\jobname` is the base name
-% of the document being typeset.
+% The \mdef{markdownOptionInputTempFileName} macro sets the filename of the
+% temporary input file that is created during the buffering of markdown text
+% from a \TeX{} source. It defaults to `\jobname.markdown.in`.
 %
 % The expansion of this macro must not contain quotation marks (`"`) or
 % backslash symbols (`\`). Mind that \TeX{} engines tend to
 % put quotation marks around `\jobname`, when it contains spaces.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\@@_add_plain_tex_option:nnn
-  { helperScriptFileName }
-  { path }
-  { \jobname.markdown.lua }
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% The \Opt{helperScriptFileName} macro has been deprecated and
-% will be removed in Markdown 3.0.0. To control the filename of the helper Lua
-% script file, use the `\g_luabridge_helper_script_filename_str` macro from the
-% \pkg{lt3luabridge} package.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\str_new:N
-  \g_luabridge_helper_script_filename_str
-\tl_gset:Nn
-  \g_luabridge_helper_script_filename_str
-  { \markdownOptionHelperScriptFileName }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% The \mdef{markdownOptionInputTempFileName} macro sets the filename of the
-% temporary input file that is created during the buffering of markdown text
-% from a \TeX{} source. It defaults to `\jobname.markdown.in`. The same
-% limitations as in the case of the \Opt{helperScriptFileName}
-% macro apply here.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -10991,7 +10958,7 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 % temporary output file that is created during the conversion from markdown to
 % plain \TeX{} in \mref{markdownMode} other than `2` It defaults to
 % `\jobname.markdown.out`. The same limitations apply here as in the case
-% of the \Opt{helperScriptFileName} macro.
+% of the \Opt{inputTempFileName} macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -11020,7 +10987,7 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 % temporary output file that is created when a Lua error is encountered during
 % the conversion from markdown to plain \TeX{} in \mref{markdownMode} other than
 % `2`. It defaults to `\jobname.markdown.err`. The same limitations
-% apply here as in the case of the \Opt{helperScriptFileName}
+% apply here as in the case of the \Opt{inputTempFileName}
 % macro.
 %
 % \end{markdown}
@@ -11057,7 +11024,7 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 % your \TeX{} engine for the package to function correctly. We need this macro
 % to make the Lua implementation aware where it should store the helper files.
 % The same limitations apply here as in the case of the
-% \Opt{helperScriptFileName} macro.
+% \Opt{inputTempFileName} macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -11078,7 +11045,7 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 %
 % For the macros that correspond to the non-boolean options recognized by the
 % Lua interface, the same limitations apply here in the case of the
-% \Opt{helperScriptFileName} macro.
+% \Opt{inputTempFileName} macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -11170,7 +11137,6 @@ The plain \TeX{} interface provides the following commands that you can use to
 specify the location of temporary files produced during the conversion from
 Markdown to \TeX{}:
 
-- `\markdownOptionHelperScriptFileName`,
 - `\markdownOptionInputTempFileName`,
 - `\markdownOptionOutputTempFileName`,
 - `\markdownOptionErrorTempFileName`,
@@ -11186,7 +11152,6 @@ document named `document.tex` with the following content:
 ``` tex
 \input lmfonts
 \input markdown
-\def\markdownOptionHelperScriptFileName{helper-script.lua}
 \def\markdownOptionInputTempFileName{temporary-input.md}
 \def\markdownOptionOutputTempFileName{temporary-output.tex}
 \def\markdownOptionErrorTempFileName{error-output.txt}
@@ -11215,11 +11180,9 @@ produce the remaining temporary files, invoke pdfTeX from the terminal:
 ``` sh
 pdftex --output-directory output-directory --shell-escape document.tex
 ``````
-Text documents named `helper-script.lua`, and `temporary-output.md` should be
-produced in the folder named `output-directory`.  The document named
-`helper-script.lua` will contain Lua code that was executed to convert markdown
-to plain \TeX{}.  The document named `temporary-output.tex` will contain the
-input markdown document converted to \TeX{}.
+Text document named `temporary-output.md` should be produced in the folder
+named `output-directory`.  The document will contain the input markdown
+document converted to \TeX{}.
 
 No document named `error-output.txt` should be produced in the folder named
 `output-directory`. This document would only be produced if an error had occured
@@ -19041,13 +19004,13 @@ following code in our \LaTeX{} document:
 ```
 
 We can also set all plain \TeX{} options directly from \LaTeX{}. For example,
-to set the `\markdownOptionHelperScriptFileName` plain \TeX{} option to
+to set the `\markdownOptionInputTempFileName` plain \TeX{} option to
 `helper-script.lua`, we would inclde the following code in our \LaTeX{}
 document:
 
 ``` tex
 \markdownSetup{
-  helperScriptFileName = helper-script.lua,
+  inputTempFileName = temporary-input.md,
 }
 ```
 
