@@ -4,16 +4,15 @@
 
 Development:
 
+- Comply with CommonMark 0.30 and increment `grammar_version` to `3`.
+  (contributed by @lostenderman, #29, #129, #210, #212, #226, #309)
 - Add a demo of using the Markdown package in OpTeX.
   (contributed by @olsak, #215, 109c1b5, #292)
-- Comply with CommonMark and increment `grammar_version` to `3`.
-  (contributed by @lostenderman, #226)
 
 Default Renderer Prototypes:
 
-- Do not force line breaks after high-level headings in LaTeX,
-  but allow the text to follow the heading on the same line.
-  (df8562c)
+- Do not force line breaks after high-level headings in LaTeX.
+  Allow the text to follow the heading on the same line. (df8562c)
 
 Deprecation:
 
