@@ -1,6 +1,6 @@
 # Changes
 
-## 3.0.0
+## 3.0.0-alpha (2023-06-27)
 
 Development:
 
