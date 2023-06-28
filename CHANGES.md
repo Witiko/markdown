@@ -16,6 +16,10 @@ Development:
   (contributed by @olsak, #215, 109c1b5, #292)
 - Add `singletonCache` Lua option. (#226)
 
+Documentation:
+
+- Add @lostenderman's thesis to `README.md`. (#226, 8a4536e)
+
 Default Renderer Prototypes:
 
 - Do not force line breaks after high-level headings in LaTeX.
