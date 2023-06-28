@@ -11247,19 +11247,23 @@ In this section, I will describe the individual token renderers.
 % \begin{markdown}
 
 #### Attribute Renderers
-The following macros are only produced, when the \Opt{headerAttributes} option
-is enabled.
+The following macros are only produced, when at least one of the following
+options for markdown attributes on different elements is enabled:
+
+- \Opt{fencedCodeAttributes}
+- \Opt{headerAttributes}
+- \Opt{inlineCodeAttributes}
+- \Opt{linkAttributes}
 
 \mdef{markdownRendererAttributeIdentifier} represents the \meta{identifier} of
 a markdown element (`id="`\meta{identifier}`"` in HTML and `#`\meta{identifier}
-in Markdown's \Opt{headerAttributes} syntax extension). The macro receives a
-single attribute that corresponds to the \meta{identifier}.
+in markdown attributes). The macro receives a single attribute that corresponds
+to the \meta{identifier}.
 
 \mdef{markdownRendererAttributeClassName} represents the \meta{class name} of a
 markdown element (`class="`\meta{class name} ...`"` in HTML and
-`.`\meta{class name} in Markdown's \Opt{headerAttributes} syntax extension).
-The macro receives a single attribute that corresponds to the \meta{class
-name}.
+`.`\meta{class name} in markdown attributes).  The macro receives a single
+attribute that corresponds to the \meta{class name}.
 
 \mdef{markdownRendererAttributeKeyValue} represents a HTML attribute in the form
 \meta{key}`=`\meta{value} that is neither an identifier nor a class name.
