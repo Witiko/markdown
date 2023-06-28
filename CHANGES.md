@@ -1,5 +1,11 @@
 # Changes
 
+## 3.0.0-alpha.1
+
+Fixes:
+
+- Correctly handle multiple heading identifiers. (3ae1b0d1)
+
 ## 3.0.0-alpha (2023-06-27)
 
 Development:
