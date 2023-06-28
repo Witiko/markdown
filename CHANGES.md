@@ -11,9 +11,10 @@ Default Renderer Prototypes:
 Development:
 
 - Comply with CommonMark 0.30 and increment `grammar_version` to `3`.
-  (contributed by @lostenderman, #29, #129, #210, #212, #226, #309)
+  (contributed by @lostenderman, #29, #210, #212, #226)
 - Add a demo of using the Markdown package in OpTeX.
   (contributed by @olsak, #215, 109c1b5, #292)
+- Add `singletonCache` Lua option. (#226)
 
 Default Renderer Prototypes:
 
@@ -22,11 +23,14 @@ Default Renderer Prototypes:
 
 Deprecation:
 
+- Remove deprecated parts of the package. (#309)
 - Remove support for LuaMetaTeX. (#226)
 
 Fixes:
 
 - Allow references in fenced divs. (#307, jgm/lunamark#69)
+- Prevent `eagerCache=false` from causing undefined behavior and make
+  it the new default. (#129)
 
 ## 2.23.0 (2023-04-27)
 
