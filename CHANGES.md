@@ -2,7 +2,7 @@
 
 ## 3.0.0-alpha.1
 
-Fixes:
+Default Renderer Prototypes:
 
 - Correctly handle multiple heading identifiers. (3ae1b0d1)
 
