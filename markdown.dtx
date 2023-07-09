@@ -6294,6 +6294,53 @@ defaultOptions.frozenCacheCounter = 0
 %</lua,lua-cli>
 %<*manual-options>
 
+#### Option `gfmAutoIdentifiers`
+
+`gfmAutoIdentifiers` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+% \Optitem[false]{gfmAutoIdentifiers}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Enable the Pandoc [gfm auto identifiers syntax extension][pandoc-gfm-auto-identifiers]:
+
+        ``` md
+        This heading gets id "heading-1":
+
+        # heading 1
+        ``````
+
+     false
+
+     :  Disable the Pandoc gfm auto identifiers syntax extension.
+
+  [pandoc-gfm-auto-identifiers]: https://pandoc.org/MANUAL.html#extension-gfm_auto_identifiers
+
+% \end{markdown}
+% \iffalse
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { gfmAutoIdentifiers }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.gfmAutoIdentifiers = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
 #### Option `hashEnumerators`
 
 `hashEnumerators` (default value: `false`)
@@ -23918,18 +23965,19 @@ local heading_identifiers = {}
 function register_heading_identifier(identifier)
 
   for i=1, #heading_identifiers do
-    if heading_identifiers[i][1] == identifier then
-      heading_identifiers[i][2] = heading_identifiers[i][2] + 1
-      return identifier .. "-" .. tostring(heading_identifiers[i][2])
+    local id_item = heading_identifiers[i]
+    if id_item.value == identifier then
+      id_item.count = id_item.count + 1
+      return id_item.value .. "-" .. tostring(id_item.count)
     end
   end
-  table.insert(heading_identifiers, {identifier, 1})
+  table.insert(heading_identifiers, {value = identifier, count = 1})
   return identifier
 end
 
 local function create_heading_identifier(s)
   -- Step 1: Remove all non-alphanumeric characters, except underscores, hyphens, and periods.
-  local step1 = s:gsub("[^%w_%.%-%s]", "")
+  local step1 = s:gsub("[^%w_%-%.%s]", "")
 
   -- Step 2: Replace all spaces and newlines with hyphens.
   local step2 = step1:gsub("[%s\n]+", "-")
@@ -23941,9 +23989,27 @@ local function create_heading_identifier(s)
   local step4 = step3:match("%a.*")
 
   -- Step 5: If nothing is left after this, use the identifier section.
-  local step5 = step4 or "section"
+  local step5 = step4 or 
+                "section"
 
   return step5
+end
+
+local function create_gfm_heading_identifier(s)
+  -- Step 1: Remove all non-alphanumeric characters, except underscores, hyphens, and periods.
+  local step1 = s:gsub("[^%w_%-%s]", "")
+
+  -- Step 2: Replace all spaces and newlines with hyphens.
+  local step2 = step1:gsub("[%s\n]+", "-")
+
+  -- Step 3: Convert all alphabetic characters to lowercase.
+  local step3 = step2:lower()
+
+  -- Step 4: If nothing is left after this, use the identifier section.
+  step4 = (step3 == "") and "section" or 
+          step3
+
+  return step4
 end
 
   local current_heading_level = 0
@@ -23982,9 +24048,13 @@ end
     current_heading_level = current_heading_level + 1
     assert(current_heading_level == level)
 
-    local has_attributes = options.headerAttributes and attributes ~= nil and #attributes > 0
+    local has_attributes = options.headerAttributes and 
+                           attributes ~= nil and 
+                           #attributes > 0
+    local has_auto_identifier = options.autoIdentifiers or 
+                                options.gfmAutoIdentifiers
 
-    if self.is_writing and (has_attributes or options.autoIdentifiers) then
+    if self.is_writing and (has_attributes or has_auto_identifier) then
       table.insert(buf, "\\markdownRendererHeaderAttributeContextBegin\n")
     end
 
@@ -23998,15 +24068,14 @@ end
     end
 
     -- add auto identifier
-    if self.is_writing and options.autoIdentifiers and not has_id then
-      local identifier = create_heading_identifier(util.rope_to_string(raw_string))
-      local registered_identifier = register_heading_identifier(identifier)
-      table.insert(attr, 1, {"\\markdownRendererAttributeIdentifier{",
-                              registered_identifier, "}"})
+    if self.is_writing and has_auto_identifier and not has_id then
+      local identifier = (options.gfmAutoIdentifiers and create_gfm_heading_identifier
+                          or create_heading_identifier)(raw_string)
+      table.insert(attr, 1, {"\\markdownRendererAttributeIdentifier{", register_heading_identifier(identifier), "}"})
     end
 
     -- add the heading attributes
-    if self.is_writing and (has_attributes or options.autoIdentifiers) then
+    if self.is_writing and (has_attributes or has_auto_identifier) then
       table.insert(buf, attr)
     end
 
@@ -24031,7 +24100,7 @@ end
       table.insert(buf, {cmd, "{", s, "}"})
     end
 
-    if self.is_writing and (has_attributes or options.autoIdentifiers) then
+    if self.is_writing and (has_attributes or has_auto_identifier) then
       table.insert(buf, "\n\\markdownRendererHeaderAttributeContextEnd ")
     end
 

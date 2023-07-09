@@ -1,11 +1,12 @@
+\def\markdownOptionAutoIdentifiers{false}
 <<<
-This test ensures that the Lua `autoIdentifiers` option is enabled by default.
+This test ensures that the Lua `gfmAutoIdentifiers` option is disabled by default.
 
-Non-alphanumeric characters besides _-. are ignored:
+Non-alphanumeric characters besides _- are ignored:
 
-# abc @#$ _-.
+# abc @#$ _-
 
-All non-alphanumeric at the start are skipped:
+Non-alphanumeric at the start are not skipped (compared to auto identifiers):
 
 # 123 . abc
 
@@ -22,7 +23,7 @@ c
 
 If no content remains, the default identifier section is assigned:
 
-# 123
+# .
 
 If the same identifier is created, the new one is distinguished by an index.
 
@@ -39,71 +40,47 @@ This is "a-3".
 # a
 >>>
 documentBegin
-codeSpan: autoIdentifiers
+codeSpan: gfmAutoIdentifiers
 interblockSeparator
 underscore
 interblockSeparator
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: abc-_-.
-headingOne: abc @(hash)(dollarSign) (underscore)-.
-END headerAttributeContext
+headingOne: abc @(hash)(dollarSign) (underscore)-
 interblockSeparator
 interblockSeparator
 END section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: abc
 headingOne: 123 . abc
-END headerAttributeContext
 interblockSeparator
 interblockSeparator
 END section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: a-b-c-d
 headingOne: a b c d
-END headerAttributeContext
 interblockSeparator
 interblockSeparator
 END section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: a-b-c
 headingOne: a(softLineBreak)b(softLineBreak)c
-END headerAttributeContext
 interblockSeparator
 interblockSeparator
 END section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: section
-headingOne: 123
-END headerAttributeContext
+headingOne: .
 interblockSeparator
 interblockSeparator
 interblockSeparator
 END section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: a
 headingOne: a
-END headerAttributeContext
 interblockSeparator
 interblockSeparator
 END section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: a-2
 headingOne: a
-END headerAttributeContext
 interblockSeparator
 interblockSeparator
 END section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: a-3
 headingOne: a
-END headerAttributeContext
 END section
 documentEnd

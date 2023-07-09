@@ -2,7 +2,7 @@
 <<<
 This test ensures that the Lua `autoIdentifiers` option correctly propagates through the plain TeX interface.
 
-Non-alphanumeric characters besides _-. are ignored.
+Non-alphanumeric characters besides _-. are ignored:
 
 # abc @#$ _-.
 

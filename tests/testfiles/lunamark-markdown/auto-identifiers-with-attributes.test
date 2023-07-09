@@ -1,9 +1,9 @@
 \def\markdownOptionHeaderAttributes{true}
 <<<
-This test ensures that the Lua `autoIdentifiers` option is disabled by default 
+This test ensures that the Lua `autoIdentifiers` option is enabled by default 
 with the Lua `headerAttributes` option set to true.
 
-Non-alphanumeric characters besides _-. are ignored.
+Non-alphanumeric characters besides _-. are ignored:
 
 # abc @#$ _-.
 
