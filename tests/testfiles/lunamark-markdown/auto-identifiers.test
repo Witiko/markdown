@@ -62,7 +62,7 @@ END section
 BEGIN section
 BEGIN headerAttributeContext
 attributeIdentifier: a-b-c-d
-headingOne: a b c d
+headingOne: a b  c   d
 END headerAttributeContext
 interblockSeparator
 interblockSeparator

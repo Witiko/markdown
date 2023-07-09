@@ -55,7 +55,7 @@ interblockSeparator
 interblockSeparator
 END section
 BEGIN section
-headingOne: a b c d
+headingOne: a b  c   d
 interblockSeparator
 interblockSeparator
 END section
