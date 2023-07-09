@@ -24005,8 +24005,8 @@ local function create_gfm_heading_identifier(s)
   local step_3 = step_2:lower()
 
   -- Step 4: If nothing is left after this, use the identifier section.
-  step_4 = (step_3 == "") and "section" or 
-          step_3
+  local step_4 = (step_3 == "") and "section" or 
+                 step_3
 
   return step_4
 end
