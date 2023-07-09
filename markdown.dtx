@@ -23962,8 +23962,7 @@ function M.writer.new(options)
 
 local heading_identifiers = {}
 
-function register_heading_identifier(identifier)
-
+local function register_heading_identifier(identifier)
   for i=1, #heading_identifiers do
     local id_item = heading_identifiers[i]
     if id_item.value == identifier then
@@ -23977,39 +23976,39 @@ end
 
 local function create_heading_identifier(s)
   -- Step 1: Remove all non-alphanumeric characters, except underscores, hyphens, and periods.
-  local step1 = s:gsub("[^%w_%-%.%s]", "")
+  local step_1 = s:gsub("[^%w_%-%.%s]", "")
 
   -- Step 2: Replace all spaces and newlines with hyphens.
-  local step2 = step1:gsub("[%s\n]+", "-")
+  local step_2 = step_1:gsub("[%s\n]+", "-")
 
   -- Step 3: Convert all alphabetic characters to lowercase.
-  local step3 = step2:lower()
+  local step_3 = step_2:lower()
 
   -- Step 4: Remove everything up to the first letter.
-  local step4 = step3:match("%a.*")
+  local step_4 = step_3:match("%a.*")
 
   -- Step 5: If nothing is left after this, use the identifier section.
-  local step5 = step4 or 
+  local step_5 = step_4 or 
                 "section"
 
-  return step5
+  return step_5
 end
 
 local function create_gfm_heading_identifier(s)
   -- Step 1: Remove all non-alphanumeric characters, except underscores, hyphens, and periods.
-  local step1 = s:gsub("[^%w_%-%s]", "")
+  local step_1 = s:gsub("[^%w_%-%s]", "")
 
   -- Step 2: Replace all spaces and newlines with hyphens.
-  local step2 = step1:gsub("[%s\n]+", "-")
+  local step_2 = step_1:gsub("[%s\n]+", "-")
 
   -- Step 3: Convert all alphabetic characters to lowercase.
-  local step3 = step2:lower()
+  local step_3 = step_2:lower()
 
   -- Step 4: If nothing is left after this, use the identifier section.
-  step4 = (step3 == "") and "section" or 
-          step3
+  step_4 = (step_3 == "") and "section" or 
+          step_3
 
-  return step4
+  return step_4
 end
 
   local current_heading_level = 0
