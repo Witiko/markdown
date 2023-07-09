@@ -1,0 +1,140 @@
+\def\markdownOptionHeaderAttributes{true}
+<<<
+This test ensures that the Lua `autoIdentifiers` option is disabled by default 
+with the Lua `headerAttributes` option set to true.
+
+Non-alphanumeric characters besides _-. are ignored.
+
+# abc @#$ _-.
+
+All non-alphanumeric at the start are skipped:
+
+# 123 . abc
+
+Runs of spaces are replaced with hyphens:
+
+# a b  c   d
+
+Newlines are replaced with hyphens as well:
+
+a
+b
+c
+=
+
+If no content remains, the default identifier section is assigned:
+
+# 123
+
+If the same identifier is created, the new one is distinguished by an index.
+
+This is just "a".
+
+# a
+
+This is "a-2".
+
+# a
+
+This is "a-3".
+
+# a
+
+This heading already has an id:
+
+# abc {#id}
+
+So does this one:
+
+a
+b
+c {#id}
+=
+>>>
+documentBegin
+codeSpan: autoIdentifiers
+softLineBreak
+codeSpan: headerAttributes
+interblockSeparator
+underscore
+interblockSeparator
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: abc-_-.
+headingOne: abc @(hash)(dollarSign) (underscore)-.
+END headerAttributeContext
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: abc
+headingOne: 123 . abc
+END headerAttributeContext
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: a-b-c-d
+headingOne: a b c d
+END headerAttributeContext
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: a-b-c
+headingOne: a(softLineBreak)b(softLineBreak)c
+END headerAttributeContext
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: section
+headingOne: 123
+END headerAttributeContext
+interblockSeparator
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: a
+headingOne: a
+END headerAttributeContext
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: a-2
+headingOne: a
+END headerAttributeContext
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: a-3
+headingOne: a
+END headerAttributeContext
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: id
+headingOne: abc
+END headerAttributeContext
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: id
+headingOne: a(softLineBreak)b(softLineBreak)c
+END headerAttributeContext
+END section
+documentEnd

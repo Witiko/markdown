@@ -1,0 +1,86 @@
+\def\markdownOptionAutoIdentifiers{false}
+<<<
+This test ensures that the Lua `autoIdentifiers` option correctly propagates through the plain TeX interface.
+
+Non-alphanumeric characters besides _-. are ignored.
+
+# abc @#$ _-.
+
+All non-alphanumeric at the start are skipped:
+
+# 123 . abc
+
+Runs of spaces are replaced with hyphens:
+
+# a b  c   d
+
+Newlines are replaced with hyphens as well:
+
+a
+b
+c
+=
+
+If no content remains, the default identifier section is assigned:
+
+# 123
+
+If the same identifier is created, the new one is distinguished by an index.
+
+This is just "a".
+
+# a
+
+This is "a-2".
+
+# a
+
+This is "a-3".
+
+# a
+>>>
+documentBegin
+codeSpan: autoIdentifiers
+interblockSeparator
+underscore
+interblockSeparator
+BEGIN section
+headingOne: abc @(hash)(dollarSign) (underscore)-.
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+headingOne: 123 . abc
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+headingOne: a b c d
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+headingOne: a(softLineBreak)b(softLineBreak)c
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+headingOne: 123
+interblockSeparator
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+headingOne: a
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+headingOne: a
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+headingOne: a
+END section
+documentEnd

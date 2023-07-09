@@ -3099,6 +3099,53 @@ defaultOptions.frozenCacheFileName = "frozenCache.tex"
 % \par
 % \iffalse
 
+#### Option `autoIdentifiers`
+
+`autoIdentifiers` (default value: `true`)
+
+% \fi
+% \begin{markdown}
+% \Optitem[true]{autoIdentifiers}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Enable the Pandoc [auto identifiers syntax extension][pandoc-auto-identifiers]:
+
+        ``` md
+        This heading gets id "heading-1":
+
+        # heading 1
+        ``````
+
+     false
+
+     :  Disable the Pandoc auto identifiers syntax extension.
+
+  [pandoc-auto-identifiers]: https://pandoc.org/MANUAL.html#extension-auto_identifiers
+
+% \end{markdown}
+% \iffalse
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { autoIdentifiers }
+  { boolean }
+  { true }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.autoIdentifiers = true
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
 #### Option `blankBeforeBlockquote`
 
 `blankBeforeBlockquote` (default value: `false`)
@@ -23700,6 +23747,7 @@ function M.writer.new(options)
 
     local buf = {}
     local seen = {}
+    local has_id = false
     for _, attribute in ipairs(expanded_attributes) do
       if seen[attribute] ~= nil then
         goto continue  -- prevent duplicate attributes
@@ -23709,6 +23757,7 @@ function M.writer.new(options)
       if attribute:sub(1, 1) == "#" then
         table.insert(buf, {"\\markdownRendererAttributeIdentifier{",
                            attribute:sub(2), "}"})
+        has_id = true
       elseif attribute:sub(1, 1) == "." then
         table.insert(buf, {"\\markdownRendererAttributeClassName{",
                            attribute:sub(2), "}"})
@@ -23720,7 +23769,7 @@ function M.writer.new(options)
       ::continue::
     end
 
-    return buf
+    return buf, has_id
   end
 %    \end{macrocode}
 % \par
@@ -23863,10 +23912,47 @@ function M.writer.new(options)
 %
 % \end{markdown}
 %  \begin{macrocode}
+
+local heading_identifiers = {}
+
+function register_heading_identifier(identifier)
+
+  for i=1, #heading_identifiers do
+    if heading_identifiers[i][1] == identifier then
+      heading_identifiers[i][2] = heading_identifiers[i][2] + 1
+      return identifier .. "-" .. tostring(heading_identifiers[i][2])
+    end
+  end
+  table.insert(heading_identifiers, {identifier, 1})
+  return identifier
+end
+
+local function create_heading_identifier(s)
+  -- Step 1: Remove all non-alphanumeric characters, except underscores, hyphens, and periods.
+  local step1 = s:gsub("[^%w_%.%-%s]", "")
+
+  -- Step 2: Replace all spaces and newlines with hyphens.
+  local step2 = step1:gsub("[%s\n]+", "-")
+
+  -- Step 3: Convert all alphabetic characters to lowercase.
+  local step3 = step2:lower()
+
+  -- Step 4: Remove everything up to the first letter.
+  local step4 = step3:match("%a.*")
+
+  -- Step 5: If nothing is left after this, use the identifier section.
+  local step5 = step4 or "section"
+
+  return step5
+end
+
   local current_heading_level = 0
-  function self.heading(s, level, attributes)
+  function self.heading(t, level, attributes)
     local buf = {}
 
+    local raw_string = t[1]:gsub("\n*$", "")
+    local s = t[2]
+    
     -- push empty attributes for implied sections
     while current_heading_level < level - 1 do
       table.insert(buf,
@@ -23896,11 +23982,32 @@ function M.writer.new(options)
     current_heading_level = current_heading_level + 1
     assert(current_heading_level == level)
 
-    -- render the heading and its attributes
+    local has_attributes = options.headerAttributes and attributes ~= nil and #attributes > 0
+
+    if self.is_writing and (has_attributes or options.autoIdentifiers) then
+      table.insert(buf, "\\markdownRendererHeaderAttributeContextBegin\n")
+    end
+
+    local attr = {}
+    local has_id = false
+
+    -- resolve the heading attributes
     if self.is_writing and options.headerAttributes
        and attributes ~= nil and #attributes > 0 then
-      table.insert(buf, "\\markdownRendererHeaderAttributeContextBegin\n")
-      table.insert(buf, self.attributes(attributes))
+      attr, has_id = self.attributes(attributes)
+    end
+
+    -- add auto identifier
+    if self.is_writing and options.autoIdentifiers and not has_id then
+      local identifier = create_heading_identifier(util.rope_to_string(raw_string))
+      local registered_identifier = register_heading_identifier(identifier)
+      table.insert(attr, 1, {"\\markdownRendererAttributeIdentifier{",
+                              registered_identifier, "}"})
+    end
+
+    -- add the heading attributes
+    if self.is_writing and (has_attributes or options.autoIdentifiers) then
+      table.insert(buf, attr)
     end
 
     local cmd
@@ -23924,8 +24031,7 @@ function M.writer.new(options)
       table.insert(buf, {cmd, "{", s, "}"})
     end
 
-    if self.is_writing and options.headerAttributes
-       and attributes ~= nil and #attributes > 0 then
+    if self.is_writing and (has_attributes or options.autoIdentifiers) then
       table.insert(buf, "\n\\markdownRendererHeaderAttributeContextEnd ")
     end
 
@@ -27267,7 +27373,7 @@ end
                         + parsers.spacechar^1 
                         * C(parsers.line))
                        / strip_atx_end
-                       / self.parser_functions.parse_inlines)
+                       / function(s) return {s, self.parser_functions.parse_inlines(s)} end)
                      * Cb("level")
                      / writer.heading
 
@@ -27281,8 +27387,8 @@ end
   parsers.SetextHeading = parsers.freeze_trail * parsers.check_trail_no_rem
                         * #(parsers.heading_text 
                            * parsers.check_minimal_indent * parsers.check_trail * parsers.heading_level)
-                        * Ct(Cs(parsers.heading_text)
-                            / self.parser_functions.parse_inlines )
+                        * (Cs(parsers.heading_text)
+                            / function(s) return {s, self.parser_functions.parse_inlines(s)} end)
                         * parsers.check_minimal_indent_and_trail * parsers.heading_level
                         * parsers.newline
                         * parsers.unfreeze_trail
@@ -29031,7 +29137,7 @@ M.extensions.header_attributes = function()
                              * (parsers.linechar
                                - parsers.lbrace)^0)^1)
                              / strip_atx_end
-                             / self.parser_functions.parse_inlines)
+                             / function(s) return {s, self.parser_functions.parse_inlines(s)} end)
                        * Cg(Ct(parsers.newline
                               + (parsers.attributes
                                 * parsers.optionalspace
@@ -29048,11 +29154,11 @@ M.extensions.header_attributes = function()
                             - (parsers.attributes
                               * parsers.optionalspace
                               * parsers.newline))^1 
-                            * parsers.newline^-1
                           - parsers.thematic_break_lines
 
       local heading_text  = heading_line
                           * ((V("Endline") / "\n") * (heading_line - parsers.heading_level))^0
+                          * parsers.newline^-1
 
       local SetextHeading  = parsers.freeze_trail * parsers.check_trail_no_rem
                            * #(heading_text 
@@ -29060,8 +29166,8 @@ M.extensions.header_attributes = function()
                                 * parsers.optionalspace
                                 * parsers.newline)^-1
                               * parsers.check_minimal_indent * parsers.check_trail * parsers.heading_level)
-                           * Ct(Cs(heading_text) / strip_trailing_spaces
-                                / self.parser_functions.parse_inlines )
+                           * (Cs(heading_text) / strip_trailing_spaces
+                                / function(s) return {s, self.parser_functions.parse_inlines(s)} end)
                            * Cg(Ct((parsers.attributes
                                  * parsers.optionalspace
                                  * parsers.newline)^-1), "attributes")
