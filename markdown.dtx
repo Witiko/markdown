@@ -24059,6 +24059,8 @@ end
     end
 
     local has_id
+    local key_value_regex = "([^= ]+)%s*=%s*(.*)"
+    local key, value
     -- check if an id is already present
     if self.is_writing and has_attributes then 
       for _, attribute in ipairs(attributes) do
@@ -24067,7 +24069,7 @@ end
           break
         else
           key, value = attribute:match(key_value_regex)
-          if key:lower() == "id" then
+          if key and key:lower() == "id" then
             has_id = true
             break
           end
