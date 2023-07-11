@@ -24068,7 +24068,7 @@ end
           has_id = true
           break
         else
-          key, value = attribute:match(key_value_regex)
+          key = attribute:match(key_value_regex)
           if key and key:lower() == "id" then
             has_id = true
             break
