@@ -15,7 +15,10 @@ documentBegin
 emphasis: Foo bar
 interblockSeparator
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: baz
 headingOne: baz
+END headerAttributeContext
 interblockSeparator
 emphasis: Bar foo
 END section

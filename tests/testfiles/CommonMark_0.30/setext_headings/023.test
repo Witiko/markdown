@@ -11,7 +11,10 @@
 documentBegin
 BEGIN section
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: foo
 headingTwo: > foo
+END headerAttributeContext
 END section
 END section
 documentEnd

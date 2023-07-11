@@ -23,30 +23,54 @@ codeSpan: shiftHeadings
 softLineBreak
 interblockSeparator
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: a-level-one-heading
 headingThree: A level one heading
+END headerAttributeContext
 interblockSeparator
 END section
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: a-level-one-heading-2
 headingThree: A level one heading
+END headerAttributeContext
 interblockSeparator
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: a-level-two-heading
 headingFour: A level two heading
+END headerAttributeContext
 interblockSeparator
 END section
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: a-level-two-heading-2
 headingFour: A level two heading
+END headerAttributeContext
 interblockSeparator
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: a-level-three-heading
 headingFive: A level three heading
+END headerAttributeContext
 interblockSeparator
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: a-level-four-heading
 headingSix: A level four heading
+END headerAttributeContext
 interblockSeparator
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: a-level-five-heading
 headingSix: A level five heading
+END headerAttributeContext
 interblockSeparator
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: a-level-six-heading
 headingSix: A level six heading
+END headerAttributeContext
 END section
 END section
 END section

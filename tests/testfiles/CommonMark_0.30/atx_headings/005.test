@@ -9,6 +9,9 @@
 >>>
 documentBegin
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: foo-bar-baz
 headingOne: foo (emphasis: bar) *baz*
+END headerAttributeContext
 END section
 documentEnd

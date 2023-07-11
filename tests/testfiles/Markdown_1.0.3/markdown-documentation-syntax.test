@@ -881,7 +881,10 @@ Markdown provides backslash escapes for the following characters:
 >>>
 documentBegin
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: syntax
 headingOne: Markdown: Syntax
+END headerAttributeContext
 interblockSeparator
 ulBeginTight
 ulItem
@@ -1042,10 +1045,16 @@ interblockSeparator
 thematicBreak
 interblockSeparator
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: overview
 headingTwo: Overview
+END headerAttributeContext
 interblockSeparator
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: philosophy
 headingThree: Philosophy
+END headerAttributeContext
 interblockSeparator
 interblockSeparator
 softLineBreak
@@ -1093,7 +1102,10 @@ softLineBreak
 interblockSeparator
 END section
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: inline-html
 headingThree: Inline HTML
+END headerAttributeContext
 interblockSeparator
 softLineBreak
 emphasis: writing
@@ -1145,7 +1157,10 @@ softLineBreak
 interblockSeparator
 END section
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: automatic-escaping-for-special-characters
 headingThree: Automatic Escaping for Special Characters
+END headerAttributeContext
 interblockSeparator
 codeSpan: <
 softLineBreak
@@ -1210,10 +1225,16 @@ interblockSeparator
 END section
 END section
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: block-elements
 headingTwo: Block Elements
+END headerAttributeContext
 interblockSeparator
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: paragraphs-and-line-breaks
 headingThree: Paragraphs and Line Breaks
+END headerAttributeContext
 interblockSeparator
 softLineBreak
 softLineBreak
@@ -1247,7 +1268,10 @@ softLineBreak
 interblockSeparator
 END section
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: headers
 headingThree: Headers
+END headerAttributeContext
 interblockSeparator
 BEGIN link
 - label: Setext
@@ -1280,7 +1304,10 @@ inputVerbatim: ./_markdown_test/b1c734088558783c318bbcca92d87dfb.verbatim
 interblockSeparator
 END section
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: blockquotes
 headingThree: Blockquotes
+END headerAttributeContext
 interblockSeparator
 codeSpan: >
 softLineBreak
@@ -1309,7 +1336,10 @@ softLineBreak
 interblockSeparator
 END section
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: lists
 headingThree: Lists
+END headerAttributeContext
 interblockSeparator
 interblockSeparator
 softLineBreak
@@ -1397,7 +1427,10 @@ inputVerbatim: ./_markdown_test/3311d57ffe81d920b965b76b809dede7.verbatim
 interblockSeparator
 END section
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: code-blocks
 headingThree: Code Blocks
+END headerAttributeContext
 interblockSeparator
 softLineBreak
 softLineBreak
@@ -1439,7 +1472,10 @@ softLineBreak
 interblockSeparator
 END section
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: horizontal-rules
 headingThree: Horizontal Rules
+END headerAttributeContext
 interblockSeparator
 codeSpan: <hr />
 softLineBreak
@@ -1453,10 +1489,16 @@ interblockSeparator
 END section
 END section
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: span-elements
 headingTwo: Span Elements
+END headerAttributeContext
 interblockSeparator
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: links
 headingThree: Links
+END headerAttributeContext
 interblockSeparator
 emphasis: inline
 emphasis: reference
@@ -1565,7 +1607,10 @@ softLineBreak
 interblockSeparator
 END section
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: emphasis
 headingThree: Emphasis
+END headerAttributeContext
 interblockSeparator
 codeSpan: *
 codeSpan: (underscore)
@@ -1600,7 +1645,10 @@ inputVerbatim: ./_markdown_test/3350aadded5e97288005f366ce9e968f.verbatim
 interblockSeparator
 END section
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: code
 headingThree: Code
+END headerAttributeContext
 interblockSeparator
 codeSpan: `
 softLineBreak
@@ -1642,7 +1690,10 @@ inputVerbatim: ./_markdown_test/4972e6763169966a715cd56ed32159ce.verbatim
 interblockSeparator
 END section
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: images
 headingThree: Images
+END headerAttributeContext
 interblockSeparator
 softLineBreak
 interblockSeparator
@@ -1685,10 +1736,16 @@ interblockSeparator
 END section
 END section
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: miscellaneous
 headingTwo: Miscellaneous
+END headerAttributeContext
 interblockSeparator
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: automatic-links
 headingThree: Automatic Links
+END headerAttributeContext
 interblockSeparator
 interblockSeparator
 inputVerbatim: ./_markdown_test/39cc5171ebb9f88a76bb7504a2aa72dd.verbatim
@@ -1712,7 +1769,10 @@ softLineBreak
 interblockSeparator
 END section
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: backslash-escapes
 headingThree: Backslash Escapes
+END headerAttributeContext
 interblockSeparator
 softLineBreak
 softLineBreak

@@ -14,10 +14,16 @@ Foo *bar*
 >>>
 documentBegin
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: foo-bar
 headingOne: Foo (emphasis: bar)
+END headerAttributeContext
 interblockSeparator
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: foo-bar-2
 headingTwo: Foo (emphasis: bar)
+END headerAttributeContext
 END section
 END section
 documentEnd

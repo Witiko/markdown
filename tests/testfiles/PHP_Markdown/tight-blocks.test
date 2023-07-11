@@ -14,7 +14,10 @@ softLineBreak
 interblockSeparator
 interblockSeparator
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: header
 headingOne: Header
+END headerAttributeContext
 interblockSeparator
 interblockSeparator
 blockQuoteBegin

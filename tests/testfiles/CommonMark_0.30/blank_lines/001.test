@@ -19,6 +19,9 @@ documentBegin
 emphasis: aaa
 interblockSeparator
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: aaa
 headingOne: aaa
+END headerAttributeContext
 END section
 documentEnd

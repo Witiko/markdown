@@ -19,22 +19,40 @@
 >>>
 documentBegin
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: foo
 headingOne: foo
+END headerAttributeContext
 interblockSeparator
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: foo-2
 headingTwo: foo
+END headerAttributeContext
 interblockSeparator
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: foo-3
 headingThree: foo
+END headerAttributeContext
 interblockSeparator
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: foo-4
 headingFour: foo
+END headerAttributeContext
 interblockSeparator
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: foo-5
 headingFive: foo
+END headerAttributeContext
 interblockSeparator
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: foo-6
 headingSix: foo
+END headerAttributeContext
 END section
 END section
 END section

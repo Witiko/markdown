@@ -142,7 +142,10 @@ belong to the previous note.
 documentBegin
 BEGIN section
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: this-is-an-h2
 headingTwo: This is an H2
+END headerAttributeContext
 interblockSeparator
 interblockSeparator
 blockQuoteBegin

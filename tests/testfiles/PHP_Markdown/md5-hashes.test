@@ -11,13 +11,19 @@ The MD5 value for `<p>test</p>` is:
 >>>
 documentBegin
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: character-escapes
 headingOne: Character Escapes
+END headerAttributeContext
 interblockSeparator
 codeSpan: +
 interblockSeparator
 END section
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: html-blocks
 headingOne: HTML Blocks
+END headerAttributeContext
 interblockSeparator
 codeSpan: <p>test</p>
 interblockSeparator

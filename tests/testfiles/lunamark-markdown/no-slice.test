@@ -136,7 +136,10 @@ codeSpan: slice
 softLineBreak
 interblockSeparator
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: this-is-an-h1
 headingOne: This is an H1
+END headerAttributeContext
 interblockSeparator
 BEGIN section
 BEGIN headerAttributeContext
@@ -145,16 +148,28 @@ headingTwo: This is an H2
 END headerAttributeContext
 interblockSeparator
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: this-is-an-h3
 headingThree: This is an H3
+END headerAttributeContext
 interblockSeparator
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: this-is-an-h4
 headingFour: This is an H4
+END headerAttributeContext
 interblockSeparator
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: this-is-an-h5
 headingFive: This is an H5
+END headerAttributeContext
 interblockSeparator
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: this-is-an-h6
 headingSix: This is an H6
+END headerAttributeContext
 interblockSeparator
 interblockSeparator
 thematicBreak
@@ -268,7 +283,10 @@ softLineBreak
 interblockSeparator
 END section
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: this-is-an-h2
 headingTwo: This is an H2
+END headerAttributeContext
 interblockSeparator
 interblockSeparator
 blockQuoteBegin

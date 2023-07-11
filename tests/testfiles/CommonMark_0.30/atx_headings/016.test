@@ -16,7 +16,10 @@ thematicBreak
 interblockSeparator
 BEGIN section
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: foo
 headingTwo: foo
+END headerAttributeContext
 interblockSeparator
 thematicBreak
 END section

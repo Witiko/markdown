@@ -1,4 +1,5 @@
 \def\markdownOptionHeaderAttributes{true}
+\def\markdownOptionAutoIdentifiers{false}
 <<<
 This test ensures that the Lua `headerAttributes` option correctly propagates
 through the plain TeX interface.

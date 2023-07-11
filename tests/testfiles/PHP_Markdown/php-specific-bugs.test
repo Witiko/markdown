@@ -33,13 +33,22 @@ interblockSeparator
 softLineBreak
 interblockSeparator
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: header-quoted-again
 headingOne: Header "quoted" again (backslash)""
+END headerAttributeContext
 interblockSeparator
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: header-quoted-again-2
 headingTwo: Header "quoted" again (backslash)""
+END headerAttributeContext
 interblockSeparator
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: header-quoted-again-3
 headingThree: Header "quoted" again (backslash)""
+END headerAttributeContext
 interblockSeparator
 codeSpan: (underscore)Detab
 interblockSeparator

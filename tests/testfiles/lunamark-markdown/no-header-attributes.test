@@ -1,3 +1,4 @@
+\def\markdownOptionAutoIdentifiers{false}
 <<<
 This test ensures that the Lua `headerAttributes` option is disabled by default.
 

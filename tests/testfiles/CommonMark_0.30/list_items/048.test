@@ -21,11 +21,17 @@ documentBegin
 ulBeginTight
 ulItem
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: foo
 headingOne: Foo
+END headerAttributeContext
 ulItemEnd
 ulItem
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: bar
 headingTwo: Bar
+END headerAttributeContext
 interblockSeparator
 emphasis: baz
 ulItemEnd

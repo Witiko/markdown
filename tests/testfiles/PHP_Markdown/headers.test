@@ -13,7 +13,10 @@ documentBegin
 BEGIN section
 BEGIN section
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: header
 headingThree: Header
+END headerAttributeContext
 interblockSeparator
 thematicBreak
 interblockSeparator

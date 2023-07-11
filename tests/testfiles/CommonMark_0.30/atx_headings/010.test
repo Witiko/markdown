@@ -12,10 +12,16 @@
 documentBegin
 BEGIN section
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: foo
 headingTwo: foo
+END headerAttributeContext
 interblockSeparator
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: bar
 headingThree: bar
+END headerAttributeContext
 END section
 END section
 END section

@@ -11,7 +11,10 @@ documentBegin
 BEGIN section
 BEGIN section
 BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: foo
 headingThree: foo(backslash)
+END headerAttributeContext
 END section
 END section
 END section
