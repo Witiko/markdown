@@ -11348,6 +11348,8 @@ options for markdown attributes on different elements is enabled:
 - \Opt{headerAttributes}
 - \Opt{inlineCodeAttributes}
 - \Opt{linkAttributes}
+- \Opt{autoIdentifiers}
+- \Opt{gfmAutoIdentifiers}
 
 \mdef{markdownRendererAttributeIdentifier} represents the \meta{identifier} of
 a markdown element (`id="`\meta{identifier}`"` in HTML and `#`\meta{identifier}
@@ -14056,8 +14058,8 @@ following text:
 % \begin{markdown}
 
 #### Header Attribute Context Renderers
-The following macros are only produced, when the \Opt{headerAttributes} option
-is enabled.
+The following macros are only produced, when the \Opt{headerAttributes}, \Opt{autoIdentifiers}, 
+or \Opt{gfmAutoIdentifiers} options are enabled.
 
 The \mdef{markdownRendererHeaderAttributeContextBegin} and
 \mdef{markdownRendererHeaderAttributeContextEnd} macros represent the beginning
