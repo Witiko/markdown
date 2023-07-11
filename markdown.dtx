@@ -24063,8 +24063,7 @@ end
     local has_id = false
 
     -- resolve the heading attributes
-    if self.is_writing and options.headerAttributes
-       and attributes ~= nil and #attributes > 0 then
+    if self.is_writing and has_attributes then
       attr, has_id = self.attributes(attributes)
     end
 
