@@ -23977,8 +23977,9 @@ local function register_heading_identifier(identifier)
 end
 
 local function create_heading_identifier(s)
-  -- Step 1: Remove all non-alphanumeric characters, except underscores, hyphens, and periods.
-  local step_1 = s:gsub("[^%w_%-%.%s]", "")
+  -- Step 1: Remove all non-alphanumeric characters, except underscores, hyphens, and periods 
+  -- (+ remove trailing whitespaces).
+  local step_1 = s:gsub("[^%w_%-%.%s]", ""):gsub("%s*$", "")
 
   -- Step 2: Replace all spaces and newlines with hyphens.
   local step_2 = step_1:gsub("[%s\n]+", "-")
@@ -23997,7 +23998,7 @@ local function create_heading_identifier(s)
 end
 
 local function create_gfm_heading_identifier(s)
-  -- Step 1: Remove all non-alphanumeric characters, except underscores, hyphens, and periods.
+  -- Step 1: Remove all non-alphanumeric characters, except underscores and hyphens.
   local step_1 = s:gsub("[^%w_%-%s]", "")
 
   -- Step 2: Replace all spaces and newlines with hyphens.
