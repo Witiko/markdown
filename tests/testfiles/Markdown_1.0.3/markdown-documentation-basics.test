@@ -294,7 +294,7 @@ Output:
 documentBegin
 BEGIN section
 BEGIN headerAttributeContext
-attributeIdentifier: basics
+attributeIdentifier: markdown-basics
 headingOne: Markdown: Basics
 END headerAttributeContext
 interblockSeparator

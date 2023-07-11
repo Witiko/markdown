@@ -28,7 +28,7 @@ interblockSeparator
 END section
 BEGIN section
 BEGIN headerAttributeContext
-attributeIdentifier: a-title-a-lot
+attributeIdentifier: a-titlea-lot
 headingTwo: <a title="a lot
 END headerAttributeContext
 interblockSeparator

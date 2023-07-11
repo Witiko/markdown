@@ -882,7 +882,7 @@ Markdown provides backslash escapes for the following characters:
 documentBegin
 BEGIN section
 BEGIN headerAttributeContext
-attributeIdentifier: syntax
+attributeIdentifier: markdown-syntax
 headingOne: Markdown: Syntax
 END headerAttributeContext
 interblockSeparator
