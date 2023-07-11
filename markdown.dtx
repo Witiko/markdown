@@ -23796,7 +23796,6 @@ function M.writer.new(options)
 
     local buf = {}
     local seen = {}
-    local has_id = false
     for _, attribute in ipairs(expanded_attributes) do
       if seen[attribute] ~= nil then
         goto continue  -- prevent duplicate attributes
@@ -23806,7 +23805,6 @@ function M.writer.new(options)
       if attribute:sub(1, 1) == "#" then
         table.insert(buf, {"\\markdownRendererAttributeIdentifier{",
                            attribute:sub(2), "}"})
-        has_id = true
       elseif attribute:sub(1, 1) == "." then
         table.insert(buf, {"\\markdownRendererAttributeClassName{",
                            attribute:sub(2), "}"})
@@ -23818,7 +23816,7 @@ function M.writer.new(options)
       ::continue::
     end
 
-    return buf, has_id
+    return buf
   end
 %    \end{macrocode}
 % \par
@@ -24060,12 +24058,27 @@ end
       table.insert(buf, "\\markdownRendererHeaderAttributeContextBegin\n")
     end
 
-    local attr = {}
-    local has_id = false
+    local has_id
+    -- check if an id is already present
+    if self.is_writing and has_attributes then 
+      for _, attribute in ipairs(attributes) do
+        if attribute:sub(1, 1) == "#" then
+          has_id = true
+          break
+        else
+          key, value = attribute:match(key_value_regex)
+          if key:lower() == "id" then
+            has_id = true
+            break
+          end
+        end
+      end
+    end
 
+    local attr = {}
     -- resolve the heading attributes
     if self.is_writing and has_attributes then
-      attr, has_id = self.attributes(attributes)
+      attr = self.attributes(attributes)
     end
 
     -- add auto identifier
