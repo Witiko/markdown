@@ -200,7 +200,7 @@ For further information, consult one of the following:
     - [Five Years of Markdown in LaTeX: What, Why, How, and Whereto][pv212-fall2020] (in Czech),
     - [Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX][tb131-video] ([slides][tb131-slides]),
     - [A Gentle Introduction to Markdown for Writers][tb134-video] ([slides][tb134-slides], [example][tb134-example]), and
-    - Markdown 3: What's New, What's Next? ([slides][tb137-slides]).
+    - [Markdown 3: What's New, What's Next?][tb137-video] ([slides][tb137-slides]).
 7. Theses by my students:
     - [Generic TeX Writer for the Pandoc Document Converter][thesis-umhg5]
     - [An implementation of the CommonMark standard into the Markdown package for TeX][thesis-r7z7l]
@@ -226,6 +226,7 @@ For further information, consult one of the following:
  [tb134-example]: https://tug.org/tug2022/assets/pdf/Tereza_Vrabcová-TUG2022-example.pdf              "A Gentle Introduction to Markdown for Writers"
  [tb134-video]:   https://youtu.be/cqbKgjAlNjo?t=2h10m35s                                             "A Gentle Introduction to Markdown for Writers"
  [tb137-slides]:  https://tug.org/tug2023/files/sa-03-novotny-markdown3/novotny-markdown3-slides.pdf  "Markdown 3: What's New, What's Next?"
+ [tb137-video]:   https://youtu.be/U8XjTOhJkg0                                                        "Markdown 3: What's New, What's Next?"
 
  [10.5300/2016-1-4/78]: https://www.doi.org/10.5300/2016-1-4/78 "Rendering Markdown inside TeX Documents"
  [10.5300/2020-1-2/48]: https://www.doi.org/10.5300/2020-1-2/48 "Markdown 2.8.1: Boldly Unto the Throne of Lightweight Markup in TeX"
