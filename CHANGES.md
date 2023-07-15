@@ -9,7 +9,8 @@ Default Renderer Prototypes:
 
 Documentation:
 
-- Add a link to TUG 2023 slides to the README. (ce6047b8)
+- Add a link to TUG 2023 slides and video to the README.
+  (ce6047b8, adb69e2f)
 
 ## 3.0.0-alpha (2023-06-27)
 
