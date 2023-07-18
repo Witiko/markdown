@@ -234,7 +234,7 @@ For further information, consult one of the following:
  [10.5300/2021-1-4/83]: https://www.doi.org/10.5300/2021-1-4/83 "Direct Typesetting of Various Document Formats in TeX Using the Pandoc Utility"
  [10.5300/2022-1-4/35]: https://www.doi.org/10.5300/2022-1-4/35 "High-Level Languages for TeX"
 
- [pv212-fall2020]: https://is.muni.cz/elearning/warp?qurl=%2Fel%2Ffi%2Fpodzim2020%2FPV212%2Findex.qwarp;prejit=5595952
+ [pv212-fall2020]: https://is.muni.cz/elearning/io/?qurl=%2Fel%2Ffi%2Fpodzim2020%2FPV212%2Findex.qwarp;prejit=5595952
 
  [install]:  https://mirrors.ctan.org/macros/generic/markdown/markdown.html#installation "Markdown Package User Manual"
  [liantze]:  http://liantze.penguinattack.org/                                           "Rants from the Lab"
