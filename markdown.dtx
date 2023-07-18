@@ -9132,6 +9132,131 @@ defaultOptions.superscripts = false
 %</lua,lua-cli>
 %<*manual-options>
 
+#### Option `tableAttributes`
+
+`tableAttributes` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{tableAttributes}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Enable the assignment of HTML attributes to (possibly empty)
+        [table captions][pandoc-table-captions]
+        (see the \Opt{tableCaptions} option):
+
+        ``` md
+        | Right | Left | Default | Center |
+        |------:|:-----|---------|:------:|
+        |   12  |  12  |    12   |    12  |
+        |  123  |  123 |   123   |   123  |
+        |    1  |    1 |     1   |     1  |
+
+          : Demonstration of pipe table syntax. {#example-table}
+        ```
+
+:    false
+
+     :  Disable the assignment of HTML attributes to table captions.
+
+ [pandoc-table-captions]: https://pandoc.org/MANUAL.html#extension-table_captions
+
+% \end{markdown}
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[
+  pipeTables,
+  tableCaptions,
+  tableAttributes,
+  relativeReferences,
+]{markdown}
+\usepackage{expl3}
+\ExplSyntaxOn
+\markdownSetup{
+  renderers = {
+    tableAttributeContextBegin = {
+      \group_begin:
+      \markdownSetup{
+        renderers = {
+          attributeIdentifier = {
+            \markdownSetup{
+              renderers = {
+                tableAttributeContextEnd = {
+                  \label{##1}
+                  \group_end:
+                },
+              },
+            }
+          },
+        },
+      }
+    },
+    tableAttributeContextEnd = {
+      \group_end:
+    },
+  },
+}
+\ExplSyntaxOff
+\begin{document}
+\begin{markdown}
+See Table <#example-table>.
+
+| Right | Left | Default | Center |
+|------:|:-----|---------|:------:|
+|   12  |  12  |    12   |    12  |
+|  123  |  123 |   123   |   123  |
+|    1  |    1 |     1   |     1  |
+
+  : Demonstration of pipe table syntax. {#example-table}
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> See Table 1.
+>
+> | Right | Left | Default | Center |
+> |------:|:-----|---------|:------:|
+> |   12  |  12  |    12   |    12  |
+> |  123  |  123 |   123   |   123  |
+> |    1  |    1 |     1   |     1  |
+>
+> : Table 1. Demonstration of pipe table syntax.
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { tableAttributes }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.tableAttributes = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
 #### Option `tableCaptions`
 
 `tableCaptions` (default value: `false`)
