@@ -1,6 +1,6 @@
 # Changes
 
-## 3.0.0-alpha.1
+## 3.0.0-alpha.2
 
 Default Renderer Prototypes:
 
