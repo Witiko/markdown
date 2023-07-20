@@ -11688,8 +11688,8 @@ enabled.
 
 The \mdef{markdownRendererBracketedSpanAttributeContextBegin} and
 \mdef{markdownRendererBracketedSpanAttributeContextEnd} macros represent the
-beginning and the end of an inline bracketed span in which the attributes of
-the span apply. The macros receive no arguments.
+beginning and the end of a context in which the attributes of
+an inline bracketed span apply. The macros receive no arguments.
 
 % \end{markdown}
 %
@@ -12659,8 +12659,8 @@ option is enabled.
 
 The \mdef{markdownRendererCodeSpanAttributeContextBegin} and
 \mdef{markdownRendererCodeSpanAttributeContextEnd} macros represent the beginning
-and the end of an inline code span in which the attributes of the inline code
-span apply. The macros receive no arguments.
+and the end of a context in which the attributes of an inline code span apply.
+The macros receive no arguments.
 
 % \end{markdown}
 %
@@ -13972,7 +13972,7 @@ enabled.
 
 The \mdef{markdownRendererFencedDivAttributeContextBegin} and
 \mdef{markdownRendererFencedDivAttributeContextEnd} macros represent the beginning
-and the end of a div in which the attributes of the div apply. The macros
+and the end of a context in which the attributes of a div apply. The macros
 receive no arguments.
 
 % \end{markdown}
@@ -14092,7 +14092,7 @@ is enabled.
 
 The \mdef{markdownRendererHeaderAttributeContextBegin} and
 \mdef{markdownRendererHeaderAttributeContextEnd} macros represent the beginning
-and the end of a heading in which the attributes of a heading apply. The macros
+and the end of a context in which the attributes of a heading apply. The macros
 receive no arguments.
 
 % \end{markdown}
@@ -14745,7 +14745,7 @@ is enabled.
 
 The \mdef{markdownRendererImageAttributeContextBegin} and
 \mdef{markdownRendererImageAttributeContextEnd} macros represent the beginning
-and the end of an image in which the attributes of the image apply. The macros
+and the end of a context in which the attributes of an image apply. The macros
 receive no arguments.
 
 % \end{markdown}
@@ -15431,7 +15431,7 @@ is enabled.
 
 The \mdef{markdownRendererLinkAttributeContextBegin} and
 \mdef{markdownRendererLinkAttributeContextEnd} macros represent the beginning
-and the end of a hyperlink in which the attributes of the hyperlink apply.
+and the end of a context in which the attributes of a hyperlink apply.
 The macros receive no arguments.
 
 % \end{markdown}
@@ -17349,6 +17349,126 @@ following text:
   \g_@@_renderer_arities_prop
   { superscript }
   { 1 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
+#### Table Attribute Context Renderers
+The following macros are only produced, when the \Opt{tableCaptions} and
+\Opt{tableAttributes} options are enabled.
+
+The \mdef{markdownRendererTableAttributeContextBegin} and
+\mdef{markdownRendererTableAttributeContextEnd} macros represent the
+beginning and the end of a context in which the attributes of a table
+apply. The macros receive no arguments.
+
+% \end{markdown}
+%
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[
+  pipeTables,
+  tableCaptions,
+  tableAttributes,
+  relativeReferences,
+]{markdown}
+\usepackage{expl3}
+\ExplSyntaxOn
+\markdownSetup{
+  renderers = {
+    tableAttributeContextBegin = {
+      \group_begin:
+      \markdownSetup{
+        renderers = {
+          attributeIdentifier = {
+            \markdownSetup{
+              renderers = {
+                tableAttributeContextEnd = {
+                  \label{##1}
+                  \group_end:
+                },
+              },
+            }
+          },
+        },
+      }
+    },
+    tableAttributeContextEnd = {
+      \group_end:
+    },
+  },
+}
+\ExplSyntaxOff
+\begin{document}
+\begin{markdown}
+See Table <#example-table>.
+
+| Right | Left | Default | Center |
+|------:|:-----|---------|:------:|
+|   12  |  12  |    12   |    12  |
+|  123  |  123 |   123   |   123  |
+|    1  |    1 |     1   |     1  |
+
+  : Demonstration of pipe table syntax. {#example-table}
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> See Table 1.
+>
+> | Right | Left | Default | Center |
+> |------:|:-----|---------|:------:|
+> |   12  |  12  |    12   |    12  |
+> |  123  |  123 |   123   |   123  |
+> |    1  |    1 |     1   |     1  |
+>
+> : Table 1. Demonstration of pipe table syntax.
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererTableAttributeContextBegin{%
+  \markdownRendererTableAttributeContextBeginPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { tableAttributeContextBegin }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { tableAttributeContextBegin }
+  { 0 }
+\ExplSyntaxOff
+\def\markdownRendererTableAttributeContextEnd{%
+  \markdownRendererTableAttributeContextEndPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { tableAttributeContextEnd }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { tableAttributeContextEnd }
+  { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par
