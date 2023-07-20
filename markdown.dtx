@@ -29567,10 +29567,18 @@ M.extensions.pipe_tables = function(table_captions, table_attributes) -- luachec
 %
 % \end{markdown}
 %  \begin{macrocode}
-      function self.table(rows, caption)
+      function self.table(rows, caption, attributes)
         if not self.is_writing then return "" end
-        local buffer = {"\\markdownRendererTable{",
-          caption or "", "}{", #rows - 1, "}{", #rows[1], "}"}
+        local buffer = {}
+        if attributes ~= nil then
+          table.insert(buffer,
+                       "\\markdownRendererTableAttributeContextBegin\n")
+          table.insert(buffer, self.attributes(attributes))
+        end
+        table.insert(buffer,
+                     {"\\markdownRendererTable{",
+                      caption or "", "}{", #rows - 1, "}{",
+                      #rows[1], "}"})
         local temp = rows[2] -- put alignments on the first row
         rows[2] = rows[1]
         rows[1] = temp
@@ -29586,6 +29594,10 @@ M.extensions.pipe_tables = function(table_captions, table_attributes) -- luachec
             end
           end
           table.insert(buffer, "}")
+        end
+        if attributes ~= nil then
+          table.insert(buffer,
+                       "\\markdownRendererTableAttributeContextEnd{}")
         end
         return buffer
       end
