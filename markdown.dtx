@@ -25862,7 +25862,6 @@ parsers.define_reference_parser = (parsers.check_trail / "") * parsers.link_labe
 % \end{markdown}
 %  \begin{macrocode}
 parsers.Inline         = V("Inline")
-parsers.IndentedInline = V("IndentedInline")
 
 -- parse many p between starter and ender
 parsers.between = function(p, starter, ender)
@@ -27862,20 +27861,6 @@ end
 % \par
 % \begin{markdown}
 %
-% Duplicate the `Inline` rule as `IndentedInline` with the right-hand-side
-% terminal symbol `Space` replaced with `OptionalIndent`.
-%
-% \end{markdown}
-%  \begin{macrocode}
-    walkable_syntax["IndentedInline"] = util.table_copy(
-      walkable_syntax["Inline"])
-    self.insert_pattern(
-      "IndentedInline instead of Space",
-      "OptionalIndent")
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
 % Materialize \luamref{walkable_syntax} and merge it into \luamref{syntax} to
 % produce the complete \acro{peg} grammar of markdown. Whenever a rule exists
 % in both \luamref{walkable_syntax} and \luamref{syntax}, the rule from
@@ -29619,7 +29604,7 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-M.extensions.pipe_tables = function(table_captions, table_attributes) -- luacheck: ignore table_attributes
+M.extensions.pipe_tables = function(table_captions, table_attributes)
 
   local function make_pipe_table_rectangular(rows)
     local num_columns = #rows[2]
@@ -29771,8 +29756,35 @@ M.extensions.pipe_tables = function(table_captions, table_attributes) -- luachec
       if table_captions then
         table_caption = #table_caption_beginning
                       * table_caption_beginning
-                      * Ct(parsers.IndentedInline^1)
-                      * parsers.newline
+        if table_attributes then
+          table_caption = table_caption
+                        * (C(((( parsers.linechar
+                               - (parsers.attributes
+                                 * parsers.optionalspace
+                                 * parsers.newline
+                                 * -#( parsers.optionalspace
+                                     * parsers.linechar)))
+                              + ( parsers.newline
+                                * #( parsers.optionalspace
+                                   * parsers.linechar)
+                                * C(parsers.optionalspace) / writer.space))
+                             * (parsers.linechar
+                               - parsers.lbrace)^0)^1)
+                             / self.parser_functions.parse_inlines)
+                        * (parsers.newline
+                          + ( Ct(parsers.attributes)
+                            * parsers.optionalspace
+                            * parsers.newline))
+        else
+          table_caption = table_caption
+                        * C(( parsers.linechar
+                            + ( parsers.newline
+                              * #( parsers.optionalspace
+                                 * parsers.linechar)
+                              * C(parsers.optionalspace) / writer.space))^1)
+                        / self.parser_functions.parse_inlines
+                        * parsers.newline
+        end
       else
         table_caption = parsers.fail
       end
@@ -30431,7 +30443,7 @@ function M.new(options)
 
   if options.pipeTables then
     local pipe_tables_extension = M.extensions.pipe_tables(
-      options.tableCaptions, options.tableCaptionAttributes)
+      options.tableCaptions, options.tableAttributes)
     table.insert(extensions, pipe_tables_extension)
   end
 
