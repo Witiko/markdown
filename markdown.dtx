@@ -29493,11 +29493,13 @@ end
 % The \luamdef{extensions.pipe_table} function implements the \acro{PHP}
 % Markdown table syntax extension (also known as pipe tables in Pandoc). When
 % the `table_captions` parameter is `true`, the function also implements the
-% Pandoc table caption syntax extension for table captions.
+% Pandoc table caption syntax extension for table captions. When the
+% `table_attributes` parameter is also `true`, the function also
+% allows attributes to be attached to the (possibly empty) table captions.
 %
 % \end{markdown}
 %  \begin{macrocode}
-M.extensions.pipe_tables = function(table_captions)
+M.extensions.pipe_tables = function(table_captions, table_attributes) -- luacheck: ignore table_attributes
 
   local function make_pipe_table_rectangular(rows)
     local num_columns = #rows[2]
@@ -30297,7 +30299,7 @@ function M.new(options)
 
   if options.pipeTables then
     local pipe_tables_extension = M.extensions.pipe_tables(
-      options.tableCaptions)
+      options.tableCaptions, options.tableCaptionAttributes)
     table.insert(extensions, pipe_tables_extension)
   end
 
