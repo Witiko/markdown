@@ -2,6 +2,10 @@
 
 ## 3.0.0-alpha.2
 
+Development:
+
+- Add support for attributes on tables. (#310, #313)
+
 Default Renderer Prototypes:
 
 - Correctly handle multiple heading identifiers. (3ae1b0d1)
