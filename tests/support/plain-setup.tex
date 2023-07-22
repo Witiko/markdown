@@ -31,6 +31,10 @@
   \TYPE{BEGIN codeSpanAttributeContext}}%
 \def\markdownRendererCodeSpanAttributeContextEnd#1{%
   \TYPE{END codeSpanAttributeContext}}%
+\def\markdownRendererTableAttributeContextBegin{%
+  \TYPE{BEGIN tableAttributeContext}}%
+\def\markdownRendererTableAttributeContextEnd{%
+  \TYPE{END tableAttributeContext}}%
 \def\markdownRendererDocumentBegin{%
   \begingroup
   \catcode"09=12%  Prevent tabs (U+0009) from folding into a single space token

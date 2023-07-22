@@ -37,6 +37,11 @@
     codeSpanAttributeContextEnd = {%
       \TYPE{END codeSpanAttributeContext}%
       \GOBBLE},
+    tableAttributeContextBegin = {%
+      \TYPE{BEGIN tableAttributeContext}},
+    tableAttributeContextEnd = {%
+      \TYPE{END tableAttributeContext}%
+      \GOBBLE},
     documentBegin = {%
       \begingroup
       \catcode"09=12%  Prevent tabs (U+0009) from folding into a single space token

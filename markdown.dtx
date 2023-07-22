@@ -9132,6 +9132,131 @@ defaultOptions.superscripts = false
 %</lua,lua-cli>
 %<*manual-options>
 
+#### Option `tableAttributes`
+
+`tableAttributes` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{tableAttributes}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Enable the assignment of HTML attributes to (possibly empty)
+        [table captions][pandoc-table-captions]
+        (see the \Opt{tableCaptions} option):
+
+        ``` md
+        | Right | Left | Default | Center |
+        |------:|:-----|---------|:------:|
+        |   12  |  12  |    12   |    12  |
+        |  123  |  123 |   123   |   123  |
+        |    1  |    1 |     1   |     1  |
+
+          : Demonstration of pipe table syntax. {#example-table}
+        ```
+
+:    false
+
+     :  Disable the assignment of HTML attributes to table captions.
+
+ [pandoc-table-captions]: https://pandoc.org/MANUAL.html#extension-table_captions
+
+% \end{markdown}
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[
+  pipeTables,
+  tableCaptions,
+  tableAttributes,
+  relativeReferences,
+]{markdown}
+\usepackage{expl3}
+\ExplSyntaxOn
+\markdownSetup{
+  renderers = {
+    tableAttributeContextBegin = {
+      \group_begin:
+      \markdownSetup{
+        renderers = {
+          attributeIdentifier = {
+            \markdownSetup{
+              renderers = {
+                tableAttributeContextEnd = {
+                  \label{##1}
+                  \group_end:
+                },
+              },
+            }
+          },
+        },
+      }
+    },
+    tableAttributeContextEnd = {
+      \group_end:
+    },
+  },
+}
+\ExplSyntaxOff
+\begin{document}
+\begin{markdown}
+See Table <#example-table>.
+
+| Right | Left | Default | Center |
+|------:|:-----|---------|:------:|
+|   12  |  12  |    12   |    12  |
+|  123  |  123 |   123   |   123  |
+|    1  |    1 |     1   |     1  |
+
+  : Demonstration of pipe table syntax. {#example-table}
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> See Table 1.
+>
+> | Right | Left | Default | Center |
+> |------:|:-----|---------|:------:|
+> |   12  |  12  |    12   |    12  |
+> |  123  |  123 |   123   |   123  |
+> |    1  |    1 |     1   |     1  |
+>
+> : Table 1. Demonstration of pipe table syntax.
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { tableAttributes }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.tableAttributes = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
 #### Option `tableCaptions`
 
 `tableCaptions` (default value: `false`)
@@ -11563,8 +11688,8 @@ enabled.
 
 The \mdef{markdownRendererBracketedSpanAttributeContextBegin} and
 \mdef{markdownRendererBracketedSpanAttributeContextEnd} macros represent the
-beginning and the end of an inline bracketed span in which the attributes of
-the span apply. The macros receive no arguments.
+beginning and the end of a context in which the attributes of
+an inline bracketed span apply. The macros receive no arguments.
 
 % \end{markdown}
 %
@@ -12534,8 +12659,8 @@ option is enabled.
 
 The \mdef{markdownRendererCodeSpanAttributeContextBegin} and
 \mdef{markdownRendererCodeSpanAttributeContextEnd} macros represent the beginning
-and the end of an inline code span in which the attributes of the inline code
-span apply. The macros receive no arguments.
+and the end of a context in which the attributes of an inline code span apply.
+The macros receive no arguments.
 
 % \end{markdown}
 %
@@ -13847,7 +13972,7 @@ enabled.
 
 The \mdef{markdownRendererFencedDivAttributeContextBegin} and
 \mdef{markdownRendererFencedDivAttributeContextEnd} macros represent the beginning
-and the end of a div in which the attributes of the div apply. The macros
+and the end of a context in which the attributes of a div apply. The macros
 receive no arguments.
 
 % \end{markdown}
@@ -13967,7 +14092,7 @@ is enabled.
 
 The \mdef{markdownRendererHeaderAttributeContextBegin} and
 \mdef{markdownRendererHeaderAttributeContextEnd} macros represent the beginning
-and the end of a heading in which the attributes of a heading apply. The macros
+and the end of a context in which the attributes of a heading apply. The macros
 receive no arguments.
 
 % \end{markdown}
@@ -14620,7 +14745,7 @@ is enabled.
 
 The \mdef{markdownRendererImageAttributeContextBegin} and
 \mdef{markdownRendererImageAttributeContextEnd} macros represent the beginning
-and the end of an image in which the attributes of the image apply. The macros
+and the end of a context in which the attributes of an image apply. The macros
 receive no arguments.
 
 % \end{markdown}
@@ -15306,7 +15431,7 @@ is enabled.
 
 The \mdef{markdownRendererLinkAttributeContextBegin} and
 \mdef{markdownRendererLinkAttributeContextEnd} macros represent the beginning
-and the end of a hyperlink in which the attributes of the hyperlink apply.
+and the end of a context in which the attributes of a hyperlink apply.
 The macros receive no arguments.
 
 % \end{markdown}
@@ -17224,6 +17349,126 @@ following text:
   \g_@@_renderer_arities_prop
   { superscript }
   { 1 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
+#### Table Attribute Context Renderers
+The following macros are only produced, when the \Opt{tableCaptions} and
+\Opt{tableAttributes} options are enabled.
+
+The \mdef{markdownRendererTableAttributeContextBegin} and
+\mdef{markdownRendererTableAttributeContextEnd} macros represent the
+beginning and the end of a context in which the attributes of a table
+apply. The macros receive no arguments.
+
+% \end{markdown}
+%
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[
+  pipeTables,
+  tableCaptions,
+  tableAttributes,
+  relativeReferences,
+]{markdown}
+\usepackage{expl3}
+\ExplSyntaxOn
+\markdownSetup{
+  renderers = {
+    tableAttributeContextBegin = {
+      \group_begin:
+      \markdownSetup{
+        renderers = {
+          attributeIdentifier = {
+            \markdownSetup{
+              renderers = {
+                tableAttributeContextEnd = {
+                  \label{##1}
+                  \group_end:
+                },
+              },
+            }
+          },
+        },
+      }
+    },
+    tableAttributeContextEnd = {
+      \group_end:
+    },
+  },
+}
+\ExplSyntaxOff
+\begin{document}
+\begin{markdown}
+See Table <#example-table>.
+
+| Right | Left | Default | Center |
+|------:|:-----|---------|:------:|
+|   12  |  12  |    12   |    12  |
+|  123  |  123 |   123   |   123  |
+|    1  |    1 |     1   |     1  |
+
+  : Demonstration of pipe table syntax. {#example-table}
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> See Table 1.
+>
+> | Right | Left | Default | Center |
+> |------:|:-----|---------|:------:|
+> |   12  |  12  |    12   |    12  |
+> |  123  |  123 |   123   |   123  |
+> |    1  |    1 |     1   |     1  |
+>
+> : Table 1. Demonstration of pipe table syntax.
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererTableAttributeContextBegin{%
+  \markdownRendererTableAttributeContextBeginPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { tableAttributeContextBegin }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { tableAttributeContextBegin }
+  { 0 }
+\ExplSyntaxOff
+\def\markdownRendererTableAttributeContextEnd{%
+  \markdownRendererTableAttributeContextEndPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { tableAttributeContextEnd }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { tableAttributeContextEnd }
+  { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par
@@ -25617,7 +25862,6 @@ parsers.define_reference_parser = (parsers.check_trail / "") * parsers.link_labe
 % \end{markdown}
 %  \begin{macrocode}
 parsers.Inline         = V("Inline")
-parsers.IndentedInline = V("IndentedInline")
 
 -- parse many p between starter and ender
 parsers.between = function(p, starter, ender)
@@ -27617,20 +27861,6 @@ end
 % \par
 % \begin{markdown}
 %
-% Duplicate the `Inline` rule as `IndentedInline` with the right-hand-side
-% terminal symbol `Space` replaced with `OptionalIndent`.
-%
-% \end{markdown}
-%  \begin{macrocode}
-    walkable_syntax["IndentedInline"] = util.table_copy(
-      walkable_syntax["Inline"])
-    self.insert_pattern(
-      "IndentedInline instead of Space",
-      "OptionalIndent")
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
 % Materialize \luamref{walkable_syntax} and merge it into \luamref{syntax} to
 % produce the complete \acro{peg} grammar of markdown. Whenever a rule exists
 % in both \luamref{walkable_syntax} and \luamref{syntax}, the rule from
@@ -29368,11 +29598,13 @@ end
 % The \luamdef{extensions.pipe_table} function implements the \acro{PHP}
 % Markdown table syntax extension (also known as pipe tables in Pandoc). When
 % the `table_captions` parameter is `true`, the function also implements the
-% Pandoc table caption syntax extension for table captions.
+% Pandoc table caption syntax extension for table captions. When the
+% `table_attributes` parameter is also `true`, the function also
+% allows attributes to be attached to the (possibly empty) table captions.
 %
 % \end{markdown}
 %  \begin{macrocode}
-M.extensions.pipe_tables = function(table_captions)
+M.extensions.pipe_tables = function(table_captions, table_attributes)
 
   local function make_pipe_table_rectangular(rows)
     local num_columns = #rows[2]
@@ -29440,10 +29672,18 @@ M.extensions.pipe_tables = function(table_captions)
 %
 % \end{markdown}
 %  \begin{macrocode}
-      function self.table(rows, caption)
+      function self.table(rows, caption, attributes)
         if not self.is_writing then return "" end
-        local buffer = {"\\markdownRendererTable{",
-          caption or "", "}{", #rows - 1, "}{", #rows[1], "}"}
+        local buffer = {}
+        if attributes ~= nil then
+          table.insert(buffer,
+                       "\\markdownRendererTableAttributeContextBegin\n")
+          table.insert(buffer, self.attributes(attributes))
+        end
+        table.insert(buffer,
+                     {"\\markdownRendererTable{",
+                      caption or "", "}{", #rows - 1, "}{",
+                      #rows[1], "}"})
         local temp = rows[2] -- put alignments on the first row
         rows[2] = rows[1]
         rows[1] = temp
@@ -29459,6 +29699,10 @@ M.extensions.pipe_tables = function(table_captions)
             end
           end
           table.insert(buffer, "}")
+        end
+        if attributes ~= nil then
+          table.insert(buffer,
+                       "\\markdownRendererTableAttributeContextEnd{}")
         end
         return buffer
       end
@@ -29512,8 +29756,35 @@ M.extensions.pipe_tables = function(table_captions)
       if table_captions then
         table_caption = #table_caption_beginning
                       * table_caption_beginning
-                      * Ct(parsers.IndentedInline^1)
-                      * parsers.newline
+        if table_attributes then
+          table_caption = table_caption
+                        * (C(((( parsers.linechar
+                               - (parsers.attributes
+                                 * parsers.optionalspace
+                                 * parsers.newline
+                                 * -#( parsers.optionalspace
+                                     * parsers.linechar)))
+                              + ( parsers.newline
+                                * #( parsers.optionalspace
+                                   * parsers.linechar)
+                                * C(parsers.optionalspace) / writer.space))
+                             * (parsers.linechar
+                               - parsers.lbrace)^0)^1)
+                             / self.parser_functions.parse_inlines)
+                        * (parsers.newline
+                          + ( Ct(parsers.attributes)
+                            * parsers.optionalspace
+                            * parsers.newline))
+        else
+          table_caption = table_caption
+                        * C(( parsers.linechar
+                            + ( parsers.newline
+                              * #( parsers.optionalspace
+                                 * parsers.linechar)
+                              * C(parsers.optionalspace) / writer.space))^1)
+                        / self.parser_functions.parse_inlines
+                        * parsers.newline
+        end
       else
         table_caption = parsers.fail
       end
@@ -30172,7 +30443,7 @@ function M.new(options)
 
   if options.pipeTables then
     local pipe_tables_extension = M.extensions.pipe_tables(
-      options.tableCaptions)
+      options.tableCaptions, options.tableAttributes)
     table.insert(extensions, pipe_tables_extension)
   end
 
