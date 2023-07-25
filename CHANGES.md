@@ -4,7 +4,7 @@
 
 Development:
 
-- Add support for attributes on tables. (#310, #313)
+- Add support for attributes on tables. (#310, #313, 8786408)
 
 Default Renderer Prototypes:
 
