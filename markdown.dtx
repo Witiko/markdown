@@ -9143,9 +9143,11 @@ defaultOptions.superscripts = false
 %
 :    true
 
-     :  Enable the assignment of HTML attributes to (possibly empty)
-        [table captions][pandoc-table-captions]
-        (see the \Opt{tableCaptions} option):
+     :  Enable the assignment of HTML attributes to
+%       table captions (see the \Opt{tableCaptions} option).
+%       \iffalse
+        [table captions](#table-captions).
+%       \fi
 
         ``` md
         | Right | Left | Default | Center |
@@ -9160,8 +9162,6 @@ defaultOptions.superscripts = false
 :    false
 
      :  Disable the assignment of HTML attributes to table captions.
-
- [pandoc-table-captions]: https://pandoc.org/MANUAL.html#extension-table_captions
 
 % \end{markdown}
 % \iffalse
@@ -9257,7 +9257,7 @@ defaultOptions.tableAttributes = false
 %</lua,lua-cli>
 %<*manual-options>
 
-#### Option `tableCaptions`
+#### Option `tableCaptions` {#table-captions}
 
 `tableCaptions` (default value: `false`)
 
