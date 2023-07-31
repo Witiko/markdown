@@ -282,11 +282,11 @@ def get_templates(tex_format: str) -> Tuple[Template]:
     return tuple(sorted(templates))
 
 
-def run_m4(input_file: Path, **variables) -> str:
+def run_m4(input_file: Path, cwd: Optional[Path] = None, **variables) -> str:
     with input_file.open('rt') as f:
         input_text = f.read()
     m4_parameters = [f'-D{key}={value}' for key, value in variables.items()]
-    m4_process = run(['m4', *m4_parameters], text=True, input=input_text, check=True, capture_output=True)
+    m4_process = run(['m4', *m4_parameters], text=True, input=input_text, check=True, capture_output=True, cwd=cwd)
     output_text = m4_process.stdout
     return output_text
 
@@ -411,7 +411,7 @@ def run_test(testfile: Path) -> TestResult:
 
         # Create test file.
         test_text = run_m4(
-            template, TEST_SETUP_FILENAME=TEST_SETUP_FILENAME, TEST_INPUT_FILENAME=TEST_INPUT_FILENAME)
+            template, cwd=temporary_directory, TEST_SETUP_FILENAME=TEST_SETUP_FILENAME, TEST_INPUT_FILENAME=TEST_INPUT_FILENAME)
         with (temporary_directory / TEST_FILENAME).open('wt') as f:
             print(test_text, file=f)
 
