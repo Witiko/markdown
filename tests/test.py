@@ -409,7 +409,7 @@ def run_test(testfile: Path) -> TestResult:
             print(test_text, file=f)
 
         # Run test.
-        test_process = run(command, cwd=temporary_directory)
+        test_process = run(command, cwd=temporary_directory, capture_output=True)
         test_subresult = TestSubResult(testfile, test_parameters, temporary_directory, test_process)
         test_subresults.append(test_subresult)
 
