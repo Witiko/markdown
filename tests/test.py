@@ -41,9 +41,10 @@ SUPPORT_DIRECTORY: Path = Path('support')
 COMMANDS_FILENAME = 'COMMANDS.m4'
 TEST_FILENAME: str = 'test.tex'
 TEST_OUTPUT_FILENAME: str = 'test.log'
+TEST_ACTUAL_OUTPUT_FILENAME: str = 'test-expected.log'
+TEST_EXPECTED_OUTPUT_FILENAME: str = 'test-expected.log'
 TEST_SETUP_FILENAME: str = 'test-setup.tex'
 TEST_INPUT_FILENAME: str = 'test-input.md'
-TEST_EXPECTED_OUTPUT_FILENAME: str = 'test-expected.log'
 
 
 # Types
@@ -90,9 +91,9 @@ class TestSubResult:
     @cached_property
     def actual_output_text(self) -> OutputText:
         try:
-            actual_output_file = self.temporary_directory / TEST_OUTPUT_FILENAME
-            actual_output_text = read_test_output_from_tex_log_file(actual_output_file)
-            return actual_output_text
+            actual_output_file = self.temporary_directory / TEST_ACTUAL_OUTPUT_FILENAME
+            with actual_output_file.open('rt') as f:
+                actual_output_text = f.read()
         except IOError:
             return ''  # We have already deleted temporary directory, or no output was produced due to an error.
 
@@ -101,7 +102,7 @@ class TestSubResult:
         expected_output_lines = self.expected_output_text.splitlines(True)
         actual_output_lines = self.actual_output_text.splitlines(True)
         expected_output_file = self.temporary_directory / TEST_EXPECTED_OUTPUT_FILENAME
-        actual_output_file = self.temporary_directory / TEST_OUTPUT_FILENAME
+        actual_output_file = self.temporary_directory / TEST_ACTUAL_OUTPUT_FILENAME
         output_diff_lines = context_diff(
             expected_output_lines, actual_output_lines, fromfile=str(expected_output_file), tofile=str(actual_output_file))
         output_diff_text = ''.join(output_diff_lines)
@@ -163,7 +164,7 @@ class TestResult:
 
         if not self.subresults_exited_successfully:
             self.updated_testfile = False
-            LOGGER.warning(f'Cannot update testfile {self.testfile}, some commands produced non-zero exit codes')
+            LOGGER.debug(f'Cannot update testfile {self.testfile}, some commands produced non-zero exit codes')
             return
 
         actual_output_texts = set()
@@ -172,7 +173,7 @@ class TestResult:
             actual_output_texts.add(subresult.actual_output_text)
 
         if len(actual_output_texts) > 1:
-            LOGGER.warning(f'Cannot update testfile {self.testfile}, different commands produced different outputs')
+            LOGGER.debug(f'Cannot update testfile {self.testfile}, different commands produced different outputs')
             return
 
         actual_output_text, = list(actual_output_texts)
@@ -412,6 +413,17 @@ def run_test(testfile: Path) -> TestResult:
 
         # Run test.
         test_process = run(command, cwd=temporary_directory, capture_output=True)
+
+        # Extract test output.
+        try:
+            actual_output_file = temporary_directory / TEST_OUTPUT_FILENAME
+            actual_output_text = read_test_output_from_tex_log_file(actual_output_file)
+            with (temporary_directory / TEST_ACTUAL_OUTPUT_FILENAME).open('wt') as f:
+                print(actual_output_text, file=f)
+        except IOError as e:
+            LOGGER.debug(f'Failed to extract test output from log file: {e}')
+
+        # Store test result.
         test_subresult = TestSubResult(testfile, test_parameters, temporary_directory, test_process)
         test_subresults.append(test_subresult)
 
