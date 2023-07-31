@@ -100,13 +100,13 @@ class TestSubResult:
 
     @cached_property
     def output_diff(self) -> OutputTextDiff:
-        expected_output_lines = self.expected_output_text.splitlines(True)
-        actual_output_lines = self.actual_output_text.splitlines(True)
+        expected_output_lines = self.expected_output_text.splitlines()
+        actual_output_lines = self.actual_output_text.splitlines()
         expected_output_file = self.temporary_directory / TEST_EXPECTED_OUTPUT_FILENAME
         actual_output_file = self.temporary_directory / TEST_ACTUAL_OUTPUT_FILENAME
         output_diff_lines = context_diff(
-            expected_output_lines, actual_output_lines, fromfile=str(expected_output_file), tofile=str(actual_output_file))
-        output_diff_text = ''.join(output_diff_lines)
+            expected_output_lines, actual_output_lines, fromfile=str(expected_output_file), tofile=str(actual_output_file), lineterm='')
+        output_diff_text = '\n'.join(output_diff_lines)
         return output_diff_text
 
     @property
