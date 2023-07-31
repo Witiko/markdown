@@ -18,9 +18,11 @@ FAIL_FAST = False
                 required=True)
 @click.option('--update-tests/--no-update-tests',
               help='Update testfiles with unexpected results',
+              is_flag=True,
               default=UPDATE_TESTS)
 @click.option('--fail-fast/--no-fail-fast',
               help='When a test fails, stop immediately',
+              is_flag=True,
               default=FAIL_FAST)
 def main(testfiles: List[str], update_tests: bool, fail_fast: bool):
     pass
