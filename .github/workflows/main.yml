@@ -131,7 +131,7 @@ jobs:
                     tee /dev/stderr)"
           test "$RESULT" = '\markdownRendererDocumentBegin'$'\n''Hello \markdownRendererEmphasis{Markdown}! $a_x + b_x = c_x$\markdownRendererDocumentEnd'
       - name: Run unit tests
-        run: docker run --rm -v "$PWD":/git-repo -w /git-repo witiko/markdown:${{ matrix.texlive }} make test
+        run: docker run --rm -v "$PWD":/git-repo -w /git-repo witiko/markdown:${{ matrix.texlive }} make FAIL_FAST=${{ github.ref != 'refs/heads/main' }} test
       - name: Build distribution archives
         if: matrix.texlive == 'latest'
         run: docker run --rm -v "$PWD":/git-repo -w /git-repo witiko/markdown:${{ matrix.texlive }} make dist gh-pages

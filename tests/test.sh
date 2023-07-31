@@ -1,4 +1,30 @@
 #!/bin/bash
+# Run tests in a Python virtual environment.
+
+set -o errexit
+
+if [ ! -d test-virtualenv ]
+then
+  # Create a Python virtual environment.
+  trap 'rm -rf test-virtualenv' EXIT
+  python3 -m venv test-virtualenv
+  source test-virtualenv/bin/activate
+  pip install -U pip wheel setuptools
+  pip install -r requirements.txt
+  deactivate
+  trap '' EXIT
+fi
+
+# Activate a Python virtual environment.
+source test-virtualenv/bin/activate
+
+# Run tests.
+python3 test.py "$@"
+
+# TODO: Remove all below code.
+
+exit
+
 # Run a test for each testfile passed as an argument. If a testfile does not
 # contain the expected test result, generate one.
 
