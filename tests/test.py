@@ -103,7 +103,7 @@ class TestSubResult:
         expected_output_file = self.temporary_directory / TEST_EXPECTED_OUTPUT_FILENAME
         actual_output_file = self.temporary_directory / TEST_OUTPUT_FILENAME
         output_diff_lines = context_diff(
-            expected_output_lines, actual_output_lines, fromfile=expected_output_file, tofile=actual_output_file)
+            expected_output_lines, actual_output_lines, fromfile=str(expected_output_file), tofile=str(actual_output_file))
         output_diff_text = ''.join(output_diff_lines)
         return output_diff_text
 
