@@ -324,6 +324,7 @@ def read_testfile(testfile: Path) -> Tuple[SetupText, InputText, OutputText]:
 
 def read_test_output_from_tex_log_file(tex_log_file: Path) -> OutputText:
     input_lines: List[str] = []
+    input_line_fragments: List[str] = []
     in_test_output = False
     with tex_log_file.open('rt') as f:
         for line in f:
@@ -331,9 +332,11 @@ def read_test_output_from_tex_log_file(tex_log_file: Path) -> OutputText:
             if not in_test_output and line.strip() == 'TEST INPUT BEGIN':
                 in_test_output = True
             elif in_test_output and line.strip() == 'TEST INPUT END':
+                input_lines.append(''.join(input_line_fragments))
+                input_line_fragments.clear()
                 in_test_output = False
             elif in_test_output:
-                input_lines.append(line)
+                input_line_fragments.append(line)
 
     output_text = '\n'.join(input_lines)
     return output_text
