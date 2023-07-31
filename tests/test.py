@@ -459,7 +459,7 @@ def main(testfiles: Iterable[str], update_tests: bool, fail_fast: bool) -> None:
     results: List[TestResult] = []
     sequential_results = list(map(run_test, testfiles[:1]))  # Populate caches with the first testfile.
     with Pool(NUM_PROCESSES) as pool:
-        parallel_results = pool.imap(run_test, testfiles[1:])  # Run the remaining tests in parallel.
+        parallel_results = pool.imap(run_test, testfiles[1:], chunksize=1)  # Run the remaining tests in parallel.
         results_iter = chain(sequential_results, parallel_results)
         results_iter = tqdm(results_iter, total=len(testfiles))
         for result in results_iter:
