@@ -117,7 +117,7 @@ class TestSubResult:
     def output_matches(self) -> bool:
         if self.temporary_directory is None:
             return True  # We have already deleted temporary directory, output must have been the same.
-        return self.expected_output_text == self.actual_output_text
+        return not self.output_diff
 
     def __bool__(self) -> bool:
         return self.exited_successfully and self.output_matches
