@@ -329,7 +329,7 @@ def read_test_output_from_tex_log_file(tex_log_file: Path) -> OutputText:
                 in_test_output = True
             elif in_test_output and line.strip() == 'TEST INPUT END':
                 in_test_output = False
-            else:
+            elif in_test_output:
                 input_lines.append(line)
 
     output_text = '\n'.join(input_lines)
