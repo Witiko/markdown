@@ -76,7 +76,7 @@ class TestSubResult:
         self.testfile = testfile
         self.test_parameters = test_parameters
         self.temporary_directory = temporary_directory
-        self.test_process = test_process
+        self.exit_code = test_process.returncode
 
         # If test succeeded, remove temporary directory.
         if self:
@@ -111,7 +111,7 @@ class TestSubResult:
 
     @property
     def exited_successfully(self) -> bool:
-        return self.test_process.returncode == 0
+        return self.exit_code == 0
 
     @property
     def output_matches(self) -> bool:
@@ -226,7 +226,7 @@ class TestResult:
                 result_lines.append('Some commands produced non-zero exit codes:')
                 exit_codes: Dict[int, List[TestSubResult]] = defaultdict(lambda: list())
                 for subresult in self.subresults:
-                    exit_codes[subresult.test_process.returncode].append(subresult)
+                    exit_codes[subresult.exit_code].append(subresult)
                 for exit_code, subresults in sorted(exit_codes.items(), key=lambda x: x[0]):
                     command_texts = format_commands(subresult.test_parameters.command for subresult in subresults)
                     plural = 's' if len(subresults) > 1 else ''
