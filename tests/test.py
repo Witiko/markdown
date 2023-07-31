@@ -452,6 +452,7 @@ def main(testfiles: Iterable[str], update_tests: bool, fail_fast: bool) -> None:
             if not result and update_tests:
                 result.try_to_update_testfile()  # Will change bool(result) to True on success.
             if not result and fail_fast:
+                results_iter.close()  # Close the progress bar.
                 print(result.summarize(), file=sys.stderr)
                 sys.exit(1)
             results.append(result)
