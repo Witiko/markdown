@@ -21,6 +21,7 @@ ARG DEPENDENCIES="\
     parallel \
     poppler-utils \
     python3-pygments \
+    python3-venv \
     ruby \
     unzip \
     wget \
