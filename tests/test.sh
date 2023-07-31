@@ -7,10 +7,10 @@ set -o errexit
 if [ ! -d test-virtualenv ]
 then
   trap 'rm -rf test-virtualenv' EXIT
-  python3 -m venv test-virtualenv
+  chronic python3 -m venv test-virtualenv
   source test-virtualenv/bin/activate
-  pip install -U pip wheel setuptools
-  pip install -r requirements.txt
+  chronic pip install -U pip wheel setuptools
+  chronic pip install -r requirements.txt
   deactivate
   trap '' EXIT
 fi

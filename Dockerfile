@@ -17,6 +17,7 @@ ARG DEPENDENCIES="\
     gawk \
     graphviz \
     m4 \
+    moreutils \
     pandoc \
     parallel \
     poppler-utils \
