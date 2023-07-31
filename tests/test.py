@@ -94,6 +94,7 @@ class TestSubResult:
             actual_output_file = self.temporary_directory / TEST_ACTUAL_OUTPUT_FILENAME
             with actual_output_file.open('rt') as f:
                 actual_output_text = f.read()
+            return actual_output_text
         except IOError:
             return ''  # We have already deleted temporary directory, or no output was produced due to an error.
 
