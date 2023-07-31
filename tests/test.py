@@ -435,6 +435,15 @@ def run_test(testfile: Path) -> TestResult:
     return test_result
 
 
+def run_tests(testfiles: Iterable[Path]) -> Iterable[TestResult]:
+    testfiles: List[Path] = list(map(Path, testfiles))
+    sequential_results = list(map(run_test, testfiles[:1]))  # Populate caches with the first testfile.
+    with Pool(NUM_PROCESSES) as pool:
+        parallel_results = pool.imap(run_test, testfiles[1:], chunksize=1)  # Run the remaining tests in parallel.
+        results_iter = chain(sequential_results, parallel_results)
+        yield from results_iter
+
+
 # Command-line interface
 @click.command()
 @click.argument('testfiles',
@@ -454,24 +463,19 @@ def main(testfiles: Iterable[str], update_tests: bool, fail_fast: bool) -> None:
     testfiles: List[Path] = list(map(Path, testfiles))
     LOGGER.info(f'Running tests for {len(testfiles)} testfiles')
 
-    # Run tests.
     some_tests_failed = False
     results: List[TestResult] = []
-    sequential_results = list(map(run_test, testfiles[:1]))  # Populate caches with the first testfile.
-    with Pool(NUM_PROCESSES) as pool:
-        parallel_results = pool.imap(run_test, testfiles[1:], chunksize=1)  # Run the remaining tests in parallel.
-        results_iter = chain(sequential_results, parallel_results)
-        results_iter = tqdm(results_iter, total=len(testfiles))
-        for result in results_iter:
-            if not result:
-                some_tests_failed = True
-            if not result and update_tests:
-                result.try_to_update_testfile()  # Will change bool(result) to True on success.
-            if not result and fail_fast:
-                results_iter.close()  # Close the progress bar.
-                print(result.summarize(), file=sys.stderr)
-                sys.exit(1)
-            results.append(result)
+    progress_bar = tqdm(run_tests(testfiles), total=len(testfiles))
+    for result in progress_bar:
+        if not result:
+            some_tests_failed = True
+        if not result and update_tests:
+            result.try_to_update_testfile()  # Will change bool(result) to True on success.
+        if not result and fail_fast:
+            progress_bar.close()  # Close the progress bar.
+            print(result.summarize(), file=sys.stderr)
+            sys.exit(1)
+        results.append(result)
 
     if some_tests_failed:
         LOGGER.error('Some tests failed, see the summary below:')
