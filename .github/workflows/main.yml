@@ -58,12 +58,46 @@ jobs:
         with:
           files: .
           config_file: .markdownlint.yaml
+  flake8:
+    name: Style check (Python)
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Install additional packages
+        run: |
+          set -ex
+          pip install -U pip wheel setuptools
+          pip install flake8
+      - name: Run Flake8
+        run: flake8 tests/test.py
+  flake8:
+    name: Type check (Python)
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Install additional packages
+        run: |
+          set -ex
+          pip install -U pip wheel setuptools
+          pip install -r tests/requirements.txt
+          pip install pytype
+      - name: Run Flake8
+        run: pytype tests/test.py
+  pytype:
   test-and-publish:
     name: Test and publish
     needs:
       - shellcheck
       - luacheck
       - markdownlint
+      - flake8
+      - pytype
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
