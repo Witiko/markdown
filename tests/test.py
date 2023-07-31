@@ -284,7 +284,7 @@ def run_m4(input_file: Path, **variables) -> str:
     with input_file.open('rt') as f:
         input_text = f.read()
     m4_parameters = [f'-D{key}={value}' for key, value in variables.items()]
-    m4_process = run(['m4', *m4_parameters], text=True, input=input_text, check=True)
+    m4_process = run(['m4', *m4_parameters], text=True, input=input_text, check=True, capture_output=True)
     output_text = m4_process.stdout
     return output_text
 
