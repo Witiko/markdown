@@ -73,7 +73,7 @@ jobs:
           pip install flake8
       - name: Run Flake8
         run: flake8 tests/test.py
-  flake8:
+  pytype:
     name: Type check (Python)
     runs-on: ubuntu-latest
     container:
@@ -89,7 +89,6 @@ jobs:
           pip install pytype
       - name: Run Flake8
         run: pytype tests/test.py
-  pytype:
   test-and-publish:
     name: Test and publish
     needs:
