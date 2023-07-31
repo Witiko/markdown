@@ -249,7 +249,7 @@ class TestResult:
                         result_lines.append(f'- Command{plural} {command_texts} produced unexpected output with the following diff:')
                         result_lines.append('')
                         for line in diff.splitlines():
-                            result_lines.append(line)
+                            result_lines.append(f'  {line}')
                         result_lines.append('')
                 if result_lines[-1]:  # Make sure that we don't produce double blank lines in the output.
                     result_lines.append('')
