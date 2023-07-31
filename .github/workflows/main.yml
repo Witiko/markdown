@@ -77,6 +77,8 @@ jobs:
         run: flake8 tests/test.py
   pytype:
     name: Type check (Python)
+    needs:
+      - flake8
     runs-on: ubuntu-latest
     container:
       image: python:3.10
@@ -89,7 +91,7 @@ jobs:
           pip install -U pip wheel setuptools
           pip install -r tests/requirements.txt
           pip install pytype
-      - name: Run Flake8
+      - name: Run Pytype
         run: pytype tests/test.py
   test-and-publish:
     name: Test and publish
@@ -97,7 +99,6 @@ jobs:
       - shellcheck
       - luacheck
       - markdownlint
-      - flake8
       - pytype
     runs-on: ubuntu-latest
     strategy:
