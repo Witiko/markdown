@@ -307,6 +307,7 @@ def read_testfile(testfile: Path) -> Tuple[SetupText, InputText, OutputText]:
     input_part = 'setup'
     with testfile.open('rt') as f:
         for line in f:
+            line = line.rstrip('\r\n')
             if input_part == 'setup' and line.strip() == '<<<':
                 input_part = 'input'
             elif input_part == 'input' and line.strip() == '>>>':
@@ -325,6 +326,7 @@ def read_test_output_from_tex_log_file(tex_log_file: Path) -> OutputText:
     in_test_output = False
     with tex_log_file.open('rt') as f:
         for line in f:
+            line = line.rstrip('\r\n')
             if not in_test_output and line.strip() == 'TEST INPUT BEGIN':
                 in_test_output = True
             elif in_test_output and line.strip() == 'TEST INPUT END':
