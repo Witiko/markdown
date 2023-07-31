@@ -41,8 +41,8 @@ SUPPORT_DIRECTORY: Path = Path('support')
 COMMANDS_FILENAME = 'COMMANDS.m4'
 TEST_FILENAME: str = 'test.tex'
 TEST_OUTPUT_FILENAME: str = 'test.log'
-TEST_ACTUAL_OUTPUT_FILENAME: str = 'test-expected.log'
 TEST_EXPECTED_OUTPUT_FILENAME: str = 'test-expected.log'
+TEST_ACTUAL_OUTPUT_FILENAME: str = 'test-actual.log'
 TEST_SETUP_FILENAME: str = 'test-setup.tex'
 TEST_INPUT_FILENAME: str = 'test-input.md'
 
