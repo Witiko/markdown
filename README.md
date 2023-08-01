@@ -224,7 +224,7 @@ For further information, consult one of the following:
  [tb131-video]:   https://youtu.be/THmPkAncMnc                                                        "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"
  [tb134-slides]:  https://tug.org/tug2022/assets/pdf/Tereza_Vrabcová-TUG2022-slides.pdf               "A Gentle Introduction to Markdown for Writers"
  [tb134-example]: https://tug.org/tug2022/assets/pdf/Tereza_Vrabcová-TUG2022-example.pdf              "A Gentle Introduction to Markdown for Writers"
- [tb134-video]:   https://youtu.be/cqbKgjAlNjo?t=2h10m35s                                             "A Gentle Introduction to Markdown for Writers"
+ [tb134-video]:   https://youtu.be/FhN_x9rsR4M                                                        "A Gentle Introduction to Markdown for Writers"
  [tb137-slides]:  https://tug.org/tug2023/files/sa-03-novotny-markdown3/novotny-markdown3-slides.pdf  "Markdown 3: What's New, What's Next?"
  [tb137-video]:   https://youtu.be/U8XjTOhJkg0                                                        "Markdown 3: What's New, What's Next?"
 
