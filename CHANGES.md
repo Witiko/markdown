@@ -1,5 +1,7 @@
 # Changes
 
+## 3.0.0
+
 ## 3.0.0-alpha.2 (2023-08-01)
 
 Development:
