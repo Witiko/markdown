@@ -17,10 +17,12 @@ ARG DEPENDENCIES="\
     gawk \
     graphviz \
     m4 \
+    moreutils \
     pandoc \
     parallel \
     poppler-utils \
     python3-pygments \
+    python3-venv \
     ruby \
     unzip \
     wget \

@@ -16,6 +16,11 @@ Documentation:
 - Add a link to TUG 2023 slides and video to the README.
   (ce6047b8, adb69e2f)
 
+Unit Tests:
+
+- Rewrite the unit testing framework from Bash to Python
+  and implement summarization. (#245, #314)
+
 ## 3.0.0-alpha (2023-06-27)
 
 Development:
