@@ -2,6 +2,10 @@
 
 ## 3.0.0
 
+Documentation:
+
+- Fix link to @xvrabcov's talk at TUG 2022 in README. (166c4506)
+
 ## 3.0.0-alpha.2 (2023-08-01)
 
 Development:
