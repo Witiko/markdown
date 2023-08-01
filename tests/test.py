@@ -144,7 +144,7 @@ class TestResult:
         return self.first_subresult.test_parameters.setup_text
 
     @property
-    def input_text(self) -> SetupText:
+    def input_text(self) -> InputText:
         return self.first_subresult.test_parameters.input_text
 
     @property
