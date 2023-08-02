@@ -271,7 +271,7 @@ class TestResult:
                 for subresult in self:
                     exit_codes[subresult.exit_code].append(subresult)
                 for exit_code, subresults in sorted(exit_codes.items(), key=lambda x: x[0]):
-                    command_texts = format_commands(subresult.test_parameters.command for subresult in subresults)
+                    command_texts = format_commands(sorted(set(subresult.test_parameters.command for subresult in subresults)))
                     plural = 's' if len(subresults) > 1 else ''
                     first_subresult, *_ = subresults
                     if first_subresult.exited_successfully:
@@ -285,7 +285,7 @@ class TestResult:
                 for subresult in self:
                     diffs[subresult.output_diff].append(subresult)
                 for diff, subresults in sorted(diffs.items(), key=lambda x: x[0]):
-                    command_texts = format_commands(subresult.test_parameters.command for subresult in subresults)
+                    command_texts = format_commands(sorted(set(subresult.test_parameters.command for subresult in subresults)))
                     plural = 's' if len(subresults) > 1 else ''
                     first_subresult, *_ = subresults
                     if first_subresult.output_matches:
