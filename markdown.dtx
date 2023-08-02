@@ -30876,12 +30876,7 @@ end
   \markdownRendererHeaderAttributeContextEndPrototype
 \cs_gset:Npn
   \markdownRendererReplacementCharacterPrototype
-  {
-    % TODO: Replace with `\codepoint_generate:nn` in TeX Live 2023
-    \sys_if_engine_pdftex:TF
-      { ^^ef^^bf^^bd }
-      { ^^^^fffd }
-  }
+  { \codepoint_str_generate:n { fffd } }
 \ExplSyntaxOff
 \def\markdownRendererSectionBeginPrototype{}%
 \def\markdownRendererSectionEndPrototype{}%
