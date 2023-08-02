@@ -648,7 +648,7 @@ def run_tests(testfiles: Iterable[TestFile]) -> Iterable[TestResult]:
 def main(testfiles: Iterable[str], update_tests: bool, fail_fast: bool) -> None:
 
     # Run tests.
-    testfiles: List[TestFile] = list(map(Path, testfiles))
+    testfiles: List[TestFile] = sorted(map(Path, testfiles))
     LOGGER.info(f'Running tests for {len(testfiles)} testfiles')
 
     some_tests_failed = False
@@ -659,8 +659,8 @@ def main(testfiles: Iterable[str], update_tests: bool, fail_fast: bool) -> None:
         if not result:
             some_tests_failed = True
         if not result and update_tests:
-            result.try_to_update_testfile()  # Will change bool(result) to True on success.
-        if not result and fail_fast:
+            result.try_to_update_testfile()
+        if not result and fail_fast:  # If `result.try_to_update_testfile()` succeeds, this will not trigger because `bool(result)` is True.
             progress_bar.close()
             print(result.summarize(), file=sys.stderr)
             sys.exit(1)
