@@ -6,6 +6,10 @@ Documentation:
 
 - Fix link to @xvrabcov's talk at TUG 2022 in README. (166c4506)
 
+Unit Tests:
+
+- Batch unit tests to improve speed. (#245, #316)
+
 ## 3.0.0-alpha.2 (2023-08-01)
 
 Development:
