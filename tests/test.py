@@ -171,11 +171,11 @@ class TestResult:
 
     def __init__(self, subresults: Iterable[TestSubResult]) -> None:
         self.subresults = list(subresults)
-        assert self.subresults  # Ensure that at least one subresult exists.
+        assert len(self) >= 1
 
     @property
     def first_subresult(self) -> TestSubResult:
-        first_subresult, *_ = self.subresults
+        first_subresult = next(iter(self))
         return first_subresult
 
     @property
@@ -192,15 +192,15 @@ class TestResult:
 
     @property
     def subresults_succeeded(self) -> bool:
-        return all(self.subresults)
+        return all(self)
 
     @property
     def subresults_exited_successfully(self) -> bool:
-        return all(subresult.exited_successfully for subresult in self.subresults)
+        return all(subresult.exited_successfully for subresult in self)
 
     @property
     def subresult_outputs_match(self) -> bool:
-        return all(subresult.output_matches for subresult in self.subresults)
+        return all(subresult.output_matches for subresult in self)
 
     def try_to_update_testfile(self) -> None:
         assert self.updated_testfile is None  # Make sure that we don't run this method twice
@@ -212,7 +212,7 @@ class TestResult:
             return
 
         actual_output_texts = set()
-        for subresult in self.subresults:
+        for subresult in self:
             self.updated_testfile = False
             actual_output_texts.add(subresult.actual_output_text)
 
@@ -268,7 +268,7 @@ class TestResult:
             if not self.subresults_exited_successfully:
                 result_lines.append('Some commands produced non-zero exit codes:')
                 exit_codes: Dict[int, List[TestSubResult]] = defaultdict(lambda: list())
-                for subresult in self.subresults:
+                for subresult in self:
                     exit_codes[subresult.exit_code].append(subresult)
                 for exit_code, subresults in sorted(exit_codes.items(), key=lambda x: x[0]):
                     command_texts = format_commands(subresult.test_parameters.command for subresult in subresults)
@@ -282,7 +282,7 @@ class TestResult:
             if not self.subresult_outputs_match:
                 result_lines.append('Some commands produced unexpected outputs:')
                 diffs: Dict[OutputTextDiff, List[TestSubResult]] = defaultdict(lambda: list())
-                for subresult in self.subresults:
+                for subresult in self:
                     diffs[subresult.output_diff].append(subresult)
                 for diff, subresults in sorted(diffs.items(), key=lambda x: x[0]):
                     command_texts = format_commands(subresult.test_parameters.command for subresult in subresults)
@@ -306,6 +306,12 @@ class TestResult:
         if result_lines[-1]:  # Make sure that we don't produce a blank line at the end of the output.
             result_lines.pop()
         return '\n'.join(result_lines)
+
+    def __len__(self):
+        return len(self.subresults)
+
+    def __iter__(self):
+        return iter(self.subresults)
 
     def __bool__(self) -> bool:
         return self.updated_testfile or self.subresults_succeeded
