@@ -119,7 +119,7 @@ jobs:
           set -ex
           shopt -s extglob
           rm -rv tests/templates/!(plain)/
-          rm -v tests/templates/plain/!(input).tex.m4
+          rm -rv tests/templates/plain/!(input)/
           grep luatex tests/templates/plain/COMMANDS.m4 > tests/templates/plain/COMMANDS.m4.new
           mv tests/templates/plain/COMMANDS.m4.new tests/templates/plain/COMMANDS.m4
       - name: Build Docker image
