@@ -39,6 +39,9 @@ TEMPLATE_DIRECTORY: Path = Path('templates')
 SUPPORT_DIRECTORY: Path = Path('support')
 
 COMMANDS_FILENAME = 'COMMANDS.m4'
+TEMPLATE_HEAD_FILENAME: str = 'head.tex'
+TEMPLATE_BODY_FILENAME: str = 'body.tex.m4'
+TEMPLATE_FOOT_FILENAME: str = 'foot.tex'
 TEST_FILENAME: str = 'test.tex'
 TEST_OUTPUT_FILENAME: str = 'test.log'
 TEST_EXPECTED_OUTPUT_FILENAME: str = 'test-expected.log'
@@ -278,7 +281,7 @@ def get_tex_formats() -> Tuple[TeXFormat]:
 
 @cache
 def get_templates(tex_format: str) -> Tuple[Template]:
-    templates: Iterable[Template] = (TEMPLATE_DIRECTORY / tex_format).glob('*.tex.m4')
+    templates: Iterable[Template] = (TEMPLATE_DIRECTORY / tex_format).glob('*/')
     return tuple(sorted(templates))
 
 
@@ -410,8 +413,19 @@ def run_test(testfile: Path) -> TestResult:
             print(expected_output_text, file=f)
 
         # Create test file.
-        test_text = run_m4(
-            template, cwd=temporary_directory, TEST_SETUP_FILENAME=TEST_SETUP_FILENAME, TEST_INPUT_FILENAME=TEST_INPUT_FILENAME)
+        with (template / TEMPLATE_HEAD_FILENAME).open('rt') as f:
+            head_text = f.read().rstrip('\r\n')
+
+        with (template / TEMPLATE_FOOT_FILENAME).open('rt') as f:
+            foot_text = f.read()
+
+        body_text = run_m4(
+            template / TEMPLATE_BODY_FILENAME,
+            cwd=temporary_directory,
+            TEST_SETUP_FILENAME=TEST_SETUP_FILENAME,
+            TEST_INPUT_FILENAME=TEST_INPUT_FILENAME)
+
+        test_text = '\n'.join([head_text, body_text, foot_text])
         with (temporary_directory / TEST_FILENAME).open('wt') as f:
             print(test_text, file=f)
 
