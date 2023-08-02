@@ -530,7 +530,7 @@ def read_test_output_from_tex_log_file(tex_log_file: Path) -> OutputText:
     input_lines: List[str] = []
     input_line_fragments: List[str] = []
     in_test_output = False
-    with tex_log_file.open('rt') as f:
+    with tex_log_file.open('rt', errors='ignore') as f:
         for line in f:
             line = line.rstrip('\r\n')
             if not in_test_output and line.strip() == 'TEST INPUT BEGIN':
