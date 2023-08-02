@@ -18,6 +18,7 @@ import sys
 from tempfile import mkdtemp
 
 import click
+from more_itertools import chunked, zip_equal
 from tqdm import tqdm
 
 
@@ -30,7 +31,9 @@ LOG_LEVEL: int = logging.INFO
 
 UPDATE_TESTS: bool = False
 FAIL_FAST: bool = False
+
 NUM_PROCESSES: Optional[int] = None  # None means that all available hyperthreads will be used.
+TESTFILE_BATCH_SIZE: int = 10
 
 MAX_TESTFILE_NAMES_SHOWN: int = 5
 MAX_TESTFILE_NAMES_SHOWN_COLLAPSED: int = 3
@@ -44,38 +47,51 @@ TEMPLATE_BODY_FILENAME: str = 'body.tex.m4'
 TEMPLATE_FOOT_FILENAME: str = 'foot.tex'
 TEST_FILENAME: str = 'test.tex'
 TEST_OUTPUT_FILENAME: str = 'test.log'
-TEST_EXPECTED_OUTPUT_FILENAME: str = 'test-expected.log'
 TEST_ACTUAL_OUTPUT_FILENAME: str = 'test-actual.log'
-TEST_SETUP_FILENAME: str = 'test-setup.tex'
-TEST_INPUT_FILENAME: str = 'test-input.md'
+
+TEST_SETUP_FILENAME_FORMAT: str = 'test-setup-%02d.tex'
+TEST_INPUT_FILENAME_FORMAT: str = 'test-input-%02d.md'
+TEST_EXPECTED_OUTPUT_FILENAME_FORMAT: str = 'test-expected-%02d.log'
 
 
 # Types
+TestFile = Path
+TestFileBatch = List[TestFile]
+
 TeXFormat = str
 Template = Path
 Command = Tuple[str]
+
 SetupText = str
 InputText = str
 OutputText = str
 OutputTextDiff = str
 
 
-class TestParameters(NamedTuple):
+class ReadTestFile(NamedTuple):
     setup_text: SetupText
     input_text: InputText
     expected_output_text: OutputText
+
+
+ReadTestFiles = List[ReadTestFile]
+
+
+class TestBatchParameters(NamedTuple):
+    read_test_files: ReadTestFiles  # TODO: Propagate structure change to TestSubResult
     tex_format: TeXFormat
     template: Template
     command: Command
 
 
+# BatchTestSubResult type is defined in the implementation below.  # TODO: Implement BatchTestSubResult.
 # TestSubResult type is defined in the implementation below.
 # TestResult type is defined in the implementation below.
 
 
 # Implementation
 class TestSubResult:
-    def __init__(self, testfile: Path, test_parameters: TestParameters, temporary_directory: Path, test_process: CompletedProcess) -> None:
+    def __init__(self, testfile: TestFile, test_parameters: TestBatchParameters, temporary_directory: Path, test_process: CompletedProcess) -> None:
         self.testfile = testfile
         self.test_parameters = test_parameters
         self.temporary_directory = temporary_directory
@@ -88,13 +104,13 @@ class TestSubResult:
 
     @property
     def expected_output_text(self) -> OutputText:
-        expected_output_text = self.test_parameters.expected_output_text
+        expected_output_text = self.test_parameters.expected_output_text  # TODO: TestBatchParameters changed, we should likely inherit this from parent BatchTestSubResult.
         return expected_output_text
 
     @cached_property
     def actual_output_text(self) -> OutputText:
         try:
-            actual_output_file = self.temporary_directory / TEST_ACTUAL_OUTPUT_FILENAME
+            actual_output_file = self.temporary_directory / TEST_ACTUAL_OUTPUT_FILENAME  # TODO: We will need to extract the actual output in BatchTestSubResult.get_subresults() and store it in TestSubResult.
             with actual_output_file.open('rt') as f:
                 actual_output_text = f.read()
             return actual_output_text
@@ -105,7 +121,7 @@ class TestSubResult:
     def output_diff(self) -> OutputTextDiff:
         expected_output_lines = self.expected_output_text.splitlines()
         actual_output_lines = self.actual_output_text.splitlines()
-        expected_output_file = self.temporary_directory / TEST_EXPECTED_OUTPUT_FILENAME
+        expected_output_file = self.temporary_directory / TEST_EXPECTED_OUTPUT_FILENAME  # TODO: We will need to extract the expected output in BatchTestSubResult.get_subresults() and store it in TestSubResult.
         actual_output_file = self.temporary_directory / TEST_ACTUAL_OUTPUT_FILENAME
         output_diff_lines = context_diff(
             expected_output_lines, actual_output_lines, fromfile=str(expected_output_file), tofile=str(actual_output_file), lineterm='')
@@ -139,16 +155,16 @@ class TestResult:
         return first_subresult
 
     @property
-    def testfile(self) -> Path:
+    def testfile(self) -> TestFile:
         return self.first_subresult.testfile
 
     @property
     def setup_text(self) -> SetupText:
-        return self.first_subresult.test_parameters.setup_text
+        return self.first_subresult.test_parameters.setup_text  # TODO: TestBatchParameters changed, we should likely inherit this from subresult's parent BatchTestSubResult.
 
     @property
     def input_text(self) -> InputText:
-        return self.first_subresult.test_parameters.input_text
+        return self.first_subresult.test_parameters.input_text  # TODO: TestBatchParameters changed, we should likely inherit this from subresult's parent BatchTestSubResult.
 
     @property
     def subresults_succeeded(self) -> bool:
@@ -307,7 +323,7 @@ def get_commands(tex_format: str) -> Tuple[Command]:
     return tuple(commands)
 
 
-def read_testfile(testfile: Path) -> Tuple[SetupText, InputText, OutputText]:
+def read_testfile(testfile: TestFile) -> ReadTestFile:
     input_lines: Dict[str, List] = defaultdict(lambda: list())
     input_part = 'setup'
     with testfile.open('rt') as f:
@@ -323,7 +339,7 @@ def read_testfile(testfile: Path) -> Tuple[SetupText, InputText, OutputText]:
     setup_text = '\n'.join(input_lines['setup'])
     input_text = '\n'.join(input_lines['input'])
     expected_output_text = '\n'.join(input_lines['expected_output'])
-    return setup_text, input_text, expected_output_text
+    return ReadTestFile(setup_text, input_text, expected_output_text)
 
 
 def read_test_output_from_tex_log_file(tex_log_file: Path) -> OutputText:
@@ -358,7 +374,7 @@ def format_command(command: Command) -> str:
     return format_commands([command])
 
 
-def format_testfiles(testfiles: Iterable[Path]) -> str:
+def format_testfiles(testfiles: Iterable[TestFile]) -> str:
     testfile_texts = list(map(str, testfiles))
     if len(testfile_texts) > 1:
         testfile_texts = [f'"{testfile_text}"' for testfile_text in testfile_texts]
@@ -370,62 +386,82 @@ def format_testfiles(testfiles: Iterable[Path]) -> str:
     return testfile_texts
 
 
-def format_testfile(testfile: Path) -> str:
+def format_testfile(testfile: TestFile) -> str:
     return format_testfiles([testfile])
 
 
-def get_test_parameters(testfile: Path) -> Iterable[TestParameters]:
-    LOGGER.debug(f'Testfile {format_testfile(testfile)}')
-    setup_text, input_text, expected_output_text = read_testfile(testfile)
+def get_test_parameters(testfile_batch: TestFileBatch) -> Iterable[TestBatchParameters]:
+    LOGGER.debug(f'Testfiles {format_testfiles(testfile_batch)}')
 
+    # Read testfiles in the batch.
+    read_testfile_results: ReadTestFiles = []
+    for testfile in testfile_batch:
+        read_testfile_result = read_testfile(testfile)
+        read_testfile_results.append(read_testfile_result)
+
+    # List TeX formats, templates, and commands.
     for tex_format in get_tex_formats():
         LOGGER.debug(f'  Format {tex_format}')
         for template in get_templates(tex_format):
             LOGGER.debug(f'    Template {template.name}')
             for command in get_commands(tex_format):
                 LOGGER.debug(f'      Command {format_command(command)}')
-                yield TestParameters(setup_text, input_text, expected_output_text, tex_format, template, command)
+                yield TestBatchParameters(read_testfile_results, tex_format, template, command)
 
 
-def run_test(testfile: Path) -> TestResult:
+def _run_test_batch_worker(testfile_batch: TestFileBatch) -> Iterable[TestSubResult]:  # TODO: Encapsulate as static method in TestBatchSubResult.
 
     # Run the test for all different test parameters.
-    test_subresults: List[TestSubResult] = []
-    for test_parameters in get_test_parameters(testfile):
+    for test_parameters in get_test_parameters(testfile_batch):
 
-        setup_text, input_text, expected_output_text, tex_format, template, command = test_parameters
+        read_testfile_results, tex_format, template, command = test_parameters
 
         # Create a temporary directory.
         temporary_directory = Path(mkdtemp())
 
-        # Copy global support files.
+        # Copy support files.
         for support_file in SUPPORT_DIRECTORY.glob('*'):
             copyfile(support_file, temporary_directory / support_file.name)
 
-        # Create test-specific support files.
-        with (temporary_directory / TEST_SETUP_FILENAME).open('wt') as f:
-            print(setup_text, file=f)
-
-        with (temporary_directory / TEST_INPUT_FILENAME).open('wt') as f:
-            print(input_text, file=f)
-
-        with (temporary_directory / TEST_EXPECTED_OUTPUT_FILENAME).open('wt') as f:
-            print(expected_output_text, file=f)
-
         # Create test file.
-        with (template / TEMPLATE_HEAD_FILENAME).open('rt') as f:
-            head_text = f.read().rstrip('\r\n')
+        test_texts: str = []
 
+        # Create test file fragment with header.
+        with (template / TEMPLATE_HEAD_FILENAME).open('rt') as f:
+            head_text = f.read()
+        test_texts.append(head_text)
+
+        for testfile_number, testfile, read_testfile_result in enumerate(zip_equal(testfile_batch, read_testfile_results)):
+            setup_text, input_text, expected_output_text = read_testfile_result
+
+            test_setup_filename = TEST_SETUP_FILENAME_FORMAT.format(testfile_number)
+            test_input_filename = TEST_INPUT_FILENAME_FORMAT.format(testfile_number)
+            test_expected_output_filename = TEST_EXPECTED_OUTPUT_FILENAME_FORMAT.format(testfile_number)
+
+            # Create testfile-specific support files.
+            with (temporary_directory / test_setup_filename).open('wt') as f:
+                print(setup_text, file=f)
+
+            with (temporary_directory / test_input_filename).open('wt') as f:
+                print(input_text, file=f)
+
+            with (temporary_directory / test_expected_output_filename).open('wt') as f:
+                print(expected_output_text, file=f)
+
+            # Create testfile-specific test file fragments.
+            body_text = run_m4(
+                template / TEMPLATE_BODY_FILENAME,
+                cwd=temporary_directory,
+                TEST_SETUP_FILENAME=test_setup_filename,
+                TEST_INPUT_FILENAME=test_input_filename)
+            test_texts.append(body_text)
+
+        # Create test file fragment with footer.
         with (template / TEMPLATE_FOOT_FILENAME).open('rt') as f:
             foot_text = f.read()
+        test_texts.append(foot_text)
 
-        body_text = run_m4(
-            template / TEMPLATE_BODY_FILENAME,
-            cwd=temporary_directory,
-            TEST_SETUP_FILENAME=TEST_SETUP_FILENAME,
-            TEST_INPUT_FILENAME=TEST_INPUT_FILENAME)
-
-        test_text = '\n'.join([head_text, body_text, foot_text])
+        test_text = '\n'.join(test_text.strip('\r\n') for test_text in test_texts)
         with (temporary_directory / TEST_FILENAME).open('wt') as f:
             print(test_text, file=f)
 
@@ -441,21 +477,42 @@ def run_test(testfile: Path) -> TestResult:
         except IOError as e:
             LOGGER.debug(f'Failed to extract test output from log file: {e}')
 
-        # Store test result.
-        test_subresult = TestSubResult(testfile, test_parameters, temporary_directory, test_process)
-        test_subresults.append(test_subresult)
+        # Store test batch result.
+        try:
+            test_batch_subresult = TestBatchSubResult(testfile_batch, test_parameters)  # TODO: Add class.
+            test_subresults: List[TestSubResult] = []
+            yield from test_batch_subresult.get_subresults(temporary_directory, test_process)  # TODO: Add method.
+        except TestBatchSubResultException:  # TODO: Define TestBatchSubResultException.
+            pass  # TODO: Add recursive descent.
 
-    test_result = TestResult(test_subresults)
-    return test_result
+
+def run_test_batch(testfile_batch: TestFileBatch) -> Iterable[TestResult]:  # TODO: Encapsulate as static method in TestBatchSubResult.
+
+    # Run the test for all different test parameters.
+    all_test_subresults_by_parameters: List[TestSubResult] = list(_run_test_batch_worker(testfile_batch))
+
+    # For each testfile in the batch, create a test result
+    all_test_subresults_by_testfiles = zip(*all_test_subresults_by_parameters)  # Transpose the list.  # TODO: Add a function for this that will also assert rectangularity.
+    for test_subresults in all_test_subresults_by_testfiles:
+        test_result = TestResult(test_subresults)
+        yield test_result
 
 
-def run_tests(testfiles: Iterable[Path]) -> Iterable[TestResult]:
-    testfiles: List[Path] = list(map(Path, testfiles))
-    sequential_results = list(map(run_test, testfiles[:1]))  # Populate caches with the first testfile.
+def run_tests(testfiles: Iterable[TestFile]) -> Iterable[TestResult]:
+
+    testfiles: List[TestFile] = list(map(Path, testfiles))
+    LOGGER.info(f'Running tests for {len(testfiles)} testfiles')
+
+    testfile_batches: List[TestFileBatch] = chunked(testfiles, TESTFILE_BATCH_SIZE)
+    LOGGER.debug(f'The testfiles break down into {len(testfile_batches)} batches')
+
+    sequential_results = list(map(run_test_batch, testfile_batches[:1]))  # Populate caches with the first batch.
     with Pool(NUM_PROCESSES) as pool:
-        parallel_results = pool.imap(run_test, testfiles[1:], chunksize=1)  # Run the remaining tests in parallel.
-        results_iter = chain(sequential_results, parallel_results)
-        yield from results_iter
+        parallel_results = pool.imap(run_test_batch, testfile_batches[1:], chunksize=1)  # Run the remaining batches in parallel.
+        all_results = chain(sequential_results, parallel_results)
+        for results in all_results:
+            for result in results:
+                yield result
 
 
 # Command-line interface
@@ -474,23 +531,24 @@ def run_tests(testfiles: Iterable[Path]) -> Iterable[TestResult]:
               default=FAIL_FAST)
 def main(testfiles: Iterable[str], update_tests: bool, fail_fast: bool) -> None:
 
-    testfiles: List[Path] = list(map(Path, testfiles))
-    LOGGER.info(f'Running tests for {len(testfiles)} testfiles')
-
+    # Run tests.
+    testfiles: List[TestFile] = list(map(Path, testfiles))
     some_tests_failed = False
     results: List[TestResult] = []
-    progress_bar = tqdm(run_tests(testfiles), total=len(testfiles))
+    result_iter = run_tests(testfiles)
+    progress_bar = tqdm(result_iter, total=len(testfiles))
     for result in progress_bar:
         if not result:
             some_tests_failed = True
         if not result and update_tests:
             result.try_to_update_testfile()  # Will change bool(result) to True on success.
         if not result and fail_fast:
-            progress_bar.close()  # Close the progress bar.
+            progress_bar.close()
             print(result.summarize(), file=sys.stderr)
             sys.exit(1)
         results.append(result)
 
+    # Summarize results.
     if some_tests_failed:
         LOGGER.error('Some tests failed, see the summary below:')
         print(TestResult.summarize_results(results), file=sys.stderr)
