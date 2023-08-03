@@ -6,7 +6,6 @@
 \catcode"20=12%  Spaces (U+0020)
 % Disable active characters of the TeX engine.
 \catcode"7E=12%  Tildes (U+007E)
-\catcode"7C=12%  Pipes (U+007C)
 % Perform the test.
 \inputmarkdown{TEST_INPUT_FILENAME}%
 \endgroup

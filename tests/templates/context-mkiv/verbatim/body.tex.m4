@@ -8,7 +8,6 @@
 \ctxlua{document.markdown_preserve_trailing_spaces = false}
 % Disable active characters of the TeX engine.
 \catcode"7E=12%  Tildes (U+007E)
-\catcode"7C=12%  Pipes (U+007C)
 % Perform the test.
 \startmarkdown
 undivert(TEST_INPUT_FILENAME)dnl
