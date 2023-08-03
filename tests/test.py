@@ -343,6 +343,7 @@ class BatchResult:
             read_testfile_results, *remaining_parameters = self.test_parameters
             first_testfile_subbatch = self.testfile_batch[:len(self) // 2]
             second_testfile_subbatch = self.testfile_batch[len(self) // 2:]
+            LOGGER.debug(f'Splitting batch to {format_testfiles(first_testfile_subbatch)} and {format_testfiles(second_testfile_subbatch)}')
             first_read_testfile_results = read_testfile_results[:len(self) // 2]
             second_read_testfile_results = read_testfile_results[len(self) // 2:]
             first_test_parameters = TestParameters(first_read_testfile_results, *remaining_parameters)
