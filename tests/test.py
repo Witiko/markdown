@@ -308,7 +308,7 @@ class TestResult:
                         result_lines.append('We successfully updated the testfile.')
                     else:
                         result_lines.append('We tried to update the testfile and failed.')
-        if result_lines[-1]:  # Make sure that we don't produce a blank line at the end of the output.
+        if not result_lines[-1]:  # Make sure that we don't produce a blank line at the end of the output.
             result_lines.pop()
         return '\n'.join(result_lines)
 
