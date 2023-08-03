@@ -1,3 +1,4 @@
+\begingroup
 % Load the test-specific setup.
 \input TEST_SETUP_FILENAME\relax
 % Prevent the folding of characters into a single space token in logs.
@@ -10,3 +11,4 @@
 \startmarkdown
 undivert(TEST_INPUT_FILENAME)dnl
 \stopmarkdown
+\endgroup
