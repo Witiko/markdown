@@ -629,13 +629,21 @@ def run_tests(testfiles: Iterable[TestFile]) -> Iterable[TestResult]:
     testfile_batches: List[TestFileBatch] = list(chunked(testfiles, TESTFILE_BATCH_SIZE))
     LOGGER.debug(f'The testfiles break down into {len(testfile_batches)} batches')
 
-    sequential_results = list(map(BatchResult.run_test_batch, testfile_batches[:1]))  # Populate caches with the first batch.
-    with Pool(NUM_PROCESSES) as pool:
-        parallel_results = pool.imap(BatchResult.run_test_batch, testfile_batches[1:], chunksize=1)  # Run remaining batches in parallel.
-        all_results = chain(sequential_results, parallel_results)
-        for results in all_results:
-            for result in results:
-                yield result
+    def get_all_results() -> Iterable[Iterable[TestResult]]:
+        if NUM_PROCESSES is None or NUM_PROCESSES > 1:
+            sequential_results = list(map(BatchResult.run_test_batch, testfile_batches[:1]))  # Populate caches with the first batch.
+            with Pool(NUM_PROCESSES) as pool:
+                parallel_results = pool.imap(BatchResult.run_test_batch, testfile_batches[1:], chunksize=1)  # Run next batches in parallel.
+                all_results = chain(sequential_results, parallel_results)
+                yield from all_results
+        else:
+            all_results = list(map(BatchResult.run_test_batch, testfile_batches))  # If `NUM_PROCESSES` is 1, run all tests sequentially.
+            yield from all_results
+
+    all_results = get_all_results()
+    for results in all_results:
+        for result in results:
+            yield result
 
 
 # Command-line interface
