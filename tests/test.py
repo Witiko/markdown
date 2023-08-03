@@ -670,7 +670,8 @@ def main(testfiles: Iterable[str], update_tests: bool, fail_fast: bool) -> None:
     some_tests_failed = False
     results: List[TestResult] = []
     result_iter = run_tests(testfiles)
-    progress_bar = tqdm(result_iter, total=len(testfiles))
+    show_progress_bar = LOG_LEVEL >= logging.INFO
+    progress_bar = tqdm(result_iter, total=len(testfiles), disable=not show_progress_bar)
     for result in progress_bar:
         if not result:
             some_tests_failed = True
