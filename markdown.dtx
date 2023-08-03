@@ -33404,39 +33404,27 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\ifx\startluacode\undefined  % MkII
-  \begingroup
-    \catcode`\|=0%
-    \catcode`\\=12%
-    |gdef|startmarkdown{%
-      |markdownReadAndConvert{\stopmarkdown}%
-                             {|stopmarkdown}}%
-    |gdef|stopmarkdown{%
-      |markdownEnd}%
-  |endgroup
-\else  % MkIV
-  \startluacode
-    document.markdown_buffering = false
-    local function preserve_trailing_spaces(line)
-      if document.markdown_buffering then
-        line = line:gsub("[ \t][ \t]$", "\t\t")
-      end
-      return line
+\startluacode
+  document.markdown_buffering = false
+  local function preserve_trailing_spaces(line)
+    if document.markdown_buffering then
+      line = line:gsub("[ \t][ \t]$", "\t\t")
     end
-    resolvers.installinputlinehandler(preserve_trailing_spaces)
-  \stopluacode
-  \begingroup
-    \catcode`\|=0%
-    \catcode`\\=12%
-    |gdef|startmarkdown{%
-      |ctxlua{document.markdown_buffering = true}%
-      |markdownReadAndConvert{\stopmarkdown}%
-                             {|stopmarkdown}}%
-    |gdef|stopmarkdown{%
-      |ctxlua{document.markdown_buffering = false}%
-      |markdownEnd}%
-  |endgroup
-\fi
+    return line
+  end
+  resolvers.installinputlinehandler(preserve_trailing_spaces)
+\stopluacode
+\begingroup
+  \catcode`\|=0%
+  \catcode`\\=12%
+  |gdef|startmarkdown{%
+    |ctxlua{document.markdown_buffering = true}%
+    |markdownReadAndConvert{\stopmarkdown}%
+                           {|stopmarkdown}}%
+  |gdef|stopmarkdown{%
+    |ctxlua{document.markdown_buffering = false}%
+    |markdownEnd}%
+|endgroup
 %    \end{macrocode}
 % \par
 % \begin{markdown}
