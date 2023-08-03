@@ -113,14 +113,13 @@ jobs:
         with:
           fetch-depth: 0
           submodules: true
-      - name: Use only LuaTeX to unit-test pull requests
-        # if: github.ref != 'refs/heads/main'
+      - name: Use only pdfTeX to unit-test pull requests
         run: |
           set -ex
           shopt -s extglob
           rm -rv tests/templates/!(plain)/
           rm -rv tests/templates/plain/!(input)/
-          grep luatex tests/templates/plain/COMMANDS.m4 > tests/templates/plain/COMMANDS.m4.new
+          grep pdftex tests/templates/plain/COMMANDS.m4 > tests/templates/plain/COMMANDS.m4.new
           mv tests/templates/plain/COMMANDS.m4.new tests/templates/plain/COMMANDS.m4
       - name: Build Docker image
         run: make docker-image TEXLIVE_TAG=${{ matrix.texlive }}
