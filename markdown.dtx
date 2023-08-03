@@ -23982,6 +23982,19 @@ function M.writer.new(options)
 % \par
 % \begin{markdown}
 %
+% Define \luamdef{writer->attribute\_type\_levels} as a hash table that
+% maps attribute types to the number of attributes of said type in
+% \luamref{writer->active\_attributes}.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  self.attribute_type_levels = {}
+  setmetatable(self.attribute_type_levels,
+               { __index = function() return 0 end })
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
 % Define \luamdef{writer->push\_attributes} and
 % \luamdef{writer->pop\_attributes} as functions that will add a new set
 % of active block-level attributes or remove the most current attributes
@@ -24026,6 +24039,9 @@ function M.writer.new(options)
 %  \begin{macrocode}
   function self.push_attributes(attribute_type, attributes,
                                 start_output, end_output)
+    local attribute_type_level = self.attribute_type_levels[attribute_type]
+    self.attribute_type_levels[attribute_type] = attribute_type_level + 1
+
     -- index attributes in a hash table for easy lookup
     attributes = attributes or {}
     for i = 1, #attributes do
@@ -24078,6 +24094,8 @@ function M.writer.new(options)
       local attributes, _, end_output
       current_attribute_type, attributes, _, end_output = table.unpack(
         self.active_attributes[#self.active_attributes])
+      local attribute_type_level = self.attribute_type_levels[current_attribute_type]
+      self.attribute_type_levels[current_attribute_type] = attribute_type_level - 1
       if self.is_writing and end_output ~= nil then
         table.insert(buf, end_output)
       end
@@ -24108,24 +24126,21 @@ function M.writer.new(options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  local current_heading_level = 0
   function self.heading(s, level, attributes)
     local buf = {}
 
     -- push empty attributes for implied sections
-    while current_heading_level < level - 1 do
+    while self.attribute_type_levels["heading"] < level - 1 do
       table.insert(buf,
                    self.push_attributes("heading",
                                         nil,
                                         "\\markdownRendererSectionBegin\n",
                                         "\n\\markdownRendererSectionEnd "))
-      current_heading_level = current_heading_level + 1
     end
 
     -- pop attributes for sections that have ended
-    while current_heading_level >= level do
+    while self.attribute_type_levels["heading"] >= level do
       table.insert(buf, self.pop_attributes("heading"))
-      current_heading_level = current_heading_level - 1
     end
 
     -- push attributes for the new section
@@ -24138,8 +24153,7 @@ function M.writer.new(options)
                                            attributes,
                                            start_output,
                                            end_output))
-    current_heading_level = current_heading_level + 1
-    assert(current_heading_level == level)
+    assert(self.attribute_type_levels["heading"] == level)
 
     -- render the heading and its attributes
     if self.is_writing and options.headerAttributes
@@ -30862,12 +30876,7 @@ end
   \markdownRendererHeaderAttributeContextEndPrototype
 \cs_gset:Npn
   \markdownRendererReplacementCharacterPrototype
-  {
-    % TODO: Replace with `\codepoint_generate:nn` in TeX Live 2023
-    \sys_if_engine_pdftex:TF
-      { ^^ef^^bf^^bd }
-      { ^^^^fffd }
-  }
+  { \codepoint_str_generate:n { fffd } }
 \ExplSyntaxOff
 \def\markdownRendererSectionBeginPrototype{}%
 \def\markdownRendererSectionEndPrototype{}%
@@ -33395,39 +33404,29 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\ifx\startluacode\undefined  % MkII
-  \begingroup
-    \catcode`\|=0%
-    \catcode`\\=12%
-    |gdef|startmarkdown{%
-      |markdownReadAndConvert{\stopmarkdown}%
-                             {|stopmarkdown}}%
-    |gdef|stopmarkdown{%
-      |markdownEnd}%
-  |endgroup
-\else  % MkIV
-  \startluacode
-    document.markdown_buffering = false
-    local function preserve_trailing_spaces(line)
-      if document.markdown_buffering then
-        line = line:gsub("[ \t][ \t]$", "\t\t")
-      end
-      return line
+\startluacode
+  document.markdown_preserve_trailing_spaces = true
+  document.markdown_is_buffering = false
+  local function preserve_trailing_spaces(line)
+    if document.markdown_is_buffering and
+       document.markdown_preserve_trailing_spaces then
+      line = line:gsub("[ \t][ \t]$", "\t\t")
     end
-    resolvers.installinputlinehandler(preserve_trailing_spaces)
-  \stopluacode
-  \begingroup
-    \catcode`\|=0%
-    \catcode`\\=12%
-    |gdef|startmarkdown{%
-      |ctxlua{document.markdown_buffering = true}%
-      |markdownReadAndConvert{\stopmarkdown}%
-                             {|stopmarkdown}}%
-    |gdef|stopmarkdown{%
-      |ctxlua{document.markdown_buffering = false}%
-      |markdownEnd}%
-  |endgroup
-\fi
+    return line
+  end
+  resolvers.installinputlinehandler(preserve_trailing_spaces)
+\stopluacode
+\begingroup
+  \catcode`\|=0%
+  \catcode`\\=12%
+  |gdef|startmarkdown{%
+    |ctxlua{document.markdown_is_buffering = true}%
+    |markdownReadAndConvert{\stopmarkdown}%
+                           {|stopmarkdown}}%
+  |gdef|stopmarkdown{%
+    |ctxlua{document.markdown_is_buffering = false}%
+    |markdownEnd}%
+|endgroup
 %    \end{macrocode}
 % \par
 % \begin{markdown}
