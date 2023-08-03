@@ -33,7 +33,7 @@ UPDATE_TESTS: bool = False
 FAIL_FAST: bool = True
 
 NUM_PROCESSES: Optional[int] = None  # None means that all available hyperthreads will be used.
-TESTFILE_BATCH_SIZE: int = 10
+TESTFILE_BATCH_SIZE: int = 50
 
 MAX_TESTFILE_NAMES_SHOWN: int = 5
 MAX_TESTFILE_NAMES_SHOWN_COLLAPSED: int = 3
