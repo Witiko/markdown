@@ -11,7 +11,7 @@ import logging
 from logging import getLogger
 from multiprocessing import Pool
 from pathlib import Path
-from typing import Dict, Iterable, List, NamedTuple, Optional, Tuple, TypeVar
+from typing import Dict, Iterable, Iterator, List, NamedTuple, Optional, Tuple, TypeVar
 from shutil import copyfile, rmtree
 from subprocess import CompletedProcess, run
 import sys
@@ -312,10 +312,10 @@ class TestResult:
             result_lines.pop()
         return '\n'.join(result_lines)
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.subresults)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[TestSubResult]:
         return iter(self.subresults)
 
     def __bool__(self) -> bool:
@@ -385,10 +385,10 @@ class BatchResult:
         except IOError:
             return tuple()  # We have already deleted temporary directory, or no output was produced due to an error.
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.testfile_batch)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[TestSubResult]:
         return iter(self.subresults)
 
     def __bool__(self) -> bool:
