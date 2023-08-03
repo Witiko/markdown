@@ -133,7 +133,7 @@ class TestSubResult:
         try:
             actual_output_text = self.batch_result.actual_output_texts[self.testfile_number]
             return actual_output_text
-        except KeyError:
+        except IndexError:
             return ''  # We have already deleted temporary directory, or no output was produced due to an error.
 
     @cached_property
