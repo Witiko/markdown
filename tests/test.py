@@ -592,7 +592,8 @@ def format_testfile(testfile: TestFile) -> str:
 
 
 def get_test_parameters(testfile_batch: TestFileBatch) -> Iterable[TestParameters]:
-    LOGGER.debug(f'Testfiles {format_testfiles(testfile_batch)}')
+    plural = 's' if len(testfile_batch) > 1 else ''
+    LOGGER.debug(f'Testfile{plural} {format_testfiles(testfile_batch)}')
 
     # Read testfiles in the batch.
     read_testfile_results: ReadTestFiles = []
@@ -650,7 +651,8 @@ def main(testfiles: Iterable[str], update_tests: bool, fail_fast: bool) -> None:
 
     # Run tests.
     testfiles: List[TestFile] = sorted(map(Path, testfiles))
-    LOGGER.info(f'Running tests for {len(testfiles)} testfiles')
+    plural = 's' if len(testfiles) > 1 else ''
+    LOGGER.info(f'Running tests for {len(testfiles)} testfile{plural}')
 
     some_tests_failed = False
     results: List[TestResult] = []
