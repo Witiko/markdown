@@ -237,7 +237,8 @@ class TestResult:
         result_lines.append('')
         summaries: Dict[str, List['TestResult']] = defaultdict(lambda: list())
         for result in results:
-            summaries[str(result)].append(result)
+            if not result.subresults_succeeded:  # Exclude successful tests from the summary.
+                summaries[str(result)].append(result)
         for summary, results in sorted(summaries.items(), key=lambda x: x[0]):
             plural = 's' if len(results) > 1 else ''
             testfile_names = format_testfiles(result.testfile for result in results)
