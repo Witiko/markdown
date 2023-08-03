@@ -30,7 +30,7 @@ LOGGER = getLogger(__name__)
 LOG_LEVEL: int = logging.INFO
 
 UPDATE_TESTS: bool = False
-FAIL_FAST: bool = False
+FAIL_FAST: bool = True
 
 NUM_PROCESSES: Optional[int] = None  # None means that all available hyperthreads will be used.
 TESTFILE_BATCH_SIZE: int = 10
