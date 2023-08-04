@@ -109,7 +109,7 @@ class TestSubResult:
         return test_parameters
 
     @property
-    def temporary_directory(self) -> Path:
+    def temporary_directory(self) -> Optional[Path]:
         temporary_directory = self.batch_result.temporary_directory
         return temporary_directory
 
