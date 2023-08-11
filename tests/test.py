@@ -568,10 +568,8 @@ def split_batch_output_text(output_text: OutputText) -> Iterable[OutputText]:
 
 def format_commands(commands: Iterable[Command]) -> str:
     command_texts = [' '.join(command) for command in commands]
-    if len(command_texts) > 1:
-        command_texts = [f'"{command_text}"' for command_text in command_texts]
-    command_texts = ', '.join(command_texts)
-    return command_texts
+    commands_text = ', '.join(command_texts)
+    return commands_text
 
 
 def format_command(command: Command) -> str:
@@ -580,14 +578,12 @@ def format_command(command: Command) -> str:
 
 def format_testfiles(testfiles: Iterable[TestFile]) -> str:
     testfile_texts = list(map(str, testfiles))
-    if len(testfile_texts) > 1:
-        testfile_texts = [f'"{testfile_text}"' for testfile_text in testfile_texts]
     if len(testfile_texts) > MAX_TESTFILE_NAMES_SHOWN:
         num_hidden = len(testfile_texts) - MAX_TESTFILE_NAMES_SHOWN_COLLAPSED
         testfile_texts = testfile_texts[:MAX_TESTFILE_NAMES_SHOWN_COLLAPSED]
         testfile_texts.append(f'and {num_hidden} others')
-    testfile_texts = ', '.join(testfile_texts)
-    return testfile_texts
+    testfiles_text = ', '.join(testfile_texts)
+    return testfiles_text
 
 
 def format_testfile(testfile: TestFile) -> str:
