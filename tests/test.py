@@ -259,11 +259,6 @@ class TestResult:
             else:
                 result_lines.append(f'  {line}')
         result_lines.append('')
-        if self.updated_testfile is not None:
-            if self.updated_testfile:
-                result_lines.append('We successfully updated the testfile.')
-            else:
-                result_lines.append('We tried to update the testfile and failed.')
         return '\n'.join(result_lines)
 
     def __str__(self) -> str:
@@ -304,11 +299,11 @@ class TestResult:
                         result_lines.append('')
                 if result_lines[-1]:  # Make sure that we don't produce double blank lines in the output.
                     result_lines.append('')
-                if self.updated_testfile is not None:
-                    if self.updated_testfile:
-                        result_lines.append('We successfully updated the testfile.')
-                    else:
-                        result_lines.append('We tried to update the testfile and failed.')
+        if self.updated_testfile is not None:
+            if self.updated_testfile:
+                result_lines.append('We successfully updated the testfile.')
+            else:
+                result_lines.append('We tried to update the testfile and failed.')
         if not result_lines[-1]:  # Make sure that we don't produce a blank line at the end of the output.
             result_lines.pop()
         return '\n'.join(result_lines)
