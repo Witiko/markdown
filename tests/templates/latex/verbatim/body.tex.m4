@@ -7,7 +7,10 @@
 % Disable active characters of the TeX engine.
 \catcode"7E=12%  Tildes (U+007E)
 % Perform the test.
-\begin{markdown*}{snippet=witiko/markdown/test/snippet}
+\begin{markdown*}{snippet=witiko/markdown/test/snippet,
+                  renderers={documentEnd={}}}
 undivert(TEST_INPUT_FILENAME)dnl
 \end{markdown*}
+\TYPE{Here is some extra output}
+\TYPE{documentEnd}
 \endgroup

@@ -7,5 +7,8 @@
 % Disable active characters of the TeX engine.
 \catcode"7E=12%  Tildes (U+007E)
 % Perform the test.
+\def\markdownRendererDocumentEnd{}
 \inputmarkdown{TEST_INPUT_FILENAME}%
+\TYPE{Here is some extra output}
+\TYPE{documentEnd}
 \endgroup
