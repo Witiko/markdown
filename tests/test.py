@@ -11,7 +11,7 @@ import logging
 from logging import getLogger
 from multiprocessing import Pool
 from pathlib import Path
-from typing import Dict, Iterable, Iterator, List, NamedTuple, Optional, Tuple, TypeVar
+from typing import Dict, Iterable, Iterator, List, NamedTuple, Optional, Set, Tuple, TypeVar
 from shutil import copyfile, rmtree
 from subprocess import CompletedProcess, run
 import sys
@@ -259,11 +259,6 @@ class TestResult:
             else:
                 result_lines.append(f'  {line}')
         result_lines.append('')
-        if self.updated_testfile is not None:
-            if self.updated_testfile:
-                result_lines.append('We successfully updated the testfile.')
-            else:
-                result_lines.append('We tried to update the testfile and failed.')
         return '\n'.join(result_lines)
 
     def __str__(self) -> str:
@@ -274,10 +269,20 @@ class TestResult:
             if not self.subresults_exited_successfully:
                 result_lines.append('Some commands produced non-zero exit codes:')
                 exit_codes: Dict[int, List[TestSubResult]] = defaultdict(lambda: list())
+                commands: Dict[Command, Set[int]] = defaultdict(lambda: set())
                 for subresult in self:
                     exit_codes[subresult.exit_code].append(subresult)
+                    commands[subresult.test_parameters.command].add(subresult.exit_code)
                 for exit_code, subresults in sorted(exit_codes.items(), key=lambda x: x[0]):
-                    command_texts = format_commands(sorted(set(subresult.test_parameters.command for subresult in subresults)))
+                    commands_with_templates = sorted(set(
+                        (
+                            command := subresult.test_parameters.command,
+                            None if len(commands[command]) == 1 else subresult.test_parameters.template
+                        )
+                        for subresult
+                        in subresults
+                    ))
+                    command_texts = format_commands_with_templates(commands_with_templates)
                     plural = 's' if len(subresults) > 1 else ''
                     first_subresult, *_ = subresults
                     if first_subresult.exited_successfully:
@@ -288,10 +293,20 @@ class TestResult:
             if not self.subresult_outputs_match:
                 result_lines.append('Some commands produced unexpected outputs:')
                 diffs: Dict[OutputTextDiff, List[TestSubResult]] = defaultdict(lambda: list())
+                commands: Dict[Command, Set[OutputTextDiff]] = defaultdict(lambda: set())
                 for subresult in self:
                     diffs[subresult.output_diff].append(subresult)
+                    commands[subresult.test_parameters.command].add(subresult.output_diff)
                 for diff, subresults in sorted(diffs.items(), key=lambda x: x[0]):
-                    command_texts = format_commands(sorted(set(subresult.test_parameters.command for subresult in subresults)))
+                    commands_with_templates = sorted(set(
+                        (
+                            command := subresult.test_parameters.command,
+                            None if len(commands[command]) == 1 else subresult.test_parameters.template
+                        )
+                        for subresult
+                        in subresults
+                    ))
+                    command_texts = format_commands_with_templates(commands_with_templates)
                     plural = 's' if len(subresults) > 1 else ''
                     first_subresult, *_ = subresults
                     if first_subresult.output_matches:
@@ -304,11 +319,11 @@ class TestResult:
                         result_lines.append('')
                 if result_lines[-1]:  # Make sure that we don't produce double blank lines in the output.
                     result_lines.append('')
-                if self.updated_testfile is not None:
-                    if self.updated_testfile:
-                        result_lines.append('We successfully updated the testfile.')
-                    else:
-                        result_lines.append('We tried to update the testfile and failed.')
+        if self.updated_testfile is not None:
+            if self.updated_testfile:
+                result_lines.append('We successfully updated the testfile.')
+            else:
+                result_lines.append('We tried to update the testfile and failed.')
         if not result_lines[-1]:  # Make sure that we don't produce a blank line at the end of the output.
             result_lines.pop()
         return '\n'.join(result_lines)
@@ -571,12 +586,23 @@ def split_batch_output_text(output_text: OutputText) -> Iterable[OutputText]:
             input_lines.append(line)
 
 
+def format_commands_with_templates(commands_with_templates: Iterable[Tuple[Command, Optional[Template]]]) -> str:
+    commands, templates = zip(*commands_with_templates)
+    command_texts = [' '.join(command) for command in commands]
+    template_texts = [f' (template {template.name})' if template is not None else '' for template in templates]
+    command_with_template_texts = [
+        f'{command_text}{template_text}'
+        for command_text, template_text
+        in zip_equal(command_texts, template_texts)
+    ]
+    commands_with_templates_text = ', '.join(command_with_template_texts)
+    return commands_with_templates_text
+
+
 def format_commands(commands: Iterable[Command]) -> str:
     command_texts = [' '.join(command) for command in commands]
-    if len(command_texts) > 1:
-        command_texts = [f'"{command_text}"' for command_text in command_texts]
-    command_texts = ', '.join(command_texts)
-    return command_texts
+    commands_text = ', '.join(command_texts)
+    return commands_text
 
 
 def format_command(command: Command) -> str:
@@ -585,14 +611,12 @@ def format_command(command: Command) -> str:
 
 def format_testfiles(testfiles: Iterable[TestFile]) -> str:
     testfile_texts = list(map(str, testfiles))
-    if len(testfile_texts) > 1:
-        testfile_texts = [f'"{testfile_text}"' for testfile_text in testfile_texts]
     if len(testfile_texts) > MAX_TESTFILE_NAMES_SHOWN:
         num_hidden = len(testfile_texts) - MAX_TESTFILE_NAMES_SHOWN_COLLAPSED
         testfile_texts = testfile_texts[:MAX_TESTFILE_NAMES_SHOWN_COLLAPSED]
         testfile_texts.append(f'and {num_hidden} others')
-    testfile_texts = ', '.join(testfile_texts)
-    return testfile_texts
+    testfiles_text = ', '.join(testfile_texts)
+    return testfiles_text
 
 
 def format_testfile(testfile: TestFile) -> str:
