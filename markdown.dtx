@@ -24349,7 +24349,7 @@ parsers.nonemptyline           = parsers.line - parsers.blankline
 %   \par
 % \begin{markdown}
 %
-%#### Parsers Used for Indentation (local)
+%#### Parsers Used for Indentation
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -26155,12 +26155,6 @@ function M.reader.new(writer, options)
 %
 %#### Parsers Used for Indentation (local)
 %
-% \end{markdown}
-%  \begin{macrocode}
-
-%  \end{macrocode}
-% \begin{markdown}
-%
 % The following patterns represent basic building blocks of indented content.
 %
 % \end{markdown}
@@ -26275,19 +26269,13 @@ function M.reader.new(writer, options)
 %
 %#### Helpers for Emphasis and Strong Emphasis (local)
 %
-% \end{markdown}
-%  \begin{macrocode}
-
-%  \end{macrocode}
-% \begin{markdown}
-%
 % Parse the content of a table `content_part` with links, images and emphasis disabled.
 %
 % \end{markdown}
 %  \begin{macrocode}
   local function parse_content_part(content_part)
     local rope = util.rope_to_string(content_part)
-    local parsed = self.parser_functions.parse_inlines_no_link_or_emphasis(rope) 
+    local parsed = self.parser_functions.parse_inlines_no_link_or_emphasis(rope)
     parsed.indent_info = nil
     return parsed
   end
@@ -27890,7 +27878,7 @@ end
 % \begin{markdown}
 %
 % Although the interface of the \luamref{reader->insert_pattern} method does
-% document this (see Section <#sec:lua-user-extensions>), we allow the
+% not document this (see Section <#sec:lua-user-extensions>), we allow the
 % \luamref{reader->insert_pattern} and \luamref{reader->update_rule}
 % methods to insert not just \acro{peg} patterns, but also rule names that
 % reference the \acro{peg} grammar of Markdown.
