@@ -222,7 +222,7 @@ For further information, consult one of the following:
  [tb136]: https://www.overleaf.com/read/dshtsnnmtshs                    "Attributes in Markdown"
 
  [tb131-slides]:     https://tug.org/tug2021/assets/pdf/tug2021-novotny-slides.pdf                            "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"
- [tb131-video]:      https://youtu.be/THmPkAncMnc                                                             "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"
+ [tb131-video]:      https://youtu.be/i2GJMnLCZls                                                             "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"
  [tb134-01-slides]:  https://tug.org/tug2022/assets/served/Lloyd_Prentice-TUG2022-prentice-selfpub-slides.pdf "A Self-Publisher's Take on Markdown and TeX"
  [tb134-01-video]:   https://youtu.be/OhwzT3TcLj8                                                             "A Self-Publisher's Take on Markdown and TeX"
  [tb134-02-slides]:  https://tug.org/tug2022/assets/pdf/Tereza_Vrabcová-TUG2022-slides.pdf                    "A Gentle Introduction to Markdown for Writers"
