@@ -15,25 +15,16 @@ documentBegin
 BEGIN section
 BEGIN section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: foo
 headingThree: foo
-END headerAttributeContext
 interblockSeparator
 END section
 END section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: foo-2
 headingTwo: foo
-END headerAttributeContext
 interblockSeparator
 END section
 END section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: foo-3
 headingOne: foo
-END headerAttributeContext
 END section
 documentEnd

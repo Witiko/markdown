@@ -13,10 +13,7 @@ bar
 >>>
 documentBegin
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: bar
 headingOne: bar
-END headerAttributeContext
 interblockSeparator
 BEGIN link
 - label: foo

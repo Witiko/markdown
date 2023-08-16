@@ -12,9 +12,6 @@ baz*
 >>>
 documentBegin
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: foo-bar-baz
 headingOne: Foo (emphasis: bar(softLineBreak)baz)
-END headerAttributeContext
 END section
 documentEnd

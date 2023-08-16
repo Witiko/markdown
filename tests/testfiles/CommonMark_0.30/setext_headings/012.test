@@ -19,18 +19,12 @@ of dashes"/>
 documentBegin
 BEGIN section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: foo
 headingTwo: `Foo
-END headerAttributeContext
 interblockSeparator
 interblockSeparator
 END section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: a-titlea-lot
 headingTwo: <a title="a lot
-END headerAttributeContext
 interblockSeparator
 END section
 END section

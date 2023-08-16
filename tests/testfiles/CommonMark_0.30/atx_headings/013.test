@@ -11,10 +11,7 @@ documentBegin
 BEGIN section
 BEGIN section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: foo-b
 headingThree: foo (hash)(hash)(hash) b
-END headerAttributeContext
 END section
 END section
 END section

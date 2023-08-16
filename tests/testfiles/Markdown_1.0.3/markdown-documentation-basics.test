@@ -293,16 +293,10 @@ Output:
 >>>
 documentBegin
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: markdown-basics
 headingOne: Markdown: Basics
-END headerAttributeContext
 interblockSeparator
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: getting-the-gist-of-markdowns-formatting-syntax
 headingTwo: Getting the Gist of Markdown's Formatting Syntax
-END headerAttributeContext
 interblockSeparator
 softLineBreak
 BEGIN link
@@ -333,10 +327,7 @@ END link
 interblockSeparator
 END section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: paragraphs-headers-blockquotes
 headingTwo: Paragraphs, Headers, Blockquotes
-END headerAttributeContext
 interblockSeparator
 softLineBreak
 softLineBreak
@@ -364,10 +355,7 @@ interblockSeparator
 inputVerbatim: ./_markdown_test/e4da8d88f0474a4d3458d7dcd41e29b7.verbatim
 interblockSeparator
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: phrase-emphasis
 headingThree: Phrase Emphasis
-END headerAttributeContext
 interblockSeparator
 interblockSeparator
 interblockSeparator
@@ -379,10 +367,7 @@ interblockSeparator
 END section
 END section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: lists
 headingTwo: Lists
-END headerAttributeContext
 interblockSeparator
 codeSpan: *
 softLineBreak
@@ -418,10 +403,7 @@ interblockSeparator
 inputVerbatim: ./_markdown_test/9d7b6a9dbba4e63ca51f3cccca3716f0.verbatim
 interblockSeparator
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: links
 headingThree: Links
-END headerAttributeContext
 interblockSeparator
 emphasis: inline
 softLineBreak
@@ -458,10 +440,7 @@ inputVerbatim: ./_markdown_test/c53d47119351d20f8302b44c655ce1dc.verbatim
 interblockSeparator
 END section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: images
 headingThree: Images
-END headerAttributeContext
 interblockSeparator
 interblockSeparator
 interblockSeparator
@@ -475,10 +454,7 @@ inputVerbatim: ./_markdown_test/08a55e6c1710b68db0cda877cfe16f93.verbatim
 interblockSeparator
 END section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: code
 headingThree: Code
-END headerAttributeContext
 interblockSeparator
 softLineBreak
 codeSpan: (ampersand)

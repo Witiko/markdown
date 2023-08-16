@@ -17,10 +17,7 @@ documentBegin
 interblockSeparator
 BEGIN section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: bar
 headingTwo: bar
-END headerAttributeContext
 interblockSeparator
 END section
 END section

@@ -13,10 +13,7 @@ Bar
 documentBegin
 BEGIN section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: foo-bar
 headingTwo: Foo(softLineBreak)Bar
-END headerAttributeContext
 END section
 END section
 documentEnd

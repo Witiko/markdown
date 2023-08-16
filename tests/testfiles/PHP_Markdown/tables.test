@@ -166,10 +166,7 @@ interblockSeparator
 thematicBreak
 interblockSeparator
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: one-column-one-row-table
 headingOne: One-column one-row table
-END headerAttributeContext
 interblockSeparator
 interblockSeparator
 BEGIN table (2 rows, 1 columns)
@@ -243,10 +240,7 @@ thematicBreak
 interblockSeparator
 END section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: empty-cells
 headingOne: Empty cells
-END headerAttributeContext
 interblockSeparator
 BEGIN table (3 rows, 2 columns)
 - caption: 
@@ -276,10 +270,7 @@ thematicBreak
 interblockSeparator
 END section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: missing-tailing-pipe
 headingOne: Missing tailing pipe
-END headerAttributeContext
 interblockSeparator
 BEGIN table (3 rows, 2 columns)
 - caption: 
@@ -333,10 +324,7 @@ thematicBreak
 interblockSeparator
 END section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: too-many-pipes-in-rows
 headingOne: Too many pipes in rows
-END headerAttributeContext
 interblockSeparator
 BEGIN table (3 rows, 1 columns)
 - caption: 

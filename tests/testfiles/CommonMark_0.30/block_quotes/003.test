@@ -16,10 +16,7 @@
 documentBegin
 blockQuoteBegin
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: foo
 headingOne: Foo
-END headerAttributeContext
 interblockSeparator
 emphasis: bar
 softLineBreak

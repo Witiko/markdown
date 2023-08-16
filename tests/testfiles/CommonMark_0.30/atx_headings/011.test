@@ -11,19 +11,13 @@
 >>>
 documentBegin
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: foo
 headingOne: foo
-END headerAttributeContext
 interblockSeparator
 BEGIN section
 BEGIN section
 BEGIN section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: foo-2
 headingFive: foo
-END headerAttributeContext
 END section
 END section
 END section

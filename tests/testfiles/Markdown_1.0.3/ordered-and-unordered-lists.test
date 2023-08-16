@@ -135,10 +135,7 @@ This was an error in Markdown 1.0.1:
 documentBegin
 BEGIN section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: unordered
 headingTwo: Unordered
-END headerAttributeContext
 interblockSeparator
 interblockSeparator
 ulBeginTight
@@ -206,10 +203,7 @@ ulEnd
 interblockSeparator
 END section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: ordered
 headingTwo: Ordered
-END headerAttributeContext
 interblockSeparator
 interblockSeparator
 olBeginTight
@@ -265,10 +259,7 @@ olEnd
 interblockSeparator
 END section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: nested
 headingTwo: Nested
-END headerAttributeContext
 interblockSeparator
 ulBeginTight
 ulItem

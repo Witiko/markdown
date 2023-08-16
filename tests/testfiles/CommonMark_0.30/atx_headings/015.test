@@ -15,25 +15,16 @@ documentBegin
 BEGIN section
 BEGIN section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: foo
 headingThree: foo (hash)(hash)(hash)
-END headerAttributeContext
 interblockSeparator
 END section
 END section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: foo-2
 headingTwo: foo (hash)(hash)(hash)
-END headerAttributeContext
 interblockSeparator
 END section
 END section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: foo-3
 headingOne: foo (hash)
-END headerAttributeContext
 END section
 documentEnd

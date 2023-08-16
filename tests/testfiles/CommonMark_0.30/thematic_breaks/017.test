@@ -13,10 +13,7 @@ bar
 documentBegin
 BEGIN section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: foo
 headingTwo: Foo
-END headerAttributeContext
 interblockSeparator
 END section
 END section

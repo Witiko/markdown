@@ -14,25 +14,16 @@
 documentBegin
 BEGIN section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: section
 headingTwo: 
-END headerAttributeContext
 interblockSeparator
 END section
 END section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: section-2
 headingOne: 
-END headerAttributeContext
 interblockSeparator
 BEGIN section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: section-3
 headingThree: 
-END headerAttributeContext
 END section
 END section
 END section

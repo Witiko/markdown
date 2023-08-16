@@ -20,18 +20,12 @@ Heading
 >>>
 documentBegin
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: heading
 headingOne: Heading
-END headerAttributeContext
 interblockSeparator
 inputVerbatim: ./_markdown_test/acbd18db4cc2f85cedef654fccc4a4d8.verbatim
 interblockSeparator
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: heading-2
 headingTwo: Heading
-END headerAttributeContext
 interblockSeparator
 inputVerbatim: ./_markdown_test/acbd18db4cc2f85cedef654fccc4a4d8.verbatim
 interblockSeparator

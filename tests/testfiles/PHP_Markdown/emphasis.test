@@ -241,10 +241,7 @@ underscore
 interblockSeparator
 BEGIN section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: tricky-cases
 headingTwo: Tricky Cases
-END headerAttributeContext
 interblockSeparator
 strongEmphasis: Test
 interblockSeparator
@@ -252,10 +249,7 @@ strongEmphasis: Test
 interblockSeparator
 END section
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: overlong-emphasis
 headingTwo: Overlong emphasis
-END headerAttributeContext
 interblockSeparator
 underscore
 underscore

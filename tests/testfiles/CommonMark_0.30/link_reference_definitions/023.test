@@ -14,10 +14,7 @@
 >>>
 documentBegin
 BEGIN section
-BEGIN headerAttributeContext
-attributeIdentifier: foo
 headingOne: (BEGIN link)(- label: Foo)(- URI: /url)(- title: )(END link)
-END headerAttributeContext
 interblockSeparator
 blockQuoteBegin
 blockQuoteEnd
