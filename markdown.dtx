@@ -30855,6 +30855,8 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \def\markdownRendererInterblockSeparatorPrototype{\par}%
+\def\markdownRendererParagraphSeparatorPrototype{%
+  \markdownRendererInterblockSeparator}%
 \def\markdownRendererHardLineBreakPrototype{\hfil\break}%
 \def\markdownRendererSoftLineBreakPrototype{ }%
 \let\markdownRendererEllipsisPrototype\dots
