@@ -3101,11 +3101,11 @@ defaultOptions.frozenCacheFileName = "frozenCache.tex"
 
 #### Option `autoIdentifiers`
 
-`autoIdentifiers` (default value: `true`)
+`autoIdentifiers` (default value: `false`)
 
 % \fi
 % \begin{markdown}
-% \Optitem[true]{autoIdentifiers}{\opt{true}, \opt{false}}
+% \Optitem[false]{autoIdentifiers}{\opt{true}, \opt{false}}
 %
 :    true
 
@@ -3132,14 +3132,14 @@ defaultOptions.frozenCacheFileName = "frozenCache.tex"
 \@@_add_lua_option:nnn
   { autoIdentifiers }
   { boolean }
-  { true }
+  { false }
 %    \end{macrocode}
 % \iffalse
 %</tex>
 %<*lua,lua-cli>
 % \fi
 %  \begin{macrocode}
-defaultOptions.autoIdentifiers = true
+defaultOptions.autoIdentifiers = false
 %    \end{macrocode}
 % \par
 % \iffalse
