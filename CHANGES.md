@@ -7,7 +7,7 @@ Fixes:
 - Reset current heading level at the end of a markdown document.
   (1261e6f)
 - Fix out-of-memory issues with CommonMark implementation.
-  (#308, #318)
+  (#308, #318, 28650b8)
 
 Documentation:
 
