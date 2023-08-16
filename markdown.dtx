@@ -24048,8 +24048,7 @@ end
     current_heading_level = current_heading_level + 1
     assert(current_heading_level == level)
 
-    local has_attributes = options.headerAttributes and 
-                           attributes ~= nil and 
+    local has_attributes = attributes ~= nil and 
                            #attributes > 0
     local has_auto_identifier = options.autoIdentifiers or 
                                 options.gfmAutoIdentifiers
