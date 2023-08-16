@@ -1,0 +1,25 @@
+%   ---RESULT--- "example": 271,
+%   
+%   <ol start="10">
+%   <li>
+%   <p>foo</p>
+%   <pre><code>bar
+%   </code></pre>
+%   </li>
+%   </ol>
+%   
+%   ---\RESULT---
+
+<<<
+  10.  foo
+
+           bar
+>>>
+documentBegin
+olBegin
+olItemWithNumber: 10
+interblockSeparator
+inputVerbatim: ./_markdown_test/37b51d194a7513e45b56f6524f2d51f2.verbatim
+olItemEnd
+olEnd
+documentEnd

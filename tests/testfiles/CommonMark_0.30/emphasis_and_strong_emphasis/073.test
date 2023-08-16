@@ -1,0 +1,14 @@
+%   ---RESULT--- "example": 422,
+%   
+%   <p><strong>foo
+%   bar</strong></p>
+%   
+%   ---\RESULT---
+
+<<<
+**foo
+bar**
+>>>
+documentBegin
+strongEmphasis: foo(softLineBreak)bar
+documentEnd

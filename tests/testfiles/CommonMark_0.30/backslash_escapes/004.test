@@ -1,0 +1,13 @@
+%   ---RESULT--- "example": 15,
+%   
+%   <p>\<em>emphasis</em></p>
+%   
+%   ---\RESULT---
+
+<<<
+\\*emphasis*
+>>>
+documentBegin
+backslash
+emphasis: emphasis
+documentEnd

@@ -3,7 +3,6 @@
 \def\markdownOptionNotes{true}
 \def\markdownOptionInlineNotes{true}
 \def\markdownOptionSmartEllipses{true}
-\def\markdownOptionFencedCode{true}
 \def\markdownOptionContentBlocks{true}
 \def\markdownOptionHeaderAttributes{true}
 \def\markdownOptionHeaderAttributes{true}
@@ -144,6 +143,7 @@ belong to the previous note.
 >>>
 documentBegin
 codeSpan: slice
+softLineBreak
 interblockSeparator
 BEGIN section
 headingOne: This is an H1

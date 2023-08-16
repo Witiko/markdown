@@ -1,0 +1,33 @@
+%   ---RESULT--- "example": 141,
+%   
+%   <h2>foo</h2>
+%   <pre><code>bar
+%   </code></pre>
+%   <h1>baz</h1>
+%   
+%   ---\RESULT---
+
+<<<
+foo
+---
+~~~
+bar
+~~~
+# baz
+>>>
+documentBegin
+BEGIN section
+BEGIN section
+headingTwo: foo
+interblockSeparator
+BEGIN fencedCode
+- src: ./_markdown_test/37b51d194a7513e45b56f6524f2d51f2.verbatim
+- infostring: 
+END fencedCode
+interblockSeparator
+END section
+END section
+BEGIN section
+headingOne: baz
+END section
+documentEnd

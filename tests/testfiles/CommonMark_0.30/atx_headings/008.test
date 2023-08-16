@@ -1,0 +1,13 @@
+%   ---RESULT--- "example": 69,
+%   
+%   <pre><code># foo
+%   </code></pre>
+%   
+%   ---\RESULT---
+
+<<<
+    # foo
+>>>
+documentBegin
+inputVerbatim: ./_markdown_test/94646261c612c5d1a38dcbc691326757.verbatim
+documentEnd

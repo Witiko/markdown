@@ -1,0 +1,24 @@
+%   ---RESULT--- "example": 227,
+%   
+%   <p><em>aaa</em></p>
+%   <h1>aaa</h1>
+%   
+%   ---\RESULT---
+
+<<<
+  
+
+*aaa*
+  
+
+# aaa
+
+  
+>>>
+documentBegin
+emphasis: aaa
+interblockSeparator
+BEGIN section
+headingOne: aaa
+END section
+documentEnd

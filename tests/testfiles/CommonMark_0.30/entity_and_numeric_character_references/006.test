@@ -1,0 +1,12 @@
+%   ---RESULT--- "example": 30,
+%   
+%   <p><em>&amp;MadeUpEntity;</em></p>
+%   
+%   ---\RESULT---
+
+<<<
+*&MadeUpEntity;*
+>>>
+documentBegin
+emphasis: (ampersand)MadeUpEntity;
+documentEnd

@@ -1,0 +1,23 @@
+%   ---RESULT--- "example": 104,
+%   
+%   <p>Foo
+%   bar</p>
+%   <hr />
+%   <p>baz</p>
+%   
+%   ---\RESULT---
+
+<<<
+Foo
+bar
+
+---
+
+baz
+>>>
+documentBegin
+softLineBreak
+interblockSeparator
+thematicBreak
+interblockSeparator
+documentEnd

@@ -83,6 +83,7 @@ $$\$$
 >>>
 documentBegin
 codeSpan: texMathDollars
+softLineBreak
 interblockSeparator
 inlineMath: E=mc^2
 interblockSeparator

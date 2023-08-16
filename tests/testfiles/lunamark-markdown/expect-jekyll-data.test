@@ -84,6 +84,7 @@ jekyllDataEnd
 interblockSeparator
 codeSpan: jekyllData
 codeSpan: expectJekyllData
+softLineBreak
 interblockSeparator
 emphasis: multiple
 interblockSeparator

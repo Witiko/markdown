@@ -1,0 +1,16 @@
+%   ---RESULT--- "example": 177,
+%   
+%   <!-- foo -->*bar*
+%   <p><em>baz</em></p>
+%   
+%   ---\RESULT---
+
+<<<
+<!-- foo -->*bar*
+*baz*
+>>>
+documentBegin
+inputBlockHtmlElement: ./_markdown_test/de8d24e05988c7a46dfe41128df9973b.verbatim
+interblockSeparator
+emphasis: baz
+documentEnd

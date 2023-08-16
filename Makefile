@@ -14,12 +14,15 @@ DISTARCHIVE=markdown.zip
 ARCHIVES=$(TDSARCHIVE) $(CTANARCHIVE) $(DISTARCHIVE)
 EXAMPLES_RESOURCES=examples/example.md examples/scientists.csv
 EXAMPLES_SOURCES=examples/context-mkiv.tex \
-  examples/latex-pdftex.tex examples/latex-xetex.tex examples/latex-luatex.tex
+  examples/latex-pdftex.tex examples/latex-xetex.tex examples/latex-luatex.tex \
+  examples/optex.tex
 EXAMPLES=examples/context-mkiv.pdf \
   examples/latex-pdftex.pdf examples/latex-xetex.pdf examples/latex-luatex.pdf \
-  examples/latex-tex4ht.html examples/latex-tex4ht.css
-TESTS=tests/test.sh tests/support/*.tex tests/templates/*/*.tex.m4 \
-  tests/templates/*/COMMANDS.m4 tests/testfiles/*/*.test
+  examples/latex-tex4ht.html examples/latex-tex4ht.css \
+  examples/optex.pdf
+TESTS=tests/test.sh tests/test.py tests/requirements.txt tests/support/*.tex \
+  tests/templates/*/*/head.tex tests/templates/*/*/body.tex.m4 \
+  tests/templates/*/*/foot.tex tests/templates/*/COMMANDS.m4 tests/testfiles/*/*.test
 MAKES=Makefile $(addsuffix /Makefile, $(SUBDIRECTORIES)) latexmkrc
 ROOT_README=README.md markdown.png
 READMES=$(ROOT_README) LICENSE examples/README.md tests/README.md \
@@ -171,11 +174,12 @@ $(TDSARCHIVE): $(DTXARCHIVE) $(INSTALLER) $(INSTALLABLES) $(DOCUMENTATION) $(EXA
 	cp t-markdown.tex tex/context/third/markdown/
 	@# Installing the documentation.
 	mkdir -p doc/generic/markdown doc/latex/markdown/examples \
-	  doc/context/third/markdown/examples
+	  doc/context/third/markdown/examples doc/optex/markdown/examples
 	cp $(DOCUMENTATION) doc/generic/markdown/
 	cp examples/context-mkiv.tex $(EXAMPLES_RESOURCES) \
 	  doc/context/third/markdown/examples/
 	cp -L examples/latex-*.tex $(EXAMPLES_RESOURCES) doc/latex/markdown/examples/
+	cp -L examples/optex.tex $(EXAMPLES_RESOURCES) doc/optex/markdown/examples/
 	@# Installing the sources.
 	mkdir -p source/generic/markdown
 	cp $(DTXARCHIVE) $(INSTALLER) source/generic/markdown

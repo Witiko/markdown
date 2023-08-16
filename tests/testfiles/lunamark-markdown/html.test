@@ -1,14 +1,14 @@
-\def\markdownOptionHtml{true}
+\def\markdownOptionHtml{false}
 <<<
 This test ensures that the Lua `html` option correctly propagates through
 the plain TeX interface.
 
 <div>
-*There is block tag support.*
+*There is no block tag support.*
 </div>
 *There is <inline tag="value"></inline> support.<br/>*
-_There is <!-- *comment* --> support._
-_There is <? *HTML instruction* ?> support._
+_There is no <!-- *comment* --> support._
+_There is no <? *HTML instruction* ?> support._
 
 <!--
 
@@ -33,14 +33,19 @@ Unrecognized character entities are ignored: &nonsense;
 >>>
 documentBegin
 codeSpan: html
+softLineBreak
 interblockSeparator
-inputBlockHtmlElement: ./_markdown_test/db2433856814aefaa62794558a22a63c.verbatim
+softLineBreak
+emphasis: There is no block tag support.
+softLineBreak
+softLineBreak
+emphasis: There is <inline tag="value"></inline> support.<br/>
+softLineBreak
+emphasis: There is no <!-- (emphasis: comment) --> support.
+softLineBreak
+emphasis: There is no <? (emphasis: HTML instruction) ?> support.
 interblockSeparator
-emphasis: There is (inlineHtmlTag: <inline tag="value">)(inlineHtmlTag: </inline>) support.(inlineHtmlTag: <br/>)
-emphasis: There is (inlineHtmlComment: (emphasis: comment)) support.
-emphasis: There is  support.
 interblockSeparator
-blockHtmlCommentBegin
 emphasis: block comment
 interblockSeparator
 olBeginTight
@@ -51,7 +56,7 @@ olItemEnd
 olItemWithNumber: 3
 olItemEnd
 olEndTight
-blockHtmlCommentEnd
+interblockSeparator
 interblockSeparator
 interblockSeparator
 ulBeginTight
@@ -59,19 +64,21 @@ ulItem
 pipe
 ulItemEnd
 ulItem
-pipe
+ampersand
 ulItemEnd
 ulItem
-pipe
+ampersand
 ulItemEnd
 ulItem
-pipe
+ampersand
 ulItemEnd
 ulItem
-pipe
+ampersand
+hash
 ulItemEnd
 ulItem
-pipe
+ampersand
+hash
 ulItemEnd
 ulEndTight
 interblockSeparator

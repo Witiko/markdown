@@ -1,0 +1,17 @@
+%   ---RESULT--- "example": 82,
+%   
+%   <h1>Foo <em>bar
+%   baz</em></h1>
+%   
+%   ---\RESULT---
+
+<<<
+  Foo *bar
+baz*	
+====
+>>>
+documentBegin
+BEGIN section
+headingOne: Foo (emphasis: bar(softLineBreak)baz)
+END section
+documentEnd

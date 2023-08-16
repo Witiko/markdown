@@ -1,0 +1,13 @@
+%   ---RESULT--- "example": 36,
+%   
+%   <pre><code>f&amp;ouml;f&amp;ouml;
+%   </code></pre>
+%   
+%   ---\RESULT---
+
+<<<
+    f&ouml;f&ouml;
+>>>
+documentBegin
+inputVerbatim: ./_markdown_test/4a928e340ec7b55031e9b08a37b31be6.verbatim
+documentEnd

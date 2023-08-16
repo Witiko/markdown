@@ -20,8 +20,11 @@ suppressed \-@doe99.
 >>>
 documentBegin
 codeSpan: citations
+softLineBreak
 codeSpan: citationNbsps
+softLineBreak
 interblockSeparator
+softLineBreak
 BEGIN cites
 BEGIN cite
 - suppressAuthor: false
@@ -45,6 +48,7 @@ BEGIN cite
 - name: doe99
 END cite
 END cites
+softLineBreak
 BEGIN cites
 BEGIN cite
 - suppressAuthor: false
@@ -53,6 +57,8 @@ BEGIN cite
 - name: smith04
 END cite
 END cites
+softLineBreak
+softLineBreak
 BEGIN cites
 BEGIN cite
 - suppressAuthor: false
@@ -62,6 +68,7 @@ BEGIN cite
 END cite
 END cites
 interblockSeparator
+softLineBreak
 BEGIN textCites
 BEGIN textCite
 - suppressAuthor: false
@@ -76,6 +83,7 @@ BEGIN textCite
 - name: smit:.#$%&-+?<>_/h04
 END textCite
 END textCites
+softLineBreak
 BEGIN textCites
 BEGIN textCite
 - suppressAuthor: false

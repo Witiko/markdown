@@ -108,64 +108,98 @@ This is not a div
 >>>
 documentBegin
 codeSpan: fencedDivs
+softLineBreak
 codeSpan: fencedCode
+softLineBreak
 interblockSeparator
-interblockSeparator
-leftBrace
-rightBrace
-interblockSeparator
-leftBrace
-rightBrace
+softLineBreak
+softLineBreak
 interblockSeparator
 leftBrace
 rightBrace
+softLineBreak
+softLineBreak
 interblockSeparator
 leftBrace
 rightBrace
-interblockSeparator
-interblockSeparator
-leftBrace
-rightBrace
+softLineBreak
 interblockSeparator
 leftBrace
 rightBrace
-interblockSeparator
-interblockSeparator
+softLineBreak
+softLineBreak
 interblockSeparator
 leftBrace
 rightBrace
+softLineBreak
+interblockSeparator
+softLineBreak
+interblockSeparator
+leftBrace
+rightBrace
+softLineBreak
+interblockSeparator
+leftBrace
+rightBrace
+softLineBreak
+softLineBreak
+softLineBreak
+softLineBreak
+interblockSeparator
+softLineBreak
+interblockSeparator
+softLineBreak
+softLineBreak
+softLineBreak
+interblockSeparator
+leftBrace
+rightBrace
+softLineBreak
 leftBrace
 hash
 rightBrace
+softLineBreak
 leftBrace
 rightBrace
+softLineBreak
+softLineBreak
+softLineBreak
+softLineBreak
 interblockSeparator
 leftBrace
 rightBrace
+softLineBreak
 interblockSeparator
 blockQuoteBegin
 interblockSeparator
 leftBrace
 rightBrace
+softLineBreak
+softLineBreak
 blockQuoteEnd
 interblockSeparator
 interblockSeparator
 leftBrace
 hash
 rightBrace
+softLineBreak
 interblockSeparator
 blockQuoteBegin
+softLineBreak
 blockQuoteEnd
 interblockSeparator
+softLineBreak
 interblockSeparator
 interblockSeparator
 interblockSeparator
 leftBrace
 rightBrace
-codeSpan:  ::: 
+softLineBreak
+codeSpan: :::
 interblockSeparator
 leftBrace
 rightBrace
+softLineBreak
 interblockSeparator
 BEGIN fencedCode
 - src: ./_markdown_test/e441fcf4a7686817fe868bf38a5c2c07.verbatim
@@ -175,7 +209,9 @@ interblockSeparator
 interblockSeparator
 leftBrace
 rightBrace
+softLineBreak
 emphasis: fenced
+softLineBreak
 interblockSeparator
 leftBrace
 rightBrace
@@ -185,6 +221,7 @@ interblockSeparator
 interblockSeparator
 leftBrace
 rightBrace
+softLineBreak
 interblockSeparator
 BEGIN fencedCode
 - src: ./_markdown_test/e441fcf4a7686817fe868bf38a5c2c07.verbatim
@@ -193,4 +230,5 @@ END fencedCode
 interblockSeparator
 leftBrace
 rightBrace
+softLineBreak
 documentEnd

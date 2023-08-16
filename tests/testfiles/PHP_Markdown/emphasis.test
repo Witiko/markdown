@@ -19,7 +19,7 @@ Combined emphasis:
 16. _test __test___
 
 
-Incorrect nesting:
+Nesting:
 
 1.  *test  **test*  test**
 2.  _test  __test_  test__
@@ -51,7 +51,7 @@ Middle-word emphasis (asterisks):
 6.   a**b**c
 
 
-Middle-word emphasis (underscore):
+No middle-word emphasis (underscore):
 
 1.  _a_b
 2.   a_b_
@@ -85,10 +85,10 @@ documentBegin
 interblockSeparator
 olBeginTight
 olItemWithNumber: 1
-strongEmphasis: (emphasis: test test)
+emphasis: (strongEmphasis: test test)
 olItemEnd
 olItemWithNumber: 2
-strongEmphasis: (emphasis: test test)
+emphasis: (strongEmphasis: test test)
 olItemEnd
 olItemWithNumber: 3
 emphasis: test (strongEmphasis: test)
@@ -137,23 +137,22 @@ interblockSeparator
 interblockSeparator
 olBeginTight
 olItemWithNumber: 1
-strongEmphasis: test* test
+emphasis: test  (emphasis: (emphasis: test)  test)
 olItemEnd
 olItemWithNumber: 2
-underscore
-strongEmphasis: test(underscore) test
+emphasis: test  (emphasis: (emphasis: test)  test)
 olItemEnd
 olItemWithNumber: 3
-emphasis: (emphasis: test (emphasis: test)) test
+emphasis: (emphasis: test  (emphasis: test)) test
 olItemEnd
 olItemWithNumber: 4
-emphasis: (emphasis: test (emphasis: test)) test
+emphasis: (emphasis: test  (emphasis: test)) test
 olItemEnd
 olItemWithNumber: 5
-emphasis: test (emphasis: test) test
+emphasis: test   (emphasis: test)  test
 olItemEnd
 olItemWithNumber: 6
-emphasis: test (emphasis: test) test
+emphasis: test   (emphasis: test)  test
 olItemEnd
 olItemWithNumber: 7
 strongEmphasis: test (strongEmphasis: test) test
@@ -168,14 +167,16 @@ olBeginTight
 olItemWithNumber: 1
 olItemEnd
 olItemWithNumber: 2
-emphasis: * test *
 olItemEnd
 olItemWithNumber: 3
 underscore
 underscore
 olItemEnd
 olItemWithNumber: 4
-emphasis: (underscore) test (underscore)
+underscore
+underscore
+underscore
+underscore
 olItemEnd
 olEndTight
 interblockSeparator
@@ -204,26 +205,39 @@ interblockSeparator
 interblockSeparator
 olBeginTight
 olItemWithNumber: 1
-emphasis: a
+underscore
+underscore
 olItemEnd
 olItemWithNumber: 2
-emphasis: b
+underscore
+underscore
 olItemEnd
 olItemWithNumber: 3
-emphasis: b
+underscore
+underscore
 olItemEnd
 olItemWithNumber: 4
-strongEmphasis: a
+underscore
+underscore
+underscore
+underscore
 olItemEnd
 olItemWithNumber: 5
-strongEmphasis: b
+underscore
+underscore
+underscore
+underscore
 olItemEnd
 olItemWithNumber: 6
-strongEmphasis: b
+underscore
+underscore
+underscore
+underscore
 olItemEnd
 olEndTight
 interblockSeparator
-emphasis: precious
+underscore
+underscore
 interblockSeparator
 BEGIN section
 BEGIN section
@@ -249,32 +263,18 @@ underscore
 underscore
 underscore
 underscore
+softLineBreak
 underscore
 underscore
 underscore
 underscore
-underscore
-underscore
-interblockSeparator
-underscore
-underscore
-underscore
-underscore
-underscore
-underscore
-underscore
-underscore
+softLineBreak
 underscore
 underscore
 interblockSeparator
-underscore
-underscore
-underscore
-underscore
-underscore
-underscore
-underscore
-underscore
+emphasis: (strongEmphasis: (strongEmphasis: Cut here))
+interblockSeparator
+strongEmphasis: (strongEmphasis: Cut here)
 END section
 END section
 documentEnd

@@ -13,15 +13,15 @@ Markdown
  [matrix]:   https://matrix.to/#/#witiko-markdown:matrix.org    "The Matrix Chat Space for the Markdown package"
  [discord]:  https://discord.gg/8xJsPghzSH                      "The Discord Chat Space for the Markdown package"
 
-The Markdown package converts [markdown][] markup to TeX commands. The
+The Markdown package converts [CommonMark][] markup to TeX commands. The
 functionality is provided both as a Lua module, and as plain TeX, LaTeX, and
 ConTeXt macro packages that can be used to directly typeset TeX documents
-containing markdown markup. Unlike other convertors, the Markdown package
-does not require any external programs, and makes it easy to redefine how each
-and every markdown element is rendered. Creative abuse of the markdown syntax
-is encouraged. 😉
+containing markdown markup. Unlike other convertors, the Markdown package does
+not require any external programs, and makes it easy to redefine how each and
+every markdown element is rendered. Creative abuse of the markdown syntax is
+encouraged. 😉
 
- [markdown]: https://daringfireball.net/projects/markdown/basics "Daring Fireball: Markdown Basics"
+ [commonmark]: https://commonmark.org/ "CommonMark: A strongly defined, highly compatible specification of Markdown"
 
 Your first Markdown document
 ----------------------------
@@ -95,6 +95,8 @@ jobs:
       - uses: actions/checkout@v2
       - run: latexmk -lualatex document.tex
       - uses: marvinpinto/action-automatic-releases@latest
+        permissions:
+          contents: write
         with:
           title: The latest typeset book
           automatic_release_tag: latest
@@ -114,7 +116,7 @@ In fact, this is how we automatically produce
 Peek under the hood
 -------------------
 
-Remember how we said that the Markdown package converts [markdown][] markup to
+Remember how we said that the Markdown package converts markdown markup to
 TeX commands? Let's see what that means and what we can do with this knowledge.
 
 Using a text editor, create an empty text document named `document.md` with
@@ -180,7 +182,7 @@ For further information, consult one of the following:
     - [Writing Beamer Slides with Markdown][overleaf-4],
     - [Writing Posters with Markdown][overleaf-5], and
     - [Using Markdown in LaTeX documents][overleaf-6].
-4. My journal articles published by [TUGboat][]:
+4. Journal articles published by [TUGboat][]:
     - [Using Markdown inside TeX documents][tb119],
     - [Markdown 2.7.0: Towards lightweight markup in TeX][tb124],
     - [Making Markdown into a Microwave Meal][tb129],
@@ -188,18 +190,21 @@ For further information, consult one of the following:
     - [Markdown 2.15.0: What's New?][tb133],
     - [Markdown 2.17.1: What's New, What's Next?][tb135], and
     - [Attributes in Markdown][tb136].
-5. Journal articles of me and my students published by [CSTUG Bulletin][csbul] (in Czech and Slovak):
+5. Journal articles published by [CSTUG Bulletin][csbul] (in Czech and Slovak):
     - [Rendering Markdown inside TeX Documents][10.5300/2016-1-4/78],
     - [Markdown 2.8.1: Boldly Unto the Throne of Lightweight Markup in TeX][10.5300/2020-1-2/48],
     - [Markdown 2.10.0: LaTeX Themes & Snippets][10.5300/2021-1-4/76],
     - [Direct Typesetting of Various Document Formats in TeX Using the Pandoc Utility][10.5300/2021-1-4/83], and
     - [High-Level Languages for TeX][10.5300/2022-1-4/35].
-6. Talks by me and my students:
-    - [Five Years of Markdown in LaTeX: What, Why, How, and Whereto][pv212-fall2020] (in Czech), and
-    - [Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX][tb131-video] ([slides][tb131-slides]).
-    - [A Gentle Introduction to Markdown for Writers][tb134-video] ([slides][tb134-slides], [example][tb134-example]).
-7. Theses by my students:
+6. Talks:
+    - [Five Years of Markdown in LaTeX: What, Why, How, and Whereto][pv212-fall2020] (in Czech),
+    - [Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX][tb131-video] ([slides][tb131-slides]),
+    - [A Self-Publisher's Take on Markdown and TeX][tb134-01-video] ([slides][tb134-01-slides]), and
+    - [A Gentle Introduction to Markdown for Writers][tb134-02-video] ([slides][tb134-02-slides], [example][tb134-02-example]), and
+    - [Markdown 3: What's New, What's Next?][tb137-video] ([slides][tb137-slides]).
+7. Theses:
     - [Generic TeX Writer for the Pandoc Document Converter][thesis-umhg5]
+    - [An implementation of the CommonMark standard into the Markdown package for TeX][thesis-r7z7l]
 
  [overleaf-1]: https://www.overleaf.com/learn/latex/Articles/How_to_write_in_Markdown_on_Overleaf       "How to write in Markdown on Overleaf"
  [overleaf-2]: https://www.overleaf.com/learn/latex/Articles/Markdown_into_LaTeX_with_Style             "Markdown into LaTeX with Style"
@@ -213,14 +218,18 @@ For further information, consult one of the following:
  [tb129]: https://www.tug.org/TUGboat/tb41-3/tb129novotny-frozen.pdf    "Making Markdown into a Microwave Meal"
  [tb131]: https://www.tug.org/TUGboat/tb42-2/tb131novotny-markdown.pdf  "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"
  [tb133]: https://www.tug.org/TUGboat/tb43-1/tb133novotny-markdown.pdf  "Markdown 2.15.0: What's New?"
- [tb135]: https://www.overleaf.com/read/pgwrhhskmgfm                    "Markdown 2.17.1: What's New, What's Next?"
+ [tb135]: https://www.tug.org/TUGboat/tb43-3/tb135novotny-markdown.pdf  "Markdown 2.17.1: What's New, What's Next?"
  [tb136]: https://www.overleaf.com/read/dshtsnnmtshs                    "Attributes in Markdown"
 
- [tb131-slides]:  https://tug.org/tug2021/assets/pdf/tug2021-novotny-slides.pdf           "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"
- [tb131-video]:   https://youtu.be/THmPkAncMnc                                            "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"
- [tb134-slides]:  https://tug.org/tug2022/assets/pdf/Tereza_Vrabcová-TUG2022-slides.pdf   "A Gentle Introduction to Markdown for Writers"
- [tb134-example]: https://tug.org/tug2022/assets/pdf/Tereza_Vrabcová-TUG2022-example.pdf  "A Gentle Introduction to Markdown for Writers"
- [tb134-video]:   https://youtu.be/cqbKgjAlNjo?t=2h10m35s                                 "A Gentle Introduction to Markdown for Writers"
+ [tb131-slides]:     https://tug.org/tug2021/assets/pdf/tug2021-novotny-slides.pdf                            "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"
+ [tb131-video]:      https://youtu.be/i2GJMnLCZls                                                             "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"
+ [tb134-01-slides]:  https://tug.org/tug2022/assets/served/Lloyd_Prentice-TUG2022-prentice-selfpub-slides.pdf "A Self-Publisher's Take on Markdown and TeX"
+ [tb134-01-video]:   https://youtu.be/OhwzT3TcLj8                                                             "A Self-Publisher's Take on Markdown and TeX"
+ [tb134-02-slides]:  https://tug.org/tug2022/assets/pdf/Tereza_Vrabcová-TUG2022-slides.pdf                    "A Gentle Introduction to Markdown for Writers"
+ [tb134-02-example]: https://tug.org/tug2022/assets/pdf/Tereza_Vrabcová-TUG2022-example.pdf                   "A Gentle Introduction to Markdown for Writers"
+ [tb134-02-video]:   https://youtu.be/FhN_x9rsR4M                                                             "A Gentle Introduction to Markdown for Writers"
+ [tb137-slides]:     https://tug.org/tug2023/files/sa-03-novotny-markdown3/novotny-markdown3-slides.pdf       "Markdown 3: What's New, What's Next?"
+ [tb137-video]:      https://youtu.be/U8XjTOhJkg0                                                             "Markdown 3: What's New, What's Next?"
 
  [10.5300/2016-1-4/78]: https://www.doi.org/10.5300/2016-1-4/78 "Rendering Markdown inside TeX Documents"
  [10.5300/2020-1-2/48]: https://www.doi.org/10.5300/2020-1-2/48 "Markdown 2.8.1: Boldly Unto the Throne of Lightweight Markup in TeX"
@@ -228,7 +237,7 @@ For further information, consult one of the following:
  [10.5300/2021-1-4/83]: https://www.doi.org/10.5300/2021-1-4/83 "Direct Typesetting of Various Document Formats in TeX Using the Pandoc Utility"
  [10.5300/2022-1-4/35]: https://www.doi.org/10.5300/2022-1-4/35 "High-Level Languages for TeX"
 
- [pv212-fall2020]: https://is.muni.cz/elearning/warp?qurl=%2Fel%2Ffi%2Fpodzim2020%2FPV212%2Findex.qwarp;prejit=5595952
+ [pv212-fall2020]: https://is.muni.cz/elearning/io/?qurl=%2Fel%2Ffi%2Fpodzim2020%2FPV212%2Findex.qwarp;prejit=5595952
 
  [install]:  https://mirrors.ctan.org/macros/generic/markdown/markdown.html#installation "Markdown Package User Manual"
  [liantze]:  http://liantze.penguinattack.org/                                           "Rants from the Lab"
@@ -243,6 +252,7 @@ For further information, consult one of the following:
  [techdoc-tex-live]:  https://mirrors.ctan.org/macros/generic/markdown/markdown.pdf             "A Markdown Interpreter for TeX"
 
  [thesis-umhg5]: https://is.muni.cz/th/umhg5/?lang=en "Generic TeX Writer for the Pandoc Document Converter"
+ [thesis-r7z7l]: https://is.muni.cz/th/r7z7l/?lang=en "An implementation of the CommonMark standard into the Markdown package for TeX"
 
 Acknowledgements
 ----------------

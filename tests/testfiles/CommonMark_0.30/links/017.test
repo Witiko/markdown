@@ -1,0 +1,16 @@
+%   ---RESULT--- "example": 497,
+%   
+%   <p><a href="foo(and(bar)">link</a></p>
+%   
+%   ---\RESULT---
+
+<<<
+[link](foo\(and\(bar\))
+>>>
+documentBegin
+BEGIN link
+- label: link
+- URI: foo(and(bar)
+- title: 
+END link
+documentEnd

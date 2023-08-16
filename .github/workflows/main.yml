@@ -14,17 +14,21 @@ on:
     - cron: '30 4 * * MON'
 env:
   DEBIAN_FRONTEND: noninteractive
+permissions:
+  contents: write
 jobs:
   shellcheck:
-    name: Shellcheck
+    name: Style check (Bash)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@1.1.0
+        env:
+          SHELLCHECK_OPTS: -e SC1091
   luacheck:
-    name: Luacheck
+    name: Style check (Lua)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -39,7 +43,7 @@ jobs:
       - name: Run luacheck
         run: luacheck *.lua
   markdownlint:
-    name: MarkdownLint
+    name: Style check (Markdown)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -56,19 +60,51 @@ jobs:
         with:
           files: .
           config_file: .markdownlint.yaml
+  flake8:
+    name: Style check (Python)
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Install additional packages
+        run: |
+          set -ex
+          pip install -U pip wheel setuptools
+          pip install flake8
+      - name: Run Flake8
+        run: flake8 tests/test.py
+  pytype:
+    name: Type check (Python)
+    needs:
+      - flake8
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Install additional packages
+        run: |
+          set -ex
+          pip install -U pip wheel setuptools
+          pip install -r tests/requirements.txt
+          pip install pytype
+      - name: Run Pytype
+        run: pytype tests/test.py
   test-and-publish:
     name: Test and publish
     needs:
       - shellcheck
       - luacheck
       - markdownlint
+      - pytype
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
       matrix:
         texlive:
-          - TL2020-historic
-          - TL2021-historic
           - TL2022-historic
           - latest
     steps:
@@ -77,15 +113,6 @@ jobs:
         with:
           fetch-depth: 0
           submodules: true
-      - name: Use only LuaTeX to unit-test pull requests
-        if: github.ref != 'refs/heads/main'
-        run: |
-          set -ex
-          shopt -s extglob
-          rm -rv tests/templates/!(plain)/
-          rm -v tests/templates/plain/!(input).tex.m4
-          grep luatex tests/templates/plain/COMMANDS.m4 > tests/templates/plain/COMMANDS.m4.new
-          mv tests/templates/plain/COMMANDS.m4.new tests/templates/plain/COMMANDS.m4
       - name: Build Docker image
         run: make docker-image TEXLIVE_TAG=${{ matrix.texlive }}
       - name: Fix ownership of repository
@@ -97,8 +124,9 @@ jobs:
                     tee /dev/stderr)"
           test "$RESULT" = '\markdownRendererDocumentBegin'$'\n''Hello \markdownRendererEmphasis{Markdown}! $a_x + b_x = c_x$\markdownRendererDocumentEnd'
       - name: Run unit tests
-        run: docker run --rm -v "$PWD":/git-repo -w /git-repo witiko/markdown:${{ matrix.texlive }} make test
+        run: docker run --rm -v "$PWD":/git-repo -w /git-repo witiko/markdown:${{ matrix.texlive }} make FAIL_FAST=${{ github.ref != 'refs/heads/main' }} test
       - name: Build distribution archives
+        if: matrix.texlive == 'latest'
         run: docker run --rm -v "$PWD":/git-repo -w /git-repo witiko/markdown:${{ matrix.texlive }} make dist gh-pages
       - name: Upload artifact markdown.tds.zip
         if: matrix.texlive == 'latest'
@@ -162,10 +190,6 @@ jobs:
     if: github.event_name == 'pull_request'
     steps:
       - name: Automatically merge pull request
-        uses: plm9606/automerge_actions@1.2.3
-        with:
-          label-name: automerge
-          reviewers-number: 0
-          merge-method: merge
-          auto-delete: true
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+        uses: pascalgn/automerge-action@v0.15.6
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"

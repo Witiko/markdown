@@ -1,0 +1,22 @@
+%   ---RESULT--- "example": 214,
+%   
+%   <h1><a href="/url">Foo</a></h1>
+%   <blockquote>
+%   <p>bar</p>
+%   </blockquote>
+%   
+%   ---\RESULT---
+
+<<<
+# [Foo]
+[foo]: /url
+> bar
+>>>
+documentBegin
+BEGIN section
+headingOne: (BEGIN link)(- label: Foo)(- URI: /url)(- title: )(END link)
+interblockSeparator
+blockQuoteBegin
+blockQuoteEnd
+END section
+documentEnd

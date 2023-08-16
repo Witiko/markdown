@@ -1,0 +1,23 @@
+%   ---RESULT--- "example": 55,
+%   
+%   <p>_ _ _ _ a</p>
+%   <p>a------</p>
+%   <p>---a---</p>
+%   
+%   ---\RESULT---
+
+<<<
+_ _ _ _ a
+
+a------
+
+---a---
+>>>
+documentBegin
+underscore
+underscore
+underscore
+underscore
+interblockSeparator
+interblockSeparator
+documentEnd

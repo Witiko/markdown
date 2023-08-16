@@ -3,7 +3,6 @@
 \def\markdownOptionNotes{true}
 \def\markdownOptionInlineNotes{true}
 \def\markdownOptionSmartEllipses{true}
-\def\markdownOptionFencedCode{true}
 \def\markdownOptionContentBlocks{true}
 \def\markdownOptionHeaderAttributes{true}
 \def\markdownOptionSlice{first-h2 second-h2}
@@ -145,6 +144,7 @@ BEGIN section
 BEGIN headerAttributeContext
 attributeIdentifier: first-h2
 headingTwo: This is an H2
+END headerAttributeContext
 interblockSeparator
 BEGIN section
 headingThree: This is an H3
@@ -193,12 +193,12 @@ END section
 END section
 END section
 END section
-END headerAttributeContext
 END section
 BEGIN section
 BEGIN headerAttributeContext
 attributeIdentifier: second-h2
 headingTwo: This is an H2
+END headerAttributeContext
 interblockSeparator
 interblockSeparator
 ulBegin
@@ -294,7 +294,6 @@ dlDefinitionEnd
 dlItemEnd
 dlEndTight
 interblockSeparator
-END headerAttributeContext
 END section
 END section
 documentEnd

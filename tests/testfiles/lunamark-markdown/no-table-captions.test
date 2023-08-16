@@ -25,6 +25,7 @@ A caption may not span multiple paragraphs.
 >>>
 documentBegin
 codeSpan: tableCaptions
+softLineBreak
 interblockSeparator
 BEGIN table (4 rows, 4 columns)
 - caption: 
@@ -51,6 +52,7 @@ BEGIN table (4 rows, 4 columns)
 END table
 interblockSeparator
 emphasis: pipe table
+softLineBreak
 interblockSeparator
 BEGIN table (4 rows, 4 columns)
 - caption: 
@@ -77,5 +79,6 @@ BEGIN table (4 rows, 4 columns)
 END table
 interblockSeparator
 emphasis: pipe table
+softLineBreak
 interblockSeparator
 documentEnd

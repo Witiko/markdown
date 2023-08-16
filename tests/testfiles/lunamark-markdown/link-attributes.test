@@ -14,6 +14,7 @@ and a reference ![image][ref]{.another-class} with attributes.
 >>>
 documentBegin
 codeSpan: linkAttributes
+softLineBreak
 interblockSeparator
 BEGIN linkAttributeContext
 attributeIdentifier: id
@@ -32,6 +33,7 @@ BEGIN link
 - title: 
 END link
 END linkAttributeContext
+softLineBreak
 BEGIN linkAttributeContext
 attributeIdentifier: id
 attributeClassName: another-class
@@ -46,6 +48,7 @@ BEGIN link
 - title: optional title
 END link
 END linkAttributeContext
+softLineBreak
 BEGIN linkAttributeContext
 attributeClassName: link
 BEGIN link
@@ -72,6 +75,7 @@ BEGIN image
 - title: 
 END image
 END imageAttributeContext
+softLineBreak
 BEGIN imageAttributeContext
 attributeIdentifier: id
 attributeClassName: another-class

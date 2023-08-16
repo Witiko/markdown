@@ -1,0 +1,16 @@
+%   ---RESULT--- "example": 222,
+%   
+%   <p><em>aaa</em>
+%   <em>bbb</em></p>
+%   
+%   ---\RESULT---
+
+<<<
+  *aaa*
+ *bbb*
+>>>
+documentBegin
+emphasis: aaa
+softLineBreak
+emphasis: bbb
+documentEnd

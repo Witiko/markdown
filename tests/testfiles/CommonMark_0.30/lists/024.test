@@ -1,0 +1,31 @@
+%   ---RESULT--- "example": 324,
+%   
+%   <ol>
+%   <li>
+%   <pre><code>_foo_
+%   </code></pre>
+%   <p><em>bar</em></p>
+%   </li>
+%   </ol>
+%   
+%   ---\RESULT---
+
+<<<
+1. ```
+   _foo_
+   ```
+
+   _bar_
+>>>
+documentBegin
+olBegin
+olItemWithNumber: 1
+BEGIN fencedCode
+- src: ./_markdown_test/543bbf7878c5aca988a5ea83b1554394.verbatim
+- infostring: 
+END fencedCode
+interblockSeparator
+emphasis: bar
+olItemEnd
+olEnd
+documentEnd

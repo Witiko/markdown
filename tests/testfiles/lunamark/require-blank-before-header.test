@@ -4,5 +4,6 @@ Hi
 # No header
 >>>
 documentBegin
+softLineBreak
 hash
 documentEnd

@@ -3,7 +3,6 @@
 \def\markdownOptionNotes{true}
 \def\markdownOptionInlineNotes{true}
 \def\markdownOptionSmartEllipses{true}
-\def\markdownOptionFencedCode{true}
 \def\markdownOptionContentBlocks{true}
 \def\markdownOptionHeaderAttributes{true}
 \def\markdownOptionHeaderAttributes{true}
@@ -137,7 +136,7 @@ belong to the previous note.
         Some code
 
     The whole paragraph can be indented, or just the first
-    line.  In this way, multi-paragraph notes work like
+    line. In this way, multi-paragraph notes work like
     multi-paragraph list items.
 >>>
 documentBegin
@@ -154,7 +153,8 @@ interblockSeparator
 blockQuoteEnd
 interblockSeparator
 note: Here is the note.
-note: Here's one with multiple blocks.(interblockSeparator)Subsequent paragraphs are indented to show that they belong to the previous note.(interblockSeparator)(inputVerbatim: ./_markdown_test/c92b3efa18315dd3d2ff8cccfb5a26a0.verbatim)(interblockSeparator)The whole paragraph can be indented, or just the first line. In this way, multi-paragraph notes work like multi-paragraph list items.
+note: Here's one with multiple blocks.(interblockSeparator)Subsequent paragraphs are indented to show that they(softLineBreak)belong to the previous note.(interblockSeparator)(inputVerbatim: ./_markdown_test/c92b3efa18315dd3d2ff8cccfb5a26a0.verbatim)(interblockSeparator)The whole paragraph can be indented, or just the first(softLineBreak)line. In this way, multi-paragraph notes work like(softLineBreak)multi-paragraph list items.
+softLineBreak
 note: Inlines notes are easier to write, since you don't have to pick an identifier and move down to type the note.
 END section
 END section

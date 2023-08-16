@@ -2,10 +2,74 @@
 
 ## 3.0.0
 
+Fixes:
+
+- Reset current heading level at the end of a markdown document.
+  (1261e6f)
+- Fix out-of-memory issues with CommonMark implementation.
+  (#308, #318)
+
+Documentation:
+
+- Fix the link to @xvrabcov's talk at TUG 2022 in `README.md`.
+  (166c4506)
+- Add a link to @writersglen's talk at TUG 2022 to `README.md`.
+  (f3efcb9)
+
+Unit Tests:
+
+- Batch unit tests to improve speed. (#245, #316, 8bfd0b3, #317)
+
+## 3.0.0-alpha.2 (2023-08-01)
+
+Development:
+
+- Add support for attributes on tables. (#310, #313, 8786408)
+
 Default Renderer Prototypes:
 
-- Do not force line breaks after high-level headings in LaTeX,
-  but allow the text to follow the heading on the same line. (df8562c)
+- Correctly handle multiple heading identifiers. (3ae1b0d1)
+- Add alt text to figures. (#312)
+
+Documentation:
+
+- Add a link to TUG 2023 slides and video to the README.
+  (ce6047b8, adb69e2f)
+
+Unit Tests:
+
+- Rewrite the unit testing framework from Bash to Python
+  and implement summarization. (#245, #314)
+
+## 3.0.0-alpha (2023-06-27)
+
+Development:
+
+- Comply with CommonMark 0.30 and increment `grammar_version` to `3`.
+  (contributed by @lostenderman, #29, #210, #212, #226)
+- Add a demo of using the Markdown package in OpTeX.
+  (contributed by @olsak, #215, 109c1b5, #292)
+- Add `singletonCache` Lua option. (#226)
+
+Documentation:
+
+- Add @lostenderman's thesis to `README.md`. (#226, 8a4536e)
+
+Default Renderer Prototypes:
+
+- Do not force line breaks after high-level headings in LaTeX.
+  Allow the text to follow the heading on the same line. (df8562c)
+
+Deprecation:
+
+- Remove deprecated parts of the package. (#309)
+- Remove support for LuaMetaTeX. (#226)
+
+Fixes:
+
+- Allow references in fenced divs. (#307, jgm/lunamark#69)
+- Prevent `eagerCache=false` from causing undefined behavior and make
+  it the new default. (#129)
 
 ## 2.23.0 (2023-04-27)
 
@@ -62,7 +126,8 @@ Development:
   parens and brackets. (contributed by @lostenderman, #61,
   #235, #236, #270)
 - Add support for attributes on links, images, fenced code,
-  and inline code spans. (jgm#36, jgm#43, #50, #123, #256, #280)
+  and inline code spans. (jgm/lunamark#36, jgm/lunamark#43,
+  #50, #123, #256, #280)
 - Add `import` LaTeX option. (#107, #286)
 
 Documentation:
@@ -114,9 +179,10 @@ Deprecation:
 Development:
 
 - Add support for line blocks.
-  (contributed by @Omikhleia and @lostenderman, jgm#41, #209, #248)
+  (contributed by @Omikhleia and @lostenderman, jgm/lunamark#41,
+  #209, #248)
 - Add support for attributes on fenced code blocks.
-  (contributed by @Omikhleia, jgm#36, #123, #211)
+  (contributed by @Omikhleia, jgm/lunamark#36, #123, #211)
 
 Documentation:
 
@@ -133,7 +199,8 @@ Fixes:
 - Fix input normalization and move it from Lua CLI and plain TeX
   layers directly to the `convert()` Lua method. (#246, #253)
 - Allow fenced div closing tag to break out of a blockquote.
-  (contributed by @Omikhleia, jgm#60, jgm#61, #230, #259)
+  (contributed by @Omikhleia, jgm/lunamark#60, jgm/lunamark#61,
+  #230, #259)
 
 Default Renderer Prototypes:
 
@@ -201,8 +268,7 @@ Development:
   - Rename the `footnotes` and `inlineFootnotes` options to `notes` and
     `inlineNotes`.
   - Rename the `HorizontalRule` rule to `ThematicBreak` and increment
-    `grammar_version` to `2`. This change is not backwards-compatible with the
-    `grammar_version` of `1`.
+    `grammar_version` to `2`.
 - Add `\markdownEscape` macro that inputs a TeX document in the middle of a
   markdown document fragment. (1478f7b)
 - Add support for raw attributes. (#173, #202)

@@ -1,0 +1,16 @@
+%   ---RESULT--- "example": 599,
+%   
+%   <p><a href="http://../">http://../</a></p>
+%   
+%   ---\RESULT---
+
+<<<
+<http://../>
+>>>
+documentBegin
+BEGIN link
+- label: http://../
+- URI: http://../
+- title: 
+END link
+documentEnd

@@ -8,6 +8,7 @@ following list should be tight.
 >>>
 documentBegin
 codeSpan: tightLists
+softLineBreak
 interblockSeparator
 olBeginTight
 olItemWithNumber: 3

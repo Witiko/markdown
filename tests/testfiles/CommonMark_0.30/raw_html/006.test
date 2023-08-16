@@ -1,0 +1,13 @@
+%   ---RESULT--- "example": 617,
+%   
+%   <p>&lt;33&gt; &lt;__&gt;</p>
+%   
+%   ---\RESULT---
+
+<<<
+<33> <__>
+>>>
+documentBegin
+underscore
+underscore
+documentEnd

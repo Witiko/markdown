@@ -1,0 +1,14 @@
+%   ---RESULT--- "example": 489,
+%   
+%   <p>[link](foo
+%   bar)</p>
+%   
+%   ---\RESULT---
+
+<<<
+[link](foo
+bar)
+>>>
+documentBegin
+softLineBreak
+documentEnd

@@ -17,10 +17,12 @@ ARG DEPENDENCIES="\
     gawk \
     graphviz \
     m4 \
+    moreutils \
     pandoc \
     parallel \
     poppler-utils \
     python3-pygments \
+    python3-venv \
     ruby \
     unzip \
     wget \
@@ -78,18 +80,8 @@ cp ${BUILD_DIR}/markdownthemewitiko_tilde.sty          ${INSTALL_DIR}/tex/latex/
 mkdir -p                                               ${INSTALL_DIR}/tex/context/third/markdown/
 cp ${BUILD_DIR}/t-markdown.tex                         ${INSTALL_DIR}/tex/context/third/markdown/
 
-# Generate the ConTeXt file database, applying the hotfix from https://gitlab.com/islandoftex/images/texlive/-/issues/30#note_1369931901
-if [ -e /usr/bin/mtxrun.lua ]
-then
-  sed -i '/package.loaded\["data-ini"\]/a if os.selfpath then environment.ownbin=lfs.symlinktarget(os.selfpath..io.fileseparator..os.selfname);environment.ownpath=environment.ownbin:match("^.*"..io.fileseparator) else environment.ownpath=kpse.new("luatex"):var_value("SELFAUTOLOC");environment.ownbin=environment.ownpath..io.fileseparator..(arg[-2] or arg[-1] or arg[0] or "luatex"):match("[^"..io.fileseparator.."]*$") end' /usr/bin/mtxrun.lua
-fi
+# Generate the ConTeXt file database
 mtxrun --generate
-if [ -e /usr/bin/mtxrun.lua ]
-then
-  texlua /usr/bin/mtxrun.lua --luatex --generate
-  context --make
-  context --luatex --make
-fi
 
 # Reindex the TeX directory structure
 texhash
@@ -122,7 +114,7 @@ COPY --from=build ${BUILD_DIR}/dist ${INSTALL_DIR}/
 
 COPY <<EOF ${BINARY_DIR}/markdown-cli
 #!/bin/bash
-texlua ${INSTALL_DIR}/scripts/markdown/markdown-cli.lua eagerCache=false \"\$@\"
+texlua ${INSTALL_DIR}/scripts/markdown/markdown-cli.lua \"\$@\"
 echo
 EOF
 
@@ -143,18 +135,8 @@ apt-get -qy clean
 apt-get -qy autoremove --purge
 rm -rf ${AUXILIARY_FILES}
 
-# Generate the ConTeXt file database, applying the hotfix from https://gitlab.com/islandoftex/images/texlive/-/issues/30#note_1369931901
-if [ -e /usr/bin/mtxrun.lua ]
-then
-  sed -i '/package.loaded\["data-ini"\]/a if os.selfpath then environment.ownbin=lfs.symlinktarget(os.selfpath..io.fileseparator..os.selfname);environment.ownpath=environment.ownbin:match("^.*"..io.fileseparator) else environment.ownpath=kpse.new("luatex"):var_value("SELFAUTOLOC");environment.ownbin=environment.ownpath..io.fileseparator..(arg[-2] or arg[-1] or arg[0] or "luatex"):match("[^"..io.fileseparator.."]*$") end' /usr/bin/mtxrun.lua
-fi
+# Generate the ConTeXt file database
 mtxrun --generate
-if [ -e /usr/bin/mtxrun.lua ]
-then
-  texlua /usr/bin/mtxrun.lua --luatex --generate
-  context --make
-  context --luatex --make
-fi
 
 # Reindex the TeX directory structure
 texhash

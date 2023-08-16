@@ -1,0 +1,17 @@
+%   ---RESULT--- "example": 134,
+%   
+%   <pre><code>```
+%   aaa
+%   ```
+%   </code></pre>
+%   
+%   ---\RESULT---
+
+<<<
+    ```
+    aaa
+    ```
+>>>
+documentBegin
+inputVerbatim: ./_markdown_test/e3d697b4aac9823edcd21eccfd55246d.verbatim
+documentEnd

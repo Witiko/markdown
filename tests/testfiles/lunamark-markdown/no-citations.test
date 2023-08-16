@@ -18,16 +18,24 @@ name of the author suppressed -@doe99.
 documentBegin
 codeSpan: citations
 interblockSeparator
+softLineBreak
+softLineBreak
 hash
 dollarSign
 percentSign
 ampersand
 tilde
 interblockSeparator
+softLineBreak
+softLineBreak
+softLineBreak
 interblockSeparator
+softLineBreak
+softLineBreak
 hash
 dollarSign
 percentSign
 ampersand
 tilde
+softLineBreak
 documentEnd

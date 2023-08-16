@@ -1,0 +1,15 @@
+%   ---RESULT--- "example": 145,
+%   
+%   <p><code>aa</code>
+%   foo</p>
+%   
+%   ---\RESULT---
+
+<<<
+``` aa ```
+foo
+>>>
+documentBegin
+codeSpan: aa
+softLineBreak
+documentEnd

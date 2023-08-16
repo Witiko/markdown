@@ -10,6 +10,8 @@ foo @bar
 >>>
 documentBegin
 codeSpan: citations
+softLineBreak
+softLineBreak
 interblockSeparator
 interblockSeparator
 BEGIN textCites

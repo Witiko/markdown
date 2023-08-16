@@ -7,10 +7,13 @@ commands, where both the labels and the URLs are escaped even though the
 
 <https://en.wikipedia.org/wiki/Value_of_life>
 
-<Value_of_life@Value_of_life.com>
+<Value_of_life@Valueoflife.com>
 >>>
 documentBegin
 codeSpan: hybrid
+softLineBreak
+softLineBreak
+softLineBreak
 codeSpan: hybrid
 interblockSeparator
 BEGIN link
@@ -20,8 +23,8 @@ BEGIN link
 END link
 interblockSeparator
 BEGIN link
-- label: Value(underscore)of(underscore)life@Value(underscore)of(underscore)life.com
-- URI: mailto:Value_of_life@Value_of_life.com
+- label: Value(underscore)of(underscore)life@Valueoflife.com
+- URI: mailto:Value_of_life@Valueoflife.com
 - title: 
 END link
 documentEnd

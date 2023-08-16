@@ -1,4 +1,4 @@
-\def\markdownOptionBreakableBlockquotes{true}
+\def\markdownOptionBreakableBlockquotes{false}
 <<<
 This test ensures that the Lua `breakableBlockquotes` option correctly
 propagates through the plain TeX interface.
@@ -10,12 +10,11 @@ propagates through the plain TeX interface.
 >>>
 documentBegin
 codeSpan: breakableBlockquotes
+softLineBreak
 interblockSeparator
 blockQuoteBegin
 emphasis: quote 1
-blockQuoteEnd
-interblockSeparator
-blockQuoteBegin
+softLineBreak
 emphasis: quote 2
 blockQuoteEnd
 documentEnd

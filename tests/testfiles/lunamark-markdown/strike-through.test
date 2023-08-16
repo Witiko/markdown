@@ -7,6 +7,7 @@ Some ~~deleted text~~ and some \~~regular text with tildes~~.
 >>>
 documentBegin
 codeSpan: strikeThrough
+softLineBreak
 interblockSeparator
 strikeThrough: deleted text
 tilde

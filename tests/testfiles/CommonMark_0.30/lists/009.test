@@ -1,0 +1,44 @@
+%   ---RESULT--- "example": 309,
+%   
+%   <ul>
+%   <li>
+%   <p><em>foo</em></p>
+%   <p><em>notcode</em></p>
+%   </li>
+%   <li>
+%   <p><em>foo</em></p>
+%   </li>
+%   </ul>
+%   <!-- -->
+%   <pre><code>_code_
+%   </code></pre>
+%   
+%   ---\RESULT---
+
+<<<
+-   _foo_
+
+    _notcode_
+
+-   _foo_
+
+<!-- -->
+
+    _code_
+>>>
+documentBegin
+ulBegin
+ulItem
+emphasis: foo
+interblockSeparator
+emphasis: notcode
+ulItemEnd
+ulItem
+emphasis: foo
+ulItemEnd
+ulEnd
+interblockSeparator
+inputBlockHtmlElement: ./_markdown_test/bd8768ad057df0a9dda8e50a0507b3ed.verbatim
+interblockSeparator
+inputVerbatim: ./_markdown_test/57e85d2f0dcbe302e18311cb70501905.verbatim
+documentEnd

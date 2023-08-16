@@ -1,0 +1,41 @@
+%   ---RESULT--- "example": 319,
+%   
+%   <ul>
+%   <li><em>a</em>
+%   <ul>
+%   <li>
+%   <p><em>b</em></p>
+%   <p><em>c</em></p>
+%   </li>
+%   </ul>
+%   </li>
+%   <li><em>d</em></li>
+%   </ul>
+%   
+%   ---\RESULT---
+
+<<<
+- _a_
+  - _b_
+
+    _c_
+- _d_
+>>>
+documentBegin
+ulBeginTight
+ulItem
+emphasis: a
+interblockSeparator
+ulBegin
+ulItem
+emphasis: b
+interblockSeparator
+emphasis: c
+ulItemEnd
+ulEnd
+ulItemEnd
+ulItem
+emphasis: d
+ulItemEnd
+ulEndTight
+documentEnd

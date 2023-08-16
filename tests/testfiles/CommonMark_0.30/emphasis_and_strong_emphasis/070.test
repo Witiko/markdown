@@ -1,0 +1,11 @@
+%   ---RESULT--- "example": 419,
+%   
+%   <p>** is not an empty emphasis</p>
+%   
+%   ---\RESULT---
+
+<<<
+** is not an empty emphasis
+>>>
+documentBegin
+documentEnd

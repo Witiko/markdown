@@ -1,0 +1,18 @@
+%   ---RESULT--- "example": 576,
+%   
+%   <p><img src="train.jpg" alt="foo bar" title="train &amp; tracks" /></p>
+%   
+%   ---\RESULT---
+
+<<<
+![foo *bar*][foobar]
+
+[FOOBAR]: train.jpg "train & tracks"
+>>>
+documentBegin
+BEGIN image
+- label: foo (emphasis: bar)
+- URI: train.jpg
+- title: train (ampersand) tracks
+END image
+documentEnd

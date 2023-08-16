@@ -1,0 +1,14 @@
+%   ---RESULT--- "example": 168,
+%   
+%   <p><del><em>foo</em></del></p>
+%   
+%   ---\RESULT---
+
+<<<
+<del>*foo*</del>
+>>>
+documentBegin
+inlineHtmlTag: <del>
+emphasis: foo
+inlineHtmlTag: </del>
+documentEnd

@@ -1,0 +1,31 @@
+%   ---RESULT--- "example": 264,
+%   
+%   <ul>
+%   <li>
+%   <p>Foo</p>
+%   <pre><code>bar
+%   
+%   
+%   baz
+%   </code></pre>
+%   </li>
+%   </ul>
+%   
+%   ---\RESULT---
+
+<<<
+- Foo
+
+      bar
+
+
+      baz
+>>>
+documentBegin
+ulBegin
+ulItem
+interblockSeparator
+inputVerbatim: ./_markdown_test/3afa1144df64a8e1134c86d273bdd5bc.verbatim
+ulItemEnd
+ulEnd
+documentEnd

@@ -1,0 +1,31 @@
+%   ---RESULT--- "example": 91,
+%   
+%   <h2>`Foo</h2>
+%   <p>`</p>
+%   <h2>&lt;a title=&quot;a lot</h2>
+%   <p>of dashes&quot;/&gt;</p>
+%   
+%   ---\RESULT---
+
+<<<
+`Foo
+----
+`
+
+<a title="a lot
+---
+of dashes"/>
+>>>
+documentBegin
+BEGIN section
+BEGIN section
+headingTwo: `Foo
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+headingTwo: <a title="a lot
+interblockSeparator
+END section
+END section
+documentEnd

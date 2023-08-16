@@ -1,0 +1,378 @@
+\fontfam[lm]
+\hyperlinks\Blue\Blue
+
+% Set options of the Markdown module
+\_def \markdownOptions {
+  cacheDir="_markdown_example",
+  definitionLists=true,
+  fencedCode=true,
+  hashEnumerators=true,
+  smartEllipses=true,
+  strikeThrough=true,
+}
+
+% Set renderers of the Markdown module
+%% Attribute Renderers
+%%% TODO
+
+%% Block Quote Renderers
+\_def  \markdownRendererBlockQuoteBegin {\_begblock}
+\_def  \markdownRendererBlockQuoteEnd {\_endblock}
+
+%% Bracketed Spans Attribute Context Renderers
+%%% TODO
+
+%% Bullet List Renderers
+\_def  \markdownRendererUlBegin       {\_begitems \_itemskipamount=\_olistskipamount}
+\_def  \markdownRendererUlBeginTight  {\_begitems}
+\_def  \markdownRendererUlItem        {\_startitem}
+\_def  \markdownRendererUlItemEnd     {\_par}
+\_def  \markdownRendererUlEnd         {\_enditems}
+\_def  \markdownRendererUlEndTight    {\_enditems}
+
+%% Citations Renderers
+%%% TODO
+
+%% Code Block Renderers
+\_def  \markdownRendererInputVerbatim #1{\_verbinput (-) {#1} }
+\_def  \markdownRendererInputFencedCode #1#2{\_verbinput \_hisyntax{#2} (-) {#1} }
+
+%% Code Span Renderer
+\_def  \markdownRendererCodeSpan    #1{{\_ttfont #1}}
+
+%% Code Span Attribute Context Renderers
+%%% TODO
+
+%% Content Block Renderers
+%%% TODO
+
+%% Definition List Renderers
+\_sdef{_item:d}{\_aftergroup\dword}
+\_def  \dword                     #1#2{{\bf#2 }\ignorespaces}
+\_def  \markdownRendererDlBegin       {\_begitems \_style d \_itemskipamount=\_olistskipamount}
+\_def  \markdownRendererDlBeginTight  {\_begitems \_style d}
+\_def  \markdownRendererDlItem        {%
+  \_begingroup
+  \_def \markdownRendererInterblockSeparator {%
+    \_par
+    \_advance\_leftskip by\_iindent
+    \_def \markdownRendererInterblockSeparator {\_par}%
+  }%
+  \_startitem
+}
+\_def  \markdownRendererDlItemEnd     {%
+  \_par
+  \_endgroup
+}
+\_def  \markdownRendererDlDefinitionBegin {}
+\_def  \markdownRendererDlDefinitionEnd #1{%
+  \_ifx #1\markdownRendererDlDefinitionBegin
+    \_firstnoindent
+    \markdownRendererInterblockSeparator
+    \_vskip\_itemskipamount
+  \_fi
+  #1%
+}
+\_def  \markdownRendererDlEnd         {\_enditems}
+\_def  \markdownRendererDlEndTight    {\_enditems}
+
+%% Ellipsis Renderer
+\_def  \markdownRendererEllipsis      {$\_ldots$}
+
+%% Emphasis Renderers
+\_def  \markdownRendererEmphasis    #1{{\_em #1}}
+\_def  \markdownRendererStrongEmphasis #1{{\_bf #1}}
+
+%% Fenced Code Attribute Context Renderers
+%%% TODO
+
+%% Fenced Div Attribute Context Renderers
+%%% TODO
+
+%% Header Attribute Context Renderers
+%%% TODO
+
+%% Heading Renderers
+\_def  \markdownRendererHeadingOne  #1{\_printtit{#1}}
+\_def  \markdownRendererHeadingTwo  #1{\_inchap{#1}}
+\_def  \markdownRendererHeadingThree #1{\_insec{#1}}
+\_def  \markdownRendererHeadingFour #1{\_insecc{#1}}
+\_def  \markdownRendererHeadingFive #1{{\_bf #1}\_firstnoindent}
+\_def  \markdownRendererHeadingSix  #1{#1\_firstnoindent}
+
+%% HTML Comment Renderers
+%%% TODO
+
+%% HTML Tag and Element Renderers
+%%% TODO
+
+%% Image Renderer
+\_def  \markdownRendererImage #1#2#3#4{%
+  \_topinsert
+  \_centerline{\_inspic{#3}}%
+  \_cskip
+  \_caption/f #4%
+  \_par
+  \_endinsert
+}
+
+%% Image Attribute Context Renderers
+%%% TODO
+
+%% Interblock Separator Renderer
+\_def  \markdownRendererInterblockSeparator {\_par}
+
+%% Line Block Renderers
+%%% TODO
+
+%% Line Break Renderers
+\_def  \markdownRendererSoftLineBreak { }
+\_def  \markdownRendererHardLineBreak {\_nl}
+
+%% Link Renderer
+\_def  \markdownRendererLink  #1#2#3#4{\_ea\_ulink\_ea[\_expanded{#3}]{#1}}
+
+%% Link Attribute Context Renderers
+%%% TODO
+
+%% Markdown Document Renderers
+\_let  \markdownRendererDocumentBegin \_relax
+\_let  \markdownRendererDocumentEnd   \_relax
+
+%% Non-Breaking Space Renderer
+\_def  \markdownRendererNbsp          {~}
+
+%% Note Renderer
+%%% TODO
+
+%% Ordered List Renderers
+\_def  \markdownRendererOlBegin       {\_begitems \_style n \_itemskipamount=\_olistskipamount}
+\_def  \markdownRendererOlBeginTight  {\_begitems \_style n}
+\_def  \markdownRendererFancyOlBegin #1#2{\markdownRendererOlBegin}
+\_def  \markdownRendererFancyOlBeginTight #1#2{\markdownRendererOlBeginTight}
+\_def  \markdownRendererOlItem        {\_startitem}
+\_def  \markdownRendererOlItemEnd     {\_par}
+\_def  \markdownRendererOlItemWithNumber #1{\_itemnum=#1 \_advance\_itemnum by -1 \_startitem}
+\_let  \markdownRendererFancyOlItem   \markdownRendererOlItem
+\_let  \markdownRendererFancyOlItemEnd \markdownRendererOlItemEnd
+\_let  \markdownRendererFancyOlItemWithNumber \markdownRendererOlItemWithNumber
+\_def  \markdownRendererOlEnd         {\_enditems}
+\_def  \markdownRendererOlEndTight    {\_enditems}
+\_let  \markdownRendererFancyOlEndTight \markdownRendererOlEndTight
+\_let  \markdownRendererFancyOlEnd   \markdownRendererOlEnd
+
+%% Raw Content Renderers
+%%% TODO
+
+%% Section Renderers
+\_let  \markdownRendererSectionBegin  \_relax
+\_let  \markdownRendererSectionEnd    \_relax
+
+%% Replacement Character Renderers
+\_def  \markdownRendererReplacementCharacter {^^^^fffd}
+
+%% Special Character Renderers
+\_edef \markdownRendererAmpersand   #1{\_csstring\&}
+\_edef \markdownRendererBackslash   #1{\_csstring\\}
+\_edef \markdownRendererCircumflex  #1{\_csstring\^}
+\_edef \markdownRendererDollarSign  #1{\_csstring\$}
+\_edef \markdownRendererHash        #1{\_csstring\#}
+\_edef \markdownRendererLeftBrace   #1{\_csstring\{}
+\_edef \markdownRendererPercentSign #1{\_csstring\%}
+\_def  \markdownRendererPipe        #1{|}
+\_edef \markdownRendererRightBrace  #1{\_csstring\}}
+\_edef \markdownRendererTilde       #1{\_csstring\~}
+\_def  \markdownRendererUnderscore  #1{_}
+
+%% Strike-Through Renderer
+\_def  \markdownRendererStrikeThrough #1{%
+  \_setbox0=\_hbox {#1}%
+  \_leavevmode
+  \_rlap {\raise.5ex \_hbox to \_wd0 {\_hfil \_hrulefill \_hfil}}%
+  \_box0
+}
+
+%% Subscript Renderer
+%%% TODO
+
+%% Superscript Renderer
+%%% TODO
+
+%% Table Renderer
+%%% TODO
+
+%% TeX Math Renderers
+%%% TODO
+
+%% Thematic Break Renderer
+\_def  \markdownRendererThematicBreak {%
+  \_vskip 0.5\_baselineskip
+  \_hrule
+  \_par
+  \_vskip 0.5\_baselineskip
+  \_firstnoindent
+}
+
+%% Tickbox Renderers
+%%% TODO
+
+%% YAML Metadata Renderers
+\_let  \markdownRendererJekyllDataBegin \_relax
+\_let  \markdownRendererJekyllDataEnd \_relax
+\_def  \markdownRendererJekyllDataMappingBegin #1#2{}
+\_let  \markdownRendererJekyllDataMappingEnd \_relax
+\_def  \markdownRendererJekyllDataSequenceBegin #1#2{}
+\_let  \markdownRendererJekyllDataSequenceEnd \_relax
+\_def  \markdownRendererJekyllDataBoolean #1#2{}
+\_def  \markdownRendererJekyllDataNumber #1#2{}
+\_def  \markdownRendererJekyllDataString #1#2{}
+\_def  \markdownRendererJekyllDataEmpty #1{}
+
+% Load the Markdown module and set TeX macros for the Markdown module
+\_directlua{
+  kpse = require("kpse")
+  kpse.set_program_name("luatex")
+  markdown = require("markdown")
+}
+
+\_eoldef \markdownBegin #1{% #1 includes the end of the current line, parameters can be here
+   \_def\_markdownParams{#1}%
+   \_bgroup \_setverb \_savemathsb \_endlinechar=`\^^J
+   \_markdownBeginA
+}
+
+\_ea\_def \_ea\_markdownBeginA \_ea#\_ea1\_csstring\\markdownEnd#2^^J{%
+  \_restoremathsb \_egroup
+  \_bgroup
+  \_catcode`\%=12\_relax
+  \_catcode`\#=12\_relax
+  \_directlua {
+    % Prepare a table of options.
+    local defaultOptions = {\markdownOptions}
+    local currentOptions = {\_markdownParams}
+    local options = {}
+    for k,v in pairs(defaultOptions) do options[k] = v end
+    for k,v in pairs(currentOptions) do options[k] = v end
+    % Ensure that the cache directory exists.
+    if options.cacheDir then
+      local lfs = require("lfs")
+      if not lfs.isdir(options.cacheDir) then
+        assert(lfs.mkdir(options.cacheDir))
+      end
+    end
+    % Convert Markdown to TeX and print it.
+    local convert = markdown.new(options)
+    local input = "\_luaescapestring{#1}"
+    local output = convert(input)
+    tex.print(output)
+  }%
+  \_egroup
+}
+
+% Set the document metadata using a YAML metadata block
+\markdownBegin hybrid=true,jekyllData=true
+---
+title:  An Example *Markdown* Document
+author: Vít Novotný
+date:   \today
+---
+
+# This is an H1
+
+## This is an H2
+
+### This is an H3
+
+#### This is an H4
+
+##### This is an H5
+
+###### This is an H6
+
+This is a text paragraph containing an ellipsis ... and followed by a
+thematic break.
+
+***
+
+This is inline `code`. This is a [link](http://google.cz "Google").
+This is an *emphasized* span of text.
+This is a __strongly emphasized__ span of text.
+
+  ![example image](example-image.png "An example image from Martin Scharrer's mwe package")
+
+This is a fenced code block:
+
+``` tex
+\fontfam[LMfonts]
+Hello World! \bye
+```
+
+This is a bullet list:
+
+* The first item of a bullet list,
+
+* the second item of a bullet list,
+
+* the third item of a bullet list.
+
+This is a compact bullet list:
+
+* The first item of a bullet list,
+* the second item of a bullet list,
+* the third item of a bullet list.
+
+This is an ordered list:
+
+5. The first item of an ordered list,
+
+6. the second item of an ordered list,
+
+7. the third item of an ordered list.
+
+This is an ordered list using hash enumerators:
+
+#. The first item of an ordered list,
+
+#. the second item of an ordered list,
+
+#. the third item of an ordered list.
+
+This is a compact ordered list:
+
+5. The first item of an ordered list,
+6. the second item of an ordered list,
+7. the third item of an ordered list.
+
+This is a compact ordered list using hash enumerators:
+
+#. The first item of an ordered list,
+#. the second item of an ordered list,
+#. the third item of an ordered list.
+
+This is a definition list:
+
+Term 1
+
+:   Definition 1 with some ~~removed text~~
+
+Term 2
+
+:   Definition 2
+
+        Some code, part of Definition 2
+
+    Third paragraph of Definition 2.
+
+:   Definition 3
+
+This is a compact definition list:
+
+Term 1
+:   Definition 1
+Term 2
+:   Definition 2
+:   Definition 3
+
+\markdownEnd
+
+\bye

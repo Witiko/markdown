@@ -1,0 +1,24 @@
+%   ---RESULT--- "example": 77,
+%   
+%   <hr />
+%   <h2>foo</h2>
+%   <hr />
+%   
+%   ---\RESULT---
+
+<<<
+****
+## foo
+****
+>>>
+documentBegin
+thematicBreak
+interblockSeparator
+BEGIN section
+BEGIN section
+headingTwo: foo
+interblockSeparator
+thematicBreak
+END section
+END section
+documentEnd

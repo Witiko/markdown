@@ -7,6 +7,7 @@ through the plain TeX interface.
 >>>
 documentBegin
 codeSpan: superscripts
+softLineBreak
 interblockSeparator
 superscript: 10
 circumflex

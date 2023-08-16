@@ -1,0 +1,20 @@
+%   ---RESULT--- "example": 243,
+%   
+%   <blockquote>
+%   <p><em>foo</em>
+%   <em>bar</em></p>
+%   </blockquote>
+%   
+%   ---\RESULT---
+
+<<<
+> *foo*
+> *bar*
+>>>
+documentBegin
+blockQuoteBegin
+emphasis: foo
+softLineBreak
+emphasis: bar
+blockQuoteEnd
+documentEnd

@@ -12,6 +12,7 @@ BEGIN link
 - URI: /"style="color:red
 - title: 
 END link
+softLineBreak
 BEGIN link
 - label: Test
 - URI: /'style='color:red
@@ -23,6 +24,7 @@ BEGIN image
 - URI: /"style="border-color:red;border-size:1px;border-style:solid
 - title: 
 END image
+softLineBreak
 BEGIN image
 - label: 
 - URI: /'style='border-color:red;border-size:1px;border-style:solid

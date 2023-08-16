@@ -1,0 +1,42 @@
+%   ---RESULT--- "example": 278,
+%   
+%   <ul>
+%   <li><em>foo</em></li>
+%   <li>
+%   <pre><code>_bar_
+%   </code></pre>
+%   </li>
+%   <li>
+%   <pre><code>_baz_
+%   </code></pre>
+%   </li>
+%   </ul>
+%   
+%   ---\RESULT---
+
+<<<
+-
+  _foo_
+-
+  ```
+  _bar_
+  ```
+-
+      _baz_
+>>>
+documentBegin
+ulBeginTight
+ulItem
+emphasis: foo
+ulItemEnd
+ulItem
+BEGIN fencedCode
+- src: ./_markdown_test/68747b2f234e41a44d20fba8df214e7b.verbatim
+- infostring: 
+END fencedCode
+ulItemEnd
+ulItem
+inputVerbatim: ./_markdown_test/dd4ffdae91dd888b881283fc83d59ca8.verbatim
+ulItemEnd
+ulEndTight
+documentEnd

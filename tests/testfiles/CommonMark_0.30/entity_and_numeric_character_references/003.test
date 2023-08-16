@@ -1,0 +1,12 @@
+%   ---RESULT--- "example": 27,
+%   
+%   <p><em>&quot; ആ ಫ</em></p>
+%   
+%   ---\RESULT---
+
+<<<
+*&#X22; &#XD06; &#xcab;*
+>>>
+documentBegin
+emphasis: " ആ ಫ
+documentEnd

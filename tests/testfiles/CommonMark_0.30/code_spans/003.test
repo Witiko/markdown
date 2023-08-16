@@ -1,0 +1,12 @@
+%   ---RESULT--- "example": 330,
+%   
+%   <p><code>``</code></p>
+%   
+%   ---\RESULT---
+
+<<<
+` `` `
+>>>
+documentBegin
+codeSpan: ``
+documentEnd
