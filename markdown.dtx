@@ -30605,6 +30605,17 @@ function M.new(options)
 % \par
 % \begin{markdown}
 %
+% Force garbage collection to reclaim memory for temporary
+% objects created in \luamref{writer.new}, \luamref{reader.new},
+% and \luamref{reader->finalize_grammar}.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  collectgarbage("collect")
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
 % Update the singleton cache.
 %
 % \end{markdown}
