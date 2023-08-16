@@ -23533,9 +23533,6 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \par
 % \begin{markdown}
-%    \end{macrocode}
-% \par
-% \begin{markdown}
 %
 % Define \luamdef{writer->paragraphsep} as the output format of a paragraph
 % separator. Users can use more than one blank line to delimit two blocks to
@@ -23548,6 +23545,9 @@ function M.writer.new(options)
     if not self.is_writing then return "" end
     return "\\markdownRendererParagraphSeparator\n{}"
   end
+%    \end{macrocode}
+% \par
+% \begin{markdown}
 %
 % Define \luamdef{writer->soft_line_break} as the output format of a soft
 % line break.
