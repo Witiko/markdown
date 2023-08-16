@@ -11,7 +11,10 @@ Fixes:
 
 Documentation:
 
-- Fix link to @xvrabcov's talk at TUG 2022 in README. (166c4506)
+- Fix the link to @xvrabcov's talk at TUG 2022 in `README.md`.
+  (166c4506)
+- Add a link to @writersglen's talk at TUG 2022 to `README.md`.
+  (f3efcb9)
 
 Unit Tests:
 
