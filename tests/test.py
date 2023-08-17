@@ -69,6 +69,7 @@ SetupText = str
 InputText = str
 OutputText = str
 OutputTextDiff = str
+OutputTextHeadlessDiff = str
 
 
 class ReadTestFile(NamedTuple):
@@ -151,6 +152,12 @@ class TestSubResult:
             expected_output_lines, actual_output_lines, fromfile=str(expected_output_file), tofile=str(actual_output_file), lineterm='')
         output_diff_text = '\n'.join(output_diff_lines)
         return output_diff_text
+
+    @property
+    def output_headless_diff(self) -> OutputTextHeadlessDiff:
+        output_headless_diff_lines = self.output_diff.splitlines()[2:]
+        output_headless_diff_text = '\n'.join(output_headless_diff_lines)
+        return output_headless_diff_text
 
     @property
     def exited_successfully(self) -> bool:
@@ -292,12 +299,12 @@ class TestResult:
                 result_lines.append('')
             if not self.subresult_outputs_match:
                 result_lines.append('Some commands produced unexpected outputs:')
-                diffs: Dict[OutputTextDiff, List[TestSubResult]] = defaultdict(lambda: list())
-                commands: Dict[Command, Set[OutputTextDiff]] = defaultdict(lambda: set())
+                headless_diffs: Dict[OutputTextHeadlessDiff, List[TestSubResult]] = defaultdict(lambda: list())
+                commands: Dict[Command, Set[OutputTextHeadlessDiff]] = defaultdict(lambda: set())
                 for subresult in self:
-                    diffs[subresult.output_diff].append(subresult)
-                    commands[subresult.test_parameters.command].add(subresult.output_diff)
-                for diff, subresults in sorted(diffs.items(), key=lambda x: x[0]):
+                    headless_diffs[subresult.output_headless_diff].append(subresult)
+                    commands[subresult.test_parameters.command].add(subresult.output_headless_diff)
+                for _, subresults in sorted(headless_diffs.items(), key=lambda x: x[0]):
                     commands_with_templates = sorted(set(
                         (
                             command := subresult.test_parameters.command,
@@ -314,7 +321,7 @@ class TestResult:
                     else:
                         result_lines.append(f'- Command{plural} {command_texts} produced unexpected output with the following diff:')
                         result_lines.append('')
-                        for line in diff.splitlines():
+                        for line in first_subresult.output_diff.splitlines():
                             result_lines.append(f'  {line}')
                         result_lines.append('')
                 if result_lines[-1]:  # Make sure that we don't produce double blank lines in the output.
