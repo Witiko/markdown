@@ -7,7 +7,7 @@ Fixes:
 - Reset current heading level at the end of a markdown document.
   (1261e6f)
 - Fix out-of-memory issues with CommonMark implementation.
-  (#308, #318)
+  (#308, #318, 28650b8)
 
 Documentation:
 
@@ -18,7 +18,8 @@ Documentation:
 
 Unit Tests:
 
-- Batch unit tests to improve speed. (#245, #316, 8bfd0b3, #317)
+- Batch unit tests to improve speed. (#245, #316, 8bfd0b3, #317,
+  #319, #320, #321, #322)
 
 ## 3.0.0-alpha.2 (2023-08-01)
 

@@ -69,6 +69,7 @@ SetupText = str
 InputText = str
 OutputText = str
 OutputTextDiff = str
+OutputTextHeadlessDiff = str
 
 
 class ReadTestFile(NamedTuple):
@@ -153,6 +154,12 @@ class TestSubResult:
         return output_diff_text
 
     @property
+    def output_headless_diff(self) -> OutputTextHeadlessDiff:
+        output_headless_diff_lines = self.output_diff.splitlines()[2:]
+        output_headless_diff_text = '\n'.join(output_headless_diff_lines)
+        return output_headless_diff_text
+
+    @property
     def exited_successfully(self) -> bool:
         return self.exit_code == 0
 
@@ -223,9 +230,9 @@ class TestResult:
         actual_output_text, = list(actual_output_texts)
 
         with self.testfile.open('wt') as f:
-            print(self.setup_text, file=f)
+            print(self.setup_text, file=f, end='')
             print('<<<', file=f)
-            print(self.input_text, file=f)
+            print(self.input_text, file=f, end='')
             print('>>>', file=f)
             print(actual_output_text, file=f)
 
@@ -292,12 +299,12 @@ class TestResult:
                 result_lines.append('')
             if not self.subresult_outputs_match:
                 result_lines.append('Some commands produced unexpected outputs:')
-                diffs: Dict[OutputTextDiff, List[TestSubResult]] = defaultdict(lambda: list())
-                commands: Dict[Command, Set[OutputTextDiff]] = defaultdict(lambda: set())
+                headless_diffs: Dict[OutputTextHeadlessDiff, List[TestSubResult]] = defaultdict(lambda: list())
+                commands: Dict[Command, Set[OutputTextHeadlessDiff]] = defaultdict(lambda: set())
                 for subresult in self:
-                    diffs[subresult.output_diff].append(subresult)
-                    commands[subresult.test_parameters.command].add(subresult.output_diff)
-                for diff, subresults in sorted(diffs.items(), key=lambda x: x[0]):
+                    headless_diffs[subresult.output_headless_diff].append(subresult)
+                    commands[subresult.test_parameters.command].add(subresult.output_headless_diff)
+                for _, subresults in sorted(headless_diffs.items(), key=lambda x: x[0]):
                     commands_with_templates = sorted(set(
                         (
                             command := subresult.test_parameters.command,
@@ -314,7 +321,7 @@ class TestResult:
                     else:
                         result_lines.append(f'- Command{plural} {command_texts} produced unexpected output with the following diff:')
                         result_lines.append('')
-                        for line in diff.splitlines():
+                        for line in first_subresult.output_diff.splitlines():
                             result_lines.append(f'  {line}')
                         result_lines.append('')
                 if result_lines[-1]:  # Make sure that we don't produce double blank lines in the output.
@@ -535,7 +542,6 @@ def read_testfile(testfile: TestFile) -> ReadTestFile:
     input_part = 'setup'
     with testfile.open('rt') as f:
         for line in f:
-            line = line.rstrip('\r\n')
             if input_part == 'setup' and line.strip() == '<<<':
                 input_part = 'input'
             elif input_part == 'input' and line.strip() == '>>>':
@@ -543,9 +549,9 @@ def read_testfile(testfile: TestFile) -> ReadTestFile:
             else:
                 input_lines[input_part].append(line)
 
-    setup_text = '\n'.join(input_lines['setup'])
-    input_text = '\n'.join(input_lines['input'])
-    expected_output_text = '\n'.join(input_lines['expected_output'])
+    setup_text = ''.join(input_lines['setup'])
+    input_text = ''.join(input_lines['input'])
+    expected_output_text = ''.join(input_lines['expected_output'])
     return ReadTestFile(setup_text, input_text, expected_output_text)
 
 
