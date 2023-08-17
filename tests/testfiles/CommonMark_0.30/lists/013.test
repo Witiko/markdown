@@ -29,6 +29,6 @@ olItemWithNumber: 2
 emphasis: b
 olItemEnd
 olEnd
-interblockSeparator
+paragraphSeparator
 inputVerbatim: ./_markdown_test/9b5fa609c661c8387cf7669ea3dd7bd4.verbatim
 documentEnd

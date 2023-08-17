@@ -21,15 +21,15 @@ documentBegin
 codeSpan: fencedCode
 softLineBreak
 codeSpan: rawAttribute
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 BEGIN fencedCode
 - src: ./_markdown_test/b43c6cb44864821760ccce3596fbc5e2.verbatim
 - infostring: (leftBrace)=openxml(rightBrace)
 END fencedCode
-interblockSeparator
+paragraphSeparator
 softLineBreak
-interblockSeparator
+paragraphSeparator
 codeSpan: <a>html</a>
 leftBrace
 rightBrace

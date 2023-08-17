@@ -111,47 +111,47 @@ codeSpan: fencedDivs
 softLineBreak
 codeSpan: fencedCode
 softLineBreak
-interblockSeparator
+paragraphSeparator
 softLineBreak
 softLineBreak
-interblockSeparator
+paragraphSeparator
 leftBrace
 rightBrace
 softLineBreak
 softLineBreak
-interblockSeparator
+paragraphSeparator
 leftBrace
 rightBrace
 softLineBreak
-interblockSeparator
-leftBrace
-rightBrace
-softLineBreak
-softLineBreak
-interblockSeparator
-leftBrace
-rightBrace
-softLineBreak
-interblockSeparator
-softLineBreak
-interblockSeparator
-leftBrace
-rightBrace
-softLineBreak
-interblockSeparator
+paragraphSeparator
 leftBrace
 rightBrace
 softLineBreak
 softLineBreak
+paragraphSeparator
+leftBrace
+rightBrace
+softLineBreak
+paragraphSeparator
+softLineBreak
+paragraphSeparator
+leftBrace
+rightBrace
+softLineBreak
+paragraphSeparator
+leftBrace
+rightBrace
 softLineBreak
 softLineBreak
-interblockSeparator
-softLineBreak
-interblockSeparator
 softLineBreak
 softLineBreak
+paragraphSeparator
 softLineBreak
-interblockSeparator
+paragraphSeparator
+softLineBreak
+softLineBreak
+softLineBreak
+paragraphSeparator
 leftBrace
 rightBrace
 softLineBreak
@@ -165,11 +165,11 @@ softLineBreak
 softLineBreak
 softLineBreak
 softLineBreak
-interblockSeparator
+paragraphSeparator
 leftBrace
 rightBrace
 softLineBreak
-interblockSeparator
+paragraphSeparator
 blockQuoteBegin
 interblockSeparator
 leftBrace
@@ -177,26 +177,48 @@ rightBrace
 softLineBreak
 softLineBreak
 blockQuoteEnd
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 leftBrace
 hash
 rightBrace
 softLineBreak
-interblockSeparator
+paragraphSeparator
 blockQuoteBegin
 softLineBreak
 blockQuoteEnd
-interblockSeparator
+paragraphSeparator
 softLineBreak
-interblockSeparator
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
+paragraphSeparator
 leftBrace
 rightBrace
 softLineBreak
 codeSpan: :::
+paragraphSeparator
+leftBrace
+rightBrace
+softLineBreak
+paragraphSeparator
+BEGIN fencedCode
+- src: ./_markdown_test/e441fcf4a7686817fe868bf38a5c2c07.verbatim
+- infostring: 
+END fencedCode
 interblockSeparator
+paragraphSeparator
+leftBrace
+rightBrace
+softLineBreak
+emphasis: fenced
+softLineBreak
+paragraphSeparator
+leftBrace
+rightBrace
+paragraphSeparator
+emphasis: fenced
+paragraphSeparator
+paragraphSeparator
 leftBrace
 rightBrace
 softLineBreak
@@ -205,29 +227,7 @@ BEGIN fencedCode
 - src: ./_markdown_test/e441fcf4a7686817fe868bf38a5c2c07.verbatim
 - infostring: 
 END fencedCode
-interblockSeparator
-interblockSeparator
-leftBrace
-rightBrace
-softLineBreak
-emphasis: fenced
-softLineBreak
-interblockSeparator
-leftBrace
-rightBrace
-interblockSeparator
-emphasis: fenced
-interblockSeparator
-interblockSeparator
-leftBrace
-rightBrace
-softLineBreak
-interblockSeparator
-BEGIN fencedCode
-- src: ./_markdown_test/e441fcf4a7686817fe868bf38a5c2c07.verbatim
-- infostring: 
-END fencedCode
-interblockSeparator
+paragraphSeparator
 leftBrace
 rightBrace
 softLineBreak

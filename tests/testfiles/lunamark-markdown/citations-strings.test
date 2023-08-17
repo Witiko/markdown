@@ -11,7 +11,7 @@ are merged into strings of citations.
 >>>
 documentBegin
 softLineBreak
-interblockSeparator
+paragraphSeparator
 BEGIN textCites
 BEGIN textCite
 - suppressAuthor: false
@@ -50,7 +50,7 @@ BEGIN textCite
 - name: doe1994
 END textCite
 END textCites
-interblockSeparator
+paragraphSeparator
 BEGIN cites
 BEGIN cite
 - suppressAuthor: false

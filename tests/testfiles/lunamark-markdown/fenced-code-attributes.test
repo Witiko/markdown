@@ -14,8 +14,8 @@ documentBegin
 codeSpan: fencedCode
 codeSpan: fencedCodeAttributes
 softLineBreak
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 BEGIN fencedCodeAttributeContext
 attributeIdentifier: mycode
 attributeClassName: haskell

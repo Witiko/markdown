@@ -145,7 +145,7 @@ BEGIN headerAttributeContext
 attributeIdentifier: first-h2
 headingTwo: This is an H2
 END headerAttributeContext
-interblockSeparator
+paragraphSeparator
 BEGIN section
 headingThree: This is an H3
 interblockSeparator
@@ -157,11 +157,11 @@ headingFive: This is an H5
 interblockSeparator
 BEGIN section
 headingSix: This is an H6
-interblockSeparator
+paragraphSeparator
 ellipsis
-interblockSeparator
+paragraphSeparator
 thematicBreak
-interblockSeparator
+paragraphSeparator
 codeSpan: code
 BEGIN link
 - label: link
@@ -170,25 +170,25 @@ BEGIN link
 END link
 emphasis: This is an (emphasis: emphasized) span of text
 strongEmphasis: This is a (strongEmphasis: strongly emphasized) span of text
-interblockSeparator
+paragraphSeparator
 BEGIN image
 - label: example image
 - URI: example-image.pdf
 - title: An example image from Martin Scharrer's mwe package
 END image
-interblockSeparator
+paragraphSeparator
 BEGIN contentBlock
 - suffix: csv
 - URI: scientists.csv
 - title: The great minds of the 19th century rendered via a content block
 END contentBlock
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 BEGIN fencedCode
 - src: ./_markdown_test/4b6b6e5629f4aa0fcfcb9164fca2efa3.verbatim
 - infostring: latex
 END fencedCode
-interblockSeparator
+paragraphSeparator
 END section
 END section
 END section

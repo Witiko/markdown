@@ -33,9 +33,9 @@ ulItemEnd
 ulItem
 ulItemEnd
 ulEndTight
-interblockSeparator
+paragraphSeparator
 thematicBreak
-interblockSeparator
+paragraphSeparator
 olBeginTight
 olItemWithNumber: 8
 olItemEnd

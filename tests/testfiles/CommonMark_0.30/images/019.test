@@ -11,5 +11,5 @@
 [[foo]]: /url "title"
 >>>
 documentBegin
-interblockSeparator
+paragraphSeparator
 documentEnd

@@ -12,5 +12,5 @@
 >>>
 documentBegin
 inlineHtmlTag: <bar>
-interblockSeparator
+paragraphSeparator
 documentEnd

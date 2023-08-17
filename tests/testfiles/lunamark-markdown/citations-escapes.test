@@ -23,7 +23,7 @@ codeSpan: citations
 softLineBreak
 codeSpan: citationNbsps
 softLineBreak
-interblockSeparator
+paragraphSeparator
 softLineBreak
 BEGIN cites
 BEGIN cite
@@ -39,7 +39,7 @@ BEGIN cite
 - name: smit:.#$%&-+?<>_/h04
 END cite
 END cites
-interblockSeparator
+paragraphSeparator
 BEGIN cites
 BEGIN cite
 - suppressAuthor: false
@@ -67,7 +67,7 @@ BEGIN cite
 - name: smith04
 END cite
 END cites
-interblockSeparator
+paragraphSeparator
 softLineBreak
 BEGIN textCites
 BEGIN textCite

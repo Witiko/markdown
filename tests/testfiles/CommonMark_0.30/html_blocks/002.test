@@ -24,5 +24,5 @@ okay.
 >>>
 documentBegin
 inputBlockHtmlElement: ./_markdown_test/aa7fdd73acc96e799e78ba0f4775fd89.verbatim
-interblockSeparator
+paragraphSeparator
 documentEnd

@@ -33,6 +33,6 @@ BEGIN image
 - URI: http://image
 - title: This is the title of the image.
 END image
-interblockSeparator
+paragraphSeparator
 END section
 documentEnd

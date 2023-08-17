@@ -26,7 +26,7 @@ A caption may not span multiple paragraphs.
 documentBegin
 codeSpan: tableCaptions
 softLineBreak
-interblockSeparator
+paragraphSeparator
 BEGIN table (4 rows, 4 columns)
 - caption: 
 - alignment of column 1: r
@@ -50,10 +50,10 @@ BEGIN table (4 rows, 4 columns)
 - row 4, column 3: 1
 - row 4, column 4: 1
 END table
-interblockSeparator
+paragraphSeparator
 emphasis: pipe table
 softLineBreak
-interblockSeparator
+paragraphSeparator
 BEGIN table (4 rows, 4 columns)
 - caption: 
 - alignment of column 1: r
@@ -77,8 +77,8 @@ BEGIN table (4 rows, 4 columns)
 - row 4, column 3: 1
 - row 4, column 4: 1
 END table
-interblockSeparator
+paragraphSeparator
 emphasis: pipe table
 softLineBreak
-interblockSeparator
+paragraphSeparator
 documentEnd

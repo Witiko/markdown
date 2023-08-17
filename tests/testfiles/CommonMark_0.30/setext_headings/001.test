@@ -15,7 +15,7 @@ Foo *bar*
 documentBegin
 BEGIN section
 headingOne: Foo (emphasis: bar)
-interblockSeparator
+paragraphSeparator
 BEGIN section
 headingTwo: Foo (emphasis: bar)
 END section

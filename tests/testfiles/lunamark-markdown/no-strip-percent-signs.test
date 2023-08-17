@@ -8,6 +8,6 @@ The following emphasized text *should contain the percent sign at the
 documentBegin
 codeSpan: stripPercentSigns
 softLineBreak
-interblockSeparator
+paragraphSeparator
 emphasis: should contain the percent sign at the(softLineBreak)(percentSign) beginning of the line
 documentEnd

@@ -14,9 +14,9 @@ bar
 documentBegin
 codeSpan: fencedCode
 softLineBreak
-interblockSeparator
+paragraphSeparator
 codeSpan: foo bar
-interblockSeparator
+paragraphSeparator
 tilde
 tilde
 tilde

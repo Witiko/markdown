@@ -22,8 +22,8 @@ Line blocks with continuation
 documentBegin
 codeSpan: lineBlocks
 softLineBreak
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 lineBlockBegin
 emphasis: limerick
 hardLineBreak
@@ -43,7 +43,7 @@ nbsp
 hardLineBreak
 lineBlockEnd
 interblockSeparator
-interblockSeparator
+paragraphSeparator
 lineBlockBegin
 hardLineBreak
 hardLineBreak

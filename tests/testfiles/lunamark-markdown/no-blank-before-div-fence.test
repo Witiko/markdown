@@ -21,12 +21,12 @@ codeSpan: fencedDivs
 softLineBreak
 codeSpan: blankBeforeDivFence
 softLineBreak
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 BEGIN fencedDivAttributeContext
 attributeClassName: foo
 END fencedDivAttributeContext
-interblockSeparator
+paragraphSeparator
 BEGIN fencedDivAttributeContext
 attributeClassName: foo
 END fencedDivAttributeContext

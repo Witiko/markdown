@@ -145,7 +145,7 @@ BEGIN headerAttributeContext
 attributeIdentifier: first-h2
 headingTwo: This is an H2
 END headerAttributeContext
-interblockSeparator
+paragraphSeparator
 BEGIN section
 headingThree: This is an H3
 interblockSeparator
@@ -157,11 +157,11 @@ headingFive: This is an H5
 interblockSeparator
 BEGIN section
 headingSix: This is an H6
-interblockSeparator
+paragraphSeparator
 ellipsis
-interblockSeparator
+paragraphSeparator
 thematicBreak
-interblockSeparator
+paragraphSeparator
 codeSpan: code
 BEGIN link
 - label: link
@@ -170,25 +170,25 @@ BEGIN link
 END link
 emphasis: This is an (emphasis: emphasized) span of text
 strongEmphasis: This is a (strongEmphasis: strongly emphasized) span of text
-interblockSeparator
+paragraphSeparator
 BEGIN image
 - label: example image
 - URI: example-image.pdf
 - title: An example image from Martin Scharrer's mwe package
 END image
-interblockSeparator
+paragraphSeparator
 BEGIN contentBlock
 - suffix: csv
 - URI: scientists.csv
 - title: The great minds of the 19th century rendered via a content block
 END contentBlock
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 BEGIN fencedCode
 - src: ./_markdown_test/4b6b6e5629f4aa0fcfcb9164fca2efa3.verbatim
 - infostring: latex
 END fencedCode
-interblockSeparator
+paragraphSeparator
 END section
 END section
 END section
@@ -199,8 +199,8 @@ BEGIN headerAttributeContext
 attributeIdentifier: second-h2
 headingTwo: This is an H2
 END headerAttributeContext
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 ulBegin
 ulItem
 interblockSeparator
@@ -210,8 +210,8 @@ ulItemEnd
 ulItem
 ulItemEnd
 ulEnd
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 ulBeginTight
 ulItem
 ulItemEnd
@@ -220,8 +220,8 @@ ulItemEnd
 ulItem
 ulItemEnd
 ulEndTight
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 olBegin
 olItemWithNumber: 5
 interblockSeparator
@@ -231,8 +231,8 @@ olItemEnd
 olItemWithNumber: 7
 olItemEnd
 olEnd
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 olBegin
 olItemWithNumber: 1
 interblockSeparator
@@ -242,8 +242,8 @@ olItemEnd
 olItemWithNumber: 3
 olItemEnd
 olEnd
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 olBeginTight
 olItemWithNumber: 5
 olItemEnd
@@ -252,8 +252,8 @@ olItemEnd
 olItemWithNumber: 7
 olItemEnd
 olEndTight
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 olBeginTight
 olItemWithNumber: 1
 olItemEnd
@@ -262,8 +262,8 @@ olItemEnd
 olItemWithNumber: 3
 olItemEnd
 olEndTight
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 dlBegin
 dlItem: Term 1
 dlDefinitionBegin
@@ -271,16 +271,16 @@ dlDefinitionEnd
 dlItemEnd
 dlItem: (emphasis: Term 2)
 dlDefinitionBegin
-interblockSeparator
+paragraphSeparator
 inputVerbatim: ./_markdown_test/990a3431517de9eac439b71b42999658.verbatim
-interblockSeparator
+paragraphSeparator
 dlDefinitionEnd
 dlDefinitionBegin
 dlDefinitionEnd
 dlItemEnd
 dlEnd
 interblockSeparator
-interblockSeparator
+paragraphSeparator
 dlBeginTight
 dlItem: Term 1
 dlDefinitionBegin

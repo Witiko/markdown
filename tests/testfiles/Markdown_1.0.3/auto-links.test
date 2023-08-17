@@ -19,13 +19,13 @@ BEGIN link
 - URI: http://example.com/
 - title: 
 END link
-interblockSeparator
+paragraphSeparator
 BEGIN link
 - label: http://example.com/?foo=1(ampersand)bar=2
 - URI: http://example.com/?foo=1&bar=2
 - title: 
 END link
-interblockSeparator
+paragraphSeparator
 ulBeginTight
 ulItem
 ulItemEnd
@@ -39,7 +39,7 @@ ulItemEnd
 ulItem
 ulItemEnd
 ulEndTight
-interblockSeparator
+paragraphSeparator
 blockQuoteBegin
 BEGIN link
 - label: http://example.com/
@@ -47,8 +47,8 @@ BEGIN link
 - title: 
 END link
 blockQuoteEnd
-interblockSeparator
+paragraphSeparator
 codeSpan: <http://example.com/>
-interblockSeparator
+paragraphSeparator
 inputVerbatim: ./_markdown_test/d063938ba4264a9a85f58f4eb996f49a.verbatim
 documentEnd

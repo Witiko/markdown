@@ -12,6 +12,6 @@
 >>>
 documentBegin
 emphasis: one
-interblockSeparator
+paragraphSeparator
 emphasis: two
 documentEnd

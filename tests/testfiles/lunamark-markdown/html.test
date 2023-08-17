@@ -34,7 +34,7 @@ Unrecognized character entities are ignored: &nonsense;
 documentBegin
 codeSpan: html
 softLineBreak
-interblockSeparator
+paragraphSeparator
 softLineBreak
 emphasis: There is no block tag support.
 softLineBreak
@@ -44,10 +44,10 @@ softLineBreak
 emphasis: There is no <!-- (emphasis: comment) --> support.
 softLineBreak
 emphasis: There is no <? (emphasis: HTML instruction) ?> support.
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 emphasis: block comment
-interblockSeparator
+paragraphSeparator
 olBeginTight
 olItemWithNumber: 1
 olItemEnd
@@ -56,9 +56,9 @@ olItemEnd
 olItemWithNumber: 3
 olItemEnd
 olEndTight
-interblockSeparator
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
+paragraphSeparator
 ulBeginTight
 ulItem
 pipe
@@ -81,6 +81,6 @@ ampersand
 hash
 ulItemEnd
 ulEndTight
-interblockSeparator
+paragraphSeparator
 ampersand
 documentEnd

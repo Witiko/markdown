@@ -18,21 +18,21 @@ A level two heading
 >>>
 documentBegin
 codeSpan: shiftHeadings
-interblockSeparator
+paragraphSeparator
 BEGIN section
 headingOne: A level one heading
-interblockSeparator
+paragraphSeparator
 END section
 BEGIN section
 headingOne: A level one heading
-interblockSeparator
+paragraphSeparator
 BEGIN section
 headingTwo: A level two heading
-interblockSeparator
+paragraphSeparator
 END section
 BEGIN section
 headingTwo: A level two heading
-interblockSeparator
+paragraphSeparator
 BEGIN section
 headingThree: A level three heading
 interblockSeparator

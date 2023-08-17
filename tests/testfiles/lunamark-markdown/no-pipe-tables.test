@@ -11,7 +11,7 @@ This test ensures that the Lua `pipeTables` option is disabled by default.
 >>>
 documentBegin
 codeSpan: pipeTables
-interblockSeparator
+paragraphSeparator
 pipe
 pipe
 emphasis: Left
@@ -43,5 +43,5 @@ pipe
 pipe
 pipe
 pipe
-interblockSeparator
+paragraphSeparator
 documentEnd

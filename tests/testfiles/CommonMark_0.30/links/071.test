@@ -16,6 +16,6 @@
 >>>
 documentBegin
 softLineBreak
-interblockSeparator
+paragraphSeparator
 softLineBreak
 documentEnd

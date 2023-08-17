@@ -16,7 +16,7 @@ Foo
 >>>
 documentBegin
 softLineBreak
-interblockSeparator
+paragraphSeparator
 interblockSeparator
 thematicBreak
 documentEnd

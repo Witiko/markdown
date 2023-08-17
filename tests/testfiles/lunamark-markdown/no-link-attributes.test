@@ -14,7 +14,7 @@ and a reference ![image][ref]{.another-class} with attributes.
 documentBegin
 codeSpan: linkAttributes
 softLineBreak
-interblockSeparator
+paragraphSeparator
 BEGIN link
 - label: link
 - URI: foo.jpg
@@ -34,7 +34,7 @@ BEGIN link
 END link
 leftBrace
 rightBrace
-interblockSeparator
+paragraphSeparator
 BEGIN image
 - label: image
 - URI: foo.jpg
@@ -46,7 +46,7 @@ rightBrace
 softLineBreak
 leftBrace
 rightBrace
-interblockSeparator
+paragraphSeparator
 leftBrace
 hash
 rightBrace

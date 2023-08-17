@@ -7,9 +7,9 @@ This test ensures that the Lua `texMathSingleBackslash` option is disabled by de
 >>>
 documentBegin
 codeSpan: texMathSingleBackslash
-interblockSeparator
+paragraphSeparator
 circumflex
-interblockSeparator
+paragraphSeparator
 backslash
 leftBrace
 rightBrace

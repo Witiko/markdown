@@ -82,7 +82,7 @@ ____Cut here____
 
 >>>
 documentBegin
-interblockSeparator
+paragraphSeparator
 olBeginTight
 olItemWithNumber: 1
 emphasis: (strongEmphasis: test test)
@@ -133,8 +133,8 @@ olItemWithNumber: 16
 emphasis: test (strongEmphasis: test)
 olItemEnd
 olEndTight
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 olBeginTight
 olItemWithNumber: 1
 emphasis: test  (emphasis: (emphasis: test)  test)
@@ -161,8 +161,8 @@ olItemWithNumber: 8
 strongEmphasis: test (strongEmphasis: test) test
 olItemEnd
 olEndTight
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 olBeginTight
 olItemWithNumber: 1
 olItemEnd
@@ -179,8 +179,8 @@ underscore
 underscore
 olItemEnd
 olEndTight
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 olBeginTight
 olItemWithNumber: 1
 emphasis: a
@@ -201,8 +201,8 @@ olItemWithNumber: 6
 strongEmphasis: b
 olItemEnd
 olEndTight
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 olBeginTight
 olItemWithNumber: 1
 underscore
@@ -235,22 +235,22 @@ underscore
 underscore
 olItemEnd
 olEndTight
-interblockSeparator
+paragraphSeparator
 underscore
 underscore
-interblockSeparator
+paragraphSeparator
 BEGIN section
 BEGIN section
 headingTwo: Tricky Cases
-interblockSeparator
+paragraphSeparator
 strongEmphasis: Test
-interblockSeparator
+paragraphSeparator
 strongEmphasis: Test
-interblockSeparator
+paragraphSeparator
 END section
 BEGIN section
 headingTwo: Overlong emphasis
-interblockSeparator
+paragraphSeparator
 underscore
 underscore
 underscore
@@ -271,9 +271,9 @@ underscore
 softLineBreak
 underscore
 underscore
-interblockSeparator
+paragraphSeparator
 emphasis: (strongEmphasis: (strongEmphasis: Cut here))
-interblockSeparator
+paragraphSeparator
 strongEmphasis: (strongEmphasis: Cut here)
 END section
 END section

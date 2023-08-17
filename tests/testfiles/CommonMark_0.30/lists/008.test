@@ -30,9 +30,9 @@ ulItem
 emphasis: bar
 ulItemEnd
 ulEndTight
-interblockSeparator
+paragraphSeparator
 inputBlockHtmlElement: ./_markdown_test/bd8768ad057df0a9dda8e50a0507b3ed.verbatim
-interblockSeparator
+paragraphSeparator
 ulBeginTight
 ulItem
 emphasis: baz

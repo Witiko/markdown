@@ -15,7 +15,7 @@
 documentBegin
 BEGIN section
 headingOne: (BEGIN link)(- label: Foo)(- URI: /url)(- title: )(END link)
-interblockSeparator
+paragraphSeparator
 blockQuoteBegin
 blockQuoteEnd
 END section

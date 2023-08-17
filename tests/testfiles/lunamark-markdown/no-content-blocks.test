@@ -18,9 +18,9 @@ htt(p:/)/exam(ple.c)om/m\(inard.jpg (Napoleon's disastrous Russian campaign of 1
 documentBegin
 codeSpan: contentBlocks
 softLineBreak
-interblockSeparator
+paragraphSeparator
 softLineBreak
-interblockSeparator
+paragraphSeparator
 BEGIN link
 - label: http://example.com/minard.jpg
 - URI: http://example.com/minard.jpg
@@ -32,9 +32,9 @@ BEGIN link
 - URI: http://example.com/minard.jpg
 - title: 
 END link
-interblockSeparator
+paragraphSeparator
 softLineBreak
-interblockSeparator
+paragraphSeparator
 softLineBreak
 softLineBreak
 documentEnd

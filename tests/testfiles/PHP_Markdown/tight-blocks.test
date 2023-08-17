@@ -11,11 +11,11 @@ Paragraph before blockquote:
 >>>
 documentBegin
 softLineBreak
-interblockSeparator
+paragraphSeparator
 interblockSeparator
 BEGIN section
 headingOne: Header
-interblockSeparator
+paragraphSeparator
 interblockSeparator
 blockQuoteBegin
 blockQuoteEnd

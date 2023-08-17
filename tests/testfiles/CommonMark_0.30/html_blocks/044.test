@@ -26,12 +26,12 @@
 >>>
 documentBegin
 inputBlockHtmlElement: ./_markdown_test/fdcbb7ca6d7202e68ff5e231215d38a9.verbatim
-interblockSeparator
+paragraphSeparator
 inputBlockHtmlElement: ./_markdown_test/c47704f0b387777458ed865b040eb69d.verbatim
-interblockSeparator
+paragraphSeparator
 inputVerbatim: ./_markdown_test/9997648152b073ebae92ce471ff47d44.verbatim
-interblockSeparator
+paragraphSeparator
 inputBlockHtmlElement: ./_markdown_test/1a8b0d5ce3f9d65107b6d5758b62d57c.verbatim
-interblockSeparator
+paragraphSeparator
 inputBlockHtmlElement: ./_markdown_test/fa660a8ad505547640133768f2877788.verbatim
 documentEnd

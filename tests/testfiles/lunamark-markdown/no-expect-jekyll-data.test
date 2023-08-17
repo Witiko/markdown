@@ -36,7 +36,7 @@ abstract: |
 >>>
 documentBegin
 softLineBreak
-interblockSeparator
+paragraphSeparator
 ulBeginTight
 ulItem
 emphasis: One
@@ -49,14 +49,14 @@ softLineBreak
 softLineBreak
 ulItemEnd
 ulEndTight
-interblockSeparator
+paragraphSeparator
 codeSpan: jekyllData
 softLineBreak
 codeSpan: expectJekyllData
 softLineBreak
-interblockSeparator
+paragraphSeparator
 emphasis: multiple
-interblockSeparator
+paragraphSeparator
 jekyllDataBegin
 BEGIN jekyllDataMappingBegin
 - key: null
@@ -64,7 +64,7 @@ BEGIN jekyllDataMappingBegin
 END jekyllDataMappingBegin
 BEGIN jekyllDataString
 - key: abstract
-- value: This is (emphasis: the abstract).(interblockSeparator)It consists of two paragraphs.
+- value: This is (emphasis: the abstract).(paragraphSeparator)It consists of two paragraphs.
 END jekyllDataString
 BEGIN jekyllDataSequenceBegin
 - key: author

@@ -39,7 +39,7 @@ Here are some ticked boxes:
 documentBegin
 codeSpan: taskLists
 softLineBreak
-interblockSeparator
+paragraphSeparator
 ulBegin
 ulItem
 emphasis: an item without a tickbox
@@ -77,8 +77,8 @@ olItemEnd
 olEnd
 ulItemEnd
 ulEnd
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 ulBeginTight
 ulItem
 untickedBox
@@ -87,8 +87,8 @@ ulItem
 untickedBox
 ulItemEnd
 ulEndTight
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 ulBeginTight
 ulItem
 halfTickedBox
@@ -100,8 +100,8 @@ ulItem
 halfTickedBox
 ulItemEnd
 ulEndTight
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 ulBeginTight
 ulItem
 tickedBox

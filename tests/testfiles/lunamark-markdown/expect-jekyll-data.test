@@ -85,9 +85,9 @@ interblockSeparator
 codeSpan: jekyllData
 codeSpan: expectJekyllData
 softLineBreak
-interblockSeparator
+paragraphSeparator
 emphasis: multiple
-interblockSeparator
+paragraphSeparator
 jekyllDataBegin
 BEGIN jekyllDataMappingBegin
 - key: null
@@ -95,7 +95,7 @@ BEGIN jekyllDataMappingBegin
 END jekyllDataMappingBegin
 BEGIN jekyllDataString
 - key: abstract
-- value: This is (emphasis: the abstract).(interblockSeparator)It consists of two paragraphs.
+- value: This is (emphasis: the abstract).(paragraphSeparator)It consists of two paragraphs.
 END jekyllDataString
 BEGIN jekyllDataSequenceBegin
 - key: author

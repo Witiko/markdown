@@ -20,11 +20,11 @@ documentBegin
 BEGIN section
 BEGIN section
 headingTwo: Foo
-interblockSeparator
+paragraphSeparator
 END section
 BEGIN section
 headingTwo: Foo
-interblockSeparator
+paragraphSeparator
 END section
 END section
 BEGIN section

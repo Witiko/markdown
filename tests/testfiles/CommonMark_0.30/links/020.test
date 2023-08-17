@@ -19,13 +19,13 @@ BEGIN link
 - URI: #fragment
 - title: 
 END link
-interblockSeparator
+paragraphSeparator
 BEGIN link
 - label: link
 - URI: http://example.com#fragment
 - title: 
 END link
-interblockSeparator
+paragraphSeparator
 BEGIN link
 - label: link
 - URI: http://example.com?foo=3#frag

@@ -18,7 +18,7 @@ documentBegin
 blockQuoteBegin
 emphasis: foo
 blockQuoteEnd
-interblockSeparator
+paragraphSeparator
 blockQuoteBegin
 emphasis: bar
 blockQuoteEnd

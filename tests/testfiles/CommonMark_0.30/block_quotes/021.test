@@ -16,6 +16,6 @@ documentBegin
 blockQuoteBegin
 emphasis: bar
 blockQuoteEnd
-interblockSeparator
+paragraphSeparator
 emphasis: baz
 documentEnd

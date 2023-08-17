@@ -12,8 +12,8 @@ documentBegin
 codeSpan: citations
 softLineBreak
 softLineBreak
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 BEGIN textCites
 BEGIN textCite
 - suppressAuthor: false

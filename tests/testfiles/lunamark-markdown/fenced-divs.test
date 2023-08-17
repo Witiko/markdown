@@ -117,10 +117,10 @@ documentBegin
 codeSpan: fencedDivs
 codeSpan: fencedCode
 softLineBreak
-interblockSeparator
+paragraphSeparator
 softLineBreak
 softLineBreak
-interblockSeparator
+paragraphSeparator
 BEGIN fencedDivAttributeContext
 attributeClassName: myclass
 BEGIN attributeKeyValue
@@ -128,7 +128,7 @@ BEGIN attributeKeyValue
 - value: fr
 END attributeKeyValue
 END fencedDivAttributeContext
-interblockSeparator
+paragraphSeparator
 BEGIN fencedDivAttributeContext
 attributeClassName: level1
 interblockSeparator
@@ -149,7 +149,7 @@ attributeClassName: level3
 END fencedDivAttributeContext
 END fencedDivAttributeContext
 END fencedDivAttributeContext
-interblockSeparator
+paragraphSeparator
 BEGIN fencedDivAttributeContext
 attributeClassName: Warning
 interblockSeparator
@@ -157,7 +157,7 @@ BEGIN fencedDivAttributeContext
 attributeClassName: Danger
 END fencedDivAttributeContext
 END fencedDivAttributeContext
-interblockSeparator
+paragraphSeparator
 BEGIN fencedDivAttributeContext
 attributeClassName: some-classname
 BEGIN fencedDivAttributeContext
@@ -170,7 +170,7 @@ END attributeKeyValue
 END fencedDivAttributeContext
 END fencedDivAttributeContext
 END fencedDivAttributeContext
-interblockSeparator
+paragraphSeparator
 BEGIN fencedDivAttributeContext
 attributeClassName: level1
 interblockSeparator
@@ -181,7 +181,7 @@ attributeClassName: level2-inside-blockquote
 END fencedDivAttributeContext
 blockQuoteEnd
 END fencedDivAttributeContext
-interblockSeparator
+paragraphSeparator
 BEGIN fencedDivAttributeContext
 attributeIdentifier: some-identifier
 interblockSeparator
@@ -190,14 +190,14 @@ interblockSeparator
 blockQuoteEnd
 interblockSeparator
 END fencedDivAttributeContext
-interblockSeparator
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
+paragraphSeparator
 leftBrace
 rightBrace
 softLineBreak
 codeSpan: :::
-interblockSeparator
+paragraphSeparator
 BEGIN fencedDivAttributeContext
 attributeClassName: some-classname
 interblockSeparator
@@ -206,14 +206,14 @@ BEGIN fencedCode
 - infostring: 
 END fencedCode
 END fencedDivAttributeContext
-interblockSeparator
+paragraphSeparator
 BEGIN fencedDivAttributeContext
 attributeIdentifier: another-identifier
 blockQuoteBegin
 softLineBreak
 blockQuoteEnd
 END fencedDivAttributeContext
-interblockSeparator
+paragraphSeparator
 BEGIN fencedDivAttributeContext
 attributeClassName: cit
 BEGIN attributeKeyValue
@@ -222,7 +222,7 @@ BEGIN attributeKeyValue
 END attributeKeyValue
 emphasis: fenced
 END fencedDivAttributeContext
-interblockSeparator
+paragraphSeparator
 BEGIN fencedDivAttributeContext
 attributeClassName: cit
 BEGIN attributeKeyValue
@@ -236,7 +236,7 @@ BEGIN link
 - title: 
 END link
 END fencedDivAttributeContext
-interblockSeparator
+paragraphSeparator
 leftBrace
 rightBrace
 softLineBreak
@@ -245,7 +245,7 @@ BEGIN fencedCode
 - src: ./_markdown_test/e441fcf4a7686817fe868bf38a5c2c07.verbatim
 - infostring: 
 END fencedCode
-interblockSeparator
+paragraphSeparator
 leftBrace
 rightBrace
 softLineBreak

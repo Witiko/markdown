@@ -21,21 +21,21 @@ A level two heading
 documentBegin
 codeSpan: shiftHeadings
 softLineBreak
-interblockSeparator
+paragraphSeparator
 BEGIN section
 headingThree: A level one heading
-interblockSeparator
+paragraphSeparator
 END section
 BEGIN section
 headingThree: A level one heading
-interblockSeparator
+paragraphSeparator
 BEGIN section
 headingFour: A level two heading
-interblockSeparator
+paragraphSeparator
 END section
 BEGIN section
 headingFour: A level two heading
-interblockSeparator
+paragraphSeparator
 BEGIN section
 headingFive: A level three heading
 interblockSeparator

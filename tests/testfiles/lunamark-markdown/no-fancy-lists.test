@@ -36,33 +36,33 @@ Fancy list (*alpha, lower, tight and paren, alpha, lower, tight*)
 >>>
 documentBegin
 codeSpan: fancyLists
-interblockSeparator
+paragraphSeparator
 emphasis: roman, lower
-interblockSeparator
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
+paragraphSeparator
 emphasis: roman, upper, tight
-interblockSeparator
+paragraphSeparator
 softLineBreak
-interblockSeparator
+paragraphSeparator
 emphasis: alpha, lower
-interblockSeparator
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
+paragraphSeparator
 emphasis: alpha, upper, tight
-interblockSeparator
+paragraphSeparator
 softLineBreak
-interblockSeparator
+paragraphSeparator
 emphasis: paren
-interblockSeparator
+paragraphSeparator
 olBegin
 olItemWithNumber: 4
 olItemEnd
 olItemWithNumber: 5
 olItemEnd
 olEnd
-interblockSeparator
+paragraphSeparator
 emphasis: alpha, lower, tight and paren, alpha, lower, tight
-interblockSeparator
+paragraphSeparator
 softLineBreak
 documentEnd

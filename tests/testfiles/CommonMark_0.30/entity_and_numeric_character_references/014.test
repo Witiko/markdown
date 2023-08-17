@@ -13,7 +13,7 @@
 * foo
 >>>
 documentBegin
-interblockSeparator
+paragraphSeparator
 ulBeginTight
 ulItem
 ulItemEnd

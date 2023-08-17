@@ -19,31 +19,31 @@ BEGIN link
 - URI: /url/
 - title: 
 END link
-interblockSeparator
+paragraphSeparator
 BEGIN link
 - label: URL and title
 - URI: /url/
 - title: title
 END link
-interblockSeparator
+paragraphSeparator
 BEGIN link
 - label: URL and title
 - URI: /url/
 - title: title preceded by two spaces
 END link
-interblockSeparator
+paragraphSeparator
 BEGIN link
 - label: URL and title
 - URI: /url/
 - title: title preceded by a tab
 END link
-interblockSeparator
+paragraphSeparator
 BEGIN link
 - label: URL and title
 - URI: /url/
 - title: title has spaces afterward
 END link
-interblockSeparator
+paragraphSeparator
 BEGIN link
 - label: Empty
 - URI: 
