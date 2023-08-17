@@ -230,9 +230,9 @@ class TestResult:
         actual_output_text, = list(actual_output_texts)
 
         with self.testfile.open('wt') as f:
-            print(self.setup_text, file=f)
+            print(self.setup_text, file=f, end='')
             print('<<<', file=f)
-            print(self.input_text, file=f)
+            print(self.input_text, file=f, end='')
             print('>>>', file=f)
             print(actual_output_text, file=f)
 
@@ -542,7 +542,6 @@ def read_testfile(testfile: TestFile) -> ReadTestFile:
     input_part = 'setup'
     with testfile.open('rt') as f:
         for line in f:
-            line = line.rstrip('\r\n')
             if input_part == 'setup' and line.strip() == '<<<':
                 input_part = 'input'
             elif input_part == 'input' and line.strip() == '>>>':
@@ -550,9 +549,9 @@ def read_testfile(testfile: TestFile) -> ReadTestFile:
             else:
                 input_lines[input_part].append(line)
 
-    setup_text = '\n'.join(input_lines['setup'])
-    input_text = '\n'.join(input_lines['input'])
-    expected_output_text = '\n'.join(input_lines['expected_output'])
+    setup_text = ''.join(input_lines['setup'])
+    input_text = ''.join(input_lines['input'])
+    expected_output_text = ''.join(input_lines['expected_output'])
     return ReadTestFile(setup_text, input_text, expected_output_text)
 
 
