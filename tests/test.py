@@ -6,7 +6,7 @@
 from collections import defaultdict
 from difflib import context_diff
 from functools import cache, cached_property
-from itertools import chain
+from itertools import chain, repeat
 import logging
 from logging import getLogger
 from multiprocessing import Pool
@@ -418,7 +418,7 @@ class BatchResult:
         return all(self)
 
     @classmethod
-    def run_test_batch_with_parameters(cls, testfile_batch: TestFileBatch, test_parameters: TestParameters) -> Iterable[TestSubResult]:
+    def run_test_batch_with_parameters(cls, testfile_batch: TestFileBatch, test_parameters: TestParameters) -> 'BatchResult':
         read_testfile_results, tex_format, template, command = test_parameters
 
         # Create a temporary directory.
@@ -484,16 +484,21 @@ class BatchResult:
 
         # Store test batch result.
         batch_result = BatchResult(testfile_batch, test_parameters, temporary_directory, test_process)
-        yield from batch_result
+        return batch_result
 
     @classmethod
-    def run_test_batch(cls, testfile_batch: TestFileBatch) -> List[TestResult]:
+    def run_test_batch(cls, args: Tuple[TestFileBatch, bool]) -> List[TestResult]:
+
+        testfile_batch, fail_fast = args
 
         # Run the test for all different test parameters.
         all_test_subresults_by_parameters: List[List[TestSubResult]] = []
         for test_parameters in get_test_parameters(testfile_batch):
-            subresults = list(cls.run_test_batch_with_parameters(testfile_batch, test_parameters))
+            batch_result = cls.run_test_batch_with_parameters(testfile_batch, test_parameters)
+            subresults = list(batch_result.subresults)
             all_test_subresults_by_parameters.append(subresults)
+            if fail_fast and not batch_result:  # If we want to fail fast, stop after the first failed command.
+                break
 
         # For each testfile in the batch, create a test result
         all_test_subresults_by_testfiles = transpose_rectangle(all_test_subresults_by_parameters)
@@ -661,20 +666,23 @@ def transpose_rectangle(input_list: Iterable[Iterable[T]]) -> List[List[T]]:
     return columns
 
 
-def run_tests(testfiles: Iterable[TestFile]) -> Iterable[TestResult]:
+def run_tests(testfiles: Iterable[TestFile], fail_fast: bool) -> Iterable[TestResult]:
 
     testfile_batches: List[TestFileBatch] = list(chunked(testfiles, TESTFILE_BATCH_SIZE))
     LOGGER.debug(f'The testfiles break down into {len(testfile_batches)} batches')
 
     def get_all_results() -> Iterable[Iterable[TestResult]]:
         if NUM_PROCESSES is None or NUM_PROCESSES > 1:
-            sequential_results = list(map(BatchResult.run_test_batch, testfile_batches[:1]))  # Populate caches with the first batch.
+            first_batch = zip(testfile_batches[:1], repeat(fail_fast))
+            sequential_results = list(map(BatchResult.run_test_batch, first_batch))  # Populate caches with the first batch.
             with Pool(NUM_PROCESSES) as pool:
-                parallel_results = pool.imap(BatchResult.run_test_batch, testfile_batches[1:], chunksize=1)  # Run next batches in parallel.
+                remaining_batches = zip(testfile_batches[1:], repeat(fail_fast))
+                parallel_results = pool.imap(BatchResult.run_test_batch, remaining_batches, chunksize=1)  # Run next batches in parallel.
                 all_results = chain(sequential_results, parallel_results)
                 yield from all_results
         else:
-            all_results = list(map(BatchResult.run_test_batch, testfile_batches))  # If `NUM_PROCESSES` is 1, run all tests sequentially.
+            all_batches = zip(testfile_batches, repeat(fail_fast))
+            all_results = list(map(BatchResult.run_test_batch, all_batches))  # If `NUM_PROCESSES` is 1, run all tests sequentially.
             yield from all_results
 
     all_results = get_all_results()
@@ -706,7 +714,7 @@ def main(testfiles: Iterable[str], update_tests: bool, fail_fast: bool) -> None:
 
     some_tests_failed = False
     results: List[TestResult] = []
-    result_iter = run_tests(testfiles)
+    result_iter = run_tests(testfiles, fail_fast)
     show_progress_bar = LOG_LEVEL >= logging.INFO
     progress_bar = tqdm(result_iter, total=len(testfiles), disable=not show_progress_bar)
     for result in progress_bar:
