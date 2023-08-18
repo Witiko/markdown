@@ -669,6 +669,12 @@ def transpose_rectangle(input_list: Iterable[Iterable[T]]) -> List[List[T]]:
 def run_tests(testfiles: Iterable[TestFile], fail_fast: bool) -> Iterable[TestResult]:
 
     testfile_batch_size = TESTFILE_BATCH_SIZE[fail_fast]
+
+    if fail_fast:
+        LOGGER.info(f'Failing fast and using a smaller batch size ({testfile_batch_size}) to minimize time to first error')
+    else:
+        LOGGER.info(f'Failing slow and using a larger batch size ({testfile_batch_size}) to minimize overall runtime')
+
     testfile_batches: List[TestFileBatch] = list(chunked(testfiles, testfile_batch_size))
     LOGGER.debug(f'The testfiles break down into {len(testfile_batches)} batches')
 
