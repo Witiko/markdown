@@ -234,7 +234,7 @@ class TestResult:
             print('<<<', file=f)
             print(self.input_text, file=f, end='')
             print('>>>', file=f)
-            print(actual_output_text, file=f)
+            print(actual_output_text, file=f, end='')
 
         self.updated_testfile = True
 
@@ -445,13 +445,13 @@ class BatchResult:
 
             # Create testfile-specific support files.
             with (temporary_directory / test_setup_filename).open('wt') as f:
-                print(setup_text, file=f)
+                print(setup_text, file=f, end='')
 
             with (temporary_directory / test_input_filename).open('wt') as f:
-                print(input_text, file=f)
+                print(input_text, file=f, end='')
 
             with (temporary_directory / test_expected_output_filename).open('wt') as f:
-                print(expected_output_text, file=f)
+                print(expected_output_text, file=f, end='')
 
             # Create testfile-specific test file fragments.
             body_text = run_m4(
@@ -552,6 +552,8 @@ def read_testfile(testfile: TestFile) -> ReadTestFile:
     setup_text = ''.join(input_lines['setup'])
     input_text = ''.join(input_lines['input'])
     expected_output_text = ''.join(input_lines['expected_output'])
+    if expected_output_text and not expected_output_text.endswith('\n'):
+        expected_output_text = f'{expected_output_text}\n'
     return ReadTestFile(setup_text, input_text, expected_output_text)
 
 
@@ -565,13 +567,15 @@ def read_test_output_from_tex_log_file(tex_log_file: Path) -> OutputText:
             if not in_test_output and line.strip() == 'TEST INPUT BEGIN':
                 in_test_output = True
             elif in_test_output and line.strip() == 'TEST INPUT END':
-                input_lines.append(''.join(input_line_fragments))
+                input_line = ''.join(input_line_fragments)
+                input_line = f'{input_line}\n'
+                input_lines.append(input_line)
                 input_line_fragments.clear()
                 in_test_output = False
             elif in_test_output:
                 input_line_fragments.append(line)
 
-    output_text = '\n'.join(input_lines)
+    output_text = ''.join(input_lines)
     return output_text
 
 
