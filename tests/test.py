@@ -33,7 +33,7 @@ UPDATE_TESTS: bool = False
 FAIL_FAST: bool = True
 
 NUM_PROCESSES: Optional[int] = None  # None means that all available hyperthreads will be used.
-TESTFILE_BATCH_SIZE: int = 50
+TESTFILE_BATCH_SIZE: Dict[bool, int] = {True: 10, False: 50}  # The batch size depends on whether fail-fast is enabled.
 
 MAX_TESTFILE_NAMES_SHOWN: int = 5
 MAX_TESTFILE_NAMES_SHOWN_COLLAPSED: int = 3
@@ -668,7 +668,8 @@ def transpose_rectangle(input_list: Iterable[Iterable[T]]) -> List[List[T]]:
 
 def run_tests(testfiles: Iterable[TestFile], fail_fast: bool) -> Iterable[TestResult]:
 
-    testfile_batches: List[TestFileBatch] = list(chunked(testfiles, TESTFILE_BATCH_SIZE))
+    testfile_batch_size = TESTFILE_BATCH_SIZE[fail_fast]
+    testfile_batches: List[TestFileBatch] = list(chunked(testfiles, testfile_batch_size))
     LOGGER.debug(f'The testfiles break down into {len(testfile_batches)} batches')
 
     def get_all_results() -> Iterable[Iterable[TestResult]]:
