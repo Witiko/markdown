@@ -33,7 +33,7 @@ UPDATE_TESTS: bool = False
 FAIL_FAST: bool = True
 
 NUM_PROCESSES: Optional[int] = None  # None means that all available hyperthreads will be used.
-TESTFILE_BATCH_SIZE: Dict[bool, int] = {True: 10, False: 50}  # The batch size depends on whether fail-fast is enabled.
+TESTFILE_BATCH_SIZE: Dict[bool, int] = {True: 20, False: 100}  # The batch size depends on whether fail-fast is enabled.
 
 MAX_TESTFILE_NAMES_SHOWN: int = 5
 MAX_TESTFILE_NAMES_SHOWN_COLLAPSED: int = 3
