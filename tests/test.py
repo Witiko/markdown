@@ -215,7 +215,7 @@ class TestResult:
 
         if not self.subresults_exited_successfully:
             self.updated_testfile = False
-            LOGGER.debug(f'Cannot update testfile {self.testfile}, some commands produced non-zero exit codes')
+            LOGGER.debug(f'Cannot update testfile {self.testfile}, some commands produced non-zero exit codes.')
             return
 
         actual_output_texts = set()
@@ -224,7 +224,7 @@ class TestResult:
             actual_output_texts.add(subresult.actual_output_text)
 
         if len(actual_output_texts) > 1:
-            LOGGER.debug(f'Cannot update testfile {self.testfile}, different commands produced different outputs')
+            LOGGER.debug(f'Cannot update testfile {self.testfile}, different commands produced different outputs.')
             return
 
         actual_output_text, = list(actual_output_texts)
@@ -243,6 +243,7 @@ class TestResult:
         result_lines: List[str] = []
         result_lines.append('')
         summaries: Dict[str, List['TestResult']] = defaultdict(lambda: list())
+        results = list(results)
         for result in results:
             if not result.subresults_succeeded:  # Exclude successful tests from the summary.
                 summaries[str(result)].append(result)
@@ -254,6 +255,17 @@ class TestResult:
             for line in summary.splitlines():
                 result_lines.append(f'  {line}')
             result_lines.append('')
+        num_successful = sum(1 if result.subresults_succeeded else 0 for result in results)
+        num_failed = len(results) - num_successful
+        num_updated = sum(1 if result.updated_testfile is True else 0 for result in results)
+        num_not_updated = sum(1 if result.updated_testfile is False else 0 for result in results)
+        result_lines.append('In summary:')
+        result_lines.append(f'- {num_successful} testfiles succeeded.')
+        result_lines.append(f'- {num_failed} testfiles failed.')
+        if num_updated or num_not_updated:
+            result_lines.append(f'- {num_updated} testfiles were successfully updated.')
+            result_lines.append(f'- {num_updated} testfiles not were successfully updated.')
+        result_lines.append('')
         return '\n'.join(result_lines)
 
     def summarize(self) -> str:
@@ -480,7 +492,7 @@ class BatchResult:
             with (temporary_directory / TEST_ACTUAL_OUTPUT_FILENAME).open('wt') as f:
                 print(actual_output_text, file=f)
         except IOError as e:
-            LOGGER.debug(f'Failed to extract test output from log file: {e}')
+            LOGGER.debug(f'Failed to extract test output from log file: {e}.')
 
         # Store test batch result.
         batch_result = BatchResult(testfile_batch, test_parameters, temporary_directory, test_process)
@@ -671,12 +683,12 @@ def run_tests(testfiles: Iterable[TestFile], fail_fast: bool) -> Iterable[TestRe
     testfile_batch_size = TESTFILE_BATCH_SIZE[fail_fast]
 
     if fail_fast:
-        LOGGER.info(f'Failing fast and using a smaller batch size ({testfile_batch_size}) to minimize time to first error')
+        LOGGER.info(f'Failing fast and using a smaller batch size ({testfile_batch_size}) to minimize time to first error.')
     else:
-        LOGGER.info(f'Failing slow and using a larger batch size ({testfile_batch_size}) to minimize overall runtime')
+        LOGGER.info(f'Failing slow and using a larger batch size ({testfile_batch_size}) to minimize overall runtime.')
 
     testfile_batches: List[TestFileBatch] = list(chunked(testfiles, testfile_batch_size))
-    LOGGER.debug(f'The testfiles break down into {len(testfile_batches)} batches')
+    LOGGER.debug(f'The testfiles break down into {len(testfile_batches)} batches.')
 
     def get_all_results() -> Iterable[Iterable[TestResult]]:
         if NUM_PROCESSES is None or NUM_PROCESSES > 1:
@@ -717,7 +729,7 @@ def main(testfiles: Iterable[str], update_tests: bool, fail_fast: bool) -> None:
     # Run tests.
     testfiles: List[TestFile] = sorted(map(Path, testfiles))
     plural = 's' if len(testfiles) > 1 else ''
-    LOGGER.info(f'Running tests for {len(testfiles)} testfile{plural}')
+    LOGGER.info(f'Running tests for {len(testfiles)} testfile{plural}.')
 
     some_tests_failed = False
     results: List[TestResult] = []
