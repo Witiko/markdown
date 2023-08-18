@@ -100,7 +100,7 @@ jobs:
       - luacheck
       - markdownlint
       - pytype
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     strategy:
       fail-fast: true
       matrix:
