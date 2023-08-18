@@ -705,9 +705,7 @@ def run_tests(testfiles: Iterable[TestFile], fail_fast: bool) -> Iterable[TestRe
             yield from all_results
 
     all_results = get_all_results()
-    for results in all_results:
-        for result in results:
-            yield result
+    return (result for results in all_results for result in results)
 
 
 # Command-line interface
