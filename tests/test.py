@@ -685,9 +685,9 @@ def run_tests(testfiles: Iterable[TestFile], fail_fast: bool) -> Iterable[TestRe
     testfile_batch_size = TESTFILE_BATCH_SIZE[fail_fast]
 
     if fail_fast:
-        LOGGER.info(f'Failing fast and using a smaller batch size ({testfile_batch_size}) to minimize time to first error.')
+        LOGGER.info(f'Will fail at first error. Using a smaller batch size ({testfile_batch_size}) to minimize time to first error.')
     else:
-        LOGGER.info(f'Failing slowly and using a larger batch size ({testfile_batch_size}) to minimize overall runtime.')
+        LOGGER.info(f'Will run all tests despite errors. Using a larger batch size ({testfile_batch_size}) to minimize overall runtime.')
 
     testfiles: List[TestFile] = list(testfiles)
     num_batches = int(ceil(len(testfiles) / testfile_batch_size))
