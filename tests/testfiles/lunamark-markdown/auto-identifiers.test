@@ -1,5 +1,8 @@
+\def\markdownOptionAutoIdentifiers{true}
+\def\markdownOptionHeaderAttributes{true}
 <<<
-This test ensures that the Lua `autoIdentifiers` option is enabled by default.
+This test ensures that the Lua `autoIdentifiers` and `headerAttributes` options
+correctly propagate through the plain TeX interface.
 
 Non-alphanumeric characters besides _-. are ignored:
 
@@ -20,26 +23,54 @@ b
 c
 =
 
-If no content remains, the default identifier section is assigned:
+If no content remains, the default identifier "section" is assigned:
 
 # 123
 
 If the same identifier is created, the new one is distinguished by an index.
 
-This is just "a".
+This is just "a":
 
 # a
 
-This is "a-2".
+This is "a-2":
 
 # a
 
-This is "a-3".
+This is "a-3":
 
 # a
+
+This heading already has an id:
+
+# abc {#id}
+
+So does this one:
+
+a
+b
+c {#id}
+=
+
+An auto identifier must be unique even regarding explicit indentifiers, 
+although duplicate explicit identifiers count only once:
+
+# a {#one}
+
+# a {#one}
+
+This, therefore, only gets "one-1", not "one-2":
+
+# one
+
+Unicode is supported:
+
+# ěščřžýáíé
 >>>
 documentBegin
 codeSpan: autoIdentifiers
+codeSpan: headerAttributes
+softLineBreak
 interblockSeparator
 underscore
 interblockSeparator
@@ -94,6 +125,14 @@ interblockSeparator
 END section
 BEGIN section
 BEGIN headerAttributeContext
+attributeIdentifier: a-1
+headingOne: a
+END headerAttributeContext
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
 attributeIdentifier: a-2
 headingOne: a
 END headerAttributeContext
@@ -102,8 +141,48 @@ interblockSeparator
 END section
 BEGIN section
 BEGIN headerAttributeContext
-attributeIdentifier: a-3
+attributeIdentifier: id
+headingOne: abc
+END headerAttributeContext
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: id
+headingOne: a(softLineBreak)b(softLineBreak)c
+END headerAttributeContext
+interblockSeparator
+softLineBreak
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: one
 headingOne: a
+END headerAttributeContext
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: one
+headingOne: a
+END headerAttributeContext
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: one-1
+headingOne: one
+END headerAttributeContext
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: ěščřžýáíé
+headingOne: ěščřžýáíé
 END headerAttributeContext
 END section
 documentEnd
