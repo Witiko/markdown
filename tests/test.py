@@ -685,9 +685,11 @@ def run_tests(testfiles: Iterable[TestFile], fail_fast: bool) -> Iterable[TestRe
     testfile_batch_size = TESTFILE_BATCH_SIZE[fail_fast]
 
     if fail_fast:
-        LOGGER.info(f'Will fail at first error. Using a smaller batch size ({testfile_batch_size}) to minimize time to first error.')
+        LOGGER.info('Will fail at first error.')
+        LOGGER.debug(f'Using a smaller batch size ({testfile_batch_size}) to minimize time to first error.')
     else:
-        LOGGER.info(f'Will run all tests despite errors. Using a larger batch size ({testfile_batch_size}) to minimize overall runtime.')
+        LOGGER.info('Will run all tests despite errors.')
+        LOGGER.debug(f'Using a larger batch size ({testfile_batch_size}) to minimize overall runtime.')
 
     testfiles: List[TestFile] = list(testfiles)
     num_batches = int(ceil(len(testfiles) / testfile_batch_size))
@@ -696,7 +698,7 @@ def run_tests(testfiles: Iterable[TestFile], fail_fast: bool) -> Iterable[TestRe
         testfile_batch_size = int(ceil(len(testfiles) / (NUM_PROCESSES + 1)))
         num_batches = int(ceil(len(testfiles) / testfile_batch_size))
         assert num_batches - 1 == NUM_PROCESSES
-        LOGGER.info(f'Reducing batch size to {testfile_batch_size} in order to fully utilize {NUM_PROCESSES} hyperthreads.')
+        LOGGER.debug(f'Reducing batch size to {testfile_batch_size} in order to fully utilize {NUM_PROCESSES} hyperthreads.')
 
     testfile_batches: List[TestFileBatch] = list(chunked(testfiles, testfile_batch_size))
     assert len(testfile_batches) == num_batches
