@@ -9,7 +9,8 @@ from functools import cache, cached_property
 from itertools import chain, repeat
 import logging
 from logging import getLogger
-from multiprocessing import Pool
+from math import ceil
+from multiprocessing import Pool, cpu_count
 from pathlib import Path
 from typing import Dict, Iterable, Iterator, List, NamedTuple, Optional, Set, Tuple, TypeVar
 from shutil import copyfile, rmtree
@@ -32,7 +33,7 @@ LOG_LEVEL: int = logging.INFO
 UPDATE_TESTS: bool = False
 FAIL_FAST: bool = True
 
-NUM_PROCESSES: Optional[int] = None  # None means that all available hyperthreads will be used.
+NUM_PROCESSES: int = cpu_count()
 TESTFILE_BATCH_SIZE: Dict[bool, int] = {True: 20, False: 100}  # The batch size depends on whether fail-fast is enabled.
 
 MAX_TESTFILE_NAMES_SHOWN: int = 5
@@ -688,11 +689,21 @@ def run_tests(testfiles: Iterable[TestFile], fail_fast: bool) -> Iterable[TestRe
     else:
         LOGGER.info(f'Failing slow and using a larger batch size ({testfile_batch_size}) to minimize overall runtime.')
 
+    testfiles: List[TestFile] = list(testfiles)
+    num_batches = int(ceil(len(testfiles) / testfile_batch_size))
+
+    if num_batches > 1 and num_batches - 1 < NUM_PROCESSES:
+        testfile_batch_size = int(ceil(len(testfiles) / (NUM_PROCESSES + 1)))
+        num_batches = int(ceil(len(testfiles) / testfile_batch_size))
+        assert num_batches - 1 == NUM_PROCESSES
+        LOGGER.info(f'Reducing batch size to {testfile_batch_size} in order to fully utilize {NUM_PROCESSES} hyperthreads.')
+
     testfile_batches: List[TestFileBatch] = list(chunked(testfiles, testfile_batch_size))
+    assert len(testfile_batches) == num_batches
     LOGGER.debug(f'The testfiles break down into {len(testfile_batches)} batches.')
 
     def get_all_results() -> Iterable[Iterable[TestResult]]:
-        if NUM_PROCESSES is None or NUM_PROCESSES > 1:
+        if NUM_PROCESSES > 1:
             first_batch = zip(testfile_batches[:1], repeat(fail_fast))
             sequential_results = list(map(BatchResult.run_test_batch, first_batch))  # Populate caches with the first batch.
             with Pool(NUM_PROCESSES) as pool:
