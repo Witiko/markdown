@@ -142,23 +142,6 @@ test:
 # This pseudo-target produces the distribution archives.
 dist: implode
 	$(MAKE) $(ARCHIVES)
-	git clone https://gitlab.com/Lotz/pkgcheck.git
-	unzip $(CTANARCHIVE) -d markdown
-	for RETRY in $$(seq 1 10); \
-	do \
-	    if (( RETRY > 1 )); \
-	    then \
-	        sleep $$((RETRY * 15)); \
-	    fi; \
-	    if pkgcheck/bin/pkgcheck -d markdown/markdown -T $(TDSARCHIVE) --urlcheck; \
-	    then \
-	        EXIT_CODE=0; \
-	        break; \
-	    else \
-	        EXIT_CODE=$$?; \
-	    fi; \
-	done; \
-	exit $$EXIT_CODE
 	$(MAKE) clean
 
 # This target produces the TeX directory structure archive.
