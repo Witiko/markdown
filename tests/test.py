@@ -212,7 +212,7 @@ class TestResult:
 
     def try_to_update_testfile(self) -> None:
         assert self.updated_testfile is None  # Make sure that we don't run this method twice
-        assert not self.subresults_succeeded  # Make sure that an update is needed
+        assert not self  # Make sure that an update is needed
 
         if not self.subresults_exited_successfully:
             self.updated_testfile = False
@@ -246,7 +246,7 @@ class TestResult:
         summaries: Dict[str, List['TestResult']] = defaultdict(lambda: list())
         results = list(results)
         for result in results:
-            if not result.subresults_succeeded:  # Exclude successful tests from the summary.
+            if not result:  # Exclude successful tests from the summary.
                 summaries[str(result)].append(result)
         for summary, results in sorted(summaries.items(), key=lambda x: x[0]):
             plural = 's' if len(results) > 1 else ''
@@ -256,7 +256,7 @@ class TestResult:
             for line in summary.splitlines():
                 result_lines.append(f'  {line}')
             result_lines.append('')
-        num_successful = sum(1 if result.subresults_succeeded else 0 for result in results)
+        num_successful = sum(1 if result else 0 for result in results)
         num_failed = len(results) - num_successful
         num_updated = sum(1 if result.updated_testfile is True else 0 for result in results)
         num_not_updated = sum(1 if result.updated_testfile is False else 0 for result in results)
@@ -284,7 +284,7 @@ class TestResult:
 
     def __str__(self) -> str:
         result_lines: List[str] = []
-        if self.subresults_succeeded:
+        if self:
             result_lines.append('Success')
         else:
             if not self.subresults_exited_successfully:
@@ -356,7 +356,7 @@ class TestResult:
         return iter(self.subresults)
 
     def __bool__(self) -> bool:
-        return self.updated_testfile or self.subresults_succeeded
+        return self.subresults_succeeded
 
 
 class BatchResult:
@@ -759,12 +759,12 @@ def main(testfiles: Iterable[str], update_tests: Optional[bool], fail_fast: Opti
     for result in progress_bar:
         if not result:
             some_tests_failed = True
-        if not result and update_tests:
-            result.try_to_update_testfile()
-        if not result and fail_fast:  # If `result.try_to_update_testfile()` succeeds, this will not trigger because `bool(result)` is True.
-            progress_bar.close()
-            print(result.summarize(), file=sys.stderr)
-            sys.exit(1)
+            if update_tests:
+                result.try_to_update_testfile()
+            if fail_fast:
+                progress_bar.close()
+                print(result.summarize(), file=sys.stderr)
+                sys.exit(1)
         results.append(result)
 
     # Summarize results.
