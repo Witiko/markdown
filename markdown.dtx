@@ -23953,26 +23953,40 @@ function M.writer.new(options)
 % \par
 % \begin{markdown}
 %
-% Define \luamdef{writer->heading} as a function that will transform an
-% input heading `s` at level `level` with attributes `attributes` to the
-% output format.
+% Register the heading identifier `identifier` in the table `heading_identifiers`.
+% Additionally, increment its count if it is an auto identifier.
 %
 % \end{markdown}
 %  \begin{macrocode}
 
 local heading_identifiers = {}
 
-local function register_heading_identifier(identifier)
+local function register_heading_identifier(identifier, count_when_found)
   for i=1, #heading_identifiers do
     local id_item = heading_identifiers[i]
     if id_item.value == identifier then
-      id_item.count = id_item.count + 1
-      return id_item.value .. "-" .. tostring(id_item.count)
+      if count_when_found then
+        local new_indentifier = id_item.value .. "-" .. tostring(id_item.count)
+        id_item.count = id_item.count + 1
+        return new_indentifier
+      else
+        return id_item.value
+      end
     end
   end
+
+  -- identifier not yet registered
   table.insert(heading_identifiers, {value = identifier, count = 1})
   return identifier
 end
+
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Create an auto identifier string by stripping and converting characters from string `s`.
+%
+% \end{markdown}
+%  \begin{macrocode}
 
 local function create_heading_identifier(s)
   -- Step 1: Remove all non-alphanumeric characters, except underscores, hyphens, and periods 
@@ -23995,6 +24009,14 @@ local function create_heading_identifier(s)
   return step_5
 end
 
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Create an gfm auto identifier string by stripping and converting characters from string `s`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+
 local function create_gfm_heading_identifier(s)
   -- Step 1: Remove all non-alphanumeric characters, except underscores and hyphens.
   local step_1 = s:gsub("[^%w_%-%s]", "")
@@ -24011,6 +24033,17 @@ local function create_gfm_heading_identifier(s)
 
   return step_4
 end
+
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define \luamdef{writer->heading} as a function that will transform an
+% input heading `s` at level `level` with attributes `attributes` to the
+% output format.
+%
+% \end{markdown}
+%  \begin{macrocode}
 
   local current_heading_level = 0
   function self.heading(t, level, attributes)
@@ -24057,41 +24090,34 @@ end
       table.insert(buf, "\\markdownRendererHeaderAttributeContextBegin\n")
     end
 
-    local has_id
-    local key_value_regex = "([^= ]+)%s*=%s*(.*)"
-    local key
-    -- check if an id is already present
-    if self.is_writing and has_attributes then 
-      for _, attribute in ipairs(attributes) do
-        if attribute:sub(1, 1) == "#" then
-          has_id = true
-          break
-        else
-          key = attribute:match(key_value_regex)
-          if key and key:lower() == "id" then
-            has_id = true
-            break
-          end
-        end
-      end
-    end
-
-    local attr = {}
+    local has_id_attributes = {}
     -- resolve the heading attributes
     if self.is_writing and has_attributes then
-      attr = self.attributes(attributes)
+      has_id_attributes = self.attributes(attributes)
+    end
+
+    local has_id = false
+    for _, str in ipairs(has_id_attributes) do
+      if string.match(str[1], "^\\markdownRendererAttributeIdentifier") then
+        has_id = true
+        local registered_identifier = register_heading_identifier(str[2], false)
+        str[2] = registered_identifier
+      end
     end
 
     -- add auto identifier
     if self.is_writing and has_auto_identifier and not has_id then
       local identifier = (options.gfmAutoIdentifiers and create_gfm_heading_identifier
                           or create_heading_identifier)(raw_string)
-      table.insert(attr, 1, {"\\markdownRendererAttributeIdentifier{", register_heading_identifier(identifier), "}"})
+      local registered_identifier = register_heading_identifier(identifier, true)
+      table.insert(attributes, 1, "#"..registered_identifier)
     end
+
+    local final_attributes = has_id and has_id_attributes or self.attributes(attributes)
 
     -- add the heading attributes
     if self.is_writing and (has_attributes or has_auto_identifier) then
-      table.insert(buf, attr)
+      table.insert(buf, final_attributes)
     end
 
     local cmd
