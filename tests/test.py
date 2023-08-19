@@ -748,6 +748,8 @@ def main(testfiles: Iterable[str], update_tests: Optional[bool], fail_fast: Opti
     testfiles: List[TestFile] = sorted(map(Path, testfiles))
     plural = 's' if len(testfiles) > 1 else ''
     LOGGER.info(f'Running tests for {len(testfiles)} testfile{plural}.')
+    if update_tests:
+        LOGGER.info('Updating testfiles at any error.')
 
     some_tests_failed = False
     results: List[TestResult] = []
