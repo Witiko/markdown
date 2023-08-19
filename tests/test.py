@@ -6,10 +6,11 @@
 from collections import defaultdict
 from difflib import context_diff
 from functools import cache, cached_property
-from itertools import chain
+from itertools import chain, repeat
 import logging
 from logging import getLogger
-from multiprocessing import Pool
+from math import ceil
+from multiprocessing import Pool, cpu_count
 from pathlib import Path
 from typing import Dict, Iterable, Iterator, List, NamedTuple, Optional, Set, Tuple, TypeVar
 from shutil import copyfile, rmtree
@@ -32,8 +33,8 @@ LOG_LEVEL: int = logging.INFO
 UPDATE_TESTS: bool = False
 FAIL_FAST: bool = True
 
-NUM_PROCESSES: Optional[int] = None  # None means that all available hyperthreads will be used.
-TESTFILE_BATCH_SIZE: int = 50
+NUM_PROCESSES: int = cpu_count()
+TESTFILE_BATCH_SIZE: Dict[bool, int] = {True: 20, False: 100}  # The batch size depends on whether fail-fast is enabled.
 
 MAX_TESTFILE_NAMES_SHOWN: int = 5
 MAX_TESTFILE_NAMES_SHOWN_COLLAPSED: int = 3
@@ -211,11 +212,11 @@ class TestResult:
 
     def try_to_update_testfile(self) -> None:
         assert self.updated_testfile is None  # Make sure that we don't run this method twice
-        assert not self.subresults_succeeded  # Make sure that an update is needed
+        assert not self  # Make sure that an update is needed
 
         if not self.subresults_exited_successfully:
             self.updated_testfile = False
-            LOGGER.debug(f'Cannot update testfile {self.testfile}, some commands produced non-zero exit codes')
+            LOGGER.debug(f'Cannot update testfile {self.testfile}, some commands produced non-zero exit codes.')
             return
 
         actual_output_texts = set()
@@ -224,7 +225,7 @@ class TestResult:
             actual_output_texts.add(subresult.actual_output_text)
 
         if len(actual_output_texts) > 1:
-            LOGGER.debug(f'Cannot update testfile {self.testfile}, different commands produced different outputs')
+            LOGGER.debug(f'Cannot update testfile {self.testfile}, different commands produced different outputs.')
             return
 
         actual_output_text, = list(actual_output_texts)
@@ -243,8 +244,9 @@ class TestResult:
         result_lines: List[str] = []
         result_lines.append('')
         summaries: Dict[str, List['TestResult']] = defaultdict(lambda: list())
+        results = list(results)
         for result in results:
-            if not result.subresults_succeeded:  # Exclude successful tests from the summary.
+            if not result:  # Exclude successful tests from the summary.
                 summaries[str(result)].append(result)
         for summary, results in sorted(summaries.items(), key=lambda x: x[0]):
             plural = 's' if len(results) > 1 else ''
@@ -254,6 +256,18 @@ class TestResult:
             for line in summary.splitlines():
                 result_lines.append(f'  {line}')
             result_lines.append('')
+        num_successful = sum(1 if result else 0 for result in results)
+        num_failed = len(results) - num_successful
+        num_updated = sum(1 if result.updated_testfile is True else 0 for result in results)
+        num_not_updated = sum(1 if result.updated_testfile is False else 0 for result in results)
+        result_lines.append('In summary:')
+        result_lines.append(f'- {num_successful} testfiles succeeded.')
+        result_lines.append(f'- {num_failed} testfiles failed.')
+        if num_updated or num_not_updated:
+            result_lines.append(f'- {num_updated} testfiles were successfully updated.')
+            if num_not_updated:
+                result_lines.append(f'- {num_updated} testfiles not were successfully updated.')
+        result_lines.append('')
         return '\n'.join(result_lines)
 
     def summarize(self) -> str:
@@ -270,7 +284,7 @@ class TestResult:
 
     def __str__(self) -> str:
         result_lines: List[str] = []
-        if self.subresults_succeeded:
+        if self:
             result_lines.append('Success')
         else:
             if not self.subresults_exited_successfully:
@@ -342,7 +356,7 @@ class TestResult:
         return iter(self.subresults)
 
     def __bool__(self) -> bool:
-        return self.updated_testfile or self.subresults_succeeded
+        return self.subresults_succeeded
 
 
 class BatchResult:
@@ -418,7 +432,7 @@ class BatchResult:
         return all(self)
 
     @classmethod
-    def run_test_batch_with_parameters(cls, testfile_batch: TestFileBatch, test_parameters: TestParameters) -> Iterable[TestSubResult]:
+    def run_test_batch_with_parameters(cls, testfile_batch: TestFileBatch, test_parameters: TestParameters) -> 'BatchResult':
         read_testfile_results, tex_format, template, command = test_parameters
 
         # Create a temporary directory.
@@ -480,20 +494,25 @@ class BatchResult:
             with (temporary_directory / TEST_ACTUAL_OUTPUT_FILENAME).open('wt') as f:
                 print(actual_output_text, file=f)
         except IOError as e:
-            LOGGER.debug(f'Failed to extract test output from log file: {e}')
+            LOGGER.debug(f'Failed to extract test output from log file: {e}.')
 
         # Store test batch result.
         batch_result = BatchResult(testfile_batch, test_parameters, temporary_directory, test_process)
-        yield from batch_result
+        return batch_result
 
     @classmethod
-    def run_test_batch(cls, testfile_batch: TestFileBatch) -> List[TestResult]:
+    def run_test_batch(cls, args: Tuple[TestFileBatch, bool]) -> List[TestResult]:
+
+        testfile_batch, fail_fast = args
 
         # Run the test for all different test parameters.
         all_test_subresults_by_parameters: List[List[TestSubResult]] = []
         for test_parameters in get_test_parameters(testfile_batch):
-            subresults = list(cls.run_test_batch_with_parameters(testfile_batch, test_parameters))
+            batch_result = cls.run_test_batch_with_parameters(testfile_batch, test_parameters)
+            subresults = list(batch_result.subresults)
             all_test_subresults_by_parameters.append(subresults)
+            if fail_fast and not batch_result:  # If we want to fail fast, stop after the first failed command.
+                break
 
         # For each testfile in the batch, create a test result
         all_test_subresults_by_testfiles = transpose_rectangle(all_test_subresults_by_parameters)
@@ -661,26 +680,46 @@ def transpose_rectangle(input_list: Iterable[Iterable[T]]) -> List[List[T]]:
     return columns
 
 
-def run_tests(testfiles: Iterable[TestFile]) -> Iterable[TestResult]:
+def run_tests(testfiles: Iterable[TestFile], fail_fast: bool) -> Iterable[TestResult]:
 
-    testfile_batches: List[TestFileBatch] = list(chunked(testfiles, TESTFILE_BATCH_SIZE))
-    LOGGER.debug(f'The testfiles break down into {len(testfile_batches)} batches')
+    testfile_batch_size = TESTFILE_BATCH_SIZE[fail_fast]
+
+    if fail_fast:
+        LOGGER.info('Will fail at first error.')
+        LOGGER.debug(f'Using a smaller batch size ({testfile_batch_size}) to minimize time to first error.')
+    else:
+        LOGGER.info('Will run all tests despite errors.')
+        LOGGER.debug(f'Using a larger batch size ({testfile_batch_size}) to minimize overall runtime.')
+
+    testfiles: List[TestFile] = list(testfiles)
+    num_batches = int(ceil(len(testfiles) / testfile_batch_size))
+
+    if num_batches > 1 and num_batches - 1 < NUM_PROCESSES:
+        testfile_batch_size = int(ceil(len(testfiles) / (NUM_PROCESSES + 1)))
+        num_batches = int(ceil(len(testfiles) / testfile_batch_size))
+        assert num_batches - 1 == NUM_PROCESSES
+        LOGGER.debug(f'Reducing batch size to {testfile_batch_size} in order to fully utilize {NUM_PROCESSES} hyperthreads.')
+
+    testfile_batches: List[TestFileBatch] = list(chunked(testfiles, testfile_batch_size))
+    assert len(testfile_batches) == num_batches
+    LOGGER.debug(f'The testfiles break down into {len(testfile_batches)} batches.')
 
     def get_all_results() -> Iterable[Iterable[TestResult]]:
-        if NUM_PROCESSES is None or NUM_PROCESSES > 1:
-            sequential_results = list(map(BatchResult.run_test_batch, testfile_batches[:1]))  # Populate caches with the first batch.
+        if NUM_PROCESSES > 1:
+            first_batch = zip(testfile_batches[:1], repeat(fail_fast))
+            sequential_results = list(map(BatchResult.run_test_batch, first_batch))  # Populate caches with the first batch.
             with Pool(NUM_PROCESSES) as pool:
-                parallel_results = pool.imap(BatchResult.run_test_batch, testfile_batches[1:], chunksize=1)  # Run next batches in parallel.
+                remaining_batches = zip(testfile_batches[1:], repeat(fail_fast))
+                parallel_results = pool.imap(BatchResult.run_test_batch, remaining_batches, chunksize=1)  # Run next batches in parallel.
                 all_results = chain(sequential_results, parallel_results)
                 yield from all_results
         else:
-            all_results = list(map(BatchResult.run_test_batch, testfile_batches))  # If `NUM_PROCESSES` is 1, run all tests sequentially.
+            all_batches = zip(testfile_batches, repeat(fail_fast))
+            all_results = list(map(BatchResult.run_test_batch, all_batches))  # If `NUM_PROCESSES` is 1, run all tests sequentially.
             yield from all_results
 
     all_results = get_all_results()
-    for results in all_results:
-        for result in results:
-            yield result
+    return (result for results in all_results for result in results)
 
 
 # Command-line interface
@@ -692,32 +731,42 @@ def run_tests(testfiles: Iterable[TestFile]) -> Iterable[TestResult]:
 @click.option('--update-tests/--no-update-tests',
               help='Update testfiles with unexpected results',
               is_flag=True,
-              default=UPDATE_TESTS)
+              default=None)
 @click.option('--fail-fast/--no-fail-fast',
               help='When a test fails, stop immediately',
               is_flag=True,
-              default=FAIL_FAST)
-def main(testfiles: Iterable[str], update_tests: bool, fail_fast: bool) -> None:
+              default=None)
+def main(testfiles: Iterable[str], update_tests: Optional[bool], fail_fast: Optional[bool]) -> None:
+
+    # Process options.
+    if update_tests is None:
+        update_tests = UPDATE_TESTS
+    if fail_fast is None:
+        fail_fast = False if update_tests else FAIL_FAST
+    if update_tests and fail_fast:
+        raise ValueError('Options --fail-fast and --update-tests are mutually exclusive')
 
     # Run tests.
     testfiles: List[TestFile] = sorted(map(Path, testfiles))
     plural = 's' if len(testfiles) > 1 else ''
-    LOGGER.info(f'Running tests for {len(testfiles)} testfile{plural}')
+    LOGGER.info(f'Running tests for {len(testfiles)} testfile{plural}.')
+    if update_tests:
+        LOGGER.info('Updating testfiles at any error.')
 
     some_tests_failed = False
     results: List[TestResult] = []
-    result_iter = run_tests(testfiles)
+    result_iter = run_tests(testfiles, fail_fast)
     show_progress_bar = LOG_LEVEL >= logging.INFO
     progress_bar = tqdm(result_iter, total=len(testfiles), disable=not show_progress_bar)
     for result in progress_bar:
         if not result:
             some_tests_failed = True
-        if not result and update_tests:
-            result.try_to_update_testfile()
-        if not result and fail_fast:  # If `result.try_to_update_testfile()` succeeds, this will not trigger because `bool(result)` is True.
-            progress_bar.close()
-            print(result.summarize(), file=sys.stderr)
-            sys.exit(1)
+            if update_tests:
+                result.try_to_update_testfile()
+            if fail_fast:
+                progress_bar.close()
+                print(result.summarize(), file=sys.stderr)
+                sys.exit(1)
         results.append(result)
 
     # Summarize results.

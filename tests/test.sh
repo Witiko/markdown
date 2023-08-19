@@ -6,7 +6,7 @@ set -o errexit
 # Create a Python virtual environment.
 if [ ! -d test-virtualenv ]
 then
-  echo Creating a Python virtual environment in "$PWD"/test-virtualenv
+  echo Creating a Python virtual environment in "$PWD"/test-virtualenv.
   trap 'rm -rf test-virtualenv' EXIT
   chronic python3 -m venv test-virtualenv
   source test-virtualenv/bin/activate
