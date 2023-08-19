@@ -264,7 +264,8 @@ class TestResult:
         result_lines.append(f'- {num_failed} testfiles failed.')
         if num_updated or num_not_updated:
             result_lines.append(f'- {num_updated} testfiles were successfully updated.')
-            result_lines.append(f'- {num_updated} testfiles not were successfully updated.')
+            if num_not_updated:
+                result_lines.append(f'- {num_updated} testfiles not were successfully updated.')
         result_lines.append('')
         return '\n'.join(result_lines)
 
