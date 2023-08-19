@@ -729,12 +729,20 @@ def run_tests(testfiles: Iterable[TestFile], fail_fast: bool) -> Iterable[TestRe
 @click.option('--update-tests/--no-update-tests',
               help='Update testfiles with unexpected results',
               is_flag=True,
-              default=UPDATE_TESTS)
+              default=None)
 @click.option('--fail-fast/--no-fail-fast',
               help='When a test fails, stop immediately',
               is_flag=True,
-              default=FAIL_FAST)
-def main(testfiles: Iterable[str], update_tests: bool, fail_fast: bool) -> None:
+              default=None)
+def main(testfiles: Iterable[str], update_tests: Optional[bool], fail_fast: Optional[bool]) -> None:
+
+    # Process options.
+    if update_tests is None:
+        update_tests = UPDATE_TESTS
+    if fail_fast is None:
+        fail_fast = False if update_tests else FAIL_FAST
+    if update_tests and fail_fast:
+        raise ValueError('Options --fail-fast and --update-tests are mutually exclusive')
 
     # Run tests.
     testfiles: List[TestFile] = sorted(map(Path, testfiles))
