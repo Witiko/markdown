@@ -93,20 +93,23 @@ jobs:
           pip install pytype
       - name: Run Pytype
         run: pytype tests/test.py
-  test-and-publish:
-    name: Test and publish
+  build-docker-image:
+    name: Build Docker image
     needs:
       - shellcheck
       - luacheck
       - markdownlint
       - pytype
-    runs-on: ubuntu-latest
     strategy:
       fail-fast: true
       matrix:
         texlive:
           - TL2022-historic
           - latest
+    outputs:
+      TL2022-historic: ${{ steps.temporary-tags.outputs.TL2022-historic }}
+      latest: ${{ steps.temporary-tags.outputs.latest }}
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -115,19 +118,71 @@ jobs:
           submodules: true
       - name: Build Docker image
         run: make docker-image TEXLIVE_TAG=${{ matrix.texlive }}
-      - name: Fix ownership of repository
-        run: docker run --rm -v "$PWD":/git-repo -w /git-repo witiko/markdown:${{ matrix.texlive }} chown -R root:root /git-repo
+      - name: Authenticate Docker registry
+        uses: azure/docker-login@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      - name: Publish Docker image with a temporary tag
+        run: make docker-push-temporary-tag TEXLIVE_TAG=${{ matrix.texlive }}
+      - name: Store the temporary tag
+        id: temporary-tags
+        run: |
+          TEMPORARY_TAG="$(make docker-print-temporary-tag TEXLIVE_TAG=${{ matrix.texlive }})"
+          echo "${{ matrix.texlive }}=$TEMPORARY_TAG" >> $GITHUB_OUTPUT
+  test:
+    name: Test Docker image
+    needs:
+      - build-docker-image
+    strategy:
+      fail-fast: true
+      matrix:
+        texlive:
+          - TL2022-historic
+          - latest
+    runs-on: ubuntu-latest  # TODO: Replace with self-hosted.
+    container:
+      image: witiko/markdown:${{ needs.build-docker-image.outputs[matrix.texlive] }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          submodules: true
       - name: Test Lua command-line interface
         run: |
-          RESULT="$(printf '%s\n' 'Hello *Markdown*! $a_x + b_x = c_x$' |
-                    docker run --rm -i witiko/markdown:${{ matrix.texlive }} markdown-cli hybrid=true underscores=false |
-                    tee /dev/stderr)"
+          RESULT="$(printf '%s\n' 'Hello *Markdown*! $a_x + b_x = c_x$' | markdown-cli hybrid=true underscores=false | tee /dev/stderr)"
           test "$RESULT" = '\markdownRendererDocumentBegin'$'\n''Hello \markdownRendererEmphasis{Markdown}! $a_x + b_x = c_x$\markdownRendererDocumentEnd'
       - name: Run unit tests
-        run: docker run --rm -v "$PWD":/git-repo -w /git-repo witiko/markdown:${{ matrix.texlive }} make FAIL_FAST=${{ github.ref != 'refs/heads/main' }} test
+        run: make FAIL_FAST=${{ github.ref != 'refs/heads/main' }} test
+  publish:
+    name: Publish Docker image and artefacts
+    needs:
+      - build-docker-image
+      - test
+    strategy:
+      fail-fast: true
+      matrix:
+        texlive:
+          - TL2022-historic
+          - latest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          submodules: true
+      - name: Fix ownership of repository
+        if: matrix.texlive == 'latest'
+        run: |
+          DOCKER_IMAGE=witiko/markdown:${{ needs.build-docker-image.outputs[matrix.texlive] }}
+          docker run --rm -v "$PWD":/git-repo -w /git-repo "$DOCKER_IMAGE" chown -R root:root /git-repo
       - name: Build distribution archives
         if: matrix.texlive == 'latest'
-        run: docker run --rm -v "$PWD":/git-repo -w /git-repo witiko/markdown:${{ matrix.texlive }} make dist gh-pages
+        run: |
+          DOCKER_IMAGE=witiko/markdown:${{ needs.build-docker-image.outputs[matrix.texlive] }}
+          docker run --rm -v "$PWD":/git-repo -w /git-repo "$DOCKER_IMAGE" make dist gh-pages
       - name: Upload artifact markdown.tds.zip
         if: matrix.texlive == 'latest'
         uses: actions/upload-artifact@v2
@@ -173,7 +228,7 @@ jobs:
             markdown.ctan.zip
             markdown.zip
             markdown.pdf
-      - name: Authenticate registry
+      - name: Authenticate Docker registry
         if: github.ref == 'refs/heads/main'
         uses: azure/docker-login@v1
         with:
@@ -181,11 +236,11 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
       - name: Publish Docker image
         if: github.ref == 'refs/heads/main'
-        run: docker push witiko/markdown --all-tags
+        run: make docker-push-release-tag TEXLIVE_TAG=${{ matrix.texlive }}
   automerge:
     name: Automatically merge pull request
     needs:
-      - test-and-publish
+      - publish
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     steps:
