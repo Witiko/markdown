@@ -695,10 +695,13 @@ def run_tests(testfiles: Iterable[TestFile], fail_fast: bool) -> Iterable[TestRe
     num_batches = int(ceil(len(testfiles) / testfile_batch_size))
 
     if num_batches > 1 and num_batches - 1 < NUM_PROCESSES:
-        testfile_batch_size = int(ceil(len(testfiles) / (NUM_PROCESSES + 1)))
-        num_batches = int(ceil(len(testfiles) / testfile_batch_size))
-        assert num_batches - 1 == NUM_PROCESSES
-        LOGGER.debug(f'Reducing batch size to {testfile_batch_size} in order to fully utilize {NUM_PROCESSES} hyperthreads.')
+        updated_testfile_batch_size = int(ceil(len(testfiles) / (NUM_PROCESSES + 1)))
+        updated_num_batches = int(ceil(len(testfiles) / testfile_batch_size))
+        assert updated_num_batches - 1 <= NUM_PROCESSES
+        assert updated_testfile_batch_size <= testfile_batch_size
+        if updated_testfile_batch_size < testfile_batch_size:
+            LOGGER.debug(f'Reducing batch size to {updated_testfile_batch_size} in order to fully utilize {NUM_PROCESSES} hyperthreads.')
+        testfile_batch_size, num_batches = updated_testfile_batch_size, updated_num_batches
 
     testfile_batches: List[TestFileBatch] = list(chunked(testfiles, testfile_batch_size))
     assert len(testfile_batches) == num_batches
