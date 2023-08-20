@@ -23988,25 +23988,24 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 
-local function create_heading_identifier(s)
+local function create_heading_identifier(identifier)
   -- Step 1: Remove all non-alphanumeric characters, except underscores, hyphens, and periods 
   -- (+ remove trailing whitespaces).
-  local step_1 = s:gsub("[^%w_%-%.%s]", ""):gsub("%s*$", "")
+  identifier = identifier:gsub("[^%w_%-%.%s]", ""):gsub("%s*$", "")
 
   -- Step 2: Replace all spaces and newlines with hyphens.
-  local step_2 = step_1:gsub("[%s\n]+", "-")
+  identifier = identifier:gsub("[%s\n]+", "-")
 
   -- Step 3: Convert all alphabetic characters to lowercase.
-  local step_3 = step_2:lower()
+  identifier = identifier:lower()
 
   -- Step 4: Remove everything up to the first letter.
-  local step_4 = step_3:match("%a.*")
+  identifier = identifier:match("%a.*")
 
   -- Step 5: If nothing is left after this, use the identifier section.
-  local step_5 = step_4 or 
-                "section"
+  identifier = identifier or "section"
 
-  return step_5
+  return identifier
 end
 
 %  \end{macrocode}
@@ -24017,21 +24016,20 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 
-local function create_gfm_heading_identifier(s)
+local function create_gfm_heading_identifier(identifier)
   -- Step 1: Remove all non-alphanumeric characters, except underscores and hyphens.
-  local step_1 = s:gsub("[^%w_%-%s]", "")
+  identifier = identifier:gsub("[^%w_%-%s]", "")
 
   -- Step 2: Replace all spaces and newlines with hyphens.
-  local step_2 = step_1:gsub("[%s\n]+", "-")
+  identifier = identifier:gsub("[%s\n]+", "-")
 
   -- Step 3: Convert all alphabetic characters to lowercase.
-  local step_3 = step_2:lower()
+  identifier = identifier:lower()
 
   -- Step 4: If nothing is left after this, use the identifier section.
-  local step_4 = (step_3 == "") and "section" or 
-                 step_3
+  lidentifier = (identifier == "") and "section" or identifier
 
-  return step_4
+  return identifier
 end
 
 %    \end{macrocode}
