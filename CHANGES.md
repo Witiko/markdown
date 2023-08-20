@@ -19,7 +19,7 @@ Documentation:
 Unit Tests:
 
 - Batch unit tests to improve speed.
-  (#245, #316, 8bfd0b3, #317, #319..#325, #327, #328)
+  (#245, #316, 8bfd0b3, #317, #319..#325, #327, #328, e3b31696)
 
 ## 3.0.0-alpha.2 (2023-08-01)
 
