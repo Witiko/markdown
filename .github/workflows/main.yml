@@ -128,6 +128,7 @@ jobs:
       - name: Store the temporary tag
         id: temporary-tags
         run: |
+          set -ex
           TEMPORARY_TAG="$(make docker-print-temporary-tag TEXLIVE_TAG=${{ matrix.texlive }})"
           echo "${{ matrix.texlive }}=$TEMPORARY_TAG" >> $GITHUB_OUTPUT
   test:
@@ -151,6 +152,7 @@ jobs:
           submodules: true
       - name: Test Lua command-line interface
         run: |
+          set -ex
           RESULT="$(printf '%s\n' 'Hello *Markdown*! $a_x + b_x = c_x$' | markdown-cli hybrid=true underscores=false | tee /dev/stderr)"
           test "$RESULT" = '\markdownRendererDocumentBegin'$'\n''Hello \markdownRendererEmphasis{Markdown}! $a_x + b_x = c_x$\markdownRendererDocumentEnd'
       - name: Run unit tests
@@ -176,11 +178,13 @@ jobs:
       - name: Fix ownership of repository
         if: matrix.texlive == 'latest'
         run: |
+          set -ex
           DOCKER_IMAGE=witiko/markdown:${{ needs.build-docker-image.outputs[matrix.texlive] }}
           docker run --rm -v "$PWD":/git-repo -w /git-repo "$DOCKER_IMAGE" chown -R root:root /git-repo
       - name: Build distribution archives
         if: matrix.texlive == 'latest'
         run: |
+          set -ex
           DOCKER_IMAGE=witiko/markdown:${{ needs.build-docker-image.outputs[matrix.texlive] }}
           docker run --rm -v "$PWD":/git-repo -w /git-repo "$DOCKER_IMAGE" make dist gh-pages
       - name: Upload artifact markdown.tds.zip
