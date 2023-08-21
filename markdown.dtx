@@ -23989,23 +23989,50 @@ end
 %  \begin{macrocode}
 
 local function create_heading_identifier(identifier)
-  -- Step 1: Remove all non-alphanumeric characters, except underscores, hyphens, and periods 
-  -- (+ remove trailing whitespaces).
-  identifier = identifier:gsub("[^%w_%-%.%s]", ""):gsub("%s*$", "")
+  local new_identifier = ""
+  local prev_space = false
+  local letter_found = false
 
-  -- Step 2: Replace all spaces and newlines with hyphens.
-  identifier = identifier:gsub("[%s\n]+", "-")
+  for _, code in utf8.codes(identifier) do
+    local char = utf8.char(code)
+    local is_letter = unicode.utf8.match(char, "%a")
 
-  -- Step 3: Convert all alphabetic characters to lowercase.
-  identifier = identifier:lower()
+    if is_letter then
+      letter_found = true
+    end
 
-  -- Step 4: Remove everything up to the first letter.
-  identifier = identifier:match("%a.*")
+    -- Remove everything up to the first letter.
+    if not letter_found then
+      goto continue
+    end
 
-  -- Step 5: If nothing is left after this, use the identifier section.
-  identifier = identifier or "section"
+    -- Remove all non-alphanumeric characters, except underscores, hyphens, and periods.
+    if not unicode.utf8.match(char, "[%w_%-%.%s]") then
+      goto continue
+    end
 
-  return identifier
+    -- Replace all spaces and newlines with hyphens.
+    if unicode.utf8.match(char, "[%s\n]") then
+      char = "-"
+      if prev_space then
+        goto continue
+      else
+        prev_space = true
+      end
+    else
+      prev_space = false
+    end
+
+    -- Convert all alphabetic characters to lowercase.
+    char = unicode.utf8.lower(char)
+
+    new_identifier = new_identifier .. char
+
+    ::continue::
+  end
+
+  new_identifier = (new_identifier == "") and "section" or new_identifier
+  return new_identifier
 end
 
 %  \end{macrocode}
@@ -24017,19 +24044,39 @@ end
 %  \begin{macrocode}
 
 local function create_gfm_heading_identifier(identifier)
-  -- Step 1: Remove all non-alphanumeric characters, except underscores and hyphens.
-  identifier = identifier:gsub("[^%w_%-%s]", "")
+  local new_identifier = ""
+  local prev_space = false
 
-  -- Step 2: Replace all spaces and newlines with hyphens.
-  identifier = identifier:gsub("[%s\n]+", "-")
+  for _, code in utf8.codes(identifier) do
+    local char = utf8.char(code)
 
-  -- Step 3: Convert all alphabetic characters to lowercase.
-  identifier = identifier:lower()
+    -- Remove all non-alphanumeric characters, except underscores and hyphens.
+    if not unicode.utf8.match(char, "[%w_%-%s]") then
+      goto continue
+    end
 
-  -- Step 4: If nothing is left after this, use the identifier section.
-  lidentifier = (identifier == "") and "section" or identifier
+    -- Replace all spaces and newlines with hyphens.
+    if unicode.utf8.match(char, "[%s\n]") then
+      char = "-"
+      if prev_space then
+        goto continue
+      else
+        prev_space = true
+      end
+    else
+      prev_space = false
+    end
 
-  return identifier
+    -- Convert all alphabetic characters to lowercase.
+    char = unicode.utf8.lower(char)
+
+    new_identifier = new_identifier .. char
+
+    ::continue::
+  end
+
+  new_identifier = (new_identifier == "") and "section" or new_identifier
+  return new_identifier
 end
 
 %    \end{macrocode}
