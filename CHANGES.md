@@ -1,10 +1,47 @@
 # Changes
 
-## 3.0.0-alpha.1
+## 3.0.0
+
+Fixes:
+
+- Reset current heading level at the end of a markdown document.
+  (1261e6f)
+- Fix out-of-memory issues with CommonMark implementation.
+  (#308, #318, 28650b8)
+
+Documentation:
+
+- Fix the link to @xvrabcov's talk at TUG 2022 in `README.md`.
+  (166c4506)
+- Add a link to @writersglen's talk at TUG 2022 to `README.md`.
+  (f3efcb9)
+
+Unit Tests:
+
+- Batch unit tests to improve speed.
+  (#245, #316, 8bfd0b3, #317, #319..#325, #327, #328, e3b31696,
+   #332, #334)
+
+## 3.0.0-alpha.2 (2023-08-01)
+
+Development:
+
+- Add support for attributes on tables. (#310, #313, 8786408)
 
 Default Renderer Prototypes:
 
 - Correctly handle multiple heading identifiers. (3ae1b0d1)
+- Add alt text to figures. (#312)
+
+Documentation:
+
+- Add a link to TUG 2023 slides and video to the README.
+  (ce6047b8, adb69e2f)
+
+Unit Tests:
+
+- Rewrite the unit testing framework from Bash to Python
+  and implement summarization. (#245, #314)
 
 ## 3.0.0-alpha (2023-06-27)
 

@@ -1,0 +1,89 @@
+\def\markdownOptionPipeTables{true}
+\def\markdownOptionTableCaptions{true}
+\def\markdownOptionTableAttributes{true}
+<<<
+This test ensures that the Lua `tableCaptions` and `tableAttributes` options correctly
+propagate through the plain TeX interface.
+
+| Right | *Left* |   Default   | Center |
+|------:|:-------|-------------|:------:|
+|   12  |   12   |      12     |    12  |
+|  123  |   123  |   **123**   |   123  |
+|    1  |     1  |       1     |     1  |
+
+  : Demonstration of *pipe table* syntax with the caption spreading over
+    multiple lines. {#identifier .class-name key=value}
+
+| Right | *Left* |   Default   | Center |
+|------:|:-------|-------------|:------:|
+|   12  |   12   |      12     |    12  |
+|  123  |   123  |   **123**   |   123  |
+|    1  |     1  |       1     |     1  |
+
+  Table: Demonstration of *pipe table* syntax with the caption spreading over
+         multiple lines.
+
+A caption may not span multiple paragraphs.
+>>>
+documentBegin
+codeSpan: tableCaptions
+codeSpan: tableAttributes
+softLineBreak
+interblockSeparator
+BEGIN tableAttributeContext
+attributeIdentifier: identifier
+attributeClassName: class-name
+BEGIN attributeKeyValue
+- key: key
+- value: value
+END attributeKeyValue
+BEGIN table (4 rows, 4 columns)
+- caption: Demonstration of (emphasis: pipe table) syntax with the caption spreading over(softLineBreak)multiple lines.
+- alignment of column 1: r
+- alignment of column 2: l
+- alignment of column 3: d
+- alignment of column 4: c
+- row 1, column 1: Right
+- row 1, column 2: (emphasis: Left)
+- row 1, column 3: Default
+- row 1, column 4: Center
+- row 2, column 1: 12
+- row 2, column 2: 12
+- row 2, column 3: 12
+- row 2, column 4: 12
+- row 3, column 1: 123
+- row 3, column 2: 123
+- row 3, column 3: (strongEmphasis: 123)
+- row 3, column 4: 123
+- row 4, column 1: 1
+- row 4, column 2: 1
+- row 4, column 3: 1
+- row 4, column 4: 1
+END table
+END tableAttributeContext
+interblockSeparator
+BEGIN table (4 rows, 4 columns)
+- caption: Demonstration of (emphasis: pipe table) syntax with the caption spreading over(softLineBreak)multiple lines.
+- alignment of column 1: r
+- alignment of column 2: l
+- alignment of column 3: d
+- alignment of column 4: c
+- row 1, column 1: Right
+- row 1, column 2: (emphasis: Left)
+- row 1, column 3: Default
+- row 1, column 4: Center
+- row 2, column 1: 12
+- row 2, column 2: 12
+- row 2, column 3: 12
+- row 2, column 4: 12
+- row 3, column 1: 123
+- row 3, column 2: 123
+- row 3, column 3: (strongEmphasis: 123)
+- row 3, column 4: 123
+- row 4, column 1: 1
+- row 4, column 2: 1
+- row 4, column 3: 1
+- row 4, column 4: 1
+END table
+interblockSeparator
+documentEnd

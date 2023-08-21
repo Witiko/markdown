@@ -1,22 +1,19 @@
 \def\markdownOptionUnderscores{false}
-\def\markdownOptionHybrid{true}
 <<<
 This test ensures that the Lua `underscores` option correctly propagates
 through the plain TeX interface.
 
-This is a math expression: $\sqrt{\sum_{i=0}^n (a_i + b_i)^2}$.
-\begingroup\catcode`\_=12
 This __is no__ strongly emphasized span of text.
 This **is** a strongly emphasized span of text.
-\endgroup
 >>>
 documentBegin
 codeSpan: underscores
 softLineBreak
 interblockSeparator
-softLineBreak
-softLineBreak
+underscore
+underscore
+underscore
+underscore
 softLineBreak
 strongEmphasis: is
-softLineBreak
 documentEnd

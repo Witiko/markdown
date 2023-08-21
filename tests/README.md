@@ -12,6 +12,11 @@ reside inside the `testfiles/` directory. The Markdown package needs to be
 Each time a commit is made to the Git repository of the project, this test
 suite is ran by a continuous integration service.  
 The current status is:
-[![ci](https://github.com/Witiko/markdown/workflows/Test/badge.svg)][ci]
+[![ci](https://github.com/witiko/markdown/actions/workflows/main.yml/badge.svg)][ci]
 
- [ci]:       https://github.com/Witiko/markdown/actions          "GitHub Actions"
+ [ci]: https://github.com/Witiko/markdown/actions "GitHub Actions"
+
+For a more detailed description of the testing framework, see
+[the description in pull request #316][pr-316].
+
+ [pr-316]: https://github.com/Witiko/markdown/pull/316#issuecomment-1663868646 "Implement batching to unit tests"
