@@ -177,12 +177,6 @@ jobs:
         with:
           fetch-depth: 0
           submodules: true
-      - name: Fix ownership of repository
-        if: matrix.texlive == 'latest'
-        run: |
-          set -ex
-          DOCKER_IMAGE=witiko/markdown:${{ needs.build-docker-image.outputs[matrix.texlive] }}
-          docker run --rm -v "$PWD":/git-repo -w /git-repo "$DOCKER_IMAGE" chown -R root:root /git-repo
       - name: Build distribution archives
         if: matrix.texlive == 'latest'
         run: |
