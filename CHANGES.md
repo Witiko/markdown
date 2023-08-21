@@ -20,7 +20,7 @@ Unit Tests:
 
 - Batch unit tests to improve speed.
   (#245, #316, 8bfd0b3, #317, #319..#325, #327, #328, e3b31696,
-   #332, #334)
+   #331, #332, #334)
 - Use self-hosted GitHub runners for tests to improve tests.
   (#326, #330, #331, contributed by @TeXhackse)
 
