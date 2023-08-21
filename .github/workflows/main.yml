@@ -158,8 +158,8 @@ jobs:
           Hello \markdownRendererEmphasis{Markdown}! $a_x + b_x = c_x$\markdownRendererDocumentEnd'
       - name: Run unit tests
         run: make FAIL_FAST=${{ github.ref != 'refs/heads/main' }} test
-  publish:
-    name: Publish Docker image and artefacts
+  publish-docker-image:
+    name: Publish Docker image
     needs:
       - build-docker-image
       - test
@@ -177,12 +177,37 @@ jobs:
         with:
           fetch-depth: 0
           submodules: true
+      - name: Authenticate Docker registry
+        uses: azure/docker-login@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      - name: Publish Docker image
+        run: make docker-push-release-tag TEXLIVE_TAG=${{ matrix.texlive }}
+  publish-artefacts:
+    name: Publish artefacts and create a prerelease
+    needs:
+      - build-docker-image
+      - test
+    strategy:
+      fail-fast: true
+      matrix:
+        texlive:
+          - TL2022-historic
+          - latest
+    runs-on: ubuntu-latest
+    container:
+      image: witiko/markdown:${{ needs.build-docker-image.outputs[matrix.texlive] }}
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          submodules: true
       - name: Build distribution archives
         if: matrix.texlive == 'latest'
-        run: |
-          set -ex
-          DOCKER_IMAGE=witiko/markdown:${{ needs.build-docker-image.outputs[matrix.texlive] }}
-          docker run --rm -v "$PWD":/git-repo -w /git-repo "$DOCKER_IMAGE" make dist gh-pages
+        run: make dist gh-pages
       - name: Upload artifact markdown.tds.zip
         if: matrix.texlive == 'latest'
         uses: actions/upload-artifact@v2
@@ -228,13 +253,6 @@ jobs:
             markdown.ctan.zip
             markdown.zip
             markdown.pdf
-      - name: Authenticate Docker registry
-        uses: azure/docker-login@v1
-        with:
-          username: ${{ secrets.DOCKER_HUB_USER }}
-          password: ${{ secrets.DOCKER_HUB_TOKEN }}
-      - name: Publish Docker image
-        run: make docker-push-release-tag TEXLIVE_TAG=${{ matrix.texlive }}
   automerge:
     name: Automatically merge pull request
     needs:
