@@ -24084,8 +24084,9 @@ end
 % \begin{markdown}
 %
 % Define \luamdef{writer->heading} as a function that will transform an
-% input heading `s` at level `level` with attributes `attributes` to the
-% output format.
+% input heading `t[2]` at level `level` with attributes `attributes` to the
+% output format. If the option \Opt{autoIdentifiers} or \Opt{gfmAutoIdentifiers} is enabled,
+% an identifier is generated based on the raw heading string `t[1]`.
 %
 % \end{markdown}
 %  \begin{macrocode}
