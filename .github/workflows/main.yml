@@ -141,7 +141,7 @@ jobs:
         texlive:
           - TL2022-historic
           - latest
-    runs-on: ubuntu-latest  # TODO: Replace with self-hosted.
+    runs-on: self-hosted
     container:
       image: witiko/markdown:${{ needs.build-docker-image.outputs[matrix.texlive] }}
     steps:
