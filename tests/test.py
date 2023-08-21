@@ -682,8 +682,9 @@ def transpose_rectangle(input_list: Iterable[Iterable[T]]) -> List[List[T]]:
 
 def run_tests(testfiles: Iterable[TestFile], fail_fast: bool) -> Iterable[TestResult]:
 
-    testfile_batch_size = TESTFILE_BATCH_SIZE[fail_fast]
+    testfiles: List[TestFile] = list(testfiles)
 
+    testfile_batch_size = TESTFILE_BATCH_SIZE[fail_fast]
     if fail_fast:
         LOGGER.info('Will fail at first error.')
         LOGGER.debug(f'Using a smaller batch size ({testfile_batch_size}) to minimize time to first error.')
@@ -691,35 +692,43 @@ def run_tests(testfiles: Iterable[TestFile], fail_fast: bool) -> Iterable[TestRe
         LOGGER.info('Will run all tests despite errors.')
         LOGGER.debug(f'Using a larger batch size ({testfile_batch_size}) to minimize overall runtime.')
 
-    testfiles: List[TestFile] = list(testfiles)
-    num_batches = int(ceil(len(testfiles) / testfile_batch_size))
-
-    if num_batches > 1 and num_batches - 1 < NUM_PROCESSES:
-        updated_testfile_batch_size = int(ceil(len(testfiles) / (NUM_PROCESSES + 1)))
-        updated_num_batches = int(ceil(len(testfiles) / testfile_batch_size))
-        assert updated_num_batches - 1 <= NUM_PROCESSES
-        assert updated_testfile_batch_size <= testfile_batch_size
-        if updated_testfile_batch_size < testfile_batch_size:
-            LOGGER.debug(f'Reducing batch size to {updated_testfile_batch_size} in order to fully utilize {NUM_PROCESSES} hyperthreads.')
-        testfile_batch_size, num_batches = updated_testfile_batch_size, updated_num_batches
-
-    testfile_batches: List[TestFileBatch] = list(chunked(testfiles, testfile_batch_size))
-    assert len(testfile_batches) == num_batches
-    LOGGER.debug(f'The testfiles break down into {len(testfile_batches)} batches.')
-
     def get_all_results() -> Iterable[Iterable[TestResult]]:
         if NUM_PROCESSES > 1:
-            first_batch = zip(testfile_batches[:1], repeat(fail_fast))
-            sequential_results = list(map(BatchResult.run_test_batch, first_batch))  # Populate caches with the first batch.
-            with Pool(NUM_PROCESSES) as pool:
-                remaining_batches = zip(testfile_batches[1:], repeat(fail_fast))
-                parallel_results = pool.imap(BatchResult.run_test_batch, remaining_batches, chunksize=1)  # Run next batches in parallel.
-                all_results = chain(sequential_results, parallel_results)
-                yield from all_results
+            # Populate caches by running the first testfile sequentially.
+            first_testfile, *remaining_testfiles = testfiles
+            first_testfile_batch: List[TestFileBatch] = [[first_testfile]]
+            first_batch = zip(first_testfile_batch, repeat(fail_fast))
+            sequential_results = map(BatchResult.run_test_batch, first_batch)
+
+            # Run the remaining batches in parallel.
+            if remaining_testfiles:
+                nonlocal testfile_batch_size
+                num_batches = int(ceil(len(remaining_testfiles) / testfile_batch_size))
+                if num_batches < NUM_PROCESSES:
+                    updated_testfile_batch_size = int(ceil(len(remaining_testfiles) / NUM_PROCESSES))
+                    updated_num_batches = int(ceil(len(remaining_testfiles) / updated_testfile_batch_size))
+                    assert updated_num_batches <= NUM_PROCESSES
+                    assert updated_testfile_batch_size <= testfile_batch_size
+                    if updated_testfile_batch_size < testfile_batch_size:
+                        LOGGER.debug(f'Reducing batch size to {updated_testfile_batch_size} to fully utilize {NUM_PROCESSES} hyperthreads.')
+                    testfile_batch_size, num_batches = updated_testfile_batch_size, updated_num_batches
+                remaining_testfile_batches: List[TestFileBatch] = list(chunked(remaining_testfiles, testfile_batch_size))
+                remaining_batches = zip(remaining_testfile_batches, repeat(fail_fast))
+                assert len(remaining_testfile_batches) == num_batches
+                LOGGER.debug(f'The testfiles break down into {num_batches} batches.')
+                sequential_results = list(sequential_results)  # Materialize the results for the first testfile before we parallelize.
+                with Pool(NUM_PROCESSES) as pool:
+                    parallel_results = pool.imap(BatchResult.run_test_batch, remaining_batches, chunksize=1)
+                    all_results = chain(sequential_results, parallel_results)
+                    yield from all_results
+            else:
+                yield from sequential_results
+        # If there is just a single hyperthread, run all batches sequentially.
         else:
+            testfile_batches: Iterable[TestFileBatch] = chunked(testfiles, testfile_batch_size)
             all_batches = zip(testfile_batches, repeat(fail_fast))
-            all_results = list(map(BatchResult.run_test_batch, all_batches))  # If `NUM_PROCESSES` is 1, run all tests sequentially.
-            yield from all_results
+            all_results = list(map(BatchResult.run_test_batch, all_batches))
+        yield from all_results
 
     all_results = get_all_results()
     return (result for results in all_results for result in results)
