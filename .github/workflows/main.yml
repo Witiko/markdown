@@ -153,7 +153,7 @@ jobs:
       - name: Test Lua command-line interface
         run: |
           set -ex
-          RESULT="$(printf '%s\n' 'Hello *Markdown*! $a_x + b_x = c_x$' | markdown-cli hybrid=true underscores=false"
+          RESULT="$(printf '%s\n' 'Hello *Markdown*! $a_x + b_x = c_x$' | markdown-cli hybrid=true underscores=false)"
           test "$RESULT" = '\markdownRendererDocumentBegin
           Hello \markdownRendererEmphasis{Markdown}! $a_x + b_x = c_x$\markdownRendererDocumentEnd'
       - name: Run unit tests
