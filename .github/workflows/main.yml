@@ -172,6 +172,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
+        if: github.ref == 'refs/heads/main' || matrix.texlive == 'latest'
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
