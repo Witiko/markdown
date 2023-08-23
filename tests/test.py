@@ -34,7 +34,7 @@ UPDATE_TESTS: bool = False
 FAIL_FAST: bool = True
 
 NUM_PROCESSES: int = cpu_count()
-TESTFILE_BATCH_SIZE: Dict[bool, int] = {True: 20, False: 100}  # The batch size depends on whether fail-fast is enabled.
+TESTFILE_BATCH_SIZE: int = 100
 
 MAX_TESTFILE_NAMES_SHOWN: int = 5
 MAX_TESTFILE_NAMES_SHOWN_COLLAPSED: int = 3
@@ -681,18 +681,10 @@ def transpose_rectangle(input_list: Iterable[Iterable[T]]) -> List[List[T]]:
 
 
 def run_tests(testfiles: Iterable[TestFile], fail_fast: bool) -> Iterable[TestResult]:
-
     testfiles: List[TestFile] = list(testfiles)
 
-    testfile_batch_size = TESTFILE_BATCH_SIZE[fail_fast]
-    if fail_fast:
-        LOGGER.info('Will fail at first error.')
-        LOGGER.debug(f'Using a smaller batch size ({testfile_batch_size}) to minimize time to first error.')
-    else:
-        LOGGER.info('Will run all tests despite errors.')
-        LOGGER.debug(f'Using a larger batch size ({testfile_batch_size}) to minimize overall runtime.')
-
     def get_all_results() -> Iterable[Iterable[TestResult]]:
+        testfile_batch_size = TESTFILE_BATCH_SIZE
         if NUM_PROCESSES > 1:
             # Populate caches by running the first testfile sequentially.
             first_testfile, *remaining_testfiles = testfiles
@@ -702,7 +694,6 @@ def run_tests(testfiles: Iterable[TestFile], fail_fast: bool) -> Iterable[TestRe
 
             # Run the remaining batches in parallel.
             if remaining_testfiles:
-                nonlocal testfile_batch_size
                 num_batches = int(ceil(len(remaining_testfiles) / testfile_batch_size))
                 if num_batches < NUM_PROCESSES:
                     updated_testfile_batch_size = int(ceil(len(remaining_testfiles) / NUM_PROCESSES))
@@ -758,13 +749,20 @@ def main(testfiles: Iterable[str], update_tests: Optional[bool], fail_fast: Opti
     if update_tests and fail_fast:
         raise ValueError('Options --fail-fast and --update-tests are mutually exclusive')
 
-    # Run tests.
+    # Print information about the run.
     testfiles: List[TestFile] = sorted(map(Path, testfiles))
     plural = 's' if len(testfiles) > 1 else ''
     LOGGER.info(f'Running tests for {len(testfiles)} testfile{plural}.')
+
     if update_tests:
         LOGGER.info('Updating testfiles at any error.')
 
+    if fail_fast:
+        LOGGER.info('Will fail at first error.')
+    else:
+        LOGGER.info('Will run all tests despite errors.')
+
+    # Run tests.
     some_tests_failed = False
     results: List[TestResult] = []
     result_iter = run_tests(testfiles, fail_fast)
