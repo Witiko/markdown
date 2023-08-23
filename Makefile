@@ -92,8 +92,8 @@ docker-print-temporary-tag:
 # a Docker registry with a release tag.
 docker-push-release-tag:
 	docker pull $(DOCKER_IMAGE):$(DOCKER_TEMPORARY_TAG)
-	docker tag $(DOCKER_IMAGE):$(TEMPORARY_TAG) \
-	           $(DOCKER_IMAGE):$(RELEASE_TAG)
+	docker tag $(DOCKER_IMAGE):$(DOCKER_TEMPORARY_TAG) \
+	           $(DOCKER_IMAGE):$(DOCKER_RELEASE_TAG)
 	docker push $(DOCKER_IMAGE):$(DOCKER_RELEASE_TAG)
 
 # This targets produces a directory with files for the GitHub Pages service.
