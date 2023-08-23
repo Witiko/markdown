@@ -207,7 +207,10 @@ jobs:
           submodules: true
       - name: Build distribution archives
         if: matrix.texlive == 'latest'
-        run: make dist gh-pages
+        run: |
+          set -ex
+          chown -R root:root .
+          make dist gh-pages
       - name: Upload artifact markdown.tds.zip
         if: matrix.texlive == 'latest'
         uses: actions/upload-artifact@v2
