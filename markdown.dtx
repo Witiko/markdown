@@ -27745,7 +27745,7 @@ end
 
         Blocks                = V("InitializeState")
                               * ( V("ExpectedJekyllData")
-                                * V("Blank")^0 / writer.interblocksep
+				* (V("Blank")^0 / writer.interblocksep)
                                 )^-1
                               * V("Blank")^0
 %    \end{macrocode}
