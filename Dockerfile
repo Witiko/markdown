@@ -35,6 +35,7 @@ ARG INSTALL_DIR=/usr/local/texlive/texmf-local
 
 ARG FROM_IMAGE=texlive/texlive
 ARG TEXLIVE_TAG=latest
+ARG NO_DOCUMENTATION=false
 
 FROM $FROM_IMAGE:$TEXLIVE_TAG as build
 
@@ -42,6 +43,8 @@ ARG DEPENDENCIES
 
 ARG BUILD_DIR
 ARG INSTALL_DIR
+
+ARG NO_DOCUMENTATION
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TERM=xterm
@@ -87,7 +90,7 @@ mtxrun --generate
 texhash
 
 # Produce the complete distribution archive of the Markdown package
-make -C ${BUILD_DIR} dist
+make -C ${BUILD_DIR} dist NO_DOCUMENTATION=${NO_DOCUMENTATION}
 mkdir ${BUILD_DIR}/dist
 unzip ${BUILD_DIR}/markdown.tds.zip -d ${BUILD_DIR}/dist
 

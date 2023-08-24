@@ -117,7 +117,9 @@ jobs:
           fetch-depth: 0
           submodules: true
       - name: Build Docker image
-        run: make docker-image TEXLIVE_TAG=${{ matrix.texlive }}
+        run: |
+          make docker-image TEXLIVE_TAG=${{ matrix.texlive }} \
+                            NO_DOCUMENTATION=${{ github.event_name == 'pull_request' && github.event.pull_request.draft == true }}
       - name: Authenticate Docker registry
         uses: azure/docker-login@v1
         with:
