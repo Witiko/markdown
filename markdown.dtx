@@ -27758,22 +27758,23 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-                              * ( ( V("Block")
-                                  + ( V("Paragraph")
-                                    * #( V("Blank")^0 * V("Block") )
-                                    )
-                                  )
+                              * ( V("Block")
                                 * ( V("Blank")^2 / writer.paragraphsep
                                   + V("Blank")^0 / writer.interblocksep
                                   )
-                                * #V("BlockOrParagraph")
                                 + V("BlockOrParagraph")
                                 * V("Blank")^0
                                 * parsers.eof
                                 + V("Paragraph")
-                                * #(V("Blank")^0 * V("Paragraph"))
+                                * ( V("Blank")^2 / writer.paragraphsep
+                                  + V("Blank")^0 / writer.interblocksep
+                                  )
+                                * V("Block")
+                                * ( V("Blank")^2 / writer.paragraphsep
+                                  + V("Blank")^0 / writer.interblocksep
+                                  )
+                                + V("Paragraph")
                                 * (V("Blank")^0 / writer.paragraphsep)
-                                * #V("Paragraph")
                                 )^0,
 
         ExpectedJekyllData    = parsers.fail,
