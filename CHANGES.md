@@ -12,6 +12,8 @@ Fixes:
   (1261e6f)
 - Fix out-of-memory issues with CommonMark implementation.
   (#308, #318, 28650b8)
+- Fix `rawAttribute` option being enabled in Lua by default.
+  (92c9ac2)
 
 Documentation:
 
