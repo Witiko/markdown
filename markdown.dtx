@@ -27506,11 +27506,11 @@ end
                                         * (parsers.minimally_indented_separated_ref_or_block)^0
                                         + (V("Reference") + (parsers.blankline / ""))
                                         + (parsers.tickbox^-1 / writer.escape)
-					* V("BlockOrParagraph")
+                                        * V("BlockOrParagraph")
                                         * (parsers.minimally_indented_separated_ref_or_block)^0
-					)
+                                        )
                                       * parsers.list_item_tightness_condition
-				  )
+                                  )
   
   parsers.indented_content_loose  = Ct( (parsers.blankline / "")
                                       * #parsers.conditionally_indented_blankline
@@ -27520,12 +27520,12 @@ end
                                           * parsers.minimally_indented_separated_ref_or_block^1)^0
                                         + (V("Reference") + (parsers.blankline / ""))
                                         + (parsers.tickbox^-1 / writer.escape)
-					* V("BlockOrParagraph")
+                                        * V("BlockOrParagraph")
                                         * ( parsers.conditionally_indented_blankline^0
                                           * parsers.minimally_indented_separated_ref_or_block^1
-					  )^0
-					)
-			          )
+                                          )^0
+                                        )
+                                  )
 
   parsers.TightListItem = function(starter)
     return  -parsers.ThematicBreak
@@ -27544,22 +27544,22 @@ end
     local bullet = parsers.bullet(bullet_type)
     return  ( Ct( parsers.TightListItem(bullet) 
                 * ( (parsers.check_minimal_indent / "")
-		  * parsers.TightListItem(bullet)
-		  )^0
-	      )
-	      * Cc(true)
+                  * parsers.TightListItem(bullet)
+                  )^0
+              )
+              * Cc(true)
               * -#( (parsers.conditionally_indented_blankline^0 / "")
                   * parsers.check_minimal_indent
-		  * (bullet - parsers.ThematicBreak)
-	      )
+                  * (bullet - parsers.ThematicBreak)
+              )
               + Ct( parsers.LooseListItem(bullet)
                   * ( (parsers.conditionally_indented_blankline^0 / "")
                     * (parsers.check_minimal_indent / "")
-		    * parsers.LooseListItem(bullet)
-		    )^0
-	      )
-	      * Cc(false)
-	    ) / writer.bulletlist
+                    * parsers.LooseListItem(bullet)
+                    )^0
+              )
+              * Cc(false)
+            ) / writer.bulletlist
   end
 
   parsers.BulletList = parsers.BulletListOfType(parsers.dash) 
@@ -27746,7 +27746,7 @@ end
         Blocks                = V("InitializeState")
                               * ( V("ExpectedJekyllData")
                                 * V("Blank")^0 / writer.interblocksep
-				)^-1
+                                )^-1
                               * V("Blank")^0
 %    \end{macrocode}
 % \par
@@ -27758,25 +27758,25 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-			      * ( ( ( (V("Block"))
-				    + ( V("Paragraph")
-				      * #( V("Blank")^0 * V("Block") )
-				      )
-				    )
-				  * ( V("Blank")^2 / writer.paragraphsep
-				    + V("Blank")^0 / writer.interblocksep
-				    )
-				  * #V("BlockOrParagraph")
-				  )
-			        + ( V("Paragraph")
-			          * #(V("Blank")^0 * V("Paragraph"))
-				  * (V("Blank")^0 / writer.paragraphsep)
-				  * #V("Paragraph")
-				  )
-			        )^0
+                              * ( ( ( (V("Block"))
+                                    + ( V("Paragraph")
+                                      * #( V("Blank")^0 * V("Block") )
+                                      )
+                                    )
+                                  * ( V("Blank")^2 / writer.paragraphsep
+                                    + V("Blank")^0 / writer.interblocksep
+                                    )
+                                  * #V("BlockOrParagraph")
+                                  )
+                                + ( V("Paragraph")
+                                  * #(V("Blank")^0 * V("Paragraph"))
+                                  * (V("Blank")^0 / writer.paragraphsep)
+                                  * #V("Paragraph")
+                                  )
+                                )^0
                               * V("BlockOrParagraph")^0
                               * V("Blank")^0
-			      * parsers.eof,
+                              * parsers.eof,
 
         ExpectedJekyllData    = parsers.fail,
 
