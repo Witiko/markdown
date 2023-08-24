@@ -1705,6 +1705,9 @@ local walkable_syntax = {
     "OrderedList",
     "DisplayHtml",
     "Heading",
+  },
+  BlockOrParagraph = {
+    "Block",
     "Paragraph",
     "Plain",
   },
@@ -26252,7 +26255,7 @@ function M.reader.new(writer, options)
 %  \begin{macrocode}
   parsers.minimally_indented_blankline = parsers.check_minimal_indent * (parsers.blankline / "")
 
-  parsers.minimally_indented_block = parsers.check_minimal_indent * V("Block")
+  parsers.minimally_indented_block = parsers.check_minimal_indent * V("BlockOrParagraph")
 
   parsers.minimally_indented_ref = parsers.check_minimal_indent * V("Reference")
 
@@ -26266,7 +26269,7 @@ function M.reader.new(writer, options)
 
   parsers.minimally_indented_separated_ref_or_block = parsers.minimally_indented_ref
                                                     + parsers.check_minimal_indent / writer.interblocksep
-                                                    * V("Block")
+                                                    * V("BlockOrParagraph")
                                                     - parsers.minimally_indented_blankline
 
 %  \end{macrocode}
@@ -26285,7 +26288,7 @@ function M.reader.new(writer, options)
                 + parsers.minimally_indented_separated_ref_or_block)^0
               + (V("Reference") + (parsers.blankline / ""))
               * blank^0
-              + V("Block")
+              + V("BlockOrParagraph")
               * ( blank
                 + parsers.minimally_indented_separated_ref_or_block)^0)
   end
@@ -27503,7 +27506,7 @@ end
                                         * (parsers.minimally_indented_separated_ref_or_block)^0
                                         + (V("Reference") + (parsers.blankline / ""))
                                         + (parsers.tickbox^-1 / writer.escape)
-					* V("Block")
+					* V("BlockOrParagraph")
                                         * (parsers.minimally_indented_separated_ref_or_block)^0
 					)
                                       * parsers.list_item_tightness_condition
@@ -27517,7 +27520,7 @@ end
                                           * parsers.minimally_indented_separated_ref_or_block^1)^0
                                         + (V("Reference") + (parsers.blankline / ""))
                                         + (parsers.tickbox^-1 / writer.escape)
-					* V("Block")
+					* V("BlockOrParagraph")
                                         * ( parsers.conditionally_indented_blankline^0
                                           * parsers.minimally_indented_separated_ref_or_block^1
 					  )^0
@@ -27742,13 +27745,38 @@ end
 
         Blocks                = V("InitializeState")
                               * ( V("ExpectedJekyllData")
-                                * (V("Blank")^0 / writer.interblocksep))^-1
+                                * V("Blank")^0 / writer.interblocksep
+				)^-1
                               * V("Blank")^0
-                              * V("Block")^-1
-                              * ( ( V("Blank")^1 / writer.paragraphsep
-                                  + V("Blank")^0 / writer.interblocksep)
-                                * V("Block"))^0
-                              * V("Blank")^0 * parsers.eof,
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Only create interblock separators between pairs of blocks that are not
+% both paragraphs. Between a pair of paragraphs, any number of blank
+% lines will always produce a paragraph separator.
+%
+% \end{markdown}
+%  \begin{macrocode}
+			      * ( ( ( (V("Block"))
+				    + ( V("Paragraph")
+				      * #( V("Blank")^0 * V("Block") )
+				      )
+				    )
+				  * ( V("Blank")^2 / writer.paragraphsep
+				    + V("Blank")^0 / writer.interblocksep
+				    )
+				  * #V("BlockOrParagraph")
+				  )
+			        + ( V("Paragraph")
+			          * #(V("Blank")^0 * V("Paragraph"))
+				  * (V("Blank")^0 / writer.paragraphsep)
+				  * #V("Paragraph")
+				  )
+			        )^0
+                              * V("BlockOrParagraph")^0
+                              * V("Blank")^0
+			      * parsers.eof,
 
         ExpectedJekyllData    = parsers.fail,
 
@@ -29283,7 +29311,7 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
                  , "div_level")
       end
 
-      local non_fenced_div_block  = parsers.check_minimal_indent * V("Block") 
+      local non_fenced_div_block  = parsers.check_minimal_indent * V("BlockOrParagraph")
                                   - parsers.check_minimal_indent_and_trail * fenced_div_end
 
       local FencedDiv = fenced_div_begin
