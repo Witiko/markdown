@@ -5055,7 +5055,7 @@ following content:
 ``` lua
 local strike_through = {
   api_version = 2,
-  grammar_version = 3,
+  grammar_version = 4,
   finalize_grammar = function(reader)
     local nonspacechar = lpeg.P(1) - lpeg.S("\t ")
     local doubleslashes = lpeg.P("//")
@@ -5441,7 +5441,7 @@ defaultOptions.expectJekyllData = false
 %    ``` lua
 %    local strike_through = {
 %      api_version = 2,
-%      grammar_version = 3,
+%      grammar_version = 4,
 %      finalize_grammar = function(reader)
 %        local nonspacechar = lpeg.P(1) - lpeg.S("\t ")
 %        local doubleslashes = lpeg.P("//")
@@ -5476,7 +5476,7 @@ defaultOptions.expectJekyllData = false
 % \fi
 %  \begin{macrocode}
 metadata.user_extension_api_version = 2
-metadata.grammar_version = 3
+metadata.grammar_version = 4
 %    \end{macrocode}
 % \iffalse
 %</lua>
@@ -5506,7 +5506,7 @@ following content:
 ``` lua
 local strike_through = {
   api_version = 2,
-  grammar_version = 3,
+  grammar_version = 4,
   finalize_grammar = function(reader)
     local nonspacechar = lpeg.P(1) - lpeg.S("\t ")
     local doubleslashes = lpeg.P("//")
