@@ -27502,9 +27502,12 @@ end
                                         * (parsers.minimally_indented_ref_or_block)
                                         * (parsers.minimally_indented_separated_ref_or_block)^0
                                         + (V("Reference") + (parsers.blankline / ""))
-                                        + (parsers.tickbox^-1 / writer.escape) * V("Block")
-                                        * (parsers.minimally_indented_separated_ref_or_block)^0) 
-                                        * parsers.list_item_tightness_condition) 
+                                        + (parsers.tickbox^-1 / writer.escape)
+					* V("Block")
+                                        * (parsers.minimally_indented_separated_ref_or_block)^0
+					)
+                                      * parsers.list_item_tightness_condition
+				  )
   
   parsers.indented_content_loose  = Ct( (parsers.blankline / "")
                                       * #parsers.conditionally_indented_blankline
@@ -27513,9 +27516,13 @@ end
                                         * ( parsers.conditionally_indented_blankline^0
                                           * parsers.minimally_indented_separated_ref_or_block^1)^0
                                         + (V("Reference") + (parsers.blankline / ""))
-                                        + (parsers.tickbox^-1 / writer.escape) * V("Block")
+                                        + (parsers.tickbox^-1 / writer.escape)
+					* V("Block")
                                         * ( parsers.conditionally_indented_blankline^0
-                                          * parsers.minimally_indented_separated_ref_or_block^1)^0))
+                                          * parsers.minimally_indented_separated_ref_or_block^1
+					  )^0
+					)
+			          )
 
   parsers.TightListItem = function(starter)
     return  -parsers.ThematicBreak
@@ -27533,13 +27540,23 @@ end
   parsers.BulletListOfType = function(bullet_type)
     local bullet = parsers.bullet(bullet_type)
     return  ( Ct( parsers.TightListItem(bullet) 
-                * ((parsers.check_minimal_indent / "") * parsers.TightListItem(bullet))^0) * Cc(true)
-                * -#((parsers.conditionally_indented_blankline^0 / "") 
-                    * parsers.check_minimal_indent * (bullet - parsers.ThematicBreak))
-               + Ct(parsers.LooseListItem(bullet) 
-                 * ((parsers.conditionally_indented_blankline^0 / "") 
-                   * (parsers.check_minimal_indent / "") * parsers.LooseListItem(bullet))^0) * Cc(false))
-            / writer.bulletlist
+                * ( (parsers.check_minimal_indent / "")
+		  * parsers.TightListItem(bullet)
+		  )^0
+	      )
+	      * Cc(true)
+              * -#( (parsers.conditionally_indented_blankline^0 / "")
+                  * parsers.check_minimal_indent
+		  * (bullet - parsers.ThematicBreak)
+	      )
+              + Ct( parsers.LooseListItem(bullet)
+                  * ( (parsers.conditionally_indented_blankline^0 / "")
+                    * (parsers.check_minimal_indent / "")
+		    * parsers.LooseListItem(bullet)
+		    )^0
+	      )
+	      * Cc(false)
+	    ) / writer.bulletlist
   end
 
   parsers.BulletList = parsers.BulletListOfType(parsers.dash) 
