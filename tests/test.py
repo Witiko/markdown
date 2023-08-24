@@ -718,8 +718,8 @@ def run_tests(testfiles: Iterable[TestFile], fail_fast: bool) -> Iterable[TestRe
         else:
             testfile_batches: Iterable[TestFileBatch] = chunked(testfiles, testfile_batch_size)
             all_batches = zip(testfile_batches, repeat(fail_fast))
-            all_results = list(map(BatchResult.run_test_batch, all_batches))
-        yield from all_results
+            all_results = map(BatchResult.run_test_batch, all_batches)
+            yield from all_results
 
     all_results = get_all_results()
     return (result for results in all_results for result in results)
