@@ -1,4 +1,6 @@
-.PHONY: all base clean implode dist test docker-image force
+.PHONY: all base clean implode dist test force \
+  docker-image docker-push-temporary-tag docker-print-temporary-tag \
+  docker-push-release-tag
 
 SHELL=/bin/bash
 
@@ -54,6 +56,10 @@ GITHUB_PAGES=gh-pages
 VERSION=$(shell git describe --tags --always --long --exclude latest)
 LASTMODIFIED=$(shell git log -1 --date=format:%Y-%m-%d --format=%ad)
 
+DOCKER_IMAGE=witiko/markdown
+DOCKER_TEMPORARY_TAG=$(VERSION)-$(TEXLIVE_TAG)
+DOCKER_RELEASE_TAG=$(TEXLIVE_TAG)
+
 PANDOC_INPUT_FORMAT=markdown+tex_math_single_backslash+tex_math_double_backslash-raw_tex
 
 # This is the default pseudo-target. It typesets the manual,
@@ -69,8 +75,26 @@ base: $(INSTALLABLES) $(LIBRARIES)
 # This pseudo-target builds a witiko/markdown Docker image.
 docker-image:
 	DOCKER_BUILDKIT=1 docker build --pull --build-arg TEXLIVE_TAG=$(TEXLIVE_TAG) \
-	                               -t witiko/markdown:$(TEXLIVE_TAG) \
-	                               -t witiko/markdown:$(VERSION)-$(TEXLIVE_TAG) .
+	                               -t $(DOCKER_IMAGE):$(DOCKER_TEMPORARY_TAG) .
+
+# This pseudo-targed pushes the built witiko/markdown Docker image to
+# a Docker registry with a temporary tag.
+docker-push-temporary-tag:
+	docker push $(DOCKER_IMAGE):$(DOCKER_TEMPORARY_TAG)
+
+# This pseudo-target prints the temporary tag that we used to tag the
+# built witiko/markdown Docker image before pushing it to the Docker
+# registry.
+docker-print-temporary-tag:
+	@echo $(DOCKER_TEMPORARY_TAG)
+
+# This pseudo-targed pushes the built witiko/markdown Docker image to
+# a Docker registry with a release tag.
+docker-push-release-tag:
+	docker pull $(DOCKER_IMAGE):$(DOCKER_TEMPORARY_TAG)
+	docker tag $(DOCKER_IMAGE):$(DOCKER_TEMPORARY_TAG) \
+	           $(DOCKER_IMAGE):$(DOCKER_RELEASE_TAG)
+	docker push $(DOCKER_IMAGE):$(DOCKER_RELEASE_TAG)
 
 # This targets produces a directory with files for the GitHub Pages service.
 $(GITHUB_PAGES): $(HTML_USER_MANUAL)
