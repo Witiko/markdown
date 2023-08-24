@@ -235,7 +235,7 @@ class TestResult:
             print('<<<', file=f)
             print(self.input_text, file=f, end='')
             print('>>>', file=f)
-            print(actual_output_text, file=f, end='')
+            print(actual_output_text, file=f)
 
         self.updated_testfile = True
 
