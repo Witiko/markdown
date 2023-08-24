@@ -47,7 +47,7 @@ emphasis: There is no <? (emphasis: HTML instruction) ?> support.
 paragraphSeparator
 paragraphSeparator
 emphasis: block comment
-paragraphSeparator
+interblockSeparator
 olBeginTight
 olItemWithNumber: 1
 olItemEnd
@@ -56,9 +56,9 @@ olItemEnd
 olItemWithNumber: 3
 olItemEnd
 olEndTight
+interblockSeparator
 paragraphSeparator
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
 ulBeginTight
 ulItem
 pipe
@@ -81,6 +81,6 @@ ampersand
 hash
 ulItemEnd
 ulEndTight
-paragraphSeparator
+interblockSeparator
 ampersand
 documentEnd

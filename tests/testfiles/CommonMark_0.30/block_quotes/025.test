@@ -19,7 +19,7 @@ documentBegin
 blockQuoteBegin
 inputVerbatim: ./_markdown_test/dfdfb29d814b371e63b725e6d416605f.verbatim
 blockQuoteEnd
-paragraphSeparator
+interblockSeparator
 blockQuoteBegin
 emphasis: not code
 blockQuoteEnd

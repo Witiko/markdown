@@ -37,7 +37,7 @@ abstract: |
 documentBegin
 codeSpan: jekyllData
 softLineBreak
-paragraphSeparator
+interblockSeparator
 jekyllDataBegin
 BEGIN jekyllDataMappingBegin
 - key: null
@@ -86,7 +86,7 @@ jekyllDataMappingEnd
 jekyllDataEnd
 paragraphSeparator
 emphasis: multiple
-paragraphSeparator
+interblockSeparator
 jekyllDataBegin
 BEGIN jekyllDataMappingBegin
 - key: null

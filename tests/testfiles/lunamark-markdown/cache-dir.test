@@ -12,6 +12,6 @@ codeSpan: cacheDir
 softLineBreak
 softLineBreak
 softLineBreak
-paragraphSeparator
+interblockSeparator
 inputVerbatim: some-other-directory/327b6f07435811239bc47e1544353273.verbatim
 documentEnd

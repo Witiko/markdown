@@ -23,7 +23,7 @@ documentBegin
 codeSpan: lineBlocks
 softLineBreak
 paragraphSeparator
-paragraphSeparator
+interblockSeparator
 lineBlockBegin
 emphasis: limerick
 hardLineBreak
@@ -43,7 +43,7 @@ nbsp
 hardLineBreak
 lineBlockEnd
 interblockSeparator
-paragraphSeparator
+interblockSeparator
 lineBlockBegin
 hardLineBreak
 hardLineBreak

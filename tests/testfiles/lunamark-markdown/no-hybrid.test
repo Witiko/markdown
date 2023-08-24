@@ -17,7 +17,7 @@ following special characters should be processed by lunamark.
 documentBegin
 codeSpan: hybrid
 softLineBreak
-paragraphSeparator
+interblockSeparator
 ulBeginTight
 ulItem
 backslash

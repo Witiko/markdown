@@ -10,7 +10,7 @@ through the plain TeX interface. The following list should be regular.
 documentBegin
 codeSpan: tightLists
 softLineBreak
-paragraphSeparator
+interblockSeparator
 olBegin
 olItemWithNumber: 3
 olItemEnd

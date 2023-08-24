@@ -87,7 +87,7 @@ codeSpan: expectJekyllData
 softLineBreak
 paragraphSeparator
 emphasis: multiple
-paragraphSeparator
+interblockSeparator
 jekyllDataBegin
 BEGIN jekyllDataMappingBegin
 - key: null

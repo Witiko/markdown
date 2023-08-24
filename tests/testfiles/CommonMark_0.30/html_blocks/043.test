@@ -25,12 +25,12 @@ Hi
 >>>
 documentBegin
 inputBlockHtmlElement: ./_markdown_test/fdcbb7ca6d7202e68ff5e231215d38a9.verbatim
-paragraphSeparator
+interblockSeparator
 inputBlockHtmlElement: ./_markdown_test/8b4b63d852941ce8c3e5a6d712ed0e40.verbatim
-paragraphSeparator
+interblockSeparator
 inputBlockHtmlElement: ./_markdown_test/2958411a6424dec5a80cf73b3eacaf98.verbatim
-paragraphSeparator
+interblockSeparator
 inputBlockHtmlElement: ./_markdown_test/07f30096ac198088e662c6246b5534d0.verbatim
-paragraphSeparator
+interblockSeparator
 inputBlockHtmlElement: ./_markdown_test/fa660a8ad505547640133768f2877788.verbatim
 documentEnd

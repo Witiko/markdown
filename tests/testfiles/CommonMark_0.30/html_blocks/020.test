@@ -15,8 +15,8 @@
 >>>
 documentBegin
 inputBlockHtmlElement: ./_markdown_test/7129cf65a8194261a86ce8d5a54dbd02.verbatim
-paragraphSeparator
+interblockSeparator
 emphasis: foo
-paragraphSeparator
+interblockSeparator
 inputBlockHtmlElement: ./_markdown_test/fd8b5771d2f10c72aebb2de751db0bdc.verbatim
 documentEnd

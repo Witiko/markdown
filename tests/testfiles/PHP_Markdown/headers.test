@@ -14,12 +14,12 @@ BEGIN section
 BEGIN section
 BEGIN section
 headingThree: Header
-paragraphSeparator
+interblockSeparator
 thematicBreak
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
+interblockSeparator
 thematicBreak
-paragraphSeparator
+interblockSeparator
 END section
 END section
 END section

@@ -27,7 +27,7 @@ paragraphSeparator
 softLineBreak
 softLineBreak
 paragraphSeparator
-paragraphSeparator
+interblockSeparator
 BEGIN fencedDivAttributeContext
 attributeClassName: foo
 END fencedDivAttributeContext

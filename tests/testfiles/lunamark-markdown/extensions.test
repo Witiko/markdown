@@ -8,7 +8,9 @@ Some //deleted text// and some \//regular text with forward slashes//.
 >>>
 documentBegin
 codeSpan: extensions
+softLineBreak
 codeSpan: strike-through.lua
-interblockSeparator
+softLineBreak
+paragraphSeparator
 strikeThrough: deleted text
 documentEnd

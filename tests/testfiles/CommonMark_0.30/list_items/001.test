@@ -20,9 +20,9 @@ with two lines.
 >>>
 documentBegin
 softLineBreak
-paragraphSeparator
+interblockSeparator
 inputVerbatim: ./_markdown_test/bf995e3b2610078e871b00000c1fb65f.verbatim
-paragraphSeparator
+interblockSeparator
 blockQuoteBegin
 blockQuoteEnd
 documentEnd

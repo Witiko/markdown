@@ -144,9 +144,9 @@ belong to the previous note.
 documentBegin
 codeSpan: slice
 softLineBreak
-paragraphSeparator
+interblockSeparator
 BEGIN section
 headingOne: This is an H1
-paragraphSeparator
+interblockSeparator
 END section
 documentEnd

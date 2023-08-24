@@ -27,7 +27,7 @@ A caption may not span multiple paragraphs.
 documentBegin
 codeSpan: tableCaptions
 softLineBreak
-paragraphSeparator
+interblockSeparator
 BEGIN table (4 rows, 4 columns)
 - caption: Demonstration of (emphasis: pipe table) syntax with the caption spreading over(softLineBreak)multiple lines.
 - alignment of column 1: r
@@ -51,7 +51,7 @@ BEGIN table (4 rows, 4 columns)
 - row 4, column 3: 1
 - row 4, column 4: 1
 END table
-paragraphSeparator
+interblockSeparator
 BEGIN table (4 rows, 4 columns)
 - caption: Demonstration of (emphasis: pipe table) syntax with the caption spreading over(softLineBreak)multiple lines.
 - alignment of column 1: r
@@ -75,5 +75,5 @@ BEGIN table (4 rows, 4 columns)
 - row 4, column 3: 1
 - row 4, column 4: 1
 END table
-paragraphSeparator
+interblockSeparator
 documentEnd

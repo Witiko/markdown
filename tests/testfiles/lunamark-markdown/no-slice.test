@@ -134,16 +134,16 @@ belong to the previous note.
 documentBegin
 codeSpan: slice
 softLineBreak
-paragraphSeparator
+interblockSeparator
 BEGIN section
 headingOne: This is an H1
-paragraphSeparator
+interblockSeparator
 BEGIN section
 BEGIN headerAttributeContext
 attributeIdentifier: first-h2
 headingTwo: This is an H2
 END headerAttributeContext
-paragraphSeparator
+interblockSeparator
 BEGIN section
 headingThree: This is an H3
 interblockSeparator
@@ -155,10 +155,10 @@ headingFive: This is an H5
 interblockSeparator
 BEGIN section
 headingSix: This is an H6
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
+interblockSeparator
 thematicBreak
-paragraphSeparator
+interblockSeparator
 codeSpan: code
 BEGIN link
 - label: link
@@ -175,12 +175,12 @@ BEGIN image
 END image
 paragraphSeparator
 paragraphSeparator
-paragraphSeparator
+interblockSeparator
 BEGIN fencedCode
 - src: ./_markdown_test/4b6b6e5629f4aa0fcfcb9164fca2efa3.verbatim
 - infostring: latex
 END fencedCode
-paragraphSeparator
+interblockSeparator
 END section
 END section
 END section
@@ -191,8 +191,8 @@ BEGIN headerAttributeContext
 attributeIdentifier: second-h2
 headingTwo: This is an H2
 END headerAttributeContext
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
+interblockSeparator
 ulBegin
 ulItem
 interblockSeparator
@@ -202,8 +202,8 @@ ulItemEnd
 ulItem
 ulItemEnd
 ulEnd
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
+interblockSeparator
 ulBeginTight
 ulItem
 ulItemEnd
@@ -212,8 +212,8 @@ ulItemEnd
 ulItem
 ulItemEnd
 ulEndTight
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
+interblockSeparator
 olBegin
 olItemWithNumber: 5
 interblockSeparator
@@ -223,17 +223,17 @@ olItemEnd
 olItemWithNumber: 7
 olItemEnd
 olEnd
-paragraphSeparator
+interblockSeparator
 paragraphSeparator
 hash
-paragraphSeparator
+interblockSeparator
 inputVerbatim: ./_markdown_test/a0fd6fe345e26edf18c330d18cdf4d52.verbatim
 interblockSeparator
 hash
 softLineBreak
 hash
 paragraphSeparator
-paragraphSeparator
+interblockSeparator
 olBeginTight
 olItemWithNumber: 5
 olItemEnd
@@ -242,7 +242,7 @@ olItemEnd
 olItemWithNumber: 7
 olItemEnd
 olEndTight
-paragraphSeparator
+interblockSeparator
 paragraphSeparator
 hash
 softLineBreak
@@ -255,9 +255,9 @@ paragraphSeparator
 paragraphSeparator
 emphasis: Term 2
 paragraphSeparator
-paragraphSeparator
+interblockSeparator
 inputVerbatim: ./_markdown_test/c268833f99a7a4a12803144b445357da.verbatim
-paragraphSeparator
+interblockSeparator
 paragraphSeparator
 paragraphSeparator
 softLineBreak
@@ -265,19 +265,19 @@ softLineBreak
 emphasis: Term 2
 softLineBreak
 softLineBreak
-paragraphSeparator
+interblockSeparator
 END section
 BEGIN section
 headingTwo: This is an H2
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
+interblockSeparator
 blockQuoteBegin
 interblockSeparator
 blockQuoteBegin
 blockQuoteEnd
 interblockSeparator
 blockQuoteEnd
-paragraphSeparator
+interblockSeparator
 circumflex
 circumflex
 softLineBreak
@@ -288,10 +288,10 @@ paragraphSeparator
 circumflex
 paragraphSeparator
 circumflex
-paragraphSeparator
+interblockSeparator
 inputVerbatim: ./_markdown_test/abbf8dcafba2274ed2400ea0c2d432ff.verbatim
 interblockSeparator
-paragraphSeparator
+interblockSeparator
 inputVerbatim: ./_markdown_test/3372369b5571c25af4e3298ee616142e.verbatim
 END section
 END section

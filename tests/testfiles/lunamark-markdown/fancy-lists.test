@@ -45,7 +45,7 @@ codeSpan: tightLists
 softLineBreak
 paragraphSeparator
 emphasis: roman, lower
-paragraphSeparator
+interblockSeparator
 BEGIN fancyOlBegin
 - numstyle: LowerRoman
 - numdelim: Period
@@ -55,9 +55,9 @@ fancyOlItemEnd
 fancyOlItemWithNumber: 5
 fancyOlItemEnd
 fancyOlEnd
-paragraphSeparator
+interblockSeparator
 emphasis: roman, upper, tight
-paragraphSeparator
+interblockSeparator
 BEGIN fancyOlBeginTight
 - numstyle: UpperRoman
 - numdelim: Period
@@ -67,9 +67,9 @@ fancyOlItemEnd
 fancyOlItemWithNumber: 5
 fancyOlItemEnd
 fancyOlEndTight
-paragraphSeparator
+interblockSeparator
 emphasis: alpha, lower
-paragraphSeparator
+interblockSeparator
 BEGIN fancyOlBegin
 - numstyle: LowerAlpha
 - numdelim: Period
@@ -79,9 +79,9 @@ fancyOlItemEnd
 fancyOlItemWithNumber: 5
 fancyOlItemEnd
 fancyOlEnd
-paragraphSeparator
+interblockSeparator
 emphasis: alpha, upper, tight
-paragraphSeparator
+interblockSeparator
 BEGIN fancyOlBeginTight
 - numstyle: UpperAlpha
 - numdelim: Period
@@ -91,9 +91,9 @@ fancyOlItemEnd
 fancyOlItemWithNumber: 5
 fancyOlItemEnd
 fancyOlEndTight
-paragraphSeparator
+interblockSeparator
 emphasis: paren
-paragraphSeparator
+interblockSeparator
 BEGIN fancyOlBegin
 - numstyle: Decimal
 - numdelim: OneParen
@@ -103,9 +103,9 @@ fancyOlItemEnd
 fancyOlItemWithNumber: 5
 fancyOlItemEnd
 fancyOlEnd
-paragraphSeparator
+interblockSeparator
 emphasis: alpha, lower, tight and paren, alpha, lower, tight
-paragraphSeparator
+interblockSeparator
 BEGIN fancyOlBeginTight
 - numstyle: LowerAlpha
 - numdelim: Period

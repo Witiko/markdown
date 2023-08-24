@@ -14,7 +14,7 @@ bar
 baz
 >>>
 documentBegin
-paragraphSeparator
+interblockSeparator
 BEGIN section
 BEGIN section
 headingTwo: bar

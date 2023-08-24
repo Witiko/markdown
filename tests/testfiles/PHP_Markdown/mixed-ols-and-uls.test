@@ -21,7 +21,7 @@ ulBeginTight
 ulItem
 ulItemEnd
 ulEndTight
-paragraphSeparator
+interblockSeparator
 olBeginTight
 olItemWithNumber: 1
 olItemEnd

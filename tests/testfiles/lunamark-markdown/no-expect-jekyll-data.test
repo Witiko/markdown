@@ -36,7 +36,7 @@ abstract: |
 >>>
 documentBegin
 softLineBreak
-paragraphSeparator
+interblockSeparator
 ulBeginTight
 ulItem
 emphasis: One
@@ -49,14 +49,14 @@ softLineBreak
 softLineBreak
 ulItemEnd
 ulEndTight
-paragraphSeparator
+interblockSeparator
 codeSpan: jekyllData
 softLineBreak
 codeSpan: expectJekyllData
 softLineBreak
 paragraphSeparator
 emphasis: multiple
-paragraphSeparator
+interblockSeparator
 jekyllDataBegin
 BEGIN jekyllDataMappingBegin
 - key: null

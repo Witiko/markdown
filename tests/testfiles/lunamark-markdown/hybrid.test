@@ -20,7 +20,7 @@ documentBegin
 codeSpan: hybrid
 softLineBreak
 softLineBreak
-paragraphSeparator
+interblockSeparator
 ulBeginTight
 ulItem
 ulItemEnd

@@ -31,12 +31,12 @@ Unrecognized character entities are ignored: &nonsense;
 >>>
 documentBegin
 codeSpan: html
-paragraphSeparator
+interblockSeparator
 inputBlockHtmlElement: ./_markdown_test/34d8e769cc46adbf7aeb7c22322cce98.verbatim
-paragraphSeparator
+interblockSeparator
 inputBlockHtmlElement: ./_markdown_test/39d398563da05b15636873d96cc50e51.verbatim
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
+interblockSeparator
 ulBeginTight
 ulItem
 pipe
@@ -57,6 +57,6 @@ ulItem
 pipe
 ulItemEnd
 ulEndTight
-paragraphSeparator
+interblockSeparator
 ampersand
 documentEnd

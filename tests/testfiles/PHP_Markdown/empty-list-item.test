@@ -37,7 +37,7 @@ With hyphens
 
 >>>
 documentBegin
-paragraphSeparator
+interblockSeparator
 ulBeginTight
 ulItem
 ulItemEnd
@@ -46,8 +46,8 @@ ulItemEnd
 ulItem
 ulItemEnd
 ulEndTight
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
+interblockSeparator
 olBeginTight
 olItemWithNumber: 1
 olItemEnd
@@ -56,8 +56,8 @@ olItemEnd
 olItemWithNumber: 3
 olItemEnd
 olEndTight
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
+interblockSeparator
 ulBeginTight
 ulItem
 ulItemEnd
@@ -66,8 +66,8 @@ ulItemEnd
 ulItem
 ulItemEnd
 ulEndTight
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
+interblockSeparator
 ulBeginTight
 ulItem
 ulItemEnd
@@ -76,8 +76,8 @@ ulItemEnd
 ulItem
 ulItemEnd
 ulEndTight
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
+interblockSeparator
 olBeginTight
 olItemWithNumber: 1
 olItemEnd
@@ -86,8 +86,8 @@ olItemEnd
 olItemWithNumber: 3
 olItemEnd
 olEndTight
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
+interblockSeparator
 ulBeginTight
 ulItem
 ulItemEnd

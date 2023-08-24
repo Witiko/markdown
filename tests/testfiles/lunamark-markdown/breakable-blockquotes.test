@@ -11,7 +11,7 @@ propagates through the plain TeX interface.
 documentBegin
 codeSpan: breakableBlockquotes
 softLineBreak
-paragraphSeparator
+interblockSeparator
 blockQuoteBegin
 emphasis: quote 1
 softLineBreak

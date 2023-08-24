@@ -20,7 +20,7 @@ documentBegin
 codeSpan: startNumber
 softLineBreak
 paragraphSeparator
-paragraphSeparator
+interblockSeparator
 olBeginTight
 olItemWithNumber: 3
 olItemEnd
@@ -29,8 +29,8 @@ olItemEnd
 olItemWithNumber: 5
 olItemEnd
 olEndTight
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
+interblockSeparator
 olBegin
 olItemWithNumber: 3
 olItemEnd

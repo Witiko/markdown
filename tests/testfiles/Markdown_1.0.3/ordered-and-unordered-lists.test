@@ -136,8 +136,8 @@ documentBegin
 BEGIN section
 BEGIN section
 headingTwo: Unordered
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
+interblockSeparator
 ulBeginTight
 ulItem
 ulItemEnd
@@ -147,7 +147,7 @@ ulItem
 ulItemEnd
 ulEndTight
 paragraphSeparator
-paragraphSeparator
+interblockSeparator
 ulBegin
 ulItem
 ulItemEnd
@@ -156,10 +156,10 @@ ulItemEnd
 ulItem
 ulItemEnd
 ulEnd
-paragraphSeparator
+interblockSeparator
 thematicBreak
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
+interblockSeparator
 ulBeginTight
 ulItem
 ulItemEnd
@@ -169,7 +169,7 @@ ulItem
 ulItemEnd
 ulEndTight
 paragraphSeparator
-paragraphSeparator
+interblockSeparator
 ulBegin
 ulItem
 ulItemEnd
@@ -178,10 +178,10 @@ ulItemEnd
 ulItem
 ulItemEnd
 ulEnd
-paragraphSeparator
+interblockSeparator
 thematicBreak
 paragraphSeparator
-paragraphSeparator
+interblockSeparator
 ulBeginTight
 ulItem
 ulItemEnd
@@ -191,7 +191,7 @@ ulItem
 ulItemEnd
 ulEndTight
 paragraphSeparator
-paragraphSeparator
+interblockSeparator
 ulBegin
 ulItem
 ulItemEnd
@@ -204,8 +204,18 @@ paragraphSeparator
 END section
 BEGIN section
 headingTwo: Ordered
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
+interblockSeparator
+olBeginTight
+olItemWithNumber: 1
+olItemEnd
+olItemWithNumber: 2
+olItemEnd
+olItemWithNumber: 3
+olItemEnd
+olEndTight
+interblockSeparator
+interblockSeparator
 olBeginTight
 olItemWithNumber: 1
 olItemEnd
@@ -215,17 +225,7 @@ olItemWithNumber: 3
 olItemEnd
 olEndTight
 paragraphSeparator
-paragraphSeparator
-olBeginTight
-olItemWithNumber: 1
-olItemEnd
-olItemWithNumber: 2
-olItemEnd
-olItemWithNumber: 3
-olItemEnd
-olEndTight
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
 olBegin
 olItemWithNumber: 1
 olItemEnd
@@ -234,8 +234,8 @@ olItemEnd
 olItemWithNumber: 3
 olItemEnd
 olEnd
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
+interblockSeparator
 olBegin
 olItemWithNumber: 1
 olItemEnd
@@ -244,8 +244,8 @@ olItemEnd
 olItemWithNumber: 3
 olItemEnd
 olEnd
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
+interblockSeparator
 olBegin
 olItemWithNumber: 1
 interblockSeparator
@@ -260,23 +260,23 @@ paragraphSeparator
 END section
 BEGIN section
 headingTwo: Nested
-paragraphSeparator
-ulBeginTight
-ulItem
 interblockSeparator
 ulBeginTight
 ulItem
 interblockSeparator
 ulBeginTight
 ulItem
+interblockSeparator
+ulBeginTight
+ulItem
 ulItemEnd
 ulEndTight
 ulItemEnd
 ulEndTight
 ulItemEnd
 ulEndTight
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
+interblockSeparator
 olBeginTight
 olItemWithNumber: 1
 olItemEnd
@@ -294,8 +294,8 @@ olItemEnd
 olItemWithNumber: 3
 olItemEnd
 olEndTight
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
+interblockSeparator
 olBegin
 olItemWithNumber: 1
 olItemEnd
@@ -314,7 +314,7 @@ olItemWithNumber: 3
 olItemEnd
 olEnd
 paragraphSeparator
-paragraphSeparator
+interblockSeparator
 ulBegin
 ulItem
 interblockSeparator

@@ -22,11 +22,11 @@ softLineBreak
 codeSpan: blankBeforeDivFence
 softLineBreak
 paragraphSeparator
-paragraphSeparator
+interblockSeparator
 BEGIN fencedDivAttributeContext
 attributeClassName: foo
 END fencedDivAttributeContext
-paragraphSeparator
+interblockSeparator
 BEGIN fencedDivAttributeContext
 attributeClassName: foo
 END fencedDivAttributeContext

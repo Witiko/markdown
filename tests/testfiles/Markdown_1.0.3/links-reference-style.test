@@ -92,7 +92,7 @@ paragraphSeparator
 inputVerbatim: ./_markdown_test/1d6cdc132aafa7c2999b741379103fae.verbatim
 paragraphSeparator
 thematicBreak
-paragraphSeparator
+interblockSeparator
 BEGIN link
 - label: this
 - URI: foo
@@ -133,7 +133,7 @@ END link
 paragraphSeparator
 paragraphSeparator
 thematicBreak
-paragraphSeparator
+interblockSeparator
 BEGIN link
 - label: link(softLineBreak)breaks
 - URI: /url/

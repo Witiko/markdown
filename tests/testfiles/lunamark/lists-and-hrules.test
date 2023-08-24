@@ -15,6 +15,6 @@ ulItemEnd
 ulEndTight
 ulItemEnd
 ulEnd
-paragraphSeparator
+interblockSeparator
 thematicBreak
 documentEnd

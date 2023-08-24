@@ -12,13 +12,13 @@ The MD5 value for `<p>test</p>` is:
 documentBegin
 BEGIN section
 headingOne: Character Escapes
-paragraphSeparator
+interblockSeparator
 codeSpan: +
-paragraphSeparator
+interblockSeparator
 END section
 BEGIN section
 headingOne: HTML Blocks
-paragraphSeparator
+interblockSeparator
 codeSpan: <p>test</p>
 paragraphSeparator
 END section

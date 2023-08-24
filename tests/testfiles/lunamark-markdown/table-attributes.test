@@ -29,7 +29,7 @@ documentBegin
 codeSpan: tableCaptions
 codeSpan: tableAttributes
 softLineBreak
-paragraphSeparator
+interblockSeparator
 BEGIN tableAttributeContext
 attributeIdentifier: identifier
 attributeClassName: class-name
@@ -61,7 +61,7 @@ BEGIN table (4 rows, 4 columns)
 - row 4, column 4: 1
 END table
 END tableAttributeContext
-paragraphSeparator
+interblockSeparator
 BEGIN table (4 rows, 4 columns)
 - caption: Demonstration of (emphasis: pipe table) syntax with the caption spreading over(softLineBreak)multiple lines.
 - alignment of column 1: r
@@ -85,5 +85,5 @@ BEGIN table (4 rows, 4 columns)
 - row 4, column 3: 1
 - row 4, column 4: 1
 END table
-paragraphSeparator
+interblockSeparator
 documentEnd

@@ -25,7 +25,7 @@ BEGIN link
 - URI: http://example.com/?foo=1&bar=2
 - title: 
 END link
-paragraphSeparator
+interblockSeparator
 ulBeginTight
 ulItem
 ulItemEnd
@@ -39,7 +39,7 @@ ulItemEnd
 ulItem
 ulItemEnd
 ulEndTight
-paragraphSeparator
+interblockSeparator
 blockQuoteBegin
 BEGIN link
 - label: http://example.com/
@@ -47,8 +47,8 @@ BEGIN link
 - title: 
 END link
 blockQuoteEnd
-paragraphSeparator
+interblockSeparator
 codeSpan: <http://example.com/>
-paragraphSeparator
+interblockSeparator
 inputVerbatim: ./_markdown_test/d063938ba4264a9a85f58f4eb996f49a.verbatim
 documentEnd

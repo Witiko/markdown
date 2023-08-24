@@ -123,8 +123,8 @@ BEGIN table (3 rows, 2 columns)
 - row 3, column 1: Cell 3
 - row 3, column 2: Cell 4
 END table
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
+interblockSeparator
 BEGIN table (3 rows, 2 columns)
 - caption: 
 - alignment of column 1: d
@@ -136,8 +136,8 @@ BEGIN table (3 rows, 2 columns)
 - row 3, column 1: Cell 3
 - row 3, column 2: Cell 4
 END table
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
+interblockSeparator
 BEGIN table (3 rows, 2 columns)
 - caption: 
 - alignment of column 1: d
@@ -149,8 +149,8 @@ BEGIN table (3 rows, 2 columns)
 - row 3, column 1: Cell 3
 - row 3, column 2: Cell 4
 END table
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
+interblockSeparator
 BEGIN table (3 rows, 2 columns)
 - caption: 
 - alignment of column 1: d
@@ -162,39 +162,39 @@ BEGIN table (3 rows, 2 columns)
 - row 3, column 1: Cell 3
 - row 3, column 2: Cell 4
 END table
-paragraphSeparator
+interblockSeparator
 thematicBreak
-paragraphSeparator
+interblockSeparator
 BEGIN section
 headingOne: One-column one-row table
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
+interblockSeparator
 BEGIN table (2 rows, 1 columns)
 - caption: 
 - alignment of column 1: d
 - row 1, column 1: Header
 - row 2, column 1: Cell
 END table
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
+interblockSeparator
 BEGIN table (2 rows, 1 columns)
 - caption: 
 - alignment of column 1: d
 - row 1, column 1: Header
 - row 2, column 1: Cell
 END table
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
+interblockSeparator
 BEGIN table (2 rows, 1 columns)
 - caption: 
 - alignment of column 1: d
 - row 1, column 1: Header
 - row 2, column 1: Cell
 END table
-paragraphSeparator
+interblockSeparator
 thematicBreak
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
+interblockSeparator
 BEGIN table (3 rows, 4 columns)
 - caption: 
 - alignment of column 1: d
@@ -214,8 +214,8 @@ BEGIN table (3 rows, 4 columns)
 - row 3, column 3: Cell
 - row 3, column 4: Cell
 END table
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
+interblockSeparator
 BEGIN table (3 rows, 4 columns)
 - caption: 
 - alignment of column 1: d
@@ -235,13 +235,13 @@ BEGIN table (3 rows, 4 columns)
 - row 3, column 3: Cell
 - row 3, column 4: Cell
 END table
-paragraphSeparator
+interblockSeparator
 thematicBreak
-paragraphSeparator
+interblockSeparator
 END section
 BEGIN section
 headingOne: Empty cells
-paragraphSeparator
+interblockSeparator
 BEGIN table (3 rows, 2 columns)
 - caption: 
 - alignment of column 1: d
@@ -253,7 +253,7 @@ BEGIN table (3 rows, 2 columns)
 - row 3, column 1: C
 - row 3, column 2: 
 END table
-paragraphSeparator
+interblockSeparator
 BEGIN table (3 rows, 2 columns)
 - caption: 
 - alignment of column 1: d
@@ -265,13 +265,13 @@ BEGIN table (3 rows, 2 columns)
 - row 3, column 1: 
 - row 3, column 2: D
 END table
-paragraphSeparator
+interblockSeparator
 thematicBreak
-paragraphSeparator
+interblockSeparator
 END section
 BEGIN section
 headingOne: Missing tailing pipe
-paragraphSeparator
+interblockSeparator
 BEGIN table (3 rows, 2 columns)
 - caption: 
 - alignment of column 1: d
@@ -283,7 +283,7 @@ BEGIN table (3 rows, 2 columns)
 - row 3, column 1: Cell
 - row 3, column 2: Cell
 END table
-paragraphSeparator
+interblockSeparator
 BEGIN table (3 rows, 2 columns)
 - caption: 
 - alignment of column 1: d
@@ -295,7 +295,7 @@ BEGIN table (3 rows, 2 columns)
 - row 3, column 1: Cell
 - row 3, column 2: Cell
 END table
-paragraphSeparator
+interblockSeparator
 BEGIN table (3 rows, 2 columns)
 - caption: 
 - alignment of column 1: d
@@ -307,7 +307,7 @@ BEGIN table (3 rows, 2 columns)
 - row 3, column 1: Cell
 - row 3, column 2: Cell
 END table
-paragraphSeparator
+interblockSeparator
 BEGIN table (3 rows, 2 columns)
 - caption: 
 - alignment of column 1: d
@@ -319,13 +319,13 @@ BEGIN table (3 rows, 2 columns)
 - row 3, column 1: Cell
 - row 3, column 2: Cell
 END table
-paragraphSeparator
+interblockSeparator
 thematicBreak
-paragraphSeparator
+interblockSeparator
 END section
 BEGIN section
 headingOne: Too many pipes in rows
-paragraphSeparator
+interblockSeparator
 BEGIN table (3 rows, 1 columns)
 - caption: 
 - alignment of column 1: d

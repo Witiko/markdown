@@ -15,7 +15,7 @@ paragraphSeparator
 interblockSeparator
 BEGIN section
 headingOne: Header
-paragraphSeparator
+interblockSeparator
 interblockSeparator
 blockQuoteBegin
 blockQuoteEnd

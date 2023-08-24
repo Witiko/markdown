@@ -21,7 +21,7 @@ BEGIN section
 BEGIN section
 headingTwo: `Foo
 interblockSeparator
-paragraphSeparator
+interblockSeparator
 END section
 BEGIN section
 headingTwo: <a title="a lot

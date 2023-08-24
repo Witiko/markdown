@@ -169,7 +169,7 @@ paragraphSeparator
 leftBrace
 rightBrace
 softLineBreak
-paragraphSeparator
+interblockSeparator
 blockQuoteBegin
 interblockSeparator
 leftBrace
@@ -177,17 +177,17 @@ rightBrace
 softLineBreak
 softLineBreak
 blockQuoteEnd
-paragraphSeparator
+interblockSeparator
 paragraphSeparator
 leftBrace
 hash
 rightBrace
 softLineBreak
-paragraphSeparator
+interblockSeparator
 blockQuoteBegin
 softLineBreak
 blockQuoteEnd
-paragraphSeparator
+interblockSeparator
 softLineBreak
 paragraphSeparator
 paragraphSeparator
@@ -200,7 +200,7 @@ paragraphSeparator
 leftBrace
 rightBrace
 softLineBreak
-paragraphSeparator
+interblockSeparator
 BEGIN fencedCode
 - src: ./_markdown_test/e441fcf4a7686817fe868bf38a5c2c07.verbatim
 - infostring: 
@@ -227,7 +227,7 @@ BEGIN fencedCode
 - src: ./_markdown_test/e441fcf4a7686817fe868bf38a5c2c07.verbatim
 - infostring: 
 END fencedCode
-paragraphSeparator
+interblockSeparator
 leftBrace
 rightBrace
 softLineBreak

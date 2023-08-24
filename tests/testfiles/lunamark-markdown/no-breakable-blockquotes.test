@@ -10,11 +10,11 @@ default.
 documentBegin
 codeSpan: breakableBlockquotes
 softLineBreak
-paragraphSeparator
+interblockSeparator
 blockQuoteBegin
 emphasis: quote 1
 blockQuoteEnd
-paragraphSeparator
+interblockSeparator
 blockQuoteBegin
 emphasis: quote 2
 blockQuoteEnd

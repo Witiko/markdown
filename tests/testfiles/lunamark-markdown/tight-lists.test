@@ -9,7 +9,7 @@ following list should be tight.
 documentBegin
 codeSpan: tightLists
 softLineBreak
-paragraphSeparator
+interblockSeparator
 olBeginTight
 olItemWithNumber: 3
 olItemEnd

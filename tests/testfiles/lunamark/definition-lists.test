@@ -81,7 +81,7 @@ orange
     2. sublist
 >>>
 documentBegin
-paragraphSeparator
+interblockSeparator
 dlBeginTight
 dlItem: apple
 dlDefinitionBegin
@@ -97,7 +97,7 @@ dlDefinitionEnd
 dlItemEnd
 dlEndTight
 interblockSeparator
-paragraphSeparator
+interblockSeparator
 dlBeginTight
 dlItem: apple
 dlDefinitionBegin
@@ -113,7 +113,7 @@ dlDefinitionEnd
 dlItemEnd
 dlEndTight
 interblockSeparator
-paragraphSeparator
+interblockSeparator
 dlBegin
 dlItem: apple
 dlDefinitionBegin
@@ -129,7 +129,7 @@ dlDefinitionEnd
 dlItemEnd
 dlEnd
 interblockSeparator
-paragraphSeparator
+interblockSeparator
 dlBegin
 dlItem: (emphasis: apple)
 dlDefinitionBegin
@@ -139,16 +139,16 @@ dlDefinitionEnd
 dlItemEnd
 dlItem: (emphasis: orange)
 dlDefinitionBegin
-paragraphSeparator
+interblockSeparator
 inputVerbatim: ./_markdown_test/e23a4f1a615f1d171556f2678d4ea912.verbatim
-paragraphSeparator
+interblockSeparator
 blockQuoteBegin
 blockQuoteEnd
 dlDefinitionEnd
 dlItemEnd
 dlEnd
 interblockSeparator
-paragraphSeparator
+interblockSeparator
 dlBeginTight
 dlItem: apple
 dlDefinitionBegin
@@ -164,7 +164,7 @@ dlDefinitionEnd
 dlItemEnd
 dlEndTight
 interblockSeparator
-paragraphSeparator
+interblockSeparator
 dlBegin
 dlItem: apple
 dlDefinitionBegin
@@ -180,7 +180,7 @@ dlDefinitionEnd
 dlItemEnd
 dlEnd
 interblockSeparator
-paragraphSeparator
+interblockSeparator
 dlBegin
 dlItem: apple
 dlDefinitionBegin
@@ -190,7 +190,7 @@ dlDefinitionEnd
 dlItemEnd
 dlItem: orange
 dlDefinitionBegin
-paragraphSeparator
+interblockSeparator
 olBeginTight
 olItemWithNumber: 1
 olItemEnd

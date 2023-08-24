@@ -54,14 +54,14 @@ paragraphSeparator
 softLineBreak
 paragraphSeparator
 emphasis: paren
-paragraphSeparator
+interblockSeparator
 olBegin
 olItemWithNumber: 4
 olItemEnd
 olItemWithNumber: 5
 olItemEnd
 olEnd
-paragraphSeparator
+interblockSeparator
 emphasis: alpha, lower, tight and paren, alpha, lower, tight
 paragraphSeparator
 softLineBreak

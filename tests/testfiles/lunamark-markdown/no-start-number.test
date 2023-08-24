@@ -23,7 +23,7 @@ codeSpan: startNumber
 softLineBreak
 softLineBreak
 paragraphSeparator
-paragraphSeparator
+interblockSeparator
 olBeginTight
 olItem
 olItemEnd
@@ -32,8 +32,8 @@ olItemEnd
 olItem
 olItemEnd
 olEndTight
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
+interblockSeparator
 olBegin
 olItem
 olItemEnd

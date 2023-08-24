@@ -23,7 +23,7 @@ softLineBreak
 softLineBreak
 paragraphSeparator
 softLineBreak
-paragraphSeparator
+interblockSeparator
 BEGIN contentBlockOnlineImage
 - suffix: jpg
 - URI: http://example.com/minard.jpg
@@ -35,7 +35,7 @@ BEGIN link
 - URI: http://example.com/minard.jpg
 - title: 
 END link
-paragraphSeparator
+interblockSeparator
 BEGIN contentBlockOnlineImage
 - suffix: jpg
 - URI: htt(p:/)/exam(ple.c)om/m(inard.jpg
@@ -47,7 +47,7 @@ BEGIN contentBlock
 - URI: Flowchart.png
 - title: Engineering Flowchart
 END contentBlock
-paragraphSeparator
+interblockSeparator
 BEGIN contentBlock
 - suffix: csv
 - URI: Savings Account.csv

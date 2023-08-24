@@ -17,6 +17,6 @@ ulBeginTight
 ulItem
 ulItemEnd
 ulEndTight
-paragraphSeparator
+interblockSeparator
 emphasis: foo
 documentEnd

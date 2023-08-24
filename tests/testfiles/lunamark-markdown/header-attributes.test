@@ -23,14 +23,14 @@ A level two heading {iD=fourth4-id .2not-a-class}
 documentBegin
 codeSpan: headerAttributes
 softLineBreak
-paragraphSeparator
+interblockSeparator
 BEGIN section
 BEGIN headerAttributeContext
 attributeIdentifier: first-id
 attributeClassName: unnumbered
 headingOne: A level one heading
 END headerAttributeContext
-paragraphSeparator
+interblockSeparator
 END section
 BEGIN section
 BEGIN headerAttributeContext
@@ -42,18 +42,18 @@ BEGIN attributeKeyValue
 END attributeKeyValue
 headingOne: A level one heading
 END headerAttributeContext
-paragraphSeparator
+interblockSeparator
 BEGIN section
 BEGIN headerAttributeContext
 attributeIdentifier: third.3id
 attributeClassName: a-class
 headingTwo: A level two heading
 END headerAttributeContext
-paragraphSeparator
+interblockSeparator
 END section
 BEGIN section
 headingTwo: A level two heading (leftBrace)iD=fourth4-id .2not-a-class(rightBrace)
-paragraphSeparator
+interblockSeparator
 BEGIN section
 headingThree: A level three heading (hash)(hash) (leftBrace)(hash)5not-the-fifth-id(rightBrace)
 interblockSeparator
@@ -72,7 +72,7 @@ attributeClassName: ccc
 attributeClassName: dddd
 headingSix: A level six heading
 END headerAttributeContext
-paragraphSeparator
+interblockSeparator
 END section
 END section
 END section

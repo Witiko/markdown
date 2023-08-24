@@ -17,7 +17,7 @@ baz
 >>>
 documentBegin
 softLineBreak
-paragraphSeparator
+interblockSeparator
 thematicBreak
-paragraphSeparator
+interblockSeparator
 documentEnd

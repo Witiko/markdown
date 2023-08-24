@@ -20,7 +20,7 @@ _world_.
 >>>
 documentBegin
 inputBlockHtmlElement: ./_markdown_test/5a8e413f9b0ef97790d0c9da301a6149.verbatim
-paragraphSeparator
+interblockSeparator
 emphasis: world
 softLineBreak
 inlineHtmlTag: </pre>

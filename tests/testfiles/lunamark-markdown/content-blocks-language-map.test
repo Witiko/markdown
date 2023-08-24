@@ -9,7 +9,7 @@ propagates through the plain TeX interface.
 documentBegin
 codeSpan: contentBlockLanguages
 softLineBreak
-paragraphSeparator
+interblockSeparator
 BEGIN contentBlockCode
 - suffix: weirdextension
 - language: weirdLANGUAGE

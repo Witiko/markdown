@@ -17,7 +17,7 @@ BEGIN link
 - URI: /url
 - title: 
 END link
-paragraphSeparator
+interblockSeparator
 blockQuoteBegin
 blockQuoteEnd
 documentEnd

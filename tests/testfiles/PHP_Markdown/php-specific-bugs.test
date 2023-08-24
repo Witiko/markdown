@@ -31,18 +31,18 @@ softLineBreak
 codeSpan: (underscore)UnslashQuotes
 paragraphSeparator
 softLineBreak
-paragraphSeparator
+interblockSeparator
 BEGIN section
 headingOne: Header "quoted" again (backslash)""
-paragraphSeparator
+interblockSeparator
 BEGIN section
 headingTwo: Header "quoted" again (backslash)""
-paragraphSeparator
+interblockSeparator
 BEGIN section
 headingThree: Header "quoted" again (backslash)""
 paragraphSeparator
 codeSpan: (underscore)Detab
-paragraphSeparator
+interblockSeparator
 inputVerbatim: ./_markdown_test/49593f3a94665fea149e78f87b7e1b70.verbatim
 END section
 END section

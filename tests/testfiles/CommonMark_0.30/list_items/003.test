@@ -18,6 +18,6 @@ ulItem
 emphasis: one
 ulItemEnd
 ulEndTight
-paragraphSeparator
+interblockSeparator
 emphasis: two
 documentEnd
