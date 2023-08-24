@@ -24,6 +24,11 @@ Unit Tests:
 - Use self-hosted GitHub runners for tests to improve speed.
   (#326, #330, #331, a9948a86, 68b6216b, contributed by @TeXhackse)
 
+Continuous Integration:
+
+- In draft pull requests, do not build documentation or examples
+  and do not run pkgcheck. (#337, #338)
+
 ## 3.0.0-alpha.2 (2023-08-01)
 
 Development:
