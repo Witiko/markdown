@@ -248,14 +248,15 @@ class TestResult:
         for result in results:
             if not result:  # Exclude successful tests from the summary.
                 summaries[str(result)].append(result)
-        for summary, results in sorted(summaries.items(), key=lambda x: x[0]):
-            plural = 's' if len(results) > 1 else ''
-            testfile_names = format_testfiles(result.testfile for result in results)
+        for summary, merged_results in sorted(summaries.items(), key=lambda x: x[0]):
+            plural = 's' if len(merged_results) > 1 else ''
+            testfile_names = format_testfiles(result.testfile for result in merged_results)
             result_lines.append(f'Testfile{plural} {testfile_names}:')
             result_lines.append('')
             for line in summary.splitlines():
                 result_lines.append(f'  {line}')
             result_lines.append('')
+
         num_successful = sum(1 if result else 0 for result in results)
         num_failed = len(results) - num_successful
         num_updated = sum(1 if result.updated_testfile is True else 0 for result in results)
