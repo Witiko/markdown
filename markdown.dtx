@@ -27758,28 +27758,29 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-                              * ( V("Block")  -- pairs of paragraphs
-                                * -#(V("Blank")^0 * parsers.eof)
-                                * ( V("Blank")^2 / writer.paragraphsep
-                                  + V("Blank")^0 / writer.interblocksep
+                              * ( V("Block")
+                                * ( V("Blank")^0 * parsers.eof
+                                  + ( V("Blank")^2 / writer.paragraphsep
+                                    + V("Blank")^0 / writer.interblocksep
+                                    )
                                   )
                                 + V("Paragraph")
-                                * -#(V("Blank")^0 * parsers.eof)
-                                * ( V("Blank")^2 / writer.paragraphsep
-                                  + V("Blank")^0 / writer.interblocksep
+                                * ( V("Blank")^0 * parsers.eof
+                                  + ( V("Blank")^2 / writer.paragraphsep
+                                    + V("Blank")^0 / writer.interblocksep
+                                    )
                                   )
                                 * V("Block")
-                                * ( V("Blank")^2 / writer.paragraphsep
-                                  + V("Blank")^0 / writer.interblocksep
+                                * ( V("Blank")^0 * parsers.eof
+                                  + ( V("Blank")^2 / writer.paragraphsep
+                                    + V("Blank")^0 / writer.interblocksep
+                                    )
                                   )
                                 + V("Paragraph")
-                                * -#(V("Blank")^0 * parsers.eof)
-                                * (V("Blank")^0 / writer.paragraphsep)
-                                )^0
-                              * ( V("BlockOrParagraph") -- last paragraph
-                                * V("Blank")^0
-                                )^-1
-                              * parsers.eof,
+                                * ( V("Blank")^0 * parsers.eof
+                                  + V("Blank")^0 / writer.paragraphsep
+                                  )
+                                )^0,
 
         ExpectedJekyllData    = parsers.fail,
 
