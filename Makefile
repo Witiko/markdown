@@ -53,6 +53,11 @@ RESOURCES=$(DOCUMENTATION) $(EXAMPLES_RESOURCES) $(EXAMPLES_SOURCES) $(EXAMPLES)
 EVERYTHING=$(RESOURCES) $(INSTALLABLES) $(LIBRARIES)
 GITHUB_PAGES=gh-pages
 
+ifeq ($(NO_DOCUMENTATION), true)
+  TECHNICAL_DOCUMENTATION=
+  EXAMPLES=
+endif
+
 VERSION=$(shell git describe --tags --always --long --exclude latest)
 LASTMODIFIED=$(shell git log -1 --date=format:%Y-%m-%d --format=%ad)
 
@@ -75,6 +80,7 @@ base: $(INSTALLABLES) $(LIBRARIES)
 # This pseudo-target builds a witiko/markdown Docker image.
 docker-image:
 	DOCKER_BUILDKIT=1 docker build --pull --build-arg TEXLIVE_TAG=$(TEXLIVE_TAG) \
+	                               --build-arg NO_DOCUMENTATION=$(NO_DOCUMENTATION) \
 	                               -t $(DOCKER_IMAGE):$(DOCKER_TEMPORARY_TAG) .
 
 # This pseudo-targed pushes the built witiko/markdown Docker image to
@@ -166,23 +172,27 @@ test:
 # This pseudo-target produces the distribution archives.
 dist: implode
 	$(MAKE) $(ARCHIVES)
-	git clone https://gitlab.com/Lotz/pkgcheck.git
-	unzip $(CTANARCHIVE) -d markdown
-	for RETRY in $$(seq 1 10); \
-	do \
-	    if (( RETRY > 1 )); \
-	    then \
-	        sleep $$((RETRY * 15)); \
-	    fi; \
-	    if pkgcheck/bin/pkgcheck -d markdown/markdown -T $(TDSARCHIVE) --urlcheck; \
-	    then \
-	        EXIT_CODE=0; \
-	        break; \
-	    else \
-	        EXIT_CODE=$$?; \
-	    fi; \
-	done; \
-	exit $$EXIT_CODE
+	if [[ '$(NO_DOCUMENTATION)' != true ]]; \
+	then \
+	    set -e -o xtrace; \
+	    git clone https://gitlab.com/Lotz/pkgcheck.git; \
+	    unzip $(CTANARCHIVE) -d markdown; \
+	    for RETRY in $$(seq 1 10); \
+	    do \
+	        if (( RETRY > 1 )); \
+	        then \
+	            sleep $$((RETRY * 15)); \
+	        fi; \
+	        if pkgcheck/bin/pkgcheck -d markdown/markdown -T $(TDSARCHIVE) --urlcheck; \
+	        then \
+	            EXIT_CODE=0; \
+	            break; \
+	        else \
+	            EXIT_CODE=$$?; \
+	        fi; \
+	    done; \
+	    exit $$EXIT_CODE; \
+	fi
 	$(MAKE) clean
 
 # This target produces the TeX directory structure archive.
