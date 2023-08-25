@@ -1444,7 +1444,11 @@ Using a text editor, create a text document named `document.tex` with the
 following content:
 ``` tex
 \input markdown
+\begingroup
+\catcode`\%=12
+\catcode`\#=12
 \input hello
+\endgroup
 \bye
 ```````
 
@@ -1772,7 +1776,11 @@ following content:
 ``` tex
 \input markdown
 \input lmfonts
+\begingroup
+\catcode`\%=12
+\catcode`\#=12
 \input example
+\endgroup
 \bye
 ```````
 Using a text editor, create a text document named `example.lua` with the
@@ -1869,10 +1877,11 @@ following content:
 ``` tex
 \input markdown
 \input lmfonts
-\input safe
-
 \begingroup
 \catcode`\%=12
+\catcode`\#=12
+\input safe
+\par
 \input unsafe
 \endgroup
 \bye
@@ -2425,6 +2434,9 @@ Using a text editor, create a text document named `document.tex` with the
 following content:
 ``` tex
 \input markdown
+\begingroup
+\catcode`\%=12
+\catcode`\#=12
 \directlua{
   local markdown = require("markdown")
   local convert1 = markdown.new({})
@@ -2435,6 +2447,7 @@ following content:
   tex.print(tostring(convert2) .. ", ")
   tex.print(tostring(convert3))
 }
+\endgroup
 \bye
 ```````
 Then, invoke LuaTeX from the terminal:
@@ -2515,11 +2528,15 @@ Using a text editor, create a text document named `document.tex` with the
 following content:
 ``` tex
 \input markdown
+\begingroup
+\catcode`\%=12
+\catcode`\#=12
 \directlua{
   local markdown = require("markdown")
   local convert = markdown.new({cacheDir = "cache"})
   local input = "Hello *world*!"
   tex.sprint(convert(input)) }
+\endgroup
 \bye
 ```````
 Create an empty directory named `cache` next to our text document. Then, invoke
@@ -2537,7 +2554,11 @@ Using a text editor, create a text document named `document.tex` with the
 following content:
 ``` tex
 \input markdown
+\begingroup
+\catcode`\%=12
+\catcode`\#=12
 \input hello
+\endgroup
 \bye
 ```````
 Using a text editor, create a text document named `hello.md` with the
@@ -2889,11 +2910,15 @@ Using a text editor, create a text document named `document.tex` with the
 following content:
 ``` tex
 \input markdown
+\begingroup
+\catcode`\%=12
+\catcode`\#=12
 \directlua{
   local markdown = require("markdown")
   local convert = markdown.new({finalizeCache = true, frozenCacheFileName = "cache.tex"})
   local input = "Hello *world*!"
   tex.sprint(convert(input)) }
+\endgroup
 \bye
 ```````
 Then, invoke LuaTeX from the terminal:
@@ -2911,7 +2936,11 @@ Using a text editor, create a text document named `document.tex` with the
 following content:
 ``` tex
 \input markdown
+\begingroup
+\catcode`\%=12
+\catcode`\#=12
 \input hello
+\endgroup
 \bye
 ```````
 Using a text editor, create a text document named `hello.md` with the
@@ -3129,6 +3158,9 @@ following content:
 ``` tex
 \input markdown
 \input lmfonts
+\begingroup
+\catcode`\%=12
+\catcode`\#=12
 \directlua{
   local markdown = require("markdown")
   local newline = [[^^J^^J]]
@@ -3143,6 +3175,7 @@ following content:
   input = "A paragraph."   .. newline ..
           "> Not a quote." .. newline
   tex.sprint(convert(input)) }
+\endgroup
 \bye
 ```````
 Then, invoke LuaTeX from the terminal:
@@ -3165,8 +3198,12 @@ following content:
 ``` tex
 \input markdown
 \input lmfonts
+\begingroup
+\catcode`\%=12
+\catcode`\#=12
 \input optionfalse
 \input optiontrue
+\endgroup
 \bye
 ```````
 Using a text editor, create a text document named `content.md` with the
@@ -3347,6 +3384,9 @@ following content:
 ``` tex
 \input markdown
 \input lmfonts
+\begingroup
+\catcode`\%=12
+\catcode`\#=12
 \directlua{
   local markdown = require("markdown")
   local newline = [[^^J^^J]]
@@ -3366,6 +3406,7 @@ following content:
           "Not a fenced code." .. newline ..
           "```"                .. newline
   tex.sprint(convert(input)) }
+\endgroup
 \bye
 ```````
 Then, invoke LuaTeX from the terminal:
@@ -3390,8 +3431,12 @@ following content:
 ``` tex
 \input markdown
 \input lmfonts
+\begingroup
+\catcode`\%=12
+\catcode`\#=12
 \input optionfalse
 \input optiontrue
+\endgroup
 \bye
 ```````
 Using a text editor, create a text document named `content.md` with the
@@ -3679,6 +3724,9 @@ following content:
 \input markdown
 \input lmfonts
 \def\markdownRendererHeadingOne#1{{\bf #1}\par}
+\begingroup
+\catcode`\%=12
+\catcode`\#=12
 \directlua{
   local markdown = require("markdown")
   local newline = [[^^J^^J]]
@@ -3695,6 +3743,7 @@ following content:
           "Not a heading."  .. newline ..
           "=============="  .. newline
   tex.sprint(convert(input)) }
+\endgroup
 \bye
 ```````
 Then, invoke LuaTeX from the terminal:
@@ -3718,8 +3767,12 @@ following content:
 ``` tex
 \input markdown
 \input lmfonts
+\begingroup
+\catcode`\%=12
+\catcode`\#=12
 \input optionfalse
 \input optiontrue
+\endgroup
 \bye
 ```````
 Using a text editor, create a text document named `content.md` with the
@@ -3910,6 +3963,9 @@ following content:
 ``` tex
 \input markdown
 \input lmfonts
+\begingroup
+\catcode`\%=12
+\catcode`\#=12
 \directlua{
   local markdown = require("markdown")
   local newline = [[^^J^^J]]
@@ -3925,6 +3981,7 @@ following content:
   input = "A paragraph."   .. newline ..
           "- not a list"     .. newline
   tex.sprint(convert(input)) }
+\endgroup
 \bye
 ```````
 Then, invoke LuaTeX from the terminal:
@@ -3947,8 +4004,12 @@ following content:
 ``` tex
 \input markdown
 \input lmfonts
+\begingroup
+\catcode`\%=12
+\catcode`\#=12
 \input optionfalse
 \input optiontrue
+\endgroup
 \bye
 ```````
 Using a text editor, create a text document named `content.md` with the
@@ -4224,6 +4285,9 @@ following content:
 \input markdown
 \input lmfonts
 \def\markdownRendererHeadingOne#1{{\bf #1}\par}
+\begingroup
+\catcode`\%=12
+\catcode`\#=12
 \directlua{
   local markdown = require("markdown")
   local newline = [[^^J^^J]]
@@ -4238,6 +4302,7 @@ following content:
   input = "> A block quote."       .. newline .. newline ..
           "> Another block quote." .. newline
   tex.sprint(convert(input)) }
+\endgroup
 \bye
 ```````
 Then, invoke LuaTeX from the terminal:
@@ -4260,8 +4325,12 @@ following content:
 ``` tex
 \input markdown
 \input lmfonts
+\begingroup
+\catcode`\%=12
+\catcode`\#=12
 \input optionfalse
 \input optiontrue
+\endgroup
 \bye
 ```````
 Using a text editor, create a text document named `content.md` with the
@@ -4657,6 +4726,9 @@ following content:
 ``` tex
 \input markdown
 \input lmfonts
+\begingroup
+\catcode`\%=12
+\catcode`\#=12
 \directlua{
   local markdown = require("markdown")
   local convert = markdown.new()
@@ -4672,6 +4744,7 @@ following content:
     "``This is a quote.'' " ..
     "``This is another quote.''"
   tex.sprint(convert(input)) }
+\endgroup
 \bye
 ```````
 Then, invoke LuaTeX from the terminal:
@@ -4692,9 +4765,13 @@ following content:
 ``` tex
 \input markdown
 \input lmfonts
+\begingroup
+\catcode`\%=12
+\catcode`\#=12
 \input optionfalse
 \par
 \input optiontrue
+\endgroup
 \bye
 ```````
 Using a text editor, create a text document named `content.md` with the
@@ -6219,6 +6296,9 @@ Using a text editor, create a text document named `document.tex` with the
 following content:
 ``` tex
 \input markdown
+\begingroup
+\catcode`\%=12
+\catcode`\#=12
 \directlua{
   local markdown = require("markdown")
   local firstConvert = markdown.new({finalizeCache = true, frozenCacheCounter = 0})
@@ -6226,6 +6306,7 @@ following content:
   local secondConvert = markdown.new({finalizeCache = true, frozenCacheCounter = 1})
   local secondInput = "*world*!"
   tex.sprint(firstConvert(firstInput) .. [[ ]] .. secondConvert(secondInput)) }
+\endgroup
 \bye
 ```````
 Then, invoke LuaTeX from the terminal:
@@ -6469,6 +6550,9 @@ following content:
 ``` tex
 \input markdown
 \input lmfonts
+\begingroup
+\catcode`\%=12
+\catcode`\#=12
 \directlua{
   local markdown = require("markdown")
   local convert = markdown.new({html = false})
@@ -6489,6 +6573,7 @@ following content:
     "_There is <!-- comment --> support._"            .. newline ..
     "_There is <? HTML instruction ?> support._"
   tex.sprint(convert(input)) }
+\endgroup
 \bye
 ```````
 Then, invoke LuaTeX from the terminal:
@@ -6512,9 +6597,13 @@ following content:
 ``` tex
 \input markdown
 \input lmfonts
+\begingroup
+\catcode`\%=12
+\catcode`\#=12
 \input optionfalse
 \par
 \input optiontrue
+\endgroup
 \bye
 ```````
 Using a text editor, create a text document named `content.md` with the
@@ -6735,6 +6824,9 @@ following content:
 ``` tex
 \input markdown
 \input lmfonts
+\begingroup
+\catcode`\%=12
+\catcode`\#=12
 \directlua{
   local markdown = require("markdown")
   local input, convert_safe, convert_unsafe, paragraph
@@ -6749,6 +6841,7 @@ following content:
     convert_unsafe(input)
   )
 }
+\endgroup
 \bye
 ```````
 Then, invoke LuaTeX from the terminal:
@@ -6771,10 +6864,11 @@ following content:
 ``` tex
 \input markdown
 \input lmfonts
-\input optionfalse
-
 \begingroup
 \catcode`\%=12
+\catcode`\#=12
+\input optionfalse
+\par
 \input optiontrue
 \endgroup
 \bye
@@ -8407,8 +8501,11 @@ Using a text editor, create a text document named `document.tex` with the
 following content:
 ``` tex
 \input markdown
-\def\markdownRendererEllipsis{. . .}
 \input lmfonts
+\def\markdownRendererEllipsis{. . .}
+\begingroup
+\catcode`\%=12
+\catcode`\#=12
 \directlua{
   local markdown = require("markdown")
   local convert = markdown.new()
@@ -8420,6 +8517,7 @@ following content:
   local convert = markdown.new({smartEllipses = true})
   local input = "... and this is a victorian ellipsis."
   tex.sprint(convert(input)) }
+\endgroup
 \bye
 ```````
 Then, invoke LuaTeX from the terminal:
@@ -8439,11 +8537,15 @@ Using a text editor, create a text document named `document.tex` with the
 following content:
 ``` tex
 \input markdown
-\def\markdownRendererEllipsis{. . .}
 \input lmfonts
+\def\markdownRendererEllipsis{. . .}
+\begingroup
+\catcode`\%=12
+\catcode`\#=12
 \input optionfalse
 \par
 \input optiontrue
+\endgroup
 \bye
 ```````
 Using a text editor, create a text document named `content.md` with the
@@ -9662,6 +9764,9 @@ following content:
 ``` tex
 \input markdown
 \input lmfonts
+\begingroup
+\catcode`\%=12
+\catcode`\#=12
 \directlua{
   local markdown = require("markdown")
   local newline = [[^^J^^J]]
@@ -9670,6 +9775,7 @@ following content:
     [[$E=mc^2$]] .. newline .. newline ..
     [[$$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$]]
   tex.sprint(convert(input)) }
+\endgroup
 \bye
 ```````
 Then, invoke LuaTeX from the terminal:
@@ -9690,9 +9796,13 @@ following content:
 ``` tex
 \input markdown
 \input lmfonts
+\begingroup
+\catcode`\%=12
+\catcode`\#=12
 \input optionfalse
 \par
 \input optiontrue
+\endgroup
 \bye
 ```````
 Using a text editor, create a text document named `content.md` with the
@@ -9718,11 +9828,11 @@ A PDF document named `document.pdf` should be produced and contain the
 following text:
 
 > \$E=mc^2\$
-> 
+>
 > \$\$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\$\$
 >
 > $E=mc^2$
-> 
+>
 > $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
 
 ##### Plain \TeX{} Example {.unnumbered}
@@ -9865,6 +9975,9 @@ following content:
 ``` tex
 \input markdown
 \input lmfonts
+\begingroup
+\catcode`\%=12
+\catcode`\#=12
 \directlua{
   local markdown = require("markdown")
   local newline = [[^^J^^J]]
@@ -9873,6 +9986,7 @@ following content:
     [[\\(E=mc^2\\)]] .. newline .. newline ..
     [[\\[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\\]]]
   tex.sprint(convert(input)) }
+\endgroup
 \bye
 ```````
 Then, invoke LuaTeX from the terminal:
@@ -9893,9 +10007,13 @@ following content:
 ``` tex
 \input markdown
 \input lmfonts
+\begingroup
+\catcode`\%=12
+\catcode`\#=12
 \input optionfalse
 \par
 \input optiontrue
+\endgroup
 \bye
 ```````
 Using a text editor, create a text document named `content.md` with the
@@ -9921,11 +10039,11 @@ A PDF document named `document.pdf` should be produced and contain the
 following text:
 
 > \\\(E=mc^2\\)
-> 
+>
 > \\\[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\\]
 >
 > \\(E=mc^2\\)
-> 
+>
 > \\[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\\]
 
 ##### Plain \TeX{} Example {.unnumbered}
@@ -10068,6 +10186,9 @@ following content:
 ``` tex
 \input markdown
 \input lmfonts
+\begingroup
+\catcode`\%=12
+\catcode`\#=12
 \directlua{
   local markdown = require("markdown")
   local newline = [[^^J^^J]]
@@ -10076,6 +10197,7 @@ following content:
     [[\(E=mc^2\)]] .. newline .. newline ..
     [[\[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\]]]
   tex.sprint(convert(input)) }
+\endgroup
 \bye
 ```````
 Then, invoke LuaTeX from the terminal:
@@ -10096,9 +10218,13 @@ following content:
 ``` tex
 \input markdown
 \input lmfonts
+\begingroup
+\catcode`\%=12
+\catcode`\#=12
 \input optionfalse
 \par
 \input optiontrue
+\endgroup
 \bye
 ```````
 Using a text editor, create a text document named `content.md` with the
@@ -10124,11 +10250,11 @@ A PDF document named `document.pdf` should be produced and contain the
 following text:
 
 > (E=mc^2)
-> 
+>
 > [\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx]
 >
 > \(E=mc^2\)
-> 
+>
 > \[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\]
 
 ##### Plain \TeX{} Example {.unnumbered}
