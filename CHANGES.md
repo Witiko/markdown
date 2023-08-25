@@ -34,6 +34,8 @@ Continuous Integration:
 
 - In draft pull requests, do not build documentation or examples
   and do not run pkgcheck. (#337, #338)
+- Allow workflows triggered from pull requests to push to Docker Hub.
+  (#340)
 
 ## 3.0.0-alpha.2 (2023-08-01)
 
