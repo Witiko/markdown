@@ -120,11 +120,12 @@ jobs:
         run: |
           make docker-image TEXLIVE_TAG=${{ matrix.texlive }} \
                             NO_DOCUMENTATION=${{ github.event_name == 'pull_request' && github.event.pull_request.draft == true }}
-      - name: Authenticate Docker registry
-        uses: azure/docker-login@v1
+      - name: Login to GitHub Packages
+        uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKER_HUB_USER }}
-          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish Docker image with a temporary tag
         run: make docker-push-temporary-tag TEXLIVE_TAG=${{ matrix.texlive }}
       - name: Store the temporary tag
@@ -179,8 +180,8 @@ jobs:
         with:
           fetch-depth: 0
           submodules: true
-      - name: Authenticate Docker registry
-        uses: azure/docker-login@v1
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
