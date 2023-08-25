@@ -18,6 +18,8 @@ Fixes:
   (#308, #318, 28650b8)
 - Fix `rawAttribute` option being enabled in Lua by default.
   (92c9ac2)
+- Make our implementation of attributes compatible with jgm/pandoc.
+  (jgm/lunamark#68, #304, #343, contributed by @Omikhleia)
 
 Documentation:
 
