@@ -6,6 +6,10 @@ Development:
 
 - Add support for TeX-like rich paragraphs. (#30, #306)
 
+Documentation:
+
+- Document setting up catcodes in Lua. (#329, #342)
+
 Fixes:
 
 - Reset current heading level at the end of a markdown document.
@@ -34,6 +38,7 @@ Continuous Integration:
 
 - In draft pull requests, do not build documentation or examples
   and do not run pkgcheck. (#337, #338)
+- Push temporary Docker images to GitHub Packages. (#340, #341)
 
 ## 3.0.0-alpha.2 (2023-08-01)
 

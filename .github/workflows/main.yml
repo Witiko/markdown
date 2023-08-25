@@ -14,8 +14,6 @@ on:
     - cron: '30 4 * * MON'
 env:
   DEBIAN_FRONTEND: noninteractive
-permissions:
-  contents: write
 jobs:
   shellcheck:
     name: Style check (Bash)
@@ -110,6 +108,8 @@ jobs:
       TL2022-historic: ${{ steps.temporary-tags.outputs.TL2022-historic }}
       latest: ${{ steps.temporary-tags.outputs.latest }}
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -120,11 +120,12 @@ jobs:
         run: |
           make docker-image TEXLIVE_TAG=${{ matrix.texlive }} \
                             NO_DOCUMENTATION=${{ github.event_name == 'pull_request' && github.event.pull_request.draft == true }}
-      - name: Authenticate Docker registry
-        uses: azure/docker-login@v1
+      - name: Login to GitHub Packages
+        uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKER_HUB_USER }}
-          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish Docker image with a temporary tag
         run: make docker-push-temporary-tag TEXLIVE_TAG=${{ matrix.texlive }}
       - name: Store the temporary tag
@@ -145,7 +146,7 @@ jobs:
           - latest
     runs-on: self-hosted
     container:
-      image: witiko/markdown:${{ needs.build-docker-image.outputs[matrix.texlive] }}
+      image: ghcr.io/witiko/markdown:${{ needs.build-docker-image.outputs[matrix.texlive] }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -179,8 +180,8 @@ jobs:
         with:
           fetch-depth: 0
           submodules: true
-      - name: Authenticate Docker registry
-        uses: azure/docker-login@v1
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
@@ -199,7 +200,7 @@ jobs:
           - latest
     runs-on: ubuntu-latest
     container:
-      image: witiko/markdown:${{ needs.build-docker-image.outputs[matrix.texlive] }}
+      image: ghcr.io/witiko/markdown:${{ needs.build-docker-image.outputs[matrix.texlive] }}
     if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout repository
@@ -263,6 +264,8 @@ jobs:
     needs:
       - test
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     if: github.event_name == 'pull_request'
     steps:
       - name: Automatically merge pull request
