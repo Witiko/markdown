@@ -14,13 +14,13 @@ This is a code span containing a single space:
 `   `
 >>>
 documentBegin
-interblockSeparator
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
+paragraphSeparator
 codeSpan:  
-interblockSeparator
+paragraphSeparator
 codeSpan:   
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 codeSpan:    
 documentEnd

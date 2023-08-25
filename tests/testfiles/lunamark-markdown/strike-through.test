@@ -8,7 +8,7 @@ Some ~~deleted text~~ and some \~~regular text with tildes~~.
 documentBegin
 codeSpan: strikeThrough
 softLineBreak
-interblockSeparator
+paragraphSeparator
 strikeThrough: deleted text
 tilde
 tilde

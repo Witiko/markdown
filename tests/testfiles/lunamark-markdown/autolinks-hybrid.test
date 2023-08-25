@@ -15,13 +15,13 @@ softLineBreak
 softLineBreak
 softLineBreak
 codeSpan: hybrid
-interblockSeparator
+paragraphSeparator
 BEGIN link
 - label: https://en.wikipedia.org/wiki/Value(underscore)of(underscore)life
 - URI: https://en.wikipedia.org/wiki/Value_of_life
 - title: 
 END link
-interblockSeparator
+paragraphSeparator
 BEGIN link
 - label: Value(underscore)of(underscore)life@Valueoflife.com
 - URI: mailto:Value_of_life@Valueoflife.com

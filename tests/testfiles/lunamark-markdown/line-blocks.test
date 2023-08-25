@@ -22,7 +22,7 @@ Line blocks with continuation
 documentBegin
 codeSpan: lineBlocks
 softLineBreak
-interblockSeparator
+paragraphSeparator
 interblockSeparator
 lineBlockBegin
 emphasis: limerick

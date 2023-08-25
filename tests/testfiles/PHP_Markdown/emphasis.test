@@ -133,7 +133,7 @@ olItemWithNumber: 16
 emphasis: test (strongEmphasis: test)
 olItemEnd
 olEndTight
-interblockSeparator
+paragraphSeparator
 interblockSeparator
 olBeginTight
 olItemWithNumber: 1
@@ -161,7 +161,7 @@ olItemWithNumber: 8
 strongEmphasis: test (strongEmphasis: test) test
 olItemEnd
 olEndTight
-interblockSeparator
+paragraphSeparator
 interblockSeparator
 olBeginTight
 olItemWithNumber: 1
@@ -179,7 +179,7 @@ underscore
 underscore
 olItemEnd
 olEndTight
-interblockSeparator
+paragraphSeparator
 interblockSeparator
 olBeginTight
 olItemWithNumber: 1
@@ -201,7 +201,7 @@ olItemWithNumber: 6
 strongEmphasis: b
 olItemEnd
 olEndTight
-interblockSeparator
+paragraphSeparator
 interblockSeparator
 olBeginTight
 olItemWithNumber: 1
@@ -238,15 +238,15 @@ olEndTight
 interblockSeparator
 underscore
 underscore
-interblockSeparator
+paragraphSeparator
 BEGIN section
 BEGIN section
 headingTwo: Tricky Cases
 interblockSeparator
 strongEmphasis: Test
-interblockSeparator
+paragraphSeparator
 strongEmphasis: Test
-interblockSeparator
+paragraphSeparator
 END section
 BEGIN section
 headingTwo: Overlong emphasis
@@ -271,9 +271,9 @@ underscore
 softLineBreak
 underscore
 underscore
-interblockSeparator
+paragraphSeparator
 emphasis: (strongEmphasis: (strongEmphasis: Cut here))
-interblockSeparator
+paragraphSeparator
 strongEmphasis: (strongEmphasis: Cut here)
 END section
 END section

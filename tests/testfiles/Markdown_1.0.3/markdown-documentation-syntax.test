@@ -1030,7 +1030,7 @@ ulItemEnd
 ulEndTight
 ulItemEnd
 ulEndTight
-interblockSeparator
+paragraphSeparator
 strongEmphasis: Note:
 softLineBreak
 BEGIN link
@@ -1038,7 +1038,7 @@ BEGIN link
 - URI: /projects/markdown/syntax.text
 - title: 
 END link
-interblockSeparator
+paragraphSeparator
 thematicBreak
 interblockSeparator
 BEGIN section
@@ -1047,7 +1047,7 @@ interblockSeparator
 BEGIN section
 headingThree: Philosophy
 interblockSeparator
-interblockSeparator
+paragraphSeparator
 softLineBreak
 softLineBreak
 softLineBreak
@@ -1084,20 +1084,20 @@ BEGIN link
 - title: 
 END link
 softLineBreak
-interblockSeparator
+paragraphSeparator
 softLineBreak
 softLineBreak
 softLineBreak
 softLineBreak
 softLineBreak
-interblockSeparator
+paragraphSeparator
 END section
 BEGIN section
 headingThree: Inline HTML
 interblockSeparator
 softLineBreak
 emphasis: writing
-interblockSeparator
+paragraphSeparator
 softLineBreak
 softLineBreak
 emphasis: not
@@ -1108,11 +1108,11 @@ emphasis: publishing
 emphasis: writing
 softLineBreak
 softLineBreak
-interblockSeparator
+paragraphSeparator
 softLineBreak
 softLineBreak
 softLineBreak
-interblockSeparator
+paragraphSeparator
 codeSpan: <div>
 softLineBreak
 codeSpan: <table>
@@ -1122,14 +1122,14 @@ softLineBreak
 softLineBreak
 softLineBreak
 codeSpan: <p>
-interblockSeparator
+paragraphSeparator
 interblockSeparator
 inputVerbatim: ./_markdown_test/988ac72abc79ccf10e4d44a3397367be.verbatim
 interblockSeparator
 softLineBreak
 codeSpan: *emphasis*
 softLineBreak
-interblockSeparator
+paragraphSeparator
 codeSpan: <span>
 codeSpan: <cite>
 codeSpan: <del>
@@ -1139,10 +1139,10 @@ softLineBreak
 codeSpan: <a>
 codeSpan: <img>
 softLineBreak
-interblockSeparator
+paragraphSeparator
 emphasis: is
 softLineBreak
-interblockSeparator
+paragraphSeparator
 END section
 BEGIN section
 headingThree: Automatic Escaping for Special Characters
@@ -1155,7 +1155,7 @@ softLineBreak
 codeSpan: (ampersand)lt;
 softLineBreak
 codeSpan: (ampersand)amp;
-interblockSeparator
+paragraphSeparator
 softLineBreak
 ampersand
 codeSpan: AT(ampersand)amp;T
@@ -1169,12 +1169,12 @@ interblockSeparator
 codeSpan: href
 softLineBreak
 softLineBreak
-interblockSeparator
+paragraphSeparator
 softLineBreak
 softLineBreak
 softLineBreak
 codeSpan: (ampersand)amp;
-interblockSeparator
+paragraphSeparator
 interblockSeparator
 inputVerbatim: ./_markdown_test/1e8d587771845f72ca4b2ae2815b26b4.verbatim
 interblockSeparator
@@ -1204,31 +1204,31 @@ softLineBreak
 codeSpan: <
 softLineBreak
 codeSpan: (ampersand)
-interblockSeparator
+paragraphSeparator
 thematicBreak
-interblockSeparator
+paragraphSeparator
 END section
 END section
 BEGIN section
 headingTwo: Block Elements
-interblockSeparator
+paragraphSeparator
 BEGIN section
 headingThree: Paragraphs and Line Breaks
 interblockSeparator
 softLineBreak
 softLineBreak
 softLineBreak
-interblockSeparator
+paragraphSeparator
 softLineBreak
 softLineBreak
 softLineBreak
 softLineBreak
 codeSpan: <br />
-interblockSeparator
+paragraphSeparator
 emphasis: do
 codeSpan: <br />
 softLineBreak
-interblockSeparator
+paragraphSeparator
 codeSpan: <br />
 softLineBreak
 codeSpan: <br />
@@ -1244,7 +1244,7 @@ BEGIN link
 - title: 
 END link
 softLineBreak
-interblockSeparator
+paragraphSeparator
 END section
 BEGIN section
 headingThree: Headers
@@ -1259,14 +1259,14 @@ BEGIN link
 - URI: http://www.aaronsw.com/2002/atx/
 - title: 
 END link
-interblockSeparator
+paragraphSeparator
 softLineBreak
 interblockSeparator
 inputVerbatim: ./_markdown_test/3014f7c6f37d31a7f09f2f99d4a9a049.verbatim
 interblockSeparator
 codeSpan: =
 codeSpan: -
-interblockSeparator
+paragraphSeparator
 softLineBreak
 interblockSeparator
 inputVerbatim: ./_markdown_test/2daa67674fe6a509b558518cfb04de16.verbatim
@@ -1277,7 +1277,7 @@ softLineBreak
 softLineBreak
 interblockSeparator
 inputVerbatim: ./_markdown_test/b1c734088558783c318bbcca92d87dfb.verbatim
-interblockSeparator
+paragraphSeparator
 END section
 BEGIN section
 headingThree: Blockquotes
@@ -1306,12 +1306,12 @@ inputVerbatim: ./_markdown_test/e0551bbbbadc854888810d197c71994a.verbatim
 interblockSeparator
 softLineBreak
 softLineBreak
-interblockSeparator
+paragraphSeparator
 END section
 BEGIN section
 headingThree: Lists
 interblockSeparator
-interblockSeparator
+paragraphSeparator
 softLineBreak
 interblockSeparator
 inputVerbatim: ./_markdown_test/b2feb3d2ccee2ee3a3aad6c8b1d679d0.verbatim
@@ -1339,13 +1339,13 @@ interblockSeparator
 softLineBreak
 softLineBreak
 softLineBreak
-interblockSeparator
+paragraphSeparator
 softLineBreak
 softLineBreak
-interblockSeparator
+paragraphSeparator
 softLineBreak
 softLineBreak
-interblockSeparator
+paragraphSeparator
 interblockSeparator
 inputVerbatim: ./_markdown_test/6c6f57b57ad29ccd12bef0665b3de542.verbatim
 interblockSeparator
@@ -1385,7 +1385,7 @@ softLineBreak
 emphasis: twice
 interblockSeparator
 inputVerbatim: ./_markdown_test/fb6f5e5ba34ea17946b8814853971aec.verbatim
-interblockSeparator
+paragraphSeparator
 softLineBreak
 interblockSeparator
 inputVerbatim: ./_markdown_test/6d47f6daaa522ea7cef7ec7a281de306.verbatim
@@ -1394,7 +1394,7 @@ emphasis: number-period-space
 softLineBreak
 interblockSeparator
 inputVerbatim: ./_markdown_test/3311d57ffe81d920b965b76b809dede7.verbatim
-interblockSeparator
+paragraphSeparator
 END section
 BEGIN section
 headingThree: Code Blocks
@@ -1404,7 +1404,7 @@ softLineBreak
 softLineBreak
 codeSpan: <pre>
 codeSpan: <code>
-interblockSeparator
+paragraphSeparator
 softLineBreak
 interblockSeparator
 inputVerbatim: ./_markdown_test/e70809fd2cd2aaf05377d4d698bc778e.verbatim
@@ -1420,7 +1420,7 @@ interblockSeparator
 inputVerbatim: ./_markdown_test/8122ca21235de208d37b9ce75958c4ae.verbatim
 interblockSeparator
 softLineBreak
-interblockSeparator
+paragraphSeparator
 codeSpan: (ampersand)
 codeSpan: <
 codeSpan: >
@@ -1436,7 +1436,7 @@ inputVerbatim: ./_markdown_test/d6be2fe3c7e11108954d5ad01232127c.verbatim
 interblockSeparator
 softLineBreak
 softLineBreak
-interblockSeparator
+paragraphSeparator
 END section
 BEGIN section
 headingThree: Horizontal Rules
@@ -1447,7 +1447,7 @@ softLineBreak
 softLineBreak
 interblockSeparator
 inputVerbatim: ./_markdown_test/7b1097924e84f9f8a3fdd03ac0f4293a.verbatim
-interblockSeparator
+paragraphSeparator
 thematicBreak
 interblockSeparator
 END section
@@ -1460,8 +1460,8 @@ headingThree: Links
 interblockSeparator
 emphasis: inline
 emphasis: reference
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 softLineBreak
 softLineBreak
 emphasis: optional
@@ -1511,12 +1511,12 @@ interblockSeparator
 inputVerbatim: ./_markdown_test/e2503cc16fa255a6c0194b5af106eec0.verbatim
 interblockSeparator
 softLineBreak
-interblockSeparator
+paragraphSeparator
 emphasis: not
 interblockSeparator
 inputVerbatim: ./_markdown_test/931031d377a1347fb86bb22253f12124.verbatim
 interblockSeparator
-interblockSeparator
+paragraphSeparator
 emphasis: implicit link name
 softLineBreak
 softLineBreak
@@ -1537,7 +1537,7 @@ interblockSeparator
 softLineBreak
 softLineBreak
 softLineBreak
-interblockSeparator
+paragraphSeparator
 interblockSeparator
 inputVerbatim: ./_markdown_test/b80b78ea17b5f6bf7dea31172752c9c9.verbatim
 interblockSeparator
@@ -1557,12 +1557,12 @@ softLineBreak
 softLineBreak
 softLineBreak
 softLineBreak
-interblockSeparator
+paragraphSeparator
 softLineBreak
 softLineBreak
 softLineBreak
 softLineBreak
-interblockSeparator
+paragraphSeparator
 END section
 BEGIN section
 headingThree: Emphasis
@@ -1585,19 +1585,19 @@ interblockSeparator
 inputVerbatim: ./_markdown_test/5a7273e71dc0066df02302e3f3984931.verbatim
 interblockSeparator
 softLineBreak
-interblockSeparator
+paragraphSeparator
 interblockSeparator
 inputVerbatim: ./_markdown_test/e9f57ac87af540986f918ca7753414bd.verbatim
 interblockSeparator
 codeSpan: *
 codeSpan: (underscore)
 softLineBreak
-interblockSeparator
+paragraphSeparator
 softLineBreak
 softLineBreak
 interblockSeparator
 inputVerbatim: ./_markdown_test/3350aadded5e97288005f366ce9e968f.verbatim
-interblockSeparator
+paragraphSeparator
 END section
 BEGIN section
 headingThree: Code
@@ -1639,17 +1639,17 @@ inputVerbatim: ./_markdown_test/871e0e62631c96707f67fc3b53c3a442.verbatim
 interblockSeparator
 interblockSeparator
 inputVerbatim: ./_markdown_test/4972e6763169966a715cd56ed32159ce.verbatim
-interblockSeparator
+paragraphSeparator
 END section
 BEGIN section
 headingThree: Images
 interblockSeparator
 softLineBreak
-interblockSeparator
+paragraphSeparator
 softLineBreak
 emphasis: inline
 emphasis: reference
-interblockSeparator
+paragraphSeparator
 interblockSeparator
 inputVerbatim: ./_markdown_test/449ad894b5ed92006b8b5ac028a2a632.verbatim
 interblockSeparator
@@ -1679,9 +1679,9 @@ interblockSeparator
 softLineBreak
 softLineBreak
 codeSpan: <img>
-interblockSeparator
+paragraphSeparator
 thematicBreak
-interblockSeparator
+paragraphSeparator
 END section
 END section
 BEGIN section
@@ -1705,11 +1705,11 @@ interblockSeparator
 interblockSeparator
 inputVerbatim: ./_markdown_test/6c6e7a7b85345dd94cb68a9bebb64e99.verbatim
 interblockSeparator
-interblockSeparator
+paragraphSeparator
 softLineBreak
 softLineBreak
 softLineBreak
-interblockSeparator
+paragraphSeparator
 END section
 BEGIN section
 headingThree: Backslash Escapes

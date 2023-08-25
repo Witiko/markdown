@@ -146,29 +146,7 @@ ulItemEnd
 ulItem
 ulItemEnd
 ulEndTight
-interblockSeparator
-interblockSeparator
-ulBegin
-ulItem
-ulItemEnd
-ulItem
-ulItemEnd
-ulItem
-ulItemEnd
-ulEnd
-interblockSeparator
-thematicBreak
-interblockSeparator
-interblockSeparator
-ulBeginTight
-ulItem
-ulItemEnd
-ulItem
-ulItemEnd
-ulItem
-ulItemEnd
-ulEndTight
-interblockSeparator
+paragraphSeparator
 interblockSeparator
 ulBegin
 ulItem
@@ -190,7 +168,7 @@ ulItemEnd
 ulItem
 ulItemEnd
 ulEndTight
-interblockSeparator
+paragraphSeparator
 interblockSeparator
 ulBegin
 ulItem
@@ -201,6 +179,28 @@ ulItem
 ulItemEnd
 ulEnd
 interblockSeparator
+thematicBreak
+paragraphSeparator
+interblockSeparator
+ulBeginTight
+ulItem
+ulItemEnd
+ulItem
+ulItemEnd
+ulItem
+ulItemEnd
+ulEndTight
+paragraphSeparator
+interblockSeparator
+ulBegin
+ulItem
+ulItemEnd
+ulItem
+ulItemEnd
+ulItem
+ulItemEnd
+ulEnd
+paragraphSeparator
 END section
 BEGIN section
 headingTwo: Ordered
@@ -224,7 +224,7 @@ olItemEnd
 olItemWithNumber: 3
 olItemEnd
 olEndTight
-interblockSeparator
+paragraphSeparator
 interblockSeparator
 olBegin
 olItemWithNumber: 1
@@ -256,7 +256,7 @@ olItemEnd
 olItemWithNumber: 3
 olItemEnd
 olEnd
-interblockSeparator
+paragraphSeparator
 END section
 BEGIN section
 headingTwo: Nested
@@ -313,7 +313,7 @@ olItemEnd
 olItemWithNumber: 3
 olItemEnd
 olEnd
-interblockSeparator
+paragraphSeparator
 interblockSeparator
 ulBegin
 ulItem

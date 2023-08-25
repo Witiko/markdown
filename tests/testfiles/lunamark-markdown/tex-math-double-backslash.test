@@ -46,36 +46,36 @@ The following is not inline math:
 documentBegin
 codeSpan: texMathDoubleBackslash
 softLineBreak
-interblockSeparator
+paragraphSeparator
 inlineMath: E=mc^2
-interblockSeparator
+paragraphSeparator
 displayMath: \hat {f} \left  ( \xi   \right  )= \int _{-\infty }^{\infty } f\left  ( x  \right  ) e^{-i2\pi  \xi  x} dx
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 backslash
 backslash
-interblockSeparator
+paragraphSeparator
 backslash
 backslash
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 backslash
-interblockSeparator
+paragraphSeparator
 backslash
-interblockSeparator
+paragraphSeparator
 backslash
-interblockSeparator
+paragraphSeparator
 backslash
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 backslash
 backslash
 backslash
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 inlineMath: \ 
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 backslash
 backslash
 documentEnd

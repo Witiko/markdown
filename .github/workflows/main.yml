@@ -117,7 +117,9 @@ jobs:
           fetch-depth: 0
           submodules: true
       - name: Build Docker image
-        run: make docker-image TEXLIVE_TAG=${{ matrix.texlive }}
+        run: |
+          make docker-image TEXLIVE_TAG=${{ matrix.texlive }} \
+                            NO_DOCUMENTATION=${{ github.event_name == 'pull_request' && github.event.pull_request.draft == true }}
       - name: Authenticate Docker registry
         uses: azure/docker-login@v1
         with:
@@ -207,7 +209,10 @@ jobs:
           submodules: true
       - name: Build distribution archives
         if: matrix.texlive == 'latest'
-        run: make dist gh-pages
+        run: |
+          set -ex
+          chown -R root:root .
+          make dist gh-pages
       - name: Upload artifact markdown.tds.zip
         if: matrix.texlive == 'latest'
         uses: actions/upload-artifact@v2

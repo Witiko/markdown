@@ -84,72 +84,72 @@ $$\$$
 documentBegin
 codeSpan: texMathDollars
 softLineBreak
-interblockSeparator
+paragraphSeparator
 inlineMath: E=mc^2
-interblockSeparator
+paragraphSeparator
 displayMath: \hat {f} \left  ( \xi   \right  )= \int _{-\infty }^{\infty } f\left  ( x  \right  ) e^{-i2\pi  \xi  x} dx
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 dollarSign
-interblockSeparator
+paragraphSeparator
 dollarSign
 dollarSign
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 dollarSign
 backslash
 dollarSign
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 inlineMath: \ 
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 dollarSign
 dollarSign
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 inlineMath: a b c
-interblockSeparator
+paragraphSeparator
 displayMath: a b c
-interblockSeparator
+paragraphSeparator
 dollarSign
-interblockSeparator
+paragraphSeparator
 dollarSign
-interblockSeparator
-dollarSign
-dollarSign
-interblockSeparator
+paragraphSeparator
 dollarSign
 dollarSign
-interblockSeparator
-interblockSeparator
+paragraphSeparator
 dollarSign
 dollarSign
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
+dollarSign
+dollarSign
+paragraphSeparator
 dollarSign
 dollarSign
 dollarSign
 dollarSign
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 displayMath:  
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 inlineMath: .
 dollarSign
-interblockSeparator
+paragraphSeparator
 dollarSign
 inlineMath: .
 dollarSign
 dollarSign
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 inlineMath: \$
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 displayMath: \$
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 dollarSign
 inlineMath: \$
 documentEnd

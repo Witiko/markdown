@@ -133,7 +133,7 @@ interblockSeparator
 dlBegin
 dlItem: (emphasis: apple)
 dlDefinitionBegin
-interblockSeparator
+paragraphSeparator
 softLineBreak
 dlDefinitionEnd
 dlItemEnd

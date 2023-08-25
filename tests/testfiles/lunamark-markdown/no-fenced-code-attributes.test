@@ -16,7 +16,7 @@ codeSpan: fencedCode
 softLineBreak
 codeSpan: fencedCodeAttributes
 softLineBreak
-interblockSeparator
+paragraphSeparator
 softLineBreak
 interblockSeparator
 BEGIN fencedCode

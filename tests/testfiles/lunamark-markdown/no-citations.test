@@ -17,7 +17,7 @@ name of the author suppressed -@doe99.
 >>>
 documentBegin
 codeSpan: citations
-interblockSeparator
+paragraphSeparator
 softLineBreak
 softLineBreak
 hash
@@ -25,11 +25,11 @@ dollarSign
 percentSign
 ampersand
 tilde
-interblockSeparator
+paragraphSeparator
 softLineBreak
 softLineBreak
 softLineBreak
-interblockSeparator
+paragraphSeparator
 softLineBreak
 softLineBreak
 hash

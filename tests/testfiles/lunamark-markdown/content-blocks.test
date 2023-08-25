@@ -21,7 +21,7 @@ documentBegin
 codeSpan: contentBlocks
 softLineBreak
 softLineBreak
-interblockSeparator
+paragraphSeparator
 softLineBreak
 interblockSeparator
 BEGIN contentBlockOnlineImage

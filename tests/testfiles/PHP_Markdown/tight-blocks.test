@@ -11,7 +11,7 @@ Paragraph before blockquote:
 >>>
 documentBegin
 softLineBreak
-interblockSeparator
+paragraphSeparator
 interblockSeparator
 BEGIN section
 headingOne: Header

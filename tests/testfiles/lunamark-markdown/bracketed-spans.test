@@ -8,7 +8,7 @@ propagates through the plain TeX interface.
 documentBegin
 codeSpan: bracketedSpans
 softLineBreak
-interblockSeparator
+paragraphSeparator
 BEGIN bracketedSpanAttributeContext
 attributeClassName: class
 BEGIN attributeKeyValue

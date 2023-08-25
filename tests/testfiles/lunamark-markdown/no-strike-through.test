@@ -5,7 +5,7 @@ Some ~~deleted text~~ and some \~~regular text with tildes~~.
 >>>
 documentBegin
 codeSpan: strikeThrough
-interblockSeparator
+paragraphSeparator
 tilde
 tilde
 tilde

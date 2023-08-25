@@ -5,7 +5,7 @@ This test ensures that the Lua `superscripts` option is disabled by default.
 >>>
 documentBegin
 codeSpan: superscripts
-interblockSeparator
+paragraphSeparator
 circumflex
 circumflex
 circumflex

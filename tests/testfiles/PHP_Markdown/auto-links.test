@@ -9,7 +9,7 @@ BEGIN link
 - URI: HTTP://WWW.SOMEURL.COM
 - title: 
 END link
-interblockSeparator
+paragraphSeparator
 BEGIN link
 - label: hr@company.com
 - URI: mailto:hr@company.com

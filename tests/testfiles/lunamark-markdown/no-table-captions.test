@@ -80,5 +80,5 @@ END table
 interblockSeparator
 emphasis: pipe table
 softLineBreak
-interblockSeparator
+paragraphSeparator
 documentEnd

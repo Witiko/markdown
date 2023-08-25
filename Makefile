@@ -53,6 +53,11 @@ RESOURCES=$(DOCUMENTATION) $(EXAMPLES_RESOURCES) $(EXAMPLES_SOURCES) $(EXAMPLES)
 EVERYTHING=$(RESOURCES) $(INSTALLABLES) $(LIBRARIES)
 GITHUB_PAGES=gh-pages
 
+ifeq ($(NO_DOCUMENTATION), true)
+  TECHNICAL_DOCUMENTATION=
+  EXAMPLES=
+endif
+
 VERSION=$(shell git describe --tags --always --long --exclude latest)
 LASTMODIFIED=$(shell git log -1 --date=format:%Y-%m-%d --format=%ad)
 
@@ -75,6 +80,7 @@ base: $(INSTALLABLES) $(LIBRARIES)
 # This pseudo-target builds a witiko/markdown Docker image.
 docker-image:
 	DOCKER_BUILDKIT=1 docker build --pull --build-arg TEXLIVE_TAG=$(TEXLIVE_TAG) \
+	                               --build-arg NO_DOCUMENTATION=$(NO_DOCUMENTATION) \
 	                               -t $(DOCKER_IMAGE):$(DOCKER_TEMPORARY_TAG) .
 
 # This pseudo-targed pushes the built witiko/markdown Docker image to
@@ -92,8 +98,8 @@ docker-print-temporary-tag:
 # a Docker registry with a release tag.
 docker-push-release-tag:
 	docker pull $(DOCKER_IMAGE):$(DOCKER_TEMPORARY_TAG)
-	docker tag $(DOCKER_IMAGE):$(TEMPORARY_TAG) \
-	           $(DOCKER_IMAGE):$(RELEASE_TAG)
+	docker tag $(DOCKER_IMAGE):$(DOCKER_TEMPORARY_TAG) \
+	           $(DOCKER_IMAGE):$(DOCKER_RELEASE_TAG)
 	docker push $(DOCKER_IMAGE):$(DOCKER_RELEASE_TAG)
 
 # This targets produces a directory with files for the GitHub Pages service.
@@ -121,7 +127,7 @@ $(LIBRARIES): force
 # This target typesets the manual.
 $(TECHNICAL_DOCUMENTATION): $(DTXARCHIVE) $(TECHNICAL_DOCUMENTATION_RESOURCES)
 	latexmk -silent $< || (cat $(basename $@).log 1>&2; exit 1)
-	test `tail $(basename $<).log | sed -rn 's/.*\(([0-9]*) pages.*/\1/p'` -gt 150
+	test `tail $(basename $<).log | sed -rn 's/.*\(([0-9]*) pages.*/\1/p'` -gt 350
 
 # These targets typeset the examples.
 $(EXAMPLES): $(EXAMPLE_SOURCES) examples/example.tex
@@ -166,23 +172,27 @@ test:
 # This pseudo-target produces the distribution archives.
 dist: implode
 	$(MAKE) $(ARCHIVES)
-	git clone https://gitlab.com/Lotz/pkgcheck.git
-	unzip $(CTANARCHIVE) -d markdown
-	for RETRY in $$(seq 1 10); \
-	do \
-	    if (( RETRY > 1 )); \
-	    then \
-	        sleep $$((RETRY * 15)); \
-	    fi; \
-	    if pkgcheck/bin/pkgcheck -d markdown/markdown -T $(TDSARCHIVE) --urlcheck; \
-	    then \
-	        EXIT_CODE=0; \
-	        break; \
-	    else \
-	        EXIT_CODE=$$?; \
-	    fi; \
-	done; \
-	exit $$EXIT_CODE
+	if [[ '$(NO_DOCUMENTATION)' != true ]]; \
+	then \
+	    set -e -o xtrace; \
+	    git clone https://gitlab.com/Lotz/pkgcheck.git; \
+	    unzip $(CTANARCHIVE) -d markdown; \
+	    for RETRY in $$(seq 1 10); \
+	    do \
+	        if (( RETRY > 1 )); \
+	        then \
+	            sleep $$((RETRY * 15)); \
+	        fi; \
+	        if pkgcheck/bin/pkgcheck -d markdown/markdown -T $(TDSARCHIVE) --urlcheck; \
+	        then \
+	            EXIT_CODE=0; \
+	            break; \
+	        else \
+	            EXIT_CODE=$$?; \
+	        fi; \
+	    done; \
+	    exit $$EXIT_CODE; \
+	fi
 	$(MAKE) clean
 
 # This target produces the TeX directory structure archive.

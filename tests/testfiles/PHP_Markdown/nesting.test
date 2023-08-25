@@ -12,18 +12,18 @@ Invalid nesting:
 [[Link](url)](url)
 >>>
 documentBegin
-interblockSeparator
+paragraphSeparator
 strongEmphasis: (BEGIN link)(- label: Link)(- URI: url)(- title: )(END link)
-interblockSeparator
+paragraphSeparator
 BEGIN link
 - label: (strongEmphasis: Link)
 - URI: url
 - title: 
 END link
-interblockSeparator
+paragraphSeparator
 strongEmphasis: (BEGIN link)(- label: (strongEmphasis: Link))(- URI: url)(- title: )(END link)
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 BEGIN link
 - label: Link
 - URI: url

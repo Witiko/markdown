@@ -24,13 +24,13 @@ BEGIN link
 - URI: /simple
 - title: 
 END link
-interblockSeparator
+paragraphSeparator
 BEGIN link
 - label: line(softLineBreak)break
 - URI: /foo
 - title: 
 END link
-interblockSeparator
+paragraphSeparator
 BEGIN link
 - label: this
 - URI: /that

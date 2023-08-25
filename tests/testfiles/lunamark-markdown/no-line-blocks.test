@@ -19,8 +19,8 @@ Line blocks with continuation
 >>>
 documentBegin
 codeSpan: lineBlocks
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 pipe
 emphasis: limerick
 softLineBreak
@@ -32,8 +32,8 @@ softLineBreak
 pipe
 softLineBreak
 pipe
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 pipe
 softLineBreak
 softLineBreak

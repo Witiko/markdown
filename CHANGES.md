@@ -2,12 +2,18 @@
 
 ## 3.0.0
 
+Development:
+
+- Add support for TeX-like rich paragraphs. (#30, #306)
+
 Fixes:
 
 - Reset current heading level at the end of a markdown document.
   (1261e6f)
 - Fix out-of-memory issues with CommonMark implementation.
   (#308, #318, 28650b8)
+- Fix `rawAttribute` option being enabled in Lua by default.
+  (92c9ac2)
 
 Documentation:
 
@@ -20,9 +26,14 @@ Unit Tests:
 
 - Batch unit tests to improve speed.
   (#245, #316, 8bfd0b3, #317, #319..#325, #327, #328, e3b31696,
-   #331, #332, #334)
+   #331, #332, #334, 0a230fa, 90cc428, 3be0013, dbe1808)
 - Use self-hosted GitHub runners for tests to improve speed.
-  (#326, #330, #331, contributed by @TeXhackse)
+  (#326, #330, #331, a9948a86, 68b6216b, contributed by @TeXhackse)
+
+Continuous Integration:
+
+- In draft pull requests, do not build documentation or examples
+  and do not run pkgcheck. (#337, #338)
 
 ## 3.0.0-alpha.2 (2023-08-01)
 

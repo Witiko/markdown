@@ -121,74 +121,74 @@ This is a tag with unescaped backticks <span attr='`ticks`'>
 This is a tag with backslashes <span attr='\\backslashes\\'>
 >>>
 documentBegin
-interblockSeparator
+paragraphSeparator
 backslash
-interblockSeparator
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
+paragraphSeparator
 underscore
-interblockSeparator
+paragraphSeparator
 leftBrace
-interblockSeparator
+paragraphSeparator
 rightBrace
-interblockSeparator
-interblockSeparator
-interblockSeparator
-interblockSeparator
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
+paragraphSeparator
+paragraphSeparator
+paragraphSeparator
+paragraphSeparator
 hash
-interblockSeparator
-interblockSeparator
-interblockSeparator
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
+paragraphSeparator
+paragraphSeparator
+paragraphSeparator
 interblockSeparator
 inputVerbatim: ./_markdown_test/143e719f4780a72ef8137083d40e1571.verbatim
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 codeSpan: (backslash)(backslash)
-interblockSeparator
+paragraphSeparator
 codeSpan: (backslash)`
-interblockSeparator
+paragraphSeparator
 codeSpan: (backslash)*
-interblockSeparator
+paragraphSeparator
 codeSpan: (backslash)(underscore)
-interblockSeparator
+paragraphSeparator
 codeSpan: (backslash)(leftBrace)
-interblockSeparator
+paragraphSeparator
 codeSpan: (backslash)(rightBrace)
-interblockSeparator
+paragraphSeparator
 codeSpan: (backslash)[
-interblockSeparator
+paragraphSeparator
 codeSpan: (backslash)]
-interblockSeparator
+paragraphSeparator
 codeSpan: (backslash)(
-interblockSeparator
+paragraphSeparator
 codeSpan: (backslash))
-interblockSeparator
+paragraphSeparator
 codeSpan: (backslash)>
-interblockSeparator
+paragraphSeparator
 codeSpan: (backslash)(hash)
-interblockSeparator
+paragraphSeparator
 codeSpan: (backslash).
-interblockSeparator
+paragraphSeparator
 codeSpan: (backslash)!
-interblockSeparator
+paragraphSeparator
 codeSpan: (backslash)+
-interblockSeparator
+paragraphSeparator
 codeSpan: (backslash)-
-interblockSeparator
+paragraphSeparator
 softLineBreak
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 underscore
 underscore
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 codeSpan: (backslash)`
-interblockSeparator
+paragraphSeparator
 inlineHtmlTag: <span attr='`ticks`'>
-interblockSeparator
+paragraphSeparator
 inlineHtmlTag: <span attr='(backslash)(backslash)backslashes(backslash)(backslash)'>
 documentEnd

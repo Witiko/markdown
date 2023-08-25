@@ -17,7 +17,7 @@
 >>>
 documentBegin
 emphasis: aaa
-interblockSeparator
+paragraphSeparator
 BEGIN section
 headingOne: aaa
 END section

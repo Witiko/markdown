@@ -8,6 +8,6 @@ the plain TeX interface.
 >>>
 documentBegin
 softLineBreak
-interblockSeparator
+paragraphSeparator
 softLineBreak
 documentEnd
