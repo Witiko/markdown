@@ -6,6 +6,10 @@ Development:
 
 - Add support for TeX-like rich paragraphs. (#30, #306)
 
+Documentation:
+
+- Document setting up catcodes in Lua. (#329, #342)
+
 Fixes:
 
 - Reset current heading level at the end of a markdown document.
