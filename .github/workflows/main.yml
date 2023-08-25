@@ -135,7 +135,7 @@ jobs:
           submodules: true
       - name: Build Docker image
         run: |
-          make docker-image TEXLIVE_TAG=${{ matrix.texlive }} \
+          make docker-image DOCKER_TEXLIVE_TAG=${{ matrix.texlive }} \
                             NO_DOCUMENTATION=${{ github.event_name == 'pull_request_target' && github.event.pull_request.draft == true }}
       - name: Login to GitHub Packages
         uses: docker/login-action@v2
@@ -144,12 +144,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish Docker image with a temporary tag
-        run: make docker-push-temporary-tag TEXLIVE_TAG=${{ matrix.texlive }}
+        run: make docker-push-temporary-tag DOCKER_TEXLIVE_TAG=${{ matrix.texlive }}
       - name: Store the temporary tag
         id: temporary-tags
         run: |
           set -ex
-          TEMPORARY_TAG="$(make docker-print-temporary-tag TEXLIVE_TAG=${{ matrix.texlive }})"
+          TEMPORARY_TAG="$(make docker-print-temporary-tag DOCKER_TEXLIVE_TAG=${{ matrix.texlive }})"
           echo "${{ matrix.texlive }}=$TEMPORARY_TAG" >> $GITHUB_OUTPUT
   test:
     name: Test Docker image
@@ -205,7 +205,7 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
       - name: Publish Docker image
-        run: make docker-push-release-tag TEXLIVE_TAG=${{ matrix.texlive }}
+        run: make docker-push-release-tag DOCKER_TEXLIVE_TAG=${{ matrix.texlive }}
   publish-artefacts:
     name: Publish artefacts and create a prerelease
     needs:
