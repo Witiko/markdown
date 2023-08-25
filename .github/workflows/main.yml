@@ -8,7 +8,7 @@ on:
       - 'CHANGES.md'
       - 'contributions/*'
       - '.github/**/*'
-  pull_request:
+  pull_request_target:
   workflow_dispatch:
   schedule:
     - cron: '30 4 * * MON'
@@ -23,6 +23,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
+          ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.ref || github.ref }}
       - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@1.1.0
         env:
@@ -33,6 +36,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
+          ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.ref || github.ref }}
       - name: Install additional packages
         run: |
           set -ex
@@ -48,6 +54,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
+          ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.ref || github.ref }}
       - name: Install additional packages
         run: |
           set -ex
@@ -68,6 +77,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
+          ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.ref || github.ref }}
       - name: Install additional packages
         run: |
           set -ex
@@ -85,6 +97,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
+          ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.ref || github.ref }}
       - name: Install additional packages
         run: |
           set -ex
@@ -114,12 +129,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
+          repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
+          ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.ref || github.ref }}
           fetch-depth: 0
           submodules: true
       - name: Build Docker image
         run: |
           make docker-image TEXLIVE_TAG=${{ matrix.texlive }} \
-                            NO_DOCUMENTATION=${{ github.event_name == 'pull_request' && github.event.pull_request.draft == true }}
+                            NO_DOCUMENTATION=${{ github.event_name == 'pull_request_target' && github.event.pull_request.draft == true }}
       - name: Authenticate Docker registry
         uses: azure/docker-login@v1
         with:
@@ -150,6 +167,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
+          repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
+          ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.ref || github.ref }}
           fetch-depth: 0
           submodules: true
       - name: Test Lua command-line interface
@@ -159,7 +178,7 @@ jobs:
           test "$RESULT" = '\markdownRendererDocumentBegin
           Hello \markdownRendererEmphasis{Markdown}! $a_x + b_x = c_x$\markdownRendererDocumentEnd'
       - name: Run unit tests
-        run: make FAIL_FAST=${{ github.ref != 'refs/heads/main' }} test
+        run: make FAIL_FAST=${{ github.event_name == 'pull_request_target' }} test
   publish-docker-image:
     name: Publish Docker image
     needs:
@@ -172,7 +191,7 @@ jobs:
           - TL2022-historic
           - latest
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.event_name != 'pull_request_target' && github.ref == 'refs/heads/main'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -200,7 +219,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: witiko/markdown:${{ needs.build-docker-image.outputs[matrix.texlive] }}
-    if: github.ref == 'refs/heads/main'
+    if: github.event_name != 'pull_request_target' && github.ref == 'refs/heads/main'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -263,7 +282,7 @@ jobs:
     needs:
       - test
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request_target'
     steps:
       - name: Automatically merge pull request
         uses: pascalgn/automerge-action@v0.15.6
