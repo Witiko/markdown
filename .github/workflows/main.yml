@@ -14,8 +14,6 @@ on:
     - cron: '30 4 * * MON'
 env:
   DEBIAN_FRONTEND: noninteractive
-permissions:
-  contents: write
 jobs:
   shellcheck:
     name: Style check (Bash)
@@ -110,6 +108,8 @@ jobs:
       TL2022-historic: ${{ steps.temporary-tags.outputs.TL2022-historic }}
       latest: ${{ steps.temporary-tags.outputs.latest }}
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -264,6 +264,8 @@ jobs:
     needs:
       - test
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     if: github.event_name == 'pull_request'
     steps:
       - name: Automatically merge pull request
