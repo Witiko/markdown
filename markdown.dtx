@@ -25294,6 +25294,7 @@ parsers.chunk                  = parsers.line * (parsers.optionallyindentedline
                                                 - parsers.blankline)^0
 
 parsers.attribute_key_char     = parsers.alphanumeric + S("-_:.")
+parsers.attribute_raw_char     = parsers.alphanumeric + S("-_")
 parsers.attribute_key          = (parsers.attribute_key_char
                                  - parsers.dash - parsers.digit)
                                * parsers.attribute_key_char^0
@@ -25305,10 +25306,16 @@ parsers.attribute_value        = ( (parsers.dquote / "")
                                  * (parsers.squote / ""))
                                + ( parsers.anyescaped - parsers.dquote - parsers.rbrace
                                  - parsers.space)^0
+parsers.attribute_identifier   = parsers.attribute_key_char^1
+parsers.attribute_classname    = parsers.letter
+                               * parsers.attribute_key_char^0
+parsers.attribute_raw          = parsers.attribute_raw_char^1
 
 parsers.attribute = (parsers.dash * Cc(".unnumbered"))
-                  + C((parsers.hash + parsers.period)
-                     * parsers.attribute_key)
+                  + C( parsers.hash
+                     * parsers.attribute_identifier)
+                  + C( parsers.period
+                     * parsers.attribute_classname)
                   + Cs( parsers.attribute_key
                       * parsers.optionalspace * parsers.equal * parsers.optionalspace
                       * parsers.attribute_value)
@@ -25324,7 +25331,7 @@ parsers.attributes = parsers.lbrace
 parsers.raw_attribute = parsers.lbrace
                       * parsers.optionalspace
                       * parsers.equal
-                      * C(parsers.attribute_key)
+                      * C(parsers.attribute_raw)
                       * parsers.optionalspace
                       * parsers.rbrace
 
