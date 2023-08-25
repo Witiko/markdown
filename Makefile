@@ -61,8 +61,9 @@ endif
 VERSION=$(shell git describe --tags --always --long --exclude latest)
 LASTMODIFIED=$(shell git log -1 --date=format:%Y-%m-%d --format=%ad)
 
-DOCKER_IMAGE=witiko/markdown
+DOCKER_TEMPORARY_IMAGE=ghcr.io/witiko/markdown
 DOCKER_TEMPORARY_TAG=$(VERSION)-$(TEXLIVE_TAG)
+DOCKER_RELEASE_IMAGE=witiko/markdown
 DOCKER_RELEASE_TAG=$(TEXLIVE_TAG)
 
 PANDOC_INPUT_FORMAT=markdown+tex_math_single_backslash+tex_math_double_backslash-raw_tex
@@ -81,12 +82,12 @@ base: $(INSTALLABLES) $(LIBRARIES)
 docker-image:
 	DOCKER_BUILDKIT=1 docker build --pull --build-arg TEXLIVE_TAG=$(TEXLIVE_TAG) \
 	                               --build-arg NO_DOCUMENTATION=$(NO_DOCUMENTATION) \
-	                               -t $(DOCKER_IMAGE):$(DOCKER_TEMPORARY_TAG) .
+	                               -t $(DOCKER_TEMPORARY_IMAGE):$(DOCKER_TEMPORARY_TAG) .
 
 # This pseudo-targed pushes the built witiko/markdown Docker image to
 # a Docker registry with a temporary tag.
 docker-push-temporary-tag:
-	docker push $(DOCKER_IMAGE):$(DOCKER_TEMPORARY_TAG)
+	docker push $(DOCKER_TEMPORARY_IMAGE):$(DOCKER_TEMPORARY_TAG)
 
 # This pseudo-target prints the temporary tag that we used to tag the
 # built witiko/markdown Docker image before pushing it to the Docker
@@ -97,10 +98,13 @@ docker-print-temporary-tag:
 # This pseudo-targed pushes the built witiko/markdown Docker image to
 # a Docker registry with a release tag.
 docker-push-release-tag:
-	docker pull $(DOCKER_IMAGE):$(DOCKER_TEMPORARY_TAG)
-	docker tag $(DOCKER_IMAGE):$(DOCKER_TEMPORARY_TAG) \
-	           $(DOCKER_IMAGE):$(DOCKER_RELEASE_TAG)
-	docker push $(DOCKER_IMAGE):$(DOCKER_RELEASE_TAG)
+	docker pull $(DOCKER_TEMPORARY_IMAGE):$(DOCKER_TEMPORARY_TAG)
+	docker tag $(DOCKER_TEMPORARY_IMAGE):$(DOCKER_TEMPORARY_TAG) \
+	           $(DOCKER_RELEASE_IMAGE):$(DOCKER_TEMPORARY_TAG)
+	docker tag $(DOCKER_TEMPORARY_IMAGE):$(DOCKER_TEMPORARY_TAG) \
+	           $(DOCKER_RELEASE_IMAGE):$(DOCKER_RELEASE_TAG)
+	docker push $(DOCKER_RELEASE_IMAGE):$(DOCKER_TEMPORARY_TAG)
+	docker push $(DOCKER_RELEASE_IMAGE):$(DOCKER_RELEASE_TAG)
 
 # This targets produces a directory with files for the GitHub Pages service.
 $(GITHUB_PAGES): $(HTML_USER_MANUAL)
@@ -131,10 +135,16 @@ $(TECHNICAL_DOCUMENTATION): $(DTXARCHIVE) $(TECHNICAL_DOCUMENTATION_RESOURCES)
 
 # These targets typeset the examples.
 $(EXAMPLES): $(EXAMPLE_SOURCES) examples/example.tex
-	$(MAKE) -C examples $(notdir $@)
+	if [[ '$(NO_DOCUMENTATION)' != true ]]; \
+	then \
+	  $(MAKE) -C examples $(notdir $@); \
+	fi
 
 examples/example.tex: force
-	$(MAKE) -C examples $(notdir $@)
+	if [[ '$(NO_DOCUMENTATION)' != true ]]; \
+	then \
+	  $(MAKE) -C examples $(notdir $@); \
+	fi
 
 # This target converts the markdown user manual to an HTML page.
 %.html: %.md %.css
