@@ -278,8 +278,7 @@ class TestResult:
             if line_number == 0:
                 result_lines.append(f'Testfile {format_testfile(self.testfile)}:')
                 result_lines.append('')
-            else:
-                result_lines.append(f'  {line}')
+            result_lines.append(f'  {line}')
         result_lines.append('')
         return '\n'.join(result_lines)
 
