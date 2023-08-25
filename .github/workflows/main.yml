@@ -146,7 +146,7 @@ jobs:
           - latest
     runs-on: self-hosted
     container:
-      image: witiko/markdown:${{ needs.build-docker-image.outputs[matrix.texlive] }}
+      image: ghcr.io/witiko/markdown:${{ needs.build-docker-image.outputs[matrix.texlive] }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -200,7 +200,7 @@ jobs:
           - latest
     runs-on: ubuntu-latest
     container:
-      image: witiko/markdown:${{ needs.build-docker-image.outputs[matrix.texlive] }}
+      image: ghcr.io/witiko/markdown:${{ needs.build-docker-image.outputs[matrix.texlive] }}
     if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout repository
