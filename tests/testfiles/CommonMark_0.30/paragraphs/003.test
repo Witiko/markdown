@@ -13,6 +13,6 @@
 >>>
 documentBegin
 emphasis: aaa
-interblockSeparator
+paragraphSeparator
 emphasis: bbb
 documentEnd

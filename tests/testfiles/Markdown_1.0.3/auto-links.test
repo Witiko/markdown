@@ -19,7 +19,7 @@ BEGIN link
 - URI: http://example.com/
 - title: 
 END link
-interblockSeparator
+paragraphSeparator
 BEGIN link
 - label: http://example.com/?foo=1(ampersand)bar=2
 - URI: http://example.com/?foo=1&bar=2

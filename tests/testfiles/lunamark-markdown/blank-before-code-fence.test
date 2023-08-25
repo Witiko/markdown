@@ -33,11 +33,11 @@ documentBegin
 codeSpan: fencedCode
 codeSpan: blankBeforeCodeFence
 softLineBreak
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 softLineBreak
 codeSpan: foo bar
-interblockSeparator
+paragraphSeparator
 softLineBreak
 tilde
 tilde
@@ -47,8 +47,8 @@ softLineBreak
 tilde
 tilde
 tilde
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 interblockSeparator
 BEGIN fencedCode
 - src: ./_markdown_test/37b51d194a7513e45b56f6524f2d51f2.verbatim

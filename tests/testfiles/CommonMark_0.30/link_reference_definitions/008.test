@@ -11,5 +11,5 @@
 [foo]
 >>>
 documentBegin
-interblockSeparator
+paragraphSeparator
 documentEnd

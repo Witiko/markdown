@@ -14,7 +14,7 @@ documentBegin
 codeSpan: fencedCode
 codeSpan: fencedCodeAttributes
 softLineBreak
-interblockSeparator
+paragraphSeparator
 interblockSeparator
 BEGIN fencedCodeAttributeContext
 attributeIdentifier: mycode

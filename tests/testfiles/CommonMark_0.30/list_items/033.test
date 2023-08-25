@@ -17,7 +17,7 @@ _foo_
 documentBegin
 emphasis: foo
 softLineBreak
-interblockSeparator
+paragraphSeparator
 emphasis: foo
 softLineBreak
 documentEnd

@@ -19,7 +19,7 @@ Loose:
 documentBegin
 codeSpan: startNumber
 softLineBreak
-interblockSeparator
+paragraphSeparator
 interblockSeparator
 olBeginTight
 olItemWithNumber: 3

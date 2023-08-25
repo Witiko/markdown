@@ -117,7 +117,7 @@ documentBegin
 codeSpan: fencedDivs
 codeSpan: fencedCode
 softLineBreak
-interblockSeparator
+paragraphSeparator
 softLineBreak
 softLineBreak
 interblockSeparator
@@ -191,8 +191,8 @@ blockQuoteEnd
 interblockSeparator
 END fencedDivAttributeContext
 interblockSeparator
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 leftBrace
 rightBrace
 softLineBreak

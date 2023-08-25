@@ -16,7 +16,7 @@ documentBegin
 codeSpan: citations
 softLineBreak
 softLineBreak
-interblockSeparator
+paragraphSeparator
 BEGIN cites
 BEGIN cite
 - suppressAuthor: false
@@ -43,7 +43,7 @@ BEGIN cite
 - name: foo:bar
 END cite
 END cites
-interblockSeparator
+paragraphSeparator
 BEGIN cites
 BEGIN cite
 - suppressAuthor: false
@@ -70,7 +70,7 @@ BEGIN cite
 - name: foo_bar_
 END cite
 END cites
-interblockSeparator
+paragraphSeparator
 BEGIN textCites
 BEGIN textCite
 - suppressAuthor: false
@@ -99,7 +99,7 @@ BEGIN textCite
 - name: foo:bar
 END textCite
 END textCites
-interblockSeparator
+paragraphSeparator
 BEGIN textCites
 BEGIN textCite
 - suppressAuthor: false

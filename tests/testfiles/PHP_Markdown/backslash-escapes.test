@@ -10,12 +10,12 @@ backslash with \\> greater than
 \\\*no emphasis*
 >>>
 documentBegin
-interblockSeparator
+paragraphSeparator
 backslash
-interblockSeparator
+paragraphSeparator
 backslash
-interblockSeparator
+paragraphSeparator
 backslash
-interblockSeparator
+paragraphSeparator
 backslash
 documentEnd

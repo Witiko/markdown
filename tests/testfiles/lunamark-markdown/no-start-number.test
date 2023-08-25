@@ -22,7 +22,7 @@ documentBegin
 codeSpan: startNumber
 softLineBreak
 softLineBreak
-interblockSeparator
+paragraphSeparator
 interblockSeparator
 olBeginTight
 olItem

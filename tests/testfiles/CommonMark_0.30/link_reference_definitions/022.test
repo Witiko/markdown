@@ -14,5 +14,5 @@ Foo
 >>>
 documentBegin
 softLineBreak
-interblockSeparator
+paragraphSeparator
 documentEnd

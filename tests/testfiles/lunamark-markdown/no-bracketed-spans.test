@@ -5,7 +5,7 @@ This test ensures that the Lua `bracketedSpans` option is disabled by default.
 >>>
 documentBegin
 codeSpan: bracketedSpans
-interblockSeparator
+paragraphSeparator
 emphasis: some text
 leftBrace
 rightBrace

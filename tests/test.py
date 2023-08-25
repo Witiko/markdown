@@ -235,7 +235,7 @@ class TestResult:
             print('<<<', file=f)
             print(self.input_text, file=f, end='')
             print('>>>', file=f)
-            print(actual_output_text, file=f, end='')
+            print(actual_output_text, file=f)
 
         self.updated_testfile = True
 
@@ -248,14 +248,15 @@ class TestResult:
         for result in results:
             if not result:  # Exclude successful tests from the summary.
                 summaries[str(result)].append(result)
-        for summary, results in sorted(summaries.items(), key=lambda x: x[0]):
-            plural = 's' if len(results) > 1 else ''
-            testfile_names = format_testfiles(result.testfile for result in results)
+        for summary, merged_results in sorted(summaries.items(), key=lambda x: x[0]):
+            plural = 's' if len(merged_results) > 1 else ''
+            testfile_names = format_testfiles(result.testfile for result in merged_results)
             result_lines.append(f'Testfile{plural} {testfile_names}:')
             result_lines.append('')
             for line in summary.splitlines():
                 result_lines.append(f'  {line}')
             result_lines.append('')
+
         num_successful = sum(1 if result else 0 for result in results)
         num_failed = len(results) - num_successful
         num_updated = sum(1 if result.updated_testfile is True else 0 for result in results)
@@ -266,7 +267,7 @@ class TestResult:
         if num_updated or num_not_updated:
             result_lines.append(f'- {num_updated} testfiles were successfully updated.')
             if num_not_updated:
-                result_lines.append(f'- {num_updated} testfiles not were successfully updated.')
+                result_lines.append(f'- {num_not_updated} testfiles not were successfully updated.')
         result_lines.append('')
         return '\n'.join(result_lines)
 
@@ -718,8 +719,8 @@ def run_tests(testfiles: Iterable[TestFile], fail_fast: bool) -> Iterable[TestRe
         else:
             testfile_batches: Iterable[TestFileBatch] = chunked(testfiles, testfile_batch_size)
             all_batches = zip(testfile_batches, repeat(fail_fast))
-            all_results = list(map(BatchResult.run_test_batch, all_batches))
-        yield from all_results
+            all_results = map(BatchResult.run_test_batch, all_batches)
+            yield from all_results
 
     all_results = get_all_results()
     return (result for results in all_results for result in results)

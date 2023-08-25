@@ -1705,6 +1705,9 @@ local walkable_syntax = {
     "OrderedList",
     "DisplayHtml",
     "Heading",
+  },
+  BlockOrParagraph = {
+    "Block",
     "Paragraph",
     "Plain",
   },
@@ -5052,7 +5055,7 @@ following content:
 ``` lua
 local strike_through = {
   api_version = 2,
-  grammar_version = 3,
+  grammar_version = 4,
   finalize_grammar = function(reader)
     local nonspacechar = lpeg.P(1) - lpeg.S("\t ")
     local doubleslashes = lpeg.P("//")
@@ -5104,13 +5107,20 @@ be produced and contain the following text:
     "Block": [
         "Blockquote",
         "Verbatim",
+        "FencedCode (built-in fenced_code syntax extension)",
         "ThematicBreak",
         "BulletList",
         "OrderedList",
         "DisplayHtml",
-        "Heading",
+        "Heading"
+    ],
+    "BlockOrParagraph": [
+        "Block",
         "Paragraph",
         "Plain"
+    ],
+    "EndlineExceptions": [
+        "EndlineExceptions (built-in fenced_code syntax extension)"
     ],
     "Inline": [
         "Str",
@@ -5438,7 +5448,7 @@ defaultOptions.expectJekyllData = false
 %    ``` lua
 %    local strike_through = {
 %      api_version = 2,
-%      grammar_version = 3,
+%      grammar_version = 4,
 %      finalize_grammar = function(reader)
 %        local nonspacechar = lpeg.P(1) - lpeg.S("\t ")
 %        local doubleslashes = lpeg.P("//")
@@ -5473,7 +5483,7 @@ defaultOptions.expectJekyllData = false
 % \fi
 %  \begin{macrocode}
 metadata.user_extension_api_version = 2
-metadata.grammar_version = 3
+metadata.grammar_version = 4
 %    \end{macrocode}
 % \iffalse
 %</lua>
@@ -5503,7 +5513,7 @@ following content:
 ``` lua
 local strike_through = {
   api_version = 2,
-  grammar_version = 3,
+  grammar_version = 4,
   finalize_grammar = function(reader)
     local nonspacechar = lpeg.P(1) - lpeg.S("\t ")
     local doubleslashes = lpeg.P("//")
@@ -7916,7 +7926,7 @@ following text:
 %<*lua,lua-cli>
 % \fi
 %  \begin{macrocode}
-defaultOptions.rawAttribute = true
+defaultOptions.rawAttribute = false
 %    \end{macrocode}
 % \par
 % \iffalse
@@ -14820,9 +14830,10 @@ following text:
 %
 % \begin{markdown}
 
-#### Interblock Separator Renderer
-The \mdef{markdownRendererInterblockSeparator} macro represents a separator
-between two markdown block elements. The macro receives no arguments.
+#### Interblock Separator Renderers
+The \mdef{markdownRendererInterblockSeparator} macro represents an interblock
+separator between two markdown block elements. The macro receives no
+arguments.
 
 % \end{markdown}
 %
@@ -14840,7 +14851,7 @@ following content:
   \par
 }
 \markdownBegin
-Hello *world*!
+- Hello *world*!
 
 _Foo_ bar!
 \markdownEnd
@@ -14853,7 +14864,7 @@ luatex document.tex
 A PDF document named `document.pdf` should be produced and contain the
 following text:
 
-> Hello *world*!
+> - Hello *world*!
 >
 > *(The end of a block)*
 > 
@@ -14877,7 +14888,7 @@ following content:
 }
 \begin{document}
 \begin{markdown}
-Hello *world*!
+- Hello *world*!
 
 _Foo_ bar!
 \end{markdown}
@@ -14890,7 +14901,7 @@ lualatex document.tex
 A PDF document named `document.pdf` should be produced and contain the
 following text:
 
-> Hello *world*!
+> - Hello *world*!
 >
 > *(The end of a block)*
 > 
@@ -14909,7 +14920,7 @@ following content:
 }
 \starttext
 \startmarkdown
-Hello *world*!
+- Hello *world*!
 
 _Foo_ bar!
 \stopmarkdown
@@ -14922,7 +14933,7 @@ context --luatex document.tex
 A PDF document named `document.pdf` should be produced and contain the
 following text:
 
-> Hello *world*!
+> - Hello *world*!
 >
 > *(The end of a block)*
 > 
@@ -14942,6 +14953,81 @@ following text:
 \prop_gput:Nnn
   \g_@@_renderer_arities_prop
   { interblockSeparator }
+  { 0 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
+Users can use more than one blank line to delimit two block to indicate the
+end of a series of blocks that make up a logical paragraph. This produces a
+paragraph separator instead of an interblock separator. Between some blocks,
+such as markdown paragraphs, a paragraph separator is always produced.
+
+The \mdef{markdownRendererParagraphSeparator} macro represents a paragraph
+separator. The macro receives no arguments.
+
+% \end{markdown}
+%
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage{markdown}
+\markdownSetup{
+  renderers = {
+    paragraphSeparator = {%
+      \par
+      \emph{(The end of a paragraph)}%
+      \par
+    },
+  },
+}
+\begin{document}
+\begin{markdown}
+Hello *world*!
+
+_Foo_ bar!
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> Hello *world*!
+>
+> *(The end of a paragraph)*
+>
+> _Foo_ bar!
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererParagraphSeparator{%
+  \markdownRendererParagraphSeparatorPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { paragraphSeparator }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { paragraphSeparator }
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
@@ -23457,6 +23543,21 @@ function M.writer.new(options)
 % \par
 % \begin{markdown}
 %
+% Define \luamdef{writer->paragraphsep} as the output format of a paragraph
+% separator. Users can use more than one blank line to delimit two blocks to
+% indicate the end of a series of blocks that make up a paragraph. This
+% produces a paragraph separator instead of an interblock separator.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  function self.paragraphsep()
+    if not self.is_writing then return "" end
+    return "\\markdownRendererParagraphSeparator\n{}"
+  end
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
 % Define \luamdef{writer->soft_line_break} as the output format of a soft
 % line break.
 %
@@ -26161,7 +26262,7 @@ function M.reader.new(writer, options)
 %  \begin{macrocode}
   parsers.minimally_indented_blankline = parsers.check_minimal_indent * (parsers.blankline / "")
 
-  parsers.minimally_indented_block = parsers.check_minimal_indent * V("Block")
+  parsers.minimally_indented_block = parsers.check_minimal_indent * V("BlockOrParagraph")
 
   parsers.minimally_indented_ref = parsers.check_minimal_indent * V("Reference")
 
@@ -26175,7 +26276,7 @@ function M.reader.new(writer, options)
 
   parsers.minimally_indented_separated_ref_or_block = parsers.minimally_indented_ref
                                                     + parsers.check_minimal_indent / writer.interblocksep
-                                                    * V("Block")
+                                                    * V("BlockOrParagraph")
                                                     - parsers.minimally_indented_blankline
 
 %  \end{macrocode}
@@ -26194,7 +26295,7 @@ function M.reader.new(writer, options)
                 + parsers.minimally_indented_separated_ref_or_block)^0
               + (V("Reference") + (parsers.blankline / ""))
               * blank^0
-              + V("Block")
+              + V("BlockOrParagraph")
               * ( blank
                 + parsers.minimally_indented_separated_ref_or_block)^0)
   end
@@ -27411,9 +27512,12 @@ end
                                         * (parsers.minimally_indented_ref_or_block)
                                         * (parsers.minimally_indented_separated_ref_or_block)^0
                                         + (V("Reference") + (parsers.blankline / ""))
-                                        + (parsers.tickbox^-1 / writer.escape) * V("Block")
-                                        * (parsers.minimally_indented_separated_ref_or_block)^0) 
-                                        * parsers.list_item_tightness_condition) 
+                                        + (parsers.tickbox^-1 / writer.escape)
+                                        * V("BlockOrParagraph")
+                                        * (parsers.minimally_indented_separated_ref_or_block)^0
+                                        )
+                                      * parsers.list_item_tightness_condition
+                                  )
   
   parsers.indented_content_loose  = Ct( (parsers.blankline / "")
                                       * #parsers.conditionally_indented_blankline
@@ -27422,9 +27526,13 @@ end
                                         * ( parsers.conditionally_indented_blankline^0
                                           * parsers.minimally_indented_separated_ref_or_block^1)^0
                                         + (V("Reference") + (parsers.blankline / ""))
-                                        + (parsers.tickbox^-1 / writer.escape) * V("Block")
+                                        + (parsers.tickbox^-1 / writer.escape)
+                                        * V("BlockOrParagraph")
                                         * ( parsers.conditionally_indented_blankline^0
-                                          * parsers.minimally_indented_separated_ref_or_block^1)^0))
+                                          * parsers.minimally_indented_separated_ref_or_block^1
+                                          )^0
+                                        )
+                                  )
 
   parsers.TightListItem = function(starter)
     return  -parsers.ThematicBreak
@@ -27442,13 +27550,23 @@ end
   parsers.BulletListOfType = function(bullet_type)
     local bullet = parsers.bullet(bullet_type)
     return  ( Ct( parsers.TightListItem(bullet) 
-                * ((parsers.check_minimal_indent / "") * parsers.TightListItem(bullet))^0) * Cc(true)
-                * -#((parsers.conditionally_indented_blankline^0 / "") 
-                    * parsers.check_minimal_indent * (bullet - parsers.ThematicBreak))
-               + Ct(parsers.LooseListItem(bullet) 
-                 * ((parsers.conditionally_indented_blankline^0 / "") 
-                   * (parsers.check_minimal_indent / "") * parsers.LooseListItem(bullet))^0) * Cc(false))
-            / writer.bulletlist
+                * ( (parsers.check_minimal_indent / "")
+                  * parsers.TightListItem(bullet)
+                  )^0
+              )
+              * Cc(true)
+              * -#( (parsers.conditionally_indented_blankline^0 / "")
+                  * parsers.check_minimal_indent
+                  * (bullet - parsers.ThematicBreak)
+              )
+              + Ct( parsers.LooseListItem(bullet)
+                  * ( (parsers.conditionally_indented_blankline^0 / "")
+                    * (parsers.check_minimal_indent / "")
+                    * parsers.LooseListItem(bullet)
+                    )^0
+              )
+              * Cc(false)
+            ) / writer.bulletlist
   end
 
   parsers.BulletList = parsers.BulletListOfType(parsers.dash) 
@@ -27634,12 +27752,42 @@ end
 
         Blocks                = V("InitializeState")
                               * ( V("ExpectedJekyllData")
-                                * (V("Blank")^0 / writer.interblocksep))^-1
+				* (V("Blank")^0 / writer.interblocksep)
+                                )^-1
                               * V("Blank")^0
-                              * V("Block")^-1
-                              * ( V("Blank")^0 / writer.interblocksep
-                                * V("Block"))^0
-                              * V("Blank")^0 * parsers.eof,
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Only create interblock separators between pairs of blocks that are not
+% both paragraphs. Between a pair of paragraphs, any number of blank
+% lines will always produce a paragraph separator.
+%
+% \end{markdown}
+%  \begin{macrocode}
+                              * ( V("Block")
+                                * ( V("Blank")^0 * parsers.eof
+                                  + ( V("Blank")^2 / writer.paragraphsep
+                                    + V("Blank")^0 / writer.interblocksep
+                                    )
+                                  )
+                                + V("Paragraph")
+                                * ( V("Blank")^0 * parsers.eof
+                                  + ( V("Blank")^2 / writer.paragraphsep
+                                    + V("Blank")^0 / writer.interblocksep
+                                    )
+                                  )
+                                * V("Block")
+                                * ( V("Blank")^0 * parsers.eof
+                                  + ( V("Blank")^2 / writer.paragraphsep
+                                    + V("Blank")^0 / writer.interblocksep
+                                    )
+                                  )
+                                + V("Paragraph")
+                                * ( V("Blank")^0 * parsers.eof
+                                  + V("Blank")^0 / writer.paragraphsep
+                                  )
+                                )^0,
 
         ExpectedJekyllData    = parsers.fail,
 
@@ -29174,7 +29322,7 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
                  , "div_level")
       end
 
-      local non_fenced_div_block  = parsers.check_minimal_indent * V("Block") 
+      local non_fenced_div_block  = parsers.check_minimal_indent * V("BlockOrParagraph")
                                   - parsers.check_minimal_indent_and_trail * fenced_div_end
 
       local FencedDiv = fenced_div_begin
@@ -30762,6 +30910,8 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \def\markdownRendererInterblockSeparatorPrototype{\par}%
+\def\markdownRendererParagraphSeparatorPrototype{%
+  \markdownRendererInterblockSeparator}%
 \def\markdownRendererHardLineBreakPrototype{\hfil\break}%
 \def\markdownRendererSoftLineBreakPrototype{ }%
 \let\markdownRendererEllipsisPrototype\dots

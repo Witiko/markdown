@@ -21,18 +21,18 @@ documentBegin
 codeSpan: texMathDoubleBackslash
 codeSpan: texMathSingleBackslash
 softLineBreak
-interblockSeparator
+paragraphSeparator
 backslash
-interblockSeparator
+paragraphSeparator
 backslash
-interblockSeparator
+paragraphSeparator
 backslash
-interblockSeparator
+paragraphSeparator
 backslash
-interblockSeparator
+paragraphSeparator
 backslash
 inlineMath: a\\
-interblockSeparator
+paragraphSeparator
 backslash
 displayMath: a\\
 documentEnd

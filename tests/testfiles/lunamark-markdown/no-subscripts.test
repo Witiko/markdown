@@ -5,7 +5,7 @@ H~2~O is a liquid and some \~regular~ text with tildes.
 >>>
 documentBegin
 codeSpan: subscripts
-interblockSeparator
+paragraphSeparator
 tilde
 tilde
 tilde

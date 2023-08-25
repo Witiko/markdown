@@ -63,34 +63,34 @@ BEGIN link
 - URI: /url/
 - title: Title
 END link
-interblockSeparator
+paragraphSeparator
 BEGIN link
 - label: embedded [brackets]
 - URI: /url/
 - title: 
 END link
-interblockSeparator
+paragraphSeparator
 BEGIN link
 - label: once
 - URI: /url
 - title: 
 END link
-interblockSeparator
+paragraphSeparator
 BEGIN link
 - label: twice
 - URI: /url
 - title: 
 END link
-interblockSeparator
+paragraphSeparator
 BEGIN link
 - label: thrice
 - URI: /url
 - title: 
 END link
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 inputVerbatim: ./_markdown_test/1d6cdc132aafa7c2999b741379103fae.verbatim
-interblockSeparator
+paragraphSeparator
 thematicBreak
 interblockSeparator
 BEGIN link
@@ -98,40 +98,40 @@ BEGIN link
 - URI: foo
 - title: 
 END link
-interblockSeparator
+paragraphSeparator
 BEGIN link
 - label: this
 - URI: foo
 - title: 
 END link
-interblockSeparator
+paragraphSeparator
 BEGIN link
 - label: this
 - URI: foo
 - title: 
 END link
-interblockSeparator
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
+paragraphSeparator
 BEGIN link
 - label: this
 - URI: foo
 - title: 
 END link
-interblockSeparator
+paragraphSeparator
 BEGIN link
 - label: this
 - URI: foo
 - title: 
 END link
-interblockSeparator
+paragraphSeparator
 BEGIN link
 - label: this
 - URI: /somethingelse/
 - title: 
 END link
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 thematicBreak
 interblockSeparator
 BEGIN link

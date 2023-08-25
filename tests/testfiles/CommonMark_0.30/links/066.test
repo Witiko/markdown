@@ -11,5 +11,5 @@
 [ref[bar]]: /uri
 >>>
 documentBegin
-interblockSeparator
+paragraphSeparator
 documentEnd

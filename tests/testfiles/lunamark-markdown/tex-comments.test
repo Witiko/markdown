@@ -35,27 +35,27 @@ Here is a corner case: `\\` separated by a comment: `\\%
 documentBegin
 codeSpan: texComments
 softLineBreak
-interblockSeparator
+paragraphSeparator
 emphasis: emphasized text
 emphasis: emphasi(percentSign)  another one(softLineBreak)zed text
-interblockSeparator
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
+paragraphSeparator
 emphasis: end of (hardLineBreak)a line
-interblockSeparator
+paragraphSeparator
 emphasis: end of (backslash)(softLineBreak)a line
-interblockSeparator
+paragraphSeparator
 emphasis: end of (backslash)(hardLineBreak)a line
-interblockSeparator
+paragraphSeparator
 codeSpan: (backslash)
 codeSpan: (backslash)(percentSign)
 codeSpan: (backslash)(backslash)
 codeSpan: (backslash)(backslash)(percentSign)
 softLineBreak
-interblockSeparator
+paragraphSeparator
 softLineBreak
 codeSpan: (backslash)text(leftBrace)Hello world(rightBrace)!(backslash)(backslash)
-interblockSeparator
+paragraphSeparator
 codeSpan: (backslash)(backslash)
 codeSpan: (backslash)(backslash)
 documentEnd

@@ -11,5 +11,5 @@ foo <!--> foo -->
 foo <!-- foo--->
 >>>
 documentBegin
-interblockSeparator
+paragraphSeparator
 documentEnd

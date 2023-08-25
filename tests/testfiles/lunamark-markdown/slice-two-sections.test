@@ -170,7 +170,7 @@ BEGIN link
 END link
 emphasis: This is an (emphasis: emphasized) span of text
 strongEmphasis: This is a (strongEmphasis: strongly emphasized) span of text
-interblockSeparator
+paragraphSeparator
 BEGIN image
 - label: example image
 - URI: example-image.pdf

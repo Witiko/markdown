@@ -29,7 +29,7 @@ codeSpan: preg(underscore)replace
 codeSpan: /e
 softLineBreak
 codeSpan: (underscore)UnslashQuotes
-interblockSeparator
+paragraphSeparator
 softLineBreak
 interblockSeparator
 BEGIN section
@@ -40,7 +40,7 @@ headingTwo: Header "quoted" again (backslash)""
 interblockSeparator
 BEGIN section
 headingThree: Header "quoted" again (backslash)""
-interblockSeparator
+paragraphSeparator
 codeSpan: (underscore)Detab
 interblockSeparator
 inputVerbatim: ./_markdown_test/49593f3a94665fea149e78f87b7e1b70.verbatim

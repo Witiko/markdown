@@ -14,6 +14,6 @@ with blank line'
 [foo]
 >>>
 documentBegin
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 documentEnd

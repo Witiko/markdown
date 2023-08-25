@@ -8,7 +8,7 @@ Here is a <#relative-reference> and <?here=is> another <./one>.
 documentBegin
 codeSpan: relativeReferences
 softLineBreak
-interblockSeparator
+paragraphSeparator
 BEGIN link
 - label: (hash)relative-reference
 - URI: #relative-reference

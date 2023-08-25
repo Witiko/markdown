@@ -9,7 +9,7 @@ This **is** a strongly emphasized span of text.
 documentBegin
 codeSpan: underscores
 softLineBreak
-interblockSeparator
+paragraphSeparator
 underscore
 underscore
 underscore

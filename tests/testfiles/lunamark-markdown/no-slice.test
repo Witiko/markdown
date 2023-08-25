@@ -167,14 +167,14 @@ BEGIN link
 END link
 emphasis: This is an (emphasis: emphasized) span of text
 strongEmphasis: This is a (strongEmphasis: strongly emphasized) span of text
-interblockSeparator
+paragraphSeparator
 BEGIN image
 - label: example image
 - URI: example-image.pdf
 - title: An example image from Martin Scharrer's mwe package
 END image
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 interblockSeparator
 BEGIN fencedCode
 - src: ./_markdown_test/4b6b6e5629f4aa0fcfcb9164fca2efa3.verbatim
@@ -224,7 +224,7 @@ olItemWithNumber: 7
 olItemEnd
 olEnd
 interblockSeparator
-interblockSeparator
+paragraphSeparator
 hash
 interblockSeparator
 inputVerbatim: ./_markdown_test/a0fd6fe345e26edf18c330d18cdf4d52.verbatim
@@ -232,7 +232,7 @@ interblockSeparator
 hash
 softLineBreak
 hash
-interblockSeparator
+paragraphSeparator
 interblockSeparator
 olBeginTight
 olItemWithNumber: 5
@@ -243,23 +243,23 @@ olItemWithNumber: 7
 olItemEnd
 olEndTight
 interblockSeparator
-interblockSeparator
+paragraphSeparator
 hash
 softLineBreak
 hash
 softLineBreak
 hash
-interblockSeparator
-interblockSeparator
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
+paragraphSeparator
+paragraphSeparator
 emphasis: Term 2
-interblockSeparator
+paragraphSeparator
 interblockSeparator
 inputVerbatim: ./_markdown_test/c268833f99a7a4a12803144b445357da.verbatim
 interblockSeparator
-interblockSeparator
-interblockSeparator
+paragraphSeparator
+paragraphSeparator
 softLineBreak
 softLineBreak
 emphasis: Term 2
@@ -284,9 +284,9 @@ softLineBreak
 circumflex
 softLineBreak
 softLineBreak
-interblockSeparator
+paragraphSeparator
 circumflex
-interblockSeparator
+paragraphSeparator
 circumflex
 interblockSeparator
 inputVerbatim: ./_markdown_test/abbf8dcafba2274ed2400ea0c2d432ff.verbatim

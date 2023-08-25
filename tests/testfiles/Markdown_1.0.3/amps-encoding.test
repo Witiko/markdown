@@ -17,19 +17,19 @@ BEGIN link
 - URI: http://example.com/?foo=1&bar=2
 - title: 
 END link
-interblockSeparator
+paragraphSeparator
 BEGIN link
 - label: AT(ampersand)T
 - URI: http://att.com/
 - title: AT(ampersand)T
 END link
-interblockSeparator
+paragraphSeparator
 BEGIN link
 - label: link
 - URI: /script?foo=1&bar=2
 - title: 
 END link
-interblockSeparator
+paragraphSeparator
 BEGIN link
 - label: link
 - URI: /script?foo=1&bar=2
