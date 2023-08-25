@@ -37,7 +37,7 @@ Unit Tests:
 Continuous Integration:
 
 - In draft pull requests, do not build documentation or examples
-  and do not run pkgcheck. (#337, #338)
+  and do not run pkgcheck. (#337, #338, 189bb153)
 - Push temporary Docker images to GitHub Packages. (#340, #341)
 
 ## 3.0.0-alpha.2 (2023-08-01)
