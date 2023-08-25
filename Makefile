@@ -135,10 +135,16 @@ $(TECHNICAL_DOCUMENTATION): $(DTXARCHIVE) $(TECHNICAL_DOCUMENTATION_RESOURCES)
 
 # These targets typeset the examples.
 $(EXAMPLES): $(EXAMPLE_SOURCES) examples/example.tex
-	$(MAKE) -C examples $(notdir $@)
+	if [[ '$(NO_DOCUMENTATION)' != true ]]; \
+	then \
+	  $(MAKE) -C examples $(notdir $@); \
+	fi
 
 examples/example.tex: force
-	$(MAKE) -C examples $(notdir $@)
+	if [[ '$(NO_DOCUMENTATION)' != true ]]; \
+	then \
+	  $(MAKE) -C examples $(notdir $@); \
+	fi
 
 # This target converts the markdown user manual to an HTML page.
 %.html: %.md %.css
