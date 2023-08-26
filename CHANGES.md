@@ -8,10 +8,6 @@ Development:
 
 - Add support for TeX-like rich paragraphs. (#30, #306)
 
-Documentation:
-
-- Document setting up catcodes in Lua. (#329, #342)
-
 Fixes:
 
 - Reset current heading level at the end of a markdown document.
@@ -29,6 +25,7 @@ Documentation:
   (166c4506)
 - Add a link to @writersglen's talk at TUG 2022 to `README.md`.
   (f3efcb9)
+- Document setting up catcodes in Lua. (#329, #342)
 
 Unit Tests:
 
