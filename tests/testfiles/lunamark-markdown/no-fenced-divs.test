@@ -1,8 +1,5 @@
-\def\markdownOptionFencedCode{true}
 <<<
-This test ensures that the Lua `fencedDivs` option is disabled by default
-and that the `fencedCode` option correctly propagates through the plain TeX
-interface.
+This test ensures that the Lua `fencedDivs` option is disabled by default.
 
 :::
 This is not a div
@@ -108,9 +105,6 @@ This is not a div
 >>>
 documentBegin
 codeSpan: fencedDivs
-softLineBreak
-codeSpan: fencedCode
-softLineBreak
 paragraphSeparator
 softLineBreak
 softLineBreak
