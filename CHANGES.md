@@ -2,6 +2,15 @@
 
 ## 3.1.0
 
+Fixes:
+
+- Correctly parse paragraphs with trailing spaces.
+  (danopolan/istqb_latex#77, #345, #347)
+
+Unit Tests:
+
+- Add support for YAML metadata in testfiles. (#345, #347)
+
 ## 3.0.0 (2023-08-25)
 
 Development:
