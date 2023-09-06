@@ -33687,11 +33687,9 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \startluacode
-  document.markdown_preserve_trailing_spaces = true
-  document.markdown_is_buffering = false
+  document.markdown_buffering = false
   local function preserve_trailing_spaces(line)
-    if document.markdown_is_buffering and
-       document.markdown_preserve_trailing_spaces then
+    if document.markdown_buffering then
       line = line:gsub("[ \t][ \t]$", "\t\t")
     end
     return line
@@ -33702,11 +33700,11 @@ end
   \catcode`\|=0%
   \catcode`\\=12%
   |gdef|startmarkdown{%
-    |ctxlua{document.markdown_is_buffering = true}%
+    |ctxlua{document.markdown_buffering = true}%
     |markdownReadAndConvert{\stopmarkdown}%
                            {|stopmarkdown}}%
   |gdef|stopmarkdown{%
-    |ctxlua{document.markdown_is_buffering = false}%
+    |ctxlua{document.markdown_buffering = false}%
     |markdownEnd}%
 |endgroup
 %    \end{macrocode}
