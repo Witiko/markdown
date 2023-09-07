@@ -87,9 +87,9 @@ Term 1
 *Term 2*
 
 :   Definition 2
-    
+
         Some code, part of Definition 2
-    
+
     Third paragraph of Definition 2.
 
 :   Definition 3
@@ -117,14 +117,14 @@ Here is a note reference[^1] and another.[^longnote]
 Here is an inline note.^[Inlines notes are easier to
 write, since you don't have to pick an identifier and
 move down to type the note.]
-  
+
 [^1]: Here is the note.
 
 [^longnote]: Here's one with multiple blocks.
-  
+
     Subsequent paragraphs are indented to show that they
 belong to the previous note.
-  
+
         Some code
 
     The whole paragraph can be indented, or just the first
