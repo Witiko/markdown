@@ -1,4 +1,4 @@
-if: format == 'context-mkiv' or template == 'verbatim'
+if: format == 'context-mkiv' or template == 'input'
 ---
 <<<
 This test ensures that two and more trailing spaces or one or more trailing
@@ -12,9 +12,10 @@ Here is a line with three trailing spaces, producing a hard line break.
 Here is a line with four trailing spaces at the end of a paragraph.    
 
 Here is a line with no trailing tabs, producing a soft line break.
-Here is a line with a single trailing tab, producing a hard line break.	
+Here is a line with a single trailing tab, producing a soft line break.	
 Here is a line with two trailing tabs, producing a hard line break.		
-Here is a line with three trailing spaces at the end of the document.			
+Here is a line with three trailing tabs, producing a hard line break.			
+Here is a line with four trailing tabs at the end of the document.				
 >>>
 documentBegin
 softLineBreak
@@ -26,6 +27,7 @@ softLineBreak
 hardLineBreak
 hardLineBreak
 paragraphSeparator
+softLineBreak
 softLineBreak
 hardLineBreak
 hardLineBreak
