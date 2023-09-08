@@ -27904,7 +27904,7 @@ end
                                     + V("Blank")^0 / writer.interblocksep
                                     )
                                   )
-                                + ( V("Paragraph") + V("Plain") )
+                                + V("Paragraph")
                                 * ( V("Blank")^0 * parsers.eof
                                   + ( V("Blank")^2 / writer.paragraphsep
                                     + V("Blank")^0 / writer.interblocksep
@@ -27916,7 +27916,7 @@ end
                                     + V("Blank")^0 / writer.interblocksep
                                     )
                                   )
-                                + ( V("Paragraph") + V("Plain") )
+                                + V("Paragraph")
                                 * ( V("Blank")^0 * parsers.eof
                                   + V("Blank")^0 / writer.paragraphsep
                                   )
