@@ -19,6 +19,7 @@ Here is a line with three trailing spaces at the end of the document.
 documentBegin
 softLineBreak
 softLineBreak
+codeSpan: input
 paragraphSeparator
 softLineBreak
 softLineBreak
