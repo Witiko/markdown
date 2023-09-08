@@ -690,8 +690,8 @@ def should_process_testfile(read_testfile_result: ReadTestFile, test_parameters:
     metadata = yaml.safe_load(read_testfile_result.metadata)
     if not isinstance(metadata, dict) or 'if' not in metadata:
         return True  # The testfile has no restrictions on the parameters.
-    local_variables = {'format': test_parameters.tex_format, 'template': test_parameters.template.name}
-    should_process_testfile = eval(metadata['if'], globals={}, locals=local_variables)
+    variables = {'format': test_parameters.tex_format, 'template': test_parameters.template.name}
+    should_process_testfile = eval(metadata['if'], variables)
     return should_process_testfile
 
 
