@@ -281,7 +281,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request_target'
     steps:
       - name: Automatically merge pull request
         uses: pascalgn/automerge-action@v0.15.6
