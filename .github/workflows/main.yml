@@ -215,6 +215,8 @@ jobs:
           - TL2022-historic
           - latest
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     container:
       image: ghcr.io/witiko/markdown:${{ needs.build-docker-image.outputs[matrix.texlive] }}
     if: github.event_name != 'pull_request_target' && github.ref == 'refs/heads/main'
