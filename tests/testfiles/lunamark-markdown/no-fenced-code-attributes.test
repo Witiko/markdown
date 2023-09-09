@@ -1,8 +1,6 @@
-\def\markdownOptionFencedCode{true}
 <<<
-This test ensures that the Lua `fencedCode` option correctly propagates through
-the plain TeX interface and that the `fencedCodeAttributes` option is disabled
-by default.
+This test ensures that the Lua `fencedCodeAttributes` option is disabled by
+default.
 
 The following fenced code block attributes should be recognized as a part of
 the infostring.
@@ -12,8 +10,6 @@ bar
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 >>>
 documentBegin
-codeSpan: fencedCode
-softLineBreak
 codeSpan: fencedCodeAttributes
 softLineBreak
 paragraphSeparator

@@ -1,8 +1,7 @@
 \def\markdownOptionFencedDivs{true}
-\def\markdownOptionFencedCode{true}
 <<<
-This test ensures that the Lua `fencedDivs` and `fencedCode` options correctly
-propagates through the plain TeX interface.
+This test ensures that the Lua `fencedDivs` option correctly propagates through
+the plain TeX interface.
 
 :::
 This is not a div
@@ -115,7 +114,6 @@ This is not a div
 >>>
 documentBegin
 codeSpan: fencedDivs
-codeSpan: fencedCode
 softLineBreak
 paragraphSeparator
 softLineBreak

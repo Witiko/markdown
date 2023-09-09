@@ -21,6 +21,7 @@ from tempfile import mkdtemp
 import click
 from more_itertools import chunked, zip_equal
 from tqdm import tqdm
+import yaml
 
 
 # Global variables
@@ -66,6 +67,7 @@ TeXFormat = str
 Template = Path
 Command = Tuple[str, ...]
 
+Metadata = str
 SetupText = str
 InputText = str
 OutputText = str
@@ -74,6 +76,7 @@ OutputTextHeadlessDiff = str
 
 
 class ReadTestFile(NamedTuple):
+    metadata: Metadata
     setup_text: SetupText
     input_text: InputText
     expected_output_text: OutputText
@@ -191,6 +194,10 @@ class TestResult:
         return self.first_subresult.testfile
 
     @property
+    def metadata(self) -> Metadata:
+        return self.first_subresult.read_test_file.metadata
+
+    @property
     def setup_text(self) -> SetupText:
         return self.first_subresult.read_test_file.setup_text
 
@@ -221,16 +228,19 @@ class TestResult:
 
         actual_output_texts = set()
         for subresult in self:
-            self.updated_testfile = False
             actual_output_texts.add(subresult.actual_output_text)
 
         if len(actual_output_texts) > 1:
+            self.updated_testfile = False
             LOGGER.debug(f'Cannot update testfile {self.testfile}, different commands produced different outputs.')
             return
 
         actual_output_text, = list(actual_output_texts)
 
         with self.testfile.open('wt') as f:
+            if self.metadata:
+                print(self.metadata, file=f, end='')
+                print('---', file=f)
             print(self.setup_text, file=f, end='')
             print('<<<', file=f)
             print(self.input_text, file=f, end='')
@@ -433,6 +443,7 @@ class BatchResult:
 
     @classmethod
     def run_test_batch_with_parameters(cls, testfile_batch: TestFileBatch, test_parameters: TestParameters) -> 'BatchResult':
+        assert len(testfile_batch) >= 1
         read_testfile_results, tex_format, template, command = test_parameters
 
         # Create a temporary directory.
@@ -451,7 +462,7 @@ class BatchResult:
         test_texts.append(head_text)
 
         for testfile_number, (testfile, read_testfile_result) in enumerate(zip_equal(testfile_batch, read_testfile_results)):
-            setup_text, input_text, expected_output_text = read_testfile_result
+            _, setup_text, input_text, expected_output_text = read_testfile_result
 
             test_setup_filename = TEST_SETUP_FILENAME_FORMAT.format(testfile_number)
             test_input_filename = TEST_INPUT_FILENAME_FORMAT.format(testfile_number)
@@ -501,22 +512,28 @@ class BatchResult:
         return batch_result
 
     @classmethod
-    def run_test_batch(cls, args: Tuple[TestFileBatch, bool]) -> List[TestResult]:
-
+    def run_test_batch(cls, args: Tuple[TestFileBatch, bool]) -> List[Optional[TestResult]]:
         testfile_batch, fail_fast = args
 
         # Run the test for all different test parameters.
-        all_test_subresults_by_parameters: List[List[TestSubResult]] = []
-        for test_parameters in get_test_parameters(testfile_batch):
-            batch_result = cls.run_test_batch_with_parameters(testfile_batch, test_parameters)
-            subresults = list(batch_result.subresults)
-            all_test_subresults_by_parameters.append(subresults)
+        all_subresults: Dict[TestFile, List[TestSubResult]] = defaultdict(lambda: list())
+        for test_parameters, filtered_testfile_batch in get_test_parameters(testfile_batch):
+            assert len(filtered_testfile_batch) >= 1
+            batch_result = cls.run_test_batch_with_parameters(filtered_testfile_batch, test_parameters)
+            for subresult in batch_result.subresults:
+                all_subresults[subresult.testfile].append(subresult)
             if fail_fast and not batch_result:  # If we want to fail fast, stop after the first failed command.
                 break
 
         # For each testfile in the batch, create a test result
-        all_test_subresults_by_testfiles = transpose_rectangle(all_test_subresults_by_parameters)
-        test_results = list(map(TestResult, all_test_subresults_by_testfiles))
+        test_results = list()
+        for testfile in testfile_batch:
+            if testfile not in all_subresults:
+                LOGGER.warning('Skipping testfile {format_testfile(testfile)}, because it supports no test parameters.')
+                test_results.append(None)
+            else:
+                test_result = TestResult(all_subresults[testfile])
+                test_results.append(test_result)
         return test_results
 
 
@@ -568,12 +585,23 @@ def read_testfile(testfile: TestFile) -> ReadTestFile:
             else:
                 input_lines[input_part].append(line)
 
-    setup_text = ''.join(input_lines['setup'])
+    # Read optional YAML metadata.
+    stripped_setup_input_lines = [input_line.strip() for input_line in input_lines['setup']]
+    if '---' in stripped_setup_input_lines:
+        yaml_delimiter_index = stripped_setup_input_lines.index('---')
+        yaml_text = ''.join(input_lines['setup'][:yaml_delimiter_index])
+        setup_text = ''.join(input_lines['setup'][yaml_delimiter_index + 1:])
+    else:
+        yaml_text = ''
+        setup_text = ''.join(input_lines['setup'])
+
+    # Read mandatory parts of the testfile.
     input_text = ''.join(input_lines['input'])
     expected_output_text = ''.join(input_lines['expected_output'])
     if expected_output_text and not expected_output_text.endswith('\n'):
         expected_output_text = f'{expected_output_text}\n'
-    return ReadTestFile(setup_text, input_text, expected_output_text)
+
+    return ReadTestFile(yaml_text, setup_text, input_text, expected_output_text)
 
 
 def read_test_output_from_tex_log_file(tex_log_file: Path) -> OutputText:
@@ -652,15 +680,21 @@ def format_testfile(testfile: TestFile) -> str:
     return format_testfiles([testfile])
 
 
-def get_test_parameters(testfile_batch: TestFileBatch) -> Iterable[TestParameters]:
+def should_process_testfile(read_testfile_result: ReadTestFile, test_parameters: TestParameters) -> bool:
+    metadata = yaml.safe_load(read_testfile_result.metadata)
+    if not isinstance(metadata, dict) or 'if' not in metadata:
+        return True  # The testfile has no restrictions on the parameters.
+    variables = {'format': test_parameters.tex_format, 'template': test_parameters.template.name}
+    should_process_testfile = eval(metadata['if'], variables)
+    return should_process_testfile
+
+
+def get_test_parameters(testfile_batch: TestFileBatch) -> Iterable[Tuple[TestParameters, TestFileBatch]]:
     plural = 's' if len(testfile_batch) > 1 else ''
     LOGGER.debug(f'Testfile{plural} {format_testfiles(testfile_batch)}')
 
     # Read testfiles in the batch.
-    read_testfile_results: ReadTestFiles = []
-    for testfile in testfile_batch:
-        read_testfile_result = read_testfile(testfile)
-        read_testfile_results.append(read_testfile_result)
+    read_testfile_results = [read_testfile(testfile) for testfile in testfile_batch]
 
     # List TeX formats, templates, and commands.
     for tex_format in get_tex_formats():
@@ -669,18 +703,21 @@ def get_test_parameters(testfile_batch: TestFileBatch) -> Iterable[TestParameter
             LOGGER.debug(f'    Template {template.name}')
             for command in get_commands(tex_format):
                 LOGGER.debug(f'      Command {format_command(command)}')
-                yield TestParameters(read_testfile_results, tex_format, template, command)
+                # Filter out testfiles that do not support the current parameters.
+                test_parameters = TestParameters(read_testfile_results, tex_format, template, command)
+                filtered_testfile_batch, filtered_read_testfile_results = list(), list()
+                for testfile, read_testfile_result in zip_equal(testfile_batch, read_testfile_results):
+                    if should_process_testfile(read_testfile_result, test_parameters):
+                        filtered_testfile_batch.append(testfile)
+                        filtered_read_testfile_results.append(read_testfile_result)
+                if len(filtered_testfile_batch) == 0:
+                    LOGGER.debug('        Skipping, because no testfiles in the batch support these parameters.')
+                else:
+                    filtered_test_parameters = TestParameters(filtered_read_testfile_results, tex_format, template, command)
+                    yield filtered_test_parameters, filtered_testfile_batch
 
 
-def transpose_rectangle(input_list: Iterable[Iterable[T]]) -> List[List[T]]:
-    columns: List[List[T]] = []
-    for column in zip_equal(*input_list):
-        column = list(column)
-        columns.append(column)
-    return columns
-
-
-def run_tests(testfiles: Iterable[TestFile], fail_fast: bool) -> Iterable[TestResult]:
+def run_tests(testfiles: Iterable[TestFile], fail_fast: bool) -> Iterable[Optional[TestResult]]:
     testfiles: List[TestFile] = list(testfiles)
 
     def get_all_results() -> Iterable[Iterable[TestResult]]:
@@ -769,7 +806,11 @@ def main(testfiles: Iterable[str], update_tests: Optional[bool], fail_fast: Opti
     show_progress_bar = LOG_LEVEL >= logging.INFO
     progress_bar = tqdm(result_iter, total=len(testfiles), disable=not show_progress_bar)
     for result in progress_bar:
+        if result is None:
+            # A testfile was skipped.
+            continue
         if not result:
+            # A test failed.
             some_tests_failed = True
             if update_tests:
                 result.try_to_update_testfile()

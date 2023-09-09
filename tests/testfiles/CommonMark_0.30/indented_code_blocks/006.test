@@ -1,3 +1,6 @@
+if: not (format == 'context-mkiv' and template == 'verbatim')
+---
+
 %   ---RESULT--- "example": 112,
 %   
 %   <pre><code>chunk1
