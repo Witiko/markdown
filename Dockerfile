@@ -106,7 +106,7 @@ ARG BINARY_DIR
 ARG BUILD_DIR
 ARG INSTALL_DIR
 
-LABEL authors="Vít Novotný <witiko@mail.muni.cz>"
+LABEL authors="Vít Starý Novotný <witiko@mail.muni.cz>"
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TERM=xterm
