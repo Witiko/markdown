@@ -11140,7 +11140,11 @@ following code in your plain \TeX{} document:
 % \begin{markdown}
 %
 % The plain \TeX{} options may be also be specified via the \mdef{markdownSetup}
-% macro. The \mref{markdownSetup} macro receives the options to set up as its only
+% macro. Here, the plain \TeX{} options are represented by a comma-delimited
+% list of \meta{key}`=`\meta{value} pairs. For boolean options, the
+% `=`\meta{value} part is optional, and \meta{key} will be interpreted as
+% \meta{key}`=true` if the `=`\meta{value} part has been omitted.
+% The \mref{markdownSetup} macro receives the options to set up as its only
 % argument.
 %
 % \markdownEnd
