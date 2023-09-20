@@ -11062,12 +11062,33 @@ pdftex --shell-escape document.tex
 % Section <#sec:lua-options>), while some of them are specific to the plain
 % \TeX{} interface.
 %
+% To determine whether plain \TeX{} is the top layer or if there are other
+% layers above plain \TeX{}, we take a look on whether the
+% \mdef{c_@@_top_layer_tl} token list has already been defined. If not,
+% we will assume that plain \TeX{} is the top layer.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\tl_const:Nn \c_@@_option_layer_plain_tex_tl { plain_tex }
+\cs_generate_variant:Nn
+  \tl_const:Nn
+  { NV }
+\tl_if_exist:NF
+  \c_@@_top_layer_tl
+  {
+    \tl_const:NV
+      \c_@@_top_layer_tl
+      \c_@@_option_layer_plain_tex_tl
+  }
+%    \end{macrocode}
+% \begin{markdown}
+%
 % To enable the enumeration of plain \TeX{} options, we will maintain the
 % \mdef{g_\@\@_plain_tex_options_seq} sequence.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\ExplSyntaxOn
 \seq_new:N \g_@@_plain_tex_options_seq
 %    \end{macrocode}
 % \begin{markdown}
@@ -11080,7 +11101,6 @@ pdftex --shell-escape document.tex
 %  \begin{macrocode}
 \prop_new:N \g_@@_plain_tex_option_types_prop
 \prop_new:N \g_@@_default_plain_tex_options_prop
-\tl_const:Nn \c_@@_option_layer_plain_tex_tl { plain_tex }
 \seq_gput_right:NV \g_@@_option_layers_seq \c_@@_option_layer_plain_tex_tl
 \cs_new:Nn
   \@@_add_plain_tex_option:nnn
@@ -19104,6 +19124,29 @@ pdflatex --shell-escape document.tex
 % rest of the interface is inherited from the plain \TeX{} interface (see
 % Section <#sec:texinterface>).
 %
+% To determine whether \LaTeX{} is the top layer or if there are other
+% layers above \LaTeX{}, we take a look on whether the
+% \mref{c_@@_top_layer_tl} token list has already been defined. If not,
+% we will assume that \LaTeX{} is the top layer.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\tl_const:Nn \c_@@_option_layer_latex_tl { latex }
+\cs_generate_variant:Nn
+  \tl_const:Nn
+  { NV }
+\tl_if_exist:NF
+  \c_@@_top_layer_tl
+  {
+    \tl_const:NV
+      \c_@@_top_layer_tl
+      \c_@@_option_layer_latex_tl
+  }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \begin{markdown}
+%
 % The \LaTeX{} implementation redefines the plain \TeX{} logging macros (see
 % Section <#sec:tex-interface-logging>) to use the \LaTeX{} `\PackageInfo`,
 % `\PackageWarning`, and `\PackageError` macros.
@@ -19326,7 +19369,6 @@ document:
 %  \begin{macrocode}
 \prop_new:N \g_@@_latex_option_types_prop
 \prop_new:N \g_@@_default_latex_options_prop
-\tl_const:Nn \c_@@_option_layer_latex_tl { latex }
 \seq_gput_right:NV \g_@@_option_layers_seq \c_@@_option_layer_latex_tl
 \cs_new:Nn
   \@@_add_latex_option:nnn
@@ -20691,6 +20733,25 @@ following text:
 %</manual-interfaces>
 %<*context>
 % \fi
+% \begin{markdown}
+%
+% To determine whether \Hologo{ConTeXt} is the top layer or if there are other
+% layers above \Hologo{ConTeXt}, we take a look on whether the
+% \mref{c_@@_top_layer_tl} token list has already been defined. If not,
+% we will assume that \Hologo{ConTeXt} is the top layer.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\tl_if_exist:NF
+  \c_@@_top_layer_tl
+  {
+    \tl_const:Nn
+      \c_@@_top_layer_tl
+      { context }
+  }
+\ExplSyntaxOff
+%    \end{macrocode}
 % \begin{markdown}
 %
 % The \Hologo{ConTeXt} interface provides a start-stop macro pair for the
