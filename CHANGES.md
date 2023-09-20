@@ -2,6 +2,10 @@
 
 ## 3.1.0
 
+Development:
+
+- Add `\markdownSetup` command to plain TeX. (#275, #349)
+
 Unit Tests:
 
 - Add support for YAML metadata in testfiles. (#345, #347)
