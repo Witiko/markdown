@@ -11119,6 +11119,43 @@ following code in your plain \TeX{} document:
 % \par
 % \begin{markdown}
 %
+% The plain \TeX{} options may be also be specified via the \mdef{markdownSetup}
+% macro. The \mref{markdownSetup} macro receives the options to set up as its only
+% argument.
+%
+% \markdownEnd
+%  \begin{macrocode}
+\ExplSyntaxOn
+\cs_new:Nn
+  \@@_setup:n
+  {
+    \keys_set:nn
+      { markdown/options }
+      { #1 }
+  }
+\cs_gset_eq:NN
+  \markdownSetup
+  \@@_setup:n
+\ExplSyntaxOff
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*manual-options>
+
+Alternatively, you can also set plain \TeX{} options using the `\markdownSetup`
+\TeX{} command. For example, to set the \Opt{taskLists} Lua option to `true`,
+you would include the following code in your plain \TeX{} document:
+
+``` tex
+\markdownSetup{taskLists = true}
+```
+
+%</manual-options>
+%<*tex>
+% \fi
+% \par
+% \begin{markdown}
+%
 %#### Finalizing and Freezing the Cache
 % The \mdef{markdownOptionFinalizeCache} option corresponds to the Lua
 % interface \Opt{finalizeCache} option, which creates an output file
@@ -19179,24 +19216,8 @@ pdflatex --shell-escape document.tex
 %
 % The \LaTeX{} options may be specified when loading the \LaTeX{} package, when
 % using the \envmref{markdown*} \LaTeX{} environment or the \mref{markdownInput}
-% macro (see Section <#sec:latexinterface>), or via the \mdef{markdownSetup}
-% macro. The \mref{markdownSetup} macro receives the options to set up as its only
-% argument:
-%
-% \markdownEnd
-%  \begin{macrocode}
-\ExplSyntaxOn
-\cs_new:Nn
-  \@@_setup:n
-  {
-    \keys_set:nn
-      { markdown/latex-options }
-      { #1 }
-  }
-\let\markdownSetup=\@@_setup:n
-\ExplSyntaxOff
-%    \end{macrocode}
-% \begin{markdown}
+% macro (see Section <#sec:latexinterface>), or via the \mref{markdownSetup}
+% macro.
 %
 %#### \LaTeX{} snippets {#latex-setup-snippets}
 %
@@ -19456,7 +19477,7 @@ would use the following code in the preamble of your document:
       \markdownLaTeXThemePackageName}{#1/}
   }
 \keys_define:nn
-  { markdown/latex-options }
+  { markdown/options }
   {
     import .code:n = {
       \tl_set:Nn
@@ -19478,7 +19499,7 @@ would use the following code in the preamble of your document:
         { / }
         \c_backslash_str
       \keys_set:nV
-        { markdown/latex-options/import }
+        { markdown/options/import }
         \l_tmpa_tl
     },
   }
@@ -19486,7 +19507,7 @@ would use the following code in the preamble of your document:
   \tl_replace_all:Nnn
   { NnV }
 \keys_define:nn
-  { markdown/latex-options }
+  { markdown/options }
   {
     theme .code:n = { \@@_set_latex_theme:n { #1 } },
   }
@@ -19813,7 +19834,7 @@ options locally.
 %  \begin{macrocode}
 \ExplSyntaxOn
 \keys_define:nn
-  { markdown/latex-options }
+  { markdown/options }
   {
     snippet .code:n = {
       \markdownIfSnippetExists{#1}
@@ -19951,7 +19972,7 @@ variant of the `import` \LaTeX{} option:
 \tl_new:N
   \l_@@_latex_import_current_theme_tl
 \keys_define:nn
-  { markdown/latex-options/import }
+  { markdown/options/import }
   {
 %    \end{macrocode}
 % \begin{markdown}
@@ -20106,7 +20127,7 @@ variant of the `import` \LaTeX{} option:
       { #2 }
       \l_tmpa_tl
     \keys_define:nn
-      { markdown/latex-options }
+      { markdown/options }
       {
         #3 .code:n = {
           \@@_set_option_value:nn
@@ -20119,7 +20140,7 @@ variant of the `import` \LaTeX{} option:
       \c_@@_option_type_boolean_tl
       {
         \keys_define:nn
-          { markdown/latex-options }
+          { markdown/options }
           {
             #3 .default:n = { true },
           }
@@ -20181,7 +20202,7 @@ variant of the `import` \LaTeX{} option:
             }
           }
         \keys_define:nV
-          { markdown/latex-options }
+          { markdown/options }
           \l_tmpa_tl
       }
   }
@@ -20302,7 +20323,7 @@ variant of the `import` \LaTeX{} option:
       { #1 }
       {
         \keys_define:nn
-          { markdown/latex-options/renderers }
+          { markdown/options/renderers }
           {
             ##1 .code:n = {
               \cs_generate_from_arg_count:NNnn
@@ -20343,7 +20364,7 @@ variant of the `import` \LaTeX{} option:
 \tl_new:N
   \l_@@_renderer_definition_tl
 \keys_define:nn
-  { markdown/latex-options/renderers }
+  { markdown/options/renderers }
   {
     unknown .code:n = {
       \regex_match:nVTF
@@ -20477,7 +20498,7 @@ variant of the `import` \LaTeX{} option:
       { #1 }
       {
         \keys_define:nn
-          { markdown/latex-options/renderer-prototypes }
+          { markdown/options/renderer-prototypes }
           {
             ##1 .code:n = {
               \cs_generate_from_arg_count:NNnn
@@ -20518,7 +20539,7 @@ variant of the `import` \LaTeX{} option:
 \tl_new:N
   \l_@@_renderer_prototype_definition_tl
 \keys_define:nn
-  { markdown/latex-options/renderer-prototypes }
+  { markdown/options/renderer-prototypes }
   {
     unknown .code:n = {
       \regex_match:nVTF
@@ -20781,14 +20802,9 @@ following text:
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\cs_new:Nn
-  \@@_setup:n
-  {
-    \keys_set:nn
-      { markdown/context-options }
-      { #1 }
-  }
-\long\def\setupmarkdown[#1]
+\cs_new:Npn
+  \setupmarkdown
+  [ #1 ]
   {
     \@@_setup:n
       { #1 }
@@ -20860,7 +20876,7 @@ following text:
       { #2 }
       \l_tmpa_tl
     \keys_define:nn
-      { markdown/context-options }
+      { markdown/options }
       {
         #3 .code:n = {
           \tl_set:Nx
@@ -20884,7 +20900,7 @@ following text:
       \c_@@_option_type_boolean_tl
       {
         \keys_define:nn
-          { markdown/context-options }
+          { markdown/options }
           {
             #3 .default:n = { true },
           }
@@ -32316,11 +32332,11 @@ end
 %  \begin{macrocode}
 \ExplSyntaxOn
 \keys_define:nn
-  { markdown/latex-options }
+  { markdown/options }
   {
     renderers .code:n = {
       \keys_set:nn
-        { markdown/latex-options/renderers }
+        { markdown/options/renderers }
         { #1 }
     },
   }
@@ -32328,11 +32344,11 @@ end
   { rendererPrototypes }
   {
     \keys_define:nn
-      { markdown/latex-options }
+      { markdown/options }
       {
         #1 .code:n = {
           \keys_set:nn
-            { markdown/latex-options/renderer-prototypes }
+            { markdown/options/renderer-prototypes }
             { ##1 }
         },
       }
@@ -32346,7 +32362,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \keys_define:nn
-  { markdown/latex-options }
+  { markdown/options }
   {
     code .code:n = { #1 },
   }
@@ -32363,7 +32379,7 @@ end
   { jekyllDataRenderers }
   {
     \keys_define:nn
-      { markdown/latex-options }
+      { markdown/options }
       {
         #1 .code:n = {
           \tl_set:Nn
@@ -32385,13 +32401,13 @@ end
             { / }
             \c_backslash_str
           \keys_set:nV
-            { markdown/latex-options/jekyll-data-renderers }
+            { markdown/options/jekyll-data-renderers }
             \l_tmpa_tl
         },
       }
   }
 \keys_define:nn
-  { markdown/latex-options/jekyll-data-renderers }
+  { markdown/options/jekyll-data-renderers }
   {
     unknown .code:n = {
       \tl_set_eq:NN
