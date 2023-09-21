@@ -11290,9 +11290,125 @@ For more information, see the examples for the \Opt{finalizeCache} option.
   { path }
   { . }
 %    \end{macrocode}
+% \iffalse
+%</tex>
+%<*manual-options>
+
+The plain \TeX{} interface provides the following commands that you can use to
+specify the location of temporary files produced during the conversion from
+Markdown to \TeX{}:
+
+- `\markdownOptionInputTempFileName`,
+- `\markdownOptionOutputDir`,
+- `\markdownOptionCacheDir`, and
+- `\markdownOptionFrozenCacheFileName`.
+
+The `\markdownOptionCacheDir` and `\markdownOptionFrozenCacheFileName` commands
+correspond to the `cacheDir` and `frozenCacheFileName` Lua options.
+
+Using a text editor, create a folder named `output-directory` and a text
+document named `document.tex` with the following content:
+``` tex
+\input lmfonts
+\input markdown
+\def\markdownOptionInputTempFileName{temporary-input.md}
+\def\markdownOptionOutputDir{output-directory}
+\def\markdownOptionCacheDir{output-directory/cache-directory}
+\def\markdownOptionEagerCache{true}
+\def\markdownOptionFinalizeCache{true}
+\def\markdownOptionFrozenCacheFileName{output-directory/cache-directory/frozen-cache.tex}
+\markdownBegin
+Hello *world*!
+\markdownEnd
+\bye
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+luatex --output-directory output-directory document.tex
+``````
+A text document named `temporary-input.md` should be produced in the folder
+named `output-directory` and contain the following text:
+
+> Hello \*world\*!
+
+A folder named `output-directory/cache-directory` should also be produced and
+contain fragments of the converted markdown document. LuaTeX does not need
+other temporary files to perform the conversion from markdown to \TeX{}. To
+produce the remaining temporary files, invoke pdfTeX from the terminal:
+``` sh
+pdftex --output-directory output-directory --shell-escape document.tex
+``````
+Text document named `temporary-output.md` should be produced in the folder
+named `output-directory`.  The document will contain the input markdown
+document converted to \TeX{}.
+
+#### Package Documentation
+
+The \mdef{markdownOptionStripPercentSigns} macro controls whether a percent
+sign (`\%`) at the beginning of a line will be discarded when reading Markdown
+input from a \TeX{} document. This enables the use of markdown when writing
+\TeX{} package documentation using the [Doc \LaTeX{} package][doc] by Frank
+Mittelbach. The recognized values of the macro are `true` (discard) and `false`
+(retain). It defaults to `false`.
+
+ [doc]: https://ctan.org/pkg/doc (doc – Format LaTeX documentation)
+
+Using a text editor, create a text document named `document.dtx` with the
+following content:
+
+ ``` tex
+ % \iffalse
+ \documentclass{ltxdoc}
+ \usepackage[stripPercentSigns]{markdown}
+ \begin{document}
+ \DocInput{document.dtx}
+ \end{document}
+ % \fi
+ %
+ % \begin{markdown}
+ % Hello *world*!
+ % \end{markdown}
+ ```````
+
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.dtx
+``````
+A PDF document named `document.pdf` should be produced and contain the text
+“Hello *world*!”
+
+%</manual-options>
+%<*tex>
+% \fi
+% \begin{markdown}
+%
+%#### Miscellaneous Options
+%
+% The \mdef{markdownOptionStripPercentSigns} macro controls whether a percent
+% sign (`\%`) at the beginning of a line will be discarded when buffering
+% Markdown input (see Section <#sec:buffering>) or not. Notably, this
+% enables the use of markdown when writing \TeX{} package documentation using
+% the \pkg{Doc} \LaTeX{}~package~[@mittelbach17] or similar. The recognized
+% values of the macro are `true` (discard) and `false` (retain). It defaults
+% to `false`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\seq_gput_right:Nn
+  \g_@@_plain_tex_options_seq
+  { stripPercentSigns }
+\prop_gput:Nnn
+  \g_@@_plain_tex_option_types_prop
+  { stripPercentSigns }
+  { boolean }
+\prop_gput:Nnx
+  \g_@@_default_plain_tex_options_prop
+  { stripPercentSigns }
+  { false }
 % \begin{markdown}
 %
 %#### Generating Plain \TeX{} option macros and \meta{key}`=`\meta{value}s
+%
 % We define the command \mdef{@@_plain_tex_define_option_commands:} that
 % defines plain \TeX{} macros and the \meta{key}`=`\meta{value} interface
 % of the \mref{markdownSetup} macro for the above plain \TeX{} options.
@@ -11546,137 +11662,17 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 %
 % If plain \TeX{} is the top layer, we use the
 % \mref{@@_define_option_commands_and_keyvals:} macro to define plain \TeX{}
-% option macros and \meta{key}`=`\meta{value}s immediately. Otherwise, we
+% option macros and key-values immediately. Otherwise, we
 % postpone the definition until the upper layers have been loaded.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\prg_generate_conditional_variant:Nnn
-  \str_if_eq:nn
-  { Vn }
-  { T }
 \str_if_eq:VnT
   \c_@@_top_layer_tl
   { plain_tex }
   {
     \@@_define_option_commands_and_keyvals:
   }
-%    \end{macrocode}
-% \iffalse
-%</tex>
-%<*manual-options>
-
-The plain \TeX{} interface provides the following commands that you can use to
-specify the location of temporary files produced during the conversion from
-Markdown to \TeX{}:
-
-- `\markdownOptionInputTempFileName`,
-- `\markdownOptionOutputDir`,
-- `\markdownOptionCacheDir`, and
-- `\markdownOptionFrozenCacheFileName`.
-
-The `\markdownOptionCacheDir` and `\markdownOptionFrozenCacheFileName` commands
-correspond to the `cacheDir` and `frozenCacheFileName` Lua options.
-
-Using a text editor, create a folder named `output-directory` and a text
-document named `document.tex` with the following content:
-``` tex
-\input lmfonts
-\input markdown
-\def\markdownOptionInputTempFileName{temporary-input.md}
-\def\markdownOptionOutputDir{output-directory}
-\def\markdownOptionCacheDir{output-directory/cache-directory}
-\def\markdownOptionEagerCache{true}
-\def\markdownOptionFinalizeCache{true}
-\def\markdownOptionFrozenCacheFileName{output-directory/cache-directory/frozen-cache.tex}
-\markdownBegin
-Hello *world*!
-\markdownEnd
-\bye
-```````
-Next, invoke LuaTeX from the terminal:
-``` sh
-luatex --output-directory output-directory document.tex
-``````
-A text document named `temporary-input.md` should be produced in the folder
-named `output-directory` and contain the following text:
-
-> Hello \*world\*!
-
-A folder named `output-directory/cache-directory` should also be produced and
-contain fragments of the converted markdown document. LuaTeX does not need
-other temporary files to perform the conversion from markdown to \TeX{}. To
-produce the remaining temporary files, invoke pdfTeX from the terminal:
-``` sh
-pdftex --output-directory output-directory --shell-escape document.tex
-``````
-Text document named `temporary-output.md` should be produced in the folder
-named `output-directory`.  The document will contain the input markdown
-document converted to \TeX{}.
-
-#### Package Documentation
-
-The \mdef{markdownOptionStripPercentSigns} macro controls whether a percent
-sign (`\%`) at the beginning of a line will be discarded when reading Markdown
-input from a \TeX{} document. This enables the use of markdown when writing
-\TeX{} package documentation using the [Doc \LaTeX{} package][doc] by Frank
-Mittelbach. The recognized values of the macro are `true` (discard) and `false`
-(retain). It defaults to `false`.
-
- [doc]: https://ctan.org/pkg/doc (doc – Format LaTeX documentation)
-
-Using a text editor, create a text document named `document.dtx` with the
-following content:
-
- ``` tex
- % \iffalse
- \documentclass{ltxdoc}
- \usepackage[stripPercentSigns]{markdown}
- \begin{document}
- \DocInput{document.dtx}
- \end{document}
- % \fi
- %
- % \begin{markdown}
- % Hello *world*!
- % \end{markdown}
- ```````
-
-Next, invoke LuaTeX from the terminal:
-``` sh
-lualatex document.dtx
-``````
-A PDF document named `document.pdf` should be produced and contain the text
-“Hello *world*!”
-
-%</manual-options>
-%<*tex>
-% \fi
-% \begin{markdown}
-%
-%#### Miscellaneous Options
-%
-% The \mdef{markdownOptionStripPercentSigns} macro controls whether a percent
-% sign (`\%`) at the beginning of a line will be discarded when buffering
-% Markdown input (see Section <#sec:buffering>) or not. Notably, this
-% enables the use of markdown when writing \TeX{} package documentation using
-% the \pkg{Doc} \LaTeX{}~package~[@mittelbach17] or similar. The recognized
-% values of the macro are `true` (discard) and `false` (retain). It defaults
-% to `false`.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\seq_gput_right:Nn
-  \g_@@_plain_tex_options_seq
-  { stripPercentSigns }
-\prop_gput:Nnn
-  \g_@@_plain_tex_option_types_prop
-  { stripPercentSigns }
-  { boolean }
-\prop_gput:Nnx
-  \g_@@_default_plain_tex_options_prop
-  { stripPercentSigns }
-  { false }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \iffalse
