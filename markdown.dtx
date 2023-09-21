@@ -5572,17 +5572,17 @@ metadata.grammar_version = 4
 % \fi
 % \begin{markdown}
 %
-%    Any changes to the syntax extension API or grammar will cause the
-%    corresponding current version to be incremented.  After Markdown 3.0.0,
-%    any changes to the API and the grammar will be either backwards-compatible
-%    or constitute a breaking change that will cause the major version of the
-%    Markdown package to increment (to 4.0.0).
+% Any changes to the syntax extension API or grammar will cause the
+% corresponding current version to be incremented.  After Markdown 3.0.0,
+% any changes to the API and the grammar will be either backwards-compatible
+% or constitute a breaking change that will cause the major version of the
+% Markdown package to increment (to 4.0.0).
 %
-%    The `finalize_grammar` field is a function that finalizes the grammar of
-%    markdown using the interface of a Lua \luamref{reader} object, such as
-%    the \luamref{reader->insert_pattern} and
-%    \luamref{reader->add_special_character} methods,
-%    see Section <#lua-user-extensions>.
+% The `finalize_grammar` field is a function that finalizes the grammar of
+% markdown using the interface of a Lua \luamref{reader} object, such as
+% the \luamref{reader->insert_pattern} and
+% \luamref{reader->add_special_character} methods,
+% see Section <#lua-user-extensions>.
 %
 % \end{markdown}
 % \iffalse
