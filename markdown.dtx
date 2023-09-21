@@ -11292,13 +11292,20 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Here, we automatically define plain \TeX{} macros for the above plain \TeX{}
-% options.
+%#### Generating Plain \TeX{} option macros and \meta{key}`=`\meta{value}s
+% We define the command \mdef{@@_plain_tex_define_option_commands:} that
+% defines plain \TeX{} macros and the \meta{key}`=`\meta{value} interface
+% of the \mref{markdownSetup} macro for the above plain \TeX{} options.
 %
-% Furthemore, we also define macros that map directly to the options recognized
-% by the Lua interface, such as \mdef{markdownOptionHybrid} for the
-% \Opt{hybrid} Lua option (see Section <#sec:lua-options>), which are not
-% processed by the plain \TeX{} implementation, only passed along to Lua.
+% The command also defines macros and \meta{key}`=`\meta{value}s that map
+% directly to the options recognized by the Lua interface, such as
+% \mdef{markdownOptionHybrid} for the \Opt{hybrid} Lua option (see Section
+% <#sec:lua-options>), which are not processed by the plain \TeX{}
+% implementation, only passed along to Lua.
+%
+% Furthermore, the command also defines options and \meta{key}`=`\meta{value}s
+% for subsequently loaded layers that correspond to higher-level \TeX{} formats
+% such as \LaTeX{} and \Hologo{ConTeXt}.
 %
 % For the macros that correspond to the non-boolean options recognized by the
 % Lua interface, the same limitations apply here in the case of the
@@ -11306,7 +11313,8 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\cs_new:Nn \@@_plain_tex_define_option_commands:
+\cs_new:Nn
+  \@@_define_option_commands_and_keyvals:
   {
     \seq_map_inline:Nn
       \g_@@_option_layers_seq
@@ -11314,12 +11322,32 @@ For more information, see the examples for the \Opt{finalizeCache} option.
         \seq_map_inline:cn
           { g_@@_ ##1 _options_seq }
           {
-              \@@_plain_tex_define_option_command:n
+              \@@_define_option_command:n
                 { ####1 }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% To make it easier to copy-and-paste options from Pandoc [@macfarlane22] such
+% as `fancy_lists`, `header_attributes`, and `pipe_tables`, we accept
+% snake\\\_case in addition to camelCase variants of options. As a bonus,
+% studies [@sharif10] also show that snake\\\_case is faster to read than
+% camelCase.
+%
+% \end{markdown}
+%  \begin{macrocode}
+              \@@_with_various_cases:nn
+                { ####1 }
+                {
+                  \@@_define_option_keyval:nnn
+                    { ##1 }
+                    { ####1 }
+                    { ########1 }
+                }
           }
       }
   }
-\cs_new:Nn \@@_plain_tex_define_option_command:n
+\cs_new:Nn
+  \@@_define_option_command:n
   {
     \@@_get_default_option_value:nN
       { #1 }
@@ -11383,9 +11411,153 @@ For more information, see the examples for the \Opt{finalizeCache} option.
           }
       }
   }
-\@@_plain_tex_define_option_commands:
+\cs_new:Nn
+  \@@_define_option_keyval:nnn
+  {
+    \prop_get:cnN
+      { g_@@_ #1 _option_types_prop }
+      { #2 }
+      \l_tmpa_tl
+    \keys_define:nn
+      { markdown/options }
+      {
 %    \end{macrocode}
+% \begin{markdown}
 %
+% For boolean options, we also accept `yes` as an alias for
+% `true` and `no` as an alias for `false`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        #3 .code:n = {
+          \tl_set:Nx
+            \l_tmpa_tl
+            {
+              \str_case:nnF
+                { ##1 }
+                {
+                  { yes } { true }
+                  { no } { false }
+                }
+                { ##1 }
+            }
+          \@@_set_option_value:nV
+            { #2 }
+            \l_tmpa_tl
+        },
+        #3 .code:n = {
+          \@@_set_option_value:nn
+            { #2 }
+            { ##1 }
+        },
+      }
+    \str_if_eq:VVT
+      \l_tmpa_tl
+      \c_@@_option_type_boolean_tl
+      {
+        \keys_define:nn
+          { markdown/options }
+          {
+            #3 .default:n = { true },
+          }
+      }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% For options of type `clist`, we assume that \meta{key} is a regular English
+% noun in plural (such as `extensions`) and we also define the
+% \meta{singular key}`=`\meta{value} interface, where \meta{singular key} is
+% \meta{key} after stripping the trailing -s (such as `extension`). Rather
+% than setting the option to \meta{value}, this interface appends \meta{value}
+% to the current value as the rightmost item in the list.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \str_if_eq:VVT
+      \l_tmpa_tl
+      \c_@@_option_type_clist_tl
+      {
+        \tl_set:Nn
+          \l_tmpa_tl
+          { #3 }
+        \tl_reverse:N
+          \l_tmpa_tl
+        \str_if_eq:enF
+          {
+            \tl_head:V
+              \l_tmpa_tl
+          }
+          { s }
+          {
+            \msg_error:nnn
+              { markdown }
+              { malformed-name-for-clist-option }
+              { #3 }
+          }
+        \tl_set:Nx
+          \l_tmpa_tl
+          {
+            \tl_tail:V
+              \l_tmpa_tl
+          }
+        \tl_reverse:N
+          \l_tmpa_tl
+        \tl_put_right:Nn
+          \l_tmpa_tl
+          {
+            .code:n = {
+              \@@_get_option_value:nN
+                { #2 }
+                \l_tmpa_tl
+              \clist_set:NV
+                \l_tmpa_clist
+                { \l_tmpa_tl, { ##1 } }
+              \@@_set_option_value:nV
+                { #2 }
+                \l_tmpa_clist
+            }
+          }
+        \keys_define:nV
+          { markdown/options }
+          \l_tmpa_tl
+      }
+  }
+\cs_generate_variant:Nn
+  \clist_set:Nn
+  { NV }
+\cs_generate_variant:Nn
+  \keys_define:nn
+  { nV }
+\cs_generate_variant:Nn
+  \@@_set_option_value:nn
+  { nV }
+\prg_generate_conditional_variant:Nnn
+  \str_if_eq:nn
+  { en }
+  { F }
+\msg_new:nnn
+  { markdown }
+  { malformed-name-for-clist-option }
+  {
+    Clist~option~name~#1~does~not~end~with~-s.
+  }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If plain \TeX{} is the top layer, we use the
+% \mref{@@_define_option_commands_and_keyvals:} macro to define plain \TeX{}
+% option macros and \meta{key}`=`\meta{value}s immediately. Otherwise, we
+% postpone the definition until the upper layers have been loaded.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\tl_if_eq:VnT
+  \c_@@_top_layer_tl
+  { plain_tex }
+  {
+    \@@_define_option_commands_and_keyvals:
+  }
+%    \end{macrocode}
 % \iffalse
 %</tex>
 %<*manual-options>
@@ -20113,167 +20285,24 @@ variant of the `import` \LaTeX{} option:
 \cs_generate_variant:Nn
   \@@_latex_setup_snippet:nn
   { Vx }
-\ExplSyntaxOff
 %    \end{macrocode}
 % \begin{markdown}
 %
-%#### Plain \TeX{} Interface Options
-% Here, we automatically define plain \TeX{} macros and the
-% \meta{key}`=`\meta{value} interface for the above \LaTeX{} options.
+%#### Generating Plain \TeX{} option macros and \meta{key}`=`\meta{value}s
+%
+% If \LaTeX{} is the top layer, we use the
+% \mref{@@_define_option_commands_and_keyvals:} macro to define plain \TeX{}
+% option macros and \meta{key}`=`\meta{value}s immediately. Otherwise, we
+% postpone the definition until the upper layers have been loaded.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\ExplSyntaxOn
-\cs_new:Nn \@@_latex_define_option_commands_and_keyvals:
+\tl_if_eq:VnT
+  \c_@@_top_layer_tl
+  { latex }
   {
-    \seq_map_inline:Nn
-      \g_@@_latex_options_seq
-      {
-          \@@_plain_tex_define_option_command:n
-            { ##1 }
-      }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% Furthermore, we also define the \meta{key}`=`\meta{value} interface
-% for all option macros recognized by the Lua and plain \TeX{} interfaces.
-%
-% \end{markdown}
-%  \begin{macrocode}
-    \seq_map_inline:Nn
-      \g_@@_option_layers_seq
-      {
-        \seq_map_inline:cn
-          { g_@@_ ##1 _options_seq }
-          {
-%    \end{macrocode}
-% \begin{markdown}
-%
-% To make it easier to copy-and-paste options from Pandoc [@macfarlane22] such
-% as `fancy_lists`, `header_attributes`, and `pipe_tables`, we accept
-% snake\\\_case in addition to camelCase variants of options. As a bonus,
-% studies [@sharif10] also show that snake\\\_case is faster to read than
-% camelCase.
-%
-% \end{markdown}
-%  \begin{macrocode}
-              \@@_with_various_cases:nn
-                { ####1 }
-                {
-                  \@@_latex_define_option_keyval:nnn
-                    { ##1 }
-                    { ####1 }
-                    { ########1 }
-                }
-          }
-      }
+    \@@_define_option_commands_and_keyvals:
   }
-\cs_new:Nn \@@_latex_define_option_keyval:nnn
-  {
-    \prop_get:cnN
-      { g_@@_ #1 _option_types_prop }
-      { #2 }
-      \l_tmpa_tl
-    \keys_define:nn
-      { markdown/options }
-      {
-        #3 .code:n = {
-          \@@_set_option_value:nn
-            { #2 }
-            { ##1 }
-        },
-      }
-    \str_if_eq:VVT
-      \l_tmpa_tl
-      \c_@@_option_type_boolean_tl
-      {
-        \keys_define:nn
-          { markdown/options }
-          {
-            #3 .default:n = { true },
-          }
-      }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% For options of type `clist`, we assume that \meta{key} is a regular English
-% noun in plural (such as `extensions`) and we also define the
-% \meta{singular key}`=`\meta{value} interface, where \meta{singular key} is
-% \meta{key} after stripping the trailing -s (such as `extension`). Rather
-% than setting the option to \meta{value}, this interface appends \meta{value}
-% to the current value as the rightmost item in the list.
-%
-% \end{markdown}
-%  \begin{macrocode}
-    \str_if_eq:VVT
-      \l_tmpa_tl
-      \c_@@_option_type_clist_tl
-      {
-        \tl_set:Nn
-          \l_tmpa_tl
-          { #3 }
-        \tl_reverse:N
-          \l_tmpa_tl
-        \str_if_eq:enF
-          {
-            \tl_head:V
-              \l_tmpa_tl
-          }
-          { s }
-          {
-              \msg_error:nnn
-                { markdown }
-                { malformed-name-for-clist-option }
-                { #3 }
-          }
-        \tl_set:Nx
-          \l_tmpa_tl
-          {
-            \tl_tail:V
-              \l_tmpa_tl
-          }
-        \tl_reverse:N
-          \l_tmpa_tl
-        \tl_put_right:Nn
-          \l_tmpa_tl
-          {
-            .code:n = {
-              \@@_get_option_value:nN
-                { #2 }
-                \l_tmpa_tl
-              \clist_set:NV
-                \l_tmpa_clist
-                { \l_tmpa_tl, { ##1 } }
-              \@@_set_option_value:nV
-                { #2 }
-                \l_tmpa_clist
-            }
-          }
-        \keys_define:nV
-          { markdown/options }
-          \l_tmpa_tl
-      }
-  }
-\cs_generate_variant:Nn
-  \clist_set:Nn
-  { NV }
-\cs_generate_variant:Nn
-  \keys_define:nn
-  { nV }
-\cs_generate_variant:Nn
-  \@@_set_option_value:nn
-  { nV }
-\prg_generate_conditional_variant:Nnn
-  \str_if_eq:nn
-  { en }
-  { F }
-\msg_new:nnn
-  { markdown }
-  { malformed-name-for-clist-option }
-  {
-    Clist~option~name~#1~does~not~end~with~-s.
-  }
-\@@_latex_define_option_commands_and_keyvals:
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par
@@ -20880,51 +20909,13 @@ following text:
 %    \end{macrocode}
 % \begin{markdown}
 %
-%#### \Hologo{ConTeXt} Interface Options
-% We define the \meta{key}`=`\meta{value} interface for all option macros
-% recognized by the Lua and plain \TeX{} interfaces.
+%#### Generating Plain \TeX{} option macros and \meta{key}`=`\meta{value}s
+% Unlike plain \TeX{}, we also accept caseless variants of options
+% in line with the style of \Hologo{ConTeXt}.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\cs_new:Nn \@@_context_define_option_commands_and_keyvals:
-  {
-    \seq_map_inline:Nn
-      \g_@@_option_layers_seq
-      {
-        \seq_map_inline:cn
-          { g_@@_ ##1 _options_seq }
-          {
-%    \end{macrocode}
-% \begin{markdown}
-%
-% To make it easier to copy-and-paste options from Pandoc [@macfarlane22] such
-% as `fancy_lists`, `header_attributes`, and `pipe_tables`, we accept
-% snake\\\_case in addition to camelCase variants of options. As a bonus,
-% studies [@sharif10] also show that snake\\\_case is faster to read than
-% camelCase.
-%
-% \end{markdown}
-%  \begin{macrocode}
-              \@@_with_various_cases:nn
-                { ####1 }
-                {
-                  \@@_context_define_option_keyval:nnn
-                    { ##1 }
-                    { ####1 }
-                    { ########1 }
-                }
-          }
-      }
-  }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% Furthermore, we also accept caseless variants of options in line with the
-% style of \Hologo{ConTeXt}.
-%
-% \end{markdown}
-%  \begin{macrocode}
 \cs_new:Nn \@@_caseless:N
   {
     \regex_replace_all:nnN
@@ -20936,47 +20927,22 @@ following text:
       { #1 }
   }
 \seq_gput_right:Nn \g_@@_cases_seq { @@_caseless:N }
-\cs_new:Nn \@@_context_define_option_keyval:nnn
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If \Hologo{ConTeXt} is the top layer, we use the
+% \mref{@@_define_option_commands_and_keyvals:} macro to define plain \TeX{}
+% option macros and \meta{key}`=`\meta{value}s immediately. Otherwise, we
+% postpone the definition until the upper layers have been loaded.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\tl_if_eq:VnT
+  \c_@@_top_layer_tl
+  { context }
   {
-    \prop_get:cnN
-      { g_@@_ #1 _option_types_prop }
-      { #2 }
-      \l_tmpa_tl
-    \keys_define:nn
-      { markdown/options }
-      {
-        #3 .code:n = {
-          \tl_set:Nx
-            \l_tmpa_tl
-            {
-              \str_case:nnF
-                { ##1 }
-                {
-                  { yes } { true }
-                  { no } { false }
-                }
-                { ##1 }
-            }
-          \@@_set_option_value:nV
-            { #2 }
-            \l_tmpa_tl
-        },
-      }
-    \str_if_eq:VVT
-      \l_tmpa_tl
-      \c_@@_option_type_boolean_tl
-      {
-        \keys_define:nn
-          { markdown/options }
-          {
-            #3 .default:n = { true },
-          }
-      }
+    \@@_define_option_commands_and_keyvals:
   }
-\cs_generate_variant:Nn
-  \@@_set_option_value:nn
-  { nV }
-\@@_context_define_option_commands_and_keyvals:
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par
