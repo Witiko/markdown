@@ -11151,7 +11151,7 @@ following code in your plain \TeX{} document:
 % The \mref{markdownSetup} macro receives the options to set up as its only
 % argument.
 %
-% \markdownEnd
+% \end{markdown}
 %  \begin{macrocode}
 \cs_new:Nn
   \@@_setup:n
@@ -19919,7 +19919,7 @@ pdflatex --shell-escape document.tex
 % `frozencache` package options in the future, so that they can become a
 % standard interface for preparing \LaTeX{} document sources for distribution.
 %
-% \end{markdown}
+% \markdownEnd
 %  \begin{macrocode}
 \DeclareOption{finalizecache}{\markdownSetup{finalizeCache}}
 \DeclareOption{frozencache}{\markdownSetup{frozenCache}}
