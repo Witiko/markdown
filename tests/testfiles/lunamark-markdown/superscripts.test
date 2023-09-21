@@ -1,4 +1,4 @@
-\def\markdownOptionSuperscripts{true}
+\markdownSetup{superscripts=true}
 <<<
 This test ensures that the Lua `superscripts` option correctly propagates
 through the plain TeX interface.

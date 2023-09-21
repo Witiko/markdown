@@ -1,11 +1,13 @@
-\def\markdownOptionHashEnumerators{true}
-\def\markdownOptionDefinitionLists{true}
-\def\markdownOptionNotes{true}
-\def\markdownOptionInlineNotes{true}
-\def\markdownOptionSmartEllipses{true}
-\def\markdownOptionContentBlocks{true}
-\def\markdownOptionHeaderAttributes{true}
-\def\markdownOptionSlice{first-h2}
+\markdownSetup{
+  hashEnumerators=true,
+  definitionLists=true,
+  notes=true,
+  inlineNotes=true,
+  smartEllipses=true,
+  contentBlocks=true,
+  headerAttributes=true,
+  slice=first-h2,
+}
 <<<
 This test ensures that the Lua `slice` option correctly propagates through the
 plain TeX interface.

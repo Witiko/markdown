@@ -1,4 +1,4 @@
-\def\markdownOptionBlankBeforeHeading{true}
+\markdownSetup{blankBeforeHeading=true}
 <<<
 Hi
 # No header

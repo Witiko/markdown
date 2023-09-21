@@ -1177,9 +1177,13 @@ local uni_case = require("lua-uni-case")
 % \end{markdown}
 %  \begin{macrocode}
 %<@@=markdown>
+%</tex>
+%<*context,tex>
 \ifx\ExplSyntaxOn\undefined
   \input expl3-generic
 \fi
+%</context,tex>
+%<*tex>
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -5568,17 +5572,17 @@ metadata.grammar_version = 4
 % \fi
 % \begin{markdown}
 %
-%    Any changes to the syntax extension API or grammar will cause the
-%    corresponding current version to be incremented.  After Markdown 3.0.0,
-%    any changes to the API and the grammar will be either backwards-compatible
-%    or constitute a breaking change that will cause the major version of the
-%    Markdown package to increment (to 4.0.0).
+% Any changes to the syntax extension API or grammar will cause the
+% corresponding current version to be incremented.  After Markdown 3.0.0,
+% any changes to the API and the grammar will be either backwards-compatible
+% or constitute a breaking change that will cause the major version of the
+% Markdown package to increment (to 4.0.0).
 %
-%    The `finalize_grammar` field is a function that finalizes the grammar of
-%    markdown using the interface of a Lua \luamref{reader} object, such as
-%    the \luamref{reader->insert_pattern} and
-%    \luamref{reader->add_special_character} methods,
-%    see Section <#lua-user-extensions>.
+% The `finalize_grammar` field is a function that finalizes the grammar of
+% markdown using the interface of a Lua \luamref{reader} object, such as
+% the \luamref{reader->insert_pattern} and
+% \luamref{reader->add_special_character} methods,
+% see Section <#sec:lua-user-extensions>.
 %
 % \end{markdown}
 % \iffalse
@@ -11062,12 +11066,33 @@ pdftex --shell-escape document.tex
 % Section <#sec:lua-options>), while some of them are specific to the plain
 % \TeX{} interface.
 %
+% To determine whether plain \TeX{} is the top layer or if there are other
+% layers above plain \TeX{}, we take a look on whether the
+% \mdef{c_@@_top_layer_tl} token list has already been defined. If not,
+% we will assume that plain \TeX{} is the top layer.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\tl_const:Nn \c_@@_option_layer_plain_tex_tl { plain_tex }
+\cs_generate_variant:Nn
+  \tl_const:Nn
+  { NV }
+\tl_if_exist:NF
+  \c_@@_top_layer_tl
+  {
+    \tl_const:NV
+      \c_@@_top_layer_tl
+      \c_@@_option_layer_plain_tex_tl
+  }
+%    \end{macrocode}
+% \begin{markdown}
+%
 % To enable the enumeration of plain \TeX{} options, we will maintain the
 % \mdef{g_\@\@_plain_tex_options_seq} sequence.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\ExplSyntaxOn
 \seq_new:N \g_@@_plain_tex_options_seq
 %    \end{macrocode}
 % \begin{markdown}
@@ -11080,7 +11105,6 @@ pdftex --shell-escape document.tex
 %  \begin{macrocode}
 \prop_new:N \g_@@_plain_tex_option_types_prop
 \prop_new:N \g_@@_default_plain_tex_options_prop
-\tl_const:Nn \c_@@_option_layer_plain_tex_tl { plain_tex }
 \seq_gput_right:NV \g_@@_option_layers_seq \c_@@_option_layer_plain_tex_tl
 \cs_new:Nn
   \@@_add_plain_tex_option:nnn
@@ -11111,6 +11135,45 @@ following code in your plain \TeX{} document:
 
 ``` tex
 \def\markdownOptionTaskLists{true}
+```
+
+%</manual-options>
+%<*tex>
+% \fi
+% \par
+% \begin{markdown}
+%
+% The plain \TeX{} options may be also be specified via the \mdef{markdownSetup}
+% macro. Here, the plain \TeX{} options are represented by a comma-delimited
+% list of \meta{key}`=`\meta{value} pairs. For boolean options, the
+% `=`\meta{value} part is optional, and \meta{key} will be interpreted as
+% \meta{key}`=true` if the `=`\meta{value} part has been omitted.
+% The \mref{markdownSetup} macro receives the options to set up as its only
+% argument.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\cs_new:Nn
+  \@@_setup:n
+  {
+    \keys_set:nn
+      { markdown/options }
+      { #1 }
+  }
+\cs_gset_eq:NN
+  \markdownSetup
+  \@@_setup:n
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*manual-options>
+
+Alternatively, you can also set plain \TeX{} options using the `\markdownSetup`
+\TeX{} macro. For example, to set the \Opt{taskLists} Lua option to `true`,
+you would include the following code in your plain \TeX{} document:
+
+``` tex
+\markdownSetup{taskLists = true}
 ```
 
 %</manual-options>
@@ -11227,102 +11290,6 @@ For more information, see the examples for the \Opt{finalizeCache} option.
   { path }
   { . }
 %    \end{macrocode}
-% \begin{markdown}
-%
-% Here, we automatically define plain \TeX{} macros for the above plain \TeX{}
-% options.
-%
-% Furthemore, we also define macros that map directly to the options recognized
-% by the Lua interface, such as \mdef{markdownOptionHybrid} for the
-% \Opt{hybrid} Lua option (see Section <#sec:lua-options>), which are not
-% processed by the plain \TeX{} implementation, only passed along to Lua.
-%
-% For the macros that correspond to the non-boolean options recognized by the
-% Lua interface, the same limitations apply here in the case of the
-% \Opt{inputTempFileName} macro.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\cs_new:Nn \@@_plain_tex_define_option_commands:
-  {
-    \seq_map_inline:Nn
-      \g_@@_option_layers_seq
-      {
-        \seq_map_inline:cn
-          { g_@@_ ##1 _options_seq }
-          {
-              \@@_plain_tex_define_option_command:n
-                { ####1 }
-          }
-      }
-  }
-\cs_new:Nn \@@_plain_tex_define_option_command:n
-  {
-    \@@_get_default_option_value:nN
-      { #1 }
-      \l_tmpa_tl
-    \@@_set_option_value:nV
-      { #1 }
-      \l_tmpa_tl
-  }
-\cs_new:Nn
-  \@@_set_option_value:nn
-  {
-    \@@_define_option:n
-      { #1 }
-    \@@_get_option_type:nN
-      { #1 }
-      \l_tmpa_tl
-    \str_if_eq:NNTF
-      \c_@@_option_type_counter_tl
-      \l_tmpa_tl
-      {
-        \@@_option_tl_to_csname:nN
-          { #1 }
-          \l_tmpa_tl
-        \int_gset:cn
-          { \l_tmpa_tl }
-          { #2 }
-      }
-      {
-        \@@_option_tl_to_csname:nN
-          { #1 }
-          \l_tmpa_tl
-        \cs_set:cpn
-          { \l_tmpa_tl }
-          { #2 }
-      }
-  }
-\cs_generate_variant:Nn
-  \@@_set_option_value:nn
-  { nV }
-\cs_new:Nn
-  \@@_define_option:n
-  {
-    \@@_option_tl_to_csname:nN
-      { #1 }
-      \l_tmpa_tl
-    \cs_if_free:cT
-      { \l_tmpa_tl }
-      {
-        \@@_get_option_type:nN
-          { #1 }
-          \l_tmpb_tl
-        \str_if_eq:NNT
-          \c_@@_option_type_counter_tl
-          \l_tmpb_tl
-          {
-            \@@_option_tl_to_csname:nN
-              { #1 }
-              \l_tmpa_tl
-            \int_new:c
-              { \l_tmpa_tl }
-          }
-      }
-  }
-\@@_plain_tex_define_option_commands:
-%    \end{macrocode}
-%
 % \iffalse
 %</tex>
 %<*manual-options>
@@ -11438,6 +11405,277 @@ A PDF document named `document.pdf` should be produced and contain the text
   \g_@@_default_plain_tex_options_prop
   { stripPercentSigns }
   { false }
+%  \end{macrocode}
+% \begin{markdown}
+%
+%#### Generating Plain \TeX{} Option Macros and Key-Values
+%
+% We define the command \mdef{@@_define_option_commands_and_keyvals:} that
+% defines plain \TeX{} macros and the key-value interface
+% of the \mref{markdownSetup} macro for the above plain \TeX{} options.
+%
+% The command also defines macros and key-values that map
+% directly to the options recognized by the Lua interface, such as
+% \mdef{markdownOptionHybrid} for the \Opt{hybrid} Lua option (see Section
+% <#sec:lua-options>), which are not processed by the plain \TeX{}
+% implementation, only passed along to Lua.
+%
+% Furthermore, the command also defines options and key-values
+% for subsequently loaded layers that correspond to higher-level \TeX{} formats
+% such as \LaTeX{} and \Hologo{ConTeXt}.
+%
+% For the macros that correspond to the non-boolean options recognized by the
+% Lua interface, the same limitations apply here in the case of the
+% \Opt{inputTempFileName} macro.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\cs_new:Nn
+  \@@_define_option_commands_and_keyvals:
+  {
+    \seq_map_inline:Nn
+      \g_@@_option_layers_seq
+      {
+        \seq_map_inline:cn
+          { g_@@_ ##1 _options_seq }
+          {
+              \@@_define_option_command:n
+                { ####1 }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% To make it easier to copy-and-paste options from Pandoc [@macfarlane22] such
+% as `fancy_lists`, `header_attributes`, and `pipe_tables`, we accept
+% snake\\\_case in addition to camelCase variants of options. As a bonus,
+% studies [@sharif10] also show that snake\\\_case is faster to read than
+% camelCase.
+%
+% \end{markdown}
+%  \begin{macrocode}
+              \@@_with_various_cases:nn
+                { ####1 }
+                {
+                  \@@_define_option_keyval:nnn
+                    { ##1 }
+                    { ####1 }
+                    { ########1 }
+                }
+          }
+      }
+  }
+\cs_new:Nn
+  \@@_define_option_command:n
+  {
+    \@@_get_default_option_value:nN
+      { #1 }
+      \l_tmpa_tl
+    \@@_set_option_value:nV
+      { #1 }
+      \l_tmpa_tl
+  }
+\cs_new:Nn
+  \@@_set_option_value:nn
+  {
+    \@@_define_option:n
+      { #1 }
+    \@@_get_option_type:nN
+      { #1 }
+      \l_tmpa_tl
+    \str_if_eq:NNTF
+      \c_@@_option_type_counter_tl
+      \l_tmpa_tl
+      {
+        \@@_option_tl_to_csname:nN
+          { #1 }
+          \l_tmpa_tl
+        \int_gset:cn
+          { \l_tmpa_tl }
+          { #2 }
+      }
+      {
+        \@@_option_tl_to_csname:nN
+          { #1 }
+          \l_tmpa_tl
+        \cs_set:cpn
+          { \l_tmpa_tl }
+          { #2 }
+      }
+  }
+\cs_generate_variant:Nn
+  \@@_set_option_value:nn
+  { nV }
+\cs_new:Nn
+  \@@_define_option:n
+  {
+    \@@_option_tl_to_csname:nN
+      { #1 }
+      \l_tmpa_tl
+    \cs_if_free:cT
+      { \l_tmpa_tl }
+      {
+        \@@_get_option_type:nN
+          { #1 }
+          \l_tmpb_tl
+        \str_if_eq:NNT
+          \c_@@_option_type_counter_tl
+          \l_tmpb_tl
+          {
+            \@@_option_tl_to_csname:nN
+              { #1 }
+              \l_tmpa_tl
+            \int_new:c
+              { \l_tmpa_tl }
+          }
+      }
+  }
+\cs_new:Nn
+  \@@_define_option_keyval:nnn
+  {
+    \prop_get:cnN
+      { g_@@_ #1 _option_types_prop }
+      { #2 }
+      \l_tmpa_tl
+    \str_if_eq:VVTF
+      \l_tmpa_tl
+      \c_@@_option_type_boolean_tl
+      {
+        \keys_define:nn
+          { markdown/options }
+          {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% For boolean options, we also accept `yes` as an alias for
+% `true` and `no` as an alias for `false`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+            #3 .code:n = {
+              \tl_set:Nx
+                \l_tmpa_tl
+                {
+                  \str_case:nnF
+                    { ##1 }
+                    {
+                      { yes } { true }
+                      { no } { false }
+                    }
+                    { ##1 }
+                }
+              \@@_set_option_value:nV
+                { #2 }
+                \l_tmpa_tl
+            },
+            #3 .default:n = { true },
+          }
+      }
+      {
+        \keys_define:nn
+          { markdown/options }
+          {
+            #3 .code:n = {
+              \@@_set_option_value:nn
+                { #2 }
+                { ##1 }
+            },
+          }
+      }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% For options of type `clist`, we assume that \meta{key} is a regular English
+% noun in plural (such as `extensions`) and we also define the
+% \meta{singular key}`=`\meta{value} interface, where \meta{singular key} is
+% \meta{key} after stripping the trailing -s (such as `extension`). Rather
+% than setting the option to \meta{value}, this interface appends \meta{value}
+% to the current value as the rightmost item in the list.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \str_if_eq:VVT
+      \l_tmpa_tl
+      \c_@@_option_type_clist_tl
+      {
+        \tl_set:Nn
+          \l_tmpa_tl
+          { #3 }
+        \tl_reverse:N
+          \l_tmpa_tl
+        \str_if_eq:enF
+          {
+            \tl_head:V
+              \l_tmpa_tl
+          }
+          { s }
+          {
+            \msg_error:nnn
+              { markdown }
+              { malformed-name-for-clist-option }
+              { #3 }
+          }
+        \tl_set:Nx
+          \l_tmpa_tl
+          {
+            \tl_tail:V
+              \l_tmpa_tl
+          }
+        \tl_reverse:N
+          \l_tmpa_tl
+        \tl_put_right:Nn
+          \l_tmpa_tl
+          {
+            .code:n = {
+              \@@_get_option_value:nN
+                { #2 }
+                \l_tmpa_tl
+              \clist_set:NV
+                \l_tmpa_clist
+                { \l_tmpa_tl, { ##1 } }
+              \@@_set_option_value:nV
+                { #2 }
+                \l_tmpa_clist
+            }
+          }
+        \keys_define:nV
+          { markdown/options }
+          \l_tmpa_tl
+      }
+  }
+\cs_generate_variant:Nn
+  \clist_set:Nn
+  { NV }
+\cs_generate_variant:Nn
+  \keys_define:nn
+  { nV }
+\cs_generate_variant:Nn
+  \@@_set_option_value:nn
+  { nV }
+\prg_generate_conditional_variant:Nnn
+  \str_if_eq:nn
+  { en }
+  { F }
+\msg_new:nnn
+  { markdown }
+  { malformed-name-for-clist-option }
+  {
+    Clist~option~name~#1~does~not~end~with~-s.
+  }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If plain \TeX{} is the top layer, we use the
+% \mref{@@_define_option_commands_and_keyvals:} macro to define plain \TeX{}
+% option macros and key-values immediately. Otherwise, we
+% postpone the definition until the upper layers have been loaded.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\str_if_eq:VVT
+  \c_@@_top_layer_tl
+  \c_@@_option_layer_plain_tex_tl
+  {
+    \@@_define_option_commands_and_keyvals:
+  }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \iffalse
@@ -18632,8 +18870,225 @@ following text:
 
 > Jane Doe is 99 years old.
 
+%</manual-tokens>
+%<*tex>
 % \fi
+% \begin{markdown}
 %
+%#### Generating Plain \TeX{} Token Renderer Macros and Key-Values {#plain-tex-renderers}
+%
+% We define the command \mdef{@@_define_renderers:} that defines plain \TeX{}
+% macros for token renderers. Futhermore, the `\markdownSetup` macro also accepts
+% the `renderers` key, whose value must be a list of key-values, where the keys
+% correspond to the markdown token renderer macros and the values are new
+% definitions of these token renderers.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\cs_new:Nn \@@_define_renderers:
+  {
+    \seq_map_function:NN
+      \g_@@_renderers_seq
+      \@@_define_renderer:n
+  }
+\cs_new:Nn \@@_define_renderer:n
+  {
+    \@@_renderer_tl_to_csname:nN
+      { #1 }
+      \l_tmpa_tl
+    \prop_get:NnN
+      \g_@@_renderer_arities_prop
+      { #1 }
+      \l_tmpb_tl
+    \@@_define_renderer:ncV
+      { #1 }
+      { \l_tmpa_tl }
+      \l_tmpb_tl
+  }
+\cs_new:Nn \@@_renderer_tl_to_csname:nN
+  {
+    \tl_set:Nn
+      \l_tmpa_tl
+      { \str_uppercase:n { #1 } }
+    \tl_set:Nx
+      #2
+      {
+        markdownRenderer
+        \tl_head:f { \l_tmpa_tl }
+        \tl_tail:n { #1 }
+      }
+  }
+\cs_new:Nn \@@_define_renderer:nNn
+  {
+    \@@_with_various_cases:nn
+      { #1 }
+      {
+        \keys_define:nn
+          { markdown/options/renderers }
+          {
+            ##1 .code:n = {
+              \cs_generate_from_arg_count:NNnn
+                #2
+                \cs_set:Npn
+                { #3 }
+                { ####1 }
+            },
+          }
+      }
+  }
+\cs_generate_variant:Nn
+  \@@_define_renderer:nNn
+  { ncV }
+\keys_define:nn
+  { markdown/options }
+  {
+    renderers .code:n = {
+      \keys_set:nn
+        { markdown/options/renderers }
+        { #1 }
+    },
+  }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% The following example code showcases a possible configuration of the
+% \mref{markdownRendererLink} and \mref{markdownRendererEmphasis} token
+% renderer macros.
+% ``` tex
+% \markdownSetup{
+%   renderers = {
+%     link = {#4},                   \% Render links as the link title.
+%     emphasis = {{\it #1}},   \% Render emphasized text using italics.
+%   }
+% }
+% ```````
+%
+% In addition to exact token renderer names, we also support wildcards
+% that match multiple token renderer names.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\tl_new:N
+  \l_@@_renderer_definition_tl
+\keys_define:nn
+  { markdown/options/renderers }
+  {
+    unknown .code:n = {
+      \regex_match:nVTF
+        { \* }
+        \l_keys_key_str
+        {
+          \tl_set:Nn
+            \l_@@_renderer_definition_tl
+            { #1 }
+          \tl_set:NV
+            \l_tmpa_tl
+            \l_keys_key_str
+          \regex_replace_all:nnN
+            { \* }
+            { .* }
+            \l_tmpa_tl
+          \regex_set:NV
+            \l_tmpa_regex
+            \l_tmpa_tl
+          \int_zero:N
+            \l_tmpa_int
+          \seq_map_inline:Nn
+            \g_@@_renderers_seq
+            {
+              \@@_with_various_cases:nn
+                { ##1 }
+                {
+                  \regex_match:NnT
+                    \l_tmpa_regex
+                    { ####1 }
+                    {
+                      \@@_renderer_tl_to_csname:nN
+                        { ##1 }
+                        \l_tmpa_tl
+                      \prop_get:NnN
+                        \g_@@_renderer_arities_prop
+                        { ##1 }
+                        \l_tmpb_tl
+                      \cs_generate_from_arg_count:cNVV
+                        { \l_tmpa_tl }
+                        \cs_set:Npn
+                        \l_tmpb_tl
+                        \l_@@_renderer_definition_tl
+                      \int_incr:N
+                        \l_tmpa_int
+                      \@@_with_various_cases_break:
+                    }
+                }
+            }
+          \int_compare:nNnT
+            { \l_tmpa_int } = { 0 }
+            {
+              \msg_error:nnV
+                { markdown }
+                { nonmatched-renderer-wildcard }
+                \l_keys_key_str
+            }
+        }
+        {
+          \msg_error:nnV
+            { markdown }
+            { undefined-renderer }
+            \l_keys_key_str
+        }
+    },
+  }
+\msg_new:nnn
+  { markdown }
+  { undefined-renderer }
+  {
+    Renderer~#1~is~undefined.
+  }
+\msg_new:nnn
+  { markdown }
+  { nonmatched-renderer-wildcard }
+  {
+    Wildcard~#1~matches~no~renderers.
+  }
+\cs_generate_variant:Nn
+  \regex_set:Nn
+  { NV }
+\cs_generate_variant:Nn
+  \cs_generate_from_arg_count:NNnn
+  { cNVV }
+\cs_generate_variant:Nn
+  \msg_error:nnn
+  { nnV }
+\prg_generate_conditional_variant:Nnn
+  \regex_match:nn
+  { nV }
+  { TF }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If plain \TeX{} is the top layer, we use the \mref{@@_define_renderers:}
+% macro to define plain \TeX{} token renderer macros and key-values
+% immediately. Otherwise, we postpone the definition until the upper layers
+% have been loaded.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\str_if_eq:VVT
+  \c_@@_top_layer_tl
+  \c_@@_option_layer_plain_tex_tl
+  {
+    \@@_define_renderers:
+  }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
 % \begin{markdown}
 
 ### Token Renderer Prototypes {#texrendererprototypes}
@@ -18878,23 +19333,89 @@ following text:
 %    \end{macrocode}
 % \begin{markdown}
 %
-% The following \TeX{} macros provide definitions for the token renderers (see
-% Section <#sec:texrenderersuser>) that have not been redefined by the
-% user. These macros are intended to be redefined by macro package authors
-% who wish to provide sensible default token renderers. They are also redefined
-% by the \LaTeX{} and \Hologo{ConTeXt} implementations (see sections
-% <#sec:lateximplementation> and <#sec:contextimplementation>).
+% The `jekyllDataRenderers` key can be used as a syntactic sugar for setting
+% the `markdown/jekyllData` key--values without using the expl3 language.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\cs_new:Nn \@@_plaintex_define_renderer_prototypes:
+\@@_with_various_cases:nn
+  { jekyllDataRenderers }
+  {
+    \keys_define:nn
+      { markdown/options }
+      {
+        #1 .code:n = {
+          \tl_set:Nn
+            \l_tmpa_tl
+            { ##1 }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% To ensure that keys containing forward slashes get passed correctly, we
+% replace all forward slashes in the input with backslash tokens with category
+% code letter and then undo the replacement. This means that if any unbraced
+% backslash tokens with category code letter exist in the input, they will be
+% replaced with forward slashes. However, this should be extremely rare.
+%
+% \end{markdown}
+%  \begin{macrocode}
+          \tl_replace_all:NnV
+            \l_tmpa_tl
+            { / }
+            \c_backslash_str
+          \keys_set:nV
+            { markdown/options/jekyll-data-renderers }
+            \l_tmpa_tl
+        },
+      }
+  }
+\keys_define:nn
+  { markdown/options/jekyll-data-renderers }
+  {
+    unknown .code:n = {
+      \tl_set_eq:NN
+        \l_tmpa_tl
+        \l_keys_key_str
+      \tl_replace_all:NVn
+        \l_tmpa_tl
+        \c_backslash_str
+        { / }
+      \tl_put_right:Nn
+        \l_tmpa_tl
+        {
+          .code:n = { #1 }
+        }
+      \keys_define:nV
+        { markdown/jekyllData }
+        \l_tmpa_tl
+    }
+  }
+\cs_generate_variant:Nn
+  \keys_define:nn
+  { nV }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \begin{markdown}
+%
+%#### Generating Plain \TeX{} Token Renderer Prototype Macros and Key-Values {#plain-tex-renderer-prototypes}
+%
+% We define the command \mdef{@@_define_renderer_prototypes:} that defines plain \TeX{}
+% macros for token renderer prototypes. Futhermore, the `\markdownSetup` macro also accepts
+% the `rendererPrototype` key, whose value must be a list of key-values, where the keys
+% correspond to the markdown token renderer prototype macros and the values are new
+% definitions of these token renderer prototypes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\cs_new:Nn \@@_define_renderer_prototypes:
   {
     \seq_map_function:NN
       \g_@@_renderers_seq
-      \@@_plaintex_define_renderer_prototype:n
+      \@@_define_renderer_prototype:n
   }
-\cs_new:Nn \@@_plaintex_define_renderer_prototype:n
+\cs_new:Nn \@@_define_renderer_prototype:n
   {
     \@@_renderer_prototype_tl_to_csname:nN
       { #1 }
@@ -18903,7 +19424,8 @@ following text:
       \g_@@_renderer_arities_prop
       { #1 }
       \l_tmpb_tl
-    \@@_plaintex_define_renderer_prototype:cV
+    \@@_define_renderer_prototype:ncV
+      { #1 }
       { \l_tmpa_tl }
       \l_tmpb_tl
   }
@@ -18921,21 +19443,193 @@ following text:
         Prototype
       }
   }
-\cs_new:Nn \@@_plaintex_define_renderer_prototype:Nn
+\cs_new:Nn \@@_define_renderer_prototype:nNn
   {
-    \cs_generate_from_arg_count:NNnn
-      #1
-      \cs_set:Npn
-      { #2 }
-      { }
+    \@@_with_various_cases:nn
+      { #1 }
+      {
+        \keys_define:nn
+          { markdown/options/renderer-prototypes }
+          {
+            ##1 .code:n = {
+              \cs_generate_from_arg_count:NNnn
+                #2
+                \cs_set:Npn
+                { #3 }
+                { ####1 }
+            },
+          }
+      }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Unless the token renderer prototype macro has already been defined,
+% we provide an empty definition.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \cs_if_free:NT
+      #2
+      {
+        \cs_generate_from_arg_count:NNnn
+          #2
+          \cs_set:Npn
+          { #3 }
+          { }
+      }
   }
 \cs_generate_variant:Nn
-  \@@_plaintex_define_renderer_prototype:Nn
-  { cV }
-\@@_plaintex_define_renderer_prototypes:
+  \@@_define_renderer_prototype:nNn
+  { ncV }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par
+% \begin{markdown}
+%
+% The following example code showcases a possible configuration of the
+% `\markdownRendererImagePrototype` and `\markdownRendererCodeSpanPrototype`
+% token renderer prototype macros.
+% ``` tex
+% \markdownSetup{
+%   rendererPrototypes = {
+%     image = {\pdfximage{#2}},    \% Embed PDF images in the document.
+%     codeSpan = {{\tt #1}},     \% Render inline code using monospace.
+%   }
+% }
+% ```````
+%
+% In addition to exact token renderer prototype names, we also support
+% wildcards that match multiple token renderer prototype names.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\tl_new:N
+  \l_@@_renderer_prototype_definition_tl
+\keys_define:nn
+  { markdown/options/renderer-prototypes }
+  {
+    unknown .code:n = {
+      \regex_match:nVTF
+        { \* }
+        \l_keys_key_str
+        {
+          \tl_set:Nn
+            \l_@@_renderer_prototype_definition_tl
+            { #1 }
+          \tl_set:NV
+            \l_tmpa_tl
+            \l_keys_key_str
+          \regex_replace_all:nnN
+            { \* }
+            { .* }
+            \l_tmpa_tl
+          \regex_set:NV
+            \l_tmpa_regex
+            \l_tmpa_tl
+          \int_zero:N
+            \l_tmpa_int
+          \seq_map_inline:Nn
+            \g_@@_renderers_seq
+            {
+              \@@_with_various_cases:nn
+                { ##1 }
+                {
+                  \regex_match:NnT
+                    \l_tmpa_regex
+                    { ####1 }
+                    {
+                      \@@_renderer_prototype_tl_to_csname:nN
+                        { ##1 }
+                        \l_tmpa_tl
+                      \prop_get:NnN
+                        \g_@@_renderer_arities_prop
+                        { ##1 }
+                        \l_tmpb_tl
+                      \cs_generate_from_arg_count:cNVV
+                        { \l_tmpa_tl }
+                        \cs_set:Npn
+                        \l_tmpb_tl
+                        \l_@@_renderer_prototype_definition_tl
+                      \int_incr:N
+                        \l_tmpa_int
+                      \@@_with_various_cases_break:
+                    }
+                }
+            }
+          \int_compare:nNnT
+            { \l_tmpa_int } = { 0 }
+            {
+              \msg_error:nnV
+                { markdown }
+                { nonmatched-renderer-prototype-wildcard }
+                \l_keys_key_str
+            }
+        }
+        {
+          \msg_error:nnV
+            { markdown }
+            { undefined-renderer-prototype }
+            \l_keys_key_str
+        }
+    },
+  }
+\msg_new:nnn
+  { markdown }
+  { undefined-renderer-prototype }
+  {
+    Renderer~prototype~#1~is~undefined.
+  }
+\msg_new:nnn
+  { markdown }
+  { nonmatched-renderer-prototype-wildcard }
+  {
+    Wildcard~#1~matches~no~renderer~prototypes.
+  }
+\cs_generate_variant:Nn
+  \regex_set:Nn
+  { NV }
+\cs_generate_variant:Nn
+  \cs_generate_from_arg_count:NNnn
+  { cNVV }
+\cs_generate_variant:Nn
+  \msg_error:nnn
+  { nnV }
+\prg_generate_conditional_variant:Nnn
+  \regex_match:nn
+  { nV }
+  { TF }
+\@@_with_various_cases:nn
+  { rendererPrototypes }
+  {
+    \keys_define:nn
+      { markdown/options }
+      {
+        #1 .code:n = {
+          \keys_set:nn
+            { markdown/options/renderer-prototypes }
+            { ##1 }
+        },
+      }
+  }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If plain \TeX{} is the top layer, we use the \mref{@@_define_renderer_prototypes:}
+% macro to define plain \TeX{} token renderer prototype macros and key-values
+% immediately. Otherwise, we postpone the definition until the upper layers
+% have been loaded.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\str_if_eq:VVT
+  \c_@@_top_layer_tl
+  \c_@@_option_layer_plain_tex_tl
+  {
+    \@@_define_renderer_prototypes:
+  }
+\ExplSyntaxOff
+%    \end{macrocode}
 % \begin{markdown}
 %
 %### Logging Facilities
@@ -19067,6 +19761,29 @@ pdflatex --shell-escape document.tex
 % rest of the interface is inherited from the plain \TeX{} interface (see
 % Section <#sec:texinterface>).
 %
+% To determine whether \LaTeX{} is the top layer or if there are other
+% layers above \LaTeX{}, we take a look on whether the
+% \mref{c_@@_top_layer_tl} token list has already been defined. If not,
+% we will assume that \LaTeX{} is the top layer.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\tl_const:Nn \c_@@_option_layer_latex_tl { latex }
+\cs_generate_variant:Nn
+  \tl_const:Nn
+  { NV }
+\tl_if_exist:NF
+  \c_@@_top_layer_tl
+  {
+    \tl_const:NV
+      \c_@@_top_layer_tl
+      \c_@@_option_layer_latex_tl
+  }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \begin{markdown}
+%
 % The \LaTeX{} implementation redefines the plain \TeX{} logging macros (see
 % Section <#sec:tex-interface-logging>) to use the \LaTeX{} `\PackageInfo`,
 % `\PackageWarning`, and `\PackageError` macros.
@@ -19090,8 +19807,8 @@ pdflatex --shell-escape document.tex
 % where \meta{options} are the \LaTeX{} interface options (see Section
 % <#sec:latex-options>). Note that \meta{options} inside the `\usepackage`
 % macro may not set the `markdownRenderers` (see Section
-% <#sec:latex-renderers>) and `markdownRendererPrototypes` (see Section
-% <#sec:latex-renderer-prototypes>) keys. Furthermore, although the
+% <#sec:plain-tex-renderers>) and `markdownRendererPrototypes` (see Section
+% <#sec:plain-tex-renderer-prototypes>) keys. Furthermore, although the
 % base variant of the `import` key that loads a single \LaTeX{} theme
 % (see Section <#sec:latexthemes>) can be used, the extended variant
 % that can load multiple themes and import snippets from them (see
@@ -19169,7 +19886,7 @@ pdflatex --shell-escape document.tex
 % part is optional, and \meta{key} will be interpreted as \meta{key}`=true`
 % if the `=`\meta{value} part has been omitted.
 %
-% Except for the `plain` option described in Section <#sec:latexplain>, and
+% Except for the `plain` option described in Section <#sec:latexplain>,
 % the \LaTeX{} themes described in Section <#sec:latexthemes>, and the
 % \LaTeX{} snippets described in Section <#sec:latex-setup-snippets>,
 % \LaTeX{} options map directly to the options recognized by the plain
@@ -19179,22 +19896,35 @@ pdflatex --shell-escape document.tex
 %
 % The \LaTeX{} options may be specified when loading the \LaTeX{} package, when
 % using the \envmref{markdown*} \LaTeX{} environment or the \mref{markdownInput}
-% macro (see Section <#sec:latexinterface>), or via the \mdef{markdownSetup}
-% macro. The \mref{markdownSetup} macro receives the options to set up as its only
-% argument:
+% macro (see Section <#sec:latexinterface>), or via the \mref{markdownSetup}
+% macro.
+%
+%#### Finalizing and Freezing the Cache
+%
+% To ensure compatibility with the `minted` package [@poore17, Section
+% 5.1], which supports the `finalizecache` and `frozencache` package options
+% with similar semantics to the \Opt{finalizeCache} and \Opt{frozenCache} plain
+% \TeX{} options, the Markdown package also recognizes these as aliases
+% and accepts them as document class options. By passing `finalizecache` and
+% `frozencache` as document class options, you may conveniently control the
+% behavior of both packages at once:
+%
+% ``` tex
+% \documentclass[frozencache]{article}
+% \usepackage{markdown,minted}
+% \begin{document}
+% % ...
+% \end{document}
+% ```````
+%
+% We hope that other packages will support the `finalizecache` and
+% `frozencache` package options in the future, so that they can become a
+% standard interface for preparing \LaTeX{} document sources for distribution.
 %
 % \markdownEnd
 %  \begin{macrocode}
-\ExplSyntaxOn
-\cs_new:Nn
-  \@@_setup:n
-  {
-    \keys_set:nn
-      { markdown/latex-options }
-      { #1 }
-  }
-\let\markdownSetup=\@@_setup:n
-\ExplSyntaxOff
+\DeclareOption{finalizecache}{\markdownSetup{finalizeCache}}
+\DeclareOption{frozencache}{\markdownSetup{frozenCache}}
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -19305,7 +20035,6 @@ document:
 %  \begin{macrocode}
 \prop_new:N \g_@@_latex_option_types_prop
 \prop_new:N \g_@@_default_latex_options_prop
-\tl_const:Nn \c_@@_option_layer_latex_tl { latex }
 \seq_gput_right:NV \g_@@_option_layers_seq \c_@@_option_layer_latex_tl
 \cs_new:Nn
   \@@_add_latex_option:nnn
@@ -19456,7 +20185,7 @@ would use the following code in the preamble of your document:
       \markdownLaTeXThemePackageName}{#1/}
   }
 \keys_define:nn
-  { markdown/latex-options }
+  { markdown/options }
   {
     import .code:n = {
       \tl_set:Nn
@@ -19478,7 +20207,7 @@ would use the following code in the preamble of your document:
         { / }
         \c_backslash_str
       \keys_set:nV
-        { markdown/latex-options/import }
+        { markdown/options/import }
         \l_tmpa_tl
     },
   }
@@ -19486,7 +20215,7 @@ would use the following code in the preamble of your document:
   \tl_replace_all:Nnn
   { NnV }
 \keys_define:nn
-  { markdown/latex-options }
+  { markdown/options }
   {
     theme .code:n = { \@@_set_latex_theme:n { #1 } },
   }
@@ -19813,7 +20542,7 @@ options locally.
 %  \begin{macrocode}
 \ExplSyntaxOn
 \keys_define:nn
-  { markdown/latex-options }
+  { markdown/options }
   {
     snippet .code:n = {
       \markdownIfSnippetExists{#1}
@@ -19951,7 +20680,7 @@ variant of the `import` \LaTeX{} option:
 \tl_new:N
   \l_@@_latex_import_current_theme_tl
 \keys_define:nn
-  { markdown/latex-options/import }
+  { markdown/options/import }
   {
 %    \end{macrocode}
 % \begin{markdown}
@@ -20044,199 +20773,29 @@ variant of the `import` \LaTeX{} option:
 \cs_generate_variant:Nn
   \@@_latex_setup_snippet:nn
   { Vx }
+%    \end{macrocode}
+% \begin{markdown}
+%
+%#### Generating Plain \TeX{} Option, Token Renderer, and Token Renderer Prototype Macros and Key-Values
+%
+% If \LaTeX{} is the top layer, we use the
+% \mref{@@_define_option_commands_and_keyvals:}, \mref{@@_define_renderers:},
+% and \mref{@@_define_renderer_prototypes:} macro to define plain \TeX{}
+% option, token renderer, and token renderer prototype macros and key-values
+% immediately. Otherwise, we postpone the definition until the upper layers
+% have been loaded.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\str_if_eq:VVT
+  \c_@@_top_layer_tl
+  \c_@@_option_layer_latex_tl
+  {
+    \@@_define_option_commands_and_keyvals:
+    \@@_define_renderers:
+    \@@_define_renderer_prototypes:
+  }
 \ExplSyntaxOff
-%    \end{macrocode}
-% \begin{markdown}
-%
-%#### Plain \TeX{} Interface Options
-% Here, we automatically define plain \TeX{} macros and the
-% \meta{key}`=`\meta{value} interface for the above \LaTeX{} options.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\ExplSyntaxOn
-\cs_new:Nn \@@_latex_define_option_commands_and_keyvals:
-  {
-    \seq_map_inline:Nn
-      \g_@@_latex_options_seq
-      {
-          \@@_plain_tex_define_option_command:n
-            { ##1 }
-      }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% Furthermore, we also define the \meta{key}`=`\meta{value} interface
-% for all option macros recognized by the Lua and plain \TeX{} interfaces.
-%
-% \end{markdown}
-%  \begin{macrocode}
-    \seq_map_inline:Nn
-      \g_@@_option_layers_seq
-      {
-        \seq_map_inline:cn
-          { g_@@_ ##1 _options_seq }
-          {
-%    \end{macrocode}
-% \begin{markdown}
-%
-% To make it easier to copy-and-paste options from Pandoc [@macfarlane22] such
-% as `fancy_lists`, `header_attributes`, and `pipe_tables`, we accept
-% snake\\\_case in addition to camelCase variants of options. As a bonus,
-% studies [@sharif10] also show that snake\\\_case is faster to read than
-% camelCase.
-%
-% \end{markdown}
-%  \begin{macrocode}
-              \@@_with_various_cases:nn
-                { ####1 }
-                {
-                  \@@_latex_define_option_keyval:nnn
-                    { ##1 }
-                    { ####1 }
-                    { ########1 }
-                }
-          }
-      }
-  }
-\cs_new:Nn \@@_latex_define_option_keyval:nnn
-  {
-    \prop_get:cnN
-      { g_@@_ #1 _option_types_prop }
-      { #2 }
-      \l_tmpa_tl
-    \keys_define:nn
-      { markdown/latex-options }
-      {
-        #3 .code:n = {
-          \@@_set_option_value:nn
-            { #2 }
-            { ##1 }
-        },
-      }
-    \str_if_eq:VVT
-      \l_tmpa_tl
-      \c_@@_option_type_boolean_tl
-      {
-        \keys_define:nn
-          { markdown/latex-options }
-          {
-            #3 .default:n = { true },
-          }
-      }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% For options of type `clist`, we assume that \meta{key} is a regular English
-% noun in plural (such as `extensions`) and we also define the
-% \meta{singular key}`=`\meta{value} interface, where \meta{singular key} is
-% \meta{key} after stripping the trailing -s (such as `extension`). Rather
-% than setting the option to \meta{value}, this interface appends \meta{value}
-% to the current value as the rightmost item in the list.
-%
-% \end{markdown}
-%  \begin{macrocode}
-    \str_if_eq:VVT
-      \l_tmpa_tl
-      \c_@@_option_type_clist_tl
-      {
-        \tl_set:Nn
-          \l_tmpa_tl
-          { #3 }
-        \tl_reverse:N
-          \l_tmpa_tl
-        \str_if_eq:enF
-          {
-            \tl_head:V
-              \l_tmpa_tl
-          }
-          { s }
-          {
-              \msg_error:nnn
-                { markdown }
-                { malformed-name-for-clist-option }
-                { #3 }
-          }
-        \tl_set:Nx
-          \l_tmpa_tl
-          {
-            \tl_tail:V
-              \l_tmpa_tl
-          }
-        \tl_reverse:N
-          \l_tmpa_tl
-        \tl_put_right:Nn
-          \l_tmpa_tl
-          {
-            .code:n = {
-              \@@_get_option_value:nN
-                { #2 }
-                \l_tmpa_tl
-              \clist_set:NV
-                \l_tmpa_clist
-                { \l_tmpa_tl, { ##1 } }
-              \@@_set_option_value:nV
-                { #2 }
-                \l_tmpa_clist
-            }
-          }
-        \keys_define:nV
-          { markdown/latex-options }
-          \l_tmpa_tl
-      }
-  }
-\cs_generate_variant:Nn
-  \clist_set:Nn
-  { NV }
-\cs_generate_variant:Nn
-  \keys_define:nn
-  { nV }
-\cs_generate_variant:Nn
-  \@@_set_option_value:nn
-  { nV }
-\prg_generate_conditional_variant:Nnn
-  \str_if_eq:nn
-  { en }
-  { F }
-\msg_new:nnn
-  { markdown }
-  { malformed-name-for-clist-option }
-  {
-    Clist~option~name~#1~does~not~end~with~-s.
-  }
-\@@_latex_define_option_commands_and_keyvals:
-\ExplSyntaxOff
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% The \Opt{finalizeCache} and \Opt{frozenCache} plain
-% \TeX{} options are exposed through \LaTeX{} options with keys `finalizeCache`
-% and `frozenCache`.
-%
-% To ensure compatibility with the `minted` package [@poore17, Section
-% 5.1], which supports the `finalizecache` and `frozencache` package options
-% with similar semantics, the Markdown package also recognizes these as aliases
-% and recognizes them as document class options. By passing `finalizecache` and
-% `frozencache` as document class options, you may conveniently control the
-% behavior of both packages at once:
-%
-% ``` tex
-% \documentclass[frozencache]{article}
-% \usepackage{markdown,minted}
-% \begin{document}
-% % ...
-% \end{document}
-% ```````
-%
-% We hope that other packages will support the `finalizecache` and
-% `frozencache` package options in the future, so that they can become a
-% standard interface for preparing \LaTeX{} document sources for distribution.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\DeclareOption{finalizecache}{\markdownSetup{finalizeCache}}
-\DeclareOption{frozencache}{\markdownSetup{frozenCache}}
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -20251,368 +20810,6 @@ variant of the `import` \LaTeX{} option:
 %   cacheDir = /tmp,
 % }
 % ```````
-%
-%#### Plain \TeX{} Markdown Token Renderers {#latex-renderers}
-%
-% The \LaTeX{} interface recognizes an option with the `renderers` key,
-% whose value must be a list of key-values, where the keys correspond
-% to the markdown token renderer macros exposed by the plain \TeX{}
-% interface (see Section <#sec:texrenderersuser>) and the values are
-% new definitions of these token renderers.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\ExplSyntaxOn
-\cs_new:Nn \@@_latex_define_renderers:
-  {
-    \seq_map_function:NN
-      \g_@@_renderers_seq
-      \@@_latex_define_renderer:n
-  }
-\cs_new:Nn \@@_latex_define_renderer:n
-  {
-    \@@_renderer_tl_to_csname:nN
-      { #1 }
-      \l_tmpa_tl
-    \prop_get:NnN
-      \g_@@_renderer_arities_prop
-      { #1 }
-      \l_tmpb_tl
-    \@@_latex_define_renderer:ncV
-      { #1 }
-      { \l_tmpa_tl }
-      \l_tmpb_tl
-  }
-\cs_new:Nn \@@_renderer_tl_to_csname:nN
-  {
-    \tl_set:Nn
-      \l_tmpa_tl
-      { \str_uppercase:n { #1 } }
-    \tl_set:Nx
-      #2
-      {
-        markdownRenderer
-        \tl_head:f { \l_tmpa_tl }
-        \tl_tail:n { #1 }
-      }
-  }
-\cs_new:Nn \@@_latex_define_renderer:nNn
-  {
-    \@@_with_various_cases:nn
-      { #1 }
-      {
-        \keys_define:nn
-          { markdown/latex-options/renderers }
-          {
-            ##1 .code:n = {
-              \cs_generate_from_arg_count:NNnn
-                #2
-                \cs_set:Npn
-                { #3 }
-                { ####1 }
-            },
-          }
-      }
-  }
-\cs_generate_variant:Nn
-  \@@_latex_define_renderer:nNn
-  { ncV }
-\ExplSyntaxOff
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% The following example \LaTeX{} code showcases a possible configuration of the
-% \mref{markdownRendererLink} and \mref{markdownRendererEmphasis} markdown token
-% renderers.
-% ``` tex
-% \markdownSetup{
-%   renderers = {
-%     link = {#4},                   \% Render links as the link title.
-%     emphasis = {\emph{#1}},    \% Render emphasized text via `\emph`.
-%   }
-% }
-% ```````
-%
-% In addition to exact token renderer names, we also support wildcards
-% that match multiple token renderer names.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\ExplSyntaxOn
-\tl_new:N
-  \l_@@_renderer_definition_tl
-\keys_define:nn
-  { markdown/latex-options/renderers }
-  {
-    unknown .code:n = {
-      \regex_match:nVTF
-        { \* }
-        \l_keys_key_str
-        {
-          \tl_set:Nn
-            \l_@@_renderer_definition_tl
-            { #1 }
-          \tl_set:NV
-            \l_tmpa_tl
-            \l_keys_key_str
-          \regex_replace_all:nnN
-            { \* }
-            { .* }
-            \l_tmpa_tl
-          \regex_set:NV
-            \l_tmpa_regex
-            \l_tmpa_tl
-          \int_zero:N
-            \l_tmpa_int
-          \seq_map_inline:Nn
-            \g_@@_renderers_seq
-            {
-              \@@_with_various_cases:nn
-                { ##1 }
-                {
-                  \regex_match:NnT
-                    \l_tmpa_regex
-                    { ####1 }
-                    {
-                      \@@_renderer_tl_to_csname:nN
-                        { ##1 }
-                        \l_tmpa_tl
-                      \prop_get:NnN
-                        \g_@@_renderer_arities_prop
-                        { ##1 }
-                        \l_tmpb_tl
-                      \cs_generate_from_arg_count:cNVV
-                        { \l_tmpa_tl }
-                        \cs_set:Npn
-                        \l_tmpb_tl
-                        \l_@@_renderer_definition_tl
-                      \int_incr:N
-                        \l_tmpa_int
-                      \@@_with_various_cases_break:
-                    }
-                }
-            }
-          \int_compare:nNnT
-            { \l_tmpa_int } = { 0 }
-            {
-              \msg_error:nnV
-                { markdown }
-                { nonmatched-renderer-wildcard }
-                \l_keys_key_str
-            }
-        }
-        {
-          \msg_error:nnV
-            { markdown }
-            { undefined-renderer }
-            \l_keys_key_str
-        }
-    },
-  }
-\msg_new:nnn
-  { markdown }
-  { undefined-renderer }
-  {
-    Renderer~#1~is~undefined.
-  }
-\msg_new:nnn
-  { markdown }
-  { nonmatched-renderer-wildcard }
-  {
-    Wildcard~#1~matches~no~renderers.
-  }
-\cs_generate_variant:Nn
-  \regex_set:Nn
-  { NV }
-\cs_generate_variant:Nn
-  \cs_generate_from_arg_count:NNnn
-  { cNVV }
-\cs_generate_variant:Nn
-  \msg_error:nnn
-  { nnV }
-\prg_generate_conditional_variant:Nnn
-  \regex_match:nn
-  { nV }
-  { TF }
-\ExplSyntaxOff
-%    \end{macrocode}
-% \begin{markdown}
-%
-%#### Plain \TeX{} Markdown Token Renderer Prototypes {#latex-renderer-prototypes}
-%
-% The \LaTeX{} interface recognizes an option with the
-% `rendererPrototypes` key, whose value must be a list of key-values,
-% where the keys correspond to the markdown token renderer prototype
-% macros exposed by the plain \TeX{} interface (see Section
-% <#sec:texrendererprototypes>) and the values are new definitions of
-% these token renderer prototypes.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\ExplSyntaxOn
-\cs_new:Nn \@@_latex_define_renderer_prototypes:
-  {
-    \seq_map_function:NN
-      \g_@@_renderers_seq
-      \@@_latex_define_renderer_prototype:n
-  }
-\cs_new:Nn \@@_latex_define_renderer_prototype:n
-  {
-    \@@_renderer_prototype_tl_to_csname:nN
-      { #1 }
-      \l_tmpa_tl
-    \prop_get:NnN
-      \g_@@_renderer_arities_prop
-      { #1 }
-      \l_tmpb_tl
-    \@@_latex_define_renderer_prototype:ncV
-      { #1 }
-      { \l_tmpa_tl }
-      \l_tmpb_tl
-  }
-\cs_new:Nn \@@_latex_define_renderer_prototype:nNn
-  {
-    \@@_with_various_cases:nn
-      { #1 }
-      {
-        \keys_define:nn
-          { markdown/latex-options/renderer-prototypes }
-          {
-            ##1 .code:n = {
-              \cs_generate_from_arg_count:NNnn
-                #2
-                \cs_set:Npn
-                { #3 }
-                { ####1 }
-            },
-          }
-      }
-  }
-\cs_generate_variant:Nn
-  \@@_latex_define_renderer_prototype:nNn
-  { ncV }
-\ExplSyntaxOff
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% The following example \LaTeX{} code showcases a possible configuration of the
-% `\markdownRendererImagePrototype` and `\markdownRendererCodeSpanPrototype`
-% markdown token renderer prototypes.
-% ``` tex
-% \markdownSetup{
-%   rendererPrototypes = {
-%     image = {\includegraphics{#2}},
-%     codeSpan = {\texttt{#1}},    \% Render inline code via `\texttt`.
-%   }
-% }
-% ```````
-%
-% In addition to exact token renderer prototype names, we also support
-% wildcards that match multiple token renderer prototype names.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\ExplSyntaxOn
-\tl_new:N
-  \l_@@_renderer_prototype_definition_tl
-\keys_define:nn
-  { markdown/latex-options/renderer-prototypes }
-  {
-    unknown .code:n = {
-      \regex_match:nVTF
-        { \* }
-        \l_keys_key_str
-        {
-          \tl_set:Nn
-            \l_@@_renderer_prototype_definition_tl
-            { #1 }
-          \tl_set:NV
-            \l_tmpa_tl
-            \l_keys_key_str
-          \regex_replace_all:nnN
-            { \* }
-            { .* }
-            \l_tmpa_tl
-          \regex_set:NV
-            \l_tmpa_regex
-            \l_tmpa_tl
-          \int_zero:N
-            \l_tmpa_int
-          \seq_map_inline:Nn
-            \g_@@_renderers_seq
-            {
-              \@@_with_various_cases:nn
-                { ##1 }
-                {
-                  \regex_match:NnT
-                    \l_tmpa_regex
-                    { ####1 }
-                    {
-                      \@@_renderer_prototype_tl_to_csname:nN
-                        { ##1 }
-                        \l_tmpa_tl
-                      \prop_get:NnN
-                        \g_@@_renderer_arities_prop
-                        { ##1 }
-                        \l_tmpb_tl
-                      \cs_generate_from_arg_count:cNVV
-                        { \l_tmpa_tl }
-                        \cs_set:Npn
-                        \l_tmpb_tl
-                        \l_@@_renderer_prototype_definition_tl
-                      \int_incr:N
-                        \l_tmpa_int
-                      \@@_with_various_cases_break:
-                    }
-                }
-            }
-          \int_compare:nNnT
-            { \l_tmpa_int } = { 0 }
-            {
-              \msg_error:nnV
-                { markdown }
-                { nonmatched-renderer-prototype-wildcard }
-                \l_keys_key_str
-            }
-        }
-        {
-          \msg_error:nnV
-            { markdown }
-            { undefined-renderer-prototype }
-            \l_keys_key_str
-        }
-    },
-  }
-\msg_new:nnn
-  { markdown }
-  { undefined-renderer-prototype }
-  {
-    Renderer~prototype~#1~is~undefined.
-  }
-\msg_new:nnn
-  { markdown }
-  { nonmatched-renderer-prototype-wildcard }
-  {
-    Wildcard~#1~matches~no~renderer~prototypes.
-  }
-\cs_generate_variant:Nn
-  \regex_set:Nn
-  { NV }
-\cs_generate_variant:Nn
-  \cs_generate_from_arg_count:NNnn
-  { cNVV }
-\cs_generate_variant:Nn
-  \msg_error:nnn
-  { nnV }
-\prg_generate_conditional_variant:Nnn
-  \regex_match:nn
-  { nV }
-  { TF }
-\ExplSyntaxOff
-%    \end{macrocode}
-% \begin{markdown}
 %
 % \iffalse
 %</latex>
@@ -20670,6 +20867,29 @@ following text:
 %</manual-interfaces>
 %<*context>
 % \fi
+% \begin{markdown}
+%
+% To determine whether \Hologo{ConTeXt} is the top layer or if there are other
+% layers above \Hologo{ConTeXt}, we take a look on whether the
+% \mref{c_@@_top_layer_tl} token list has already been defined. If not,
+% we will assume that \Hologo{ConTeXt} is the top layer.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\tl_const:Nn \c_@@_option_layer_context_tl { context }
+\cs_generate_variant:Nn
+  \tl_const:Nn
+  { NV }
+\tl_if_exist:NF
+  \c_@@_top_layer_tl
+  {
+    \tl_const:NV
+      \c_@@_top_layer_tl
+      \c_@@_option_layer_context_tl
+  }
+\ExplSyntaxOff
+%    \end{macrocode}
 % \begin{markdown}
 %
 % The \Hologo{ConTeXt} interface provides a start-stop macro pair for the
@@ -20774,21 +20994,16 @@ following text:
 % \TeX{} interface (see Section <#sec:tex-options>).
 %
 % The \Hologo{ConTeXt} options may be specified when using the
-% \mref{inputmarkdown} macro (see Section <#sec:contextinterface>), or via the
-% \mdef{setupmarkdown} macro. The \mref{setupmarkdown} macro receives the
-% options to set up as its only argument:
+% \mref{inputmarkdown} macro (see Section <#sec:contextinterface>),
+% via the \mref{markdownSetup} macro, or via the \mdef{setupmarkdown}`[#1]`
+% macro, which is an alias for \mref{markdownSetup}`{#1}`.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\cs_new:Nn
-  \@@_setup:n
-  {
-    \keys_set:nn
-      { markdown/context-options }
-      { #1 }
-  }
-\long\def\setupmarkdown[#1]
+\cs_new:Npn
+  \setupmarkdown
+  [ #1 ]
   {
     \@@_setup:n
       { #1 }
@@ -20797,51 +21012,14 @@ following text:
 %    \end{macrocode}
 % \begin{markdown}
 %
-%#### \Hologo{ConTeXt} Interface Options
-% We define the \meta{key}`=`\meta{value} interface for all option macros
-% recognized by the Lua and plain \TeX{} interfaces.
+%#### Generating Plain \TeX{} Option Macros and Key-Values
+%
+% Unlike plain \TeX{}, we also accept caseless variants of options
+% in line with the style of \Hologo{ConTeXt}.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\cs_new:Nn \@@_context_define_option_commands_and_keyvals:
-  {
-    \seq_map_inline:Nn
-      \g_@@_option_layers_seq
-      {
-        \seq_map_inline:cn
-          { g_@@_ ##1 _options_seq }
-          {
-%    \end{macrocode}
-% \begin{markdown}
-%
-% To make it easier to copy-and-paste options from Pandoc [@macfarlane22] such
-% as `fancy_lists`, `header_attributes`, and `pipe_tables`, we accept
-% snake\\\_case in addition to camelCase variants of options. As a bonus,
-% studies [@sharif10] also show that snake\\\_case is faster to read than
-% camelCase.
-%
-% \end{markdown}
-%  \begin{macrocode}
-              \@@_with_various_cases:nn
-                { ####1 }
-                {
-                  \@@_context_define_option_keyval:nnn
-                    { ##1 }
-                    { ####1 }
-                    { ########1 }
-                }
-          }
-      }
-  }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% Furthermore, we also accept caseless variants of options in line with the
-% style of \Hologo{ConTeXt}.
-%
-% \end{markdown}
-%  \begin{macrocode}
 \cs_new:Nn \@@_caseless:N
   {
     \regex_replace_all:nnN
@@ -20853,47 +21031,26 @@ following text:
       { #1 }
   }
 \seq_gput_right:Nn \g_@@_cases_seq { @@_caseless:N }
-\cs_new:Nn \@@_context_define_option_keyval:nnn
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If \Hologo{ConTeXt} is the top layer, we use the
+% \mref{@@_define_option_commands_and_keyvals:}, \mref{@@_define_renderers:},
+% and \mref{@@_define_renderer_prototypes:} macro to define plain \TeX{}
+% option, token renderer, and token renderer prototype macros and key-values
+% immediately. Otherwise, we postpone the definition until the upper layers
+% have been loaded.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\str_if_eq:VVT
+  \c_@@_top_layer_tl
+  \c_@@_option_layer_context_tl
   {
-    \prop_get:cnN
-      { g_@@_ #1 _option_types_prop }
-      { #2 }
-      \l_tmpa_tl
-    \keys_define:nn
-      { markdown/context-options }
-      {
-        #3 .code:n = {
-          \tl_set:Nx
-            \l_tmpa_tl
-            {
-              \str_case:nnF
-                { ##1 }
-                {
-                  { yes } { true }
-                  { no } { false }
-                }
-                { ##1 }
-            }
-          \@@_set_option_value:nV
-            { #2 }
-            \l_tmpa_tl
-        },
-      }
-    \str_if_eq:VVT
-      \l_tmpa_tl
-      \c_@@_option_type_boolean_tl
-      {
-        \keys_define:nn
-          { markdown/context-options }
-          {
-            #3 .default:n = { true },
-          }
-      }
+    \@@_define_option_commands_and_keyvals:
+    \@@_define_renderers:
+    \@@_define_renderer_prototypes:
   }
-\cs_generate_variant:Nn
-  \@@_set_option_value:nn
-  { nV }
-\@@_context_define_option_commands_and_keyvals:
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par
@@ -31948,19 +32105,6 @@ end
 % \par
 % \begin{markdown}
 %
-% Use reflection to define the `renderers` and `rendererPrototypes` keys of
-% \mref{markdownSetup} as well as the keys that correspond to Lua options.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\ExplSyntaxOn
-\@@_latex_define_renderers:
-\@@_latex_define_renderer_prototypes:
-\ExplSyntaxOff
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
 %### Logging Facilities
 % The \LaTeX{} implementation redefines the plain \TeX{} logging macros (see
 % Section <#sec:tex-interface-logging>) to use the \LaTeX{} `\PackageInfo`,
@@ -32309,114 +32453,20 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% After processing the options, activate the `jekyllDataRenderes`, `renderers`,
-% `rendererPrototypes`, and `code` keys.
+% After processing the options, activate the `code` key, which can be used
+% to immediately expand and execute code. This can be especially useful in
+% \LaTeX{} snippets.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
 \keys_define:nn
-  { markdown/latex-options }
-  {
-    renderers .code:n = {
-      \keys_set:nn
-        { markdown/latex-options/renderers }
-        { #1 }
-    },
-  }
-\@@_with_various_cases:nn
-  { rendererPrototypes }
-  {
-    \keys_define:nn
-      { markdown/latex-options }
-      {
-        #1 .code:n = {
-          \keys_set:nn
-            { markdown/latex-options/renderer-prototypes }
-            { ##1 }
-        },
-      }
-  }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% The `code` key is used to immediately expand and execute code, which can be
-% especially useful in \LaTeX{} snippets.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\keys_define:nn
-  { markdown/latex-options }
+  { markdown/options }
   {
     code .code:n = { #1 },
   }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% The `jekyllDataRenderers` key can be used as a syntactic sugar for setting
-% the `markdown/jekyllData` key--values (see Section <#sec:expl3yamlmetadata>)
-% without using the expl3 language.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\@@_with_various_cases:nn
-  { jekyllDataRenderers }
-  {
-    \keys_define:nn
-      { markdown/latex-options }
-      {
-        #1 .code:n = {
-          \tl_set:Nn
-            \l_tmpa_tl
-            { ##1 }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% To ensure that keys containing forward slashes get passed correctly, we
-% replace all forward slashes in the input with backslash tokens with category
-% code letter and then undo the replacement. This means that if any unbraced
-% backslash tokens with category code letter exist in the input, they will be
-% replaced with forward slashes. However, this should be extremely rare.
-%
-% \end{markdown}
-%  \begin{macrocode}
-          \tl_replace_all:NnV
-            \l_tmpa_tl
-            { / }
-            \c_backslash_str
-          \keys_set:nV
-            { markdown/latex-options/jekyll-data-renderers }
-            \l_tmpa_tl
-        },
-      }
-  }
-\keys_define:nn
-  { markdown/latex-options/jekyll-data-renderers }
-  {
-    unknown .code:n = {
-      \tl_set_eq:NN
-        \l_tmpa_tl
-        \l_keys_key_str
-      \tl_replace_all:NVn
-        \l_tmpa_tl
-        \c_backslash_str
-        { / }
-      \tl_put_right:Nn
-        \l_tmpa_tl
-        {
-          .code:n = { #1 }
-        }
-      \keys_define:nV
-        { markdown/jekyllData }
-        \l_tmpa_tl
-    }
-  }
-\cs_generate_variant:Nn
-  \keys_define:nn
-  { nV }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %### Token Renderer Prototypes {#latex-default-renderer-prototypes}

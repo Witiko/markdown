@@ -1,5 +1,4 @@
-\def\markdownOptionContentBlocks{true}
-\def\markdownOptionContentBlocksLanguageMap{markdown-languages-nonstandard.json}
+\markdownSetup{contentBlocks=true, contentBlocksLanguageMap=markdown-languages-nonstandard.json}
 <<<
 This test ensures that the Lua `contentBlockLanguages` option correctly
 propagates through the plain TeX interface.

@@ -1,4 +1,4 @@
-\def\markdownOptionTightLists{false}
+\markdownSetup{tightLists=false}
 <<<
 This test ensures that the Lua `tightLists` option correctly propagates
 through the plain TeX interface. The following list should be regular.

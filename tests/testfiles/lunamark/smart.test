@@ -1,4 +1,4 @@
-\def\markdownOptionSmartEllipses{true}
+\markdownSetup{smartEllipses=true}
 <<<
 Ellipses...and...and....
 >>>

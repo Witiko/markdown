@@ -2,6 +2,12 @@
 
 ## 3.1.0
 
+Development:
+
+- Add `\markdownSetup` command to plain TeX and allow the command
+  to define renderers, renderer prototypes, and the processing
+  of YAML in all formats, not just in LaTeX. (#275, #349)
+
 Unit Tests:
 
 - Add support for YAML metadata in testfiles. (#345, #347)

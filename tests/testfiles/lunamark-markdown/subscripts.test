@@ -1,4 +1,4 @@
-\def\markdownOptionSubscripts{true}
+\markdownSetup{subscripts=true}
 <<<
 This test ensures that the Lua `subscripts` option correctly propagates
 through the plain TeX interface.

@@ -1,4 +1,4 @@
-\def\markdownOptionNotes{true}
+\markdownSetup{notes=true}
 <<<
 Here is a note reference,[^1] and another.[^longnote]
 This should *not* be a note reference, because it has not been

@@ -1,4 +1,4 @@
-\def\markdownOptionLinkAttributes{true}
+\markdownSetup{linkAttributes=true}
 <<<
 This test ensures that the Lua `linkAttributes` option correctly
 propagates through the plain TeX interface.

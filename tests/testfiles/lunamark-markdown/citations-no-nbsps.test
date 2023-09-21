@@ -1,5 +1,4 @@
-\def\markdownOptionCitations{true}
-\def\markdownOptionCitationNbsps{false}
+\markdownSetup{citations=true, citationNbsps=false}
 <<<
 This test ensures that the Lua `citations` and `citationNbsps` options correctly
 propagate through the plain TeX interface.

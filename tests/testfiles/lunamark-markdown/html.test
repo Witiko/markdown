@@ -1,4 +1,4 @@
-\def\markdownOptionHtml{false}
+\markdownSetup{html=false}
 <<<
 This test ensures that the Lua `html` option correctly propagates through
 the plain TeX interface.

@@ -1,4 +1,4 @@
-\def\markdownOptionHashEnumerators{true}
+\markdownSetup{hashEnumerators=true}
 <<<
 #. one
 #. two

@@ -1,4 +1,4 @@
-\def\markdownOptionFancyLists{true}
+\markdownSetup{fancyLists=true}
 <<<
 This test ensures that the Lua `fancyLists` option correctly propagates
 through the plain TeX interface and that the `startNumber` and `tightLists`

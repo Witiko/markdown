@@ -1,4 +1,4 @@
-\def\markdownOptionBracketedSpans{true}
+\markdownSetup{bracketedSpans=true}
 <<<
 This test ensures that the Lua `bracketedSpans` option correctly
 propagates through the plain TeX interface.

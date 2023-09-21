@@ -1,6 +1,8 @@
-\def\markdownOptionHeaderAttributes{true}
-\def\markdownOptionFencedDivs{true}
-\def\markdownOptionSlice{sliced-div ^first-heading}
+\markdownSetup{
+  headerAttributes=true,
+  fencedDivs=true,
+  slice=sliced-div ^first-heading,
+}
 <<<
 This test ensures that the Lua `slice` option applies to fenced divs.
 

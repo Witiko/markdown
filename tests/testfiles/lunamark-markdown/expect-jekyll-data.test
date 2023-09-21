@@ -1,5 +1,4 @@
-\def\markdownOptionJekyllData{true}
-\def\markdownOptionExpectJekyllData{true}
+\markdownSetup{jekyllData=true, expectJekyllData=true}
 <<<
 title: The document title
 author:

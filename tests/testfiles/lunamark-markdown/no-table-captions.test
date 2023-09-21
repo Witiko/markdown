@@ -1,4 +1,4 @@
-\def\markdownOptionPipeTables{true}
+\markdownSetup{pipeTables=true}
 <<<
 This test ensures that the Lua `tableCaptions` option is disabled by
 default.

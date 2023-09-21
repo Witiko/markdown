@@ -1,4 +1,4 @@
-\def\markdownOptionJekyllData{true}
+\markdownSetup{jekyllData=true}
 <<<
 This test ensures that the Lua `jekyllData` option correctly propagates
 through the plain TeX interface.

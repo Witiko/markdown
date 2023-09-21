@@ -1,5 +1,4 @@
-\def\markdownOptionFencedDivs{true}
-\def\markdownOptionBlankBeforeDivFence{true}
+\markdownSetup{fencedDivs=true, blankBeforeDivFence=true}
 <<<
 This test ensures that the Lua `fencedDivs` and `blankBeforeDivFence` options
 correctly propagate through the plain TeX interface.

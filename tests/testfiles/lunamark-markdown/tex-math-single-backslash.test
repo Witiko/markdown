@@ -1,4 +1,4 @@
-\def\markdownOptionTexMathSingleBackslash{true}
+\markdownSetup{texMathSingleBackslash=true}
 \let\hat=\relax
 \let\left=\relax
 \let\xi=\relax

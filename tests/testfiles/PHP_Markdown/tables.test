@@ -1,4 +1,4 @@
-\def\markdownOptionPipeTables{true}
+\markdownSetup{pipeTables=true}
 <<<
 Header 1  | Header 2
 --------- | ---------

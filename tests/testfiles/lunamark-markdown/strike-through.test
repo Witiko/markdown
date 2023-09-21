@@ -1,4 +1,4 @@
-\def\markdownOptionStrikeThrough{true}
+\markdownSetup{strikeThrough=true}
 <<<
 This test ensures that the Lua `strikeThrough` option correctly propagates
 through the plain TeX interface.

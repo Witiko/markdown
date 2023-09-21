@@ -1,5 +1,4 @@
-\def\markdownOptionTexMathDoubleBackslash{true}
-\def\markdownOptionTexMathSingleBackslash{true}
+\markdownSetup{texMathDoubleBackslash=true, texMathSingleBackslash=true}
 \let\\=\relax
 <<<
 This test ensures that the Lua `texMathDoubleBackslash` and `texMathSingleBackslash` options correctly propagate
