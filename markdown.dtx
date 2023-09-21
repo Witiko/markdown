@@ -18938,6 +18938,15 @@ following text:
 \cs_generate_variant:Nn
   \@@_define_renderer:nNn
   { ncV }
+\keys_define:nn
+  { markdown/options }
+  {
+    renderers .code:n = {
+      \keys_set:nn
+        { markdown/options/renderers }
+        { #1 }
+    },
+  }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par
@@ -19322,6 +19331,71 @@ following text:
 %    \end{macrocode}
 % \begin{markdown}
 %
+% The `jekyllDataRenderers` key can be used as a syntactic sugar for setting
+% the `markdown/jekyllData` key--values without using the expl3 language.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\@@_with_various_cases:nn
+  { jekyllDataRenderers }
+  {
+    \keys_define:nn
+      { markdown/options }
+      {
+        #1 .code:n = {
+          \tl_set:Nn
+            \l_tmpa_tl
+            { ##1 }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% To ensure that keys containing forward slashes get passed correctly, we
+% replace all forward slashes in the input with backslash tokens with category
+% code letter and then undo the replacement. This means that if any unbraced
+% backslash tokens with category code letter exist in the input, they will be
+% replaced with forward slashes. However, this should be extremely rare.
+%
+% \end{markdown}
+%  \begin{macrocode}
+          \tl_replace_all:NnV
+            \l_tmpa_tl
+            { / }
+            \c_backslash_str
+          \keys_set:nV
+            { markdown/options/jekyll-data-renderers }
+            \l_tmpa_tl
+        },
+      }
+  }
+\keys_define:nn
+  { markdown/options/jekyll-data-renderers }
+  {
+    unknown .code:n = {
+      \tl_set_eq:NN
+        \l_tmpa_tl
+        \l_keys_key_str
+      \tl_replace_all:NVn
+        \l_tmpa_tl
+        \c_backslash_str
+        { / }
+      \tl_put_right:Nn
+        \l_tmpa_tl
+        {
+          .code:n = { #1 }
+        }
+      \keys_define:nV
+        { markdown/jekyllData }
+        \l_tmpa_tl
+    }
+  }
+\cs_generate_variant:Nn
+  \keys_define:nn
+  { nV }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \begin{markdown}
+%
 %#### Generating Plain \TeX{} Token Renderer Prototype Macros and Key-Values {#plain-tex-renderer-prototypes}
 %
 % We define the command \mdef{@@_define_renderer_prototypes:} that defines plain \TeX{}
@@ -19523,6 +19597,19 @@ following text:
   \regex_match:nn
   { nV }
   { TF }
+\@@_with_various_cases:nn
+  { rendererPrototypes }
+  {
+    \keys_define:nn
+      { markdown/options }
+      {
+        #1 .code:n = {
+          \keys_set:nn
+            { markdown/options/renderer-prototypes }
+            { ##1 }
+        },
+      }
+  }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -32364,8 +32451,9 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% After processing the options, activate the `jekyllDataRenderes`, `renderers`,
-% `rendererPrototypes`, and `code` keys.
+% After processing the options, activate the `code` key, which can be used
+% to immediately expand and execute code. This can be especially useful in
+% \LaTeX{} snippets.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -32373,105 +32461,10 @@ end
 \keys_define:nn
   { markdown/options }
   {
-    renderers .code:n = {
-      \keys_set:nn
-        { markdown/options/renderers }
-        { #1 }
-    },
-  }
-\@@_with_various_cases:nn
-  { rendererPrototypes }
-  {
-    \keys_define:nn
-      { markdown/options }
-      {
-        #1 .code:n = {
-          \keys_set:nn
-            { markdown/options/renderer-prototypes }
-            { ##1 }
-        },
-      }
-  }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% The `code` key is used to immediately expand and execute code, which can be
-% especially useful in \LaTeX{} snippets.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\keys_define:nn
-  { markdown/options }
-  {
     code .code:n = { #1 },
   }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% The `jekyllDataRenderers` key can be used as a syntactic sugar for setting
-% the `markdown/jekyllData` key--values (see Section <#sec:expl3yamlmetadata>)
-% without using the expl3 language.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\@@_with_various_cases:nn
-  { jekyllDataRenderers }
-  {
-    \keys_define:nn
-      { markdown/options }
-      {
-        #1 .code:n = {
-          \tl_set:Nn
-            \l_tmpa_tl
-            { ##1 }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% To ensure that keys containing forward slashes get passed correctly, we
-% replace all forward slashes in the input with backslash tokens with category
-% code letter and then undo the replacement. This means that if any unbraced
-% backslash tokens with category code letter exist in the input, they will be
-% replaced with forward slashes. However, this should be extremely rare.
-%
-% \end{markdown}
-%  \begin{macrocode}
-          \tl_replace_all:NnV
-            \l_tmpa_tl
-            { / }
-            \c_backslash_str
-          \keys_set:nV
-            { markdown/options/jekyll-data-renderers }
-            \l_tmpa_tl
-        },
-      }
-  }
-\keys_define:nn
-  { markdown/options/jekyll-data-renderers }
-  {
-    unknown .code:n = {
-      \tl_set_eq:NN
-        \l_tmpa_tl
-        \l_keys_key_str
-      \tl_replace_all:NVn
-        \l_tmpa_tl
-        \c_backslash_str
-        { / }
-      \tl_put_right:Nn
-        \l_tmpa_tl
-        {
-          .code:n = { #1 }
-        }
-      \keys_define:nV
-        { markdown/jekyllData }
-        \l_tmpa_tl
-    }
-  }
-\cs_generate_variant:Nn
-  \keys_define:nn
-  { nV }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %### Token Renderer Prototypes {#latex-default-renderer-prototypes}
