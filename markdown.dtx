@@ -19431,7 +19431,7 @@ pdflatex --shell-escape document.tex
 % part is optional, and \meta{key} will be interpreted as \meta{key}`=true`
 % if the `=`\meta{value} part has been omitted.
 %
-% Except for the `plain` option described in Section <#sec:latexplain>, and
+% Except for the `plain` option described in Section <#sec:latexplain>,
 % the \LaTeX{} themes described in Section <#sec:latexthemes>, and the
 % \LaTeX{} snippets described in Section <#sec:latex-setup-snippets>,
 % \LaTeX{} options map directly to the options recognized by the plain
@@ -19443,6 +19443,35 @@ pdflatex --shell-escape document.tex
 % using the \envmref{markdown*} \LaTeX{} environment or the \mref{markdownInput}
 % macro (see Section <#sec:latexinterface>), or via the \mref{markdownSetup}
 % macro.
+%
+%#### Finalizing and Freezing the Cache
+%
+% To ensure compatibility with the `minted` package [@poore17, Section
+% 5.1], which supports the `finalizecache` and `frozencache` package options
+% with similar semantics to the \Opt{finalizeCache} and \Opt{frozenCache} plain
+% \TeX{} options, the Markdown package also recognizes these as aliases
+% and accepts them as document class options. By passing `finalizecache` and
+% `frozencache` as document class options, you may conveniently control the
+% behavior of both packages at once:
+%
+% ``` tex
+% \documentclass[frozencache]{article}
+% \usepackage{markdown,minted}
+% \begin{document}
+% % ...
+% \end{document}
+% ```````
+%
+% We hope that other packages will support the `finalizecache` and
+% `frozencache` package options in the future, so that they can become a
+% standard interface for preparing \LaTeX{} document sources for distribution.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\DeclareOption{finalizecache}{\markdownSetup{finalizeCache}}
+\DeclareOption{frozencache}{\markdownSetup{frozenCache}}
+%    \end{macrocode}
+% \begin{markdown}
 %
 %#### \LaTeX{} snippets {#latex-setup-snippets}
 %
@@ -20308,37 +20337,6 @@ variant of the `import` \LaTeX{} option:
     \@@_define_option_commands_and_keyvals:
   }
 \ExplSyntaxOff
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% The \Opt{finalizeCache} and \Opt{frozenCache} plain
-% \TeX{} options are exposed through \LaTeX{} options with keys `finalizeCache`
-% and `frozenCache`.
-%
-% To ensure compatibility with the `minted` package [@poore17, Section
-% 5.1], which supports the `finalizecache` and `frozencache` package options
-% with similar semantics, the Markdown package also recognizes these as aliases
-% and recognizes them as document class options. By passing `finalizecache` and
-% `frozencache` as document class options, you may conveniently control the
-% behavior of both packages at once:
-%
-% ``` tex
-% \documentclass[frozencache]{article}
-% \usepackage{markdown,minted}
-% \begin{document}
-% % ...
-% \end{document}
-% ```````
-%
-% We hope that other packages will support the `finalizecache` and
-% `frozencache` package options in the future, so that they can become a
-% standard interface for preparing \LaTeX{} document sources for distribution.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\DeclareOption{finalizecache}{\markdownSetup{finalizeCache}}
-\DeclareOption{frozencache}{\markdownSetup{frozenCache}}
 %    \end{macrocode}
 % \par
 % \begin{markdown}
