@@ -11535,9 +11535,13 @@ A PDF document named `document.pdf` should be produced and contain the text
       { g_@@_ #1 _option_types_prop }
       { #2 }
       \l_tmpa_tl
-    \keys_define:nn
-      { markdown/options }
+    \str_if_eq:VVTF
+      \l_tmpa_tl
+      \c_@@_option_type_boolean_tl
       {
+        \keys_define:nn
+          { markdown/options }
+          {
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -11546,36 +11550,34 @@ A PDF document named `document.pdf` should be produced and contain the text
 %
 % \end{markdown}
 %  \begin{macrocode}
-        #3 .code:n = {
-          \tl_set:Nx
-            \l_tmpa_tl
-            {
-              \str_case:nnF
-                { ##1 }
+            #3 .code:n = {
+              \tl_set:Nx
+                \l_tmpa_tl
                 {
-                  { yes } { true }
-                  { no } { false }
+                  \str_case:nnF
+                    { ##1 }
+                    {
+                      { yes } { true }
+                      { no } { false }
+                    }
+                    { ##1 }
                 }
-                { ##1 }
-            }
-          \@@_set_option_value:nV
-            { #2 }
-            \l_tmpa_tl
-        },
-        #3 .code:n = {
-          \@@_set_option_value:nn
-            { #2 }
-            { ##1 }
-        },
+              \@@_set_option_value:nV
+                { #2 }
+                \l_tmpa_tl
+            },
+            #3 .default:n = { true },
+          }
       }
-    \str_if_eq:VVT
-      \l_tmpa_tl
-      \c_@@_option_type_boolean_tl
       {
         \keys_define:nn
           { markdown/options }
           {
-            #3 .default:n = { true },
+            #3 .code:n = {
+              \@@_set_option_value:nn
+                { #2 }
+                { ##1 }
+            },
           }
       }
 %    \end{macrocode}
