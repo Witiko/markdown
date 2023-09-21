@@ -11405,21 +11405,22 @@ A PDF document named `document.pdf` should be produced and contain the text
   \g_@@_default_plain_tex_options_prop
   { stripPercentSigns }
   { false }
+%  \end{macrocode}
 % \begin{markdown}
 %
-%#### Generating Plain \TeX{} option macros and \meta{key}`=`\meta{value}s
+%#### Generating Plain \TeX{} Option Macros and Key-Values
 %
-% We define the command \mdef{@@_plain_tex_define_option_commands:} that
-% defines plain \TeX{} macros and the \meta{key}`=`\meta{value} interface
+% We define the command \mdef{@@_define_option_commands_and_keyvals:} that
+% defines plain \TeX{} macros and the key-value interface
 % of the \mref{markdownSetup} macro for the above plain \TeX{} options.
 %
-% The command also defines macros and \meta{key}`=`\meta{value}s that map
+% The command also defines macros and key-values that map
 % directly to the options recognized by the Lua interface, such as
 % \mdef{markdownOptionHybrid} for the \Opt{hybrid} Lua option (see Section
 % <#sec:lua-options>), which are not processed by the plain \TeX{}
 % implementation, only passed along to Lua.
 %
-% Furthermore, the command also defines options and \meta{key}`=`\meta{value}s
+% Furthermore, the command also defines options and key-values
 % for subsequently loaded layers that correspond to higher-level \TeX{} formats
 % such as \LaTeX{} and \Hologo{ConTeXt}.
 %
@@ -11667,9 +11668,9 @@ A PDF document named `document.pdf` should be produced and contain the text
 %
 % \end{markdown}
 %  \begin{macrocode}
-\str_if_eq:VnT
+\str_if_eq:VVT
   \c_@@_top_layer_tl
-  { plain_tex }
+  \c_@@_option_layer_plain_tex_tl
   {
     \@@_define_option_commands_and_keyvals:
   }
@@ -18867,8 +18868,216 @@ following text:
 
 > Jane Doe is 99 years old.
 
+%</manual-tokens>
+%<*tex>
 % \fi
+% \begin{markdown}
 %
+%#### Generating Plain \TeX{} Token Renderer Macros and Key-Values {#plain-tex-renderers}
+%
+% We define the command \mdef{@@_define_renderers:} that defines plain \TeX{}
+% macros for token renderers. Futhermore, the `\markdownSetup` macro also
+% the `renderers` key, whose value must be a list of key-values, where the keys
+% correspond to the markdown token renderer macros and the values are new
+% definitions of these token renderers.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\cs_new:Nn \@@_define_renderers:
+  {
+    \seq_map_function:NN
+      \g_@@_renderers_seq
+      \@@_define_renderer:n
+  }
+\cs_new:Nn \@@_define_renderer:n
+  {
+    \@@_renderer_tl_to_csname:nN
+      { #1 }
+      \l_tmpa_tl
+    \prop_get:NnN
+      \g_@@_renderer_arities_prop
+      { #1 }
+      \l_tmpb_tl
+    \@@_define_renderer:ncV
+      { #1 }
+      { \l_tmpa_tl }
+      \l_tmpb_tl
+  }
+\cs_new:Nn \@@_renderer_tl_to_csname:nN
+  {
+    \tl_set:Nn
+      \l_tmpa_tl
+      { \str_uppercase:n { #1 } }
+    \tl_set:Nx
+      #2
+      {
+        markdownRenderer
+        \tl_head:f { \l_tmpa_tl }
+        \tl_tail:n { #1 }
+      }
+  }
+\cs_new:Nn \@@_define_renderer:nNn
+  {
+    \@@_with_various_cases:nn
+      { #1 }
+      {
+        \keys_define:nn
+          { markdown/options/renderers }
+          {
+            ##1 .code:n = {
+              \cs_generate_from_arg_count:NNnn
+                #2
+                \cs_set:Npn
+                { #3 }
+                { ####1 }
+            },
+          }
+      }
+  }
+\cs_generate_variant:Nn
+  \@@_define_renderer:nNn
+  { ncV }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% The following example code showcases a possible configuration of the
+% \mref{markdownRendererLink} and \mref{markdownRendererEmphasis} token
+% renderer macros.
+% ``` tex
+% \markdownSetup{
+%   renderers = {
+%     link = {#4},                   \% Render links as the link title.
+%     emphasis = {{\it #1}},   \% Render emphasized text using italics.
+%   }
+% }
+% ```````
+%
+% In addition to exact token renderer names, we also support wildcards
+% that match multiple token renderer names.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\tl_new:N
+  \l_@@_renderer_definition_tl
+\keys_define:nn
+  { markdown/options/renderers }
+  {
+    unknown .code:n = {
+      \regex_match:nVTF
+        { \* }
+        \l_keys_key_str
+        {
+          \tl_set:Nn
+            \l_@@_renderer_definition_tl
+            { #1 }
+          \tl_set:NV
+            \l_tmpa_tl
+            \l_keys_key_str
+          \regex_replace_all:nnN
+            { \* }
+            { .* }
+            \l_tmpa_tl
+          \regex_set:NV
+            \l_tmpa_regex
+            \l_tmpa_tl
+          \int_zero:N
+            \l_tmpa_int
+          \seq_map_inline:Nn
+            \g_@@_renderers_seq
+            {
+              \@@_with_various_cases:nn
+                { ##1 }
+                {
+                  \regex_match:NnT
+                    \l_tmpa_regex
+                    { ####1 }
+                    {
+                      \@@_renderer_tl_to_csname:nN
+                        { ##1 }
+                        \l_tmpa_tl
+                      \prop_get:NnN
+                        \g_@@_renderer_arities_prop
+                        { ##1 }
+                        \l_tmpb_tl
+                      \cs_generate_from_arg_count:cNVV
+                        { \l_tmpa_tl }
+                        \cs_set:Npn
+                        \l_tmpb_tl
+                        \l_@@_renderer_definition_tl
+                      \int_incr:N
+                        \l_tmpa_int
+                      \@@_with_various_cases_break:
+                    }
+                }
+            }
+          \int_compare:nNnT
+            { \l_tmpa_int } = { 0 }
+            {
+              \msg_error:nnV
+                { markdown }
+                { nonmatched-renderer-wildcard }
+                \l_keys_key_str
+            }
+        }
+        {
+          \msg_error:nnV
+            { markdown }
+            { undefined-renderer }
+            \l_keys_key_str
+        }
+    },
+  }
+\msg_new:nnn
+  { markdown }
+  { undefined-renderer }
+  {
+    Renderer~#1~is~undefined.
+  }
+\msg_new:nnn
+  { markdown }
+  { nonmatched-renderer-wildcard }
+  {
+    Wildcard~#1~matches~no~renderers.
+  }
+\cs_generate_variant:Nn
+  \regex_set:Nn
+  { NV }
+\cs_generate_variant:Nn
+  \cs_generate_from_arg_count:NNnn
+  { cNVV }
+\cs_generate_variant:Nn
+  \msg_error:nnn
+  { nnV }
+\prg_generate_conditional_variant:Nnn
+  \regex_match:nn
+  { nV }
+  { TF }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If plain \TeX{} is the top layer, we use the \mref{@@_define_renderers:}
+% macro to define plain \TeX{} token renderer macros and key-values
+% immediately. Otherwise, we postpone the definition until the upper layers
+% have been loaded.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\str_if_eq:VVT
+  \c_@@_top_layer_tl
+  \c_@@_option_layer_plain_tex_tl
+  {
+    \@@_define_renderers:
+  }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
 % \begin{markdown}
 
 ### Token Renderer Prototypes {#texrendererprototypes}
@@ -19113,23 +19322,24 @@ following text:
 %    \end{macrocode}
 % \begin{markdown}
 %
-% The following \TeX{} macros provide definitions for the token renderers (see
-% Section <#sec:texrenderersuser>) that have not been redefined by the
-% user. These macros are intended to be redefined by macro package authors
-% who wish to provide sensible default token renderers. They are also redefined
-% by the \LaTeX{} and \Hologo{ConTeXt} implementations (see sections
-% <#sec:lateximplementation> and <#sec:contextimplementation>).
+%#### Generating Plain \TeX{} Token Renderer Prototype Macros and Key-Values {#plain-tex-renderer-prototypes}
+%
+% We define the command \mdef{@@_define_renderer_prototypes:} that defines plain \TeX{}
+% macros for token renderer prototypes. Futhermore, the `\markdownSetup` macro also
+% the `rendererPrototype` key, whose value must be a list of key-values, where the keys
+% correspond to the markdown token renderer prototype macros and the values are new
+% definitions of these token renderer prototypes.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\cs_new:Nn \@@_plaintex_define_renderer_prototypes:
+\cs_new:Nn \@@_define_renderer_prototypes:
   {
     \seq_map_function:NN
       \g_@@_renderers_seq
-      \@@_plaintex_define_renderer_prototype:n
+      \@@_define_renderer_prototype:n
   }
-\cs_new:Nn \@@_plaintex_define_renderer_prototype:n
+\cs_new:Nn \@@_define_renderer_prototype:n
   {
     \@@_renderer_prototype_tl_to_csname:nN
       { #1 }
@@ -19138,7 +19348,8 @@ following text:
       \g_@@_renderer_arities_prop
       { #1 }
       \l_tmpb_tl
-    \@@_plaintex_define_renderer_prototype:cV
+    \@@_define_renderer_prototype:ncV
+      { #1 }
       { \l_tmpa_tl }
       \l_tmpb_tl
   }
@@ -19156,21 +19367,180 @@ following text:
         Prototype
       }
   }
-\cs_new:Nn \@@_plaintex_define_renderer_prototype:Nn
+\cs_new:Nn \@@_define_renderer_prototype:nNn
   {
-    \cs_generate_from_arg_count:NNnn
-      #1
-      \cs_set:Npn
-      { #2 }
-      { }
+    \@@_with_various_cases:nn
+      { #1 }
+      {
+        \keys_define:nn
+          { markdown/options/renderer-prototypes }
+          {
+            ##1 .code:n = {
+              \cs_generate_from_arg_count:NNnn
+                #2
+                \cs_set:Npn
+                { #3 }
+                { ####1 }
+            },
+          }
+      }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Unless the token renderer prototype macro has already been defined,
+% we provide an empty definition.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \cs_if_free:NT
+      #2
+      {
+        \cs_generate_from_arg_count:NNnn
+          #2
+          \cs_set:Npn
+          { #3 }
+          { }
+      }
   }
 \cs_generate_variant:Nn
-  \@@_plaintex_define_renderer_prototype:Nn
-  { cV }
-\@@_plaintex_define_renderer_prototypes:
+  \@@_define_renderer_prototype:nNn
+  { ncV }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par
+% \begin{markdown}
+%
+% The following example code showcases a possible configuration of the
+% `\markdownRendererImagePrototype` and `\markdownRendererCodeSpanPrototype`
+% token renderer prototype macros.
+% ``` tex
+% \markdownSetup{
+%   rendererPrototypes = {
+%     image = {\pdfximage{#2}},    \% Embed PDF images in the document.
+%     codeSpan = {{\tt #1}},     \% Render inline code using monospace.
+%   }
+% }
+% ```````
+%
+% In addition to exact token renderer prototype names, we also support
+% wildcards that match multiple token renderer prototype names.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\tl_new:N
+  \l_@@_renderer_prototype_definition_tl
+\keys_define:nn
+  { markdown/options/renderer-prototypes }
+  {
+    unknown .code:n = {
+      \regex_match:nVTF
+        { \* }
+        \l_keys_key_str
+        {
+          \tl_set:Nn
+            \l_@@_renderer_prototype_definition_tl
+            { #1 }
+          \tl_set:NV
+            \l_tmpa_tl
+            \l_keys_key_str
+          \regex_replace_all:nnN
+            { \* }
+            { .* }
+            \l_tmpa_tl
+          \regex_set:NV
+            \l_tmpa_regex
+            \l_tmpa_tl
+          \int_zero:N
+            \l_tmpa_int
+          \seq_map_inline:Nn
+            \g_@@_renderers_seq
+            {
+              \@@_with_various_cases:nn
+                { ##1 }
+                {
+                  \regex_match:NnT
+                    \l_tmpa_regex
+                    { ####1 }
+                    {
+                      \@@_renderer_prototype_tl_to_csname:nN
+                        { ##1 }
+                        \l_tmpa_tl
+                      \prop_get:NnN
+                        \g_@@_renderer_arities_prop
+                        { ##1 }
+                        \l_tmpb_tl
+                      \cs_generate_from_arg_count:cNVV
+                        { \l_tmpa_tl }
+                        \cs_set:Npn
+                        \l_tmpb_tl
+                        \l_@@_renderer_prototype_definition_tl
+                      \int_incr:N
+                        \l_tmpa_int
+                      \@@_with_various_cases_break:
+                    }
+                }
+            }
+          \int_compare:nNnT
+            { \l_tmpa_int } = { 0 }
+            {
+              \msg_error:nnV
+                { markdown }
+                { nonmatched-renderer-prototype-wildcard }
+                \l_keys_key_str
+            }
+        }
+        {
+          \msg_error:nnV
+            { markdown }
+            { undefined-renderer-prototype }
+            \l_keys_key_str
+        }
+    },
+  }
+\msg_new:nnn
+  { markdown }
+  { undefined-renderer-prototype }
+  {
+    Renderer~prototype~#1~is~undefined.
+  }
+\msg_new:nnn
+  { markdown }
+  { nonmatched-renderer-prototype-wildcard }
+  {
+    Wildcard~#1~matches~no~renderer~prototypes.
+  }
+\cs_generate_variant:Nn
+  \regex_set:Nn
+  { NV }
+\cs_generate_variant:Nn
+  \cs_generate_from_arg_count:NNnn
+  { cNVV }
+\cs_generate_variant:Nn
+  \msg_error:nnn
+  { nnV }
+\prg_generate_conditional_variant:Nnn
+  \regex_match:nn
+  { nV }
+  { TF }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If plain \TeX{} is the top layer, we use the \mref{@@_define_renderer_prototypes:}
+% macro to define plain \TeX{} token renderer prototype macros and key-values
+% immediately. Otherwise, we postpone the definition until the upper layers
+% have been loaded.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\str_if_eq:VVT
+  \c_@@_top_layer_tl
+  \c_@@_option_layer_plain_tex_tl
+  {
+    \@@_define_renderer_prototypes:
+  }
+\ExplSyntaxOff
+%    \end{macrocode}
 % \begin{markdown}
 %
 %### Logging Facilities
@@ -19348,8 +19718,8 @@ pdflatex --shell-escape document.tex
 % where \meta{options} are the \LaTeX{} interface options (see Section
 % <#sec:latex-options>). Note that \meta{options} inside the `\usepackage`
 % macro may not set the `markdownRenderers` (see Section
-% <#sec:latex-renderers>) and `markdownRendererPrototypes` (see Section
-% <#sec:latex-renderer-prototypes>) keys. Furthermore, although the
+% <#sec:plain-tex-renderers>) and `markdownRendererPrototypes` (see Section
+% <#sec:plain-tex-renderer-prototypes>) keys. Furthermore, although the
 % base variant of the `import` key that loads a single \LaTeX{} theme
 % (see Section <#sec:latexthemes>) can be used, the extended variant
 % that can load multiple themes and import snippets from them (see
@@ -20317,20 +20687,24 @@ variant of the `import` \LaTeX{} option:
 %    \end{macrocode}
 % \begin{markdown}
 %
-%#### Generating Plain \TeX{} option macros and \meta{key}`=`\meta{value}s
+%#### Generating Plain \TeX{} Option, Token Renderer, and Token Renderer Prototype Macros and Key-Values
 %
 % If \LaTeX{} is the top layer, we use the
-% \mref{@@_define_option_commands_and_keyvals:} macro to define plain \TeX{}
-% option macros and \meta{key}`=`\meta{value}s immediately. Otherwise, we
-% postpone the definition until the upper layers have been loaded.
+% \mref{@@_define_option_commands_and_keyvals:}, \mref{@@_define_renderers:},
+% and \mref{@@_define_renderer_prototypes:} macro to define plain \TeX{}
+% option, token renderer, and token renderer prototype macros and key-values
+% immediately. Otherwise, we postpone the definition until the upper layers
+% have been loaded.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\str_if_eq:VnT
+\str_if_eq:VVT
   \c_@@_top_layer_tl
-  { latex }
+  \c_@@_option_layer_latex_tl
   {
     \@@_define_option_commands_and_keyvals:
+    \@@_define_renderers:
+    \@@_define_renderer_prototypes:
   }
 \ExplSyntaxOff
 %    \end{macrocode}
@@ -20347,368 +20721,6 @@ variant of the `import` \LaTeX{} option:
 %   cacheDir = /tmp,
 % }
 % ```````
-%
-%#### Plain \TeX{} Markdown Token Renderers {#latex-renderers}
-%
-% The \LaTeX{} interface recognizes an option with the `renderers` key,
-% whose value must be a list of key-values, where the keys correspond
-% to the markdown token renderer macros exposed by the plain \TeX{}
-% interface (see Section <#sec:texrenderersuser>) and the values are
-% new definitions of these token renderers.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\ExplSyntaxOn
-\cs_new:Nn \@@_latex_define_renderers:
-  {
-    \seq_map_function:NN
-      \g_@@_renderers_seq
-      \@@_latex_define_renderer:n
-  }
-\cs_new:Nn \@@_latex_define_renderer:n
-  {
-    \@@_renderer_tl_to_csname:nN
-      { #1 }
-      \l_tmpa_tl
-    \prop_get:NnN
-      \g_@@_renderer_arities_prop
-      { #1 }
-      \l_tmpb_tl
-    \@@_latex_define_renderer:ncV
-      { #1 }
-      { \l_tmpa_tl }
-      \l_tmpb_tl
-  }
-\cs_new:Nn \@@_renderer_tl_to_csname:nN
-  {
-    \tl_set:Nn
-      \l_tmpa_tl
-      { \str_uppercase:n { #1 } }
-    \tl_set:Nx
-      #2
-      {
-        markdownRenderer
-        \tl_head:f { \l_tmpa_tl }
-        \tl_tail:n { #1 }
-      }
-  }
-\cs_new:Nn \@@_latex_define_renderer:nNn
-  {
-    \@@_with_various_cases:nn
-      { #1 }
-      {
-        \keys_define:nn
-          { markdown/options/renderers }
-          {
-            ##1 .code:n = {
-              \cs_generate_from_arg_count:NNnn
-                #2
-                \cs_set:Npn
-                { #3 }
-                { ####1 }
-            },
-          }
-      }
-  }
-\cs_generate_variant:Nn
-  \@@_latex_define_renderer:nNn
-  { ncV }
-\ExplSyntaxOff
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% The following example \LaTeX{} code showcases a possible configuration of the
-% \mref{markdownRendererLink} and \mref{markdownRendererEmphasis} markdown token
-% renderers.
-% ``` tex
-% \markdownSetup{
-%   renderers = {
-%     link = {#4},                   \% Render links as the link title.
-%     emphasis = {\emph{#1}},    \% Render emphasized text via `\emph`.
-%   }
-% }
-% ```````
-%
-% In addition to exact token renderer names, we also support wildcards
-% that match multiple token renderer names.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\ExplSyntaxOn
-\tl_new:N
-  \l_@@_renderer_definition_tl
-\keys_define:nn
-  { markdown/options/renderers }
-  {
-    unknown .code:n = {
-      \regex_match:nVTF
-        { \* }
-        \l_keys_key_str
-        {
-          \tl_set:Nn
-            \l_@@_renderer_definition_tl
-            { #1 }
-          \tl_set:NV
-            \l_tmpa_tl
-            \l_keys_key_str
-          \regex_replace_all:nnN
-            { \* }
-            { .* }
-            \l_tmpa_tl
-          \regex_set:NV
-            \l_tmpa_regex
-            \l_tmpa_tl
-          \int_zero:N
-            \l_tmpa_int
-          \seq_map_inline:Nn
-            \g_@@_renderers_seq
-            {
-              \@@_with_various_cases:nn
-                { ##1 }
-                {
-                  \regex_match:NnT
-                    \l_tmpa_regex
-                    { ####1 }
-                    {
-                      \@@_renderer_tl_to_csname:nN
-                        { ##1 }
-                        \l_tmpa_tl
-                      \prop_get:NnN
-                        \g_@@_renderer_arities_prop
-                        { ##1 }
-                        \l_tmpb_tl
-                      \cs_generate_from_arg_count:cNVV
-                        { \l_tmpa_tl }
-                        \cs_set:Npn
-                        \l_tmpb_tl
-                        \l_@@_renderer_definition_tl
-                      \int_incr:N
-                        \l_tmpa_int
-                      \@@_with_various_cases_break:
-                    }
-                }
-            }
-          \int_compare:nNnT
-            { \l_tmpa_int } = { 0 }
-            {
-              \msg_error:nnV
-                { markdown }
-                { nonmatched-renderer-wildcard }
-                \l_keys_key_str
-            }
-        }
-        {
-          \msg_error:nnV
-            { markdown }
-            { undefined-renderer }
-            \l_keys_key_str
-        }
-    },
-  }
-\msg_new:nnn
-  { markdown }
-  { undefined-renderer }
-  {
-    Renderer~#1~is~undefined.
-  }
-\msg_new:nnn
-  { markdown }
-  { nonmatched-renderer-wildcard }
-  {
-    Wildcard~#1~matches~no~renderers.
-  }
-\cs_generate_variant:Nn
-  \regex_set:Nn
-  { NV }
-\cs_generate_variant:Nn
-  \cs_generate_from_arg_count:NNnn
-  { cNVV }
-\cs_generate_variant:Nn
-  \msg_error:nnn
-  { nnV }
-\prg_generate_conditional_variant:Nnn
-  \regex_match:nn
-  { nV }
-  { TF }
-\ExplSyntaxOff
-%    \end{macrocode}
-% \begin{markdown}
-%
-%#### Plain \TeX{} Markdown Token Renderer Prototypes {#latex-renderer-prototypes}
-%
-% The \LaTeX{} interface recognizes an option with the
-% `rendererPrototypes` key, whose value must be a list of key-values,
-% where the keys correspond to the markdown token renderer prototype
-% macros exposed by the plain \TeX{} interface (see Section
-% <#sec:texrendererprototypes>) and the values are new definitions of
-% these token renderer prototypes.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\ExplSyntaxOn
-\cs_new:Nn \@@_latex_define_renderer_prototypes:
-  {
-    \seq_map_function:NN
-      \g_@@_renderers_seq
-      \@@_latex_define_renderer_prototype:n
-  }
-\cs_new:Nn \@@_latex_define_renderer_prototype:n
-  {
-    \@@_renderer_prototype_tl_to_csname:nN
-      { #1 }
-      \l_tmpa_tl
-    \prop_get:NnN
-      \g_@@_renderer_arities_prop
-      { #1 }
-      \l_tmpb_tl
-    \@@_latex_define_renderer_prototype:ncV
-      { #1 }
-      { \l_tmpa_tl }
-      \l_tmpb_tl
-  }
-\cs_new:Nn \@@_latex_define_renderer_prototype:nNn
-  {
-    \@@_with_various_cases:nn
-      { #1 }
-      {
-        \keys_define:nn
-          { markdown/options/renderer-prototypes }
-          {
-            ##1 .code:n = {
-              \cs_generate_from_arg_count:NNnn
-                #2
-                \cs_set:Npn
-                { #3 }
-                { ####1 }
-            },
-          }
-      }
-  }
-\cs_generate_variant:Nn
-  \@@_latex_define_renderer_prototype:nNn
-  { ncV }
-\ExplSyntaxOff
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% The following example \LaTeX{} code showcases a possible configuration of the
-% `\markdownRendererImagePrototype` and `\markdownRendererCodeSpanPrototype`
-% markdown token renderer prototypes.
-% ``` tex
-% \markdownSetup{
-%   rendererPrototypes = {
-%     image = {\includegraphics{#2}},
-%     codeSpan = {\texttt{#1}},    \% Render inline code via `\texttt`.
-%   }
-% }
-% ```````
-%
-% In addition to exact token renderer prototype names, we also support
-% wildcards that match multiple token renderer prototype names.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\ExplSyntaxOn
-\tl_new:N
-  \l_@@_renderer_prototype_definition_tl
-\keys_define:nn
-  { markdown/options/renderer-prototypes }
-  {
-    unknown .code:n = {
-      \regex_match:nVTF
-        { \* }
-        \l_keys_key_str
-        {
-          \tl_set:Nn
-            \l_@@_renderer_prototype_definition_tl
-            { #1 }
-          \tl_set:NV
-            \l_tmpa_tl
-            \l_keys_key_str
-          \regex_replace_all:nnN
-            { \* }
-            { .* }
-            \l_tmpa_tl
-          \regex_set:NV
-            \l_tmpa_regex
-            \l_tmpa_tl
-          \int_zero:N
-            \l_tmpa_int
-          \seq_map_inline:Nn
-            \g_@@_renderers_seq
-            {
-              \@@_with_various_cases:nn
-                { ##1 }
-                {
-                  \regex_match:NnT
-                    \l_tmpa_regex
-                    { ####1 }
-                    {
-                      \@@_renderer_prototype_tl_to_csname:nN
-                        { ##1 }
-                        \l_tmpa_tl
-                      \prop_get:NnN
-                        \g_@@_renderer_arities_prop
-                        { ##1 }
-                        \l_tmpb_tl
-                      \cs_generate_from_arg_count:cNVV
-                        { \l_tmpa_tl }
-                        \cs_set:Npn
-                        \l_tmpb_tl
-                        \l_@@_renderer_prototype_definition_tl
-                      \int_incr:N
-                        \l_tmpa_int
-                      \@@_with_various_cases_break:
-                    }
-                }
-            }
-          \int_compare:nNnT
-            { \l_tmpa_int } = { 0 }
-            {
-              \msg_error:nnV
-                { markdown }
-                { nonmatched-renderer-prototype-wildcard }
-                \l_keys_key_str
-            }
-        }
-        {
-          \msg_error:nnV
-            { markdown }
-            { undefined-renderer-prototype }
-            \l_keys_key_str
-        }
-    },
-  }
-\msg_new:nnn
-  { markdown }
-  { undefined-renderer-prototype }
-  {
-    Renderer~prototype~#1~is~undefined.
-  }
-\msg_new:nnn
-  { markdown }
-  { nonmatched-renderer-prototype-wildcard }
-  {
-    Wildcard~#1~matches~no~renderer~prototypes.
-  }
-\cs_generate_variant:Nn
-  \regex_set:Nn
-  { NV }
-\cs_generate_variant:Nn
-  \cs_generate_from_arg_count:NNnn
-  { cNVV }
-\cs_generate_variant:Nn
-  \msg_error:nnn
-  { nnV }
-\prg_generate_conditional_variant:Nnn
-  \regex_match:nn
-  { nV }
-  { TF }
-\ExplSyntaxOff
-%    \end{macrocode}
-% \begin{markdown}
 %
 % \iffalse
 %</latex>
@@ -20776,12 +20788,16 @@ following text:
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
+\tl_const:Nn \c_@@_option_layer_context_tl { context }
+\cs_generate_variant:Nn
+  \tl_const:Nn
+  { NV }
 \tl_if_exist:NF
   \c_@@_top_layer_tl
   {
-    \tl_const:Nn
+    \tl_const:NV
       \c_@@_top_layer_tl
-      { context }
+      \c_@@_option_layer_context_tl
   }
 \ExplSyntaxOff
 %    \end{macrocode}
@@ -20907,7 +20923,8 @@ following text:
 %    \end{macrocode}
 % \begin{markdown}
 %
-%#### Generating Plain \TeX{} option macros and \meta{key}`=`\meta{value}s
+%#### Generating Plain \TeX{} Option Macros and Key-Values
+%
 % Unlike plain \TeX{}, we also accept caseless variants of options
 % in line with the style of \Hologo{ConTeXt}.
 %
@@ -20929,17 +20946,21 @@ following text:
 % \begin{markdown}
 %
 % If \Hologo{ConTeXt} is the top layer, we use the
-% \mref{@@_define_option_commands_and_keyvals:} macro to define plain \TeX{}
-% option macros and \meta{key}`=`\meta{value}s immediately. Otherwise, we
-% postpone the definition until the upper layers have been loaded.
+% \mref{@@_define_option_commands_and_keyvals:}, \mref{@@_define_renderers:},
+% and \mref{@@_define_renderer_prototypes:} macro to define plain \TeX{}
+% option, token renderer, and token renderer prototype macros and key-values
+% immediately. Otherwise, we postpone the definition until the upper layers
+% have been loaded.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\str_if_eq:VnT
+\str_if_eq:VVT
   \c_@@_top_layer_tl
-  { context }
+  \c_@@_option_layer_context_tl
   {
     \@@_define_option_commands_and_keyvals:
+    \@@_define_renderers:
+    \@@_define_renderer_prototypes:
   }
 \ExplSyntaxOff
 %    \end{macrocode}
@@ -31991,19 +32012,6 @@ end
 \def\markdownVersionSpace{ }%
 \ProvidesPackage{markdown}[\markdownLastModified\markdownVersionSpace v%
   \markdownVersion\markdownVersionSpace markdown renderer]%
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% Use reflection to define the `renderers` and `rendererPrototypes` keys of
-% \mref{markdownSetup} as well as the keys that correspond to Lua options.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\ExplSyntaxOn
-\@@_latex_define_renderers:
-\@@_latex_define_renderer_prototypes:
-\ExplSyntaxOff
 %    \end{macrocode}
 % \par
 % \begin{markdown}
