@@ -11551,7 +11551,11 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\tl_if_eq:VnT
+\prg_generate_conditional_variant:Nnn
+  \str_if_eq:nn
+  { Vn }
+  { T }
+\str_if_eq:VnT
   \c_@@_top_layer_tl
   { plain_tex }
   {
@@ -20297,7 +20301,7 @@ variant of the `import` \LaTeX{} option:
 %
 % \end{markdown}
 %  \begin{macrocode}
-\tl_if_eq:VnT
+\str_if_eq:VnT
   \c_@@_top_layer_tl
   { latex }
   {
@@ -20937,7 +20941,7 @@ following text:
 %
 % \end{markdown}
 %  \begin{macrocode}
-\tl_if_eq:VnT
+\str_if_eq:VnT
   \c_@@_top_layer_tl
   { context }
   {
