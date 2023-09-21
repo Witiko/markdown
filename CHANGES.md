@@ -5,9 +5,8 @@
 Development:
 
 - Add `\markdownSetup` command to plain TeX and allow the command
-  to define renderers, renderer prototypes, and YAML processing
-  in all formats including plain TeX and ConTeXt, not just LaTeX.
-  (#275, #349)
+  to define renderers, renderer prototypes, and the processing
+  of YAML in all formats, not just in LaTeX. (#275, #349)
 
 Unit Tests:
 
