@@ -1,4 +1,4 @@
-\def\markdownOptionUnderscores{false}
+\markdownSetup{underscores=false}
 <<<
 This test ensures that the Lua `underscores` option correctly propagates
 through the plain TeX interface.

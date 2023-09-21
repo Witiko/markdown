@@ -1,5 +1,4 @@
-\def\markdownOptionStripIndent{true}
-\def\markdownOptionPreserveTabs{false}
+\markdownSetup{stripIndent=true, preserveTabs=false}
 <<<
     This test ensures that the Lua `stripIndent` option correctly propagates
   	through the plain TeX interface. This indented block should have its indent

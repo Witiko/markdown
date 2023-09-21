@@ -1,4 +1,4 @@
-\def\markdownOptionBreakableBlockquotes{false}
+\markdownSetup{breakableBlockquotes=false}
 <<<
 This test ensures that the Lua `breakableBlockquotes` option correctly
 propagates through the plain TeX interface.

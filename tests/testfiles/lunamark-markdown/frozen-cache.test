@@ -1,5 +1,4 @@
-\def\markdownOptionFrozenCache{true}
-\def\markdownOptionFrozenCacheFileName{frozen-cache.tex}
+\markdownSetup{frozenCache=true, frozenCacheFileName=frozen-cache.tex}
 <<<
 This test ensures that the plain TeX `\markdownOptionFrozenCache` option and
 the Lua `frozenCacheFileName` and `frozenCacheCounter` options correctly

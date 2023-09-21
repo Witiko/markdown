@@ -1,4 +1,4 @@
-\def\markdownOptionInlineNotes{true}
+\markdownSetup{inlineNotes=true}
 <<<
 This test ensures that the Lua `notes` and `inlineNotes` options
 correctly propagate through the plain TeX interface.

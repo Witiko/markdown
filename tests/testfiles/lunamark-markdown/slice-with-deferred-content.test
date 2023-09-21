@@ -1,6 +1,8 @@
-\def\markdownOptionNotes{true}
-\def\markdownOptionHeaderAttributes{true}
-\def\markdownOptionSlice{section-with-deferred-content}
+\markdownSetup{
+  notes=true,
+  headerAttributes=true,
+  slice=section-with-deferred-content,
+}
 <<<
 # This is a section
 # This is another section {#section-with-deferred-content}

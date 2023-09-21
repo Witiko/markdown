@@ -1,4 +1,4 @@
-\def\markdownOptionCitations{true}
+\markdownSetup{citations=true}
 <<<
 This test ensures that the Lua `citations` option correctly propagates through
 the plain TeX interface and that space characters are required before a text

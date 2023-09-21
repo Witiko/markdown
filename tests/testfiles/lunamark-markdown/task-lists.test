@@ -1,4 +1,4 @@
-\def\markdownOptionTaskLists{true}
+\markdownSetup{taskLists=true}
 <<<
 This test ensures that the Lua `taskLists` option correctly propagates through
 the plain TeX interface.

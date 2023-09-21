@@ -1,4 +1,4 @@
-\def\markdownOptionTexComments{true}
+\markdownSetup{texComments=true}
 <<<
 This test ensures that the Lua `texComments` option correctly propagates
 through the plain TeX interface.

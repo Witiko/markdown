@@ -1,5 +1,4 @@
-\def\markdownOptionFencedCode{true}
-\def\markdownOptionFencedCodeAttributes{true}
+\markdownSetup{fencedCode=true, fencedCodeAttributes=true}
 <<<
 This test ensures that the Lua `fencedCode` and `fencedCodeAttributes` options
 correctly propagate through the plain TeX interface.

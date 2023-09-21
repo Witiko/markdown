@@ -1,4 +1,4 @@
-\def\markdownOptionFencedCode{false}
+\markdownSetup{fencedCode=false}
 <<<
 This test ensures that the Lua `fencedCode` option correctly propagates through
 the plain TeX interface.

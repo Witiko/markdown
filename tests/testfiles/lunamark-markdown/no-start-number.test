@@ -1,4 +1,4 @@
-\def\markdownOptionStartNumber{false}
+\markdownSetup{startNumber=false}
 <<<
 This test ensures that the Lua `startNumber` option correctly propagates
 through the plain TeX interface. The following lists should not receive

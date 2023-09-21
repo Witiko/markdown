@@ -1,4 +1,4 @@
-\def\markdownOptionExtensions{strike-through.lua}
+\markdownSetup{extension=strike-through.lua}
 <<<
 This test ensures that the Lua `extensions` option correctly propagates through
 the plain TeX interface and that the `strike-through.lua` user-defined syntax

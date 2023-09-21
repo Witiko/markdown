@@ -1,5 +1,4 @@
-\def\markdownOptionPipeTables{true}
-\def\markdownOptionTableCaptions{true}
+\markdownSetup{pipeTables=true, tableCaptions=true}
 <<<
 This test ensures that the Lua `tableCaptions` option correctly propagates
 through the plain TeX interface.

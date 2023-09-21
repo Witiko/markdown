@@ -1,4 +1,4 @@
-\def\markdownOptionDefinitionLists{true}
+\markdownSetup{definitionLists=true}
 <<<
 Tight using spaces:
 

@@ -1,4 +1,4 @@
-\def\markdownOptionInlineCodeAttributes{true}
+\markdownSetup{inlineCodeAttributes=true}
 <<<
 This test ensures that the Lua `inlineCodeAttributes` option correctly
 propagates through the plain TeX interface.

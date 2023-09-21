@@ -1,4 +1,4 @@
-\def\markdownOptionJekyllData{true}
+\markdownSetup{jekyllData=true}
 <<<
 title: The document title
 author:

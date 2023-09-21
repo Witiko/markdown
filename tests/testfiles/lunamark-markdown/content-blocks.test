@@ -1,4 +1,4 @@
-\def\markdownOptionContentBlocks{true}
+\markdownSetup{contentBlocks=true}
 <<<
 This test ensures that the Lua `contentBlocks` option correctly propagates
 through the plain TeX interface.

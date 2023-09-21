@@ -1,4 +1,4 @@
-\def\markdownOptionShiftHeadings{2}
+\markdownSetup{shiftHeadings=2}
 <<<
 This test ensures that the Lua `shiftHeadings` option correctly propagates
 through the plain TeX interface.

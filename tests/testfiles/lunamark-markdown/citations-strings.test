@@ -1,4 +1,4 @@
-\def\markdownOptionCitations{true}
+\markdownSetup{citations=true}
 <<<
 This test ensures that separate text and parenthetical citations
 are merged into strings of citations.

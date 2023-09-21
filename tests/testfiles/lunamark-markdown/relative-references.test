@@ -1,4 +1,4 @@
-\def\markdownOptionRelativeReferences{true}
+\markdownSetup{relativeReferences=true}
 <<<
 This test ensures that the Lua `relativeReferences` option correctly propagates
 through the plain TeX interface.

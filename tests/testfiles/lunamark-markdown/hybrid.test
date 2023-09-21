@@ -1,4 +1,4 @@
-\def\markdownOptionHybrid{true}
+\markdownSetup{hybrid=true}
 <<<
 This test ensures that the Lua `hybrid` option correctly propagates through
 the plain TeX interface. The following special characters should not be

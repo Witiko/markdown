@@ -1,4 +1,4 @@
-\def\markdownOptionCacheDir{some-other-directory}
+\markdownSetup{cacheDir=some-other-directory}
 <<<
 This test ensures that the Lua `cacheDir` option correctly propagates through
 the plain TeX interface and causes a change in the cache directory location.

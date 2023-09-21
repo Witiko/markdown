@@ -1,4 +1,4 @@
-\def\markdownOptionBlankBeforeCodeFence{true}
+\markdownSetup{blankBeforeCodeFence=true}
 <<<
 This test ensures that the Lua `fencedCode` and `blankBeforeCodeFence` options
 correctly propagate through the plain TeX interface.

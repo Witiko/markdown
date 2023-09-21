@@ -1,4 +1,4 @@
-\def\markdownOptionBlankBeforeBlockquote{true}
+\markdownSetup{blankBeforeBlockquote=true}
 <<<
 Hi
 > no quote

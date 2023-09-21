@@ -1,4 +1,4 @@
-\def\markdownOptionCodeSpans{false}
+\markdownSetup{codeSpans=false}
 <<<
 This test ensures that the Lua `codeSpans` option correctly propagates through
 the plain TeX interface.

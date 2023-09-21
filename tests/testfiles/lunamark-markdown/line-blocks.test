@@ -1,4 +1,4 @@
-\def\markdownOptionLineBlocks{true}
+\markdownSetup{lineBlocks=true}
 <<<
 This test ensures that the Lua `lineBlocks` option correctly propagates
 through the plain TeX interface.

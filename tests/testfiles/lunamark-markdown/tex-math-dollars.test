@@ -1,4 +1,4 @@
-\def\markdownOptionTexMathDollars{true}
+\markdownSetup{texMathDollars=true}
 \let\hat=\relax
 \let\left=\relax
 \let\xi=\relax
