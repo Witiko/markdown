@@ -3,9 +3,11 @@
   {2023-09-25}{1.0.0}%
   {A LaTeX theme for the Markdown package that writes used renderers to the log for testing}
 
+% Input support file `setup.tex`.
 \file_input:n
   { setup }
 
+% Read support file `keyval-setup.tex`.
 \ior_new:N
   \l_tmpa_ior
 \ior_open:Nn
@@ -20,9 +22,11 @@
       \l_tmpa_tl
       { #1 }
   }
+
+% Expand `\markdownSetupSnippet{snippet}{<content of keyval-setup.tex>}`.
 \cs_generate_variant:Nn
-  \@@_latex_setup_snippet:nn
+  \__markdown_latex_setup_snippet:nn
   { nV }
-\@@_latex_setup_snippet:nV
+\__markdown_latex_setup_snippet:nV
   { snippet }
   \l_tmpa_tl
