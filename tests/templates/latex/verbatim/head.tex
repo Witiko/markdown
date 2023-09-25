@@ -3,9 +3,13 @@
 
 % Load the package.
 \usepackage[plain]{markdown}
-\markdownSetup{import=witiko/markdown/test}
 
 % Load the support files.
 \input setup
+\markdownSetup{
+  import = {
+    witiko/markdown/test = snippet as testSnippet,
+  }
+}
 
 \begin{document}

@@ -3284,10 +3284,10 @@ A paragraph.
 > A quote.
 \end{markdown}
 
-\begin{markdown*}{blankBeforeBlockquote}
+\begin{markdown}[blankBeforeBlockquote]
 A paragraph.
 > Not a quote.
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -3530,12 +3530,12 @@ A fenced code.
 ```
 \end{markdown}
 
-\begin{markdown*}{blankBeforeCodeFence}
+\begin{markdown}[blankBeforeCodeFence]
 A paragraph.
 ```
 Not a fenced code.
 ```
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ````````
@@ -3653,13 +3653,13 @@ A fenced div.
 :::
 \end{markdown}
 
-\begin{markdown*}{blankBeforeDivFence}
+\begin{markdown}[blankBeforeDivFence]
 A paragraph.
 
 ::: {.identifier}
 Not a fenced div.
 :::
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ````````
@@ -3859,11 +3859,11 @@ A heading.
 ==========
 \end{markdown}
 
-\begin{markdown*}{blankBeforeHeading}
+\begin{markdown}[blankBeforeHeading]
 A paragraph.
 Not a heading.
 ==============
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -4090,10 +4090,10 @@ A paragraph.
 - a list
 \end{markdown}
 
-\begin{markdown*}{blankBeforeList}
+\begin{markdown}[blankBeforeList]
 A paragraph.
 - not a list
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ````````
@@ -4410,11 +4410,11 @@ following content:
 \usepackage{markdown}
 \begin{document}
 
-\begin{markdown*}{breakableBlockquotes = false}
+\begin{markdown}[breakableBlockquotes = false]
 > A single
 
 > block quote.
-\end{markdown*}
+\end{markdown}
 
 \begin{markdown}
 > A block quote.
@@ -4542,9 +4542,9 @@ following content:
 The TeXbook [@knuth:tex, p. 123 and 130] is good.
 \end{markdown}
 
-\begin{markdown*}{citationNbsps = false}
+\begin{markdown}[citationNbsps = false]
 The TeXbook [@knuth:tex, p. 123 and 130] is good.
-\end{markdown*}
+\end{markdown}
 
 \bibliographystyle{plain}
 \bibliography{document.bib}
@@ -4847,10 +4847,10 @@ following content:
 ``This is no longer a code span.''
 \end{markdown}
 
-\begin{markdown*}{codeSpans=false}
+\begin{markdown}[codeSpans=false]
 ``This is a quote.''
 ``This is another quote.''
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -6385,11 +6385,11 @@ following content:
 #. Parish
 \end{markdown}
 
-\begin{markdown*}{hashEnumerators}
+\begin{markdown}[hashEnumerators]
 #. Bird
 #. McHale
 #. Parish
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -6695,14 +6695,14 @@ following content:
 \usepackage{markdown}
 \begin{document}
 
-\begin{markdown*}{html = false}
+\begin{markdown}[html = false]
 <div>
 *There is no block tag support.*
 </div>
 *There is no <inline tag="tag"></inline> support.*
 _There is no <!-- comment --> support._
 _There is no <? HTML instruction ?> support._
-\end{markdown*}
+\end{markdown}
 
 \begin{markdown}
 <div>
@@ -6948,9 +6948,9 @@ following content:
 $\sqrt{-1}$ *equals* $i$.
 \end{markdown}
 
-\begin{markdown*}{hybrid}
+\begin{markdown}[hybrid]
 $\sqrt{-1}$ *equals* $i$.
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -8624,9 +8624,9 @@ following content:
 These are just three regular dots ...
 \end{markdown}
 
-\begin{markdown*}{smartEllipses}
+\begin{markdown}[smartEllipses]
 ... and this is a victorian ellipsis.
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -8733,14 +8733,14 @@ The following list respects the numbers specified in the markup:
 5. fifth item
 \end{markdown}
 
-\begin{markdown*}{startNumber=false}
+\begin{markdown}[startNumber=false]
 The following list does not respect the numbers specified in the
 markup:
 
 3. third item
 4. fourth item
 5. fifth item
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -10426,13 +10426,13 @@ The following list is loose:
 - third item
 \end{markdown}
 
-\begin{markdown*}{tightLists=false}
+\begin{markdown}[tightLists=false]
 The following list is now also loose:
 
 - first item
 - second item
 - third item
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -10559,9 +10559,9 @@ following content:
 This is _emphasized text_ and this is a math subscript: $m\_n$.
 \end{markdown}
 
-\begin{markdown*}{underscores=false}
+\begin{markdown}[underscores=false]
 This is *emphasized text* and this is a math subscript: $m_n$.
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -12384,7 +12384,7 @@ following content:
 \usepackage[tightLists]{markdown}
 \begin{document}
 
-\begin{markdown*}{
+\begin{markdown}[
   renderers = {
     interblockSeparator = {},
     ulBeginTight = { (},
@@ -12397,15 +12397,15 @@ following content:
     ulItemEnd = {},
     ulEndTight = {).},
   },  
-}
+]
 This is a tight list
 
 - the first item
 - the second item
 - the third item
-\end{markdown*}
+\end{markdown}
 
-\begin{markdown*}{
+\begin{markdown}[
   renderers = {
     interblockSeparator = {%
       :\par
@@ -12416,7 +12416,7 @@ This is a tight list
     ulItemEnd = {.},
     ulEnd = {\end{itemize}},
   },  
-}
+]
 This is a loose list
 
 - This is the first item
@@ -12424,7 +12424,7 @@ This is a loose list
 - This is the second item
 
 - This is the third item
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -12943,9 +12943,9 @@ following content:
 $\sqrt{-1}$ *equals* $i$
 \end{markdown}
 
-\begin{markdown*}{hybrid}
+\begin{markdown}[hybrid]
 $\sqrt{-1}$ *equals* $i$
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -13736,7 +13736,7 @@ following content:
 \usepackage[definitionLists, tightLists]{markdown}
 \begin{document}
 
-\begin{markdown*}{
+\begin{markdown}[
   renderers = {
     interblockSeparator = {%
       :%
@@ -13758,7 +13758,7 @@ following content:
     dlDefinitionBegin = \item,
     dlEndTight = {\end{description}},
   },
-}
+]
 This is a tight definition list
 
 Coffee
@@ -13770,9 +13770,9 @@ Milk
 :   white cold drink
 :   nutrient-rich
 :   produced on an industrial scale
-\end{markdown*}
+\end{markdown}
 
-\begin{markdown*}{
+\begin{markdown}[
   renderers = {
     interblockSeparator = {%
       \def\markdownRendererInterblockSeparator{\par}%
@@ -13791,7 +13791,7 @@ Milk
     dlDefinitionEnd = {},
     dlEnd = {.},
   },
-}
+]
 This is a loose definition list
 
 Coffee
@@ -13809,7 +13809,7 @@ Milk
 :   nutrient-rich
 
 :   produced on an industrial scale
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -16865,7 +16865,7 @@ following content:
 \usepackage[tightLists, startNumber]{markdown}
 \begin{document}
 
-\begin{markdown*}{
+\begin{markdown}[
   renderers = {
     interblockSeparator = {},
     olBeginTight = { (},
@@ -16883,15 +16883,15 @@ following content:
     olItemEnd = {},
     olEndTight = {).},
   },  
-}
+]
 This is a tight list
 
 1. item
 2. item
 3. item
-\end{markdown*}
+\end{markdown}
 
-\begin{markdown*}{
+\begin{markdown}[
   renderers = {
     interblockSeparator = {%
       :\par
@@ -16913,7 +16913,7 @@ This is a tight list
     olItemEnd = {.},
     olEnd = {\end{enumerate}},
   },  
-}
+]
 This is a loose list
 
 1. item
@@ -16921,7 +16921,7 @@ This is a loose list
 2. item
 
 3. item
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -19148,13 +19148,13 @@ following content:
 ~
 \end{markdown}
 
-\begin{markdown*}{
+\begin{markdown}[
   renderers = {
     tilde = {User-defined token renderers take precedence.},
   },
-}
+]
 ~
-\end{markdown*}
+\end{markdown}
 \end{document}
 ```````
 Next, invoke LuaTeX from the terminal:
@@ -19725,9 +19725,9 @@ following content:
 $\sqrt{-1}$ *equals* $i$
 \end{markdown}
 
-\begin{markdown*}{hybrid}
+\begin{markdown}[hybrid]
 $\sqrt{-1}$ *equals* $i$
-\end{markdown*}
+\end{markdown}
 
 \end{document}
 ```````
@@ -19823,11 +19823,14 @@ pdflatex --shell-escape document.tex
 % The interface exposes the \envmdef{markdown} and \envmdef{markdown*}
 % \LaTeX{} environments, and redefines the \mref{markdownInput} command.
 %
-% The \envmref{markdown} and \envmref{markdown*} \LaTeX{} environments are used to
-% typeset markdown document fragments. The starred version of the
-% \envmref{markdown} environment accepts \LaTeX{} interface options (see
-% Section <#sec:latex-options>) as its only argument. These options will
-% only influence this markdown document fragment.
+% The \envmref{markdown} and \envmref{markdown*} \LaTeX{} environments are used
+% to typeset markdown document fragments. Both \LaTeX{} environments accept
+% \LaTeX{} interface options (see ection <#sec:latex-options>) as the only
+% argument. This argument is optional for the \envmref{markdown} environment
+% and mandatory for the \envmref{markdown*} environment.
+%
+% The \envmref{markdown*} environment has been deprecated and will be removed
+% in the next major version of the Markdown package.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -19837,7 +19840,7 @@ pdflatex --shell-escape document.tex
 % \markdownBegin
 %
 % You may prepend your own code to the \mdef{markdown} macro and append your own
-% code to the \mdef{endmarkdown} macro to produce special effects before and after
+% code to the \mref{markdownEnd} macro to produce special effects before and after
 % the \envmref{markdown} \LaTeX{} environment (and likewise for the starred
 % version).
 %
@@ -19852,7 +19855,7 @@ pdflatex --shell-escape document.tex
 % \usepackage{markdown}              \usepackage{markdown}
 % \begin{document}                   \begin{document}
 % \% ...                              \% ...
-% \begin{markdown}                   \begin{markdown*}{smartEllipses}
+% \begin{markdown}[smartEllipses]    \begin{markdown*}{smartEllipses}
 % _Hello_ **world** ...              _Hello_ **world** ...
 % \end{markdown}                     \end{markdown*}
 % \% ...                              \% ...
@@ -20584,14 +20587,14 @@ The following ordered list will be preceded by arabic numerals:
 2. aithnayn
 
 \end{markdown}
-\begin{markdown*}{snippet=romanNumerals}
+\begin{markdown}[snippet=romanNumerals]
 
 The following ordered list will be preceded by roman numerals:
 
 3. tres
 4. quattuor
 
-\end{markdown*}
+\end{markdown}
 ```````
 
 If the `romanNumerals` snippet were defined in the `jdoe/lists` theme,
@@ -20600,14 +20603,14 @@ we could import the `jdoe/lists` theme and use the qualified name
 
 ``` tex
 \markdownSetup{import=jdoe/lists}
-\begin{markdown*}{snippet=jdoe/lists/romanNumerals}
+\begin{markdown}[snippet=jdoe/lists/romanNumerals]
 
 The following ordered list will be preceded by roman numerals:
 
 3. tres
 4. quattuor
 
-\end{markdown*}
+\end{markdown}
 ```````
 
 Alternatively, we can use the extended variant of the `import` \LaTeX{}
@@ -20620,14 +20623,14 @@ current namespace for easier access:
     jdoe/lists = romanNumerals,
   },
 }
-\begin{markdown*}{snippet=romanNumerals}
+\begin{markdown}[snippet=romanNumerals]
 
 The following ordered list will be preceded by roman numerals:
 
 3. tres
 4. quattuor
 
-\end{markdown*}
+\end{markdown}
 ```````
 
 Furthermore, we can also specify the name of the snippet in the current 
@@ -20641,14 +20644,14 @@ namespace, which can be different from the name of the snippet in the
     jdoe/lists = romanNumerals as roman,
   },
 }
-\begin{markdown*}{snippet=roman}
+\begin{markdown}[snippet=roman]
 
 The following ordered list will be preceded by roman numerals:
 
 3. tres
 4. quattuor
 
-\end{markdown*}
+\end{markdown}
 ```````
 
 Several themes and/or snippets can be loaded at once using the extended
@@ -32139,10 +32142,113 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\renewenvironment{markdown}{%
-  \markdownReadAndConvert@markdown{}}{%
-  \markdownEnd}%
+\ExplSyntaxOn
+\renewenvironment
+  { markdown }
+  {
+%    \end{macrocode}
+% \markdownBegin
+%
+% In our implementation of the \envmref{markdown} \LaTeX{} environment, we
+% want to distinguish between the following two cases:
+% ``` tex
+% \begin{markdown} [smartEllipses]   \begin{markdown}
+% \% This is an optional argument ^     [smartEllipses]
+% \% ...                              \% ^ This is link
+% \end{markdown}                     \end{markdown}
+% ```````
+%
+% Therefore, we cannot use the built-in \LaTeX{} support for environments
+% with optional arguments or packages such as \pkg{xparse}. Instead, we
+% must read the optional argument manually and prevent reading past the
+% end of a line.
+%
+% To prevent reading past the end of a line when looking for the optional
+% argument of the \envmref{markdown} \LaTeX{} environment and accidentally
+% tokenizing markdown text, we change the category code of carriage return
+% (`\r`, ASCII character 13 in decimal) from 5 (end of line).
+%
+% While any category code other than 5 (end of line) would work, we switch to
+% the category 13 (active), which is also used by the
+% \mref{markdownReadAndConvert} macro. This is necessary if we read until the
+% end of a line, because then the carriage return character will be
+% produced by \TeX{} via the `\endlinechar` plain \TeX{} macro and it needs
+% to have the correct category code, so that \mref{markdownReadAndConvert}
+% processes it correctly.
+%
+% \markdownEnd
+%  \begin{macrocode}
+    \group_begin:
+    \char_set_catcode_active:n { 13 }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% To prevent doubling the hash signs (`#`, ASCII code 35 in decimal), we switch
+% its category from 6 (parameter) to 12 (letter).
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \char_set_catcode_letter:n { 35 }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% After we have matched the opening `[` that begins the optional argument,
+% we accept carriage returns as well.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \peek_regex_replace_once:nnF
+      { \ *\[([^]]*)\][^\r]* }
+      {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% After we have matched the optional argument, we switch back the category
+% code of carriage returns and hash signs and we retokenize the content. This
+% will cause single new lines to produce a space token and multiple new lines
+% to produce `\par` tokens. Furthermore, this will cause hash signs followed
+% by a number to be recognized as parameter numbers, which is necessary when
+% we use the optional argument to redefine token renderers and token renderer
+% prototypes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        \c { group_end: }
+        \c { markdownInfo } { \1 }
+        \c { tl_set_rescan:Nnn } \c { l_tmpa_tl } { } { \1 }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Then, we pass the retokenized content to the \mref{markdownSetup} macro.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        \c { @@_setup:V } \c { l_tmpa_tl }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Finally, regardless of whether or not we have matched the optional argument,
+% we let the \mref{markdownReadAndConvert} macro process the rest of the
+% \LaTeX{} environment.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        \c { markdownReadAndConvert@markdown } { }
+      }
+      {
+        \group_end:
+        \markdownReadAndConvert@markdown { }
+      }
+  }
+  { \markdownEnd }
+\cs_generate_variant:Nn
+  \@@_setup:n
+  { V }
+\ExplSyntaxOff
 \renewenvironment{markdown*}[1]{%
+  \markdownWarning{%
+    The markdown* LaTeX environment has been deprecated and will
+    be removed in the next major version of the Markdown package.}%
   \markdownSetup{#1}%
   \markdownReadAndConvert@markdown*}{%
   \markdownEnd}%

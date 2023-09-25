@@ -1,7 +1,4 @@
-\ProvidesExplPackage
-  {markdownthemewitiko_markdown_test}%
-  {2023-09-25}{1.0.0}%
-  {A LaTeX theme for the Markdown package that writes used renderers to the log for testing}
+\ExplSyntaxOn
 
 \cs_gset:Npn
   \next
@@ -20,12 +17,11 @@
           { ##1 }
       }
 
-    % Expand `\markdownSetupSnippet{snippet}{<content of keyval-setup.tex>}`.
+    % Expand `\markdownSetup{<content of keyval-setup.tex>}`.
     \cs_generate_variant:Nn
-      \__markdown_latex_setup_snippet:nn
-      { nV }
-    \__markdown_latex_setup_snippet:nV
-      { snippet }
+      \__markdown_setup:n
+      { V }
+    \__markdown_setup:V
       \l_tmpa_tl
   }
 
