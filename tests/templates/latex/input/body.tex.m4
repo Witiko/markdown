@@ -11,6 +11,6 @@
 \catcode"7E=12%  Tildes (U+007E)
 
 % Perform the test.
-\markdownInput[snippet=witiko/markdown/test/snippet]{TEST_INPUT_FILENAME}
+\markdownInput[snippet=testSnippet]{TEST_INPUT_FILENAME}
 
 \endgroup
