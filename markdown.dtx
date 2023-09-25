@@ -32142,9 +32142,109 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\renewenvironment{markdown}{%
-  \markdownReadAndConvert@markdown{}}{%
-  \markdownEnd}%
+\ExplSyntaxOn
+\renewenvironment
+  { markdown }
+  {
+%    \end{macrocode}
+% \markdownBegin
+%
+% In our implementation of the \envmref{markdown} \LaTeX{} environment, we
+% want to distinguish between the following two cases:
+% ``` tex
+% \begin{markdown} [smartEllipses]   \begin{markdown}
+% \% This is an optional argument ^      [smartEllipses]
+% \% ...                              \% ^ This is a link.
+% \end{markdown}                     \end{markdown}
+% ```````
+%
+% Therefore, we cannot use the built-in \LaTeX{} support for environments
+% with optional arguments or packages such as \pkg{xparse}. Instead, we
+% must read the optional argument manually and prevent reading past the
+% end of a line.
+%
+% To prevent reading past the end of a line when looking for the optional
+% argument of the \envmref{markdown} \LaTeX{} environment and accidentally
+% tokenizing markdown text, we change the category code of carriage return
+% (`\r`, ASCII character 13 in decimal) from 5 (end of line).
+%
+% While any category code other than 5 (end of line) would work, we switch to
+% the category 13 (active), which is also used by the
+% \mref{markdownReadAndConvert} macro. This is necessary if we read until the
+% end of a line, because then the carriage return character will be
+% produced by \TeX{} via the `\endlinechar` plain \TeX{} macro and it needs
+% to have the correct category code, so that \mref{markdownReadAndConvert}
+% processes it correctly.
+%
+% \markdownEnd
+%  \begin{macrocode}
+    \group_begin:
+    \char_set_catcode_active:n { 13 }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% To prevent doubling the hash signs (`#`, ASCII code 35 in decimal), we switch
+% its category from 6 (parameter) to 12 (letter).
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \char_set_catcode_letter:n { 35 }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% After we have matched the opening `[` that begins the optional argument,
+% we accept carriage returns as well.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \peek_regex_replace_once:nnF
+      { \ *\[([^]]*)\][^\r]* }
+      {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% After we have matched the optional argument, we switch back the category
+% code of carriage returns and hash signs and we retokenize the content. This
+% will cause single new lines to produce a space token and multiple new lines
+% to produce `\par` tokens. Furthermore, this will cause hash signs followed
+% by a number to be recognized as parameter numbers, which is necessary when
+% we use the optional argument to redefine token renderers and token renderer
+% prototypes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        \c { group_end: }
+        \c { markdownInfo } { \1 }
+        \c { tl_set_rescan:Nnn } \c { l_tmpa_tl } { } { \1 }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Then, we pass the retokenized content to the \mref{markdownSetup} macro.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        \c { @@_setup:V } \c { l_tmpa_tl }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Finally, regardless of whether or not we have matched the optional argument,
+% we let the \mref{markdownReadAndConvert} macro process the rest of the
+% \LaTeX{} environment.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        \c { markdownReadAndConvert@markdown } { }
+      }
+      {
+        \group_end:
+        \markdownReadAndConvert@markdown { }
+      }
+  }
+  { \markdownEnd }
+\cs_generate_variant:Nn
+  \@@_setup:n
+  { V }
+\ExplSyntaxOff
 \renewenvironment{markdown*}[1]{%
   \markdownWarning{%
     The markdown* LaTeX environment has been deprecated and will
