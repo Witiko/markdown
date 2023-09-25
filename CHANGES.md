@@ -8,6 +8,10 @@ Development:
   to define renderers, renderer prototypes, and the processing
   of YAML in all formats, not just in LaTeX. (#275, #349)
 
+Deprecation:
+
+- Deprecate the `markdown*` LaTeX environment. (#299, #351)
+
 Unit Tests:
 
 - Add support for YAML metadata in testfiles. (#345, #347)

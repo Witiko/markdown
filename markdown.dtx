@@ -19823,11 +19823,14 @@ pdflatex --shell-escape document.tex
 % The interface exposes the \envmdef{markdown} and \envmdef{markdown*}
 % \LaTeX{} environments, and redefines the \mref{markdownInput} command.
 %
-% The \envmref{markdown} and \envmref{markdown*} \LaTeX{} environments are used to
-% typeset markdown document fragments. The starred version of the
-% \envmref{markdown} environment accepts \LaTeX{} interface options (see
-% Section <#sec:latex-options>) as its only argument. These options will
-% only influence this markdown document fragment.
+% The \envmref{markdown} and \envmref{markdown*} \LaTeX{} environments are used
+% to typeset markdown document fragments. Both \LaTeX{} environments accept
+% \LaTeX{} interface options (see ection <#sec:latex-options>) as the only
+% argument. This argument is optional for the \envmref{markdown} environment
+% and mandatory for the \envmref{markdown*} environment.
+%
+% The \envmref{markdown*} environment has been deprecated and will be removed
+% in the next major version of the Markdown package.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -19837,7 +19840,7 @@ pdflatex --shell-escape document.tex
 % \markdownBegin
 %
 % You may prepend your own code to the \mdef{markdown} macro and append your own
-% code to the \mdef{endmarkdown} macro to produce special effects before and after
+% code to the \mdef{markdownEnd} macro to produce special effects before and after
 % the \envmref{markdown} \LaTeX{} environment (and likewise for the starred
 % version).
 %
@@ -19852,7 +19855,7 @@ pdflatex --shell-escape document.tex
 % \usepackage{markdown}              \usepackage{markdown}
 % \begin{document}                   \begin{document}
 % \% ...                              \% ...
-% \begin{markdown}                   \begin{markdown*}{smartEllipses}
+% \begin{markdown}[smartEllipses]    \begin{markdown*}{smartEllipses}
 % _Hello_ **world** ...              _Hello_ **world** ...
 % \end{markdown}                     \end{markdown*}
 % \% ...                              \% ...
@@ -32143,6 +32146,9 @@ end
   \markdownReadAndConvert@markdown{}}{%
   \markdownEnd}%
 \renewenvironment{markdown*}[1]{%
+  \markdownWarning{%
+    The markdown* LaTeX environment has been deprecated and will
+    be removed in the next major version of the Markdown package.}%
   \markdownSetup{#1}%
   \markdownReadAndConvert@markdown*}{%
   \markdownEnd}%
