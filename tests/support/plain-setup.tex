@@ -1,28 +1,31 @@
 \ExplSyntaxOn
 
-% Input support file `setup.tex`.
-\file_input:n
-  { setup }
-
-% Read support file `keyval-setup.tex`.
-\ior_open:Nn
-  \g_tmpa_ior
-  { keyval-setup }
-\tl_clear:N
-  \l_tmpa_tl
-\ior_map_inline:Nn
-  \g_tmpa_ior
+\cs_new:Npn
+  \next
   {
-    \tl_put_right:Nn
+    % Read support file `keyval-setup.tex`.
+    \ior_open:Nn
+      \g_tmpa_ior
+      { keyval-setup }
+    \tl_clear:N
       \l_tmpa_tl
-      { #1 }
+    \ior_map_inline:Nn
+      \g_tmpa_ior
+      {
+        \tl_put_right:Nn
+          \l_tmpa_tl
+          { #1 }
+      }
+
+    % Expand `\markdownSetup{<content of keyval-setup.tex>}`.
+    \cs_generate_variant:Nn
+      \__markdown_setup:n
+      { V }
+    \__markdown_setup:V
+      \l_tmpa_tl
   }
 
-% Expand `\markdownSetup{<content of keyval-setup.tex>}`.
-\cs_generate_variant:Nn
-  \__markdown_setup:n
-  { V }
-\__markdown_setup:V
-  \l_tmpa_tl
-
+% Ensure that the support file `keyval-setup.tex` is read
+% with ordinary category codes, not with expl3 category codes.
 \ExplSyntaxOff
+\next
