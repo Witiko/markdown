@@ -8,15 +8,13 @@
   { setup }
 
 % Read support file `keyval-setup.tex`.
-\ior_new:N
-  \l_tmpa_ior
 \ior_open:Nn
-  \l_tmpa_ior
+  \g_tmpa_ior
   { keyval-setup }
 \tl_clear:N
   \l_tmpa_tl
 \ior_map_inline:Nn
-  \l_tmpa_ior
+  \g_tmpa_ior
   {
     \tl_put_right:Nn
       \l_tmpa_tl
