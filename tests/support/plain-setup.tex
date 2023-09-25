@@ -1,2 +1,26 @@
-\input setup
-\expandafter\markdownSetup\expandafter{\input keyval-setup\relax}
+\ExplSyntaxOn
+
+\file_input:n
+  { setup }
+
+\ior_new:N
+  \l_tmpa_ior
+\ior_open:Nn
+  \l_tmpa_ior
+  { keyval-setup }
+\tl_clear:N
+  \l_tmpa_tl
+\ior_map_inline:Nn
+  \l_tmpa_ior
+  {
+    \tl_put_right:Nn
+      \l_tmpa_tl
+      { #1 }
+  }
+\cs_generate_variant:Nn
+  \@@_setup:n
+  { V }
+\@@_setup:V
+  \l_tmpa_tl
+
+\ExplSyntaxOff
