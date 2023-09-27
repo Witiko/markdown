@@ -1,0 +1,13 @@
+\markdownSetup{mark=true}
+<<<
+This test ensures that the Lua `mark` option correctly propagates
+through the plain TeX interface.
+
+Some ==highlighted text== and some \==regular text with equal signs==.
+>>>
+documentBegin
+codeSpan: mark
+softLineBreak
+paragraphSeparator
+mark: highlighted text
+documentEnd
