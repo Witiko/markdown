@@ -18,6 +18,11 @@ Unit Tests:
 
 - Add support for YAML metadata in testfiles. (#345, #347)
 
+Documentation:
+
+- Add a link to a preprint from CSTUG Bulletin to `README.md`.
+  (2c354f49)
+
 ## 3.0.1 (2023-09-10)
 
 Fixes:
