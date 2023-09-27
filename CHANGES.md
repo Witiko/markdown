@@ -1,6 +1,8 @@
 # Changes
 
-## 3.1.0
+## 3.2.0
+
+## 3.1.0 (2023-09-27)
 
 Development:
 
@@ -9,6 +11,8 @@ Development:
   of YAML in all formats, not just in LaTeX. (#275, #349)
 - Add an optional argument to the `markdown` LaTeX environment.
   (#299, #351)
+- Add support for Pandoc `mark` syntax extension.
+  (jgm/lunamark#67, #303, #352)
 
 Deprecation:
 

@@ -1328,7 +1328,7 @@ local uni_case = require("lua-uni-case")
 % \pkg{soulutf8}
 %
 %:    A package that is used in the default renderer prototype for
-%     strike-throughs.
+%     strike-throughs and marked text.
 %
 % \pkg{ltxcmds}
 %
@@ -7610,6 +7610,77 @@ following text:
 % \fi
 %  \begin{macrocode}
 defaultOptions.lineBlocks = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
+#### Option `mark`
+
+`mark` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{mark}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Enable the Pandoc [mark syntax extension][pandoc-mark]:
+
+        ``` md
+        This ==is highlighted text.==
+        ``````
+
+:    false
+
+     :  Disable the Pandoc mark syntax extension.
+
+ [pandoc-mark]: https://pandoc.org/MANUAL.html#extension-mark
+
+% \end{markdown}
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[mark]{markdown}
+\begin{document}
+\begin{markdown}
+
+This ==is highlighted text.==
+
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> This <mark>is highlighted text.</mark>
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { mark }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.mark = false
 %    \end{macrocode}
 % \par
 % \iffalse
@@ -15945,6 +16016,73 @@ following text:
   \g_@@_renderer_arities_prop
   { linkAttributeContextEnd }
   { 0 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
+#### Marked Text Renderer
+The following macro is only produced, when the \Opt{mark} option is enabled.
+
+The \mdef{markdownRendererMark} macro represents a span of marked or
+highlighted text. The macro receives a single argument that corresponds to
+the marked text.
+
+% \end{markdown}
+%
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[mark]{markdown}
+\usepackage{soul}
+\markdownSetup{
+  renderers = {
+    mark = {\hl{#1}},
+  },
+}
+\begin{document}
+\begin{markdown}
+
+This ==is highlighted text.==
+
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> This <mark>is highlighted text.</mark>
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererMark{%
+  \markdownRendererMarkPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { mark }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { mark }
+  { 1 }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par
@@ -28560,9 +28698,10 @@ M.extensions.bracketed_spans = function()
                               + V("InlineHtml")
                               + ( parsers.backslash * parsers.backslash)
                               + ( parsers.backslash * (parsers.lbracket + parsers.rbracket)
-                                + V("Space") + V("Endline") 
+                                + V("Space") + V("Endline")
                                 + (parsers.any
-                                  - (parsers.newline + parsers.lbracket + parsers.rbracket + parsers.blankline^2))))^1)
+                                  - (parsers.newline + parsers.lbracket + parsers.rbracket
+                                    + parsers.blankline^2))))^1)
                           / self.parser_functions.parse_inlines)
                           * parsers.rbracket
 
@@ -29837,6 +29976,47 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Marked text
+%
+% The \luamdef{extensions.mark} function implements the Pandoc mark syntax
+% extension.
+%
+% \end{markdown}
+%  \begin{macrocode}
+M.extensions.mark = function()
+  return {
+    name = "built-in mark syntax extension",
+    extend_writer = function(self)
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define \luamdef{writer->mark} as a function that will transform an input
+% marked text `s` to the output format.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      function self.mark(s)
+        return {"\\markdownRendererMark{", s, "}"}
+      end
+    end, extend_reader = function(self)
+      local parsers = self.parsers
+      local writer = self.writer
+
+      local doubleequals = P("==")
+
+      local Mark = parsers.between(V("Inline"), doubleequals, doubleequals)
+                 / function (inlines) return writer.mark(inlines) end
+
+      self.add_special_character("=")
+      self.insert_pattern("Inline before LinkAndEmph",
+                          Mark, "Mark")
+    end
+  }
+end
+%    \end{macrocode}
+% \begin{markdown}
+%
 %#### Link Attributes
 %
 % The \luamdef{extensions.link_attributes} function implements the Pandoc
@@ -30882,6 +31062,11 @@ function M.new(options)
   if options.lineBlocks then
     local line_block_extension = M.extensions.line_blocks()
     table.insert(extensions, line_block_extension)
+  end
+
+  if options.mark then
+    local mark_extension = M.extensions.mark()
+    table.insert(extensions, mark_extension)
   end
 
   if options.pipeTables then
@@ -33635,18 +33820,18 @@ end
 % \par
 % \begin{markdown}
 %
-%#### Strike-Through
-% If the \Opt{strikeThrough} option is enabled, we will load the
-% \pkg{soulutf8} package and use it to implement strike-throughs.
+%#### Marked Text
+% If the \Opt{mark} option is enabled, we will load the \pkg{soulutf8} package
+% and use it to implement marked text.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\markdownIfOption{strikeThrough}{%
+\markdownIfOption{mark}{%
   \RequirePackage{soulutf8}%
   \markdownSetup{
     rendererPrototypes = {
-      strikeThrough = {%
-        \st{#1}%
+      mark = {%
+        \hl{#1}%
       },
     }
   }

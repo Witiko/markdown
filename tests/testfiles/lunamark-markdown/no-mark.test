@@ -1,0 +1,9 @@
+<<<
+This test ensures that the Lua `mark` option is disabled by default.
+
+Some ==highlighted text== and some \==regular text with equal signs==.
+>>>
+documentBegin
+codeSpan: mark
+paragraphSeparator
+documentEnd
