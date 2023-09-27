@@ -28523,16 +28523,19 @@ M.extensions = {}
 %    \end{macrocode}
 % \begin{markdown}
 %
-%#### Bracketed Spans
+%#### Bracketed Spans and Highlighted Text
 %
-% The \luamdef{extensions.bracketed_spans} function implements the Pandoc
-% bracketed span syntax extension.
+% The \luamdef{extensions.spans} function implements the Pandoc
+% bracketed span and mark syntax extensions. When the `bracketed_spans`
+% parameter is enabled, the Pandoc bracketed span syntax extension will
+% be enabled. When the `mark` parameter is enabled, the Pandoc mark syntax
+% extension will be enabled.
 %
 % \end{markdown}
 %  \begin{macrocode}
-M.extensions.bracketed_spans = function()
+M.extensions.spans = function(bracketed_spans, mark)
   return {
-    name = "built-in bracketed_spans syntax extension",
+    name = "built-in spans syntax extension",
     extend_writer = function(self)
 %    \end{macrocode}
 % \par
@@ -28553,25 +28556,41 @@ M.extensions.bracketed_spans = function()
       local parsers = self.parsers
       local writer = self.writer
 
-      local span_label  = parsers.lbracket
-                          * (Cs((parsers.alphanumeric^1
-                              + parsers.inticks
-                              + parsers.autolink
-                              + V("InlineHtml")
-                              + ( parsers.backslash * parsers.backslash)
-                              + ( parsers.backslash * (parsers.lbracket + parsers.rbracket)
-                                + V("Space") + V("Endline") 
-                                + (parsers.any
-                                  - (parsers.newline + parsers.lbracket + parsers.rbracket + parsers.blankline^2))))^1)
-                          / self.parser_functions.parse_inlines)
-                          * parsers.rbracket
+      if bracketed_spans then
+        local span_label  = parsers.lbracket
+                            * (Cs((parsers.alphanumeric^1
+                                + parsers.inticks
+                                + parsers.autolink
+                                + V("InlineHtml")
+                                + ( parsers.backslash * parsers.backslash)
+                                + ( parsers.backslash * (parsers.lbracket + parsers.rbracket)
+                                  + V("Space") + V("Endline")
+                                  + (parsers.any
+                                    - (parsers.newline + parsers.lbracket + parsers.rbracket
+                                      + parsers.blankline^2))))^1)
+                            / self.parser_functions.parse_inlines)
+                            * parsers.rbracket
 
-      local Span = span_label
-                 * Ct(parsers.attributes)
-                 / writer.span
+        local Span = span_label
+                   * Ct(parsers.attributes)
+                   / writer.span
 
-      self.insert_pattern("Inline before LinkAndEmph",
-                          Span, "Span")
+        self.insert_pattern("Inline before LinkAndEmph",
+                            Span, "Span")
+      end
+
+      if mark then
+        local doubleequals = P("==")
+
+        local Mark = parsers.between(V("Inline"), doubleequals, doubleequals)
+                   / function (inlines)
+                       return writer.span(inlines, {".mark"})
+                     end
+
+        self.add_special_character("=")
+        self.insert_pattern("Inline before LinkAndEmph",
+                            Mark, "Mark")
+      end
     end
   }
 end
@@ -30825,9 +30844,10 @@ function M.new(options)
 %  \begin{macrocode}
   local extensions = {}
 
-  if options.bracketedSpans then
-    local bracketed_spans_extension = M.extensions.bracketed_spans()
-    table.insert(extensions, bracketed_spans_extension)
+  if options.bracketedSpans or options.mark then
+    local spans_extension = M.extensions.spans(
+      options.bracketedSpans, options.mark)
+    table.insert(extensions, spans_extension)
   end
 
   if options.contentBlocks then
