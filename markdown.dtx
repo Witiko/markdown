@@ -1328,7 +1328,7 @@ local uni_case = require("lua-uni-case")
 % \pkg{soulutf8}
 %
 %:    A package that is used in the default renderer prototype for
-%     strike-throughs.
+%     strike-throughs and marked spans.
 %
 % \pkg{ltxcmds}
 %
@@ -7651,7 +7651,9 @@ following content:
 \usepackage[mark]{markdown}
 \begin{document}
 \begin{markdown}
+
 This ==is highlighted text.==
+
 \end{markdown}
 \end{document}
 ```````
@@ -16014,6 +16016,73 @@ following text:
   \g_@@_renderer_arities_prop
   { linkAttributeContextEnd }
   { 0 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
+#### Marked Span Renderer
+The following macro is only produced, when the \Opt{mark} option is enabled.
+
+The \mdef{markdownRendererMarkedSpan} macro represents a span of marked or
+highlighted text. The macro receives a single argument that corresponds to
+the marked span.
+
+% \end{markdown}
+%
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[mark]{markdown}
+\usepackage{soul}
+\markdownSetup{
+  renderers = {
+    markedSpan = {\hl{#1}},
+  },
+}
+\begin{document}
+\begin{markdown}
+
+This ==is highlighted text.==
+
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> This <mark>is highlighted text.</mark>
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererMarkedSpan{%
+  \markdownRendererMarkedSpanPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { markedSpan }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { markedSpan }
+  { 1 }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par
@@ -33751,18 +33820,18 @@ end
 % \par
 % \begin{markdown}
 %
-%#### Strike-Through
-% If the \Opt{strikeThrough} option is enabled, we will load the
-% \pkg{soulutf8} package and use it to implement strike-throughs.
+%#### Marked Spans
+% If the \Opt{mark} option is enabled, we will load the \pkg{soulutf8} package
+% and use it to implement marked text.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\markdownIfOption{strikeThrough}{%
+\markdownIfOption{mark}{%
   \RequirePackage{soulutf8}%
   \markdownSetup{
     rendererPrototypes = {
-      strikeThrough = {%
-        \st{#1}%
+      markedSpan = {%
+        \hl{#1}%
       },
     }
   }
