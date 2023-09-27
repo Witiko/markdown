@@ -7616,6 +7616,75 @@ defaultOptions.lineBlocks = false
 %</lua,lua-cli>
 %<*manual-options>
 
+#### Option `mark`
+
+`mark` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{mark}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Enable the Pandoc [mark syntax extension][pandoc-mark]:
+
+        ``` md
+        This ==is highlighted text.==
+        ``````
+
+:    false
+
+     :  Disable the Pandoc mark syntax extension.
+
+ [pandoc-mark]: https://pandoc.org/MANUAL.html#extension-mark
+
+% \end{markdown}
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[mark]{markdown}
+\begin{document}
+\begin{markdown}
+This ==is highlighted text.==
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> This <mark>is highlighted text.</mark>
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { mark }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.mark = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
 #### Option `notes`
 
 `notes` (default value: `false`)
