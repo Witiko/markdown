@@ -1328,7 +1328,7 @@ local uni_case = require("lua-uni-case")
 % \pkg{soulutf8}
 %
 %:    A package that is used in the default renderer prototype for
-%     strike-throughs and marked spans.
+%     strike-throughs and marked text.
 %
 % \pkg{ltxcmds}
 %
@@ -16027,12 +16027,12 @@ following text:
 %
 % \begin{markdown}
 
-#### Marked Span Renderer
+#### Marked Text Renderer
 The following macro is only produced, when the \Opt{mark} option is enabled.
 
-The \mdef{markdownRendererMarkedSpan} macro represents a span of marked or
+The \mdef{markdownRendererMark} macro represents a span of marked or
 highlighted text. The macro receives a single argument that corresponds to
-the marked span.
+the marked text.
 
 % \end{markdown}
 %
@@ -16048,7 +16048,7 @@ following content:
 \usepackage{soul}
 \markdownSetup{
   renderers = {
-    markedSpan = {\hl{#1}},
+    mark = {\hl{#1}},
   },
 }
 \begin{document}
@@ -16073,15 +16073,15 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererMarkedSpan{%
-  \markdownRendererMarkedSpanPrototype}%
+\def\markdownRendererMark{%
+  \markdownRendererMarkPrototype}%
 \ExplSyntaxOn
 \seq_gput_right:Nn
   \g_@@_renderers_seq
-  { markedSpan }
+  { mark }
 \prop_gput:Nnn
   \g_@@_renderer_arities_prop
-  { markedSpan }
+  { mark }
   { 1 }
 \ExplSyntaxOff
 %    \end{macrocode}
@@ -29976,7 +29976,7 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-%#### Marked spans
+%#### Marked text
 %
 % The \luamdef{extensions.mark} function implements the Pandoc mark syntax
 % extension.
@@ -29992,12 +29992,12 @@ M.extensions.mark = function()
 % \begin{markdown}
 %
 % Define \luamdef{writer->mark} as a function that will transform an input
-% marked span `s` to the output format.
+% marked text `s` to the output format.
 %
 % \end{markdown}
 %  \begin{macrocode}
       function self.mark(s)
-        return {"\\markdownRendererMarkedSpan{", s, "}"}
+        return {"\\markdownRendererMark{", s, "}"}
       end
     end, extend_reader = function(self)
       local parsers = self.parsers
@@ -33820,7 +33820,7 @@ end
 % \par
 % \begin{markdown}
 %
-%#### Marked Spans
+%#### Marked Text
 % If the \Opt{mark} option is enabled, we will load the \pkg{soulutf8} package
 % and use it to implement marked text.
 %
@@ -33830,7 +33830,7 @@ end
   \RequirePackage{soulutf8}%
   \markdownSetup{
     rendererPrototypes = {
-      markedSpan = {%
+      mark = {%
         \hl{#1}%
       },
     }
