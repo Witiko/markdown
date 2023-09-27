@@ -12,7 +12,7 @@ Development:
 - Add an optional argument to the `markdown` LaTeX environment.
   (#299, #351)
 - Add support for Pandoc `mark` syntax extension.
-  (jgm/lunamark#67, #303, #352)
+  (jgm/lunamark#67, #303, #352, contributed by @Omikhleia)
 
 Deprecation:
 
