@@ -6,9 +6,8 @@
 
 Development:
 
-- Add `\markdownSetup` command to plain TeX and allow the command
-  to define renderers, renderer prototypes, and the processing
-  of YAML in all formats, not just in LaTeX. (#275, #349)
+- Add `\markdownSetup` command to all TeX formats.
+  (#275, #349)
 - Add an optional argument to the `markdown` LaTeX environment.
   (#299, #351)
 - Add support for Pandoc `mark` syntax extension.
