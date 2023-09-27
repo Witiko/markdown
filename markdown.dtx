@@ -28592,19 +28592,16 @@ M.extensions = {}
 %    \end{macrocode}
 % \begin{markdown}
 %
-%#### Bracketed Spans and Highlighted Text
+%#### Bracketed Spans
 %
-% The \luamdef{extensions.spans} function implements the Pandoc
-% bracketed span and mark syntax extensions. When the `bracketed_spans`
-% parameter is enabled, the Pandoc bracketed span syntax extension will
-% be enabled. When the `mark` parameter is enabled, the Pandoc mark syntax
-% extension will be enabled.
+% The \luamdef{extensions.bracketed_spans} function implements the Pandoc
+% bracketed span syntax extension.
 %
 % \end{markdown}
 %  \begin{macrocode}
-M.extensions.spans = function(bracketed_spans, mark)
+M.extensions.bracketed_spans = function()
   return {
-    name = "built-in spans syntax extension",
+    name = "built-in bracketed_spans syntax extension",
     extend_writer = function(self)
 %    \end{macrocode}
 % \par
@@ -28625,41 +28622,26 @@ M.extensions.spans = function(bracketed_spans, mark)
       local parsers = self.parsers
       local writer = self.writer
 
-      if bracketed_spans then
-        local span_label  = parsers.lbracket
-                            * (Cs((parsers.alphanumeric^1
-                                + parsers.inticks
-                                + parsers.autolink
-                                + V("InlineHtml")
-                                + ( parsers.backslash * parsers.backslash)
-                                + ( parsers.backslash * (parsers.lbracket + parsers.rbracket)
-                                  + V("Space") + V("Endline")
-                                  + (parsers.any
-                                    - (parsers.newline + parsers.lbracket + parsers.rbracket
-                                      + parsers.blankline^2))))^1)
-                            / self.parser_functions.parse_inlines)
-                            * parsers.rbracket
+      local span_label  = parsers.lbracket
+                          * (Cs((parsers.alphanumeric^1
+                              + parsers.inticks
+                              + parsers.autolink
+                              + V("InlineHtml")
+                              + ( parsers.backslash * parsers.backslash)
+                              + ( parsers.backslash * (parsers.lbracket + parsers.rbracket)
+                                + V("Space") + V("Endline")
+                                + (parsers.any
+                                  - (parsers.newline + parsers.lbracket + parsers.rbracket
+                                    + parsers.blankline^2))))^1)
+                          / self.parser_functions.parse_inlines)
+                          * parsers.rbracket
 
-        local Span = span_label
-                   * Ct(parsers.attributes)
-                   / writer.span
+      local Span = span_label
+                 * Ct(parsers.attributes)
+                 / writer.span
 
-        self.insert_pattern("Inline before LinkAndEmph",
-                            Span, "Span")
-      end
-
-      if mark then
-        local doubleequals = P("==")
-
-        local Mark = parsers.between(V("Inline"), doubleequals, doubleequals)
-                   / function (inlines)
-                       return writer.span(inlines, {".mark"})
-                     end
-
-        self.add_special_character("=")
-        self.insert_pattern("Inline before LinkAndEmph",
-                            Mark, "Mark")
-      end
+      self.insert_pattern("Inline before LinkAndEmph",
+                          Span, "Span")
     end
   }
 end
@@ -29925,6 +29907,47 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Marked spans
+%
+% The \luamdef{extensions.mark} function implements the Pandoc mark syntax
+% extension.
+%
+% \end{markdown}
+%  \begin{macrocode}
+M.extensions.mark = function()
+  return {
+    name = "built-in mark syntax extension",
+    extend_writer = function(self)
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define \luamdef{writer->mark} as a function that will transform an input
+% marked span `s` to the output format.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      function self.mark(s)
+        return {"\\markdownRendererMarkedSpan{", s, "}"}
+      end
+    end, extend_reader = function(self)
+      local parsers = self.parsers
+      local writer = self.writer
+
+      local doubleequals = P("==")
+
+      local Mark = parsers.between(V("Inline"), doubleequals, doubleequals)
+                 / function (inlines) return writer.mark(inlines) end
+
+      self.add_special_character("=")
+      self.insert_pattern("Inline before LinkAndEmph",
+                          Mark, "Mark")
+    end
+  }
+end
+%    \end{macrocode}
+% \begin{markdown}
+%
 %#### Link Attributes
 %
 % The \luamdef{extensions.link_attributes} function implements the Pandoc
@@ -30913,10 +30936,9 @@ function M.new(options)
 %  \begin{macrocode}
   local extensions = {}
 
-  if options.bracketedSpans or options.mark then
-    local spans_extension = M.extensions.spans(
-      options.bracketedSpans, options.mark)
-    table.insert(extensions, spans_extension)
+  if options.bracketedSpans then
+    local bracketed_spans_extension = M.extensions.bracketedSpans()
+    table.insert(extensions, bracketed_spans_extension)
   end
 
   if options.contentBlocks then
@@ -30971,6 +30993,11 @@ function M.new(options)
   if options.lineBlocks then
     local line_block_extension = M.extensions.line_blocks()
     table.insert(extensions, line_block_extension)
+  end
+
+  if options.mark then
+    local mark_extension = M.extensions.mark()
+    table.insert(extensions, mark_extension)
   end
 
   if options.pipeTables then
