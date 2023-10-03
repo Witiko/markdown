@@ -56,12 +56,12 @@ Next, run the [LaTeXMK][] tool from
 [our official Docker image][docker-witiko/markdown] on `document.tex`:
 
     docker run --rm -v "$PWD"/workdir:/workdir -w /workdir witiko/markdown \
-      latexmk -lualatex -silent document.tex
+      latexmk -pdf -shell-escape -silent document.tex
 
 Alternatively, you can install [TeX Live][tex-live] (can take up to several
 hours) and use its [LaTeXMK][] tool:
 
-    latexmk -cd -lualatex -silent workdir/document.tex
+    latexmk -cd -pdf -shell-escape -silent workdir/document.tex
 
 A PDF document named `workdir/document.pdf` should be produced and contain the
 following output:
