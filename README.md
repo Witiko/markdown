@@ -222,7 +222,7 @@ For further information, consult one of the following:
  [tb133]: https://www.tug.org/TUGboat/tb43-1/tb133novotny-markdown.pdf       "Markdown 2.15.0: What's New?"
  [tb135]: https://www.tug.org/TUGboat/tb43-3/tb135novotny-markdown.pdf       "Markdown 2.17.1: What's New, What's Next?"
  [tb136]: https://www.tug.org/TUGboat/tb44-1/tb136novotny-markdown-attr.pdf  "Attributes in Markdown"
- [tb138]: https://www.overleaf.com/read/gqffwsjnysbm                         "Markdown 3 at TUG 2023: Reflections from the Q&A session"
+ [tb138]: https://www.overleaf.com/read/mjghwhrbgmfj                         "Markdown 3 at TUG 2023: Reflections from the Q&A session"
 
  [tb131-slides]:     https://tug.org/tug2021/assets/pdf/tug2021-novotny-slides.pdf                            "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"
  [tb131-video]:      https://youtu.be/i2GJMnLCZls                                                             "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"
