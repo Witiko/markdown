@@ -5,7 +5,7 @@
 Documentation:
 
 - Add a link to a preprint from TUGboat 44:3 to `README.md`.
-  (cf6b3d7b)
+  (cf6b3d7b, dc57af7)
 
 ## 3.1.0 (2023-09-27)
 
