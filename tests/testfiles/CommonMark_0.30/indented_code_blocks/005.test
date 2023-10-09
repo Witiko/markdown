@@ -1,4 +1,4 @@
-if: not (format == 'context-mkiv' and template == 'verbatim')
+if: template == 'input'
 ---
 
 %   ---RESULT--- "example": 111,

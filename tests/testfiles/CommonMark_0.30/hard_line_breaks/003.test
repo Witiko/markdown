@@ -1,0 +1,17 @@
+if: format == 'context-mkiv' or template == 'input'
+---
+
+%   ---RESULT--- "example": 635,
+%   
+%   <p>foo<br />
+%   baz</p>
+%   
+%   ---\RESULT---
+
+<<<
+foo       
+baz
+>>>
+documentBegin
+hardLineBreak
+documentEnd

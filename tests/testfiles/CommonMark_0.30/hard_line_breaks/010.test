@@ -1,0 +1,17 @@
+if: template == 'input'
+---
+
+%   ---RESULT--- "example": 642,
+%   
+%   <p><a href="foo  
+%   bar"></p>
+%   
+%   ---\RESULT---
+
+<<<
+<a href="foo  
+bar">
+>>>
+documentBegin
+inlineHtmlTag: <a href="foo   bar">
+documentEnd

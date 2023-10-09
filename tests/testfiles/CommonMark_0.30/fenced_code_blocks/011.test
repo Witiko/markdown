@@ -1,7 +1,10 @@
+if: template == 'input'
+---
+
 %   ---RESULT--- "example": 129,
 %   
 %   <pre><code>
-%   
+%     
 %   </code></pre>
 %   
 %   ---\RESULT---
@@ -9,12 +12,12 @@
 <<<
 ```
 
-
+  
 ```
 >>>
 documentBegin
 BEGIN fencedCode
-- src: ./_markdown_test/68b329da9893e34099c7d8ad5cb9c940.verbatim
+- src: ./_markdown_test/f67be96ce768fb5b40aecf0438f97886.verbatim
 - infostring: 
 END fencedCode
 documentEnd
