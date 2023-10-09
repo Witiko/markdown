@@ -1,13 +1,16 @@
+if: template == 'input'
+---
+
 %   ---RESULT--- "example": 118,
 %   
-%   <pre><code>foo
+%   <pre><code>foo  
 %   </code></pre>
 %   
 %   ---\RESULT---
 
 <<<
-    foo
+    foo  
 >>>
 documentBegin
-inputVerbatim: ./_markdown_test/acbd18db4cc2f85cedef654fccc4a4d8.verbatim
+inputVerbatim: ./_markdown_test/e8d2133b16be538460e59776bb34676a.verbatim
 documentEnd

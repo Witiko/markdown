@@ -1,10 +1,10 @@
-if: not (format == 'context-mkiv' and template == 'verbatim')
+if: template == 'input'
 ---
 
 %   ---RESULT--- "example": 112,
 %   
 %   <pre><code>chunk1
-%   
+%     
 %     chunk2
 %   </code></pre>
 %   
@@ -12,9 +12,9 @@ if: not (format == 'context-mkiv' and template == 'verbatim')
 
 <<<
     chunk1
-    
+      
       chunk2
 >>>
 documentBegin
-inputVerbatim: ./_markdown_test/baeeb37d6c9237faa1bcd55e3102e279.verbatim
+inputVerbatim: ./_markdown_test/d6bc1998e8030f4c5bc9338f5ed4bbf4.verbatim
 documentEnd
