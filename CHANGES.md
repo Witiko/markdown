@@ -6,6 +6,8 @@ Fixes:
 
 - Make the `import` LaTeX option correctly handle recursive imports.
   (68c7a2f5, danopolan/istqb_latex#87)
+- Support attributes on multi-line setext headings.
+  (contributed by @lostenderman, #315, #355, #356)
 
 Documentation:
 
