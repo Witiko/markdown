@@ -2,6 +2,12 @@
 
 ## 3.2.0
 
+Development:
+
+- Add support for Pandoc `auto_identifiers` and `gfm_auto_identifiers`
+  syntax extensions.
+  (contributed by @lostenderman, #237, #238, #315, #354)
+
 Fixes:
 
 - Make the `import` LaTeX option correctly handle recursive imports.
