@@ -5,7 +5,7 @@
 Fixes:
 
 - Make the `import` LaTeX option correctly handle recursive imports.
-  (68c7a2f5)
+  (68c7a2f5, danopolan/istqb_latex#87)
 
 Documentation:
 
