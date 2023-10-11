@@ -29860,11 +29860,11 @@ M.extensions.header_attributes = function()
                             - (parsers.attributes
                               * parsers.optionalspace
                               * parsers.newline))^1 
-                            * parsers.newline^-1
                           - parsers.thematic_break_lines
 
       local heading_text  = heading_line
                           * ((V("Endline") / "\n") * (heading_line - parsers.heading_level))^0
+                          * parsers.newline^-1
 
       local SetextHeading  = parsers.freeze_trail * parsers.check_trail_no_rem
                            * #(heading_text 

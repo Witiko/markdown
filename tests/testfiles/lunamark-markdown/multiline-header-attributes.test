@@ -20,13 +20,13 @@ interblockSeparator
 BEGIN section
 BEGIN headerAttributeContext
 attributeIdentifier: identifier
-headingOne: A level one heading
+headingOne: A level one(softLineBreak)heading
 END headerAttributeContext
 interblockSeparator
 BEGIN section
 BEGIN headerAttributeContext
 attributeClassName: class-name
-headingTwo: A level two heading
+headingTwo: A level two(softLineBreak)heading
 END headerAttributeContext
 END section
 END section
