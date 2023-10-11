@@ -2,6 +2,11 @@
 
 ## 3.2.0
 
+Fixes:
+
+- Make the `import` LaTeX option correctly handle recursive imports.
+  (68c7a2f5)
+
 Documentation:
 
 - Add a link to a preprint from TUGboat 44:3 to `README.md`.
