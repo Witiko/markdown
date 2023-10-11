@@ -20854,15 +20854,6 @@ variant of the `import` \LaTeX{} option:
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Here, we load the \LaTeX{} theme.
-%
-% \end{markdown}
-%  \begin{macrocode}
-      \@@_set_latex_theme:V
-        \l_@@_latex_import_current_theme_tl
-%    \end{macrocode}
-% \begin{markdown}
-%
 % Here, we import the \LaTeX{} snippets.
 %
 % \end{markdown}
@@ -20903,6 +20894,15 @@ variant of the `import` \LaTeX{} option:
             \l_tmpb_tl
             { snippet = { \l_tmpa_tl } }
         }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Here, we load the \LaTeX{} theme.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      \@@_set_latex_theme:V
+        \l_@@_latex_import_current_theme_tl
     },
   }
 \cs_generate_variant:Nn
