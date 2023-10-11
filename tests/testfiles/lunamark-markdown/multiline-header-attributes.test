@@ -1,0 +1,33 @@
+\markdownSetup{headerAttributes=true}
+<<<
+This test ensures that the Lua `headerAttributes` option correctly propagates
+through the plain TeX interface and that multi-line setext headers are
+correctly processed.
+
+A level one
+heading {#identifier}
+=====================
+
+A level two
+heading {.class-name}
+---------------------
+>>>
+documentBegin
+codeSpan: headerAttributes
+softLineBreak
+softLineBreak
+interblockSeparator
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: identifier
+headingOne: A level one heading
+END headerAttributeContext
+interblockSeparator
+BEGIN section
+BEGIN headerAttributeContext
+attributeClassName: class-name
+headingTwo: A level two heading
+END headerAttributeContext
+END section
+END section
+documentEnd
