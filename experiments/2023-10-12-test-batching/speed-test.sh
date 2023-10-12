@@ -49,7 +49,7 @@ EOF
 cd -
 
 # Create a Python virtualenv before measuring the speed.
-docker run --rm -i -u $(id -u):$(id -g) -v "$PWD"/markdown:/workdir -w /workdir/tests "$DOCKER_IMAGE" ./test.sh || true
+docker run --rm -i -u "$(id -u)":"$(id -g)" -v "$PWD"/markdown:/workdir -w /workdir/tests "$DOCKER_IMAGE" ./test.sh || true
 
 # Measure the speed
 /usr/bin/env time -o "$OUTPUT_FILE" -a docker run --rm -i -v "$PWD"/markdown:/workdir:ro -w /workdir "$DOCKER_IMAGE" make test
