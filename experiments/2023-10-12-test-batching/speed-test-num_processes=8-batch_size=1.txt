@@ -1,0 +1,10 @@
+1.26user 0.51system 3:16:32elapsed 0%CPU (0avgtext+0avgdata 26308maxresident)k
+0inputs+0outputs (0major+6599minor)pagefaults 0swaps
+1.39user 0.30system 3:19:53elapsed 0%CPU (0avgtext+0avgdata 26780maxresident)k
+0inputs+0outputs (0major+5209minor)pagefaults 0swaps
+1.26user 0.39system 4:10:38elapsed 0%CPU (0avgtext+0avgdata 26500maxresident)k
+0inputs+0outputs (0major+5113minor)pagefaults 0swaps
+1.20user 0.51system 3:13:03elapsed 0%CPU (0avgtext+0avgdata 24980maxresident)k
+23440inputs+0outputs (313major+4991minor)pagefaults 0swaps
+1.20user 0.40system 3:02:11elapsed 0%CPU (0avgtext+0avgdata 26488maxresident)k
+0inputs+0outputs (0major+7490minor)pagefaults 0swaps
