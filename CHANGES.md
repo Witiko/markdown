@@ -13,6 +13,7 @@ Documentation:
 
 - Add a link to a preprint from TUGboat 44:3 to `README.md`.
   (cf6b3d7b, dc57af7)
+- Measure the speed impact of test file batching. (#357)
 
 Unit Tests:
 
