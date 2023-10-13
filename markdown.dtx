@@ -3135,6 +3135,55 @@ defaultOptions.frozenCacheFileName = "frozenCache.tex"
 % \par
 % \iffalse
 
+#### Option `autoIdentifiers`
+
+`autoIdentifiers` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+% \Optitem[false]{autoIdentifiers}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Enable the Pandoc [auto identifiers syntax extension][pandoc-auto-identifiers]:
+
+        ``` md
+        The following heading received the identifier `sesame-street`:
+
+        # 123 Sesame Street
+        ``````
+
+     false
+
+     :  Disable the Pandoc auto identifiers syntax extension.
+
+See also the option \Opt{gfmAutoIdentifiers}.
+
+  [pandoc-auto-identifiers]: https://pandoc.org/MANUAL.html#extension-auto_identifiers
+
+% \end{markdown}
+% \iffalse
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { autoIdentifiers }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.autoIdentifiers = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
 #### Option `blankBeforeBlockquote`
 
 `blankBeforeBlockquote` (default value: `false`)
@@ -6336,6 +6385,55 @@ requested using the `frozenCacheCounter` option.
 % \fi
 %  \begin{macrocode}
 defaultOptions.frozenCacheCounter = 0
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
+#### Option `gfmAutoIdentifiers`
+
+`gfmAutoIdentifiers` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+% \Optitem[false]{gfmAutoIdentifiers}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Enable the Pandoc [GitHub-flavored auto identifiers syntax extension][pandoc-gfm-auto-identifiers]:
+
+        ``` md
+        The following heading received the identifier `123-sesame-street`:
+
+        # 123 Sesame Street
+        ``````
+
+     false
+
+     :  Disable the Pandoc GitHub-flavored auto identifiers syntax extension.
+
+See also the option \Opt{autoIdentifiers}.
+
+  [pandoc-gfm-auto-identifiers]: https://pandoc.org/MANUAL.html#extension-gfm_auto_identifiers
+
+% \end{markdown}
+% \iffalse
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { gfmAutoIdentifiers }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.gfmAutoIdentifiers = false
 %    \end{macrocode}
 % \par
 % \iffalse
@@ -11820,7 +11918,9 @@ In this section, I will describe the individual token renderers.
 The following macros are only produced, when at least one of the following
 options for markdown attributes on different elements is enabled:
 
+- \Opt{autoIdentifiers}
 - \Opt{fencedCodeAttributes}
+- \Opt{gfmAutoIdentifiers}
 - \Opt{headerAttributes}
 - \Opt{inlineCodeAttributes}
 - \Opt{linkAttributes}
@@ -14532,8 +14632,8 @@ following text:
 % \begin{markdown}
 
 #### Header Attribute Context Renderers
-The following macros are only produced, when the \Opt{headerAttributes} option
-is enabled.
+The following macros are only produced, when the \Opt{autoIdentifiers},
+\Opt{gfmAutoIdentifiers}, or \Opt{headerAttributes} options are enabled.
 
 The \mdef{markdownRendererHeaderAttributeContextBegin} and
 \mdef{markdownRendererHeaderAttributeContextEnd} macros represent the beginning
