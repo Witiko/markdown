@@ -1,0 +1,263 @@
+\markdownSetup{
+  gfmAutoIdentifiers=true,
+  headerAttributes=true,
+  inlineNotes=true,
+}
+<<<
+This test ensures that the Lua `autoIdentifiers`, `headerAttributes`,
+and `inlineNotes` options correctly propagate through the plain TeX
+interface.
+
+Non-alphanumeric characters besides _- are ignored:
+
+# abc @#$ _-.
+
+Non-alphabetic characters at the start are not skipped (compared to auto identifiers):
+
+# 123 . abc
+
+Runs of spaces are replaced with hyphens:
+
+# a b  c   d
+
+Newlines are replaced with hyphens as well:
+
+a
+b
+c
+=
+
+Trailing whitespace is removed:
+
+# this ends with spaces   
+
+If no content remains, the default identifier "section" is assigned:
+
+# .
+
+If the same identifier is created, the new one is distinguished by an index.
+
+This is just "a":
+
+# a
+
+This is "a-1":
+
+# a
+
+This is "a-2":
+
+# a {#a-2}
+
+This is "a-3":
+
+# a
+
+This heading already has an id:
+
+# abc {#id}
+
+So does this one:
+
+a
+b
+c {#id}
+=
+
+An auto identifier must be unique even regarding explicit indentifiers, 
+although duplicate explicit identifiers count only once:
+
+# a {#one}
+
+# a {#one}
+
+This, therefore, only gets "one-1", not "one-2":
+
+# one
+
+Auto identifiers sort the same as explicit identifiers:
+
+# two {.two two=two}
+
+# two {#two .two two=two}
+
+Unicode is supported:
+
+# Ěščřžýáíé
+
+Inline markup is reduced to the text content in the auto identifiers
+such as "foo-bar-baz":
+
+# [Foo](no-effect) ![bar](no-effect) _baz_ ^[no-effect]
+>>>
+documentBegin
+codeSpan: autoIdentifiers
+codeSpan: headerAttributes
+softLineBreak
+codeSpan: inlineNotes
+softLineBreak
+paragraphSeparator
+underscore
+interblockSeparator
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: abc--_-
+headingOne: abc @(hash)(dollarSign) (underscore)-.
+END headerAttributeContext
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: 123--abc
+headingOne: 123 . abc
+END headerAttributeContext
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: a-b-c-d
+headingOne: a b  c   d
+END headerAttributeContext
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: a-b-c
+headingOne: a(softLineBreak)b(softLineBreak)c
+END headerAttributeContext
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: this-ends-with-spaces
+headingOne: this ends with spaces
+END headerAttributeContext
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: section
+headingOne: .
+END headerAttributeContext
+interblockSeparator
+paragraphSeparator
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: a
+headingOne: a
+END headerAttributeContext
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: a-1
+headingOne: a
+END headerAttributeContext
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: a-2
+headingOne: a
+END headerAttributeContext
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: a-3
+headingOne: a
+END headerAttributeContext
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: id
+headingOne: abc
+END headerAttributeContext
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: id
+headingOne: a(softLineBreak)b(softLineBreak)c
+END headerAttributeContext
+interblockSeparator
+softLineBreak
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: one
+headingOne: a
+END headerAttributeContext
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: one
+headingOne: a
+END headerAttributeContext
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: one-1
+headingOne: one
+END headerAttributeContext
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: two
+attributeClassName: two
+BEGIN attributeKeyValue
+- key: two
+- value: two
+END attributeKeyValue
+headingOne: two
+END headerAttributeContext
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: two
+attributeClassName: two
+BEGIN attributeKeyValue
+- key: two
+- value: two
+END attributeKeyValue
+headingOne: two
+END headerAttributeContext
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: ěščřžýáíé
+headingOne: Ěščřžýáíé
+END headerAttributeContext
+interblockSeparator
+softLineBreak
+interblockSeparator
+END section
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: foo-bar-baz
+headingOne: (BEGIN link)(- label: Foo)(- URI: no-effect)(- title: )(END link) (BEGIN image)(- label: bar)(- URI: no-effect)(- title: )(END image) (emphasis: baz) (note: no-effect)
+END headerAttributeContext
+END section
+documentEnd
