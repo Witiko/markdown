@@ -24004,6 +24004,18 @@ function M.writer.new(options)
 % \par
 % \begin{markdown}
 %
+% Define \luamdef{writer->flatten\_inlines}, which indicates whether or not the
+% writer should produce raw text rather than text in the output format for
+% inline elements. The \luamref{writer->flatten\_inlines} member variable is
+% mutable.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  self.flatten_inlines = false
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
 % Parse the \Opt{slice} option and define \luamdef{writer->slice\_begin},
 % \luamdef{writer->slice\_end}, and \luamdef{writer->is\_writing}. The
 % \luamref{writer->is\_writing} member variable is mutable.
@@ -24143,7 +24155,10 @@ function M.writer.new(options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  self.soft_line_break = "\\markdownRendererSoftLineBreak\n{}"
+  self.soft_line_break = function()
+    if self.flatten_inlines then return "\n" end
+    return "\\markdownRendererSoftLineBreak\n{}"
+  end
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -24153,7 +24168,10 @@ function M.writer.new(options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  self.hard_line_break = "\\markdownRendererHardLineBreak\n{}"
+  self.hard_line_break = function()
+    if self.flatten_inlines then return "\n" end
+    return "\\markdownRendererHardLineBreak\n{}"
+  end
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -24246,11 +24264,18 @@ function M.writer.new(options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  local escape_typographic_text = util.escaper(
+  local function create_escaper(char_escapes, string_escapes)
+    local escape = util.escaper(char_escapes, string_escapes)
+    return function(s)
+      if self.flatten_inlines then return s end
+      return escape(s)
+    end
+  end
+  local escape_typographic_text = create_escaper(
     self.escaped_chars, self.escaped_strings)
-  local escape_programmatic_text = util.escaper(
+  local escape_programmatic_text = create_escaper(
     self.escaped_uri_chars, self.escaped_minimal_strings)
-  local escape_minimal = util.escaper(
+  local escape_minimal = create_escaper(
     {}, self.escaped_minimal_strings)
 %    \end{macrocode}
 % \par
@@ -24294,6 +24319,7 @@ function M.writer.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.code(s, attributes)
+    if self.flatten_inlines then return s end
     local buf = {}
     if attributes ~= nil then
       table.insert(buf,
@@ -24320,6 +24346,7 @@ function M.writer.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.link(lab, src, tit, attributes)
+    if self.flatten_inlines then return lab end
     local buf = {}
     if attributes ~= nil then
       table.insert(buf,
@@ -24348,6 +24375,7 @@ function M.writer.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.image(lab, src, tit, attributes)
+    if self.flatten_inlines then return lab end
     local buf = {}
     if attributes ~= nil then
       table.insert(buf,
@@ -24467,6 +24495,7 @@ function M.writer.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.inline_html_comment(contents)
+    if self.flatten_inlines then return contents end
     return {"\\markdownRendererInlineHtmlComment{",contents,"}"}
   end
 %    \end{macrocode}
@@ -24481,6 +24510,7 @@ function M.writer.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.inline_html_tag(contents)
+    if self.flatten_inlines then return contents end
     return {"\\markdownRendererInlineHtmlTag{",self.string(contents),"}"}
   end
 %    \end{macrocode}
@@ -24508,6 +24538,7 @@ function M.writer.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.emphasis(s)
+    if self.flatten_inlines then return s end
     return {"\\markdownRendererEmphasis{",s,"}"}
   end
 %    \end{macrocode}
@@ -24538,6 +24569,7 @@ function M.writer.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.strong(s)
+    if self.flatten_inlines then return s end
     return {"\\markdownRendererStrongEmphasis{",s,"}"}
   end
 %    \end{macrocode}
@@ -24809,6 +24841,7 @@ function M.writer.new(options)
 %  \begin{macrocode}
   function self.heading(s, level, attributes)
     local buf = {}
+    local inlines = s[2]
 
     -- push empty attributes for implied sections
     while self.attribute_type_levels["heading"] < level - 1 do
@@ -24861,7 +24894,7 @@ function M.writer.new(options)
       cmd = ""
     end
     if self.is_writing then
-      table.insert(buf, {cmd, "{", s, "}"})
+      table.insert(buf, {cmd, "{", inlines, "}"})
     end
 
     if self.is_writing and options.headerAttributes
@@ -24884,6 +24917,7 @@ function M.writer.new(options)
   function self.get_state()
     return {
       is_writing=self.is_writing,
+      flatten_inlines=self.flatten_inlines,
       active_attributes={table.unpack(self.active_attributes)},
     }
   end
@@ -28208,6 +28242,16 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
+  function parsers.parse_heading_text(s)
+    local inlines = self.parser_functions.parse_inlines(s)
+    local flatten_inlines = self.writer.flatten_inlines
+    self.writer.flatten_inlines = true
+    local flat_text = self.parser_functions.parse_inlines(s)
+    flat_text = util.rope_to_string(flat_text)
+    self.writer.flatten_inlines = flatten_inlines
+    return {flat_text, inlines}
+  end
+
   -- parse atx header
   parsers.AtxHeading = parsers.check_trail_no_rem
                      * Cg(parsers.heading_start, "level")
@@ -28218,7 +28262,7 @@ end
                         + parsers.spacechar^1 
                         * C(parsers.line))
                        / strip_atx_end
-                       / self.parser_functions.parse_inlines)
+                       / parsers.parse_heading_text)
                      * Cb("level")
                      / writer.heading
 
@@ -28232,8 +28276,8 @@ end
   parsers.SetextHeading = parsers.freeze_trail * parsers.check_trail_no_rem
                         * #(parsers.heading_text 
                            * parsers.check_minimal_indent * parsers.check_trail * parsers.heading_level)
-                        * Ct(Cs(parsers.heading_text)
-                            / self.parser_functions.parse_inlines )
+                        * Cs(parsers.heading_text)
+                        / parsers.parse_heading_text
                         * parsers.check_minimal_indent_and_trail * parsers.heading_level
                         * parsers.newline
                         * parsers.unfreeze_trail
@@ -28838,6 +28882,7 @@ M.extensions.bracketed_spans = function()
 % \end{markdown}
 %  \begin{macrocode}
       function self.span(s, attr)
+        if self.flatten_inlines then return s end
         return {"\\markdownRendererBracketedSpanAttributeContextBegin",
                 self.attributes(attr),
                 s,
@@ -28907,11 +28952,24 @@ M.extensions.citations = function(citation_nbsps)
 % \end{markdown}
 %  \begin{macrocode}
       function self.citations(text_cites, cites)
-        local buffer = {"\\markdownRenderer", text_cites and "TextCite" or "Cite",
-          "{", #cites, "}"}
-        for _,cite in ipairs(cites) do
-          buffer[#buffer+1] = {cite.suppress_author and "-" or "+", "{",
-            cite.prenote or "", "}{", cite.postnote or "", "}{", cite.name, "}"}
+        local buffer = {}
+        if self.flatten_inlines then
+          for _,cite in ipairs(cites) do
+            if cite.prenote then
+              table.insert(buffer, {cite.prenote, " "})
+            end
+            table.insert(buffer, cite.name)
+            if cite.postnote then
+              table.insert(buffer, {" ", cite.postnote})
+            end
+          end
+        else
+          table.insert(buffer, {"\\markdownRenderer", text_cites and "TextCite" or "Cite",
+            "{", #cites, "}"})
+          for _,cite in ipairs(cites) do
+            table.insert(buffer, {cite.suppress_author and "-" or "+", "{",
+              cite.prenote or "", "}{", cite.postnote or "", "}{", cite.name, "}"})
+          end
         end
         return buffer
       end
@@ -29999,7 +30057,7 @@ M.extensions.header_attributes = function()
                              * (parsers.linechar
                                - parsers.lbrace)^0)^1)
                              / strip_atx_end
-                             / self.parser_functions.parse_inlines)
+                             / parsers.parse_heading_text)
                        * Cg(Ct(parsers.newline
                               + (parsers.attributes
                                 * parsers.optionalspace
@@ -30028,16 +30086,16 @@ M.extensions.header_attributes = function()
                                 * parsers.optionalspace
                                 * parsers.newline)^-1
                               * parsers.check_minimal_indent * parsers.check_trail * parsers.heading_level)
-                           * Ct(Cs(heading_text) / strip_trailing_spaces
-                                / self.parser_functions.parse_inlines )
+                           * Cs(heading_text) / strip_trailing_spaces
+                           / parsers.parse_heading_text
                            * Cg(Ct((parsers.attributes
                                  * parsers.optionalspace
                                  * parsers.newline)^-1), "attributes")
-                            * parsers.check_minimal_indent_and_trail * parsers.heading_level
-                            * Cb("attributes")
-                            * parsers.newline
-                            * parsers.unfreeze_trail
-                            / writer.heading
+                           * parsers.check_minimal_indent_and_trail * parsers.heading_level
+                           * Cb("attributes")
+                           * parsers.newline
+                           * parsers.unfreeze_trail
+                           / writer.heading
 
       local Heading = AtxHeading + SetextHeading
       self.update_rule("Heading", Heading)
@@ -30153,6 +30211,7 @@ M.extensions.mark = function()
 % \end{markdown}
 %  \begin{macrocode}
       function self.mark(s)
+        if self.flatten_inlines then return s end
         return {"\\markdownRendererMark{", s, "}"}
       end
     end, extend_reader = function(self)
@@ -30291,6 +30350,7 @@ M.extensions.notes = function(notes, inline_notes)
 % \end{markdown}
 %  \begin{macrocode}
       function self.note(s)
+        if self.flatten_inlines then return "" end
         return {"\\markdownRendererNote{",s,"}"}
       end
     end, extend_reader = function(self)
@@ -30607,6 +30667,7 @@ M.extensions.raw_inline = function()
 %  \begin{macrocode}
       function self.rawInline(s, attr)
         if not self.is_writing then return "" end
+        if self.flatten_inlines then return s end
         local name = util.cache_verbatim(options.cacheDir, s)
         return {"\\markdownRendererInputRawInline{",
                 name,"}{", self.string(attr),"}"}
@@ -30647,6 +30708,7 @@ M.extensions.strike_through = function()
 % \end{markdown}
 %  \begin{macrocode}
       function self.strike_through(s)
+        if self.flatten_inlines then return s end
         return {"\\markdownRendererStrikeThrough{",s,"}"}
       end
     end, extend_reader = function(self)
@@ -30689,6 +30751,7 @@ M.extensions.subscripts = function()
 % \end{markdown}
 %  \begin{macrocode}
       function self.subscript(s)
+        if self.flatten_inlines then return s end
         return {"\\markdownRendererSubscript{",s,"}"}
       end
     end, extend_reader = function(self)
@@ -30730,6 +30793,7 @@ M.extensions.superscripts = function()
 % \end{markdown}
 %  \begin{macrocode}
       function self.superscript(s)
+        if self.flatten_inlines then return s end
         return {"\\markdownRendererSuperscript{",s,"}"}
       end
     end, extend_reader = function(self)
@@ -30773,7 +30837,7 @@ M.extensions.tex_math = function(tex_math_dollars,
 % \end{markdown}
 %  \begin{macrocode}
       function self.display_math(s)
-        if not self.is_writing then return "" end
+        if self.flatten_inlines then return s end
         return {"\\markdownRendererDisplayMath{",self.math(s),"}"}
       end
 %    \end{macrocode}
@@ -30785,7 +30849,7 @@ M.extensions.tex_math = function(tex_math_dollars,
 % \end{markdown}
 %  \begin{macrocode}
       function self.inline_math(s)
-        if not self.is_writing then return "" end
+        if self.flatten_inlines then return s end
         return {"\\markdownRendererInlineMath{",self.math(s),"}"}
       end
     end, extend_reader = function(self)
