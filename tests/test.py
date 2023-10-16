@@ -272,12 +272,12 @@ class TestResult:
         num_updated = sum(1 if result.updated_testfile is True else 0 for result in results)
         num_not_updated = sum(1 if result.updated_testfile is False else 0 for result in results)
         result_lines.append('In summary:')
-        result_lines.append(f'- {num_successful} testfiles succeeded.')
-        result_lines.append(f'- {num_failed} testfiles failed.')
+        result_lines.append(f'- {num_successful} testfile{"" if num_successful == 1 else "s"} succeeded.')
+        result_lines.append(f'- {num_failed} testfile{"" if num_failed == 1 else "s"} failed.')
         if num_updated or num_not_updated:
-            result_lines.append(f'- {num_updated} testfiles were successfully updated.')
+            result_lines.append(f'- {num_updated} testfile{"" if num_updated == 1 else "s"} were successfully updated.')
             if num_not_updated:
-                result_lines.append(f'- {num_not_updated} testfiles not were successfully updated.')
+                result_lines.append(f'- {num_not_updated} testfile{"s" if num_not_updated > 1 else ""} not were successfully updated.')
         result_lines.append('')
         return '\n'.join(result_lines)
 
