@@ -29713,7 +29713,7 @@ M.extensions.fancy_lists = function()
       local function fancylist(items,tight,start)
         local startnum, numstyle, numdelim = sniffstyle(start[2][1], start[2][2])
         return writer.fancylist(items,tight,
-                                options.startNumber and startnum,
+                                options.startNumber and startnum or 1,
                                 numstyle or "Decimal",
                                 numdelim or "Default")
       end
