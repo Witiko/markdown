@@ -272,12 +272,12 @@ class TestResult:
         num_updated = sum(1 if result.updated_testfile is True else 0 for result in results)
         num_not_updated = sum(1 if result.updated_testfile is False else 0 for result in results)
         result_lines.append('In summary:')
-        result_lines.append(f'- {num_successful} testfiles succeeded.')
-        result_lines.append(f'- {num_failed} testfiles failed.')
+        result_lines.append(f'- {num_successful} testfile{"" if num_successful == 1 else "s"} succeeded.')
+        result_lines.append(f'- {num_failed} testfile{"" if num_failed == 1 else "s"} failed.')
         if num_updated or num_not_updated:
-            result_lines.append(f'- {num_updated} testfiles were successfully updated.')
+            result_lines.append(f'- {num_updated} testfile{"" if num_updated == 1 else "s"} were successfully updated.')
             if num_not_updated:
-                result_lines.append(f'- {num_not_updated} testfiles not were successfully updated.')
+                result_lines.append(f'- {num_not_updated} testfile{"s" if num_not_updated > 1 else ""} not were successfully updated.')
         result_lines.append('')
         return '\n'.join(result_lines)
 
@@ -371,12 +371,13 @@ class TestResult:
 
 class BatchResult:
     def __init__(self, testfile_batch: TestFileBatch, test_parameters: TestParameters, temporary_directory: Path,
-                 test_process: CompletedProcess) -> None:
+                 test_process: CompletedProcess, fail_fast: bool) -> None:
         self.testfile_batch = testfile_batch
         assert len(self) >= 1
         self.test_parameters = test_parameters
         self.temporary_directory = temporary_directory
         self.exit_code = test_process.returncode
+        self.fail_fast = fail_fast
 
         # If test succeeded, remove temporary directory.
         if self:
@@ -393,17 +394,23 @@ class BatchResult:
                 subresult_list.append(subresult)
         elif len(self) > 1:  # If some testfiles did not produce output and the batch is larger than one, bisect the batch.
             read_testfile_results, *remaining_parameters = self.test_parameters
-            first_testfile_subbatch = self.testfile_batch[:len(self) // 2]
-            second_testfile_subbatch = self.testfile_batch[len(self) // 2:]
+            pivot = len(self) // 2
+            first_testfile_subbatch = self.testfile_batch[:pivot]
+            second_testfile_subbatch = self.testfile_batch[pivot:]
             LOGGER.warning(f'Bisecting batch {format_testfiles(self.testfile_batch)} due to an error:')
             LOGGER.warning(f'- First subbatch: {format_testfiles(first_testfile_subbatch)}')
-            LOGGER.warning(f'- Second subbatch: {format_testfiles(second_testfile_subbatch)}')
-            first_read_testfile_results = read_testfile_results[:len(self) // 2]
-            second_read_testfile_results = read_testfile_results[len(self) // 2:]
+            first_read_testfile_results = read_testfile_results[:pivot]
+            second_read_testfile_results = read_testfile_results[pivot:]
             first_test_parameters = TestParameters(first_read_testfile_results, *remaining_parameters)
             second_test_parameters = TestParameters(second_read_testfile_results, *remaining_parameters)
-            first_subresults = self.__class__.run_test_batch_with_parameters(first_testfile_subbatch, first_test_parameters)
-            second_subresults = self.__class__.run_test_batch_with_parameters(second_testfile_subbatch, second_test_parameters)
+            first_subresults = self.__class__.run_test_batch_with_parameters(
+                first_testfile_subbatch, first_test_parameters, self.fail_fast)
+            if self.fail_fast and not all(first_subresults):
+                second_subresults = [TestSubResult(self, testfile_number) for testfile_number in range(pivot, len(self))]
+            else:
+                LOGGER.warning(f'- Second subbatch: {format_testfiles(second_testfile_subbatch)}')
+                second_subresults = self.__class__.run_test_batch_with_parameters(
+                    second_testfile_subbatch, second_test_parameters, self.fail_fast)
             subresult_list = list(chain(first_subresults, second_subresults))
         else:  # If some testfiles did not produce output and the batch contains a single testfile, return the result.
             testfile_number = 0
@@ -442,7 +449,8 @@ class BatchResult:
         return all(self)
 
     @classmethod
-    def run_test_batch_with_parameters(cls, testfile_batch: TestFileBatch, test_parameters: TestParameters) -> 'BatchResult':
+    def run_test_batch_with_parameters(cls, testfile_batch: TestFileBatch, test_parameters: TestParameters,
+                                       fail_fast: bool) -> 'BatchResult':
         assert len(testfile_batch) >= 1
         read_testfile_results, tex_format, template, command = test_parameters
 
@@ -508,7 +516,7 @@ class BatchResult:
             LOGGER.debug(f'Failed to extract test output from log file: {e}.')
 
         # Store test batch result.
-        batch_result = BatchResult(testfile_batch, test_parameters, temporary_directory, test_process)
+        batch_result = BatchResult(testfile_batch, test_parameters, temporary_directory, test_process, fail_fast)
         return batch_result
 
     @classmethod
@@ -519,7 +527,7 @@ class BatchResult:
         all_subresults: Dict[TestFile, List[TestSubResult]] = defaultdict(lambda: list())
         for test_parameters, filtered_testfile_batch in get_test_parameters(testfile_batch):
             assert len(filtered_testfile_batch) >= 1
-            batch_result = cls.run_test_batch_with_parameters(filtered_testfile_batch, test_parameters)
+            batch_result = cls.run_test_batch_with_parameters(filtered_testfile_batch, test_parameters, fail_fast)
             for subresult in batch_result.subresults:
                 all_subresults[subresult.testfile].append(subresult)
             if fail_fast and not batch_result:  # If we want to fail fast, stop after the first failed command.

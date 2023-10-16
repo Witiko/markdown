@@ -1139,7 +1139,7 @@ end)()
 %
 % \end{markdown}
 %  \begin{macrocode}
-local uni_case = require("lua-uni-case")
+local uni_algos = require("lua-uni-algos")
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -3134,6 +3134,55 @@ defaultOptions.frozenCacheFileName = "frozenCache.tex"
 % \end{markdown}
 % \par
 % \iffalse
+
+#### Option `autoIdentifiers`
+
+`autoIdentifiers` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+% \Optitem[false]{autoIdentifiers}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Enable the Pandoc [auto identifiers syntax extension][pandoc-auto-identifiers]:
+
+        ``` md
+        The following heading received the identifier `sesame-street`:
+
+        # 123 Sesame Street
+        ``````
+
+     false
+
+     :  Disable the Pandoc auto identifiers syntax extension.
+
+See also the option \Opt{gfmAutoIdentifiers}.
+
+  [pandoc-auto-identifiers]: https://pandoc.org/MANUAL.html#extension-auto_identifiers
+
+% \end{markdown}
+% \iffalse
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { autoIdentifiers }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.autoIdentifiers = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
 
 #### Option `blankBeforeBlockquote`
 
@@ -6336,6 +6385,55 @@ requested using the `frozenCacheCounter` option.
 % \fi
 %  \begin{macrocode}
 defaultOptions.frozenCacheCounter = 0
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
+#### Option `gfmAutoIdentifiers`
+
+`gfmAutoIdentifiers` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+% \Optitem[false]{gfmAutoIdentifiers}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Enable the Pandoc [GitHub-flavored auto identifiers syntax extension][pandoc-gfm-auto-identifiers]:
+
+        ``` md
+        The following heading received the identifier `123-sesame-street`:
+
+        # 123 Sesame Street
+        ``````
+
+     false
+
+     :  Disable the Pandoc GitHub-flavored auto identifiers syntax extension.
+
+See also the option \Opt{autoIdentifiers}.
+
+  [pandoc-gfm-auto-identifiers]: https://pandoc.org/MANUAL.html#extension-gfm_auto_identifiers
+
+% \end{markdown}
+% \iffalse
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { gfmAutoIdentifiers }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.gfmAutoIdentifiers = false
 %    \end{macrocode}
 % \par
 % \iffalse
@@ -11820,7 +11918,9 @@ In this section, I will describe the individual token renderers.
 The following macros are only produced, when at least one of the following
 options for markdown attributes on different elements is enabled:
 
+- \Opt{autoIdentifiers}
 - \Opt{fencedCodeAttributes}
+- \Opt{gfmAutoIdentifiers}
 - \Opt{headerAttributes}
 - \Opt{inlineCodeAttributes}
 - \Opt{linkAttributes}
@@ -14532,8 +14632,8 @@ following text:
 % \begin{markdown}
 
 #### Header Attribute Context Renderers
-The following macros are only produced, when the \Opt{headerAttributes} option
-is enabled.
+The following macros are only produced, when the \Opt{autoIdentifiers},
+\Opt{gfmAutoIdentifiers}, or \Opt{headerAttributes} options are enabled.
 
 The \mdef{markdownRendererHeaderAttributeContextBegin} and
 \mdef{markdownRendererHeaderAttributeContextEnd} macros represent the beginning
@@ -23848,6 +23948,18 @@ function M.writer.new(options)
 % \par
 % \begin{markdown}
 %
+% Define \luamdef{writer->flatten\_inlines}, which indicates whether or not the
+% writer should produce raw text rather than text in the output format for
+% inline elements. The \luamref{writer->flatten\_inlines} member variable is
+% mutable.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  self.flatten_inlines = false
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
 % Parse the \Opt{slice} option and define \luamdef{writer->slice\_begin},
 % \luamdef{writer->slice\_end}, and \luamdef{writer->is\_writing}. The
 % \luamref{writer->is\_writing} member variable is mutable.
@@ -23987,7 +24099,10 @@ function M.writer.new(options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  self.soft_line_break = "\\markdownRendererSoftLineBreak\n{}"
+  self.soft_line_break = function()
+    if self.flatten_inlines then return "\n" end
+    return "\\markdownRendererSoftLineBreak\n{}"
+  end
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -23997,7 +24112,10 @@ function M.writer.new(options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  self.hard_line_break = "\\markdownRendererHardLineBreak\n{}"
+  self.hard_line_break = function()
+    if self.flatten_inlines then return "\n" end
+    return "\\markdownRendererHardLineBreak\n{}"
+  end
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -24090,11 +24208,18 @@ function M.writer.new(options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  local escape_typographic_text = util.escaper(
+  local function create_escaper(char_escapes, string_escapes)
+    local escape = util.escaper(char_escapes, string_escapes)
+    return function(s)
+      if self.flatten_inlines then return s end
+      return escape(s)
+    end
+  end
+  local escape_typographic_text = create_escaper(
     self.escaped_chars, self.escaped_strings)
-  local escape_programmatic_text = util.escaper(
+  local escape_programmatic_text = create_escaper(
     self.escaped_uri_chars, self.escaped_minimal_strings)
-  local escape_minimal = util.escaper(
+  local escape_minimal = create_escaper(
     {}, self.escaped_minimal_strings)
 %    \end{macrocode}
 % \par
@@ -24138,6 +24263,7 @@ function M.writer.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.code(s, attributes)
+    if self.flatten_inlines then return s end
     local buf = {}
     if attributes ~= nil then
       table.insert(buf,
@@ -24164,6 +24290,7 @@ function M.writer.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.link(lab, src, tit, attributes)
+    if self.flatten_inlines then return lab end
     local buf = {}
     if attributes ~= nil then
       table.insert(buf,
@@ -24192,6 +24319,7 @@ function M.writer.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.image(lab, src, tit, attributes)
+    if self.flatten_inlines then return lab end
     local buf = {}
     if attributes ~= nil then
       table.insert(buf,
@@ -24311,6 +24439,7 @@ function M.writer.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.inline_html_comment(contents)
+    if self.flatten_inlines then return contents end
     return {"\\markdownRendererInlineHtmlComment{",contents,"}"}
   end
 %    \end{macrocode}
@@ -24325,6 +24454,7 @@ function M.writer.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.inline_html_tag(contents)
+    if self.flatten_inlines then return contents end
     return {"\\markdownRendererInlineHtmlTag{",self.string(contents),"}"}
   end
 %    \end{macrocode}
@@ -24352,6 +24482,7 @@ function M.writer.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.emphasis(s)
+    if self.flatten_inlines then return s end
     return {"\\markdownRendererEmphasis{",s,"}"}
   end
 %    \end{macrocode}
@@ -24382,6 +24513,7 @@ function M.writer.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.strong(s)
+    if self.flatten_inlines then return s end
     return {"\\markdownRendererStrongEmphasis{",s,"}"}
   end
 %    \end{macrocode}
@@ -24441,17 +24573,24 @@ function M.writer.new(options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  function self.attributes(attributes)
-    local expanded_attributes = {}
-    local key_value_regex = "([^= ]+)%s*=%s*(.*)"
+  local seen_identifiers = {}
+  local key_value_regex = "([^= ]+)%s*=%s*(.*)"
+  local function normalize_attributes(attributes, auto_identifiers)
+    -- normalize attributes
+    local normalized_attributes = {}
+    local has_explicit_identifiers = false
     local key, value
-    for _, attribute in ipairs(attributes) do
-      if attribute:sub(1, 1) == "#" or attribute:sub(1, 1) == "." then
-        table.insert(expanded_attributes, attribute)
+    for _, attribute in ipairs(attributes or {}) do
+      if attribute:sub(1, 1) == "#" then
+        table.insert(normalized_attributes, attribute)
+        has_explicit_identifiers = true
+        seen_identifiers[attribute:sub(2)] = true
+      elseif attribute:sub(1, 1) == "." then
+        table.insert(normalized_attributes, attribute)
       else
         key, value = attribute:match(key_value_regex)
         if key:lower() == "id" then
-          table.insert(expanded_attributes, "#" .. value)
+          table.insert(normalized_attributes, "#" .. value)
         elseif key:lower() == "class" then
           local classes = {}
           for class in value:gmatch("%S+") do
@@ -24459,23 +24598,67 @@ function M.writer.new(options)
           end
           table.sort(classes)
           for _, class in ipairs(classes) do
-            table.insert(expanded_attributes, "." .. class)
+            table.insert(normalized_attributes, "." .. class)
           end
         else
-          table.insert(expanded_attributes, attribute)
+          table.insert(normalized_attributes, attribute)
         end
       end
     end
-    table.sort(expanded_attributes)
+
+    -- if no explicit identifiers exist, add auto identifiers
+    if not has_explicit_identifiers and auto_identifiers ~= nil then
+      local seen_auto_identifiers = {}
+      for _, auto_identifier in ipairs(auto_identifiers) do
+        if seen_auto_identifiers[auto_identifier] == nil then
+          seen_auto_identifiers[auto_identifier] = true
+          if seen_identifiers[auto_identifier] == nil then
+            seen_identifiers[auto_identifier] = true
+            table.insert(normalized_attributes,
+                         "#" .. auto_identifier)
+          else
+            local auto_identifier_number = 1
+            while true do
+              local numbered_auto_identifier = auto_identifier .. "-"
+                                             .. auto_identifier_number
+              if seen_identifiers[numbered_auto_identifier] == nil then
+                seen_identifiers[numbered_auto_identifier] = true
+                table.insert(normalized_attributes,
+                             "#" .. numbered_auto_identifier)
+                break
+              end
+              auto_identifier_number = auto_identifier_number + 1
+            end
+          end
+        end
+      end
+    end
+
+    -- sort and deduplicate normalized attributes
+    table.sort(normalized_attributes)
+    local seen_normalized_attributes = {}
+    local deduplicated_normalized_attributes = {}
+    for _, attribute in ipairs(normalized_attributes) do
+      if seen_normalized_attributes[attribute] == nil then
+        seen_normalized_attributes[attribute] = true
+        table.insert(deduplicated_normalized_attributes, attribute)
+      end
+    end
+
+    return deduplicated_normalized_attributes
+  end
+
+  function self.attributes(attributes, should_normalize_attributes)
+    local normalized_attributes
+    if should_normalize_attributes == false then
+      normalized_attributes = attributes
+    else
+      normalized_attributes = normalize_attributes(attributes)
+    end
 
     local buf = {}
-    local seen = {}
-    for _, attribute in ipairs(expanded_attributes) do
-      if seen[attribute] ~= nil then
-        goto continue  -- prevent duplicate attributes
-      else
-        seen[attribute] = true
-      end
+    local key, value
+    for _, attribute in ipairs(normalized_attributes) do
       if attribute:sub(1, 1) == "#" then
         table.insert(buf, {"\\markdownRendererAttributeIdentifier{",
                            attribute:sub(2), "}"})
@@ -24487,7 +24670,6 @@ function M.writer.new(options)
         table.insert(buf, {"\\markdownRendererAttributeKeyValue{",
                            key, "}{", value, "}"})
       end
-      ::continue::
     end
 
     return buf
@@ -24641,6 +24823,119 @@ function M.writer.new(options)
     end
     return buf
   end
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Create an auto identifier string by stripping and converting characters from string `s`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function create_auto_identifier(s)
+  local buffer = {}
+  local prev_space = false
+  local letter_found = false
+
+  for _, code in utf8.codes(uni_algos.normalize.NFC(s)) do
+    local char = utf8.char(code)
+
+    -- Remove everything up to the first letter.
+    if not letter_found then
+      local is_letter = unicode.utf8.match(char, "%a")
+      if is_letter then
+        letter_found = true
+      else
+        goto continue
+      end
+    end
+
+    -- Remove all non-alphanumeric characters, except underscores, hyphens, and periods.
+    if not unicode.utf8.match(char, "[%w_%-%.%s]") then
+      goto continue
+    end
+
+    -- Replace all spaces and newlines with hyphens.
+    if unicode.utf8.match(char, "[%s\n]") then
+      char = "-"
+      if prev_space then
+        goto continue
+      else
+        prev_space = true
+      end
+    else
+      -- Convert all alphabetic characters to lowercase.
+      char = unicode.utf8.lower(char)
+      prev_space = false
+    end
+
+    table.insert(buffer, char)
+
+    ::continue::
+  end
+
+  if prev_space then
+    table.remove(buffer)
+  end
+
+  local identifier = #buffer == 0 and "section" or table.concat(buffer, "")
+  return identifier
+end
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Create an GitHub-flavored auto identifier string by stripping and converting characters from string `s`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function create_gfm_auto_identifier(s)
+  local buffer = {}
+  local prev_space = false
+  local letter_found = false
+
+  for _, code in utf8.codes(uni_algos.normalize.NFC(s)) do
+    local char = utf8.char(code)
+
+    -- Remove everything up to the first non-space.
+    if not letter_found then
+      local is_letter = unicode.utf8.match(char, "%S")
+      if is_letter then
+        letter_found = true
+      else
+        goto continue
+      end
+    end
+
+    -- Remove all non-alphanumeric characters, except underscores and hyphens.
+    if not unicode.utf8.match(char, "[%w_%-%s]") then
+      prev_space = false
+      goto continue
+    end
+
+    -- Replace all spaces and newlines with hyphens.
+    if unicode.utf8.match(char, "[%s\n]") then
+      char = "-"
+      if prev_space then
+        goto continue
+      else
+        prev_space = true
+      end
+    else
+      -- Convert all alphabetic characters to lowercase.
+      char = unicode.utf8.lower(char)
+      prev_space = false
+    end
+
+    table.insert(buffer, char)
+
+    ::continue::
+  end
+
+  if prev_space then
+    table.remove(buffer)
+  end
+
+  local identifier = #buffer == 0 and "section" or table.concat(buffer, "")
+  return identifier
+end
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -24653,6 +24948,7 @@ function M.writer.new(options)
 %  \begin{macrocode}
   function self.heading(s, level, attributes)
     local buf = {}
+    local flat_text, inlines = table.unpack(s)
 
     -- push empty attributes for implied sections
     while self.attribute_type_levels["heading"] < level - 1 do
@@ -24668,6 +24964,16 @@ function M.writer.new(options)
       table.insert(buf, self.pop_attributes("heading"))
     end
 
+    -- construct attributes for the new section
+    local auto_identifiers = {}
+    if self.options.autoIdentifiers then
+      table.insert(auto_identifiers, create_auto_identifier(flat_text))
+    end
+    if self.options.gfmAutoIdentifiers then
+      table.insert(auto_identifiers, create_gfm_auto_identifier(flat_text))
+    end
+    local normalized_attributes = normalize_attributes(attributes, auto_identifiers)
+
     -- push attributes for the new section
     local start_output = {}
     local end_output = {}
@@ -24675,16 +24981,15 @@ function M.writer.new(options)
     table.insert(end_output, "\n\\markdownRendererSectionEnd ")
 
     table.insert(buf, self.push_attributes("heading",
-                                           attributes,
+                                           normalized_attributes,
                                            start_output,
                                            end_output))
     assert(self.attribute_type_levels["heading"] == level)
 
     -- render the heading and its attributes
-    if self.is_writing and options.headerAttributes
-       and attributes ~= nil and #attributes > 0 then
+    if self.is_writing and #normalized_attributes > 0 then
       table.insert(buf, "\\markdownRendererHeaderAttributeContextBegin\n")
-      table.insert(buf, self.attributes(attributes))
+      table.insert(buf, self.attributes(normalized_attributes, false))
     end
 
     local cmd
@@ -24705,11 +25010,10 @@ function M.writer.new(options)
       cmd = ""
     end
     if self.is_writing then
-      table.insert(buf, {cmd, "{", s, "}"})
+      table.insert(buf, {cmd, "{", inlines, "}"})
     end
 
-    if self.is_writing and options.headerAttributes
-       and attributes ~= nil and #attributes > 0 then
+    if self.is_writing and #normalized_attributes > 0 then
       table.insert(buf, "\n\\markdownRendererHeaderAttributeContextEnd ")
     end
 
@@ -24728,6 +25032,7 @@ function M.writer.new(options)
   function self.get_state()
     return {
       is_writing=self.is_writing,
+      flatten_inlines=self.flatten_inlines,
       active_attributes={table.unpack(self.active_attributes)},
     }
   end
@@ -26540,7 +26845,7 @@ function M.reader.new(writer, options)
     tag = util.rope_to_string(tag)
     tag = tag:gsub("[ \n\r\t]+", " ")
     tag = tag:gsub("^ ", ""):gsub(" $", "")
-    tag = uni_case.casefold(tag, true, false)
+    tag = uni_algos.case.casefold(tag, true, false)
     return tag
   end
 %    \end{macrocode}
@@ -28052,6 +28357,16 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
+  function parsers.parse_heading_text(s)
+    local inlines = self.parser_functions.parse_inlines(s)
+    local flatten_inlines = self.writer.flatten_inlines
+    self.writer.flatten_inlines = true
+    local flat_text = self.parser_functions.parse_inlines(s)
+    flat_text = util.rope_to_string(flat_text)
+    self.writer.flatten_inlines = flatten_inlines
+    return {flat_text, inlines}
+  end
+
   -- parse atx header
   parsers.AtxHeading = parsers.check_trail_no_rem
                      * Cg(parsers.heading_start, "level")
@@ -28062,7 +28377,7 @@ end
                         + parsers.spacechar^1 
                         * C(parsers.line))
                        / strip_atx_end
-                       / self.parser_functions.parse_inlines)
+                       / parsers.parse_heading_text)
                      * Cb("level")
                      / writer.heading
 
@@ -28076,8 +28391,8 @@ end
   parsers.SetextHeading = parsers.freeze_trail * parsers.check_trail_no_rem
                         * #(parsers.heading_text 
                            * parsers.check_minimal_indent * parsers.check_trail * parsers.heading_level)
-                        * Ct(Cs(parsers.heading_text)
-                            / self.parser_functions.parse_inlines )
+                        * Cs(parsers.heading_text)
+                        / parsers.parse_heading_text
                         * parsers.check_minimal_indent_and_trail * parsers.heading_level
                         * parsers.newline
                         * parsers.unfreeze_trail
@@ -28682,6 +28997,7 @@ M.extensions.bracketed_spans = function()
 % \end{markdown}
 %  \begin{macrocode}
       function self.span(s, attr)
+        if self.flatten_inlines then return s end
         return {"\\markdownRendererBracketedSpanAttributeContextBegin",
                 self.attributes(attr),
                 s,
@@ -28751,11 +29067,24 @@ M.extensions.citations = function(citation_nbsps)
 % \end{markdown}
 %  \begin{macrocode}
       function self.citations(text_cites, cites)
-        local buffer = {"\\markdownRenderer", text_cites and "TextCite" or "Cite",
-          "{", #cites, "}"}
-        for _,cite in ipairs(cites) do
-          buffer[#buffer+1] = {cite.suppress_author and "-" or "+", "{",
-            cite.prenote or "", "}{", cite.postnote or "", "}{", cite.name, "}"}
+        local buffer = {}
+        if self.flatten_inlines then
+          for _,cite in ipairs(cites) do
+            if cite.prenote then
+              table.insert(buffer, {cite.prenote, " "})
+            end
+            table.insert(buffer, cite.name)
+            if cite.postnote then
+              table.insert(buffer, {" ", cite.postnote})
+            end
+          end
+        else
+          table.insert(buffer, {"\\markdownRenderer", text_cites and "TextCite" or "Cite",
+            "{", #cites, "}"})
+          for _,cite in ipairs(cites) do
+            table.insert(buffer, {cite.suppress_author and "-" or "+", "{",
+              cite.prenote or "", "}{", cite.postnote or "", "}{", cite.name, "}"})
+          end
         end
         return buffer
       end
@@ -29843,7 +30172,7 @@ M.extensions.header_attributes = function()
                              * (parsers.linechar
                                - parsers.lbrace)^0)^1)
                              / strip_atx_end
-                             / self.parser_functions.parse_inlines)
+                             / parsers.parse_heading_text)
                        * Cg(Ct(parsers.newline
                               + (parsers.attributes
                                 * parsers.optionalspace
@@ -29872,16 +30201,16 @@ M.extensions.header_attributes = function()
                                 * parsers.optionalspace
                                 * parsers.newline)^-1
                               * parsers.check_minimal_indent * parsers.check_trail * parsers.heading_level)
-                           * Ct(Cs(heading_text) / strip_trailing_spaces
-                                / self.parser_functions.parse_inlines )
+                           * Cs(heading_text) / strip_trailing_spaces
+                           / parsers.parse_heading_text
                            * Cg(Ct((parsers.attributes
                                  * parsers.optionalspace
                                  * parsers.newline)^-1), "attributes")
-                            * parsers.check_minimal_indent_and_trail * parsers.heading_level
-                            * Cb("attributes")
-                            * parsers.newline
-                            * parsers.unfreeze_trail
-                            / writer.heading
+                           * parsers.check_minimal_indent_and_trail * parsers.heading_level
+                           * Cb("attributes")
+                           * parsers.newline
+                           * parsers.unfreeze_trail
+                           / writer.heading
 
       local Heading = AtxHeading + SetextHeading
       self.update_rule("Heading", Heading)
@@ -29997,6 +30326,7 @@ M.extensions.mark = function()
 % \end{markdown}
 %  \begin{macrocode}
       function self.mark(s)
+        if self.flatten_inlines then return s end
         return {"\\markdownRendererMark{", s, "}"}
       end
     end, extend_reader = function(self)
@@ -30135,6 +30465,7 @@ M.extensions.notes = function(notes, inline_notes)
 % \end{markdown}
 %  \begin{macrocode}
       function self.note(s)
+        if self.flatten_inlines then return "" end
         return {"\\markdownRendererNote{",s,"}"}
       end
     end, extend_reader = function(self)
@@ -30451,6 +30782,7 @@ M.extensions.raw_inline = function()
 %  \begin{macrocode}
       function self.rawInline(s, attr)
         if not self.is_writing then return "" end
+        if self.flatten_inlines then return s end
         local name = util.cache_verbatim(options.cacheDir, s)
         return {"\\markdownRendererInputRawInline{",
                 name,"}{", self.string(attr),"}"}
@@ -30491,6 +30823,7 @@ M.extensions.strike_through = function()
 % \end{markdown}
 %  \begin{macrocode}
       function self.strike_through(s)
+        if self.flatten_inlines then return s end
         return {"\\markdownRendererStrikeThrough{",s,"}"}
       end
     end, extend_reader = function(self)
@@ -30533,6 +30866,7 @@ M.extensions.subscripts = function()
 % \end{markdown}
 %  \begin{macrocode}
       function self.subscript(s)
+        if self.flatten_inlines then return s end
         return {"\\markdownRendererSubscript{",s,"}"}
       end
     end, extend_reader = function(self)
@@ -30574,6 +30908,7 @@ M.extensions.superscripts = function()
 % \end{markdown}
 %  \begin{macrocode}
       function self.superscript(s)
+        if self.flatten_inlines then return s end
         return {"\\markdownRendererSuperscript{",s,"}"}
       end
     end, extend_reader = function(self)
@@ -30617,7 +30952,7 @@ M.extensions.tex_math = function(tex_math_dollars,
 % \end{markdown}
 %  \begin{macrocode}
       function self.display_math(s)
-        if not self.is_writing then return "" end
+        if self.flatten_inlines then return s end
         return {"\\markdownRendererDisplayMath{",self.math(s),"}"}
       end
 %    \end{macrocode}
@@ -30629,7 +30964,7 @@ M.extensions.tex_math = function(tex_math_dollars,
 % \end{markdown}
 %  \begin{macrocode}
       function self.inline_math(s)
-        if not self.is_writing then return "" end
+        if self.flatten_inlines then return s end
         return {"\\markdownRendererInlineMath{",self.math(s),"}"}
       end
     end, extend_reader = function(self)

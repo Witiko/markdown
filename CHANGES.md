@@ -2,6 +2,12 @@
 
 ## 3.2.0
 
+Development:
+
+- Add support for Pandoc `auto_identifiers` and `gfm_auto_identifiers`
+  syntax extensions.
+  (contributed by @lostenderman, #237, #238, #315, #354)
+
 Fixes:
 
 - Make the `import` LaTeX option correctly handle recursive imports.
@@ -20,6 +26,13 @@ Unit Tests:
 - Restore CommonMark testfiles with trailing tabs and spaces.
   (contributed by @lostenderman, #348, #353,
    lostenderman/markdown#2)
+- Fail faster during batch bisection. (#354)
+
+Continuous Integration:
+
+- Do not rebuild existing Docker images when we rerun the
+  continuous integration for the same commit multiple times.
+  (#354)
 
 ## 3.1.0 (2023-09-27)
 
