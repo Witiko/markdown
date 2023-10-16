@@ -34,6 +34,10 @@ Continuous Integration:
   continuous integration for the same commit multiple times.
   (#354)
 
+Default Renderer Prototypes:
+
+- In LaTeX, correctly capitalize fancy list labels. (0a10053f)
+
 ## 3.1.0 (2023-09-27)
 
 Development:
