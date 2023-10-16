@@ -14,6 +14,8 @@ Fixes:
   (68c7a2f5, danopolan/istqb_latex#87)
 - Support attributes on multi-line setext headings.
   (contributed by @lostenderman, #315, #355, #356)
+- Correctly process the combination of Lua options `fancyLists` and
+  `startNumber`. (59fb97e8)
 
 Documentation:
 
