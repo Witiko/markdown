@@ -21452,62 +21452,6 @@ end
 % \par
 % \begin{markdown}
 %
-% The \luamdef{util.codepoint_to_data} function produces values from a row of
-% the file `UnicodeData.txt` that corresponds to the unicode code point `c` or
-% `nil` if the codepoint is invalid or does not have a row in the file
-% `UnicodeData.txt`.
-%
-% \end{markdown}
-%  \begin{macrocode}
-util.codepoint_to_data = (function()
-  local categories = nil
-  local lowercase_mappings = nil
-  return function(c)
-%    \end{macrocode}
-% \begin{markdown}
-%
-% Read the file `UnicodeData.txt` lazily on the first call to the function.
-%
-% \end{markdown}
-%  \begin{macrocode}
-    if categories == nil then
-      local pathname = util.lookup_files("UnicodeData.txt")
-      local input_file = assert(io.open(pathname, "r"))
-      categories = {}
-      lowercase_mappings = {}
-      for line in input_file:lines() do
-        local segments = {}
-        for segment in (line .. ";"):gmatch("(.-);") do
-          table.insert(segments, segment)
-        end
-        assert(#segments == 15)
-        local code_value = tonumber(segments[1], 16)
-        assert(code_value ~= nil)
-
-        local category = segments[3]
-        assert(#category > 0)
-        assert(categories[code_value] == nil)
-        categories[code_value] = category
-
-        local lowercase_mapping = tonumber(segments[14], 16)
-        assert(lowercase_mappings[code_value] == nil)
-        lowercase_mappings[code_value] = lowercase_mapping
-      end
-    end
-    if categories[c] == nil then
-      return nil
-    else
-      return {
-        ["category"] = categories[c],
-        ["lowercase_mapping"] = lowercase_mappings[c],
-      }
-    end
-  end
-end)()
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
 % The \luamdef{util.expand_tabs_in_line} expands tabs in string `s`. If
 % `tabstop` is specified, it is used as the tab stop width. Otherwise,
 % the tab stop width of 4 characters is used. The method is a copy of the tab
