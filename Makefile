@@ -62,10 +62,13 @@ VERSION=$(shell git describe --tags --always --long --exclude latest)
 LASTMODIFIED=$(shell git log -1 --date=format:%Y-%m-%d --format=%ad)
 
 DOCKER_TEXLIVE_TAG=latest
+ifeq ($(NO_DOCUMENTATION), true)
+	DOCKER_TAG_POSTFIX=-no_docs
+endif
 DOCKER_TEMPORARY_IMAGE=ghcr.io/witiko/markdown
-DOCKER_TEMPORARY_TAG=$(VERSION)-$(DOCKER_TEXLIVE_TAG)
+DOCKER_TEMPORARY_TAG=$(VERSION)-$(DOCKER_TEXLIVE_TAG)$(DOCKER_TAG_POSTFIX)
 DOCKER_RELEASE_IMAGE=witiko/markdown
-DOCKER_RELEASE_TAG=$(DOCKER_TEXLIVE_TAG)
+DOCKER_RELEASE_TAG=$(DOCKER_TEXLIVE_TAG)$(DOCKER_TAG_POSTFIX)
 
 PANDOC_INPUT_FORMAT=markdown+tex_math_single_backslash+tex_math_double_backslash-raw_tex
 
@@ -81,6 +84,7 @@ base: $(INSTALLABLES) $(LIBRARIES)
 
 # This pseudo-target builds a witiko/markdown Docker image.
 docker-image:
+	docker pull $(DOCKER_TEMPORARY_IMAGE):$(DOCKER_TEMPORARY_TAG) || \
 	DOCKER_BUILDKIT=1 docker build --pull --build-arg TEXLIVE_TAG=$(DOCKER_TEXLIVE_TAG) \
 	                               --build-arg NO_DOCUMENTATION=$(NO_DOCUMENTATION) \
 	                               -t $(DOCKER_TEMPORARY_IMAGE):$(DOCKER_TEMPORARY_TAG) .
