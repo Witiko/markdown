@@ -26,6 +26,7 @@ Unit Tests:
 - Restore CommonMark testfiles with trailing tabs and spaces.
   (contributed by @lostenderman, #348, #353,
    lostenderman/markdown#2)
+- Fail faster during batch bisection. (#354)
 
 ## 3.1.0 (2023-09-27)
 
