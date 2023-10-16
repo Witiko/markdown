@@ -1139,7 +1139,7 @@ end)()
 %
 % \end{markdown}
 %  \begin{macrocode}
-local uni_case = require("lua-uni-case")
+local uni_algos = require("lua-uni-algos")
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -24573,17 +24573,24 @@ function M.writer.new(options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  function self.attributes(attributes)
-    local expanded_attributes = {}
-    local key_value_regex = "([^= ]+)%s*=%s*(.*)"
+  local seen_identifiers = {}
+  local key_value_regex = "([^= ]+)%s*=%s*(.*)"
+  local function normalize_attributes(attributes, auto_identifiers)
+    -- normalize attributes
+    local normalized_attributes = {}
+    local has_explicit_identifiers = false
     local key, value
-    for _, attribute in ipairs(attributes) do
-      if attribute:sub(1, 1) == "#" or attribute:sub(1, 1) == "." then
-        table.insert(expanded_attributes, attribute)
+    for _, attribute in ipairs(attributes or {}) do
+      if attribute:sub(1, 1) == "#" then
+        table.insert(normalized_attributes, attribute)
+        has_explicit_identifiers = true
+        seen_identifiers[attribute:sub(2)] = true
+      elseif attribute:sub(1, 1) == "." then
+        table.insert(normalized_attributes, attribute)
       else
         key, value = attribute:match(key_value_regex)
         if key:lower() == "id" then
-          table.insert(expanded_attributes, "#" .. value)
+          table.insert(normalized_attributes, "#" .. value)
         elseif key:lower() == "class" then
           local classes = {}
           for class in value:gmatch("%S+") do
@@ -24591,23 +24598,67 @@ function M.writer.new(options)
           end
           table.sort(classes)
           for _, class in ipairs(classes) do
-            table.insert(expanded_attributes, "." .. class)
+            table.insert(normalized_attributes, "." .. class)
           end
         else
-          table.insert(expanded_attributes, attribute)
+          table.insert(normalized_attributes, attribute)
         end
       end
     end
-    table.sort(expanded_attributes)
+
+    -- if no explicit identifiers exist, add auto identifiers
+    if not has_explicit_identifiers and auto_identifiers ~= nil then
+      local seen_auto_identifiers = {}
+      for _, auto_identifier in ipairs(auto_identifiers) do
+        if seen_auto_identifiers[auto_identifier] == nil then
+          seen_auto_identifiers[auto_identifier] = true
+          if seen_identifiers[auto_identifier] == nil then
+            seen_identifiers[auto_identifier] = true
+            table.insert(normalized_attributes,
+                         "#" .. auto_identifier)
+          else
+            local auto_identifier_number = 1
+            while true do
+              local numbered_auto_identifier = auto_identifier .. "-"
+                                             .. auto_identifier_number
+              if seen_identifiers[numbered_auto_identifier] == nil then
+                seen_identifiers[numbered_auto_identifier] = true
+                table.insert(normalized_attributes,
+                             "#" .. numbered_auto_identifier)
+                break
+              end
+              auto_identifier_number = auto_identifier_number + 1
+            end
+          end
+        end
+      end
+    end
+
+    -- sort and deduplicate normalized attributes
+    table.sort(normalized_attributes)
+    local seen_normalized_attributes = {}
+    local deduplicated_normalized_attributes = {}
+    for _, attribute in ipairs(normalized_attributes) do
+      if seen_normalized_attributes[attribute] == nil then
+        seen_normalized_attributes[attribute] = true
+        table.insert(deduplicated_normalized_attributes, attribute)
+      end
+    end
+
+    return deduplicated_normalized_attributes
+  end
+
+  function self.attributes(attributes, should_normalize_attributes)
+    local normalized_attributes
+    if should_normalize_attributes == false then
+      normalized_attributes = attributes
+    else
+      normalized_attributes = normalize_attributes(attributes)
+    end
 
     local buf = {}
-    local seen = {}
-    for _, attribute in ipairs(expanded_attributes) do
-      if seen[attribute] ~= nil then
-        goto continue  -- prevent duplicate attributes
-      else
-        seen[attribute] = true
-      end
+    local key, value
+    for _, attribute in ipairs(normalized_attributes) do
       if attribute:sub(1, 1) == "#" then
         table.insert(buf, {"\\markdownRendererAttributeIdentifier{",
                            attribute:sub(2), "}"})
@@ -24619,7 +24670,6 @@ function M.writer.new(options)
         table.insert(buf, {"\\markdownRendererAttributeKeyValue{",
                            key, "}{", value, "}"})
       end
-      ::continue::
     end
 
     return buf
@@ -24773,6 +24823,119 @@ function M.writer.new(options)
     end
     return buf
   end
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Create an auto identifier string by stripping and converting characters from string `s`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function create_auto_identifier(s)
+  local buffer = {}
+  local prev_space = false
+  local letter_found = false
+
+  for _, code in utf8.codes(uni_algos.normalize.NFC(s)) do
+    local char = utf8.char(code)
+
+    -- Remove everything up to the first letter.
+    if not letter_found then
+      local is_letter = unicode.utf8.match(char, "%a")
+      if is_letter then
+        letter_found = true
+      else
+        goto continue
+      end
+    end
+
+    -- Remove all non-alphanumeric characters, except underscores, hyphens, and periods.
+    if not unicode.utf8.match(char, "[%w_%-%.%s]") then
+      goto continue
+    end
+
+    -- Replace all spaces and newlines with hyphens.
+    if unicode.utf8.match(char, "[%s\n]") then
+      char = "-"
+      if prev_space then
+        goto continue
+      else
+        prev_space = true
+      end
+    else
+      -- Convert all alphabetic characters to lowercase.
+      char = unicode.utf8.lower(char)
+      prev_space = false
+    end
+
+    table.insert(buffer, char)
+
+    ::continue::
+  end
+
+  if prev_space then
+    table.remove(buffer)
+  end
+
+  local identifier = #buffer == 0 and "section" or table.concat(buffer, "")
+  return identifier
+end
+%  \end{macrocode}
+% \begin{markdown}
+%
+% Create an GitHub-flavored auto identifier string by stripping and converting characters from string `s`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function create_gfm_auto_identifier(s)
+  local buffer = {}
+  local prev_space = false
+  local letter_found = false
+
+  for _, code in utf8.codes(uni_algos.normalize.NFC(s)) do
+    local char = utf8.char(code)
+
+    -- Remove everything up to the first non-space.
+    if not letter_found then
+      local is_letter = unicode.utf8.match(char, "%S")
+      if is_letter then
+        letter_found = true
+      else
+        goto continue
+      end
+    end
+
+    -- Remove all non-alphanumeric characters, except underscores and hyphens.
+    if not unicode.utf8.match(char, "[%w_%-%s]") then
+      prev_space = false
+      goto continue
+    end
+
+    -- Replace all spaces and newlines with hyphens.
+    if unicode.utf8.match(char, "[%s\n]") then
+      char = "-"
+      if prev_space then
+        goto continue
+      else
+        prev_space = true
+      end
+    else
+      -- Convert all alphabetic characters to lowercase.
+      char = unicode.utf8.lower(char)
+      prev_space = false
+    end
+
+    table.insert(buffer, char)
+
+    ::continue::
+  end
+
+  if prev_space then
+    table.remove(buffer)
+  end
+
+  local identifier = #buffer == 0 and "section" or table.concat(buffer, "")
+  return identifier
+end
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -24785,7 +24948,7 @@ function M.writer.new(options)
 %  \begin{macrocode}
   function self.heading(s, level, attributes)
     local buf = {}
-    local inlines = s[2]
+    local flat_text, inlines = table.unpack(s)
 
     -- push empty attributes for implied sections
     while self.attribute_type_levels["heading"] < level - 1 do
@@ -24801,6 +24964,16 @@ function M.writer.new(options)
       table.insert(buf, self.pop_attributes("heading"))
     end
 
+    -- construct attributes for the new section
+    local auto_identifiers = {}
+    if self.options.autoIdentifiers then
+      table.insert(auto_identifiers, create_auto_identifier(flat_text))
+    end
+    if self.options.gfmAutoIdentifiers then
+      table.insert(auto_identifiers, create_gfm_auto_identifier(flat_text))
+    end
+    local normalized_attributes = normalize_attributes(attributes, auto_identifiers)
+
     -- push attributes for the new section
     local start_output = {}
     local end_output = {}
@@ -24808,16 +24981,15 @@ function M.writer.new(options)
     table.insert(end_output, "\n\\markdownRendererSectionEnd ")
 
     table.insert(buf, self.push_attributes("heading",
-                                           attributes,
+                                           normalized_attributes,
                                            start_output,
                                            end_output))
     assert(self.attribute_type_levels["heading"] == level)
 
     -- render the heading and its attributes
-    if self.is_writing and options.headerAttributes
-       and attributes ~= nil and #attributes > 0 then
+    if self.is_writing and #normalized_attributes > 0 then
       table.insert(buf, "\\markdownRendererHeaderAttributeContextBegin\n")
-      table.insert(buf, self.attributes(attributes))
+      table.insert(buf, self.attributes(normalized_attributes, false))
     end
 
     local cmd
@@ -24841,8 +25013,7 @@ function M.writer.new(options)
       table.insert(buf, {cmd, "{", inlines, "}"})
     end
 
-    if self.is_writing and options.headerAttributes
-       and attributes ~= nil and #attributes > 0 then
+    if self.is_writing and #normalized_attributes > 0 then
       table.insert(buf, "\n\\markdownRendererHeaderAttributeContextEnd ")
     end
 
@@ -26674,7 +26845,7 @@ function M.reader.new(writer, options)
     tag = util.rope_to_string(tag)
     tag = tag:gsub("[ \n\r\t]+", " ")
     tag = tag:gsub("^ ", ""):gsub(" $", "")
-    tag = uni_case.casefold(tag, true, false)
+    tag = uni_algos.case.casefold(tag, true, false)
     return tag
   end
 %    \end{macrocode}
