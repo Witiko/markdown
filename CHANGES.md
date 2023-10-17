@@ -14,6 +14,8 @@ Fixes:
   (68c7a2f5, danopolan/istqb_latex#87)
 - Support attributes on multi-line setext headings.
   (contributed by @lostenderman, #315, #355, #356)
+- Properly parse emphasis at line endings in headings.
+  (contributed by @lostenderman, #358, #360)
 
 Documentation:
 
