@@ -33209,16 +33209,26 @@ end
       \tl_set:Nn
         \l_@@_latex_fancy_list_item_label_delimiter_style_tl
         { #2 }
-      \tl_set:Nn
+      \@@_if_option:nTF
+        { startNumber }
+        {
+          \tl_set:Nn
+            \l_tmpa_tl
+            { \begin{enumerate} }
+        }
+        {
+          \tl_set:Nn
+            \l_tmpa_tl
+            { \begin{enumerate}[ }
+          \tl_put_right:Nx
+            \l_tmpa_tl
+            { \@@_latex_paralist_style:nn { #1 } { #2 } }
+          \tl_put_right:Nn
+            \l_tmpa_tl
+            { ] }
+        }
+      \tl_use:N
         \l_tmpa_tl
-        { \begin{enumerate}[ }
-      \tl_put_right:Nx
-        \l_tmpa_tl
-        { \@@_latex_paralist_style:nn { #1 } { #2 } }
-      \tl_put_right:Nn
-        \l_tmpa_tl
-        { ] }
-      \l_tmpa_tl
     },
     fancyOlEnd = {
       \end{enumerate}
@@ -33256,15 +33266,27 @@ end
         {
           \plpartopsep=\partopsep
           \pltopsep=\topsep
-          \begin{compactenum}[
         }
-      \tl_put_right:Nx
+      \@@_if_option:nTF
+        { startNumber }
+        {
+          \tl_put_right:Nn
+            \l_tmpa_tl
+            { \begin{compactenum} }
+        }
+        {
+          \tl_put_right:Nn
+            \l_tmpa_tl
+            { \begin{compactenum}[ }
+          \tl_put_right:Nx
+            \l_tmpa_tl
+            { \@@_latex_paralist_style:nn { #1 } { #2 } }
+          \tl_put_right:Nn
+            \l_tmpa_tl
+            { ] }
+        }
+      \tl_use:N
         \l_tmpa_tl
-        { \@@_latex_paralist_style:nn { #1 } { #2 } }
-      \tl_put_right:Nn
-        \l_tmpa_tl
-        { ] }
-      \l_tmpa_tl
     },
     fancyOlEndTight = {
       \end{compactenum}
