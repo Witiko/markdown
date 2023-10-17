@@ -32,6 +32,8 @@ Unit Tests:
   (contributed by @lostenderman, #348, #353,
    lostenderman/markdown#2)
 - Fail faster during batch bisection. (#354)
+- Use `BEGIN document` and `END document` instead of `documentBegin`
+  and `documentEnd` for consistence with other renderers. (0be6be4)
 
 Continuous Integration:
 
