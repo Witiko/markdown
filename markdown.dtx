@@ -29714,7 +29714,7 @@ M.extensions.fancy_lists = function()
       local function fancylist(items,tight,start)
         local startnum, numstyle, numdelim = sniffstyle(start[2][1], start[2][2])
         return writer.fancylist(items,tight,
-                                options.startNumber and startnum,
+                                options.startNumber and startnum or 1,
                                 numstyle or "Decimal",
                                 numdelim or "Default")
       end
@@ -33144,7 +33144,7 @@ end
           { LowerRoman } { \int_to_roman:n { #2 } }
           { UpperRoman } { \int_to_Roman:n { #2 } }
           { LowerAlpha } { \int_to_alph:n { #2 } }
-          { UpperAlpha } { \int_to_alph:n { #2 } }
+          { UpperAlpha } { \int_to_Alph:n { #2 } }
         }
     }
   \cs_new:Nn
@@ -33210,16 +33210,26 @@ end
       \tl_set:Nn
         \l_@@_latex_fancy_list_item_label_delimiter_style_tl
         { #2 }
-      \tl_set:Nn
+      \@@_if_option:nTF
+        { startNumber }
+        {
+          \tl_set:Nn
+            \l_tmpa_tl
+            { \begin{enumerate} }
+        }
+        {
+          \tl_set:Nn
+            \l_tmpa_tl
+            { \begin{enumerate}[ }
+          \tl_put_right:Nx
+            \l_tmpa_tl
+            { \@@_latex_paralist_style:nn { #1 } { #2 } }
+          \tl_put_right:Nn
+            \l_tmpa_tl
+            { ] }
+        }
+      \tl_use:N
         \l_tmpa_tl
-        { \begin{enumerate}[ }
-      \tl_put_right:Nx
-        \l_tmpa_tl
-        { \@@_latex_paralist_style:nn { #1 } { #2 } }
-      \tl_put_right:Nn
-        \l_tmpa_tl
-        { ] }
-      \l_tmpa_tl
     },
     fancyOlEnd = {
       \end{enumerate}
@@ -33257,15 +33267,27 @@ end
         {
           \plpartopsep=\partopsep
           \pltopsep=\topsep
-          \begin{compactenum}[
         }
-      \tl_put_right:Nx
+      \@@_if_option:nTF
+        { startNumber }
+        {
+          \tl_put_right:Nn
+            \l_tmpa_tl
+            { \begin{compactenum} }
+        }
+        {
+          \tl_put_right:Nn
+            \l_tmpa_tl
+            { \begin{compactenum}[ }
+          \tl_put_right:Nx
+            \l_tmpa_tl
+            { \@@_latex_paralist_style:nn { #1 } { #2 } }
+          \tl_put_right:Nn
+            \l_tmpa_tl
+            { ] }
+        }
+      \tl_use:N
         \l_tmpa_tl
-        { \@@_latex_paralist_style:nn { #1 } { #2 } }
-      \tl_put_right:Nn
-        \l_tmpa_tl
-        { ] }
-      \l_tmpa_tl
     },
     fancyOlEndTight = {
       \end{compactenum}

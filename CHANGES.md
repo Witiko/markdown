@@ -6,7 +6,8 @@ Development:
 
 - Add support for Pandoc `auto_identifiers` and `gfm_auto_identifiers`
   syntax extensions.
-  (contributed by @lostenderman, #237, #238, #315, #354)
+  (contributed by @lostenderman, #237, #238, lostenderman/markdown#153,
+   #315, #354)
 
 Fixes:
 
@@ -14,6 +15,8 @@ Fixes:
   (68c7a2f5, danopolan/istqb_latex#87)
 - Support attributes on multi-line setext headings.
   (contributed by @lostenderman, #315, #355, #356)
+- Correctly process the combination of Lua options `fancyLists` and
+  `startNumber`. (59fb97e8)
 - Properly parse emphasis at line endings in headings.
   (contributed by @lostenderman, #358, #360)
 
@@ -35,6 +38,12 @@ Continuous Integration:
 - Do not rebuild existing Docker images when we rerun the
   continuous integration for the same commit multiple times.
   (#354)
+
+Default Renderer Prototypes:
+
+- In LaTeX, correctly capitalize fancy list labels. (0a10053f)
+- In LaTeX, properly indent fancy ordered lists when the Lua option
+  `startNumber` is enabled. (6a7649e8)
 
 ## 3.1.0 (2023-09-27)
 
