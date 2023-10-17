@@ -1,0 +1,59 @@
+<<<
+This test ensures that emphasis can occur at the end of line in headings,
+preventing a regression for <https://github.com/witiko/markdown/pull/360>.
+The test is the example from <https://github.com/witiko/markdown/issues/358>.
+
+# _foo_
+## foo _bar_
+## foo *bar*
+## foo _bar_ bar
+
+foo _bar_
+---------
+foo *bar*
+---------
+foo _bar_ bar
+-------------
+>>>
+documentBegin
+softLineBreak
+BEGIN link
+- label: https://github.com/witiko/markdown/pull/360
+- URI: https://github.com/witiko/markdown/pull/360
+- title: 
+END link
+softLineBreak
+BEGIN link
+- label: https://github.com/witiko/markdown/issues/358
+- URI: https://github.com/witiko/markdown/issues/358
+- title: 
+END link
+interblockSeparator
+BEGIN section
+headingOne: (emphasis: foo)
+interblockSeparator
+BEGIN section
+headingTwo: foo (emphasis: bar)
+interblockSeparator
+END section
+BEGIN section
+headingTwo: foo (emphasis: bar)
+interblockSeparator
+END section
+BEGIN section
+headingTwo: foo (emphasis: bar) bar
+interblockSeparator
+END section
+BEGIN section
+headingTwo: foo (emphasis: bar)
+interblockSeparator
+END section
+BEGIN section
+headingTwo: foo (emphasis: bar)
+interblockSeparator
+END section
+BEGIN section
+headingTwo: foo (emphasis: bar) bar
+END section
+END section
+documentEnd

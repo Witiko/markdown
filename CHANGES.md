@@ -17,6 +17,8 @@ Fixes:
   (contributed by @lostenderman, #315, #355, #356)
 - Correctly process the combination of Lua options `fancyLists` and
   `startNumber`. (59fb97e8)
+- Properly parse emphasis at line endings in headings.
+  (contributed by @lostenderman, #358, #360)
 
 Documentation:
 
