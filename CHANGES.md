@@ -40,6 +40,8 @@ Continuous Integration:
 Default Renderer Prototypes:
 
 - In LaTeX, correctly capitalize fancy list labels. (0a10053f)
+- In LaTeX, properly indent fancy ordered lists when the Lua option
+  `startNumber` is enabled. (6a7649e8)
 
 ## 3.1.0 (2023-09-27)
 
