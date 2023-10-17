@@ -21,7 +21,7 @@
 
    3. _c_
 >>>
-documentBegin
+BEGIN document
 olBegin
 olItemWithNumber: 1
 emphasis: a
@@ -33,4 +33,4 @@ olItemWithNumber: 3
 emphasis: c
 olItemEnd
 olEnd
-documentEnd
+END document

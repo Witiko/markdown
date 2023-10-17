@@ -7,10 +7,10 @@
 <<<
 [foo<http://example.com/?search=](uri)>
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: http://example.com/?search=](uri)
 - URI: http://example.com/?search=](uri)
 - title: 
 END link
-documentEnd
+END document

@@ -5,7 +5,7 @@ This test ensures that the Lua `texMathSingleBackslash` option is disabled by de
 
 \[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\]
 >>>
-documentBegin
+BEGIN document
 codeSpan: texMathSingleBackslash
 paragraphSeparator
 circumflex
@@ -32,4 +32,4 @@ leftBrace
 backslash
 backslash
 rightBrace
-documentEnd
+END document

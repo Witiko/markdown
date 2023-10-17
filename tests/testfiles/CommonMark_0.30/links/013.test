@@ -11,8 +11,8 @@
 [a](<b)c>
 [a](<b>c)
 >>>
-documentBegin
+BEGIN document
 softLineBreak
 softLineBreak
 inlineHtmlTag: <b>
-documentEnd
+END document

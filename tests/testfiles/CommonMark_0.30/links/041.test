@@ -7,10 +7,10 @@
 <<<
 [foo *bar](baz*)
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: foo *bar
 - URI: baz*
 - title: 
 END link
-documentEnd
+END document

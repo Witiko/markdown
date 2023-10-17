@@ -7,6 +7,6 @@
 <<<
 *&#35; &#1234; &#992; &#0;*
 >>>
-documentBegin
+BEGIN document
 emphasis: (hash) Ӓ Ϡ (replacementCharacter)
-documentEnd
+END document

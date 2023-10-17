@@ -7,7 +7,7 @@
 <<<
 aa_"bb"_cc
 >>>
-documentBegin
+BEGIN document
 underscore
 underscore
-documentEnd
+END document

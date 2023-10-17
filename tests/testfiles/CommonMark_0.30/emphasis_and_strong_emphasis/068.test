@@ -7,6 +7,6 @@
 <<<
 *foo **bar *baz* bim** bop*
 >>>
-documentBegin
+BEGIN document
 emphasis: foo (strongEmphasis: bar (emphasis: baz) bim) bop
-documentEnd
+END document

@@ -7,6 +7,6 @@
 <<<
 ` a`
 >>>
-documentBegin
+BEGIN document
 codeSpan:  a
-documentEnd
+END document

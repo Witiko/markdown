@@ -7,6 +7,6 @@
 <<<
 <a h*#ref="hi">
 >>>
-documentBegin
+BEGIN document
 hash
-documentEnd
+END document

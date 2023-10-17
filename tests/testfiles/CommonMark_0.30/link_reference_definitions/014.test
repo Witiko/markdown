@@ -9,10 +9,10 @@
 
 [Foo]
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: Foo
 - URI: /url
 - title: 
 END link
-documentEnd
+END document

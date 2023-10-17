@@ -3,7 +3,7 @@
 >
 > [foo]: /bar
 >>>
-documentBegin
+BEGIN document
 blockQuoteBegin
 BEGIN link
 - label: foo
@@ -11,4 +11,4 @@ BEGIN link
 - title: 
 END link
 blockQuoteEnd
-documentEnd
+END document

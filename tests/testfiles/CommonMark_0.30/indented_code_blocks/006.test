@@ -15,6 +15,6 @@ if: template == 'input'
       
       chunk2
 >>>
-documentBegin
+BEGIN document
 inputVerbatim: ./_markdown_test/d6bc1998e8030f4c5bc9338f5ed4bbf4.verbatim
-documentEnd
+END document

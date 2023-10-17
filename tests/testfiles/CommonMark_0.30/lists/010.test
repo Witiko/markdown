@@ -21,7 +21,7 @@
  - _f_
 - _g_
 >>>
-documentBegin
+BEGIN document
 ulBeginTight
 ulItem
 emphasis: a
@@ -45,4 +45,4 @@ ulItem
 emphasis: g
 ulItemEnd
 ulEndTight
-documentEnd
+END document

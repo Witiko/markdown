@@ -7,6 +7,6 @@
 <<<
 _a `_`_
 >>>
-documentBegin
+BEGIN document
 emphasis: a (codeSpan: (underscore))
-documentEnd
+END document

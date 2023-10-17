@@ -24,7 +24,7 @@
     - _baz_
       - _boo_
 >>>
-documentBegin
+BEGIN document
 ulBeginTight
 ulItem
 emphasis: foo
@@ -48,4 +48,4 @@ ulItemEnd
 ulEndTight
 ulItemEnd
 ulEndTight
-documentEnd
+END document

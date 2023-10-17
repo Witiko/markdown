@@ -9,10 +9,10 @@
 
 [bar\\]
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: bar(backslash)
 - URI: /uri
 - title: 
 END link
-documentEnd
+END document

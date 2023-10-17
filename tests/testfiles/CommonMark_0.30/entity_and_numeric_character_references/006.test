@@ -7,6 +7,6 @@
 <<<
 *&MadeUpEntity;*
 >>>
-documentBegin
+BEGIN document
 emphasis: (ampersand)MadeUpEntity;
-documentEnd
+END document

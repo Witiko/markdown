@@ -9,7 +9,7 @@ The following fenced code block attributes should be recognized as such.
 bar
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 >>>
-documentBegin
+BEGIN document
 codeSpan: fencedCode
 codeSpan: fencedCodeAttributes
 softLineBreak
@@ -28,4 +28,4 @@ BEGIN fencedCode
 - infostring: foo
 END fencedCode
 END fencedCodeAttributeContext
-documentEnd
+END document

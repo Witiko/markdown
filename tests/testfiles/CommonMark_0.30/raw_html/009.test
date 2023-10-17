@@ -13,8 +13,8 @@ foo><bar/ >
 <foo bar=baz
 bim!bop />
 >>>
-documentBegin
+BEGIN document
 softLineBreak
 softLineBreak
 softLineBreak
-documentEnd
+END document

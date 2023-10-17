@@ -36,7 +36,7 @@ Here are some ticked boxes:
 - [X] two ticked boxes
 - ☒ three ticked boxes
 >>>
-documentBegin
+BEGIN document
 codeSpan: taskLists
 softLineBreak
 interblockSeparator
@@ -113,4 +113,4 @@ ulItem
 tickedBox
 ulItemEnd
 ulEndTight
-documentEnd
+END document

@@ -9,8 +9,8 @@
   *aaa*
  *bbb*
 >>>
-documentBegin
+BEGIN document
 emphasis: aaa
 softLineBreak
 emphasis: bbb
-documentEnd
+END document

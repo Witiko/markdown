@@ -7,6 +7,6 @@
 <<<
 foo <![CDATA[>&<]]>
 >>>
-documentBegin
+BEGIN document
 inlineHtmlTag: <![CDATA[>(ampersand)<]]>
-documentEnd
+END document

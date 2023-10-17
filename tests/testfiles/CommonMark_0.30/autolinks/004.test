@@ -7,10 +7,10 @@
 <<<
 <MAILTO:FOO@BAR.BAZ>
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: MAILTO:FOO@BAR.BAZ
 - URI: MAILTO:FOO@BAR.BAZ
 - title: 
 END link
-documentEnd
+END document

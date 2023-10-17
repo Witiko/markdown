@@ -33,7 +33,7 @@ abstract: |
   It consists of two paragraphs.
 ---
 >>>
-documentBegin
+BEGIN document
 jekyllDataBegin
 BEGIN jekyllDataMappingBegin
 - key: null
@@ -138,4 +138,4 @@ BEGIN jekyllDataString
 END jekyllDataString
 jekyllDataMappingEnd
 jekyllDataEnd
-documentEnd
+END document

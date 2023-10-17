@@ -13,7 +13,7 @@
    > *bar*
  > *baz*
 >>>
-documentBegin
+BEGIN document
 blockQuoteBegin
 BEGIN section
 headingOne: Foo
@@ -23,4 +23,4 @@ softLineBreak
 emphasis: baz
 blockQuoteEnd
 END section
-documentEnd
+END document

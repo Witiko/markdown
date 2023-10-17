@@ -29,7 +29,7 @@ Here are several ways to write a pipe:
 
 Unrecognized character entities are ignored: &nonsense;
 >>>
-documentBegin
+BEGIN document
 codeSpan: html
 interblockSeparator
 inputBlockHtmlElement: ./_markdown_test/34d8e769cc46adbf7aeb7c22322cce98.verbatim
@@ -59,4 +59,4 @@ ulItemEnd
 ulEndTight
 interblockSeparator
 ampersand
-documentEnd
+END document

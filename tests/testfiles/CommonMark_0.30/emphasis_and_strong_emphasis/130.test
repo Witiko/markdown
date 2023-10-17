@@ -7,10 +7,10 @@
 <<<
 **a<http://foo.bar/?q=**>
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: http://foo.bar/?q=**
 - URI: http://foo.bar/?q=**
 - title: 
 END link
-documentEnd
+END document

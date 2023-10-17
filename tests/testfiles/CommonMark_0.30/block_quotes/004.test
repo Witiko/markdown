@@ -12,6 +12,6 @@
     > bar
     > baz
 >>>
-documentBegin
+BEGIN document
 inputVerbatim: ./_markdown_test/35443980c7292da7765b3181cd9f8e6c.verbatim
-documentEnd
+END document

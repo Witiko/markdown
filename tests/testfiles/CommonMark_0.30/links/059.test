@@ -9,10 +9,10 @@
 
 [SS]: /url
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: ẞ
 - URI: /url
 - title: 
 END link
-documentEnd
+END document

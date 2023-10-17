@@ -11,6 +11,6 @@ if: template == 'input'
 `foo   bar 
 baz`
 >>>
-documentBegin
+BEGIN document
 codeSpan: foo   bar  baz
-documentEnd
+END document

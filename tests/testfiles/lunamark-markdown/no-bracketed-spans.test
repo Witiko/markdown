@@ -3,10 +3,10 @@ This test ensures that the Lua `bracketedSpans` option is disabled by default.
 
 [This is *some text*]{.class key="val"}
 >>>
-documentBegin
+BEGIN document
 codeSpan: bracketedSpans
 paragraphSeparator
 emphasis: some text
 leftBrace
 rightBrace
-documentEnd
+END document

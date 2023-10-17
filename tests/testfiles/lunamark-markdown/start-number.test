@@ -16,7 +16,7 @@ Loose:
 
 5. five
 >>>
-documentBegin
+BEGIN document
 codeSpan: startNumber
 softLineBreak
 paragraphSeparator
@@ -39,4 +39,4 @@ olItemEnd
 olItemWithNumber: 5
 olItemEnd
 olEnd
-documentEnd
+END document

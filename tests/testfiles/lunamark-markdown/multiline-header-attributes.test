@@ -12,7 +12,7 @@ A level two
 heading {.class-name}
 ---------------------
 >>>
-documentBegin
+BEGIN document
 codeSpan: headerAttributes
 softLineBreak
 softLineBreak
@@ -30,4 +30,4 @@ headingTwo: A level two(softLineBreak)heading
 END headerAttributeContext
 END section
 END section
-documentEnd
+END document

@@ -7,6 +7,6 @@
 <<<
 foo _\__
 >>>
-documentBegin
+BEGIN document
 emphasis: (underscore)
-documentEnd
+END document

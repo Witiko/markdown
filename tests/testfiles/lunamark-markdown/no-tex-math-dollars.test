@@ -5,7 +5,7 @@ $E=mc^2$
 
 $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
 >>>
-documentBegin
+BEGIN document
 codeSpan: texMathDollars
 paragraphSeparator
 dollarSign
@@ -38,4 +38,4 @@ backslash
 rightBrace
 dollarSign
 dollarSign
-documentEnd
+END document

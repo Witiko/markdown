@@ -11,6 +11,6 @@ if: template == 'input'
 <<<
     foo  
 >>>
-documentBegin
+BEGIN document
 inputVerbatim: ./_markdown_test/e8d2133b16be538460e59776bb34676a.verbatim
-documentEnd
+END document

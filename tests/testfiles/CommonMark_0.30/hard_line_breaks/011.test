@@ -9,6 +9,6 @@
 <a href="foo\
 bar">
 >>>
-documentBegin
+BEGIN document
 inlineHtmlTag: <a href="foo(backslash) bar">
-documentEnd
+END document

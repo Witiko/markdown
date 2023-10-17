@@ -26,7 +26,7 @@ foo
 bar
 ~~~
 >>>
-documentBegin
+BEGIN document
 codeSpan: fencedCode
 softLineBreak
 codeSpan: blankBeforeCodeFence
@@ -55,4 +55,4 @@ BEGIN fencedCode
 - src: ./_markdown_test/37b51d194a7513e45b56f6524f2d51f2.verbatim
 - infostring: foo
 END fencedCode
-documentEnd
+END document

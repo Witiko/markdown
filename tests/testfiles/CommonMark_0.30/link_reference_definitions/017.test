@@ -10,6 +10,6 @@ foo
 ]: /url
 *bar*
 >>>
-documentBegin
+BEGIN document
 emphasis: bar
-documentEnd
+END document

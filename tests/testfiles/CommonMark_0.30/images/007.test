@@ -7,10 +7,10 @@
 <<<
 ![foo](train.jpg)
 >>>
-documentBegin
+BEGIN document
 BEGIN image
 - label: foo
 - URI: train.jpg
 - title: 
 END image
-documentEnd
+END document

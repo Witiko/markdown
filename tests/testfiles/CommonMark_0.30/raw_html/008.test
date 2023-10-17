@@ -7,5 +7,5 @@
 <<<
 <a href="hi'> <a href=hi'>
 >>>
-documentBegin
-documentEnd
+BEGIN document
+END document

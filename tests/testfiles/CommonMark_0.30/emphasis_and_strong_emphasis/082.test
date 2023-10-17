@@ -9,6 +9,6 @@
 **foo *bar **baz**
 bim* bop**
 >>>
-documentBegin
+BEGIN document
 strongEmphasis: foo (emphasis: bar (strongEmphasis: baz)(softLineBreak)bim) bop
-documentEnd
+END document

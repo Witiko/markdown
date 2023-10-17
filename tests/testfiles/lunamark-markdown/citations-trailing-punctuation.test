@@ -12,7 +12,7 @@ in the citation name.
 
  @_   @f_   @foo_bar   @foo_bar_
 >>>
-documentBegin
+BEGIN document
 codeSpan: citations
 softLineBreak
 softLineBreak
@@ -126,4 +126,4 @@ BEGIN textCite
 - name: foo_bar_
 END textCite
 END textCites
-documentEnd
+END document

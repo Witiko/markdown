@@ -11,7 +11,7 @@ bar
 bar
 ~~~
 >>>
-documentBegin
+BEGIN document
 codeSpan: fencedCode
 softLineBreak
 paragraphSeparator
@@ -25,4 +25,4 @@ softLineBreak
 tilde
 tilde
 tilde
-documentEnd
+END document

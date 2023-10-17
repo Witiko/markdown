@@ -120,7 +120,7 @@ This is a tag with unescaped backticks <span attr='`ticks`'>
 
 This is a tag with backslashes <span attr='\\backslashes\\'>
 >>>
-documentBegin
+BEGIN document
 paragraphSeparator
 backslash
 paragraphSeparator
@@ -191,4 +191,4 @@ paragraphSeparator
 inlineHtmlTag: <span attr='`ticks`'>
 paragraphSeparator
 inlineHtmlTag: <span attr='(backslash)(backslash)backslashes(backslash)(backslash)'>
-documentEnd
+END document

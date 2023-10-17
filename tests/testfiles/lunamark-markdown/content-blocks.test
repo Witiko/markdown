@@ -17,7 +17,7 @@ htt(p:/)/exam(ple.c)om/m\(inard.jpg (Napoleon's disastrous Russian campaign of 1
 /Example.jS (Source code)
 /Lorem Ipsum.txt
 >>>
-documentBegin
+BEGIN document
 codeSpan: contentBlocks
 softLineBreak
 softLineBreak
@@ -66,4 +66,4 @@ BEGIN contentBlock
 - URI: Lorem Ipsum.txt
 - title: 
 END contentBlock
-documentEnd
+END document

@@ -8,6 +8,6 @@
 <<<
     f&ouml;f&ouml;
 >>>
-documentBegin
+BEGIN document
 inputVerbatim: ./_markdown_test/4a928e340ec7b55031e9b08a37b31be6.verbatim
-documentEnd
+END document

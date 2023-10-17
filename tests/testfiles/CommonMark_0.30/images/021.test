@@ -9,5 +9,5 @@
 
 [foo]: /url "title"
 >>>
-documentBegin
-documentEnd
+BEGIN document
+END document

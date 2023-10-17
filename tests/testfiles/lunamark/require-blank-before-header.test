@@ -3,7 +3,7 @@
 Hi
 # No header
 >>>
-documentBegin
+BEGIN document
 softLineBreak
 hash
-documentEnd
+END document

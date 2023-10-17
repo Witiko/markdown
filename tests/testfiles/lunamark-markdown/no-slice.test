@@ -131,7 +131,7 @@ belong to the previous note.
     line.  In this way, multi-paragraph notes work like
     multi-paragraph list items.
 >>>
-documentBegin
+BEGIN document
 codeSpan: slice
 softLineBreak
 interblockSeparator
@@ -295,4 +295,4 @@ interblockSeparator
 inputVerbatim: ./_markdown_test/3372369b5571c25af4e3298ee616142e.verbatim
 END section
 END section
-documentEnd
+END document

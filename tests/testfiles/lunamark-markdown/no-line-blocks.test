@@ -17,7 +17,7 @@ Line blocks with continuation
 | Berkeley,
  CA 94718
 >>>
-documentBegin
+BEGIN document
 codeSpan: lineBlocks
 paragraphSeparator
 paragraphSeparator
@@ -41,4 +41,4 @@ pipe
 softLineBreak
 pipe
 softLineBreak
-documentEnd
+END document

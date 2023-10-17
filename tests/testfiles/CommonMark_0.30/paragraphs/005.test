@@ -11,10 +11,10 @@
              *bbb*
                                        *ccc*
 >>>
-documentBegin
+BEGIN document
 emphasis: aaa
 softLineBreak
 emphasis: bbb
 softLineBreak
 emphasis: ccc
-documentEnd
+END document

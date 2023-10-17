@@ -11,8 +11,8 @@
 > *foo*
 >  
 >>>
-documentBegin
+BEGIN document
 blockQuoteBegin
 emphasis: foo
 blockQuoteEnd
-documentEnd
+END document

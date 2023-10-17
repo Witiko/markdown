@@ -37,7 +37,7 @@ Fancy list (*alpha, lower, tight and paren, alpha, lower, tight*)
  a. item
  b) item
 >>>
-documentBegin
+BEGIN document
 codeSpan: fancyLists
 softLineBreak
 codeSpan: startNumber
@@ -121,4 +121,4 @@ END fancyOlBeginTight
 fancyOlItemWithNumber: 2
 fancyOlItemEnd
 fancyOlEndTight
-documentEnd
+END document

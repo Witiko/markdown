@@ -12,9 +12,9 @@ aaa
 ```
 ``````
 >>>
-documentBegin
+BEGIN document
 BEGIN fencedCode
 - src: ./_markdown_test/3d84e45fbd4717f2d54005dfb65c8a2d.verbatim
 - infostring: 
 END fencedCode
-documentEnd
+END document

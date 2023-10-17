@@ -6,7 +6,7 @@
 ![](/'style='border-color:red;border-size:1px;border-style:solid)
 
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: Test
 - URI: /"style="color:red
@@ -30,4 +30,4 @@ BEGIN image
 - URI: /'style='border-color:red;border-size:1px;border-style:solid
 - title: 
 END image
-documentEnd
+END document

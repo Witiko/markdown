@@ -11,10 +11,10 @@
   ***
    ***
 >>>
-documentBegin
+BEGIN document
 thematicBreak
 interblockSeparator
 thematicBreak
 interblockSeparator
 thematicBreak
-documentEnd
+END document

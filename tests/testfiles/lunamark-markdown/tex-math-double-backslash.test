@@ -43,7 +43,7 @@ The following is not inline math:
 
 \\\(a\\\)
 >>>
-documentBegin
+BEGIN document
 codeSpan: texMathDoubleBackslash
 softLineBreak
 paragraphSeparator
@@ -78,4 +78,4 @@ paragraphSeparator
 paragraphSeparator
 backslash
 backslash
-documentEnd
+END document

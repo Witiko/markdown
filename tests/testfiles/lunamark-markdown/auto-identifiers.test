@@ -99,7 +99,7 @@ Here is a number of additional examples from the Pandoc documentation:
 ##### 3. Applications
 ###### 33
 >>>
-documentBegin
+BEGIN document
 codeSpan: autoIdentifiers
 codeSpan: headerAttributes
 softLineBreak
@@ -312,4 +312,4 @@ END section
 END section
 END section
 END section
-documentEnd
+END document

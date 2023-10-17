@@ -7,7 +7,7 @@
 <<<
 </a></foo >
 >>>
-documentBegin
+BEGIN document
 inlineHtmlTag: </a>
 inlineHtmlTag: </foo >
-documentEnd
+END document

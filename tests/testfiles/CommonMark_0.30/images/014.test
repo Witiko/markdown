@@ -9,10 +9,10 @@
 
 [*foo* bar]: /url "title"
 >>>
-documentBegin
+BEGIN document
 BEGIN image
 - label: (emphasis: foo) bar
 - URI: /url
 - title: title
 END image
-documentEnd
+END document

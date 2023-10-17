@@ -638,10 +638,10 @@ def split_batch_output_text(output_text: OutputText) -> Iterable[OutputText]:
     input_lines: List[str] = []
     in_test_output = False
     for line in output_text.splitlines():
-        if not in_test_output and line.strip() == 'documentBegin':
+        if not in_test_output and line.strip() == 'BEGIN document':
             in_test_output = True
             input_lines.append(line)
-        elif in_test_output and line.strip() == 'documentEnd':
+        elif in_test_output and line.strip() == 'END document':
             input_lines.append(line)
             output_text = '\n'.join(input_lines)
             input_lines.clear()

@@ -7,11 +7,11 @@
 <<<
 _foo [bar_](/url)
 >>>
-documentBegin
+BEGIN document
 underscore
 BEGIN link
 - label: bar(underscore)
 - URI: /url
 - title: 
 END link
-documentEnd
+END document

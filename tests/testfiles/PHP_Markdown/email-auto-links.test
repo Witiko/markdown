@@ -1,10 +1,10 @@
 <<<
 <michel.fortin@michelf.com>
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: michel.fortin@michelf.com
 - URI: mailto:michel.fortin@michelf.com
 - title: 
 END link
-documentEnd
+END document

@@ -12,10 +12,10 @@
 
 *baz*
 >>>
-documentBegin
+BEGIN document
 blockQuoteBegin
 emphasis: bar
 blockQuoteEnd
 interblockSeparator
 emphasis: baz
-documentEnd
+END document

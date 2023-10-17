@@ -5,9 +5,9 @@ through the plain TeX interface.
 
 Some ==highlighted text== and some \==regular text with equal signs==.
 >>>
-documentBegin
+BEGIN document
 codeSpan: mark
 softLineBreak
 paragraphSeparator
 mark: highlighted text
-documentEnd
+END document

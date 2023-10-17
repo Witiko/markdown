@@ -9,6 +9,6 @@
 [link](<foo
 bar>)
 >>>
-documentBegin
+BEGIN document
 inlineHtmlTag: <foo bar>
-documentEnd
+END document

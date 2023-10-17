@@ -13,8 +13,8 @@ bar
 \---
 baz
 >>>
-documentBegin
+BEGIN document
 softLineBreak
 softLineBreak
 softLineBreak
-documentEnd
+END document

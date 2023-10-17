@@ -22,7 +22,7 @@
 
 - _baz_
 >>>
-documentBegin
+BEGIN document
 ulBegin
 ulItem
 emphasis: foo
@@ -34,4 +34,4 @@ ulItem
 emphasis: baz
 ulItemEnd
 ulEnd
-documentEnd
+END document

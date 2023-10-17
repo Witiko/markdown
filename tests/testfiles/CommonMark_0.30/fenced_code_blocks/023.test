@@ -15,7 +15,7 @@ bar
 ~~~
 # baz
 >>>
-documentBegin
+BEGIN document
 BEGIN section
 BEGIN section
 headingTwo: foo
@@ -30,4 +30,4 @@ END section
 BEGIN section
 headingOne: baz
 END section
-documentEnd
+END document

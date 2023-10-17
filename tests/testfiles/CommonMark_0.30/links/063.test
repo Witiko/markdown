@@ -11,10 +11,10 @@
 
 [bar][foo]
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: bar
 - URI: /url1
 - title: 
 END link
-documentEnd
+END document

@@ -11,10 +11,10 @@
 *&frac34; &HilbertSpace; &DifferentialD;*
 *&ClockwiseContourIntegral; &ngE;*
 >>>
-documentBegin
+BEGIN document
 emphasis: (nbsp) (ampersand) © Æ Ď
 softLineBreak
 emphasis: ¾ ℋ ⅆ
 softLineBreak
 emphasis: ∲ ≧̸
-documentEnd
+END document

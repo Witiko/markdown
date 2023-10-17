@@ -9,10 +9,10 @@
 
 [foo]
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: foo
 - URI: /url(backslash)bar*baz
 - title: foo"bar(backslash)baz
 END link
-documentEnd
+END document

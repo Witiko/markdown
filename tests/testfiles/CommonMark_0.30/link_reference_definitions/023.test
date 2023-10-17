@@ -12,11 +12,11 @@
 [foo]: /url
 > bar
 >>>
-documentBegin
+BEGIN document
 BEGIN section
 headingOne: (BEGIN link)(- label: Foo)(- URI: /url)(- title: )(END link)
 interblockSeparator
 blockQuoteBegin
 blockQuoteEnd
 END section
-documentEnd
+END document

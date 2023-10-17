@@ -7,10 +7,10 @@
 <<<
 [a](<b)c>)
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: a
 - URI: b)c
 - title: 
 END link
-documentEnd
+END document

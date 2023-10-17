@@ -7,5 +7,5 @@
 <<<
 [link] bar](/uri)
 >>>
-documentBegin
-documentEnd
+BEGIN document
+END document

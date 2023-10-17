@@ -7,8 +7,8 @@
 <<<
 # foo#
 >>>
-documentBegin
+BEGIN document
 BEGIN section
 headingOne: foo(hash)
 END section
-documentEnd
+END document

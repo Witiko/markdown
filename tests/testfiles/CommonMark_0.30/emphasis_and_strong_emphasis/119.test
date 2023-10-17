@@ -7,7 +7,7 @@
 <<<
 *foo _bar* baz_
 >>>
-documentBegin
+BEGIN document
 emphasis: foo (underscore)bar
 underscore
-documentEnd
+END document

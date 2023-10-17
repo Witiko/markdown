@@ -6,11 +6,11 @@
 > foo
 
 >>>
-documentBegin
+BEGIN document
 blockQuoteBegin
 interblockSeparator
 blockQuoteBegin
 blockQuoteEnd
 interblockSeparator
 blockQuoteEnd
-documentEnd
+END document

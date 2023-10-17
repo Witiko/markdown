@@ -11,7 +11,7 @@ Here's an inline [link](</script?foo=1&bar=2>).
 [1]: http://example.com/?foo=1&bar=2
 [2]: http://att.com/  "AT&T"
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: link
 - URI: http://example.com/?foo=1&bar=2
@@ -35,4 +35,4 @@ BEGIN link
 - URI: /script?foo=1&bar=2
 - title: 
 END link
-documentEnd
+END document

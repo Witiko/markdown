@@ -7,8 +7,8 @@
 <<<
 # foo *bar* \*baz\*
 >>>
-documentBegin
+BEGIN document
 BEGIN section
 headingOne: foo (emphasis: bar) *baz*
 END section
-documentEnd
+END document

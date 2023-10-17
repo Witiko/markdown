@@ -7,5 +7,5 @@
 <<<
 [link] (/uri)
 >>>
-documentBegin
-documentEnd
+BEGIN document
+END document

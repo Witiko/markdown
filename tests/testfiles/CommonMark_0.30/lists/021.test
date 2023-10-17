@@ -21,7 +21,7 @@
   ```
 - _d_
 >>>
-documentBegin
+BEGIN document
 ulBeginTight
 ulItem
 emphasis: a
@@ -39,4 +39,4 @@ ulItem
 emphasis: d
 ulItemEnd
 ulEndTight
-documentEnd
+END document

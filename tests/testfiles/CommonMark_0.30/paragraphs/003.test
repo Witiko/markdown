@@ -11,8 +11,8 @@
 
 *bbb*
 >>>
-documentBegin
+BEGIN document
 emphasis: aaa
 paragraphSeparator
 emphasis: bbb
-documentEnd
+END document

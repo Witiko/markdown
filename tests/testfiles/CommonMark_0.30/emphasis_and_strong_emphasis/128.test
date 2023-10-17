@@ -7,6 +7,6 @@
 <<<
 *a `*`*
 >>>
-documentBegin
+BEGIN document
 emphasis: a (codeSpan: *)
-documentEnd
+END document

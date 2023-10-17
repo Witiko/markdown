@@ -36,7 +36,7 @@ With hyphens
 -
 
 >>>
-documentBegin
+BEGIN document
 interblockSeparator
 ulBeginTight
 ulItem
@@ -96,4 +96,4 @@ ulItemEnd
 ulItem
 ulItemEnd
 ulEndTight
-documentEnd
+END document

@@ -16,7 +16,7 @@
 ---
 of dashes"/>
 >>>
-documentBegin
+BEGIN document
 BEGIN section
 BEGIN section
 headingTwo: `Foo
@@ -28,4 +28,4 @@ headingTwo: <a title="a lot
 interblockSeparator
 END section
 END section
-documentEnd
+END document

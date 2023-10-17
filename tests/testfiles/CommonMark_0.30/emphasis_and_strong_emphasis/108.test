@@ -7,7 +7,7 @@
 <<<
 __foo___
 >>>
-documentBegin
+BEGIN document
 strongEmphasis: foo
 underscore
-documentEnd
+END document

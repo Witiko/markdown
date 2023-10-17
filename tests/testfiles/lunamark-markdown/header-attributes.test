@@ -20,7 +20,7 @@ A level two heading {iD=fourth4-id .2not-a-class}
 
 # Attributes {#should #appear .in .alphabetical order=ing and="not" #the .order of='typing'}
 >>>
-documentBegin
+BEGIN document
 codeSpan: headerAttributes
 softLineBreak
 interblockSeparator
@@ -108,4 +108,4 @@ END attributeKeyValue
 headingOne: Attributes
 END headerAttributeContext
 END section
-documentEnd
+END document

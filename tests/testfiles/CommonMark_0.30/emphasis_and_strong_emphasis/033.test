@@ -7,9 +7,9 @@
 <<<
 __ foo bar__
 >>>
-documentBegin
+BEGIN document
 underscore
 underscore
 underscore
 underscore
-documentEnd
+END document

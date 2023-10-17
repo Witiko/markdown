@@ -7,6 +7,6 @@
 <<<
 `` \[\` ``
 >>>
-documentBegin
+BEGIN document
 codeSpan: (backslash)[(backslash)`
-documentEnd
+END document

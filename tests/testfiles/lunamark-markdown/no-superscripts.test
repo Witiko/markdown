@@ -3,11 +3,11 @@ This test ensures that the Lua `superscripts` option is disabled by default.
 
 2^10^ is 1024 and some \^regular^ text with circumflexes.
 >>>
-documentBegin
+BEGIN document
 codeSpan: superscripts
 paragraphSeparator
 circumflex
 circumflex
 circumflex
 circumflex
-documentEnd
+END document

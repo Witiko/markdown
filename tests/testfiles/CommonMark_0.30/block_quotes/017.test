@@ -12,10 +12,10 @@
 >
 > *bar*
 >>>
-documentBegin
+BEGIN document
 blockQuoteBegin
 emphasis: foo
 interblockSeparator
 emphasis: bar
 blockQuoteEnd
-documentEnd
+END document

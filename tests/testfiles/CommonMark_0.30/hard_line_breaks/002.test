@@ -9,6 +9,6 @@
 foo\
 baz
 >>>
-documentBegin
+BEGIN document
 hardLineBreak
-documentEnd
+END document

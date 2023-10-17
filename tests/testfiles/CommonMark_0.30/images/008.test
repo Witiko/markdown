@@ -7,10 +7,10 @@
 <<<
 My ![foo bar](/path/to/train.jpg  "title"   )
 >>>
-documentBegin
+BEGIN document
 BEGIN image
 - label: foo bar
 - URI: /path/to/train.jpg
 - title: title
 END image
-documentEnd
+END document

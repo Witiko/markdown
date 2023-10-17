@@ -17,7 +17,7 @@
 > 1. > _Blockquote
 continued here._
 >>>
-documentBegin
+BEGIN document
 blockQuoteBegin
 olBeginTight
 olItemWithNumber: 1
@@ -27,4 +27,4 @@ blockQuoteEnd
 olItemEnd
 olEndTight
 blockQuoteEnd
-documentEnd
+END document

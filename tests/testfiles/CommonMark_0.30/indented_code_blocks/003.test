@@ -16,7 +16,7 @@
 
     - bar
 >>>
-documentBegin
+BEGIN document
 olBegin
 olItemWithNumber: 1
 interblockSeparator
@@ -26,4 +26,4 @@ ulItemEnd
 ulEndTight
 olItemEnd
 olEnd
-documentEnd
+END document

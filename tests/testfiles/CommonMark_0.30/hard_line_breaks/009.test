@@ -8,6 +8,6 @@
 `code\
 span`
 >>>
-documentBegin
+BEGIN document
 codeSpan: code(backslash) span
-documentEnd
+END document

@@ -18,7 +18,7 @@ The following inline raw span should be recognized as such:
 
 This is `<a>html</a>`{=html}
 >>>
-documentBegin
+BEGIN document
 codeSpan: fencedCode
 softLineBreak
 codeSpan: rawAttribute
@@ -35,4 +35,4 @@ BEGIN rawInline
 - src: ./_markdown_test/fd6a1b0756c054889635f876357a8ca1.verbatim
 - raw attribute: html
 END rawInline
-documentEnd
+END document

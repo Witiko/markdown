@@ -7,6 +7,6 @@
 <<<
 ******foo******
 >>>
-documentBegin
+BEGIN document
 strongEmphasis: (strongEmphasis: (strongEmphasis: foo))
-documentEnd
+END document

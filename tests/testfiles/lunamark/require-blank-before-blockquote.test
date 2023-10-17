@@ -3,6 +3,6 @@
 Hi
 > no quote
 >>>
-documentBegin
+BEGIN document
 softLineBreak
-documentEnd
+END document

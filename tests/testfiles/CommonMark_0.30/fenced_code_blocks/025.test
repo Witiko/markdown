@@ -14,9 +14,9 @@ def foo(x)
 end
 ~~~~~~~
 >>>
-documentBegin
+BEGIN document
 BEGIN fencedCode
 - src: ./_markdown_test/bec320a1e3b741ba35aaee15586aa06d.verbatim
 - infostring: ruby startline=3 $%@#$
 END fencedCode
-documentEnd
+END document

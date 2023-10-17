@@ -140,7 +140,7 @@ belong to the previous note.
     line.  In this way, multi-paragraph notes work like
     multi-paragraph list items.
 >>>
-documentBegin
+BEGIN document
 BEGIN section
 BEGIN section
 BEGIN headerAttributeContext
@@ -197,4 +197,4 @@ END section
 END section
 END section
 END section
-documentEnd
+END document

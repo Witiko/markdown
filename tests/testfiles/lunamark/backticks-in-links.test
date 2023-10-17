@@ -1,10 +1,10 @@
 <<<
 [hi `there] bud`](/url)
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: hi (codeSpan: there] bud)
 - URI: /url
 - title: 
 END link
-documentEnd
+END document

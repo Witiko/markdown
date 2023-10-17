@@ -7,6 +7,6 @@
 <<<
 `hi`lo`
 >>>
-documentBegin
+BEGIN document
 codeSpan: hi
-documentEnd
+END document

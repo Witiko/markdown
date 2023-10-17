@@ -5,9 +5,9 @@
  	stripped and be recognized as a paragraph of text, not a verbatim code
 	block.
 >>>
-documentBegin
+BEGIN document
 codeSpan: stripIndent
 softLineBreak
 softLineBreak
 softLineBreak
-documentEnd
+END document

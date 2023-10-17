@@ -7,7 +7,7 @@ reference.  It need *not* be placed at the end of the document.]
 
 \^[This should *not* be a note, because it has been escaped.]
 >>>
-documentBegin
+BEGIN document
 codeSpan: inlineNotes
 softLineBreak
 paragraphSeparator
@@ -17,4 +17,4 @@ emphasis: not
 paragraphSeparator
 circumflex
 emphasis: not
-documentEnd
+END document

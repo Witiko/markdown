@@ -18,7 +18,7 @@ break].
 [other]: /other
 
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: simple case
 - URI: /simple
@@ -41,4 +41,4 @@ BEGIN link
 - URI: /other
 - title: 
 END link
-documentEnd
+END document

@@ -15,7 +15,7 @@
 	
 		code block with whitespace on preceding line
 >>>
-documentBegin
+BEGIN document
 ulBegin
 ulItem
 interblockSeparator
@@ -30,4 +30,4 @@ interblockSeparator
 inputVerbatim: ./_markdown_test/76f4166a488956dfe5082ca0ab4ca21f.verbatim
 ulItemEnd
 ulEnd
-documentEnd
+END document

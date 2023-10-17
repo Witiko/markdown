@@ -13,6 +13,6 @@ bar
 </div>
 *foo*
 >>>
-documentBegin
+BEGIN document
 inputBlockHtmlElement: ./_markdown_test/7001f3dd24898bf2401acb6c9979b65d.verbatim
-documentEnd
+END document

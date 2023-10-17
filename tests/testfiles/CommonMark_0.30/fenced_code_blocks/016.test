@@ -12,6 +12,6 @@
     aaa
     ```
 >>>
-documentBegin
+BEGIN document
 inputVerbatim: ./_markdown_test/e3d697b4aac9823edcd21eccfd55246d.verbatim
-documentEnd
+END document

@@ -10,10 +10,10 @@ Foo
 Bar
 ---
 >>>
-documentBegin
+BEGIN document
 BEGIN section
 BEGIN section
 headingTwo: Foo(softLineBreak)Bar
 END section
 END section
-documentEnd
+END document

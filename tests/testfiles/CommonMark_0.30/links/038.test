@@ -7,6 +7,6 @@
 <<<
 [foo *[bar [baz](/uri)](/uri)*](/uri)
 >>>
-documentBegin
+BEGIN document
 emphasis: [bar (BEGIN link)(- label: baz)(- URI: /uri)(- title: )(END link)](/uri)
-documentEnd
+END document

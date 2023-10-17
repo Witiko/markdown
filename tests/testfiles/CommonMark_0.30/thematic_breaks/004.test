@@ -11,9 +11,9 @@
 **
 __
 >>>
-documentBegin
+BEGIN document
 softLineBreak
 softLineBreak
 underscore
 underscore
-documentEnd
+END document

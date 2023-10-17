@@ -23,7 +23,7 @@ default.
 
 A caption may not span multiple paragraphs.
 >>>
-documentBegin
+BEGIN document
 codeSpan: tableCaptions
 softLineBreak
 interblockSeparator
@@ -81,4 +81,4 @@ interblockSeparator
 emphasis: pipe table
 softLineBreak
 paragraphSeparator
-documentEnd
+END document

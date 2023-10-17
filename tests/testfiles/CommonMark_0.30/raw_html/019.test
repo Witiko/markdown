@@ -7,6 +7,6 @@
 <<<
 foo <a href="&ouml;">
 >>>
-documentBegin
+BEGIN document
 inlineHtmlTag: <a href="(ampersand)ouml;">
-documentEnd
+END document

@@ -9,8 +9,8 @@
 ` `
 `  `
 >>>
-documentBegin
+BEGIN document
 codeSpan:  
 softLineBreak
 codeSpan:   
-documentEnd
+END document

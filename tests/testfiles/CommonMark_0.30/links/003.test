@@ -7,10 +7,10 @@
 <<<
 [](./target.md)
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: 
 - URI: ./target.md
 - title: 
 END link
-documentEnd
+END document

@@ -9,10 +9,10 @@
 <<<
 0. _ok_
 >>>
-documentBegin
+BEGIN document
 olBeginTight
 olItemWithNumber: 0
 emphasis: ok
 olItemEnd
 olEndTight
-documentEnd
+END document

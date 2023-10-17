@@ -7,5 +7,5 @@
 <<<
 </a href="foo">
 >>>
-documentBegin
-documentEnd
+BEGIN document
+END document

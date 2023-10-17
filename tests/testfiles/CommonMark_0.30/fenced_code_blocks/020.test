@@ -9,8 +9,8 @@
 ``` ```
 *aaa*
 >>>
-documentBegin
+BEGIN document
 codeSpan:  
 softLineBreak
 emphasis: aaa
-documentEnd
+END document

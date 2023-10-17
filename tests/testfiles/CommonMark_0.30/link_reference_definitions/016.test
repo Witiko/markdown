@@ -7,5 +7,5 @@
 <<<
 [foo]: /url
 >>>
-documentBegin
-documentEnd
+BEGIN document
+END document

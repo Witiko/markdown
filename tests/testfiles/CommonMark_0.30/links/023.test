@@ -7,10 +7,10 @@
 <<<
 [link]("title")
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: link
 - URI: "title"
 - title: 
 END link
-documentEnd
+END document

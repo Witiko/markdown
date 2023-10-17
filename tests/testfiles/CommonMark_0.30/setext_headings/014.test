@@ -13,9 +13,9 @@
 bar
 ===
 >>>
-documentBegin
+BEGIN document
 blockQuoteBegin
 softLineBreak
 softLineBreak
 blockQuoteEnd
-documentEnd
+END document

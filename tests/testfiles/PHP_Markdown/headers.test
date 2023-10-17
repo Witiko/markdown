@@ -9,7 +9,7 @@ Paragraphr
 
 Paragraph
 >>>
-documentBegin
+BEGIN document
 BEGIN section
 BEGIN section
 BEGIN section
@@ -23,4 +23,4 @@ interblockSeparator
 END section
 END section
 END section
-documentEnd
+END document

@@ -7,6 +7,6 @@
 <<<
 _foo*
 >>>
-documentBegin
+BEGIN document
 underscore
-documentEnd
+END document

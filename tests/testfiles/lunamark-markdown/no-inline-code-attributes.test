@@ -4,11 +4,11 @@ disabled by default.
 
 `<$>`{.haskell}
 >>>
-documentBegin
+BEGIN document
 codeSpan: inlineCodeAttributes
 softLineBreak
 paragraphSeparator
 codeSpan: <(dollarSign)>
 leftBrace
 rightBrace
-documentEnd
+END document

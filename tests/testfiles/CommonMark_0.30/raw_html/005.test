@@ -7,6 +7,6 @@
 <<<
 Foo <responsive-image src="foo.jpg" />
 >>>
-documentBegin
+BEGIN document
 inlineHtmlTag: <responsive-image src="foo.jpg" />
-documentEnd
+END document

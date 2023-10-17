@@ -7,10 +7,10 @@
 <<<
 [foo](/f&ouml;&ouml; "f&ouml;&ouml;")
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: foo
 - URI: /f&ouml;&ouml;
 - title: föö
 END link
-documentEnd
+END document

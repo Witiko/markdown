@@ -9,6 +9,6 @@
 *foo\
 bar*
 >>>
-documentBegin
+BEGIN document
 emphasis: foo(hardLineBreak)bar
-documentEnd
+END document

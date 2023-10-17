@@ -25,7 +25,7 @@
 
       _bim_
 >>>
-documentBegin
+BEGIN document
 ulBeginTight
 ulItem
 emphasis: foo
@@ -45,4 +45,4 @@ ulItemEnd
 ulEndTight
 ulItemEnd
 ulEndTight
-documentEnd
+END document

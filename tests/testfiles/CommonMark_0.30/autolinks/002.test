@@ -7,10 +7,10 @@
 <<<
 <http://foo.bar.baz/test?q=hello&id=22&boolean>
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: http://foo.bar.baz/test?q=hello(ampersand)id=22(ampersand)boolean
 - URI: http://foo.bar.baz/test?q=hello&id=22&boolean
 - title: 
 END link
-documentEnd
+END document

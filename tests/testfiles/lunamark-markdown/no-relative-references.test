@@ -4,9 +4,9 @@ default.
 
 Here is a <#relative-reference> and <?here=is> another <./one>.
 >>>
-documentBegin
+BEGIN document
 codeSpan: relativeReferences
 softLineBreak
 paragraphSeparator
 hash
-documentEnd
+END document

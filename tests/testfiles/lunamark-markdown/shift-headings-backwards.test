@@ -18,7 +18,7 @@ A level two heading
 ##### A level five heading
 ###### A level six heading
 >>>
-documentBegin
+BEGIN document
 codeSpan: shiftHeadings
 softLineBreak
 interblockSeparator
@@ -53,4 +53,4 @@ END section
 END section
 END section
 END section
-documentEnd
+END document

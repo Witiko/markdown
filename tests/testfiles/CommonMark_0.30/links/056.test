@@ -9,6 +9,6 @@
 
 [ref]: /uri
 >>>
-documentBegin
+BEGIN document
 codeSpan: ][ref]
-documentEnd
+END document

@@ -7,6 +7,6 @@
 <<<
 *(*foo*)*
 >>>
-documentBegin
+BEGIN document
 emphasis: ((emphasis: foo))
-documentEnd
+END document

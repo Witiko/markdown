@@ -10,7 +10,7 @@ Two markdown *paragraphs* are
 *no matter how many blank lines* in between.
 
 >>>
-documentBegin
+BEGIN document
 softLineBreak
 paragraphSeparator
 emphasis: paragraphs
@@ -18,4 +18,4 @@ paragraphSeparator
 emphasis: always separated by a paragraph separator
 paragraphSeparator
 emphasis: no matter how many blank lines
-documentEnd
+END document

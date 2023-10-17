@@ -13,7 +13,7 @@ bar
 ---
 baz
 >>>
-documentBegin
+BEGIN document
 interblockSeparator
 BEGIN section
 BEGIN section
@@ -21,4 +21,4 @@ headingTwo: bar
 interblockSeparator
 END section
 END section
-documentEnd
+END document

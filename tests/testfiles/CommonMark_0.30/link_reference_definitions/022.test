@@ -12,7 +12,7 @@ Foo
 
 [bar]
 >>>
-documentBegin
+BEGIN document
 softLineBreak
 paragraphSeparator
-documentEnd
+END document

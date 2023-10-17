@@ -10,7 +10,7 @@
 >  
 > 
 >>>
-documentBegin
+BEGIN document
 blockQuoteBegin
 blockQuoteEnd
-documentEnd
+END document

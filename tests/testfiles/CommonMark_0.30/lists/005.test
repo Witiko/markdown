@@ -11,10 +11,10 @@
 The number of windows in my house is
 1.  The number of doors is 6.
 >>>
-documentBegin
+BEGIN document
 interblockSeparator
 olBeginTight
 olItemWithNumber: 1
 olItemEnd
 olEndTight
-documentEnd
+END document

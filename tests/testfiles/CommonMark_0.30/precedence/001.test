@@ -11,11 +11,11 @@
 - `one
 - two`
 >>>
-documentBegin
+BEGIN document
 ulBeginTight
 ulItem
 ulItemEnd
 ulItem
 ulItemEnd
 ulEndTight
-documentEnd
+END document

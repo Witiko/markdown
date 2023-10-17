@@ -10,10 +10,10 @@
 -   
   _foo_
 >>>
-documentBegin
+BEGIN document
 ulBeginTight
 ulItem
 emphasis: foo
 ulItemEnd
 ulEndTight
-documentEnd
+END document

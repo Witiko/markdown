@@ -14,10 +14,10 @@
 
 	bar
 >>>
-documentBegin
+BEGIN document
 ulBegin
 ulItem
 interblockSeparator
 ulItemEnd
 ulEnd
-documentEnd
+END document

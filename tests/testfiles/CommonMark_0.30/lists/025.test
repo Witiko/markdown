@@ -18,7 +18,7 @@
 
   _baz_
 >>>
-documentBegin
+BEGIN document
 ulBegin
 ulItem
 emphasis: foo
@@ -32,4 +32,4 @@ interblockSeparator
 emphasis: baz
 ulItemEnd
 ulEnd
-documentEnd
+END document

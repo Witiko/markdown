@@ -10,10 +10,10 @@
 [foo]: first
 [foo]: second
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: foo
 - URI: first
 - title: 
 END link
-documentEnd
+END document

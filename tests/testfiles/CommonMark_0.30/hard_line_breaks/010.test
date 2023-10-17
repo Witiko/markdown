@@ -12,6 +12,6 @@ if: template == 'input'
 <a href="foo  
 bar">
 >>>
-documentBegin
+BEGIN document
 inlineHtmlTag: <a href="foo   bar">
-documentEnd
+END document

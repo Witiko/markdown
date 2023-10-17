@@ -15,9 +15,9 @@ bar
 
 baz
 >>>
-documentBegin
+BEGIN document
 softLineBreak
 interblockSeparator
 thematicBreak
 interblockSeparator
-documentEnd
+END document

@@ -18,6 +18,6 @@
 
         > A block quote.
 >>>
-documentBegin
+BEGIN document
 inputVerbatim: ./_markdown_test/b1fdfe7d092508ebd2932e4da0968c70.verbatim
-documentEnd
+END document

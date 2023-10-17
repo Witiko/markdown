@@ -13,11 +13,11 @@ a------
 
 ---a---
 >>>
-documentBegin
+BEGIN document
 underscore
 underscore
 underscore
 underscore
 paragraphSeparator
 paragraphSeparator
-documentEnd
+END document

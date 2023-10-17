@@ -11,7 +11,7 @@
   ## foo
    # foo
 >>>
-documentBegin
+BEGIN document
 BEGIN section
 BEGIN section
 BEGIN section
@@ -27,4 +27,4 @@ END section
 BEGIN section
 headingOne: foo
 END section
-documentEnd
+END document

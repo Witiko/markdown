@@ -13,7 +13,7 @@ Auto-links should not occur here: `<http://example.com/>`
 
 	or here: <http://example.com/>
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: http://example.com/
 - URI: http://example.com/
@@ -51,4 +51,4 @@ interblockSeparator
 codeSpan: <http://example.com/>
 interblockSeparator
 inputVerbatim: ./_markdown_test/d063938ba4264a9a85f58f4eb996f49a.verbatim
-documentEnd
+END document

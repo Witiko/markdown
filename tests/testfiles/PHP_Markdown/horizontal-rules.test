@@ -30,7 +30,7 @@ j j j
 n n n
 
 >>>
-documentBegin
+BEGIN document
 interblockSeparator
 thematicBreak
 interblockSeparator
@@ -50,4 +50,4 @@ paragraphSeparator
 paragraphSeparator
 paragraphSeparator
 paragraphSeparator
-documentEnd
+END document

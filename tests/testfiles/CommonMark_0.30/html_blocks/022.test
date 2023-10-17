@@ -19,7 +19,7 @@ main = print $ parseTags tags
 </code></pre>
 okay
 >>>
-documentBegin
+BEGIN document
 inputBlockHtmlElement: ./_markdown_test/83889e8427e2b847ebe0b01d91a34fbf.verbatim
 interblockSeparator
-documentEnd
+END document

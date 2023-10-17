@@ -7,8 +7,8 @@
 <<<
 <a><bab><c2c>
 >>>
-documentBegin
+BEGIN document
 inlineHtmlTag: <a>
 inlineHtmlTag: <bab>
 inlineHtmlTag: <c2c>
-documentEnd
+END document

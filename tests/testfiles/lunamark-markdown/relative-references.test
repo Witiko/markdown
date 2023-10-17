@@ -5,7 +5,7 @@ through the plain TeX interface.
 
 Here is a <#relative-reference> and <?here=is> another <./one>.
 >>>
-documentBegin
+BEGIN document
 codeSpan: relativeReferences
 softLineBreak
 paragraphSeparator
@@ -24,4 +24,4 @@ BEGIN link
 - URI: ./one
 - title: 
 END link
-documentEnd
+END document

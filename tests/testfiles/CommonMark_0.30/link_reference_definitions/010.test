@@ -10,7 +10,7 @@
 
 [foo]
 >>>
-documentBegin
+BEGIN document
 inlineHtmlTag: <bar>
 paragraphSeparator
-documentEnd
+END document

@@ -19,7 +19,7 @@
    - bar
 	 - baz
 >>>
-documentBegin
+BEGIN document
 ulBeginTight
 ulItem
 interblockSeparator
@@ -34,4 +34,4 @@ ulItemEnd
 ulEndTight
 ulItemEnd
 ulEndTight
-documentEnd
+END document

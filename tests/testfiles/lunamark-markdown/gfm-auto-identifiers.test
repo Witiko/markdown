@@ -90,7 +90,7 @@ such as "foo-bar-baz":
 
 # [Foo](no-effect) ![bar](no-effect) _baz_ ^[no-effect]
 >>>
-documentBegin
+BEGIN document
 codeSpan: autoIdentifiers
 codeSpan: headerAttributes
 softLineBreak
@@ -260,4 +260,4 @@ attributeIdentifier: foo-bar-baz
 headingOne: (BEGIN link)(- label: Foo)(- URI: no-effect)(- title: )(END link) (BEGIN image)(- label: bar)(- URI: no-effect)(- title: )(END image) (emphasis: baz) (note: no-effect)
 END headerAttributeContext
 END section
-documentEnd
+END document

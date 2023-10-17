@@ -7,7 +7,7 @@
 <<<
 __ is not an empty emphasis
 >>>
-documentBegin
+BEGIN document
 underscore
 underscore
-documentEnd
+END document

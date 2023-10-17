@@ -23,7 +23,7 @@ Test with tabs for `_Detab`:
 	Code	'block'	with	some	"tabs"	and	"quotes"
 
 >>>
-documentBegin
+BEGIN document
 softLineBreak
 codeSpan: preg(underscore)replace
 codeSpan: /e
@@ -47,4 +47,4 @@ inputVerbatim: ./_markdown_test/49593f3a94665fea149e78f87b7e1b70.verbatim
 END section
 END section
 END section
-documentEnd
+END document

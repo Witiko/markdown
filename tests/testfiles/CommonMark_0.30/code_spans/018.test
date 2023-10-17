@@ -7,6 +7,6 @@
 <<<
 `<http://foo.bar.`baz>`
 >>>
-documentBegin
+BEGIN document
 codeSpan: <http://foo.bar.
-documentEnd
+END document

@@ -9,7 +9,7 @@
 <a  /><b2
 data="foo" >
 >>>
-documentBegin
+BEGIN document
 inlineHtmlTag: <a  />
 inlineHtmlTag: <b2 data="foo" >
-documentEnd
+END document

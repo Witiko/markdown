@@ -6,7 +6,7 @@ following list should be tight.
 4. four
 5. five
 >>>
-documentBegin
+BEGIN document
 codeSpan: tightLists
 softLineBreak
 interblockSeparator
@@ -18,4 +18,4 @@ olItemEnd
 olItemWithNumber: 5
 olItemEnd
 olEndTight
-documentEnd
+END document

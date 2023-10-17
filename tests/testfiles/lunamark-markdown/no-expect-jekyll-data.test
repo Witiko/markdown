@@ -34,7 +34,7 @@ abstract: |
   It consists of two paragraphs.
 ---
 >>>
-documentBegin
+BEGIN document
 softLineBreak
 interblockSeparator
 ulBeginTight
@@ -108,4 +108,4 @@ BEGIN jekyllDataString
 END jekyllDataString
 jekyllDataMappingEnd
 jekyllDataEnd
-documentEnd
+END document

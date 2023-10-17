@@ -14,7 +14,7 @@
 
    _bar_
 >>>
-documentBegin
+BEGIN document
 ulBegin
 ulItem
 emphasis: foo
@@ -22,4 +22,4 @@ interblockSeparator
 emphasis: bar
 ulItemEnd
 ulEnd
-documentEnd
+END document

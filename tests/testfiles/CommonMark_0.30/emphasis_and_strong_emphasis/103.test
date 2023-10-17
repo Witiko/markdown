@@ -7,6 +7,6 @@
 <<<
 foo __*__
 >>>
-documentBegin
+BEGIN document
 strongEmphasis: *
-documentEnd
+END document

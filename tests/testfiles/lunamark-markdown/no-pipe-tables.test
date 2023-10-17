@@ -9,7 +9,7 @@ This test ensures that the Lua `pipeTables` option is disabled by default.
 
   : Demonstration of pipe table syntax.
 >>>
-documentBegin
+BEGIN document
 codeSpan: pipeTables
 paragraphSeparator
 pipe
@@ -44,4 +44,4 @@ pipe
 pipe
 pipe
 paragraphSeparator
-documentEnd
+END document

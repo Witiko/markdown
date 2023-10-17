@@ -141,7 +141,7 @@ belong to the previous note.
     line. In this way, multi-paragraph notes work like
     multi-paragraph list items.
 >>>
-documentBegin
+BEGIN document
 BEGIN section
 BEGIN section
 headingTwo: This is an H2
@@ -160,4 +160,4 @@ softLineBreak
 note: Inlines notes are easier to write, since you don't have to pick an identifier and move down to type the note.
 END section
 END section
-documentEnd
+END document

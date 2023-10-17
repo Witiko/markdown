@@ -3,7 +3,7 @@ This test ensures that the Lua `strikeThrough` option is disabled by default.
 
 Some ~~deleted text~~ and some \~~regular text with tildes~~.
 >>>
-documentBegin
+BEGIN document
 codeSpan: strikeThrough
 paragraphSeparator
 tilde
@@ -14,4 +14,4 @@ tilde
 tilde
 tilde
 tilde
-documentEnd
+END document

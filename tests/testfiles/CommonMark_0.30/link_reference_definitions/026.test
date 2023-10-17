@@ -16,7 +16,7 @@
 [bar],
 [baz]
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: foo
 - URI: /foo-url
@@ -34,4 +34,4 @@ BEGIN link
 - URI: /baz-url
 - title: 
 END link
-documentEnd
+END document

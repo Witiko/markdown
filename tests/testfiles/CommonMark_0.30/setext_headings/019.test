@@ -9,8 +9,8 @@
 ---
 ---
 >>>
-documentBegin
+BEGIN document
 thematicBreak
 interblockSeparator
 thematicBreak
-documentEnd
+END document

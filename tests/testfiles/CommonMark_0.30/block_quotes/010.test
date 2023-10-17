@@ -13,7 +13,7 @@
 *foo*
 ```
 >>>
-documentBegin
+BEGIN document
 blockQuoteBegin
 BEGIN fencedCode
 - src: ./_markdown_test/d41d8cd98f00b204e9800998ecf8427e.verbatim
@@ -27,4 +27,4 @@ BEGIN fencedCode
 - src: ./_markdown_test/d41d8cd98f00b204e9800998ecf8427e.verbatim
 - infostring: 
 END fencedCode
-documentEnd
+END document

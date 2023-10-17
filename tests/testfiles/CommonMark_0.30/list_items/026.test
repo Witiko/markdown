@@ -24,7 +24,7 @@
 -
       _baz_
 >>>
-documentBegin
+BEGIN document
 ulBeginTight
 ulItem
 emphasis: foo
@@ -39,4 +39,4 @@ ulItem
 inputVerbatim: ./_markdown_test/dd4ffdae91dd888b881283fc83d59ca8.verbatim
 ulItemEnd
 ulEndTight
-documentEnd
+END document

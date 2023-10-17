@@ -10,6 +10,6 @@ Foo
     bar
 
 >>>
-documentBegin
+BEGIN document
 softLineBreak
-documentEnd
+END document

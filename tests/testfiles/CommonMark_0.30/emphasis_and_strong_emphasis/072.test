@@ -7,6 +7,6 @@
 <<<
 **foo [bar](/url)**
 >>>
-documentBegin
+BEGIN document
 strongEmphasis: foo (BEGIN link)(- label: bar)(- URI: /url)(- title: )(END link)
-documentEnd
+END document

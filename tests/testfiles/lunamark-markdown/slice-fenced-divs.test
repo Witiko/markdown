@@ -20,7 +20,7 @@ This text will be *ignored*.
 This text will be *ignored*.
 :::
 >>>
-documentBegin
+BEGIN document
 BEGIN fencedDivAttributeContext
 attributeClassName: class-name
 BEGIN fencedDivAttributeContext
@@ -28,4 +28,4 @@ attributeIdentifier: sliced-div
 emphasis: displayed
 END fencedDivAttributeContext
 END fencedDivAttributeContext
-documentEnd
+END document

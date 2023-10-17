@@ -7,6 +7,6 @@
 <<<
 hello $.;'there
 >>>
-documentBegin
+BEGIN document
 dollarSign
-documentEnd
+END document

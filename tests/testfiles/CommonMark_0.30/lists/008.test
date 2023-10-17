@@ -21,7 +21,7 @@
 - _baz_
 - _bim_
 >>>
-documentBegin
+BEGIN document
 ulBeginTight
 ulItem
 emphasis: foo
@@ -41,4 +41,4 @@ ulItem
 emphasis: bim
 ulItemEnd
 ulEndTight
-documentEnd
+END document

@@ -13,7 +13,7 @@
 
 [link](http://example.com?foo=3#frag)
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: link
 - URI: #fragment
@@ -31,4 +31,4 @@ BEGIN link
 - URI: http://example.com?foo=3#frag
 - title: 
 END link
-documentEnd
+END document

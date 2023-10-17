@@ -7,6 +7,6 @@
 <<<
 [foo <bar attr="](baz)">
 >>>
-documentBegin
+BEGIN document
 inlineHtmlTag: <bar attr="](baz)">
-documentEnd
+END document

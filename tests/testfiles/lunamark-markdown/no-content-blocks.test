@@ -15,7 +15,7 @@ htt(p:/)/exam(ple.c)om/m\(inard.jpg (Napoleon's disastrous Russian campaign of 1
 /Example.swift (Source code)
 /Lorem Ipsum.txt
 >>>
-documentBegin
+BEGIN document
 codeSpan: contentBlocks
 softLineBreak
 paragraphSeparator
@@ -37,4 +37,4 @@ softLineBreak
 paragraphSeparator
 softLineBreak
 softLineBreak
-documentEnd
+END document

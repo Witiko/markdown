@@ -14,7 +14,7 @@
 
 bbb
 >>>
-documentBegin
+BEGIN document
 blockQuoteBegin
 BEGIN fencedCode
 - src: ./_markdown_test/47bce5c74f589f4867dbd57e9ca9f808.verbatim
@@ -22,4 +22,4 @@ BEGIN fencedCode
 END fencedCode
 blockQuoteEnd
 interblockSeparator
-documentEnd
+END document

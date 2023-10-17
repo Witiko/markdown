@@ -15,7 +15,7 @@
   [2]: </url(test)> "title"
 
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: Inline link 1 with parens
 - URI: /url(test)
@@ -51,4 +51,4 @@ BEGIN link
 - URI: /url(test)
 - title: title
 END link
-documentEnd
+END document

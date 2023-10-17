@@ -17,7 +17,7 @@
 
    _bar_
 >>>
-documentBegin
+BEGIN document
 olBegin
 olItemWithNumber: 1
 BEGIN fencedCode
@@ -28,4 +28,4 @@ interblockSeparator
 emphasis: bar
 olItemEnd
 olEnd
-documentEnd
+END document

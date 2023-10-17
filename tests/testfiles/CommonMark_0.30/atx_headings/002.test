@@ -7,7 +7,7 @@
 <<<
 ####### foo
 >>>
-documentBegin
+BEGIN document
 hash
 hash
 hash
@@ -15,4 +15,4 @@ hash
 hash
 hash
 hash
-documentEnd
+END document

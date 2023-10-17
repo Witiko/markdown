@@ -13,7 +13,7 @@ with blank line'
 
 [foo]
 >>>
-documentBegin
+BEGIN document
 paragraphSeparator
 paragraphSeparator
-documentEnd
+END document

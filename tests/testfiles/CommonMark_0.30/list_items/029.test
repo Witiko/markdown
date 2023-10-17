@@ -13,7 +13,7 @@
 -
 - _bar_
 >>>
-documentBegin
+BEGIN document
 ulBeginTight
 ulItem
 emphasis: foo
@@ -24,4 +24,4 @@ ulItem
 emphasis: bar
 ulItemEnd
 ulEndTight
-documentEnd
+END document

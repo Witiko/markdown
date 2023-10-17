@@ -16,7 +16,7 @@
 >>
   >  > _two_
 >>>
-documentBegin
+BEGIN document
 blockQuoteBegin
 blockQuoteBegin
 ulBeginTight
@@ -28,4 +28,4 @@ interblockSeparator
 emphasis: two
 blockQuoteEnd
 blockQuoteEnd
-documentEnd
+END document

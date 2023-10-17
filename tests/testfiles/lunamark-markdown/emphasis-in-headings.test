@@ -15,7 +15,7 @@ foo *bar*
 foo _bar_ bar
 -------------
 >>>
-documentBegin
+BEGIN document
 softLineBreak
 BEGIN link
 - label: https://github.com/witiko/markdown/pull/360
@@ -56,4 +56,4 @@ BEGIN section
 headingTwo: foo (emphasis: bar) bar
 END section
 END section
-documentEnd
+END document

@@ -20,7 +20,7 @@
 
     3. _c_
 >>>
-documentBegin
+BEGIN document
 olBegin
 olItemWithNumber: 1
 emphasis: a
@@ -31,4 +31,4 @@ olItemEnd
 olEnd
 interblockSeparator
 inputVerbatim: ./_markdown_test/9b5fa609c661c8387cf7669ea3dd7bd4.verbatim
-documentEnd
+END document

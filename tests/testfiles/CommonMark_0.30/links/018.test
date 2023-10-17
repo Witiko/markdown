@@ -7,10 +7,10 @@
 <<<
 [link](<foo(and(bar)>)
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: link
 - URI: foo(and(bar)
 - title: 
 END link
-documentEnd
+END document

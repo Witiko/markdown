@@ -18,7 +18,7 @@ Heading
     foo
 ----
 >>>
-documentBegin
+BEGIN document
 BEGIN section
 headingOne: Heading
 interblockSeparator
@@ -32,4 +32,4 @@ interblockSeparator
 thematicBreak
 END section
 END section
-documentEnd
+END document

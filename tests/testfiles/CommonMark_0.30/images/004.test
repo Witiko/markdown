@@ -7,10 +7,10 @@
 <<<
 ![foo [bar](/url)](/url2)
 >>>
-documentBegin
+BEGIN document
 BEGIN image
 - label: foo (BEGIN link)(- label: bar)(- URI: /url)(- title: )(END link)
 - URI: /url2
 - title: 
 END image
-documentEnd
+END document

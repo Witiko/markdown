@@ -7,7 +7,7 @@
 <<<
 a_"foo"_
 >>>
-documentBegin
+BEGIN document
 underscore
 underscore
-documentEnd
+END document

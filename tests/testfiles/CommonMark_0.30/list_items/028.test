@@ -12,11 +12,11 @@
 
   _foo_
 >>>
-documentBegin
+BEGIN document
 ulBeginTight
 ulItem
 ulItemEnd
 ulEndTight
 interblockSeparator
 emphasis: foo
-documentEnd
+END document

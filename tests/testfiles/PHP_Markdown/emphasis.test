@@ -81,7 +81,7 @@ _____Cut here_____
 ____Cut here____
 
 >>>
-documentBegin
+BEGIN document
 interblockSeparator
 olBeginTight
 olItemWithNumber: 1
@@ -277,4 +277,4 @@ paragraphSeparator
 strongEmphasis: (strongEmphasis: Cut here)
 END section
 END section
-documentEnd
+END document

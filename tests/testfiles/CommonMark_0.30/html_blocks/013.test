@@ -11,6 +11,6 @@
 foo
 </td></tr></table>
 >>>
-documentBegin
+BEGIN document
 inputBlockHtmlElement: ./_markdown_test/f3bd5ed4fc4a218fe39dedb3ad4331dd.verbatim
-documentEnd
+END document
