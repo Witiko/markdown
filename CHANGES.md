@@ -8,6 +8,8 @@ Development:
   syntax extensions.
   (contributed by @lostenderman, #237, #238, lostenderman/markdown#153,
    #315, #354)
+- Add support of bulk redefinition of token renderers and token renderer
+  prototypes in the `\markdownSetup` command using enumeration. (#232, #361)
 
 Fixes:
 

@@ -807,7 +807,7 @@ abbr {
   },
   rendererPrototypes = {
     codeSpan = {\inline{#1}},
-    jek*llDataEnd = {%
+    jekyllData(End) = {%
       \AfterEndPreamble{%
         \printtitlepage
         \tableofcontents
@@ -19210,73 +19210,113 @@ following text:
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
+\prop_new:N
+  \g_@@_glob_cache_prop
+\tl_new:N
+  \l_@@_current_glob_tl
+\cs_new:Nn
+  \@@_glob_seq:nNN
+  {
+    \tl_set:Nn
+      \l_@@_current_glob_tl
+      { #1 }
+    \prop_get:NVNTF
+      \g_@@_glob_cache_prop
+      \l_@@_current_glob_tl
+      \l_tmpa_clist
+      {
+        \seq_set_from_clist:NN
+          #3
+          \l_tmpa_clist
+      }
+      {
+        \seq_clear:N
+          #3
+        \regex_match:nVT
+          { \* }
+          \l_@@_current_glob_tl
+          {
+            \regex_replace_all:nnN
+              { \* }
+              { .* }
+              \l_@@_current_glob_tl
+          }
+        \regex_set:NV
+          \l_tmpa_regex
+          \l_@@_current_glob_tl
+        \seq_map_inline:Nn
+          #2
+          {
+            \@@_with_various_cases:nn
+              { ##1 }
+              {
+                \regex_match:NnT
+                  \l_tmpa_regex
+                  { ####1 }
+                  {
+                    \seq_put_right:Nn
+                      #3
+                      { ##1 }
+                    \@@_with_various_cases_break:
+                  }
+              }
+          }
+        \clist_set_from_seq:NN
+          \l_tmpa_clist
+          #3
+        \prop_gput:NVV
+          \g_@@_glob_cache_prop
+          \l_@@_current_glob_tl
+          \l_tmpa_clist
+      }
+  }
+\prg_generate_conditional_variant:Nnn
+  \regex_match:nn
+  { nV }
+  { T }
+\cs_generate_variant:Nn
+  \regex_set:Nn
+  { NV }
+\seq_new:N
+  \l_@@_renderer_glob_results_seq
 \tl_new:N
   \l_@@_renderer_definition_tl
 \keys_define:nn
   { markdown/options/renderers }
   {
     unknown .code:n = {
-      \regex_match:nVTF
-        { \* }
+      \@@_glob_seq:VNN
         \l_keys_key_str
-        {
-          \tl_set:Nn
-            \l_@@_renderer_definition_tl
-            { #1 }
-          \tl_set:NV
-            \l_tmpa_tl
-            \l_keys_key_str
-          \regex_replace_all:nnN
-            { \* }
-            { .* }
-            \l_tmpa_tl
-          \regex_set:NV
-            \l_tmpa_regex
-            \l_tmpa_tl
-          \int_zero:N
-            \l_tmpa_int
-          \seq_map_inline:Nn
-            \g_@@_renderers_seq
-            {
-              \@@_with_various_cases:nn
-                { ##1 }
-                {
-                  \regex_match:NnT
-                    \l_tmpa_regex
-                    { ####1 }
-                    {
-                      \@@_renderer_tl_to_csname:nN
-                        { ##1 }
-                        \l_tmpa_tl
-                      \prop_get:NnN
-                        \g_@@_renderer_arities_prop
-                        { ##1 }
-                        \l_tmpb_tl
-                      \cs_generate_from_arg_count:cNVV
-                        { \l_tmpa_tl }
-                        \cs_set:Npn
-                        \l_tmpb_tl
-                        \l_@@_renderer_definition_tl
-                      \int_incr:N
-                        \l_tmpa_int
-                      \@@_with_various_cases_break:
-                    }
-                }
-            }
-          \int_compare:nNnT
-            { \l_tmpa_int } = { 0 }
-            {
-              \msg_error:nnV
-                { markdown }
-                { nonmatched-renderer-wildcard }
-                \l_keys_key_str
-            }
-        }
+        \g_@@_renderers_seq
+        \l_@@_renderer_glob_results_seq
+      \seq_if_empty:NTF
+        \l_@@_renderer_glob_results_seq
         {
           \msg_error:nnV
             { markdown }
             { undefined-renderer }
             \l_keys_key_str
+        }
+        {
+          \tl_set:Nn
+            \l_@@_renderer_definition_tl
+            { #1 }
+          \seq_map_inline:Nn
+            \l_@@_renderer_glob_results_seq
+            {
+              \@@_renderer_tl_to_csname:nN
+                { ##1 }
+                \l_tmpa_tl
+              \prop_get:NnN
+                \g_@@_renderer_arities_prop
+                { ##1 }
+                \l_tmpb_tl
+              \cs_generate_from_arg_count:cNVV
+                { \l_tmpa_tl }
+                \cs_set:Npn
+                \l_tmpb_tl
+                \l_@@_renderer_definition_tl
+            }
         }
     },
   }
@@ -19286,25 +19326,15 @@ following text:
   {
     Renderer~#1~is~undefined.
   }
-\msg_new:nnn
-  { markdown }
-  { nonmatched-renderer-wildcard }
-  {
-    Wildcard~#1~matches~no~renderers.
-  }
 \cs_generate_variant:Nn
-  \regex_set:Nn
-  { NV }
+  \@@_glob_seq:nNN
+  { VNN }
 \cs_generate_variant:Nn
   \cs_generate_from_arg_count:NNnn
   { cNVV }
 \cs_generate_variant:Nn
   \msg_error:nnn
   { nnV }
-\prg_generate_conditional_variant:Nnn
-  \regex_match:nn
-  { nV }
-  { TF }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -19742,73 +19772,46 @@ following text:
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
+\seq_new:N
+  \l_@@_renderer_prototype_glob_results_seq
 \tl_new:N
   \l_@@_renderer_prototype_definition_tl
 \keys_define:nn
   { markdown/options/renderer-prototypes }
   {
     unknown .code:n = {
-      \regex_match:nVTF
-        { \* }
+      \@@_glob_seq:VNN
         \l_keys_key_str
-        {
-          \tl_set:Nn
-            \l_@@_renderer_prototype_definition_tl
-            { #1 }
-          \tl_set:NV
-            \l_tmpa_tl
-            \l_keys_key_str
-          \regex_replace_all:nnN
-            { \* }
-            { .* }
-            \l_tmpa_tl
-          \regex_set:NV
-            \l_tmpa_regex
-            \l_tmpa_tl
-          \int_zero:N
-            \l_tmpa_int
-          \seq_map_inline:Nn
-            \g_@@_renderers_seq
-            {
-              \@@_with_various_cases:nn
-                { ##1 }
-                {
-                  \regex_match:NnT
-                    \l_tmpa_regex
-                    { ####1 }
-                    {
-                      \@@_renderer_prototype_tl_to_csname:nN
-                        { ##1 }
-                        \l_tmpa_tl
-                      \prop_get:NnN
-                        \g_@@_renderer_arities_prop
-                        { ##1 }
-                        \l_tmpb_tl
-                      \cs_generate_from_arg_count:cNVV
-                        { \l_tmpa_tl }
-                        \cs_set:Npn
-                        \l_tmpb_tl
-                        \l_@@_renderer_prototype_definition_tl
-                      \int_incr:N
-                        \l_tmpa_int
-                      \@@_with_various_cases_break:
-                    }
-                }
-            }
-          \int_compare:nNnT
-            { \l_tmpa_int } = { 0 }
-            {
-              \msg_error:nnV
-                { markdown }
-                { nonmatched-renderer-prototype-wildcard }
-                \l_keys_key_str
-            }
-        }
+        \g_@@_renderers_seq
+        \l_@@_renderer_prototype_glob_results_seq
+      \seq_if_empty:NTF
+        \l_@@_renderer_prototype_glob_results_seq
         {
           \msg_error:nnV
             { markdown }
             { undefined-renderer-prototype }
             \l_keys_key_str
+        }
+        {
+          \tl_set:Nn
+            \l_@@_renderer_prototype_definition_tl
+            { #1 }
+          \seq_map_inline:Nn
+            \l_@@_renderer_prototype_glob_results_seq
+            {
+              \@@_renderer_prototype_tl_to_csname:nN
+                { ##1 }
+                \l_tmpa_tl
+              \prop_get:NnN
+                \g_@@_renderer_arities_prop
+                { ##1 }
+                \l_tmpb_tl
+              \cs_generate_from_arg_count:cNVV
+                { \l_tmpa_tl }
+                \cs_set:Npn
+                \l_tmpb_tl
+                \l_@@_renderer_prototype_definition_tl
+            }
         }
     },
   }
@@ -19818,25 +19821,6 @@ following text:
   {
     Renderer~prototype~#1~is~undefined.
   }
-\msg_new:nnn
-  { markdown }
-  { nonmatched-renderer-prototype-wildcard }
-  {
-    Wildcard~#1~matches~no~renderer~prototypes.
-  }
-\cs_generate_variant:Nn
-  \regex_set:Nn
-  { NV }
-\cs_generate_variant:Nn
-  \cs_generate_from_arg_count:NNnn
-  { cNVV }
-\cs_generate_variant:Nn
-  \msg_error:nnn
-  { nnV }
-\prg_generate_conditional_variant:Nnn
-  \regex_match:nn
-  { nV }
-  { TF }
 \@@_with_various_cases:nn
   { rendererPrototypes }
   {
