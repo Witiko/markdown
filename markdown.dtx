@@ -797,7 +797,7 @@ abbr {
 \RequirePackage{etoolbox}
 \markdownSetup{
   renderers = {
-    head*Four = {%
+    headingFour = {%
       \paragraph{#1}\leavevmode
       \def\markdownRendererInterblockSeparator{%
         \let\markdownRendererInterblockSeparator\par
@@ -807,7 +807,7 @@ abbr {
   },
   rendererPrototypes = {
     codeSpan = {\inline{#1}},
-    jekyllData(End) = {%
+    jekyllDataEnd = {%
       \AfterEndPreamble{%
         \printtitlepage
         \tableofcontents
