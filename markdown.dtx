@@ -19215,14 +19215,14 @@ following text:
 \tl_new:N
   \l_@@_current_glob_tl
 \cs_new:Nn
-  \@@_glob_seq:nNN
+  \@@_glob_seq:nnN
   {
     \tl_set:Nn
       \l_@@_current_glob_tl
       { #1 }
-    \prop_get:NVNTF
+    \prop_get:NoNTF
       \g_@@_glob_cache_prop
-      \l_@@_current_glob_tl
+      { #2 / \l_@@_current_glob_tl }
       \l_tmpa_clist
       {
         \seq_set_from_clist:NN
@@ -19244,8 +19244,8 @@ following text:
         \regex_set:NV
           \l_tmpa_regex
           \l_@@_current_glob_tl
-        \seq_map_inline:Nn
-          #2
+        \seq_map_inline:cn
+          { #2 }
           {
             \@@_with_various_cases:nn
               { ##1 }
@@ -19264,9 +19264,9 @@ following text:
         \clist_set_from_seq:NN
           \l_tmpa_clist
           #3
-        \prop_gput:NVV
+        \prop_gput:NoV
           \g_@@_glob_cache_prop
-          \l_@@_current_glob_tl
+          { #2 / \l_@@_current_glob_tl }
           \l_tmpa_clist
       }
   }
@@ -19277,6 +19277,9 @@ following text:
 \cs_generate_variant:Nn
   \regex_set:Nn
   { NV }
+\cs_generate_variant:Nn
+  \prop_gput:Nnn
+  { NoV }
 \seq_new:N
   \l_@@_renderer_glob_results_seq
 \tl_new:N
@@ -19285,9 +19288,9 @@ following text:
   { markdown/options/renderers }
   {
     unknown .code:n = {
-      \@@_glob_seq:VNN
+      \@@_glob_seq:VnN
         \l_keys_key_str
-        \g_@@_renderers_seq
+        { g_@@_renderers_seq }
         \l_@@_renderer_glob_results_seq
       \seq_if_empty:NTF
         \l_@@_renderer_glob_results_seq
@@ -19327,8 +19330,8 @@ following text:
     Renderer~#1~is~undefined.
   }
 \cs_generate_variant:Nn
-  \@@_glob_seq:nNN
-  { VNN }
+  \@@_glob_seq:nnN
+  { VnN }
 \cs_generate_variant:Nn
   \cs_generate_from_arg_count:NNnn
   { cNVV }
@@ -19782,7 +19785,7 @@ following text:
     unknown .code:n = {
       \@@_glob_seq:VNN
         \l_keys_key_str
-        \g_@@_renderers_seq
+        { g_@@_renderers_seq }
         \l_@@_renderer_prototype_glob_results_seq
       \seq_if_empty:NTF
         \l_@@_renderer_prototype_glob_results_seq
