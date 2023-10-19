@@ -19157,6 +19157,8 @@ following text:
         \tl_tail:n { #1 }
       }
   }
+\tl_new:N
+  \l_@@_renderer_definition_tl
 \cs_new:Nn \@@_define_renderer:nNn
   {
     \@@_with_various_cases:nn
@@ -19166,11 +19168,18 @@ following text:
           { markdown/options/renderers }
           {
             ##1 .code:n = {
-              \cs_generate_from_arg_count:NNnn
+              \tl_set:Nn
+                \l_@@_renderer_definition_tl
+                { ####1 }
+              \regex_replace_all:nnN
+                { \cP\#0 }
+                { #1 }
+                \l_@@_renderer_definition_tl
+              \cs_generate_from_arg_count:NNnV
                 #2
                 \cs_set:Npn
                 { #3 }
-                { ####1 }
+                \l_@@_renderer_definition_tl
             },
           }
       }
@@ -19178,6 +19187,9 @@ following text:
 \cs_generate_variant:Nn
   \@@_define_renderer:nNn
   { ncV }
+\cs_generate_variant:Nn
+  \cs_generate_from_arg_count:NNnn
+  { NNnV }
 \keys_define:nn
   { markdown/options }
   {
@@ -19282,8 +19294,6 @@ following text:
   { NoV }
 \seq_new:N
   \l_@@_renderer_glob_results_seq
-\tl_new:N
-  \l_@@_renderer_definition_tl
 \keys_define:nn
   { markdown/options/renderers }
   {
@@ -19314,11 +19324,21 @@ following text:
                 \g_@@_renderer_arities_prop
                 { ##1 }
                 \l_tmpb_tl
+              \int_set:Nn
+                \l_tmpa_int
+                \l_tmpb_tl
+              \tl_set:Nn
+                \l_tmpb_tl
+                \l_@@_renderer_definition_tl
+              \regex_replace_all:nnN
+                { \cP\#0 }
+                { ##1 }
+                \l_tmpb_tl
               \cs_generate_from_arg_count:cNVV
                 { \l_tmpa_tl }
                 \cs_set:Npn
+                \l_tmpa_int
                 \l_tmpb_tl
-                \l_@@_renderer_definition_tl
             }
         }
     },
@@ -19714,6 +19734,8 @@ following text:
         Prototype
       }
   }
+\tl_new:N
+  \l_@@_renderer_prototype_definition_tl
 \cs_new:Nn \@@_define_renderer_prototype:nNn
   {
     \@@_with_various_cases:nn
@@ -19723,11 +19745,18 @@ following text:
           { markdown/options/renderer-prototypes }
           {
             ##1 .code:n = {
-              \cs_generate_from_arg_count:NNnn
+              \tl_set:Nn
+                \l_@@_renderer_prototype_definition_tl
+                { ####1 }
+              \regex_replace_all:nnN
+                { \cP\#0 }
+                { #1 }
+                \l_@@_renderer_prototype_definition_tl
+              \cs_generate_from_arg_count:NNnV
                 #2
                 \cs_set:Npn
                 { #3 }
-                { ####1 }
+                \l_@@_renderer_prototype_definition_tl
             },
           }
       }
@@ -19777,8 +19806,6 @@ following text:
 \ExplSyntaxOn
 \seq_new:N
   \l_@@_renderer_prototype_glob_results_seq
-\tl_new:N
-  \l_@@_renderer_prototype_definition_tl
 \keys_define:nn
   { markdown/options/renderer-prototypes }
   {
@@ -19809,11 +19836,21 @@ following text:
                 \g_@@_renderer_arities_prop
                 { ##1 }
                 \l_tmpb_tl
+              \int_set:Nn
+                \l_tmpa_int
+                \l_tmpb_tl
+              \tl_set:Nn
+                \l_tmpb_tl
+                \l_@@_renderer_prototype_definition_tl
+              \regex_replace_all:nnN
+                { \cP\#0 }
+                { ##1 }
+                \l_tmpb_tl
               \cs_generate_from_arg_count:cNVV
                 { \l_tmpa_tl }
                 \cs_set:Npn
+                \l_tmpa_int
                 \l_tmpb_tl
-                \l_@@_renderer_prototype_definition_tl
             }
         }
     },
