@@ -40,44 +40,24 @@
 % Citations parsing
 \newcount\CITATIONSCOUNTER
 
-%% Regular citations
-\def\DOCITATIONS#1#2#3#4{%
+%% Citations
+\def\DOCITATIONS#1#2#3#4#5{%
   \advance\CITATIONSCOUNTER by 1\relax
-  \CITE{#1}{#2}{#3}{#4}%
+  \CITE{#1}{#2}{#3}{#4}{#5}%
   \ifnum\CITATIONSCOUNTER>\CITATIONSTOTAL\relax
-    \TYPE{END cites}%
+    \TYPE{END #1s}%
+    \expandafter\expandafter\expandafter\GOBBLE
     \expandafter\GOBBLE
-  \fi\DOCITATIONS}%
-\def\CITE#1#2#3#4{%
-  \TYPE{BEGIN cite}%
-  \TYPE{- suppressAuthor: \if#1+false\else true\fi}%
-  \TYPE{- prenote:        #2}%
-  \TYPE{- postnote:       #3}%
-  \TYPE{- name:           #4}%
-  \TYPE{END cite}}%
-\def\CITATIONS#1{%
-  \TYPE{BEGIN cites}%
+  \fi\DOCITATIONS{#1}}%
+\def\CITE#1#2#3#4#5{%
+  \TYPE{BEGIN #1}%
+  \TYPE{- suppressAuthor: \if#2+false\else true\fi}%
+  \TYPE{- prenote:        #3}%
+  \TYPE{- postnote:       #4}%
+  \TYPE{- name:           #5}%
+  \TYPE{END #1}}%
+\def\CITATIONS#1#2{%
+  \TYPE{BEGIN #1s}%
   \CITATIONSCOUNTER=1%
-  \def\CITATIONSTOTAL{#1}%
-  \DOCITATIONS}%
-
-%% Text citations
-\def\DOTEXTCITATIONS#1#2#3#4{%
-  \advance\CITATIONSCOUNTER by 1\relax
-  \TEXTCITE{#1}{#2}{#3}{#4}%
-  \ifnum\CITATIONSCOUNTER>\CITATIONSTOTAL\relax
-    \TYPE{END textCites}%
-    \expandafter\GOBBLE
-  \fi\DOTEXTCITATIONS}%
-\def\TEXTCITE#1#2#3#4{%
-  \TYPE{BEGIN textCite}%
-  \TYPE{- suppressAuthor: \if#1+false\else true\fi}%
-  \TYPE{- prenote:        #2}%
-  \TYPE{- postnote:       #3}%
-  \TYPE{- name:           #4}%
-  \TYPE{END textCite}}%
-\def\TEXTCITATIONS#1{%
-  \TYPE{BEGIN textCites}%
-  \CITATIONSCOUNTER=1%
-  \def\CITATIONSTOTAL{#1}%
-  \DOTEXTCITATIONS}%
+  \def\CITATIONSTOTAL{#2}%
+  \DOCITATIONS{#1}}%
