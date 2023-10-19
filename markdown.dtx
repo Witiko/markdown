@@ -19259,8 +19259,8 @@ following text:
   {
     \tl_set:Nn
       \l_@@_current_glob_tl
-      { #1 }
-    \prop_get:NoNTF
+      { ^ #1 $ }
+    \prop_get:NeNTF
       \g_@@_glob_cache_prop
       { #2 / \l_@@_current_glob_tl }
       \l_tmpa_clist
@@ -19304,7 +19304,7 @@ following text:
         \clist_set_from_seq:NN
           \l_tmpa_clist
           #3
-        \prop_gput:NoV
+        \prop_gput:NeV
           \g_@@_glob_cache_prop
           { #2 / \l_@@_current_glob_tl }
           \l_tmpa_clist
@@ -19319,7 +19319,7 @@ following text:
   { NV }
 \cs_generate_variant:Nn
   \prop_gput:Nnn
-  { NoV }
+  { NeV }
 \seq_new:N
   \l_@@_renderer_glob_results_seq
 \keys_define:nn
@@ -19355,7 +19355,7 @@ following text:
               \int_set:Nn
                 \l_tmpa_int
                 \l_tmpb_tl
-              \tl_set:Nn
+              \tl_set:NV
                 \l_tmpb_tl
                 \l_@@_renderer_definition_tl
               \regex_replace_all:nnN
@@ -19867,7 +19867,7 @@ following text:
   { markdown/options/renderer-prototypes }
   {
     unknown .code:n = {
-      \@@_glob_seq:VNN
+      \@@_glob_seq:VnN
         \l_keys_key_str
         { g_@@_renderers_seq }
         \l_@@_renderer_prototype_glob_results_seq
@@ -19896,7 +19896,7 @@ following text:
               \int_set:Nn
                 \l_tmpa_int
                 \l_tmpb_tl
-              \tl_set:Nn
+              \tl_set:NV
                 \l_tmpb_tl
                 \l_@@_renderer_prototype_definition_tl
               \regex_replace_all:nnN
