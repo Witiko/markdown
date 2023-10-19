@@ -61,7 +61,9 @@ endif
 VERSION=$(shell git describe --tags --always --long --exclude latest)
 LASTMODIFIED=$(shell git log -1 --date=format:%Y-%m-%d --format=%ad)
 
-DOCKER_TEXLIVE_TAG=latest
+ifndef DOCKER_TEXLIVE_TAG
+	DOCKER_TEXLIVE_TAG=latest
+endif
 ifeq ($(NO_DOCUMENTATION), true)
 	DOCKER_TAG_POSTFIX=-no_docs
 endif
