@@ -19157,27 +19157,35 @@ following text:
         \tl_tail:n { #1 }
       }
   }
+\tl_new:N
+  \l_@@_renderer_definition_tl
 \cs_new:Nn \@@_define_renderer:nNn
   {
-    \@@_with_various_cases:nn
-      { #1 }
+    \keys_define:nn
+      { markdown/options/renderers }
       {
-        \keys_define:nn
-          { markdown/options/renderers }
-          {
-            ##1 .code:n = {
-              \cs_generate_from_arg_count:NNnn
-                #2
-                \cs_set:Npn
-                { #3 }
-                { ####1 }
-            },
-          }
+        #1 .code:n = {
+          \tl_set:Nn
+            \l_@@_renderer_definition_tl
+            { ##1 }
+          \regex_replace_all:nnN
+            { \cP\#0 }
+            { #1 }
+            \l_@@_renderer_definition_tl
+          \cs_generate_from_arg_count:NNnV
+            #2
+            \cs_set:Npn
+            { #3 }
+            \l_@@_renderer_definition_tl
+        },
       }
   }
 \cs_generate_variant:Nn
   \@@_define_renderer:nNn
   { ncV }
+\cs_generate_variant:Nn
+  \cs_generate_from_arg_count:NNnn
+  { NNnV }
 \keys_define:nn
   { markdown/options }
   {
@@ -19205,7 +19213,35 @@ following text:
 % ```````
 %
 % In addition to exact token renderer names, we also support wildcards
-% that match multiple token renderer names.
+% and enumerations that match multiple token renderer names:
+% ``` tex
+% \markdownSetup{
+%   renderers = {
+%     heading* = {{\bf #1}},    \% Render headings using the bold face.
+%     jekyllData(String|Number) = {   \% Render YAML string and numbers
+%       {\it #2}\%                                     \% using italics.
+%     },
+%   }
+% }
+% ```````
+%
+% Wildcards and enumerations can be combined:
+% ``` tex
+% \markdownSetup{
+%   renderers = {
+%     *lItem(|End) = {"},           \% Quote ordered/bullet list items.
+%   }
+% }
+% ```````
+%
+% To determine the current token renderer, you can use the parameter `#0`:
+% ``` tex
+% \markdownSetup{
+%   renderers = {
+%     heading* = {#0: #1},      \% Render headings as the renderer name
+%   }                                  \% followed by the heading text.
+% }
+% ```````
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -19215,14 +19251,14 @@ following text:
 \tl_new:N
   \l_@@_current_glob_tl
 \cs_new:Nn
-  \@@_glob_seq:nNN
+  \@@_glob_seq:nnN
   {
     \tl_set:Nn
       \l_@@_current_glob_tl
-      { #1 }
-    \prop_get:NVNTF
+      { ^ #1 $ }
+    \prop_get:NeNTF
       \g_@@_glob_cache_prop
-      \l_@@_current_glob_tl
+      { #2 / \l_@@_current_glob_tl }
       \l_tmpa_clist
       {
         \seq_set_from_clist:NN
@@ -19232,62 +19268,54 @@ following text:
       {
         \seq_clear:N
           #3
-        \regex_match:nVT
+        \regex_replace_all:nnN
           { \* }
+          { .* }
           \l_@@_current_glob_tl
-          {
-            \regex_replace_all:nnN
-              { \* }
-              { .* }
-              \l_@@_current_glob_tl
-          }
         \regex_set:NV
           \l_tmpa_regex
           \l_@@_current_glob_tl
-        \seq_map_inline:Nn
-          #2
+        \seq_map_inline:cn
+          { #2 }
           {
-            \@@_with_various_cases:nn
+            \regex_match:NnT
+              \l_tmpa_regex
               { ##1 }
               {
-                \regex_match:NnT
-                  \l_tmpa_regex
-                  { ####1 }
-                  {
-                    \seq_put_right:Nn
-                      #3
-                      { ##1 }
-                    \@@_with_various_cases_break:
-                  }
+                \seq_put_right:Nn
+                  #3
+                  { ##1 }
               }
           }
         \clist_set_from_seq:NN
           \l_tmpa_clist
           #3
-        \prop_gput:NVV
+        \prop_gput:NeV
           \g_@@_glob_cache_prop
-          \l_@@_current_glob_tl
+          { #2 / \l_@@_current_glob_tl }
           \l_tmpa_clist
       }
   }
+% TODO: Remove in TeX Live 2023.
 \prg_generate_conditional_variant:Nnn
-  \regex_match:nn
-  { nV }
-  { T }
+  \prop_get:NnN
+  { NeN }
+  { TF }
 \cs_generate_variant:Nn
   \regex_set:Nn
   { NV }
+\cs_generate_variant:Nn
+  \prop_gput:Nnn
+  { NeV }
 \seq_new:N
   \l_@@_renderer_glob_results_seq
-\tl_new:N
-  \l_@@_renderer_definition_tl
 \keys_define:nn
   { markdown/options/renderers }
   {
     unknown .code:n = {
-      \@@_glob_seq:VNN
+      \@@_glob_seq:VnN
         \l_keys_key_str
-        \g_@@_renderers_seq
+        { g_@@_renderers_seq }
         \l_@@_renderer_glob_results_seq
       \seq_if_empty:NTF
         \l_@@_renderer_glob_results_seq
@@ -19311,11 +19339,21 @@ following text:
                 \g_@@_renderer_arities_prop
                 { ##1 }
                 \l_tmpb_tl
+              \int_set:Nn
+                \l_tmpa_int
+                \l_tmpb_tl
+              \tl_set:NV
+                \l_tmpb_tl
+                \l_@@_renderer_definition_tl
+              \regex_replace_all:nnN
+                { \cP\#0 }
+                { ##1 }
+                \l_tmpb_tl
               \cs_generate_from_arg_count:cNVV
                 { \l_tmpa_tl }
                 \cs_set:Npn
+                \l_tmpa_int
                 \l_tmpb_tl
-                \l_@@_renderer_definition_tl
             }
         }
     },
@@ -19327,8 +19365,8 @@ following text:
     Renderer~#1~is~undefined.
   }
 \cs_generate_variant:Nn
-  \@@_glob_seq:nNN
-  { VNN }
+  \@@_glob_seq:nnN
+  { VnN }
 \cs_generate_variant:Nn
   \cs_generate_from_arg_count:NNnn
   { cNVV }
@@ -19711,22 +19749,27 @@ following text:
         Prototype
       }
   }
+\tl_new:N
+  \l_@@_renderer_prototype_definition_tl
 \cs_new:Nn \@@_define_renderer_prototype:nNn
   {
-    \@@_with_various_cases:nn
-      { #1 }
+    \keys_define:nn
+      { markdown/options/renderer-prototypes }
       {
-        \keys_define:nn
-          { markdown/options/renderer-prototypes }
-          {
-            ##1 .code:n = {
-              \cs_generate_from_arg_count:NNnn
-                #2
-                \cs_set:Npn
-                { #3 }
-                { ####1 }
-            },
-          }
+        #1 .code:n = {
+          \tl_set:Nn
+            \l_@@_renderer_prototype_definition_tl
+            { ##1 }
+          \regex_replace_all:nnN
+            { \cP\#0 }
+            { #1 }
+            \l_@@_renderer_prototype_definition_tl
+          \cs_generate_from_arg_count:NNnV
+            #2
+            \cs_set:Npn
+            { #3 }
+            \l_@@_renderer_prototype_definition_tl
+        },
       }
 %    \end{macrocode}
 % \begin{markdown}
@@ -19766,23 +19809,50 @@ following text:
 % }
 % ```````
 %
-% In addition to exact token renderer prototype names, we also support
-% wildcards that match multiple token renderer prototype names.
+% In addition to exact token renderer names, we also support wildcards
+% and enumerations that match multiple token renderer prototype names:
+% ``` tex
+% \markdownSetup{
+%   rendererPrototypes = {
+%     heading* = {{\bf #1}},    \% Render headings using the bold face.
+%     jekyllData(String|Number) = {   \% Render YAML string and numbers
+%       {\it #2}\%                                     \% using italics.
+%     },
+%   }
+% }
+% ```````
+%
+% Wildcards and enumerations can be combined:
+% ``` tex
+% \markdownSetup{
+%   rendererPrototypes = {
+%     *lItem(|End) = {"},           \% Quote ordered/bullet list items.
+%   }
+% }
+% ```````
+%
+% To determine the current token renderer prototype, you can use the
+% parameter `#0`:
+% ``` tex
+% \markdownSetup{
+%   rendererPrototypes = {
+%     heading* = {#0: #1}, \% Render headings as the renderer prototype
+%   }                             \% name followed by the heading text.
+% }
+% ```````
 %
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
 \seq_new:N
   \l_@@_renderer_prototype_glob_results_seq
-\tl_new:N
-  \l_@@_renderer_prototype_definition_tl
 \keys_define:nn
   { markdown/options/renderer-prototypes }
   {
     unknown .code:n = {
-      \@@_glob_seq:VNN
+      \@@_glob_seq:VnN
         \l_keys_key_str
-        \g_@@_renderers_seq
+        { g_@@_renderers_seq }
         \l_@@_renderer_prototype_glob_results_seq
       \seq_if_empty:NTF
         \l_@@_renderer_prototype_glob_results_seq
@@ -19806,11 +19876,21 @@ following text:
                 \g_@@_renderer_arities_prop
                 { ##1 }
                 \l_tmpb_tl
+              \int_set:Nn
+                \l_tmpa_int
+                \l_tmpb_tl
+              \tl_set:NV
+                \l_tmpb_tl
+                \l_@@_renderer_prototype_definition_tl
+              \regex_replace_all:nnN
+                { \cP\#0 }
+                { ##1 }
+                \l_tmpb_tl
               \cs_generate_from_arg_count:cNVV
                 { \l_tmpa_tl }
                 \cs_set:Npn
+                \l_tmpa_int
                 \l_tmpb_tl
-                \l_@@_renderer_prototype_definition_tl
             }
         }
     },

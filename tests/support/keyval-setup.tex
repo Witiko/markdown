@@ -1,13 +1,13 @@
 renderers = {%
   attributeIdentifier = {%
-    \TYPE{attributeIdentifier:   #1}},
+    \TYPE{#0: #1}},
   attributeClassName = {%
-    \TYPE{attributeClassName:    #1}},
+    \TYPE{#0: #1}},
   attributeKeyValue = {%
-    \TYPE{BEGIN attributeKeyValue}%
-    \TYPE{- key:                 #1}%
-    \TYPE{- value:               #2}%
-    \TYPE{END attributeKeyValue}},
+    \TYPE{BEGIN #0}%
+    \TYPE{- key:   #1}%
+    \TYPE{- value: #2}%
+    \TYPE{END #0}},
   fencedCodeAttributeContextBegin = {%
     \TYPE{BEGIN fencedCodeAttributeContext}},
   fencedCodeAttributeContextEnd = {%
@@ -45,20 +45,14 @@ renderers = {%
     \TYPE{BEGIN document}},
   documentEnd = {%
     \TYPE{END document}},
-  interblockSeparator = {%
-    \TYPE{interblockSeparator}%
+  *Separator = {%
+    \TYPE{#0}%
     \GOBBLE},
-  paragraphSeparator = {%
-    \TYPE{paragraphSeparator}%
-    \GOBBLE},
-  softLineBreak = {%
-    \TYPE{softLineBreak}%
-    \GOBBLE},
-  hardLineBreak = {%
-    \TYPE{hardLineBreak}%
+  *LineBreak = {%
+    \TYPE{#0}%
     \GOBBLE},
   ellipsis = {%
-    \TYPE{ellipsis}%
+    \TYPE{#0}%
     \GOBBLE},
   sectionBegin = {%
     \TYPE{BEGIN section}},
@@ -69,250 +63,146 @@ renderers = {%
   headerAttributeContextEnd = {%
     \TYPE{END headerAttributeContext}},
   nbsp = {%
-    \TYPE{nbsp}%
+    \TYPE{#0}%
     \GOBBLE},
   leftBrace = {%
-    \TYPE{leftBrace}%
+    \TYPE{#0}%
     \GOBBLE},
   rightBrace = {%
-    \TYPE{rightBrace}%
+    \TYPE{#0}%
     \GOBBLE},
   dollarSign = {%
-    \TYPE{dollarSign}%
+    \TYPE{#0}%
     \GOBBLE},
   percentSign = {%
-    \TYPE{percentSign}%
+    \TYPE{#0}%
     \GOBBLE},
   ampersand = {%
-    \TYPE{ampersand}%
+    \TYPE{#0}%
     \GOBBLE},
   underscore = {%
-    \TYPE{underscore}%
+    \TYPE{#0}%
     \GOBBLE},
   hash = {%
-    \TYPE{hash}%
+    \TYPE{#0}%
     \GOBBLE},
   circumflex = {%
-    \TYPE{circumflex}%
+    \TYPE{#0}%
     \GOBBLE},
   backslash = {%
-    \TYPE{backslash}%
+    \TYPE{#0}%
     \GOBBLE},
   tilde = {%
-    \TYPE{tilde}%
+    \TYPE{#0}%
     \GOBBLE},
   pipe = {%
-    \TYPE{pipe}%
+    \TYPE{#0}%
     \GOBBLE},
   codeSpan = {%
-    \TYPE{codeSpan:              #1}},
-  link = {%
-    \TYPE{BEGIN link}%
-    \TYPE{- label:               #1}%
-    \TYPE{- URI:                 #3}%
-    \TYPE{- title:               #4}%
-    \TYPE{END link}},
-  image = {%
-    \TYPE{BEGIN image}%
-    \TYPE{- label:               #1}%
-    \TYPE{- URI:                 #3}%
-    \TYPE{- title:               #4}%
-    \TYPE{END image}},
-  contentBlock = {%
-    \TYPE{BEGIN contentBlock}%
-    \TYPE{- suffix:              #1}%
-    \TYPE{- URI:                 #3}%
-    \TYPE{- title:               #4}%
-    \TYPE{END contentBlock}},
-  contentBlockOnlineImage = {%
-    \TYPE{BEGIN contentBlockOnlineImage}%
-    \TYPE{- suffix:              #1}%
-    \TYPE{- URI:                 #3}%
-    \TYPE{- title:               #4}%
-    \TYPE{END contentBlockOnlineImage}},
+    \TYPE{#0: #1}},
+  (link|image) = {%
+    \TYPE{BEGIN #0}%
+    \TYPE{- label:  #1}%
+    \TYPE{- URI:    #3}%
+    \TYPE{- title:  #4}%
+    \TYPE{END #0}},
+  contentBlock(|OnlineImage) = {%
+    \TYPE{BEGIN #0}%
+    \TYPE{- suffix: #1}%
+    \TYPE{- URI:    #3}%
+    \TYPE{- title:  #4}%
+    \TYPE{END #0}},
   contentBlockCode = {%
-    \TYPE{BEGIN contentBlockCode}%
-    \TYPE{- suffix:              #1}%
-    \TYPE{- language:            #2}%
-    \TYPE{- URI:                 #4}%
-    \TYPE{- title:               #5}%
-    \TYPE{END contentBlockCode}},
-  ulBegin = {%
-    \TYPE{ulBegin}},
-  ulBeginTight = {%
-    \TYPE{ulBeginTight}},
-  ulItem = {%
-    \TYPE{ulItem}},
-  ulItemEnd = {%
-    \TYPE{ulItemEnd}},
-  ulEnd = {%
-    \TYPE{ulEnd}},
-  ulEndTight = {%
-    \TYPE{ulEndTight}},
-  olBegin = {%
-    \TYPE{olBegin}},
-  olBeginTight = {%
-    \TYPE{olBeginTight}},
-  fancyOlBegin = {%
-    \TYPE{BEGIN fancyOlBegin}%
-    \TYPE{- numstyle:            #1}%
-    \TYPE{- numdelim:            #2}%
-    \TYPE{END fancyOlBegin}},
-  fancyOlBeginTight = {%
-    \TYPE{BEGIN fancyOlBeginTight}%
-    \TYPE{- numstyle:            #1}%
-    \TYPE{- numdelim:            #2}%
-    \TYPE{END fancyOlBeginTight}},
-  olItem = {%
-    \TYPE{olItem}},
-  olItemEnd = {%
-    \TYPE{olItemEnd}},
-  olItemWithNumber = {%
-    \TYPE{olItemWithNumber:      #1}},
-  fancyOlItem = {%
-    \TYPE{fancyOlItem}},
-  fancyOlItemEnd = {%
-    \TYPE{fancyOlItemEnd}},
-  fancyOlItemWithNumber = {%
-    \TYPE{fancyOlItemWithNumber: #1}},
-  olEnd = {%
-    \TYPE{olEnd}},
-  olEndTight = {%
-    \TYPE{olEndTight}},
-  fancyOlEnd = {%
-    \TYPE{fancyOlEnd}},
-  fancyOlEndTight = {%
-    \TYPE{fancyOlEndTight}},
-  dlBegin = {%
-    \TYPE{dlBegin}},
-  dlBeginTight = {%
-    \TYPE{dlBeginTight}},
+    \TYPE{BEGIN #0}%
+    \TYPE{- suffix:   #1}%
+    \TYPE{- language: #2}%
+    \TYPE{- URI:      #4}%
+    \TYPE{- title:    #5}%
+    \TYPE{END #0}},
+  (o|u|d)l(Begin|End)(|Tight) = {%
+    \TYPE{#0}},
+  ((o|fancyO)|u)lItem(|End) = {%
+    \TYPE{#0}},
+  (o|fancyO)lItemWithNumber = {%
+    \TYPE{#0: #1}},
+  fancyOlBegin(|Tight) = {%
+    \TYPE{BEGIN #0}%
+    \TYPE{- numstyle: #1}%
+    \TYPE{- numdelim: #2}%
+    \TYPE{END #0}},
+  fancyOlEnd(|Tight) = {%
+    \TYPE{#0}},
   dlItem = {%
-    \TYPE{dlItem:                #1}},
+    \TYPE{#0: #1}},
   dlItemEnd = {%
-    \TYPE{dlItemEnd}},
-  dlDefinitionBegin = {%
-    \TYPE{dlDefinitionBegin}},
-  dlDefinitionEnd = {%
-    \TYPE{dlDefinitionEnd}},
-  dlEnd = {%
-    \TYPE{dlEnd}},
-  dlEndTight = {%
-    \TYPE{dlEndTight}},
-  emphasis = {%
-    \TYPE{emphasis:              #1}},
-  strongEmphasis = {%
-    \TYPE{strongEmphasis:        #1}},
-  blockQuoteBegin = {%
-    \TYPE{blockQuoteBegin}},
-  blockQuoteEnd = {%
-    \TYPE{blockQuoteEnd}},
-  lineBlockBegin = {%
-    \TYPE{lineBlockBegin}},
-  lineBlockEnd = {%
-    \TYPE{lineBlockEnd}},
+    \TYPE{#0}},
+  dlDefinition(Begin|End) = {%
+    \TYPE{#0}},
+  (e|strongE)mphasis = {%
+    \TYPE{#0: #1}},
+  blockQuote(Begin|End) = {%
+    \TYPE{#0}},
+  lineBlock(Begin|End) = {%
+    \TYPE{#0}},
   inputVerbatim = {%
-    \TYPE{inputVerbatim:         #1}},
+    \TYPE{#0: #1}},
   inputFencedCode = {%
     \TYPE{BEGIN fencedCode}%
-    \TYPE{- src:                 #1}%
-    \TYPE{- infostring:          #3}%
+    \TYPE{- src:        #1}%
+    \TYPE{- infostring: #3}%
     \TYPE{END fencedCode}},
-  headingOne = {%
-    \TYPE{headingOne:            #1}},
-  headingTwo = {%
-    \TYPE{headingTwo:            #1}},
-  headingThree = {%
-    \TYPE{headingThree:          #1}},
-  headingFour = {%
-    \TYPE{headingFour:           #1}},
-  headingFive = {%
-    \TYPE{headingFive:           #1}},
-  headingSix = {%
-    \TYPE{headingSix:            #1}},
+  heading* = {%
+    \TYPE{#0: #1}},
   thematicBreak = {%
-    \TYPE{thematicBreak}},
+    \TYPE{#0}},
   note = {%
-    \TYPE{note:              #1}},
-  cite = {%
-    \CITATIONS{#1}},
-  textCite = {%
-    \TEXTCITATIONS{#1}},
+    \TYPE{#0: #1}},
+  (c|textC)ite = {%
+    \CITATIONS{#0}{#1}},
   table = {%
     \TABLE{#1}{#2}{#3}},
-  inlineHtmlComment = {%
-    \TYPE{inlineHtmlComment:     #1}},
-  inlineHtmlTag = {%
-    \TYPE{inlineHtmlTag:         #1}},
+  inlineHtml(Comment|Tag) = {%
+    \TYPE{#0: #1}},
   inputBlockHtmlElement = {%
-    \TYPE{inputBlockHtmlElement: #1}},
-  tickedBox = {%
-    \TYPE{tickedBox}%
+    \TYPE{#0: #1}},
+  (ticked|halfTicked|unticked)Box = {%
+    \TYPE{#0}%
     \GOBBLE},
-  halfTickedBox = {%
-    \TYPE{halfTickedBox}%
-    \GOBBLE},
-  untickedBox = {%
-    \TYPE{untickedBox}%
-    \GOBBLE},
-  jekyllDataBoolean = {%
-    \TYPE{BEGIN jekyllDataBoolean}%
-    \TYPE{- key:                 #1}%
-    \TYPE{- value:               #2}%
-    \TYPE{END jekyllDataBoolean}},
+  jekyllData(Boolean|Number|String) = {%
+    \TYPE{BEGIN #0}%
+    \TYPE{- key:   #1}%
+    \TYPE{- value: #2}%
+    \TYPE{END #0}},
   jekyllDataEmpty = {%
-    \TYPE{jekyllDataEmpty:       #1}},%
-  jekyllDataNumber = {%
-    \TYPE{BEGIN jekyllDataNumber}%
-    \TYPE{- key:                 #1}%
-    \TYPE{- value:               #2}%
-    \TYPE{END jekyllDataNumber}},
-  jekyllDataString = {%
-    \TYPE{BEGIN jekyllDataString}%
-    \TYPE{- key:                 #1}%
-    \TYPE{- value:               #2}%
-    \TYPE{END jekyllDataString}},
-  jekyllDataBegin = {%
-    \TYPE{jekyllDataBegin}},
-  jekyllDataEnd = {%
-    \TYPE{jekyllDataEnd}},
-  jekyllDataSequenceBegin = {%
-    \TYPE{BEGIN jekyllDataSequenceBegin}%
-    \TYPE{- key:                 #1}%
-    \TYPE{- length:              #2}%
-    \TYPE{END jekyllDataSequenceBegin}},
-  jekyllDataSequenceEnd = {%
-    \TYPE{jekyllDataSequenceEnd}},
-  jekyllDataMappingBegin = {%
-    \TYPE{BEGIN jekyllDataMappingBegin}%
-    \TYPE{- key:                 #1}%
-    \TYPE{- length:              #2}%
-    \TYPE{END jekyllDataMappingBegin}},
-  jekyllDataMappingEnd = {%
-    \TYPE{jekyllDataMappingEnd}},
+    \TYPE{#0: #1}},%
+  jekyllData(Begin|End) = {%
+    \TYPE{#0}},
+  jekyllData(Sequence|Mapping)Begin = {%
+    \TYPE{BEGIN #0}%
+    \TYPE{- key:    #1}%
+    \TYPE{- length: #2}%
+    \TYPE{END #0}},
+  jekyllData(Sequence|Mapping)End = {%
+    \TYPE{#0}},
   mark = {%
-    \TYPE{mark:                  #1}},
+    \TYPE{#0: #1}},
   strikeThrough = {%
-    \TYPE{strikeThrough:         #1}},
-  superscript = {%
-    \TYPE{superscript:           #1}},
-  subscript = {%
-    \TYPE{subscript:             #1}},
-  displayMath = {%
-    \TYPE{displayMath:           #1}},
-  inlineMath = {%
-    \TYPE{inlineMath:            #1}},
+    \TYPE{#0: #1}},
+  (super|sub)script = {%
+    \TYPE{#0: #1}},
+  (display|inline)Math = {%
+    \TYPE{#0: #1}},
   inputRawInline = {%
     \TYPE{BEGIN rawInline}%
-    \TYPE{- src:                 #1}%
-    \TYPE{- raw attribute:       #2}%
+    \TYPE{- src:           #1}%
+    \TYPE{- raw attribute: #2}%
     \TYPE{END rawInline}},
   inputRawBlock = {%
     \TYPE{BEGIN rawBlock}%
-    \TYPE{- src:                 #1}%
-    \TYPE{- raw attribute:       #2}%
+    \TYPE{- src:           #1}%
+    \TYPE{- raw attribute: #2}%
     \TYPE{END rawBlock}},
   replacementCharacter = {%
-    \TYPE{replacementCharacter}%
+    \TYPE{#0}%
     \GOBBLE},
 }%

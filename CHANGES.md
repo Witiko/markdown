@@ -9,7 +9,8 @@ Development:
   (contributed by @lostenderman, #237, #238, lostenderman/markdown#153,
    #315, #354)
 - Add support of bulk redefinition of token renderers and token renderer
-  prototypes in the `\markdownSetup` command using enumeration. (#232, #361)
+  prototypes in the `\markdownSetup` command using enumeration.
+  (#232, #361..#363)
 
 Fixes:
 
@@ -33,7 +34,8 @@ Unit Tests:
 - Restore CommonMark testfiles with trailing tabs and spaces.
   (contributed by @lostenderman, #348, #353,
    lostenderman/markdown#2)
-- Fail faster during batch bisection. (#354)
+- Fail faster during batch bisection. (5177ef6)
+- Speed up tests by running ConTeXt MkIV only once. (61f36e6d)
 - Use `BEGIN document` and `END document` instead of `documentBegin`
   and `documentEnd` for consistence with other renderers. (0be6be4)
 
@@ -41,7 +43,7 @@ Continuous Integration:
 
 - Do not rebuild existing Docker images when we rerun the
   continuous integration for the same commit multiple times.
-  (#354)
+  (ae390ec, 70c5f2e5)
 
 Default Renderer Prototypes:
 
