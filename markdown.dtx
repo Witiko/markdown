@@ -19296,7 +19296,11 @@ following text:
           \l_tmpa_clist
       }
   }
+% TODO: Remove in TeX Live 2023.
 \prg_generate_conditional_variant:Nnn
+  \prop_get:NnN
+  { NeN }
+  { TF }
 \cs_generate_variant:Nn
   \regex_set:Nn
   { NV }
