@@ -9,6 +9,6 @@
 _foo
 baz_
 >>>
-documentBegin
+BEGIN document
 emphasis: foo(softLineBreak)baz
-documentEnd
+END document

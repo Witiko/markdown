@@ -20,7 +20,7 @@
 
 - _c_
 >>>
-documentBegin
+BEGIN document
 ulBegin
 ulItem
 emphasis: a
@@ -32,4 +32,4 @@ ulItem
 emphasis: c
 ulItemEnd
 ulEnd
-documentEnd
+END document

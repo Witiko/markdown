@@ -9,10 +9,10 @@
 
 [ref]: /uri
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: link (emphasis: foo (strongEmphasis: bar) (codeSpan: (hash)))
 - URI: /uri
 - title: 
 END link
-documentEnd
+END document

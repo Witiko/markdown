@@ -7,10 +7,10 @@
 <<<
 <http://example.com?find=\*>
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: http://example.com?find=(backslash)*
 - URI: http://example.com?find=(backslash)*
 - title: 
 END link
-documentEnd
+END document

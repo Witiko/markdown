@@ -5,7 +5,7 @@ propagates through the plain TeX interface.
 
 [This is *some text*]{.class key="val"}
 >>>
-documentBegin
+BEGIN document
 codeSpan: bracketedSpans
 softLineBreak
 paragraphSeparator
@@ -17,4 +17,4 @@ BEGIN attributeKeyValue
 END attributeKeyValue
 emphasis: some text
 END bracketedSpanAttributeContext
-documentEnd
+END document

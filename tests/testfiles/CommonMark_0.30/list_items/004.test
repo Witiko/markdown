@@ -14,7 +14,7 @@
 
   _two_
 >>>
-documentBegin
+BEGIN document
 ulBegin
 ulItem
 emphasis: one
@@ -22,4 +22,4 @@ interblockSeparator
 emphasis: two
 ulItemEnd
 ulEnd
-documentEnd
+END document

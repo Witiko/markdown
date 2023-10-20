@@ -6,11 +6,11 @@ extensions is correctly applied.
 
 Some //deleted text// and some \//regular text with forward slashes//.
 >>>
-documentBegin
+BEGIN document
 codeSpan: extensions
 softLineBreak
 codeSpan: strike-through.lua
 softLineBreak
 paragraphSeparator
 strikeThrough: deleted text
-documentEnd
+END document

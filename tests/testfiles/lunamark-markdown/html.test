@@ -31,7 +31,7 @@ Here are several ways to write a pipe:
 
 Unrecognized character entities are ignored: &nonsense;
 >>>
-documentBegin
+BEGIN document
 codeSpan: html
 softLineBreak
 paragraphSeparator
@@ -83,4 +83,4 @@ ulItemEnd
 ulEndTight
 interblockSeparator
 ampersand
-documentEnd
+END document

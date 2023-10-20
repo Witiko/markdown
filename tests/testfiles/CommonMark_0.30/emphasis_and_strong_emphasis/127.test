@@ -7,8 +7,8 @@
 <<<
 __<a href="__">
 >>>
-documentBegin
+BEGIN document
 underscore
 underscore
 inlineHtmlTag: <a href="(underscore)(underscore)">
-documentEnd
+END document

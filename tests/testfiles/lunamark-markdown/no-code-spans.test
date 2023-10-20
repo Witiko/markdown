@@ -6,8 +6,8 @@ the plain TeX interface.
 ``This is a quote.''
 ``This is another one.''
 >>>
-documentBegin
+BEGIN document
 softLineBreak
 paragraphSeparator
 softLineBreak
-documentEnd
+END document

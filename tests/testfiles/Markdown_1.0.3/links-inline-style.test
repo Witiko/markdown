@@ -13,7 +13,7 @@ Just a [URL](/url/).
 [Empty]().
 
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: URL
 - URI: /url/
@@ -49,4 +49,4 @@ BEGIN link
 - URI: 
 - title: 
 END link
-documentEnd
+END document

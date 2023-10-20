@@ -17,7 +17,7 @@ Here is a line with two trailing tabs, producing a hard line break.
 Here is a line with three trailing tabs, producing a hard line break.			
 Here is a line with four trailing tabs at the end of the document.				
 >>>
-documentBegin
+BEGIN document
 softLineBreak
 softLineBreak
 codeSpan: input
@@ -31,4 +31,4 @@ softLineBreak
 softLineBreak
 hardLineBreak
 hardLineBreak
-documentEnd
+END document

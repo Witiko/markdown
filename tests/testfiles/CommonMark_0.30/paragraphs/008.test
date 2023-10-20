@@ -12,8 +12,8 @@ if: format == 'context-mkiv' or template == 'input'
 *aaa*     
 *bbb*     
 >>>
-documentBegin
+BEGIN document
 emphasis: aaa
 hardLineBreak
 emphasis: bbb
-documentEnd
+END document

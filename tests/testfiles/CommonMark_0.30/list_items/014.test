@@ -7,6 +7,6 @@
 <<<
 1234567890. _not ok_
 >>>
-documentBegin
+BEGIN document
 emphasis: not ok
-documentEnd
+END document

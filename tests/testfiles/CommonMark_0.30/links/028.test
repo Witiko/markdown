@@ -7,10 +7,10 @@
 <<<
 [link](/url 'title "and" title')
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: link
 - URI: /url
 - title: title "and" title
 END link
-documentEnd
+END document

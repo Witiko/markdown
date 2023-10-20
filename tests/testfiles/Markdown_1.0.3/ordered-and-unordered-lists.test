@@ -132,7 +132,7 @@ This was an error in Markdown 1.0.1:
 	that
 
 >>>
-documentBegin
+BEGIN document
 BEGIN section
 BEGIN section
 headingTwo: Unordered
@@ -327,4 +327,4 @@ ulItemEnd
 ulEnd
 END section
 END section
-documentEnd
+END document

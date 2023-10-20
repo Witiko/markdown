@@ -9,7 +9,7 @@
 foo
     # bar
 >>>
-documentBegin
+BEGIN document
 softLineBreak
 hash
-documentEnd
+END document

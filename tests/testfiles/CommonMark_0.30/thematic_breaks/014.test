@@ -7,6 +7,6 @@
 <<<
  *-*
 >>>
-documentBegin
+BEGIN document
 emphasis: -
-documentEnd
+END document

@@ -14,6 +14,7 @@ on:
     - cron: '30 4 * * MON'
 env:
   DEBIAN_FRONTEND: noninteractive
+  NO_DOCUMENTATION: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.draft == true }}
 jobs:
   shellcheck:
     name: Style check (Bash)
@@ -125,6 +126,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       packages: write
+    env:
+      DOCKER_TEXLIVE_TAG: ${{ matrix.texlive }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -133,9 +136,7 @@ jobs:
           ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
       - name: Build Docker image
-        run: |
-          make docker-image DOCKER_TEXLIVE_TAG=${{ matrix.texlive }} \
-                            NO_DOCUMENTATION=${{ github.event_name == 'pull_request_target' && github.event.pull_request.draft == true }}
+        run: make docker-image
       - name: Login to GitHub Packages
         uses: docker/login-action@v2
         with:
@@ -143,12 +144,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish Docker image with a temporary tag
-        run: make docker-push-temporary-tag DOCKER_TEXLIVE_TAG=${{ matrix.texlive }}
+        run: make docker-push-temporary-tag
       - name: Store the temporary tag
         id: temporary-tags
         run: |
           set -ex
-          TEMPORARY_TAG="$(make docker-print-temporary-tag DOCKER_TEXLIVE_TAG=${{ matrix.texlive }})"
+          TEMPORARY_TAG="$(make docker-print-temporary-tag)"
           echo "${{ matrix.texlive }}=$TEMPORARY_TAG" >> $GITHUB_OUTPUT
   test:
     name: Test Docker image
@@ -191,6 +192,8 @@ jobs:
           - latest
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request_target' && github.ref == 'refs/heads/main'
+    env:
+      DOCKER_TEXLIVE_TAG: ${{ matrix.texlive }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -202,7 +205,7 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
       - name: Publish Docker image
-        run: make docker-push-release-tag DOCKER_TEXLIVE_TAG=${{ matrix.texlive }}
+        run: make docker-push-release-tag
   publish-artefacts:
     name: Publish artefacts and create a prerelease
     needs:

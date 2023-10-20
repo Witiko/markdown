@@ -10,8 +10,8 @@ Foo *bar
 baz*
 ====
 >>>
-documentBegin
+BEGIN document
 BEGIN section
 headingOne: Foo (emphasis: bar(softLineBreak)baz)
 END section
-documentEnd
+END document

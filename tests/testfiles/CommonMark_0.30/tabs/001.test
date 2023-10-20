@@ -8,6 +8,6 @@
 <<<
 	foo	baz		bim
 >>>
-documentBegin
+BEGIN document
 inputVerbatim: ./_markdown_test/69ea260f4809aa90880b8df4d674c362.verbatim
-documentEnd
+END document

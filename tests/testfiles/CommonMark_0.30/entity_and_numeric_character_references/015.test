@@ -9,5 +9,5 @@
 <<<
 foo&#10;&#10;bar
 >>>
-documentBegin
-documentEnd
+BEGIN document
+END document

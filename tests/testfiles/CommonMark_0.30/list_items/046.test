@@ -13,7 +13,7 @@
 <<<
 - - _foo_
 >>>
-documentBegin
+BEGIN document
 ulBeginTight
 ulItem
 ulBeginTight
@@ -23,4 +23,4 @@ ulItemEnd
 ulEndTight
 ulItemEnd
 ulEndTight
-documentEnd
+END document

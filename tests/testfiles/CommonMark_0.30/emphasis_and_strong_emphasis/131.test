@@ -7,7 +7,7 @@
 <<<
 __a<http://foo.bar/?q=__>
 >>>
-documentBegin
+BEGIN document
 underscore
 underscore
 BEGIN link
@@ -15,4 +15,4 @@ BEGIN link
 - URI: http://foo.bar/?q=__
 - title: 
 END link
-documentEnd
+END document

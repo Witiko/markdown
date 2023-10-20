@@ -22,7 +22,7 @@
 
      > A block quote.
 >>>
-documentBegin
+BEGIN document
 olBegin
 olItemWithNumber: 1
 softLineBreak
@@ -33,4 +33,4 @@ blockQuoteBegin
 blockQuoteEnd
 olItemEnd
 olEnd
-documentEnd
+END document

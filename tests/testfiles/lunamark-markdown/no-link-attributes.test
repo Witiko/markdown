@@ -11,7 +11,7 @@ and a reference ![image][ref]{.another-class} with attributes.
 
 [ref]: foo.jpg "optional title" {#id .class key=val}
 >>>
-documentBegin
+BEGIN document
 codeSpan: linkAttributes
 softLineBreak
 paragraphSeparator
@@ -50,4 +50,4 @@ paragraphSeparator
 leftBrace
 hash
 rightBrace
-documentEnd
+END document

@@ -7,10 +7,10 @@
 <<<
 <made-up-scheme://foo,bar>
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: made-up-scheme://foo,bar
 - URI: made-up-scheme://foo,bar
 - title: 
 END link
-documentEnd
+END document

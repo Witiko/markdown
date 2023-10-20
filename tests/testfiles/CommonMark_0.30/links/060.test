@@ -10,10 +10,10 @@
 
 [Baz][Foo bar]
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: Baz
 - URI: /url
 - title: 
 END link
-documentEnd
+END document

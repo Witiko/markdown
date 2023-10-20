@@ -7,6 +7,6 @@
 <<<
 _foo_bar_baz_
 >>>
-documentBegin
+BEGIN document
 emphasis: foo(underscore)bar(underscore)baz
-documentEnd
+END document

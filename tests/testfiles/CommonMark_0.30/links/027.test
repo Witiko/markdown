@@ -7,5 +7,5 @@
 <<<
 [link](/url "title "and" title")
 >>>
-documentBegin
-documentEnd
+BEGIN document
+END document

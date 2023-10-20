@@ -7,7 +7,7 @@
 <<<
 \!\"\#\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\\\]\^\_\`\{\|\}\~
 >>>
-documentBegin
+BEGIN document
 hash
 dollarSign
 percentSign
@@ -19,4 +19,4 @@ leftBrace
 pipe
 rightBrace
 tilde
-documentEnd
+END document

@@ -9,10 +9,10 @@
 <<<
 123456789. _ok_
 >>>
-documentBegin
+BEGIN document
 olBeginTight
 olItemWithNumber: 123456789
 emphasis: ok
 olItemEnd
 olEndTight
-documentEnd
+END document

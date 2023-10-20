@@ -11,7 +11,7 @@
 
 > [foo]: /url
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: foo
 - URI: /url
@@ -20,4 +20,4 @@ END link
 interblockSeparator
 blockQuoteBegin
 blockQuoteEnd
-documentEnd
+END document

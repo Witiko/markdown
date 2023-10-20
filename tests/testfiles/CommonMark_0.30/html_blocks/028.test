@@ -13,7 +13,7 @@
 - <div>
 - foo
 >>>
-documentBegin
+BEGIN document
 ulBeginTight
 ulItem
 inputBlockHtmlElement: ./_markdown_test/32125540a649ecc646413c37c588775d.verbatim
@@ -21,4 +21,4 @@ ulItemEnd
 ulItem
 ulItemEnd
 ulEndTight
-documentEnd
+END document

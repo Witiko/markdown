@@ -13,7 +13,7 @@
 - Foo
 - * * *
 >>>
-documentBegin
+BEGIN document
 ulBeginTight
 ulItem
 ulItemEnd
@@ -21,4 +21,4 @@ ulItem
 thematicBreak
 ulItemEnd
 ulEndTight
-documentEnd
+END document

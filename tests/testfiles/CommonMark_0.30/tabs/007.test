@@ -12,10 +12,10 @@
 <<<
 -		foo
 >>>
-documentBegin
+BEGIN document
 ulBeginTight
 ulItem
 inputVerbatim: ./_markdown_test/8f258c63c0e290338dc5f8d2f05855d3.verbatim
 ulItemEnd
 ulEndTight
-documentEnd
+END document

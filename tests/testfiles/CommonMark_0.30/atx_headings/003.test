@@ -10,8 +10,8 @@
 
 #hashtag
 >>>
-documentBegin
+BEGIN document
 hash
 paragraphSeparator
 hash
-documentEnd
+END document

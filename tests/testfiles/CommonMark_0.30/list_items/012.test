@@ -21,11 +21,11 @@
 
       baz
 >>>
-documentBegin
+BEGIN document
 ulBegin
 ulItem
 interblockSeparator
 inputVerbatim: ./_markdown_test/3afa1144df64a8e1134c86d273bdd5bc.verbatim
 ulItemEnd
 ulEnd
-documentEnd
+END document

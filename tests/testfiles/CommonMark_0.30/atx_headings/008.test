@@ -8,6 +8,6 @@
 <<<
     # foo
 >>>
-documentBegin
+BEGIN document
 inputVerbatim: ./_markdown_test/94646261c612c5d1a38dcbc691326757.verbatim
-documentEnd
+END document

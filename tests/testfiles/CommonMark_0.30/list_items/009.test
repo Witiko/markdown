@@ -10,8 +10,8 @@
 
 2._two_
 >>>
-documentBegin
+BEGIN document
 emphasis: one
 paragraphSeparator
 emphasis: two
-documentEnd
+END document

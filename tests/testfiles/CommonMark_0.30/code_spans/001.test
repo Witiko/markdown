@@ -7,6 +7,6 @@
 <<<
 `foo`
 >>>
-documentBegin
+BEGIN document
 codeSpan: foo
-documentEnd
+END document

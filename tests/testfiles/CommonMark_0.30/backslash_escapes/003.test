@@ -23,7 +23,7 @@
 \[foo]: /url "not a reference"
 \&ouml; not a character entity
 >>>
-documentBegin
+BEGIN document
 softLineBreak
 softLineBreak
 softLineBreak
@@ -34,4 +34,4 @@ hash
 softLineBreak
 softLineBreak
 ampersand
-documentEnd
+END document

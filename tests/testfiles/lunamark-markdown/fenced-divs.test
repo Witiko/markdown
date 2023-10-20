@@ -112,7 +112,7 @@ This is not a div
 ::: {.some-classname}
 This is not a div
 >>>
-documentBegin
+BEGIN document
 codeSpan: fencedDivs
 softLineBreak
 paragraphSeparator
@@ -247,4 +247,4 @@ interblockSeparator
 leftBrace
 rightBrace
 softLineBreak
-documentEnd
+END document

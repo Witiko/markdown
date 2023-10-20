@@ -9,10 +9,10 @@
 
 [ref]: /uri
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: (BEGIN image)(- label: moon)(- URI: moon.jpg)(- title: )(END image)
 - URI: /uri
 - title: 
 END link
-documentEnd
+END document

@@ -10,11 +10,11 @@
 ===
 [foo]
 >>>
-documentBegin
+BEGIN document
 softLineBreak
 BEGIN link
 - label: foo
 - URI: /url
 - title: 
 END link
-documentEnd
+END document

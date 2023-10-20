@@ -17,7 +17,7 @@
   ---
   _baz_
 >>>
-documentBegin
+BEGIN document
 ulBeginTight
 ulItem
 BEGIN section
@@ -32,4 +32,4 @@ ulItemEnd
 ulEndTight
 END section
 END section
-documentEnd
+END document

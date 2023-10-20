@@ -879,7 +879,7 @@ Markdown provides backslash escapes for the following characters:
     !   exclamation mark
 
 >>>
-documentBegin
+BEGIN document
 BEGIN section
 headingOne: Markdown: Syntax
 interblockSeparator
@@ -1727,4 +1727,4 @@ inputVerbatim: ./_markdown_test/7a40c43d62d88235d1e9b3ee88fad7e3.verbatim
 END section
 END section
 END section
-documentEnd
+END document

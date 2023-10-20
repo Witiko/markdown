@@ -7,6 +7,6 @@
 <<<
 <a href="`">`
 >>>
-documentBegin
+BEGIN document
 inlineHtmlTag: <a href="`">
-documentEnd
+END document

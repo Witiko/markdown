@@ -18,7 +18,7 @@ string of several @doe99 [pp. 33-35; also
 @smit:.#$%&-+?<>_/h04, chap. 1]. Here is one with the
 name of the author suppressed -@doe99.
 >>>
-documentBegin
+BEGIN document
 codeSpan: citations
 softLineBreak
 codeSpan: citationNbsps
@@ -108,4 +108,4 @@ BEGIN textCite
 - name: doe99
 END textCite
 END textCites
-documentEnd
+END document

@@ -8,7 +8,7 @@ propagates through the plain TeX interface.
 > *quote 2*
 
 >>>
-documentBegin
+BEGIN document
 codeSpan: breakableBlockquotes
 softLineBreak
 interblockSeparator
@@ -17,4 +17,4 @@ emphasis: quote 1
 softLineBreak
 emphasis: quote 2
 blockQuoteEnd
-documentEnd
+END document

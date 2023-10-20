@@ -9,7 +9,7 @@ The MD5 value for `<p>test</p>` is:
 
 6205333b793f34273d75379350b36826
 >>>
-documentBegin
+BEGIN document
 BEGIN section
 headingOne: Character Escapes
 interblockSeparator
@@ -22,4 +22,4 @@ interblockSeparator
 codeSpan: <p>test</p>
 paragraphSeparator
 END section
-documentEnd
+END document

@@ -9,7 +9,7 @@
 ## foo ##
   ###   bar    ###
 >>>
-documentBegin
+BEGIN document
 BEGIN section
 BEGIN section
 headingTwo: foo
@@ -19,4 +19,4 @@ headingThree: bar
 END section
 END section
 END section
-documentEnd
+END document

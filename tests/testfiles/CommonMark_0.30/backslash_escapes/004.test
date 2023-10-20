@@ -7,7 +7,7 @@
 <<<
 \\*emphasis*
 >>>
-documentBegin
+BEGIN document
 backslash
 emphasis: emphasis
-documentEnd
+END document

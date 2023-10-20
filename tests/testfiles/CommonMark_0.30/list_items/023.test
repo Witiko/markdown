@@ -10,8 +10,8 @@
 
 _bar_
 >>>
-documentBegin
+BEGIN document
 emphasis: foo
 paragraphSeparator
 emphasis: bar
-documentEnd
+END document

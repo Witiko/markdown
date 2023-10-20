@@ -7,6 +7,6 @@
 <<<
 *&copy*
 >>>
-documentBegin
+BEGIN document
 emphasis: (ampersand)copy
-documentEnd
+END document

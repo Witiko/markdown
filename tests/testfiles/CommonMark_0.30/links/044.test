@@ -7,6 +7,6 @@
 <<<
 [foo`](/uri)`
 >>>
-documentBegin
+BEGIN document
 codeSpan: ](/uri)
-documentEnd
+END document

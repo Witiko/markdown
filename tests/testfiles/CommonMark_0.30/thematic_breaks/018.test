@@ -15,7 +15,7 @@
 * * *
 * Bar
 >>>
-documentBegin
+BEGIN document
 ulBeginTight
 ulItem
 ulItemEnd
@@ -27,4 +27,4 @@ ulBeginTight
 ulItem
 ulItemEnd
 ulEndTight
-documentEnd
+END document

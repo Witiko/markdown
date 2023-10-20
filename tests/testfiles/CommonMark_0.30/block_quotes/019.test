@@ -15,7 +15,7 @@
 ***
 > *bbb*
 >>>
-documentBegin
+BEGIN document
 blockQuoteBegin
 emphasis: aaa
 blockQuoteEnd
@@ -25,4 +25,4 @@ interblockSeparator
 blockQuoteBegin
 emphasis: bbb
 blockQuoteEnd
-documentEnd
+END document

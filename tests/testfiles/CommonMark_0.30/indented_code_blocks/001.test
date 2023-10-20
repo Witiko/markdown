@@ -10,6 +10,6 @@
     a simple
       indented code block
 >>>
-documentBegin
+BEGIN document
 inputVerbatim: ./_markdown_test/5595b0aa623c80a8d8043e5a03a584fb.verbatim
-documentEnd
+END document

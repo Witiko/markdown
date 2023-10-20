@@ -27,7 +27,7 @@ propagate through the plain TeX interface.
 
 A caption may not span multiple paragraphs.
 >>>
-documentBegin
+BEGIN document
 codeSpan: tableCaptions
 codeSpan: tableAttributes
 softLineBreak
@@ -88,4 +88,4 @@ BEGIN table (4 rows, 4 columns)
 - row 4, column 4: 1
 END table
 interblockSeparator
-documentEnd
+END document

@@ -11,10 +11,10 @@
 > *foo*
 ---
 >>>
-documentBegin
+BEGIN document
 blockQuoteBegin
 emphasis: foo
 blockQuoteEnd
 interblockSeparator
 thematicBreak
-documentEnd
+END document

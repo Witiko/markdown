@@ -14,9 +14,9 @@ Foo
 Foo
 --- -
 >>>
-documentBegin
+BEGIN document
 softLineBreak
 paragraphSeparator
 interblockSeparator
 thematicBreak
-documentEnd
+END document

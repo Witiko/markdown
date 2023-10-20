@@ -7,6 +7,6 @@
 <<<
 ` b `
 >>>
-documentBegin
+BEGIN document
 codeSpan: (nbsp)b(nbsp)
-documentEnd
+END document

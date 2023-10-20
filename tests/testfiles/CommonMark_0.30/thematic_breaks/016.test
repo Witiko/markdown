@@ -11,8 +11,8 @@ Foo
 ***
 bar
 >>>
-documentBegin
+BEGIN document
 interblockSeparator
 thematicBreak
 interblockSeparator
-documentEnd
+END document

@@ -7,6 +7,6 @@
 <<<
 _foo __bar__ baz_
 >>>
-documentBegin
+BEGIN document
 emphasis: foo (strongEmphasis: bar) baz
-documentEnd
+END document

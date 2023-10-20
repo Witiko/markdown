@@ -1,6 +1,6 @@
 <<<
 Here's how you put `` `backticks` `` in a code span.
 >>>
-documentBegin
+BEGIN document
 codeSpan: `backticks`
-documentEnd
+END document

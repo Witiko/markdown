@@ -31,7 +31,7 @@ function matchwo(a,b)
 ]]>
 okay
 >>>
-documentBegin
+BEGIN document
 inputBlockHtmlElement: ./_markdown_test/d0556f47a7761d40abd0dd3c5446a360.verbatim
 interblockSeparator
-documentEnd
+END document

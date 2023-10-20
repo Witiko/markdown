@@ -14,9 +14,9 @@
 
 bar
 >>>
-documentBegin
+BEGIN document
 blockQuoteBegin
 inputBlockHtmlElement: ./_markdown_test/f49d41a0a6f9ddbae66885068486146e.verbatim
 blockQuoteEnd
 interblockSeparator
-documentEnd
+END document

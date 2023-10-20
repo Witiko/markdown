@@ -18,7 +18,7 @@ Loose:
 
 5. five
 >>>
-documentBegin
+BEGIN document
 codeSpan: startNumber
 softLineBreak
 softLineBreak
@@ -42,4 +42,4 @@ olItemEnd
 olItem
 olItemEnd
 olEnd
-documentEnd
+END document

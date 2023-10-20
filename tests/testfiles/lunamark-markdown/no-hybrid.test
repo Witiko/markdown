@@ -14,7 +14,7 @@ following special characters should be processed by lunamark.
  * \char`~
  * \char`|
 >>>
-documentBegin
+BEGIN document
 codeSpan: hybrid
 softLineBreak
 interblockSeparator
@@ -64,4 +64,4 @@ backslash
 pipe
 ulItemEnd
 ulEndTight
-documentEnd
+END document

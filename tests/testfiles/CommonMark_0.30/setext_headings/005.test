@@ -16,7 +16,7 @@
   Foo
   ===
 >>>
-documentBegin
+BEGIN document
 BEGIN section
 BEGIN section
 headingTwo: Foo
@@ -30,4 +30,4 @@ END section
 BEGIN section
 headingOne: Foo
 END section
-documentEnd
+END document

@@ -5,7 +5,7 @@
 
   *   *   *   *   *
 >>>
-documentBegin
+BEGIN document
 ulBegin
 ulItem
 interblockSeparator
@@ -17,4 +17,4 @@ ulItemEnd
 ulEnd
 interblockSeparator
 thematicBreak
-documentEnd
+END document

@@ -7,8 +7,8 @@
 <<<
 <del>*foo*</del>
 >>>
-documentBegin
+BEGIN document
 inlineHtmlTag: <del>
 emphasis: foo
 inlineHtmlTag: </del>
-documentEnd
+END document

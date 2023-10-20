@@ -12,6 +12,6 @@ if: format == 'context-mkiv' or template == 'input'
 foo  
 baz
 >>>
-documentBegin
+BEGIN document
 hardLineBreak
-documentEnd
+END document

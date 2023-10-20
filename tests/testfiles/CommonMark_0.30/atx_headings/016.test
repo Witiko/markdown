@@ -11,7 +11,7 @@
 ## foo
 ****
 >>>
-documentBegin
+BEGIN document
 thematicBreak
 interblockSeparator
 BEGIN section
@@ -21,4 +21,4 @@ interblockSeparator
 thematicBreak
 END section
 END section
-documentEnd
+END document

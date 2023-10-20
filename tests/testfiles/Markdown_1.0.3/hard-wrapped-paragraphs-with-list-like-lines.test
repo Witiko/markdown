@@ -5,9 +5,9 @@ Because a hard-wrapped line in the
 middle of a paragraph looked like a
 list item.
 >>>
-documentBegin
+BEGIN document
 softLineBreak
 softLineBreak
 softLineBreak
 softLineBreak
-documentEnd
+END document

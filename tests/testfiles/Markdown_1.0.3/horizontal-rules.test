@@ -68,7 +68,7 @@ _ _ _
     _ _ _
 
 >>>
-documentBegin
+BEGIN document
 interblockSeparator
 thematicBreak
 interblockSeparator
@@ -131,4 +131,4 @@ interblockSeparator
 thematicBreak
 interblockSeparator
 inputVerbatim: ./_markdown_test/23f30f77015603313f80e6d0da15d7fe.verbatim
-documentEnd
+END document

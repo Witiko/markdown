@@ -7,6 +7,6 @@
 <<<
 `f&ouml;&ouml;`
 >>>
-documentBegin
+BEGIN document
 codeSpan: f(ampersand)ouml;(ampersand)ouml;
-documentEnd
+END document

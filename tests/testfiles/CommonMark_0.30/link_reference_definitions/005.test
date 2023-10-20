@@ -17,10 +17,10 @@ line2
 
 [foo]
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: foo
 - URI: /url
 - title:  title line1 line2 
 END link
-documentEnd
+END document

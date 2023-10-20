@@ -7,10 +7,10 @@
 <<<
 <a+b+c:d>
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: a+b+c:d
 - URI: a+b+c:d
 - title: 
 END link
-documentEnd
+END document

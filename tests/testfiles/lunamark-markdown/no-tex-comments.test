@@ -8,11 +8,11 @@ zed text* should also be interrupted.
 A single backslash at the *end of \
 a line* should be allowed by the preprocessor.
 >>>
-documentBegin
+BEGIN document
 codeSpan: texComments
 paragraphSeparator
 emphasis: emphasi(percentSign)  this is a comment(softLineBreak)zed text
 emphasis: emphasi(percentSign)  another one(softLineBreak)zed text
 paragraphSeparator
 emphasis: end of (hardLineBreak)a line
-documentEnd
+END document

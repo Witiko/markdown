@@ -11,11 +11,11 @@
 - foo
 -----
 >>>
-documentBegin
+BEGIN document
 ulBeginTight
 ulItem
 ulItemEnd
 ulEndTight
 interblockSeparator
 thematicBreak
-documentEnd
+END document

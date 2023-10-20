@@ -4,7 +4,7 @@
 1. one
 2. two
 >>>
-documentBegin
+BEGIN document
 ulBeginTight
 ulItem
 ulItemEnd
@@ -18,4 +18,4 @@ olItemEnd
 olItemWithNumber: 2
 olItemEnd
 olEndTight
-documentEnd
+END document

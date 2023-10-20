@@ -5,7 +5,7 @@ through the plain TeX interface.
 
 Some ~~deleted text~~ and some \~~regular text with tildes~~.
 >>>
-documentBegin
+BEGIN document
 codeSpan: strikeThrough
 softLineBreak
 paragraphSeparator
@@ -14,4 +14,4 @@ tilde
 tilde
 tilde
 tilde
-documentEnd
+END document

@@ -7,5 +7,5 @@
 <<<
 foo@bar.example.com
 >>>
-documentBegin
-documentEnd
+BEGIN document
+END document

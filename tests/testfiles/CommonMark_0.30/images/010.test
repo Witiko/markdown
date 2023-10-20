@@ -7,10 +7,10 @@
 <<<
 ![](/url)
 >>>
-documentBegin
+BEGIN document
 BEGIN image
 - label: 
 - URI: /url
 - title: 
 END image
-documentEnd
+END document

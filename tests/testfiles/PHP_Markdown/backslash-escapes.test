@@ -9,7 +9,7 @@ backslash with \\> greater than
 
 \\\*no emphasis*
 >>>
-documentBegin
+BEGIN document
 paragraphSeparator
 backslash
 paragraphSeparator
@@ -18,4 +18,4 @@ paragraphSeparator
 backslash
 paragraphSeparator
 backslash
-documentEnd
+END document

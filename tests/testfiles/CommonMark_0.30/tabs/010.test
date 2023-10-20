@@ -7,8 +7,8 @@
 <<<
 #	Foo
 >>>
-documentBegin
+BEGIN document
 BEGIN section
 headingOne: Foo
 END section
-documentEnd
+END document

@@ -32,7 +32,7 @@ Here is a corner case: `\\` separated by a comment: `\\%
 \`.
 
 >>>
-documentBegin
+BEGIN document
 codeSpan: texComments
 softLineBreak
 paragraphSeparator
@@ -58,4 +58,4 @@ codeSpan: (backslash)text(leftBrace)Hello world(rightBrace)!(backslash)(backslas
 paragraphSeparator
 codeSpan: (backslash)(backslash)
 codeSpan: (backslash)(backslash)
-documentEnd
+END document

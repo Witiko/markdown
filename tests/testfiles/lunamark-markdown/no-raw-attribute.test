@@ -17,7 +17,7 @@ braced text:
 
 This is `<a>html</a>`{=html}
 >>>
-documentBegin
+BEGIN document
 codeSpan: fencedCode
 softLineBreak
 codeSpan: rawAttribute
@@ -33,4 +33,4 @@ paragraphSeparator
 codeSpan: <a>html</a>
 leftBrace
 rightBrace
-documentEnd
+END document

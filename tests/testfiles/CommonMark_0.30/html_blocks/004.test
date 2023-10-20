@@ -9,6 +9,6 @@
 </div>
 *foo*
 >>>
-documentBegin
+BEGIN document
 inputBlockHtmlElement: ./_markdown_test/2dd48ef9c9453076999473575887769d.verbatim
-documentEnd
+END document

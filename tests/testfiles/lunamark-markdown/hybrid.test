@@ -16,7 +16,7 @@ processed by lunamark in any way.
  * \char`~
  * \char`|
 >>>
-documentBegin
+BEGIN document
 codeSpan: hybrid
 softLineBreak
 softLineBreak
@@ -44,4 +44,4 @@ ulItemEnd
 ulItem
 ulItemEnd
 ulEndTight
-documentEnd
+END document

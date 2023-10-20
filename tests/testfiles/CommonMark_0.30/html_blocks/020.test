@@ -13,10 +13,10 @@
 
 </del>
 >>>
-documentBegin
+BEGIN document
 inputBlockHtmlElement: ./_markdown_test/7129cf65a8194261a86ce8d5a54dbd02.verbatim
 interblockSeparator
 emphasis: foo
 interblockSeparator
 inputBlockHtmlElement: ./_markdown_test/fd8b5771d2f10c72aebb2de751db0bdc.verbatim
-documentEnd
+END document

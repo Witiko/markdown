@@ -81,7 +81,7 @@ while this is a dollar sign followed by inline math with an escaped dollar sign,
 $$\$$
 
 >>>
-documentBegin
+BEGIN document
 codeSpan: texMathDollars
 softLineBreak
 paragraphSeparator
@@ -152,4 +152,4 @@ paragraphSeparator
 paragraphSeparator
 dollarSign
 inlineMath: \$
-documentEnd
+END document

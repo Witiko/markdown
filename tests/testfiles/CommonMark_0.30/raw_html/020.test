@@ -7,6 +7,6 @@
 <<<
 foo <a href="\*">
 >>>
-documentBegin
+BEGIN document
 inlineHtmlTag: <a href="(backslash)*">
-documentEnd
+END document

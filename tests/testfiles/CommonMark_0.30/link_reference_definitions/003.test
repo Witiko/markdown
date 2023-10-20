@@ -9,10 +9,10 @@
 
 [Foo*bar\]]
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: Foo*bar]
 - URI: my_(url)
 - title: title (with parens)
 END link
-documentEnd
+END document

@@ -7,6 +7,6 @@
 <<<
 foo <?php echo $a; ?>
 >>>
-documentBegin
+BEGIN document
 inlineHtmlTag: <?php echo (dollarSign)a; ?>
-documentEnd
+END document

@@ -8,10 +8,10 @@
 \> foo
 ------
 >>>
-documentBegin
+BEGIN document
 BEGIN section
 BEGIN section
 headingTwo: > foo
 END section
 END section
-documentEnd
+END document

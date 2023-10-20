@@ -292,7 +292,7 @@ Output:
     </code></pre>
 
 >>>
-documentBegin
+BEGIN document
 BEGIN section
 headingOne: Markdown: Basics
 interblockSeparator
@@ -483,4 +483,4 @@ inputVerbatim: ./_markdown_test/e1de0455cbe83acebe6cfa078bdcb1cc.verbatim
 END section
 END section
 END section
-documentEnd
+END document

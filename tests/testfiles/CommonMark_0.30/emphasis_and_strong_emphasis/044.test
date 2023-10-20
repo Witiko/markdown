@@ -9,6 +9,6 @@
 **Gomphocarpus (*Gomphocarpus physocarpus*, syn.
 *Asclepias physocarpa*)**
 >>>
-documentBegin
+BEGIN document
 strongEmphasis: Gomphocarpus ((emphasis: Gomphocarpus physocarpus), syn.(softLineBreak)(emphasis: Asclepias physocarpa))
-documentEnd
+END document

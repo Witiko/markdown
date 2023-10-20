@@ -6,7 +6,7 @@ through the plain TeX interface.
 This __is no__ strongly emphasized span of text.
 This **is** a strongly emphasized span of text.
 >>>
-documentBegin
+BEGIN document
 codeSpan: underscores
 softLineBreak
 paragraphSeparator
@@ -16,4 +16,4 @@ underscore
 underscore
 softLineBreak
 strongEmphasis: is
-documentEnd
+END document

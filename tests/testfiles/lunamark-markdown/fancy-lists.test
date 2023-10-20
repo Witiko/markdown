@@ -58,7 +58,7 @@ Fancy list (*alpha, lower, tight and roman, lower, tight*)
  v. item
  vi. item
 >>>
-documentBegin
+BEGIN document
 codeSpan: fancyLists
 softLineBreak
 codeSpan: startNumber
@@ -202,4 +202,40 @@ END fancyOlBeginTight
 fancyOlItemWithNumber: 6
 fancyOlItemEnd
 fancyOlEndTight
-documentEnd
+interblockSeparator
+emphasis: roman, lower, tight and alpha, lower, tight
+interblockSeparator
+BEGIN fancyOlBeginTight
+- numstyle: LowerRoman
+- numdelim: Period
+END fancyOlBeginTight
+fancyOlItemWithNumber: 1
+fancyOlItemEnd
+fancyOlEndTight
+interblockSeparator
+BEGIN fancyOlBeginTight
+- numstyle: LowerAlpha
+- numdelim: Period
+END fancyOlBeginTight
+fancyOlItemWithNumber: 10
+fancyOlItemEnd
+fancyOlEndTight
+interblockSeparator
+emphasis: alpha, lower, tight and roman, lower, tight
+interblockSeparator
+BEGIN fancyOlBeginTight
+- numstyle: LowerAlpha
+- numdelim: Period
+END fancyOlBeginTight
+fancyOlItemWithNumber: 22
+fancyOlItemEnd
+fancyOlEndTight
+interblockSeparator
+BEGIN fancyOlBeginTight
+- numstyle: LowerRoman
+- numdelim: Period
+END fancyOlBeginTight
+fancyOlItemWithNumber: 6
+fancyOlItemEnd
+fancyOlEndTight
+END document

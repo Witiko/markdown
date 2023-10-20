@@ -5,11 +5,11 @@ through the plain TeX interface.
 
 H~2~O is a liquid and some \~regular~ text with tildes.
 >>>
-documentBegin
+BEGIN document
 codeSpan: subscripts
 softLineBreak
 paragraphSeparator
 subscript: 2
 tilde
 tilde
-documentEnd
+END document

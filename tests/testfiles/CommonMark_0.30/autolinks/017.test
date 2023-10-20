@@ -7,5 +7,5 @@
 <<<
 <foo.bar.baz>
 >>>
-documentBegin
-documentEnd
+BEGIN document
+END document

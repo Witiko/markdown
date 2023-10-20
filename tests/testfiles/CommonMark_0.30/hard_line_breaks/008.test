@@ -11,6 +11,6 @@ if: template == 'input'
 `code  
 span`
 >>>
-documentBegin
+BEGIN document
 codeSpan: code   span
-documentEnd
+END document

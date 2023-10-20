@@ -9,6 +9,6 @@
 **foo
 bar**
 >>>
-documentBegin
+BEGIN document
 strongEmphasis: foo(softLineBreak)bar
-documentEnd
+END document

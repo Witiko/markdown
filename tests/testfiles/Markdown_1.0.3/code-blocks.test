@@ -9,7 +9,7 @@ Regular Text.
 
 	code block on the last line
 >>>
-documentBegin
+BEGIN document
 inputVerbatim: ./_markdown_test/0ce1606380714a85685e1b8b4c818188.verbatim
 interblockSeparator
 interblockSeparator
@@ -17,4 +17,4 @@ inputVerbatim: ./_markdown_test/3d9ad8836bff9bd942de9d19fa9d023b.verbatim
 interblockSeparator
 interblockSeparator
 inputVerbatim: ./_markdown_test/5b71bb29e431424ea95f56b2ed675bf5.verbatim
-documentEnd
+END document

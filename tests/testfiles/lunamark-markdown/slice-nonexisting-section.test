@@ -140,5 +140,5 @@ belong to the previous note.
     line.  In this way, multi-paragraph notes work like
     multi-paragraph list items.
 >>>
-documentBegin
-documentEnd
+BEGIN document
+END document

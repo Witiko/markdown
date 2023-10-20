@@ -7,6 +7,6 @@
 <<<
 **foo**
 >>>
-documentBegin
+BEGIN document
 strongEmphasis: foo
-documentEnd
+END document

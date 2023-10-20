@@ -13,7 +13,7 @@
 2.
 3. _bar_
 >>>
-documentBegin
+BEGIN document
 olBeginTight
 olItemWithNumber: 1
 emphasis: foo
@@ -24,4 +24,4 @@ olItemWithNumber: 3
 emphasis: bar
 olItemEnd
 olEndTight
-documentEnd
+END document

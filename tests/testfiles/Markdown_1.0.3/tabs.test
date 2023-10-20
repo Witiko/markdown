@@ -22,7 +22,7 @@ And:
 	    indented with spaces
 
 >>>
-documentBegin
+BEGIN document
 ulBegin
 ulItem
 softLineBreak
@@ -40,4 +40,4 @@ inputVerbatim: ./_markdown_test/e424f57582b0ed6641aa44d4f76d21ad.verbatim
 interblockSeparator
 interblockSeparator
 inputVerbatim: ./_markdown_test/48a9553993c273349c59884b09324a97.verbatim
-documentEnd
+END document

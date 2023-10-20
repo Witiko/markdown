@@ -22,7 +22,7 @@ with two lines._
 
       > A block quote.
 >>>
-documentBegin
+BEGIN document
 olBegin
 olItemWithNumber: 1
 emphasis: A paragraph(softLineBreak)with two lines.
@@ -33,4 +33,4 @@ blockQuoteBegin
 blockQuoteEnd
 olItemEnd
 olEnd
-documentEnd
+END document

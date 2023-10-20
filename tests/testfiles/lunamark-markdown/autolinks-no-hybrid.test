@@ -6,7 +6,7 @@ labels and the URLs are escaped.
 
 <Value_of_life@Valueoflife.com>
 >>>
-documentBegin
+BEGIN document
 softLineBreak
 paragraphSeparator
 BEGIN link
@@ -20,4 +20,4 @@ BEGIN link
 - URI: mailto:Value_of_life@Valueoflife.com
 - title: 
 END link
-documentEnd
+END document

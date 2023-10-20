@@ -12,7 +12,7 @@
 
  _two_
 >>>
-documentBegin
+BEGIN document
 ulBeginTight
 ulItem
 emphasis: one
@@ -20,4 +20,4 @@ ulItemEnd
 ulEndTight
 interblockSeparator
 emphasis: two
-documentEnd
+END document

@@ -15,10 +15,10 @@
 
   
 >>>
-documentBegin
+BEGIN document
 emphasis: aaa
 paragraphSeparator
 BEGIN section
 headingOne: aaa
 END section
-documentEnd
+END document

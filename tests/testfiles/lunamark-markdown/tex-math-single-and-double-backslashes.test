@@ -16,7 +16,7 @@ through the plain TeX interface.
 
 \\\[a\\\]
 >>>
-documentBegin
+BEGIN document
 codeSpan: texMathDoubleBackslash
 codeSpan: texMathSingleBackslash
 softLineBreak
@@ -34,4 +34,4 @@ inlineMath: a\\
 paragraphSeparator
 backslash
 displayMath: a\\
-documentEnd
+END document

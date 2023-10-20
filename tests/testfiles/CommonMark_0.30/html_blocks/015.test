@@ -11,6 +11,6 @@
 *bar*
 </a>
 >>>
-documentBegin
+BEGIN document
 inputBlockHtmlElement: ./_markdown_test/80cb299274a91fd2edfed2bfe359aa0b.verbatim
-documentEnd
+END document

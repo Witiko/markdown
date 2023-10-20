@@ -9,6 +9,6 @@
 Foo
     ---
 >>>
-documentBegin
+BEGIN document
 softLineBreak
-documentEnd
+END document

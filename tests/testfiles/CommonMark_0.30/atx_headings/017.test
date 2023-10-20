@@ -11,7 +11,7 @@
 # baz
 *Bar foo*
 >>>
-documentBegin
+BEGIN document
 emphasis: Foo bar
 interblockSeparator
 BEGIN section
@@ -19,4 +19,4 @@ headingOne: baz
 interblockSeparator
 emphasis: Bar foo
 END section
-documentEnd
+END document

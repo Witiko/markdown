@@ -11,8 +11,8 @@ Foo
 <a href="bar">
 baz
 >>>
-documentBegin
+BEGIN document
 softLineBreak
 inlineHtmlTag: <a href="bar">
 softLineBreak
-documentEnd
+END document

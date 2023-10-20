@@ -7,10 +7,10 @@
 <<<
 [link](foo\bar)
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: link
 - URI: foo(backslash)bar
 - title: 
 END link
-documentEnd
+END document

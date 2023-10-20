@@ -7,6 +7,6 @@
 <<<
 [not a `link](/foo`)
 >>>
-documentBegin
+BEGIN document
 codeSpan: link](/foo
-documentEnd
+END document

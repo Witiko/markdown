@@ -8,6 +8,6 @@
 [foo]: /*url*
 "title" *ok*
 >>>
-documentBegin
+BEGIN document
 emphasis: ok
-documentEnd
+END document

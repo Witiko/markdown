@@ -15,7 +15,7 @@
 > > > *foo*
 *bar*
 >>>
-documentBegin
+BEGIN document
 blockQuoteBegin
 blockQuoteBegin
 blockQuoteBegin
@@ -25,4 +25,4 @@ emphasis: bar
 blockQuoteEnd
 blockQuoteEnd
 blockQuoteEnd
-documentEnd
+END document

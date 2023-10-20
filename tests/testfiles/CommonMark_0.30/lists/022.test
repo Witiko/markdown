@@ -9,10 +9,10 @@
 <<<
 - _a_
 >>>
-documentBegin
+BEGIN document
 ulBeginTight
 ulItem
 emphasis: a
 ulItemEnd
 ulEndTight
-documentEnd
+END document

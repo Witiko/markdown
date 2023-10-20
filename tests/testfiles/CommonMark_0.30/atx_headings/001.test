@@ -17,7 +17,7 @@
 ##### foo
 ###### foo
 >>>
-documentBegin
+BEGIN document
 BEGIN section
 headingOne: foo
 interblockSeparator
@@ -41,4 +41,4 @@ END section
 END section
 END section
 END section
-documentEnd
+END document

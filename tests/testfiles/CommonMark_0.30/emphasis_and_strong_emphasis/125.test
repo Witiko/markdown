@@ -7,6 +7,6 @@
 <<<
 *<img src="foo" title="*"/>
 >>>
-documentBegin
+BEGIN document
 inlineHtmlTag: <img src="foo" title="*"/>
-documentEnd
+END document

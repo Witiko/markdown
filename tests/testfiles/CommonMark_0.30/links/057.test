@@ -9,10 +9,10 @@
 
 [ref]: /uri
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: http://example.com/?search=][ref]
 - URI: http://example.com/?search=][ref]
 - title: 
 END link
-documentEnd
+END document

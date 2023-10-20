@@ -3,10 +3,10 @@
 
 [Hi]: /foo
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: hI
 - URI: /foo
 - title: 
 END link
-documentEnd
+END document

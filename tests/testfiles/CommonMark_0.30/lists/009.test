@@ -26,7 +26,7 @@
 
     _code_
 >>>
-documentBegin
+BEGIN document
 ulBegin
 ulItem
 emphasis: foo
@@ -41,4 +41,4 @@ interblockSeparator
 inputBlockHtmlElement: ./_markdown_test/bd8768ad057df0a9dda8e50a0507b3ed.verbatim
 interblockSeparator
 inputVerbatim: ./_markdown_test/57e85d2f0dcbe302e18311cb70501905.verbatim
-documentEnd
+END document

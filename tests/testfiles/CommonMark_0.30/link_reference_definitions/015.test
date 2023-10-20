@@ -9,10 +9,10 @@
 
 [αγω]
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: αγω
 - URI: /φου
 - title: 
 END link
-documentEnd
+END document

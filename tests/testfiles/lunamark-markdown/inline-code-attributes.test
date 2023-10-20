@@ -5,7 +5,7 @@ propagates through the plain TeX interface.
 
 `<$>`{.haskell}
 >>>
-documentBegin
+BEGIN document
 codeSpan: inlineCodeAttributes
 softLineBreak
 paragraphSeparator
@@ -13,4 +13,4 @@ BEGIN codeSpanAttributeContext
 attributeClassName: haskell
 codeSpan: <(dollarSign)>
 END codeSpanAttributeContext
-documentEnd
+END document

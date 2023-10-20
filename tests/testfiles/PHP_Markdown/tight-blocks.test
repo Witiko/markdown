@@ -9,7 +9,7 @@ Paragraph before blockquote:
 > Some quote.
 
 >>>
-documentBegin
+BEGIN document
 softLineBreak
 paragraphSeparator
 interblockSeparator
@@ -20,4 +20,4 @@ interblockSeparator
 blockQuoteBegin
 blockQuoteEnd
 END section
-documentEnd
+END document

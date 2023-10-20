@@ -9,7 +9,7 @@ commands, where both the labels and the URLs are escaped even though the
 
 <Value_of_life@Valueoflife.com>
 >>>
-documentBegin
+BEGIN document
 codeSpan: hybrid
 softLineBreak
 softLineBreak
@@ -27,4 +27,4 @@ BEGIN link
 - URI: mailto:Value_of_life@Valueoflife.com
 - title: 
 END link
-documentEnd
+END document

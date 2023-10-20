@@ -9,7 +9,7 @@
 ``` aa ```
 foo
 >>>
-documentBegin
+BEGIN document
 codeSpan: aa
 softLineBreak
-documentEnd
+END document

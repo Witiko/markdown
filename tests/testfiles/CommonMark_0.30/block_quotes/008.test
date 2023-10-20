@@ -15,7 +15,7 @@
 > - *foo*
 - *bar*
 >>>
-documentBegin
+BEGIN document
 blockQuoteBegin
 ulBeginTight
 ulItem
@@ -29,4 +29,4 @@ ulItem
 emphasis: bar
 ulItemEnd
 ulEndTight
-documentEnd
+END document

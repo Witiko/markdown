@@ -7,6 +7,6 @@
 <<<
 foo <!ELEMENT br EMPTY>
 >>>
-documentBegin
+BEGIN document
 inlineHtmlTag: <!ELEMENT br EMPTY>
-documentEnd
+END document

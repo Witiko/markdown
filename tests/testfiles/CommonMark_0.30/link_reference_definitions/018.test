@@ -7,7 +7,7 @@
 <<<
 [foo]: /*url* "title" *ok*
 >>>
-documentBegin
+BEGIN document
 emphasis: url
 emphasis: ok
-documentEnd
+END document

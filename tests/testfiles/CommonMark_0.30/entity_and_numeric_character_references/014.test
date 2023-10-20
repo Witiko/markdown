@@ -12,10 +12,10 @@
 
 * foo
 >>>
-documentBegin
+BEGIN document
 interblockSeparator
 ulBeginTight
 ulItem
 ulItemEnd
 ulEndTight
-documentEnd
+END document

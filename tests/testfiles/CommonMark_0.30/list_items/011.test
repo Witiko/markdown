@@ -25,7 +25,7 @@
 
     > _bam_
 >>>
-documentBegin
+BEGIN document
 olBegin
 olItemWithNumber: 1
 emphasis: foo
@@ -42,4 +42,4 @@ emphasis: bam
 blockQuoteEnd
 olItemEnd
 olEnd
-documentEnd
+END document

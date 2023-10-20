@@ -6,7 +6,7 @@
 1. test
 2. test
 >>>
-documentBegin
+BEGIN document
 ulBeginTight
 ulItem
 ulItemEnd
@@ -28,4 +28,4 @@ olItemEnd
 olItemWithNumber: 2
 olItemEnd
 olEndTight
-documentEnd
+END document

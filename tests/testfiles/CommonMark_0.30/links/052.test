@@ -9,11 +9,11 @@
 
 [ref]: /uri
 >>>
-documentBegin
+BEGIN document
 emphasis: bar (BEGIN link)(- label: baz)(- URI: /uri)(- title: )(END link)
 BEGIN link
 - label: ref
 - URI: /uri
 - title: 
 END link
-documentEnd
+END document

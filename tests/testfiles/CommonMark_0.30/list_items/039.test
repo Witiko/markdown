@@ -11,10 +11,10 @@
   1.  _A paragraph
     with two lines._
 >>>
-documentBegin
+BEGIN document
 olBeginTight
 olItemWithNumber: 1
 emphasis: A paragraph(softLineBreak)with two lines.
 olItemEnd
 olEndTight
-documentEnd
+END document

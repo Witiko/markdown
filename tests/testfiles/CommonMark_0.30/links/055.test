@@ -9,6 +9,6 @@
 
 [ref]: /uri
 >>>
-documentBegin
+BEGIN document
 inlineHtmlTag: <bar attr="][ref]">
-documentEnd
+END document

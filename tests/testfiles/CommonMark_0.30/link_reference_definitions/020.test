@@ -11,7 +11,7 @@
 
 [foo]
 >>>
-documentBegin
+BEGIN document
 inputVerbatim: ./_markdown_test/4cc6fdeae1297843fc2a220a6aa4bfcf.verbatim
 interblockSeparator
-documentEnd
+END document

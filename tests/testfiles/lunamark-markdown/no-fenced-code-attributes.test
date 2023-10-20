@@ -9,7 +9,7 @@ the infostring.
 bar
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 >>>
-documentBegin
+BEGIN document
 codeSpan: fencedCodeAttributes
 softLineBreak
 paragraphSeparator
@@ -19,4 +19,4 @@ BEGIN fencedCode
 - src: ./_markdown_test/37b51d194a7513e45b56f6524f2d51f2.verbatim
 - infostring: foo (leftBrace)#mycode .haskell .numberLines startFrom="100"(rightBrace)
 END fencedCode
-documentEnd
+END document

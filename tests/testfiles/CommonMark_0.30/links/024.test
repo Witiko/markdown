@@ -11,7 +11,7 @@
 [link](/url 'title')
 [link](/url (title))
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: link
 - URI: /url
@@ -29,4 +29,4 @@ BEGIN link
 - URI: /url
 - title: title
 END link
-documentEnd
+END document

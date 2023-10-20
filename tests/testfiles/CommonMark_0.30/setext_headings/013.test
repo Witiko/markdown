@@ -11,9 +11,9 @@
 > Foo
 ---
 >>>
-documentBegin
+BEGIN document
 blockQuoteBegin
 blockQuoteEnd
 interblockSeparator
 thematicBreak
-documentEnd
+END document

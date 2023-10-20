@@ -7,7 +7,7 @@
 <<<
 \## foo
 >>>
-documentBegin
+BEGIN document
 hash
 hash
-documentEnd
+END document

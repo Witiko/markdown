@@ -7,6 +7,6 @@
 <<<
 foo-_(bar)_
 >>>
-documentBegin
+BEGIN document
 emphasis: (bar)
-documentEnd
+END document

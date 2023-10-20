@@ -17,7 +17,7 @@
 <<<
 1. - 2. _foo_
 >>>
-documentBegin
+BEGIN document
 olBeginTight
 olItemWithNumber: 1
 ulBeginTight
@@ -31,4 +31,4 @@ ulItemEnd
 ulEndTight
 olItemEnd
 olEndTight
-documentEnd
+END document

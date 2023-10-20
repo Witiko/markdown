@@ -9,10 +9,10 @@
 
 [FOOBAR]: train.jpg "train & tracks"
 >>>
-documentBegin
+BEGIN document
 BEGIN image
 - label: foo (emphasis: bar)
 - URI: train.jpg
 - title: train (ampersand) tracks
 END image
-documentEnd
+END document

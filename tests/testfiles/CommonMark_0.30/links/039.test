@@ -7,10 +7,10 @@
 <<<
 ![[[foo](uri1)](uri2)](uri3)
 >>>
-documentBegin
+BEGIN document
 BEGIN image
 - label: [(BEGIN link)(- label: foo)(- URI: uri1)(- title: )(END link)](uri2)
 - URI: uri3
 - title: 
 END image
-documentEnd
+END document

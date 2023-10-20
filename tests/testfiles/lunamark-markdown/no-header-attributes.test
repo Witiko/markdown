@@ -18,7 +18,7 @@ A level two heading {iD=fourth4-id .2not-a-class}
 
 # Attributes {#should #appear .in .alphabetical order=ing and="not" #the .order of='typing'}
 >>>
-documentBegin
+BEGIN document
 codeSpan: headerAttributes
 interblockSeparator
 BEGIN section
@@ -56,4 +56,4 @@ END section
 BEGIN section
 headingOne: Attributes (leftBrace)(hash)should (hash)appear .in .alphabetical order=ing and="not" (hash)the .order of='typing'(rightBrace)
 END section
-documentEnd
+END document

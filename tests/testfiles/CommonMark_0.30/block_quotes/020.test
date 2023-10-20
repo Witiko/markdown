@@ -11,10 +11,10 @@
 > *bar*
 *baz*
 >>>
-documentBegin
+BEGIN document
 blockQuoteBegin
 emphasis: bar
 softLineBreak
 emphasis: baz
 blockQuoteEnd
-documentEnd
+END document

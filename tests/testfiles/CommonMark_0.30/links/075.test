@@ -11,11 +11,11 @@
 
 [foo]: /url "title"
 >>>
-documentBegin
+BEGIN document
 BEGIN link
 - label: foo
 - URI: /url
 - title: title
 END link
 softLineBreak
-documentEnd
+END document

@@ -34,7 +34,7 @@ Fancy list (*alpha, lower, tight and paren, alpha, lower, tight*)
  a. item
  b) item
 >>>
-documentBegin
+BEGIN document
 codeSpan: fancyLists
 paragraphSeparator
 emphasis: roman, lower
@@ -65,4 +65,4 @@ interblockSeparator
 emphasis: alpha, lower, tight and paren, alpha, lower, tight
 paragraphSeparator
 softLineBreak
-documentEnd
+END document

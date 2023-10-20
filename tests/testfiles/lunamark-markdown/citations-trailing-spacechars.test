@@ -8,7 +8,7 @@ foo@bar
 
 foo @bar
 >>>
-documentBegin
+BEGIN document
 codeSpan: citations
 softLineBreak
 softLineBreak
@@ -22,4 +22,4 @@ BEGIN textCite
 - name: bar
 END textCite
 END textCites
-documentEnd
+END document

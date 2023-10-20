@@ -7,7 +7,7 @@
 <<<
 __foo_
 >>>
-documentBegin
+BEGIN document
 underscore
 emphasis: foo
-documentEnd
+END document

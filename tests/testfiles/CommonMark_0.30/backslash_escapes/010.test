@@ -7,6 +7,6 @@
 <<<
 <a href="/bar\/)">
 >>>
-documentBegin
+BEGIN document
 inputBlockHtmlElement: ./_markdown_test/a40d946dc39fc782b3e55b166809bdff.verbatim
-documentEnd
+END document

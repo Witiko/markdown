@@ -7,6 +7,6 @@
 <<<
 __(bar)__.
 >>>
-documentBegin
+BEGIN document
 strongEmphasis: (bar)
-documentEnd
+END document

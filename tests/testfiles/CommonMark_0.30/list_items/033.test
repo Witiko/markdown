@@ -14,10 +14,10 @@ _foo_
 _foo_
 1.
 >>>
-documentBegin
+BEGIN document
 emphasis: foo
 softLineBreak
 paragraphSeparator
 emphasis: foo
 softLineBreak
-documentEnd
+END document

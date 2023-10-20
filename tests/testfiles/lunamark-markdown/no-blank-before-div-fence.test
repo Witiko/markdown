@@ -16,7 +16,7 @@ bar
 
 :::
 >>>
-documentBegin
+BEGIN document
 codeSpan: fencedDivs
 softLineBreak
 codeSpan: blankBeforeDivFence
@@ -30,4 +30,4 @@ interblockSeparator
 BEGIN fencedDivAttributeContext
 attributeClassName: foo
 END fencedDivAttributeContext
-documentEnd
+END document

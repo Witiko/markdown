@@ -13,7 +13,7 @@
  9. item 2
 10. item 2a
 >>>
-documentBegin
+BEGIN document
 ulBeginTight
 ulItem
 ulItemEnd
@@ -44,4 +44,4 @@ olItemEnd
 olItemWithNumber: 10
 olItemEnd
 olEndTight
-documentEnd
+END document

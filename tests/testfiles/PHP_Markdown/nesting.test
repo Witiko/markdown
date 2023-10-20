@@ -11,7 +11,7 @@ Invalid nesting:
 
 [[Link](url)](url)
 >>>
-documentBegin
+BEGIN document
 paragraphSeparator
 strongEmphasis: (BEGIN link)(- label: Link)(- URI: url)(- title: )(END link)
 paragraphSeparator
@@ -29,4 +29,4 @@ BEGIN link
 - URI: url
 - title: 
 END link
-documentEnd
+END document

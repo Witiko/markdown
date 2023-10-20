@@ -5,7 +5,7 @@ propagates through the plain TeX interface.
 
 /basename.WEIRDextension (title)
 >>>
-documentBegin
+BEGIN document
 codeSpan: contentBlockLanguages
 softLineBreak
 interblockSeparator
@@ -15,4 +15,4 @@ BEGIN contentBlockCode
 - URI: basename.WEIRDextension
 - title: title
 END contentBlockCode
-documentEnd
+END document

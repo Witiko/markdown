@@ -16,8 +16,8 @@
     Foo
 ---
 >>>
-documentBegin
+BEGIN document
 inputVerbatim: ./_markdown_test/5407a4668f8bd845ac30ec29307320fb.verbatim
 interblockSeparator
 thematicBreak
-documentEnd
+END document
