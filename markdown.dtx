@@ -29658,9 +29658,9 @@ M.extensions.fancy_lists = function()
       end
 
       local function join_table_with_func(func, markers_table)
-        local pattern = func(markers_table[1][1], markers_table[1][2], markers_table[1][3])
+        local pattern = func(table.unpack(markers_table[1]))
         for i = 2, #markers_table do
-          pattern = pattern + func(markers_table[i][1], markers_table[i][2], markers_table[i][3])
+          pattern = pattern + func(table.unpack(markers_table[i]))
         end
         return pattern
       end
@@ -29798,8 +29798,8 @@ M.extensions.fancy_lists = function()
       end
 
       local FancyListOfType = function(start_marker, continuation_marker, delimiter_type)
-        local enumerator_start = enumerator(start_marker, _, delimiter_type)
-        local enumerator_cont = enumerator(continuation_marker, _, delimiter_type)
+        local enumerator_start = enumerator(start_marker, continuation_marker, delimiter_type)
+        local enumerator_cont = enumerator(continuation_marker, continuation_marker, delimiter_type)
         return Cg(enumerator_start, "listtype")
              * (Ct( TightListItem(Cb("listtype"))
                  * ((parsers.check_minimal_indent / "") * TightListItem(enumerator_cont))^0)
