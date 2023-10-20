@@ -29702,7 +29702,7 @@ M.extensions.fancy_lists = function()
 
       local markers_table = combine_markers_and_delims(markers, delims)
 
-      local enumerator = function(start_marker, _, delimiter_type, interrupting)
+      local function enumerator(start_marker, _, delimiter_type, interrupting)
         local delimiter_range
         local allowed_end
         if interrupting then
