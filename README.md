@@ -267,11 +267,15 @@ Acknowledgements
 | [<img width="150" src="https://www.fi.muni.cz/images/fi-logo.png">][fimu] | I gratefully acknowledge the funding from the [Faculty of Informatics][fimu] at the [Masaryk University][mu] in Brno, Czech Republic, for the development of the Markdown package in projects [MUNI/33/12/2015][], [MUNI/33/1784/2020][], [MUNI/33/0776/2021][], [MUNI/33/1654/2022][], and [MUNI/33/1658/2022][]. |
 | [<img width="150" src="https://cdn.overleaf.com/img/ol-brand/overleaf_og_logo.png">][overleaf] | Extensive user documentation for the Markdown package was kindly written by [Lian Tze Lim][liantze] and published by [Overleaf][]. |
 | [<img width="150" src="https://pbs.twimg.com/profile_images/1004769879319334912/6Bh1UthD.jpg">][omedym] | Support for content slicing (Lua options [`shiftHeadings`][option-shift-headings] and [`slice`][option-slice]) and pipe tables (Lua options [`pipeTables`][option-pipe-tables] and [`tableCaptions`][option-table-captions]) was graciously sponsored by [David Vins][dvins] and [Omedym][]. |
+| [<img width="150" src="https://www.istqb.org/static/istqb-logo-1b043e800a580724ad223567f9ea57c0.png">][istqb] | The fix for issue [#359][issue-359] was graciously sponsored by the [International Software Testing Qualifications Board (ISTQB)][istqb]. |
 
  [dvins]:  https://github.com/dvins             "David Vins"
  [fimu]:   https://www.fi.muni.cz/index.html.en "Faculty of Informatics, Masaryk University"
+ [ISTQB]:  https://www.istqb.org/               "International Software Testing Qualifications Board"
  [mu]:     https://www.muni.cz/en               "Masaryk University"
  [Omedym]: https://www.omedym.com/              "Omedym"
+
+ [issue-359]: https://github.com/witiko/markdown/issues/359 "First item of a fancy list forms a separate list"
 
  [option-pipe-tables]:    https://mirrors.ctan.org/macros/generic/markdown/markdown.html#pipe-tables          "Markdown Package User Manual"
  [option-shift-headings]: https://mirrors.ctan.org/macros/generic/markdown/markdown.html#option-shiftheadings "Markdown Package User Manual"
