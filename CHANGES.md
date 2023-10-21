@@ -12,7 +12,9 @@ Development:
    #315, #354)
 - Add support for bulk redefinition of token renderers and token renderer
   prototypes in the `\markdownSetup` command using enumeration.
-  (#232, #361..#363)
+  (#232, #361..#363, [matrix.org][matrix-361])
+
+ [matrix-361]: https://matrix.to/#/!UeAwznpYwwsinVTetR:matrix.org/$k__vWylYp_L9eyZ0lXCPy26GokZ-Y9g5v8Xs9n47twQ?via=matrix.org&via=im.f3l.de
 
 Fixes:
 
@@ -32,7 +34,10 @@ Documentation:
 
 - Add a link to a preprint from TUGboat 44:3 to `README.md`.
   (cf6b3d7b, dc57af7)
-- Measure the speed impact of test file batching. (#357)
+- Measure the speed impact of test file batching.
+  (#357, [matrix.org][matrix-357])
+
+ [matrix-357]: https://matrix.to/#/!efVbynJpCMjlOTfose:matrix.org/$WR3quuO1fyOl6w_KX6YFA4BACBcL-cWUWBpVfpPWDkI?via=matrix.org&via=im.f3l.de
 
 Unit Tests:
 
@@ -61,19 +66,29 @@ Default Renderer Prototypes:
 Development:
 
 - Add `\markdownSetup` command to all TeX formats.
-  (#275, #349)
+  (#275, #349, [matrix.org][matrix-349])
 - Add an optional argument to the `markdown` LaTeX environment.
   (#299, #351)
 - Add support for Pandoc `mark` syntax extension.
-  (jgm/lunamark#67, #303, #352, contributed by @Omikhleia)
+  (jgm/lunamark#67, #303, #352, [matrix.org][matrix-352],
+   contributed by @Omikhleia)
+
+ [matrix-349]: https://matrix.to/#/!efVbynJpCMjlOTfose:matrix.org/$8JXGbDz0viyRyv6ySWQ3344BOhwd4dj5WYeawzEg_tU?via=matrix.org&via=im.f3l.de
+ [matrix-352]: https://matrix.to/#/!lWGKeMcpgwGHpfLYkf:matrix.org/$yVeWB0Yzfz6mgORv5VeG9IEl7a4xLogkAUmdNMSCxEg?via=matrix.org&via=im.f3l.de
 
 Deprecation:
 
-- Deprecate the `markdown*` LaTeX environment. (#299, #351)
+- Deprecate the `markdown*` LaTeX environment.
+  (#299, #351, [matrix.org][matrix-351])
+
+ [matrix-351]: https://matrix.to/#/!lWGKeMcpgwGHpfLYkf:matrix.org/$yVeWB0Yzfz6mgORv5VeG9IEl7a4xLogkAUmdNMSCxEg?via=matrix.org&via=im.f3l.de
 
 Unit Tests:
 
-- Add support for YAML metadata in testfiles. (#345, #347)
+- Add support for YAML metadata in testfiles.
+  (#345, #347, [matrix.org][matrix-347])
+
+ [matrix-347]: https://matrix.to/#/!efVbynJpCMjlOTfose:matrix.org/$8JXGbDz0viyRyv6ySWQ3344BOhwd4dj5WYeawzEg_tU?via=matrix.org&via=im.f3l.de
 
 Documentation:
 
@@ -91,7 +106,10 @@ Fixes:
 
 Development:
 
-- Add support for TeX-like rich paragraphs. (#30, #306)
+- Add support for TeX-like rich paragraphs.
+  (#30, #306, [matrix.org][matrix-306])
+
+ [matrix-306]: https://matrix.to/#/!lWGKeMcpgwGHpfLYkf:matrix.org/$g9ZTEyXP-V_5elJjcqRd-D9QyIfJuTw-TWlZIFoh72c?via=matrix.org&via=im.f3l.de
 
 Fixes:
 
@@ -234,8 +252,10 @@ Development:
   #235, #236, #270)
 - Add support for attributes on links, images, fenced code,
   and inline code spans. (jgm/lunamark#36, jgm/lunamark#43,
-  #50, #123, #256, #280)
+  #50, #123, #256, #280, [matrix.org][matrix-256])
 - Add `import` LaTeX option. (#107, #286)
+
+ [matrix-256]: https://matrix.to/#/!pznomuvubVyxElflTe:matrix.org/$mDATROtxOLOGBvH5Nt3o86iysRe1LCfZB-lw4PqjKJk?via=matrix.org&via=im.f3l.de
 
 Documentation:
 
