@@ -4,6 +4,11 @@ This test ensures that the Lua `fancyLists` option correctly propagates
 through the plain TeX interface and that the `startNumber` and `tightLists`
 options are enabled by default.
 
+Fancy list (*roman, lower, tight*)
+
+ i. item
+ ii. item
+
 Fancy list (*roman, lower*)
 
  iv. item
@@ -12,7 +17,13 @@ Fancy list (*roman, lower*)
 
 Fancy list (*roman, upper, tight*)
 
+ I. item
+ II. item
+
+Fancy list (*roman, upper*)
+
  IV. item
+
  V. item
 
 Fancy list (*alpha, lower*)
@@ -36,6 +47,16 @@ Fancy list (*alpha, lower, tight and paren, alpha, lower, tight*)
 
  a. item
  b) item
+
+Fancy list (*roman, lower, tight and alpha, lower, tight*)
+
+ i. item
+ j. item
+
+Fancy list (*alpha, lower, tight and roman, lower, tight*)
+
+ v. item
+ vi. item
 >>>
 BEGIN document
 codeSpan: fancyLists
@@ -44,6 +65,18 @@ codeSpan: startNumber
 codeSpan: tightLists
 softLineBreak
 paragraphSeparator
+emphasis: roman, lower, tight
+interblockSeparator
+BEGIN fancyOlBeginTight
+- numstyle: LowerRoman
+- numdelim: Period
+END fancyOlBeginTight
+fancyOlItemWithNumber: 1
+fancyOlItemEnd
+fancyOlItemWithNumber: 2
+fancyOlItemEnd
+fancyOlEndTight
+interblockSeparator
 emphasis: roman, lower
 interblockSeparator
 BEGIN fancyOlBegin
@@ -62,11 +95,23 @@ BEGIN fancyOlBeginTight
 - numstyle: UpperRoman
 - numdelim: Period
 END fancyOlBeginTight
+fancyOlItemWithNumber: 1
+fancyOlItemEnd
+fancyOlItemWithNumber: 2
+fancyOlItemEnd
+fancyOlEndTight
+interblockSeparator
+emphasis: roman, upper
+interblockSeparator
+BEGIN fancyOlBegin
+- numstyle: UpperRoman
+- numdelim: Period
+END fancyOlBegin
 fancyOlItemWithNumber: 4
 fancyOlItemEnd
 fancyOlItemWithNumber: 5
 fancyOlItemEnd
-fancyOlEndTight
+fancyOlEnd
 interblockSeparator
 emphasis: alpha, lower
 interblockSeparator
@@ -119,6 +164,42 @@ BEGIN fancyOlBeginTight
 - numdelim: OneParen
 END fancyOlBeginTight
 fancyOlItemWithNumber: 2
+fancyOlItemEnd
+fancyOlEndTight
+interblockSeparator
+emphasis: roman, lower, tight and alpha, lower, tight
+interblockSeparator
+BEGIN fancyOlBeginTight
+- numstyle: LowerRoman
+- numdelim: Period
+END fancyOlBeginTight
+fancyOlItemWithNumber: 1
+fancyOlItemEnd
+fancyOlEndTight
+interblockSeparator
+BEGIN fancyOlBeginTight
+- numstyle: LowerAlpha
+- numdelim: Period
+END fancyOlBeginTight
+fancyOlItemWithNumber: 10
+fancyOlItemEnd
+fancyOlEndTight
+interblockSeparator
+emphasis: alpha, lower, tight and roman, lower, tight
+interblockSeparator
+BEGIN fancyOlBeginTight
+- numstyle: LowerAlpha
+- numdelim: Period
+END fancyOlBeginTight
+fancyOlItemWithNumber: 22
+fancyOlItemEnd
+fancyOlEndTight
+interblockSeparator
+BEGIN fancyOlBeginTight
+- numstyle: LowerRoman
+- numdelim: Period
+END fancyOlBeginTight
+fancyOlItemWithNumber: 6
 fancyOlItemEnd
 fancyOlEndTight
 END document

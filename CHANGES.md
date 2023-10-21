@@ -22,6 +22,9 @@ Fixes:
   `startNumber`. (59fb97e8)
 - Properly parse emphasis at line endings in headings.
   (contributed by @lostenderman, #358, #360)
+- Fix fancy lists that use roman numerals as markers.
+  (contributed by @lostenderman, sponsored by ISTQB,
+   danopolan/istqb_latex#87, #359, #364)
 
 Documentation:
 

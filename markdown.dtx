@@ -29639,19 +29639,28 @@ M.extensions.fancy_lists = function()
       local writer = self.writer
 
       local function combine_markers_and_delims(markers, delims)
-        local pairs = {}
+        local markers_table = {}
         for _,marker in ipairs(markers) do
+          local start_marker
+          local continuation_marker
+          if type(marker) == "table" then
+            start_marker = marker[1]
+            continuation_marker = marker[2]
+          else
+            start_marker = marker
+            continuation_marker = marker
+          end
           for _,delim in ipairs(delims) do
-            table.insert(pairs, {marker, delim})
+            table.insert(markers_table, {start_marker, continuation_marker, delim})
           end
         end
-        return pairs
+        return markers_table
       end
 
-      local function apply_function_to_pairs(func, starter_pairs)
-        local pattern = func(starter_pairs[1][1], starter_pairs[1][2])
-        for i = 2, #starter_pairs do
-          pattern = pattern + func(starter_pairs[i][1], starter_pairs[i][2])
+      local function join_table_with_func(func, markers_table)
+        local pattern = func(table.unpack(markers_table[1]))
+        for i = 2, #markers_table do
+          pattern = pattern + func(table.unpack(markers_table[i]))
         end
         return pattern
       end
@@ -29668,12 +29677,17 @@ M.extensions.fancy_lists = function()
                 * (i*x + i*v + v^-1 * i^-3)
       end
 
-      local lowercase_roman_marker  = roman_marker({"M", "D", "C", "L", "X", "V", "I"})
-      local uppercase_roman_marker  = roman_marker({"m", "d", "c", "l", "x", "v", "i"})
+      local lowercase_roman_marker  = roman_marker({"m", "d", "c", "l", "x", "v", "i"})
+      local uppercase_roman_marker  = roman_marker({"M", "D", "C", "L", "X", "V", "I"})
+
+      local lowercase_opening_roman_marker  = P("i")
+      local uppercase_opening_roman_marker  = P("I")
 
       local digit_marker = parsers.dig * parsers.dig^-8
-      
+
       local markers = { 
+        {lowercase_opening_roman_marker, lowercase_roman_marker},
+        {uppercase_opening_roman_marker, uppercase_roman_marker},
         lowercase_letter_marker,
         uppercase_letter_marker,
         lowercase_roman_marker,
@@ -29686,16 +29700,16 @@ M.extensions.fancy_lists = function()
         parsers.rparent 
       }
 
-      local starter_pairs = combine_markers_and_delims(markers, delims)
+      local markers_table = combine_markers_and_delims(markers, delims)
 
-      local enumerator = function(marker_type, delimiter_type, interrupting)
+      local function enumerator(start_marker, _, delimiter_type, interrupting)
         local delimiter_range
         local allowed_end
         if interrupting then
           delimiter_range = P("1")
           allowed_end = C(parsers.spacechar^1) * #parsers.linechar
         else
-          delimiter_range = marker_type
+          delimiter_range = start_marker
           allowed_end = C(parsers.spacechar^1) + #(parsers.newline + parsers.eof)
         end
 
@@ -29704,7 +29718,7 @@ M.extensions.fancy_lists = function()
                 * allowed_end
       end
 
-      local starter = apply_function_to_pairs(enumerator, starter_pairs)
+      local starter = join_table_with_func(enumerator, markers_table)
 
       local TightListItem = function(starter)
         return  parsers.add_indent(starter, "li")
@@ -29783,22 +29797,23 @@ M.extensions.fancy_lists = function()
                                 numdelim or "Default")
       end
 
-      local FancyListOfType = function(marker_type, delimiter_type)
-        local enumerator = enumerator(marker_type, delimiter_type)
-        return Cg(enumerator, "listtype")
+      local FancyListOfType = function(start_marker, continuation_marker, delimiter_type)
+        local enumerator_start = enumerator(start_marker, continuation_marker, delimiter_type)
+        local enumerator_cont = enumerator(continuation_marker, continuation_marker, delimiter_type)
+        return Cg(enumerator_start, "listtype")
              * (Ct( TightListItem(Cb("listtype"))
-                 * ((parsers.check_minimal_indent / "") * TightListItem(enumerator))^0)
+                 * ((parsers.check_minimal_indent / "") * TightListItem(enumerator_cont))^0)
              * Cc(true) 
              * -#((parsers.conditionally_indented_blankline^0 / "") 
-                 * parsers.check_minimal_indent * enumerator)
+                 * parsers.check_minimal_indent * enumerator_cont)
              + Ct( LooseListItem(Cb("listtype"))
                  * ((parsers.conditionally_indented_blankline^0 / "") 
-                   * (parsers.check_minimal_indent / "") * LooseListItem(enumerator))^0)
+                   * (parsers.check_minimal_indent / "") * LooseListItem(enumerator_cont))^0)
              * Cc(false)
              ) * Ct(Cb("listtype")) / fancylist
       end
 
-      local FancyList = apply_function_to_pairs(FancyListOfType, starter_pairs)
+      local FancyList = join_table_with_func(FancyListOfType, markers_table)
 
       local Endline   = parsers.newline
                       * (parsers.check_minimal_indent 
