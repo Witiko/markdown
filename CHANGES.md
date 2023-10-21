@@ -8,8 +8,8 @@ Development:
 
 - Add support for Pandoc `auto_identifiers` and `gfm_auto_identifiers`
   syntax extensions.
-  (contributed by @lostenderman, #237, #238, lostenderman/markdown#153,
-   #315, #354)
+  (#237, #238, lostenderman/markdown#153, #315, #354,
+   contributed by @lostenderman)
 - Add support for bulk redefinition of token renderers and token renderer
   prototypes in the `\markdownSetup` command using enumeration.
   (#232, #361..#363, [matrix.org][matrix-361])
@@ -21,14 +21,14 @@ Fixes:
 - Make the `import` LaTeX option correctly handle recursive imports.
   (68c7a2f5, danopolan/istqb_latex#87)
 - Support attributes on multi-line setext headings.
-  (contributed by @lostenderman, #315, #355, #356)
+  (#315, #355, #356, contributed by @lostenderman)
 - Correctly process the combination of Lua options `fancyLists` and
   `startNumber`. (59fb97e8)
 - Properly parse emphasis at line endings in headings.
-  (contributed by @lostenderman, #358, #360)
+  (#358, #360, contributed by @lostenderman)
 - Fix fancy lists that use roman numerals as markers.
-  (contributed by @lostenderman, sponsored by ISTQB,
-   danopolan/istqb_latex#87, #359, #364)
+  (danopolan/istqb_latex#87, #359, #364,
+   contributed by @lostenderman, sponsored by ISTQB)
 
 Documentation:
 
@@ -42,8 +42,7 @@ Documentation:
 Unit Tests:
 
 - Restore CommonMark testfiles with trailing tabs and spaces.
-  (contributed by @lostenderman, #348, #353,
-   lostenderman/markdown#2)
+  (#348, #353, lostenderman/markdown#2, contributed by @lostenderman)
 - Fail faster during batch bisection. (5177ef6)
 - Speed up tests by running ConTeXt MkIV only once. (61f36e6d)
 - Use `BEGIN document` and `END document` instead of `documentBegin`
