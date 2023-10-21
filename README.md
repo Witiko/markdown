@@ -4,6 +4,7 @@ Markdown
 [![license](https://img.shields.io/github/license/witiko/markdown)](LICENSE)
 [![ci](https://github.com/witiko/markdown/actions/workflows/main.yml/badge.svg)][ci]
 [![release](https://img.shields.io/github/release/witiko/markdown)][release]
+[![docker-witiko/markdown](https://img.shields.io/docker/v/witiko/markdown/latest?label=docker%20image)][docker-witiko/markdown]
 &emsp;
 [![matrix](https://img.shields.io/matrix/witiko-markdown:matrix.org?label=matrix%20chat)][matrix]
 [![discord](https://img.shields.io/discord/1011667276908474440?label=discord%20chat&color=blueviolet)][discord]
