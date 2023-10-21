@@ -6,8 +6,8 @@ Markdown
 [![release](https://img.shields.io/github/release/witiko/markdown)][release]
 [![docker-witiko/markdown](https://img.shields.io/docker/v/witiko/markdown/latest?label=docker%20image)][docker-witiko/markdown]
 &emsp;
-[![matrix](https://img.shields.io/matrix/witiko-markdown:matrix.org?label=matrix%20chat)][matrix]
-[![discord](https://img.shields.io/discord/1011667276908474440?label=discord%20chat&color=blueviolet)][discord]
+[![matrix](https://img.shields.io/matrix/witiko-markdown:matrix.org?label=matrix)][matrix]
+[![discord](https://img.shields.io/discord/1011667276908474440?label=discord&color=blueviolet)][discord]
 
  [release]:  https://github.com/Witiko/markdown/releases/latest "Releases · Witiko/markdown"
  [ci]:       https://github.com/Witiko/markdown/actions         "GitHub Actions"
