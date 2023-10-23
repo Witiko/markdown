@@ -35,7 +35,7 @@ Documentation:
 - Add a link to a preprint from TUGboat 44:3 to `README.md`.
   (cf6b3d7b, dc57af7)
 - Measure the speed impact of test file batching.
-  (#357, [matrix.org][matrix-357])
+  (#357, b526fa65, 8c94ffc9, [matrix.org][matrix-357])
 
  [matrix-357]: https://matrix.to/#/!efVbynJpCMjlOTfose:matrix.org/$WR3quuO1fyOl6w_KX6YFA4BACBcL-cWUWBpVfpPWDkI?via=matrix.org&via=im.f3l.de
 
