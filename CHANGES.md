@@ -135,7 +135,10 @@ Unit Tests:
   (#245, #316, 8bfd0b3, #317, #319..#325, #327, #328, e3b31696,
    #331, #332, #334, 0a230fa, 90cc428, 3be0013, dbe1808, a0108814)
 - Use self-hosted GitHub runners for tests to improve speed.
-  (#326, #330, #331, a9948a86, 68b6216b, contributed by @TeXhackse)
+  (#326, #330, #331, a9948a86, 68b6216b, contributed by @TeXhackse,
+   [matrix.org][matrix-331])
+
+ [matrix-331]: https://matrix.to/#/!efVbynJpCMjlOTfose:matrix.org/$6qKDXlLxsaJnOl0muFX3K7Htj41B-7hL2PmSFTIm6NE?via=matrix.org&via=im.f3l.de
 
 Continuous Integration:
 
