@@ -2,6 +2,11 @@
 
 ## 3.3.0
 
+Documentation:
+
+- Add a link to a work-in-progress article for TUGboat 45:1 to `README.md`.
+  (1988a0c2)
+
 ## 3.2.0 (2023-10-21)
 
 Development:
