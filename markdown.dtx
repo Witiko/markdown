@@ -20187,7 +20187,7 @@ pdflatex --shell-escape document.tex
 %
 % Except for the `plain` option described in Section <#sec:latexplain>,
 % the \LaTeX{} themes described in Section <#sec:latexthemes>, and the
-% \LaTeX{} snippets described in Section <#sec:latex-setup-snippets>,
+% \LaTeX{} snippets described in Section <#sec:latexsnippets>,
 % \LaTeX{} options map directly to the options recognized by the plain
 % \TeX{} interface (see Section <#sec:tex-options>) and to the markdown token
 % renderers and their prototypes recognized by the plain \TeX{} interface (see
@@ -20256,58 +20256,6 @@ pdflatex --shell-escape document.tex
 \DeclareOption{finalizecache}{\markdownSetup{finalizeCache}}
 \DeclareOption{frozencache}{\markdownSetup{frozenCache}}
 %    \end{macrocode}
-% \begin{markdown}
-%
-%#### \LaTeX{} snippets {#latex-setup-snippets}
-%
-% We may also set up \LaTeX{} options as *snippets* using the
-% \mdef{markdownSetupSnippet} macro and invoke them later. The
-% \mref{markdownSetupSnippet} macro receives two arguments: the name
-% of the snippet and the options to store:
-%
-% \end{markdown}
-%  \begin{macrocode}
-\ExplSyntaxOn
-\cs_new:Nn
-  \@@_latex_setup_snippet:nn
-  {
-    \markdownIfSnippetExists
-      { #1 }
-      {
-        \markdownWarning
-          {Redefined~snippet~\markdownLaTeXThemeName#1}
-        \csname markdownLaTeXSetupSnippet%
-          \markdownLaTeXThemeName#1\endcsname={#2}
-      }
-      {
-        \newtoks\next
-          \next={#2}
-        \expandafter\let\csname markdownLaTeXSetupSnippet%
-          \markdownLaTeXThemeName#1\endcsname=\next
-      }
-  }
-\let\markdownSetupSnippet=\@@_latex_setup_snippet:nn
-\ExplSyntaxOff
-%    \end{macrocode}
-% \begin{markdown}
-%
-% To decide whether a snippet exists, we can use the
-% \mdef{markdownIfSnippetExists} macro:
-%
-% \end{markdown}
-%  \begin{macrocode}
-\newcommand\markdownIfSnippetExists[3]{%
-  \@ifundefined
-    {markdownLaTeXSetupSnippet\markdownLaTeXThemeName#1}%
-    {#3}{#2}}%
-%    \end{macrocode}
-% \begin{markdown}
-%
-% See Section <#sec:latexthemes> for information on interactions between
-% snippets and \LaTeX{} themes. See Section <#sec:latexsnippets>
-% for information about invoking the set-up snippets.
-%
-% \end{markdown}
 % \iffalse
 %</latex>
 %<*manual-options>
@@ -20512,16 +20460,6 @@ would use the following code in the preamble of your document:
   }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \begin{markdown}
-%
-% The \LaTeX{} themes have a useful synergy with snippets (see Section
-% <#sec:latex-setup-snippets>): To make it less likely that different themes
-% will set up snippets with the same name, we will prepend \meta{theme
-% name}`/` before the snippet name and use the result as the snippet name.
-% For example, if the `witiko/dot` theme sets up the `product` snippet, the
-% snippet will be available under the name `witiko/dot/product`.
-%
-% \end{markdown}
 % \iffalse
 %</latex>
 %<*manual-options>
@@ -20823,14 +20761,57 @@ However, it is often desirable to change only some local aspects of a document.
 \LaTeX{} snippets provide syntactic sugar for defining and invoking various
 options locally.
 
-% \fi
-% \begin{markdown}
-% The \LaTeX{} option with key `snippet` invokes a snippet named \meta{value}:
-% \end{markdown}
-% \iffalse
 %</manual-options>
 %<*latex>
 % \fi
+% \begin{markdown}
+%
+% We may set up \LaTeX{} options as *snippets* using the
+% \mdef{markdownSetupSnippet} macro and invoke them later. The
+% \mref{markdownSetupSnippet} macro receives two arguments: the name
+% of the snippet and the options to store.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\cs_new:Nn
+  \@@_latex_setup_snippet:nn
+  {
+    \markdownIfSnippetExists
+      { #1 }
+      {
+        \markdownWarning
+          {Redefined~snippet~\markdownLaTeXThemeName#1}
+        \csname markdownLaTeXSetupSnippet%
+          \markdownLaTeXThemeName#1\endcsname={#2}
+      }
+      {
+        \newtoks\next
+          \next={#2}
+        \expandafter\let\csname markdownLaTeXSetupSnippet%
+          \markdownLaTeXThemeName#1\endcsname=\next
+      }
+  }
+\let\markdownSetupSnippet=\@@_latex_setup_snippet:nn
+\ExplSyntaxOff
+%    \end{macrocode}
+% \begin{markdown}
+%
+% To decide whether a snippet exists, we can use the
+% \mdef{markdownIfSnippetExists} macro.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\newcommand\markdownIfSnippetExists[3]{%
+  \@ifundefined
+    {markdownLaTeXSetupSnippet\markdownLaTeXThemeName#1}%
+    {#3}{#2}}%
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The \LaTeX{} option with key `snippet` invokes a snippet named \meta{value}.
+%
+% \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
 \keys_define:nn
