@@ -2,6 +2,11 @@
 
 ## 3.3.0
 
+Fixes:
+
+- Remove the `options.cacheDir` directory if it is empty after conversion.
+  (5cfcea6)
+
 Documentation:
 
 - Add a link to a work-in-progress article for TUGboat 45:1 to `README.md`.
