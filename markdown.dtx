@@ -797,13 +797,7 @@ abbr {
 \RequirePackage{etoolbox}
 \markdownSetup{
   renderers = {
-    head*Four = {%
-      \paragraph{#1}\leavevmode
-      \def\markdownRendererInterblockSeparator{%
-        \let\markdownRendererInterblockSeparator\par
-      }%
-      \noindent
-    },
+    head*Four = {\paragraph{#1}\leavevmode},
   },
   rendererPrototypes = {
     codeSpan = {\inline{#1}},
