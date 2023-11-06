@@ -31728,6 +31728,14 @@ else
   assert(io.write(output))
 end
 %    \end{macrocode}
+% \begin{markdown}
+% Remove the `options.cacheDir` directory if it is empty.
+% \end{markdown}
+%  \begin{macrocode}
+if options.cacheDir then
+  lfs.rmdir(options["cacheDir"])
+end
+%    \end{macrocode}
 % \iffalse
 %</lua-cli>
 %<*tex>
@@ -32299,6 +32307,23 @@ end
 % \par
 % \begin{markdown}
 %
+% The \mdef{markdownCleanup} macro contains the Lua code that is executed
+% after any conversion from markdown to plain \TeX{}.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\def\markdownCleanup{%
+%    \end{macrocode}
+% \begin{markdown}
+% Remove the `options.cacheDir` directory if it is empty.
+% \end{markdown}
+%  \begin{macrocode}
+  lfs.rmdir(cacheDir)
+}%
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
 %### Buffering Markdown Input {#buffering}
 %
 % The
@@ -32616,14 +32641,8 @@ end
           [[Could not open file "&1" for reading]])
         local input = assert(file:read("*a"))
         assert(file:close())
-%    \end{macrocode}
-% \begin{markdown}
-% Since the Lua converter expects \acro{unix} line endings, normalize the
-% input. Also add a line ending at the end of the file in case the input file
-% has none.
-% \end{markdown}
-%  \begin{macrocode}
-        print(convert(input))}%
+        print(convert(input))
+        |markdownCleanup}%
 %    \end{macrocode}
 % \begin{markdown}
 % If we are finalizing the frozen cache, increment \Opt{frozenCacheCounter}.
