@@ -20198,6 +20198,37 @@ pdflatex --shell-escape document.tex
 % macro (see Section <#sec:latexinterface>), or via the \mref{markdownSetup}
 % macro.
 %
+% To enable the enumeration of \LaTeX{} options, we will maintain the
+% \mdef{g_\@\@_latex_options_seq} sequence.
+%
+% \markdownEnd
+%  \begin{macrocode}
+\ExplSyntaxOn
+\seq_new:N \g_@@_latex_options_seq
+%    \end{macrocode}
+% \begin{markdown}
+%
+% To enable the reflection of default \LaTeX{} options and their types, we
+% will maintain the \mdef{g_\@\@_default_latex_options_prop} and
+% \mdef{g_\@\@_latex_option_types_prop} property lists, respectively.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\prop_new:N \g_@@_latex_option_types_prop
+\prop_new:N \g_@@_default_latex_options_prop
+\seq_gput_right:NV \g_@@_option_layers_seq \c_@@_option_layer_latex_tl
+\cs_new:Nn
+  \@@_add_latex_option:nnn
+  {
+    \@@_add_option:Vnnn
+      \c_@@_option_layer_latex_tl
+      { #1 }
+      { #2 }
+      { #3 }
+  }
+%    \end{macrocode}
+% \begin{markdown}
+%
 %#### Finalizing and Freezing the Cache
 %
 % To ensure compatibility with the `minted` package [@poore17, Section
@@ -20310,45 +20341,6 @@ document:
 }
 ```
 
-%</manual-options>
-%<*latex>
-% \fi
-% \par
-% \begin{markdown}
-%
-% To enable the enumeration of \LaTeX{} options, we will maintain the
-% \mdef{g_\@\@_latex_options_seq} sequence.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\ExplSyntaxOn
-\seq_new:N \g_@@_latex_options_seq
-%    \end{macrocode}
-% \begin{markdown}
-%
-% To enable the reflection of default \LaTeX{} options and their types, we
-% will maintain the \mdef{g_\@\@_default_latex_options_prop} and
-% \mdef{g_\@\@_latex_option_types_prop} property lists, respectively.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\prop_new:N \g_@@_latex_option_types_prop
-\prop_new:N \g_@@_default_latex_options_prop
-\seq_gput_right:NV \g_@@_option_layers_seq \c_@@_option_layer_latex_tl
-\cs_new:Nn
-  \@@_add_latex_option:nnn
-  {
-    \@@_add_option:Vnnn
-      \c_@@_option_layer_latex_tl
-      { #1 }
-      { #2 }
-      { #3 }
-  }
-%    \end{macrocode}
-% \iffalse
-%</latex>
-%<*manual-options>
-% \fi
 % \begin{markdown}
 
 #### No default token renderer prototypes {#latexplain}
