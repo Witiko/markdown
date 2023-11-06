@@ -11574,7 +11574,7 @@ A PDF document named `document.pdf` should be produced and contain the text
   \g_@@_default_plain_tex_options_prop
   { stripPercentSigns }
   { false }
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 %#### Generating Plain \TeX{} Option Macros and Key-Values
@@ -24887,7 +24887,7 @@ function M.writer.new(options)
     end
     return buf
   end
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Create an auto identifier string by stripping and converting characters from string `s`.
@@ -24943,7 +24943,7 @@ local function create_auto_identifier(s)
   local identifier = #buffer == 0 and "section" or table.concat(buffer, "")
   return identifier
 end
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Create an GitHub-flavored auto identifier string by stripping and converting characters from string `s`.
@@ -25250,7 +25250,7 @@ parsers.nonemptyline           = parsers.line - parsers.blankline
 
 parsers.leader      = parsers.space^-3
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Check if a trail exists and is non-empty in the indent table `indent_table`.
@@ -25263,7 +25263,7 @@ local function has_trail(indent_table)
     next(indent_table.trail) ~= nil
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Check if indent table `indent_table` has any indents.
@@ -25276,7 +25276,7 @@ local function has_indents(indent_table)
     next(indent_table.indents) ~= nil
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Add a trail `trail_info` to the indent table `indent_table`.
@@ -25288,7 +25288,7 @@ local function add_trail(indent_table, trail_info)
   return indent_table
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Remove a trail `trail_info` from the indent table `indent_table`.
@@ -25300,7 +25300,7 @@ local function remove_trail(indent_table)
   return indent_table
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Update the indent table `indent_table` by adding or removing a new
@@ -25327,7 +25327,7 @@ local function update_indent_table(indent_table, new_indent, add)
   return indent_table
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Remove an indent by its name `name`.
@@ -25343,7 +25343,7 @@ local function remove_indent(name)
   return Cg(Cmt(Cb("indent_info"), remove_indent_level), "indent_info")
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Process the spacing of a string of spaces and tabs `spacing` with preceding indent width from
@@ -25422,7 +25422,7 @@ local function process_starter_spacing(indent, spacing, minimum, left_strip_leng
   }
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Count the total width of all indents in the indent table `indent_table`.
@@ -25441,7 +25441,7 @@ local function count_indent_tab_level(indent_table)
   return count
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Count the total width of a delimiter `delimiter`.
@@ -25457,7 +25457,7 @@ local function total_delimiter_length(delimiter)
   return count
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Process the container starter `starter` of a type `indent_type`. Adjust the width of the indent
@@ -25517,7 +25517,7 @@ local function process_starter_indent(_, _, indent_table, starter, is_blank, ind
   return true, indent_table
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Return the pattern corresponding with the indent name `name`.
@@ -25533,7 +25533,7 @@ local function decode_pattern(name)
   return C(parsers.optionalspace) * C(delimeter) * C(parsers.optionalspace) * Cp()
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Find the first blank-only indent of the indent table `indent_table` followed
@@ -25560,7 +25560,7 @@ local function left_blank_starter(indent_table)
   return blank_starter_index
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Apply the patterns decoded from the indents of the indent table `indent_table`
@@ -25662,7 +25662,7 @@ local function traverse_indent(s, i, indent_table, is_optional, is_blank)
   return true, new_index, current_trail
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 %  Check if a code trail is expected.
@@ -25673,7 +25673,7 @@ local function check_trail(expect_code, is_code)
   return (expect_code and is_code) or (not expect_code and not is_code)
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Check if the current trail of the `indent_table` would produce code if it is expected `expect_code` 
@@ -25710,7 +25710,7 @@ local function check_trail_joined(s, i, indent_table, spacing, expect_code, omit
   return result, remainder
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Check if the current trail of the `indent_table` is of length between `min` and `max`.
@@ -25734,7 +25734,7 @@ local function check_trail_length(s, i, indent_table, spacing, min, max) -- luac
   return min <= total_length and total_length <= max
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Check the indentation of the continuation line, optionally with 
@@ -25756,7 +25756,7 @@ local function check_continuation_indentation(s, i, indent_table, is_optional, i
   return false
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Get name of the last indent from the `indent_table`.
@@ -25769,7 +25769,7 @@ local function get_last_indent_name(indent_table)
   end
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Remove the remainder altogether if the last indent from the `indent_table`
@@ -25784,7 +25784,7 @@ local function remove_remainder_if_blank(indent_table, remainder)
   return remainder
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Take the trail `trail` or create a new one from `spacing` and comapre it 
@@ -25815,7 +25815,7 @@ local function check_trail_type(s, i, trail, spacing, trail_type) -- luacheck: i
   end
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Stores or restores an `is_freezing` trail from indent table `indent_table`.
@@ -25837,7 +25837,7 @@ local function trail_freezing(s, i, indent_table, is_freezing) -- luacheck: igno
   return true, indent_table
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Check the indentation of the continuation line, optionally with 
@@ -25894,7 +25894,7 @@ local function check_continuation_indentation_and_trail(s, i, indent_table, is_o
   return false
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % The following patterns check whitespace indentation at the start of a block.
@@ -25915,7 +25915,7 @@ parsers.check_trail_length = function(n)
   return parsers.check_trail_length_range(n, n)
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % The following patterns handle trail backup, to prevent a failing pattern to modify it before
@@ -25927,7 +25927,7 @@ parsers.freeze_trail = Cg(Cmt(Cb("indent_info") * Cc(true), trail_freezing), "in
 
 parsers.unfreeze_trail = Cg(Cmt(Cb("indent_info") * Cc(false), trail_freezing), "indent_info")
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % The following patterns check indentation in continuation lines as defined by the container start.
@@ -25940,7 +25940,7 @@ parsers.check_optional_indent = Cmt(Cb("indent_info") * Cc(true), check_continua
 
 parsers.check_minimal_blank_indent = Cmt(Cb("indent_info") * Cc(false) * Cc(true), check_continuation_indentation)
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % The following patterns check indentation in continuation lines as defined by the container start.
@@ -25981,7 +25981,7 @@ parsers.check_optional_blank_indent_and_any_trail = Cmt( Cb("indent_info")
                                                       * Cc(true) * Cc(true) * Cc("full-any") * Cc(true) * Cc(false), 
                                                        check_continuation_indentation_and_trail)
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % The following patterns specify behaviour around newlines.
@@ -27079,7 +27079,7 @@ function M.reader.new(writer, options)
                                                     * V("BlockOrParagraph")
                                                     - parsers.minimally_indented_blankline
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % The following pattern parses the properly indented content that follows the initial container start.
@@ -27181,7 +27181,7 @@ function M.reader.new(writer, options)
     return parsed
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Collect the content between the `opening_index` and `closing_index` in the delimiter table `t`.
@@ -27220,7 +27220,7 @@ function M.reader.new(writer, options)
     return content
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Render content between the `opening_index` and `closing_index` in the delimiter table `t` 
@@ -27234,7 +27234,7 @@ function M.reader.new(writer, options)
     t[opening_index + 1].rendered = writer.emphasis(content)
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Render content between the `opening_index` and `closing_index` in the delimiter table `t` 
@@ -27248,7 +27248,7 @@ function M.reader.new(writer, options)
     t[opening_index + 1].rendered = writer.strong(content)
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Check whether the opening delimiter `opening_delimiter` and closing delimiter `closing_delimiter` break
@@ -27262,7 +27262,7 @@ function M.reader.new(writer, options)
       (opening_delimiter.original_count % 3 ~= 0 or closing_delimiter.original_count % 3 ~= 0)
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Look for the first potential emphasis opener in the delimiter table `t` in the range from
@@ -27287,7 +27287,7 @@ function M.reader.new(writer, options)
     end
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Iterate over the delimiters in the delimiter table `t`, producing emphasis or strong emphasis macros.
@@ -27366,7 +27366,7 @@ function M.reader.new(writer, options)
 
   local cont = lpeg.R("\128\191") -- continuation byte
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Match a UTF-8 character of byte length `n`.
@@ -27388,7 +27388,7 @@ function M.reader.new(writer, options)
     end
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Check if a there is a character of a type `chartype` between the start position `start_pos`
@@ -27683,7 +27683,7 @@ function M.reader.new(writer, options)
                               * ((parsers.link_image_open_or_close + parsers.emph_open_or_close)
                                 * parsers.link_and_emph_content)^1
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Collect the content between the `opening_index` and `closing_index` in the delimiter table `t`.
@@ -27698,7 +27698,7 @@ function M.reader.new(writer, options)
     return util.rope_to_string(content)
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Look for the closest potential link opener in the delimiter table `t` in the range from
@@ -27722,7 +27722,7 @@ function M.reader.new(writer, options)
     end
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Find the position of a delimiter that closes a full link after an an index `latest_index`
@@ -27741,7 +27741,7 @@ function M.reader.new(writer, options)
     end
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Disable all preceding opening link delimiters by marking them inactive with the `is_active` property
@@ -27765,7 +27765,7 @@ function M.reader.new(writer, options)
     end
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Disable the delimiters between the `opening_index` and `closing_index` in the delimiter table `t`
@@ -27785,7 +27785,7 @@ function M.reader.new(writer, options)
     end
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Clear the parsed content between the `opening_index` and `closing_index` in the delimiter table `t`.
@@ -27798,7 +27798,7 @@ function M.reader.new(writer, options)
     end
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Clear the content between the `opening_index` and `closing_index` in the delimiter table `t`.
@@ -27811,7 +27811,7 @@ function M.reader.new(writer, options)
     end
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Join the attributes from the link reference definition `reference_attributes` with the link's own
@@ -27833,7 +27833,7 @@ function M.reader.new(writer, options)
     return merged_attributes
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Parse content between two delimiters in the delimiter table `t`. Produce the respective link and image 
@@ -27861,7 +27861,7 @@ function M.reader.new(writer, options)
     disable_range(t, opening_index, closing_index)
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Match the link destination of an inline link at index `closing_index` in table `t`
@@ -27916,7 +27916,7 @@ function M.reader.new(writer, options)
     }
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Resolve an inline link [a](b "c") from the delimiters at `opening_index` and `closing_index` 
@@ -27929,7 +27929,7 @@ function M.reader.new(writer, options)
     render_link_or_image(t, opening_index, closing_index, closing_index, inline_content)
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Resolve a shortcut link [a] from the delimiters at `opening_index` and `closing_index` within a delimiter table `t`.
@@ -27948,7 +27948,7 @@ function M.reader.new(writer, options)
     end
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Resolve a full link [a][b] from the delimiters at `opening_index` and `closing_index` within a delimiter table `t`.
@@ -27969,7 +27969,7 @@ function M.reader.new(writer, options)
     end
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Resolve a collapsed link [a][] from the delimiters at `opening_index` and `closing_index` 
@@ -27990,7 +27990,7 @@ function M.reader.new(writer, options)
     end
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Parse a table of link and emphasis delimiters `t`.
