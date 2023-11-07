@@ -5,14 +5,15 @@ Markdown
 [![ci](https://github.com/witiko/markdown/actions/workflows/main.yml/badge.svg)][ci]
 [![release](https://img.shields.io/github/release/witiko/markdown)][release]
 [![docker-witiko/markdown](https://img.shields.io/docker/v/witiko/markdown/latest?label=docker)][docker-witiko/markdown]
-&emsp;
 [![matrix](https://img.shields.io/matrix/witiko-markdown:matrix.org?label=matrix)][matrix]
 [![discord](https://img.shields.io/discord/1011667276908474440?label=discord&color=blueviolet)][discord]
+[![chatgpt](https://img.shields.io/badge/gpt-9cf)][chatgpt]
 
- [release]:  https://github.com/Witiko/markdown/releases/latest "Releases · Witiko/markdown"
- [ci]:       https://github.com/Witiko/markdown/actions         "GitHub Actions"
- [matrix]:   https://matrix.to/#/#witiko-markdown:matrix.org    "The Matrix Chat Space for the Markdown package"
- [discord]:  https://discord.gg/8xJsPghzSH                      "The Discord Chat Space for the Markdown package"
+ [release]:  https://github.com/Witiko/markdown/releases/latest              "Releases · Witiko/markdown"
+ [ci]:       https://github.com/Witiko/markdown/actions                      "GitHub Actions"
+ [matrix]:   https://matrix.to/#/#witiko-markdown:matrix.org                 "The Matrix Chat Space for the Markdown package"
+ [discord]:  https://discord.gg/8xJsPghzSH                                   "The Discord Chat Space for the Markdown package"
+ [chatgpt]:  https://chat.openai.com/g/g-I3K0DweJe-markdown-package-for-tex  "ChatGPT - Markdown package for TeX"
 
 The Markdown package converts [CommonMark][] markup to TeX commands. The
 functionality is provided both as a Lua module, and as plain TeX, LaTeX, and
