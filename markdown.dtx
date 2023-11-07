@@ -797,13 +797,7 @@ abbr {
 \RequirePackage{etoolbox}
 \markdownSetup{
   renderers = {
-    head*Four = {%
-      \paragraph{#1}\leavevmode
-      \def\markdownRendererInterblockSeparator{%
-        \let\markdownRendererInterblockSeparator\par
-      }%
-      \noindent
-    },
+    head*Four = {\paragraph{#1}\leavevmode},
   },
   rendererPrototypes = {
     codeSpan = {\inline{#1}},
@@ -822,8 +816,8 @@ abbr {
             \markdownSetup{
               rendererPrototypes = {
                 headerAttributeContextEnd = {%
-                  \endgroup
                   \label{sec:##1}%
+                  \endgroup
                 },
               }
             }%
@@ -1283,7 +1277,7 @@ local uni_algos = require("lua-uni-algos")
 % \pkg{csvsimple}
 %
 %:    A package that provides the `\csvautotabular` macro for typesetting
-%     \acro{csv} files in the default renderer prototypes for iA\,Writer
+%     \acro{csv} files in the default renderer prototypes for iA\\,Writer
 %     content blocks.
 %
 % \pkg{gobble}
@@ -1361,7 +1355,7 @@ local uni_algos = require("lua-uni-algos")
 % \pkg{m-database}
 %
 %:    A module that provides the default token renderer prototype for
-%     iA\,Writer content blocks with the \acro{csv} filename extension (see
+%     iA\\,Writer content blocks with the \acro{csv} filename extension (see
 %     Section <#sec:texrendererprototypes>).
 %
 % Feedback
@@ -2682,7 +2676,7 @@ defaultOptions.cacheDir = "."
 % \Valitem[markdown-languages.json]{contentBlocksLanguageMap}{filename}
 %
 :    The filename of the \acro{JSON} file that maps filename extensions to
-     programming language names in the iA\,Writer content blocks when the
+     programming language names in the iA\\,Writer content blocks when the
      \Opt{contentBlocks} option is enabled.
 %    See Section <#sec:texcontentblockrenderers> for more information.
 
@@ -4979,9 +4973,9 @@ defaultOptions.codeSpans = true
 :    true
 
      :  Enable the
-%       iA\,Writer content blocks syntax extension~[@sotkov17]:
+%       iA\\,Writer content blocks syntax extension~[@sotkov17]:
 %       \iffalse
-        iA\,Writer content blocks syntax extension:
+        iA\\,Writer content blocks syntax extension:
 %       \fi
 
         ``` md
@@ -4996,7 +4990,7 @@ defaultOptions.codeSpans = true
 :    false
 
      :  Disable the
-        iA\,Writer content blocks syntax extension.
+        iA\\,Writer content blocks syntax extension.
 
 % \end{markdown}
 % \iffalse
@@ -11574,7 +11568,7 @@ A PDF document named `document.pdf` should be produced and contain the text
   \g_@@_default_plain_tex_options_prop
   { stripPercentSigns }
   { false }
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 %#### Generating Plain \TeX{} Option Macros and Key-Values
@@ -13281,7 +13275,7 @@ following text:
 
 #### Content Block Renderers {#texcontentblockrenderers}
 
-The \mdef{markdownRendererContentBlock} macro represents an iA\,Writer content
+The \mdef{markdownRendererContentBlock} macro represents an iA\\,Writer content
 block. It receives four arguments: the local file or online image filename
 extension cast to the lower case, the fully escaped \acro{uri} that can be
 directly typeset, the raw \acro{uri} that can be used outside typesetting,
@@ -13317,7 +13311,7 @@ and the title of the content block.
 % \begin{markdown}
 
 The \mdef{markdownRendererContentBlockOnlineImage} macro represents an
-iA\,Writer online image content block. The macro receives the same arguments
+iA\\,Writer online image content block. The macro receives the same arguments
 as \mref{markdownRendererContentBlock}.
 
 % \end{markdown}
@@ -13349,7 +13343,7 @@ as \mref{markdownRendererContentBlock}.
 %
 % \begin{markdown}
 
-The \mdef{markdownRendererContentBlockCode} macro represents an iA\,Writer
+The \mdef{markdownRendererContentBlockCode} macro represents an iA\\,Writer
 content block that was recognized as a file in a known programming language
 by its filename extension $s$. If any `markdown-languages.json` file found
 by \pkg{kpathsea}^[Filenames other than `markdown-languages.json` may
@@ -20193,7 +20187,7 @@ pdflatex --shell-escape document.tex
 %
 % Except for the `plain` option described in Section <#sec:latexplain>,
 % the \LaTeX{} themes described in Section <#sec:latexthemes>, and the
-% \LaTeX{} snippets described in Section <#sec:latex-setup-snippets>,
+% \LaTeX{} snippets described in Section <#sec:latexsnippets>,
 % \LaTeX{} options map directly to the options recognized by the plain
 % \TeX{} interface (see Section <#sec:tex-options>) and to the markdown token
 % renderers and their prototypes recognized by the plain \TeX{} interface (see
@@ -20203,6 +20197,37 @@ pdflatex --shell-escape document.tex
 % using the \envmref{markdown*} \LaTeX{} environment or the \mref{markdownInput}
 % macro (see Section <#sec:latexinterface>), or via the \mref{markdownSetup}
 % macro.
+%
+% To enable the enumeration of \LaTeX{} options, we will maintain the
+% \mdef{g_\@\@_latex_options_seq} sequence.
+%
+% \markdownEnd
+%  \begin{macrocode}
+\ExplSyntaxOn
+\seq_new:N \g_@@_latex_options_seq
+%    \end{macrocode}
+% \begin{markdown}
+%
+% To enable the reflection of default \LaTeX{} options and their types, we
+% will maintain the \mdef{g_\@\@_default_latex_options_prop} and
+% \mdef{g_\@\@_latex_option_types_prop} property lists, respectively.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\prop_new:N \g_@@_latex_option_types_prop
+\prop_new:N \g_@@_default_latex_options_prop
+\seq_gput_right:NV \g_@@_option_layers_seq \c_@@_option_layer_latex_tl
+\cs_new:Nn
+  \@@_add_latex_option:nnn
+  {
+    \@@_add_option:Vnnn
+      \c_@@_option_layer_latex_tl
+      { #1 }
+      { #2 }
+      { #3 }
+  }
+%    \end{macrocode}
+% \begin{markdown}
 %
 %#### Finalizing and Freezing the Cache
 %
@@ -20226,63 +20251,11 @@ pdflatex --shell-escape document.tex
 % `frozencache` package options in the future, so that they can become a
 % standard interface for preparing \LaTeX{} document sources for distribution.
 %
-% \markdownEnd
+% \end{markdown}
 %  \begin{macrocode}
 \DeclareOption{finalizecache}{\markdownSetup{finalizeCache}}
 \DeclareOption{frozencache}{\markdownSetup{frozenCache}}
 %    \end{macrocode}
-% \begin{markdown}
-%
-%#### \LaTeX{} snippets {#latex-setup-snippets}
-%
-% We may also set up \LaTeX{} options as *snippets* using the
-% \mdef{markdownSetupSnippet} macro and invoke them later. The
-% \mref{markdownSetupSnippet} macro receives two arguments: the name
-% of the snippet and the options to store:
-%
-% \end{markdown}
-%  \begin{macrocode}
-\ExplSyntaxOn
-\cs_new:Nn
-  \@@_latex_setup_snippet:nn
-  {
-    \markdownIfSnippetExists
-      { #1 }
-      {
-        \markdownWarning
-          {Redefined~snippet~\markdownLaTeXThemeName#1}
-        \csname markdownLaTeXSetupSnippet%
-          \markdownLaTeXThemeName#1\endcsname={#2}
-      }
-      {
-        \newtoks\next
-          \next={#2}
-        \expandafter\let\csname markdownLaTeXSetupSnippet%
-          \markdownLaTeXThemeName#1\endcsname=\next
-      }
-  }
-\let\markdownSetupSnippet=\@@_latex_setup_snippet:nn
-\ExplSyntaxOff
-%    \end{macrocode}
-% \begin{markdown}
-%
-% To decide whether a snippet exists, we can use the
-% \mdef{markdownIfSnippetExists} macro:
-%
-% \end{markdown}
-%  \begin{macrocode}
-\newcommand\markdownIfSnippetExists[3]{%
-  \@ifundefined
-    {markdownLaTeXSetupSnippet\markdownLaTeXThemeName#1}%
-    {#3}{#2}}%
-%    \end{macrocode}
-% \begin{markdown}
-%
-% See Section <#sec:latexthemes> for information on interactions between
-% snippets and \LaTeX{} themes. See Section <#sec:latexsnippets>
-% for information about invoking the set-up snippets.
-%
-% \end{markdown}
 % \iffalse
 %</latex>
 %<*manual-options>
@@ -20316,44 +20289,6 @@ document:
 }
 ```
 
-%</manual-options>
-%<*latex>
-% \fi
-% \par
-% \begin{markdown}
-%
-% To enable the enumeration of \LaTeX{} options, we will maintain the
-% \mdef{g_\@\@_latex_options_seq} sequence.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\ExplSyntaxOn
-\seq_new:N \g_@@_latex_options_seq
-%    \end{macrocode}
-% \begin{markdown}
-%
-% To enable the reflection of default \LaTeX{} options and their types, we
-% will maintain the \mdef{g_\@\@_default_latex_options_prop} and
-% \mdef{g_\@\@_latex_option_types_prop} property lists, respectively.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\prop_new:N \g_@@_latex_option_types_prop
-\prop_new:N \g_@@_default_latex_options_prop
-\seq_gput_right:NV \g_@@_option_layers_seq \c_@@_option_layer_latex_tl
-\cs_new:Nn
-  \@@_add_latex_option:nnn
-  {
-    \@@_add_option:Vnnn
-      \c_@@_option_layer_latex_tl
-      { #1 }
-      { #2 }
-      { #3 }
-  }
-%    \end{macrocode}
-% \iffalse
-%</latex>
-%<*manual-options>
 % \fi
 % \begin{markdown}
 
@@ -20526,20 +20461,11 @@ would use the following code in the preamble of your document:
   }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \begin{markdown}
-%
-% The \LaTeX{} themes have a useful synergy with snippets (see Section
-% <#sec:latex-setup-snippets>): To make it less likely that different themes
-% will set up snippets with the same name, we will prepend \meta{theme
-% name}`/` before the snippet name and use the result as the snippet name.
-% For example, if the `witiko/dot` theme sets up the `product` snippet, the
-% snippet will be available under the name `witiko/dot/product`.
-%
-% \end{markdown}
 % \iffalse
 %</latex>
 %<*manual-options>
 % \fi
+% \par
 % \begin{markdown}
 
 Due to limitations of \LaTeX{}, themes may not be loaded after the
@@ -20836,14 +20762,58 @@ However, it is often desirable to change only some local aspects of a document.
 \LaTeX{} snippets provide syntactic sugar for defining and invoking various
 options locally.
 
-% \fi
-% \begin{markdown}
-% The \LaTeX{} option with key `snippet` invokes a snippet named \meta{value}:
-% \end{markdown}
-% \iffalse
 %</manual-options>
 %<*latex>
 % \fi
+% \par
+% \begin{markdown}
+%
+% We may set up \LaTeX{} options as *snippets* using the
+% \mdef{markdownSetupSnippet} macro and invoke them later. The
+% \mref{markdownSetupSnippet} macro receives two arguments: the name
+% of the snippet and the options to store.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\cs_new:Nn
+  \@@_latex_setup_snippet:nn
+  {
+    \markdownIfSnippetExists
+      { #1 }
+      {
+        \markdownWarning
+          {Redefined~snippet~\markdownLaTeXThemeName#1}
+        \csname markdownLaTeXSetupSnippet%
+          \markdownLaTeXThemeName#1\endcsname={#2}
+      }
+      {
+        \newtoks\next
+          \next={#2}
+        \expandafter\let\csname markdownLaTeXSetupSnippet%
+          \markdownLaTeXThemeName#1\endcsname=\next
+      }
+  }
+\let\markdownSetupSnippet=\@@_latex_setup_snippet:nn
+\ExplSyntaxOff
+%    \end{macrocode}
+% \begin{markdown}
+%
+% To decide whether a snippet exists, we can use the
+% \mdef{markdownIfSnippetExists} macro.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\newcommand\markdownIfSnippetExists[3]{%
+  \@ifundefined
+    {markdownLaTeXSetupSnippet\markdownLaTeXThemeName#1}%
+    {#3}{#2}}%
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The \LaTeX{} option with key `snippet` invokes a snippet named \meta{value}.
+%
+% \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
 \keys_define:nn
@@ -24887,7 +24857,7 @@ function M.writer.new(options)
     end
     return buf
   end
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Create an auto identifier string by stripping and converting characters from string `s`.
@@ -24943,7 +24913,7 @@ local function create_auto_identifier(s)
   local identifier = #buffer == 0 and "section" or table.concat(buffer, "")
   return identifier
 end
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Create an GitHub-flavored auto identifier string by stripping and converting characters from string `s`.
@@ -25250,7 +25220,7 @@ parsers.nonemptyline           = parsers.line - parsers.blankline
 
 parsers.leader      = parsers.space^-3
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Check if a trail exists and is non-empty in the indent table `indent_table`.
@@ -25263,7 +25233,7 @@ local function has_trail(indent_table)
     next(indent_table.trail) ~= nil
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Check if indent table `indent_table` has any indents.
@@ -25276,7 +25246,7 @@ local function has_indents(indent_table)
     next(indent_table.indents) ~= nil
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Add a trail `trail_info` to the indent table `indent_table`.
@@ -25288,7 +25258,7 @@ local function add_trail(indent_table, trail_info)
   return indent_table
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Remove a trail `trail_info` from the indent table `indent_table`.
@@ -25300,7 +25270,7 @@ local function remove_trail(indent_table)
   return indent_table
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Update the indent table `indent_table` by adding or removing a new
@@ -25327,7 +25297,7 @@ local function update_indent_table(indent_table, new_indent, add)
   return indent_table
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Remove an indent by its name `name`.
@@ -25343,7 +25313,7 @@ local function remove_indent(name)
   return Cg(Cmt(Cb("indent_info"), remove_indent_level), "indent_info")
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Process the spacing of a string of spaces and tabs `spacing` with preceding indent width from
@@ -25422,7 +25392,7 @@ local function process_starter_spacing(indent, spacing, minimum, left_strip_leng
   }
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Count the total width of all indents in the indent table `indent_table`.
@@ -25441,7 +25411,7 @@ local function count_indent_tab_level(indent_table)
   return count
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Count the total width of a delimiter `delimiter`.
@@ -25457,7 +25427,7 @@ local function total_delimiter_length(delimiter)
   return count
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Process the container starter `starter` of a type `indent_type`. Adjust the width of the indent
@@ -25517,7 +25487,7 @@ local function process_starter_indent(_, _, indent_table, starter, is_blank, ind
   return true, indent_table
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Return the pattern corresponding with the indent name `name`.
@@ -25533,7 +25503,7 @@ local function decode_pattern(name)
   return C(parsers.optionalspace) * C(delimeter) * C(parsers.optionalspace) * Cp()
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Find the first blank-only indent of the indent table `indent_table` followed
@@ -25560,7 +25530,7 @@ local function left_blank_starter(indent_table)
   return blank_starter_index
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Apply the patterns decoded from the indents of the indent table `indent_table`
@@ -25662,7 +25632,7 @@ local function traverse_indent(s, i, indent_table, is_optional, is_blank)
   return true, new_index, current_trail
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 %  Check if a code trail is expected.
@@ -25673,7 +25643,7 @@ local function check_trail(expect_code, is_code)
   return (expect_code and is_code) or (not expect_code and not is_code)
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Check if the current trail of the `indent_table` would produce code if it is expected `expect_code` 
@@ -25710,7 +25680,7 @@ local function check_trail_joined(s, i, indent_table, spacing, expect_code, omit
   return result, remainder
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Check if the current trail of the `indent_table` is of length between `min` and `max`.
@@ -25734,7 +25704,7 @@ local function check_trail_length(s, i, indent_table, spacing, min, max) -- luac
   return min <= total_length and total_length <= max
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Check the indentation of the continuation line, optionally with 
@@ -25756,7 +25726,7 @@ local function check_continuation_indentation(s, i, indent_table, is_optional, i
   return false
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Get name of the last indent from the `indent_table`.
@@ -25769,7 +25739,7 @@ local function get_last_indent_name(indent_table)
   end
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Remove the remainder altogether if the last indent from the `indent_table`
@@ -25784,7 +25754,7 @@ local function remove_remainder_if_blank(indent_table, remainder)
   return remainder
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Take the trail `trail` or create a new one from `spacing` and comapre it 
@@ -25815,7 +25785,7 @@ local function check_trail_type(s, i, trail, spacing, trail_type) -- luacheck: i
   end
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Stores or restores an `is_freezing` trail from indent table `indent_table`.
@@ -25837,7 +25807,7 @@ local function trail_freezing(s, i, indent_table, is_freezing) -- luacheck: igno
   return true, indent_table
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Check the indentation of the continuation line, optionally with 
@@ -25894,7 +25864,7 @@ local function check_continuation_indentation_and_trail(s, i, indent_table, is_o
   return false
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % The following patterns check whitespace indentation at the start of a block.
@@ -25915,7 +25885,7 @@ parsers.check_trail_length = function(n)
   return parsers.check_trail_length_range(n, n)
 end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % The following patterns handle trail backup, to prevent a failing pattern to modify it before
@@ -25927,7 +25897,7 @@ parsers.freeze_trail = Cg(Cmt(Cb("indent_info") * Cc(true), trail_freezing), "in
 
 parsers.unfreeze_trail = Cg(Cmt(Cb("indent_info") * Cc(false), trail_freezing), "indent_info")
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % The following patterns check indentation in continuation lines as defined by the container start.
@@ -25940,7 +25910,7 @@ parsers.check_optional_indent = Cmt(Cb("indent_info") * Cc(true), check_continua
 
 parsers.check_minimal_blank_indent = Cmt(Cb("indent_info") * Cc(false) * Cc(true), check_continuation_indentation)
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % The following patterns check indentation in continuation lines as defined by the container start.
@@ -25981,7 +25951,7 @@ parsers.check_optional_blank_indent_and_any_trail = Cmt( Cb("indent_info")
                                                       * Cc(true) * Cc(true) * Cc("full-any") * Cc(true) * Cc(false), 
                                                        check_continuation_indentation_and_trail)
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % The following patterns specify behaviour around newlines.
@@ -27079,7 +27049,7 @@ function M.reader.new(writer, options)
                                                     * V("BlockOrParagraph")
                                                     - parsers.minimally_indented_blankline
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % The following pattern parses the properly indented content that follows the initial container start.
@@ -27181,7 +27151,7 @@ function M.reader.new(writer, options)
     return parsed
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Collect the content between the `opening_index` and `closing_index` in the delimiter table `t`.
@@ -27220,7 +27190,7 @@ function M.reader.new(writer, options)
     return content
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Render content between the `opening_index` and `closing_index` in the delimiter table `t` 
@@ -27234,7 +27204,7 @@ function M.reader.new(writer, options)
     t[opening_index + 1].rendered = writer.emphasis(content)
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Render content between the `opening_index` and `closing_index` in the delimiter table `t` 
@@ -27248,7 +27218,7 @@ function M.reader.new(writer, options)
     t[opening_index + 1].rendered = writer.strong(content)
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Check whether the opening delimiter `opening_delimiter` and closing delimiter `closing_delimiter` break
@@ -27262,7 +27232,7 @@ function M.reader.new(writer, options)
       (opening_delimiter.original_count % 3 ~= 0 or closing_delimiter.original_count % 3 ~= 0)
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Look for the first potential emphasis opener in the delimiter table `t` in the range from
@@ -27287,7 +27257,7 @@ function M.reader.new(writer, options)
     end
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Iterate over the delimiters in the delimiter table `t`, producing emphasis or strong emphasis macros.
@@ -27366,7 +27336,7 @@ function M.reader.new(writer, options)
 
   local cont = lpeg.R("\128\191") -- continuation byte
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Match a UTF-8 character of byte length `n`.
@@ -27388,7 +27358,7 @@ function M.reader.new(writer, options)
     end
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Check if a there is a character of a type `chartype` between the start position `start_pos`
@@ -27683,7 +27653,7 @@ function M.reader.new(writer, options)
                               * ((parsers.link_image_open_or_close + parsers.emph_open_or_close)
                                 * parsers.link_and_emph_content)^1
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Collect the content between the `opening_index` and `closing_index` in the delimiter table `t`.
@@ -27698,7 +27668,7 @@ function M.reader.new(writer, options)
     return util.rope_to_string(content)
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Look for the closest potential link opener in the delimiter table `t` in the range from
@@ -27722,7 +27692,7 @@ function M.reader.new(writer, options)
     end
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Find the position of a delimiter that closes a full link after an an index `latest_index`
@@ -27741,7 +27711,7 @@ function M.reader.new(writer, options)
     end
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Disable all preceding opening link delimiters by marking them inactive with the `is_active` property
@@ -27765,7 +27735,7 @@ function M.reader.new(writer, options)
     end
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Disable the delimiters between the `opening_index` and `closing_index` in the delimiter table `t`
@@ -27785,7 +27755,7 @@ function M.reader.new(writer, options)
     end
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Clear the parsed content between the `opening_index` and `closing_index` in the delimiter table `t`.
@@ -27798,7 +27768,7 @@ function M.reader.new(writer, options)
     end
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Clear the content between the `opening_index` and `closing_index` in the delimiter table `t`.
@@ -27811,7 +27781,7 @@ function M.reader.new(writer, options)
     end
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Join the attributes from the link reference definition `reference_attributes` with the link's own
@@ -27833,7 +27803,7 @@ function M.reader.new(writer, options)
     return merged_attributes
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Parse content between two delimiters in the delimiter table `t`. Produce the respective link and image 
@@ -27861,7 +27831,7 @@ function M.reader.new(writer, options)
     disable_range(t, opening_index, closing_index)
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Match the link destination of an inline link at index `closing_index` in table `t`
@@ -27916,7 +27886,7 @@ function M.reader.new(writer, options)
     }
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Resolve an inline link [a](b "c") from the delimiters at `opening_index` and `closing_index` 
@@ -27929,7 +27899,7 @@ function M.reader.new(writer, options)
     render_link_or_image(t, opening_index, closing_index, closing_index, inline_content)
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Resolve a shortcut link [a] from the delimiters at `opening_index` and `closing_index` within a delimiter table `t`.
@@ -27948,7 +27918,7 @@ function M.reader.new(writer, options)
     end
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Resolve a full link [a][b] from the delimiters at `opening_index` and `closing_index` within a delimiter table `t`.
@@ -27969,7 +27939,7 @@ function M.reader.new(writer, options)
     end
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Resolve a collapsed link [a][] from the delimiters at `opening_index` and `closing_index` 
@@ -27990,7 +27960,7 @@ function M.reader.new(writer, options)
     end
   end
 
-%  \end{macrocode}
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Parse a table of link and emphasis delimiters `t`.
@@ -29284,7 +29254,7 @@ end
 %
 %#### Content Blocks
 %
-% The \luamdef{extensions.content_blocks} function implements the iA\,Writer
+% The \luamdef{extensions.content_blocks} function implements the iA\\,Writer
 % content blocks syntax extension. The `language_map` parameter specifies
 % the filename of the \acro{JSON} file that maps filename extensions to
 % programming language names.
@@ -29334,7 +29304,7 @@ M.extensions.content_blocks = function(language_map)
 % \begin{markdown}
 %
 % Define \luamdef{writer->contentblock} as a function that will transform an
-% input iA\,Writer content block to the output format, where `src`
+% input iA\\,Writer content block to the output format, where `src`
 % corresponds to the \acro{uri} prefix, `suf` to the \acro{uri} extension,
 % `type` to the type of the content block (`localfile` or `onlineimage`),
 % and `tit` to the title of the content block.
@@ -31760,6 +31730,14 @@ else
   assert(io.write(output))
 end
 %    \end{macrocode}
+% \begin{markdown}
+% Remove the `options.cacheDir` directory if it is empty.
+% \end{markdown}
+%  \begin{macrocode}
+if options.cacheDir then
+  lfs.rmdir(options["cacheDir"])
+end
+%    \end{macrocode}
 % \iffalse
 %</lua-cli>
 %<*tex>
@@ -32331,6 +32309,23 @@ end
 % \par
 % \begin{markdown}
 %
+% The \mdef{markdownCleanup} macro contains the Lua code that is executed
+% after any conversion from markdown to plain \TeX{}.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\def\markdownCleanup{%
+%    \end{macrocode}
+% \begin{markdown}
+% Remove the `options.cacheDir` directory if it is empty.
+% \end{markdown}
+%  \begin{macrocode}
+  lfs.rmdir(cacheDir)
+}%
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
 %### Buffering Markdown Input {#buffering}
 %
 % The
@@ -32648,14 +32643,8 @@ end
           [[Could not open file "&1" for reading]])
         local input = assert(file:read("*a"))
         assert(file:close())
-%    \end{macrocode}
-% \begin{markdown}
-% Since the Lua converter expects \acro{unix} line endings, normalize the
-% input. Also add a line ending at the end of the file in case the input file
-% has none.
-% \end{markdown}
-%  \begin{macrocode}
-        print(convert(input))}%
+        print(convert(input))
+        |markdownCleanup}%
 %    \end{macrocode}
 % \begin{markdown}
 % If we are finalizing the frozen cache, increment \Opt{frozenCacheCounter}.
