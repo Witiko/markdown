@@ -1277,7 +1277,7 @@ local uni_algos = require("lua-uni-algos")
 % \pkg{csvsimple}
 %
 %:    A package that provides the `\csvautotabular` macro for typesetting
-%     \acro{csv} files in the default renderer prototypes for iA\,Writer
+%     \acro{csv} files in the default renderer prototypes for iA\\,Writer
 %     content blocks.
 %
 % \pkg{gobble}
@@ -1355,7 +1355,7 @@ local uni_algos = require("lua-uni-algos")
 % \pkg{m-database}
 %
 %:    A module that provides the default token renderer prototype for
-%     iA\,Writer content blocks with the \acro{csv} filename extension (see
+%     iA\\,Writer content blocks with the \acro{csv} filename extension (see
 %     Section <#sec:texrendererprototypes>).
 %
 % Feedback
@@ -2676,7 +2676,7 @@ defaultOptions.cacheDir = "."
 % \Valitem[markdown-languages.json]{contentBlocksLanguageMap}{filename}
 %
 :    The filename of the \acro{JSON} file that maps filename extensions to
-     programming language names in the iA\,Writer content blocks when the
+     programming language names in the iA\\,Writer content blocks when the
      \Opt{contentBlocks} option is enabled.
 %    See Section <#sec:texcontentblockrenderers> for more information.
 
@@ -4973,9 +4973,9 @@ defaultOptions.codeSpans = true
 :    true
 
      :  Enable the
-%       iA\,Writer content blocks syntax extension~[@sotkov17]:
+%       iA\\,Writer content blocks syntax extension~[@sotkov17]:
 %       \iffalse
-        iA\,Writer content blocks syntax extension:
+        iA\\,Writer content blocks syntax extension:
 %       \fi
 
         ``` md
@@ -4990,7 +4990,7 @@ defaultOptions.codeSpans = true
 :    false
 
      :  Disable the
-        iA\,Writer content blocks syntax extension.
+        iA\\,Writer content blocks syntax extension.
 
 % \end{markdown}
 % \iffalse
@@ -13275,7 +13275,7 @@ following text:
 
 #### Content Block Renderers {#texcontentblockrenderers}
 
-The \mdef{markdownRendererContentBlock} macro represents an iA\,Writer content
+The \mdef{markdownRendererContentBlock} macro represents an iA\\,Writer content
 block. It receives four arguments: the local file or online image filename
 extension cast to the lower case, the fully escaped \acro{uri} that can be
 directly typeset, the raw \acro{uri} that can be used outside typesetting,
@@ -13311,7 +13311,7 @@ and the title of the content block.
 % \begin{markdown}
 
 The \mdef{markdownRendererContentBlockOnlineImage} macro represents an
-iA\,Writer online image content block. The macro receives the same arguments
+iA\\,Writer online image content block. The macro receives the same arguments
 as \mref{markdownRendererContentBlock}.
 
 % \end{markdown}
@@ -13343,7 +13343,7 @@ as \mref{markdownRendererContentBlock}.
 %
 % \begin{markdown}
 
-The \mdef{markdownRendererContentBlockCode} macro represents an iA\,Writer
+The \mdef{markdownRendererContentBlockCode} macro represents an iA\\,Writer
 content block that was recognized as a file in a known programming language
 by its filename extension $s$. If any `markdown-languages.json` file found
 by \pkg{kpathsea}^[Filenames other than `markdown-languages.json` may
@@ -29253,7 +29253,7 @@ end
 %
 %#### Content Blocks
 %
-% The \luamdef{extensions.content_blocks} function implements the iA\,Writer
+% The \luamdef{extensions.content_blocks} function implements the iA\\,Writer
 % content blocks syntax extension. The `language_map` parameter specifies
 % the filename of the \acro{JSON} file that maps filename extensions to
 % programming language names.
@@ -29303,7 +29303,7 @@ M.extensions.content_blocks = function(language_map)
 % \begin{markdown}
 %
 % Define \luamdef{writer->contentblock} as a function that will transform an
-% input iA\,Writer content block to the output format, where `src`
+% input iA\\,Writer content block to the output format, where `src`
 % corresponds to the \acro{uri} prefix, `suf` to the \acro{uri} extension,
 % `type` to the type of the content block (`localfile` or `onlineimage`),
 % and `tit` to the title of the content block.
