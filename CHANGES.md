@@ -12,6 +12,8 @@ Documentation:
 - Add a link to a work-in-progress article for TUGboat 45:1 to `README.md`.
   (1988a0c2)
 - Fix miscellaneous issues with the technical documentation. (#366, #367)
+- In `README.md`, add a link to a GPT chatbot with background knowledge about
+  the Markdown Package for TeX. (59eb04d)
 
 ## 3.2.0 (2023-10-21)
 
