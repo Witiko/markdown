@@ -1,6 +1,6 @@
 .PHONY: all base clean implode dist test force \
   docker-image docker-push-temporary-tag docker-print-temporary-tag \
-  docker-push-release-tag
+  docker-push-release-tag preview
 
 SHELL=/bin/bash
 
@@ -139,6 +139,10 @@ $(LIBRARIES): force
 $(TECHNICAL_DOCUMENTATION): $(DTXARCHIVE) $(TECHNICAL_DOCUMENTATION_RESOURCES)
 	latexmk -silent $< || (cat $(basename $@).log 1>&2; exit 1)
 	test `tail $(basename $<).log | sed -rn 's/.*\(([0-9]*) pages.*/\1/p'` -gt 350
+
+# This pseudotarget continuously typesets the manual.
+preview: $(DTXARCHIVE) $(TECHNICAL_DOCUMENTATION_RESOURCES)
+	latexmk -silent -pvc $<
 
 # These targets typeset the examples.
 $(EXAMPLES): $(EXAMPLE_SOURCES) examples/example.tex
