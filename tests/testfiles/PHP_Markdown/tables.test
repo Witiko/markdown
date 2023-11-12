@@ -343,7 +343,6 @@ BEGIN table (3 rows, 1 columns)
 - row 3, column 1: Cell
 END table
 interblockSeparator
-interblockSeparator
 END section
 BEGIN section
 headingOne: Table inside a list
