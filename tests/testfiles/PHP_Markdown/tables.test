@@ -110,6 +110,15 @@ Cell      | Cell
 | --------- 
 | Cell      | Cell      | Extra cell? |
 | Cell | Cell | Extra cell? |
+
+# Table inside a list
+
+- item
+
+  | Header 1  | Header 2  |
+  | --------- | --------- |
+  | Cell 1    | Cell 2    |
+  | Cell 3    | Cell 4    |
 >>>
 BEGIN document
 BEGIN table (3 rows, 2 columns)
@@ -333,5 +342,27 @@ BEGIN table (3 rows, 1 columns)
 - row 2, column 1: Cell
 - row 3, column 1: Cell
 END table
+interblockSeparator
+interblockSeparator
+END section
+BEGIN section
+headingOne: Table inside a list
+interblockSeparator
+ulBegin
+ulItem
+interblockSeparator
+BEGIN table (3 rows, 2 columns)
+- caption: 
+- alignment of column 1: d
+- alignment of column 2: d
+- row 1, column 1: Header 1
+- row 1, column 2: Header 2
+- row 2, column 1: Cell 1
+- row 2, column 2: Cell 2
+- row 3, column 1: Cell 3
+- row 3, column 2: Cell 4
+END table
+ulItemEnd
+ulEnd
 END section
 END document
