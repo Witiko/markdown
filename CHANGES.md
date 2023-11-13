@@ -6,6 +6,7 @@ Fixes:
 
 - Remove the `options.cacheDir` directory if it is empty after conversion.
   (5cfcea6)
+- Allow tables inside lists. (#368, #371, contributed by @lostenderman)
 
 Documentation:
 
