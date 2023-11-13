@@ -198,21 +198,7 @@ dist: implode
 	    set -e -o xtrace; \
 	    git clone https://gitlab.com/Lotz/pkgcheck.git; \
 	    unzip $(CTANARCHIVE) -d markdown; \
-	    for RETRY in $$(seq 1 10); \
-	    do \
-	        if (( RETRY > 1 )); \
-	        then \
-	            sleep $$((RETRY * 15)); \
-	        fi; \
-	        if pkgcheck/bin/pkgcheck -d markdown/markdown -T $(TDSARCHIVE) --urlcheck; \
-	        then \
-	            EXIT_CODE=0; \
-	            break; \
-	        else \
-	            EXIT_CODE=$$?; \
-	        fi; \
-	    done; \
-	    exit $$EXIT_CODE; \
+	    pkgcheck/bin/pkgcheck -d markdown/markdown -T $(TDSARCHIVE); \
 	fi
 	$(MAKE) clean
 
