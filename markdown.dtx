@@ -32565,7 +32565,51 @@ end
 \ExplSyntaxOn
 \cs_new:Npn
   \markdownLuaExecute
-  { \luabridgeExecute }
+  #1
+  {
+    \int_compare:nNnT
+      { \g_luabridge_method_int }
+      =
+      { \c_luabridge_method_shell_int }
+      {
+        \sys_if_shell_unrestricted:F
+          {
+            \sys_if_shell:TF
+              {
+                \msg_error:nn
+                  { markdown }
+                  { restricted-shell-access }
+              }
+              {
+                \msg_error:nn
+                  { markdown }
+                  { disabled-shell-access }
+              }
+          }
+      }
+    \luabridge_now:e
+      { #1 }
+  }
+\cs_generate_variant:Nn
+  \msg_new:nnnn
+  { nnnV }
+\tl_set:Nn
+  \l_tmpa_tl
+  {
+    You~may~need~to~run~TeX~with~the~--shell-escape~or~the~
+    --enable-write18~flag,~or~write~shell_escape=t~in~the~
+    texmf.cnf~file.
+  }
+\msg_new:nnnV
+  { markdown }
+  { restricted-shell-access }
+  { Shell~escape~is~restricted }
+  \l_tmpa_tl
+\msg_new:nnnV
+  { markdown }
+  { disabled-shell-access }
+  { Shell~escape~is~disabled }
+  \l_tmpa_tl
 \ExplSyntaxOff
 %    \end{macrocode}
 % \begin{markdown}
