@@ -7,6 +7,8 @@ Fixes:
 - Remove the `options.cacheDir` directory if it is empty after conversion.
   (5cfcea6)
 - Allow tables inside lists. (#368, #371, contributed by @lostenderman)
+- Check that shell access is unrestricted before attempting shell escape.
+  (#365, witiko/lt3luabridge#22, latex3/latex3#1339, #372)
 
 Documentation:
 
