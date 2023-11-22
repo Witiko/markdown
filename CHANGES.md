@@ -18,6 +18,10 @@ Documentation:
 - In `README.md`, add a link to a GPT chatbot with background knowledge about
   the Markdown Package for TeX. (59eb04d)
 
+Docker:
+
+- Include developer tools in the development Docker image. (#374)
+
 ## 3.2.0 (2023-10-21)
 
 Development:
