@@ -11872,7 +11872,136 @@ a specific look and other high-level goals without low-level programming.
 % \end{markdown}
 % \iffalse
 %</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\ExplSyntaxOn
+\keys_define:nn
+  { markdown/options }
+  {
+    theme .code:n = {
+      \@@_set_theme:n
+        { #1 }
+    },
+    import .code:n = {
+      \tl_set:Nn
+        \l_tmpa_tl
+        { #1 }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% To ensure that keys containing forward slashes get passed correctly, we
+% replace all forward slashes in the input with backslash tokens with category
+% code letter and then undo the replacement. This means that if any unbraced
+% backslash tokens with category code letter exist in the input, they will be
+% replaced with forward slashes. However, this should be extremely rare.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      \tl_replace_all:NnV
+        \l_tmpa_tl
+        { / }
+        \c_backslash_str
+      \keys_set:nV
+        { markdown/options/import }
+        \l_tmpa_tl
+    },
+  }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% To keep track of the current theme when themes are nested, we will
+% maintain the \mdef{g_\@\@_themes_seq} stack of theme names.
+% For convenience, the name of the current theme is also available in the
+% \mdef{markdownThemeName} macro.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\seq_new:N
+  \g_@@_themes_seq
+\tl_new:N
+  \markdownThemeName
+\tl_gset:Nn
+  \markdownThemeName
+  { }
+\seq_gput_right:NV
+  \g_@@_themes_seq
+  \markdownThemeName
+\cs_new:Nn
+  \@@_set_theme:n
+  {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% First, we validate the theme name.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \str_if_in:nnF
+      { #1 }
+      { / }
+      {
+        \markdownError
+        { Won't~load~theme~with~unqualified~name~#1 }
+        { Theme~names~must~contain~at~least~one~forward~slash }
+      }
+    \str_if_in:nnT
+      { #1 }
+      { _ }
+      {
+        \markdownError
+        { Won't~load~theme~with~an~underscore~in~its~name~#1 }
+        { Theme~names~must~not~contain~underscores~in~their~names }
+      }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, we munge the theme name.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \tl_set:Nn
+      \l_tmpa_str
+      { #1 }
+    \str_replace_all:Nnn
+      \l_tmpa_str
+      { / }
+      { _ }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Finally, we load the theme.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \tl_gset:Nn
+      \markdownThemeName
+      { #1 / }
+    \seq_gput_right:NV
+      \g_@@_themes_seq
+      \markdownThemeName
+    \@@_load_theme:nV
+      { #1 }
+      \l_tmpa_str
+    \seq_gpop_right:NN
+      \g_@@_themes_seq
+      \l_tmpa_tl
+    \seq_get_right:NN
+      \g_@@_themes_seq
+      \l_tmpa_tl
+    \tl_gset:NV
+      \markdownThemeName
+      \l_tmpa_tl
+  }
+\cs_generate_variant:Nn
+  \tl_replace_all:Nnn
+  { NnV }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \iffalse
+%</tex>
 %<*manual-tokens>
+% \fi
 
 ## Markdown Tokens
 
@@ -20414,73 +20543,6 @@ would use the following code in the preamble of your document:
 \newif\ifmarkdownLaTeXLoaded
   \markdownLaTeXLoadedfalse
 \AtEndOfPackage{\markdownLaTeXLoadedtrue}
-\ExplSyntaxOn
-\tl_new:N \markdownLaTeXThemePackageName
-\cs_new:Nn
-  \@@_set_latex_theme:n
-  {
-    \str_if_in:nnF
-      { #1 }
-      { / }
-      {
-        \markdownError
-        { Won't~load~theme~with~unqualified~name~#1 }
-        { Theme~names~must~contain~at~least~one~forward~slash }
-      }
-    \str_if_in:nnT
-      { #1 }
-      { _ }
-      {
-        \markdownError
-        { Won't~load~theme~with~an~underscore~in~its~name~#1 }
-        { Theme~names~must~not~contain~underscores~in~their~names }
-      }
-    \tl_set:Nn \markdownLaTeXThemePackageName { #1 }
-    \str_replace_all:Nnn
-      \markdownLaTeXThemePackageName
-      { / }
-      { _ }
-    \edef\markdownLaTeXThemePackageName{
-      markdowntheme\markdownLaTeXThemePackageName}
-    \expandafter\markdownLaTeXThemeLoad\expandafter{
-      \markdownLaTeXThemePackageName}{#1/}
-  }
-\keys_define:nn
-  { markdown/options }
-  {
-    import .code:n = {
-      \tl_set:Nn
-        \l_tmpa_tl
-        { #1 }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% To ensure that keys containing forward slashes get passed correctly, we
-% replace all forward slashes in the input with backslash tokens with category
-% code letter and then undo the replacement. This means that if any unbraced
-% backslash tokens with category code letter exist in the input, they will be
-% replaced with forward slashes. However, this should be extremely rare.
-%
-% \end{markdown}
-%  \begin{macrocode}
-      \tl_replace_all:NnV
-        \l_tmpa_tl
-        { / }
-        \c_backslash_str
-      \keys_set:nV
-        { markdown/options/import }
-        \l_tmpa_tl
-    },
-  }
-\cs_generate_variant:Nn
-  \tl_replace_all:Nnn
-  { NnV }
-\keys_define:nn
-  { markdown/options }
-  {
-    theme .code:n = { \@@_set_latex_theme:n { #1 } },
-  }
-\ExplSyntaxOff
 %    \end{macrocode}
 % \iffalse
 %</latex>
@@ -20499,8 +20561,10 @@ beginning of a \LaTeX{} document.
 % \fi
 %  \begin{macrocode}
 \ExplSyntaxOn
+\iffalse  % TODO: Write logic for loading LaTeX themes after preamble.
 \@onlypreamble
   \@@_set_latex_theme:n
+\fi
 \ExplSyntaxOff
 %    \end{macrocode}
 % \iffalse
@@ -20803,15 +20867,15 @@ options locally.
       { #1 }
       {
         \markdownWarning
-          {Redefined~snippet~\markdownLaTeXThemeName#1}
+          {Redefined~snippet~\markdownThemeName#1}
         \csname markdownLaTeXSetupSnippet%
-          \markdownLaTeXThemeName#1\endcsname={#2}
+          \markdownThemeName#1\endcsname={#2}
       }
       {
         \newtoks\next
           \next={#2}
         \expandafter\let\csname markdownLaTeXSetupSnippet%
-          \markdownLaTeXThemeName#1\endcsname=\next
+          \markdownThemeName#1\endcsname=\next
       }
   }
 \let\markdownSetupSnippet=\@@_latex_setup_snippet:nn
@@ -20826,7 +20890,7 @@ options locally.
 %  \begin{macrocode}
 \newcommand\markdownIfSnippetExists[3]{%
   \@ifundefined
-    {markdownLaTeXSetupSnippet\markdownLaTeXThemeName#1}%
+    {markdownLaTeXSetupSnippet\markdownThemeName#1}%
     {#3}{#2}}%
 %    \end{macrocode}
 % \begin{markdown}
@@ -20844,7 +20908,7 @@ options locally.
         {
           \expandafter\markdownSetup\expandafter{
             \the\csname markdownLaTeXSetupSnippet
-            \markdownLaTeXThemeName#1\endcsname}
+            \markdownThemeName#1\endcsname}
         }{
           \markdownError
             {Can't~invoke~setup~snippet~#1}
@@ -21055,7 +21119,7 @@ variant of the `import` \LaTeX{} option:
 %
 % \end{markdown}
 %  \begin{macrocode}
-      \@@_set_latex_theme:V
+      \@@_set_theme:V
         \l_@@_latex_import_current_theme_tl
     },
   }
@@ -21063,7 +21127,7 @@ variant of the `import` \LaTeX{} option:
   \tl_replace_all:Nnn
   { NVn }
 \cs_generate_variant:Nn
-  \@@_set_latex_theme:n
+  \@@_set_theme:n
   { V }
 \cs_generate_variant:Nn
   \@@_latex_setup_snippet:nn
@@ -32941,35 +33005,23 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\newcommand\markdownLaTeXThemeName{}
-\seq_new:N \g_@@_latex_themes_seq
-\seq_gput_right:NV
-  \g_@@_latex_themes_seq
-  \markdownLaTeXThemeName
-\newcommand\markdownLaTeXThemeLoad[2]{
-  \def\@tempa{%
-    \def\markdownLaTeXThemeName{#2}
-    \seq_gput_right:NV
-      \g_@@_latex_themes_seq
-      \markdownLaTeXThemeName
-    \RequirePackage{#1}
-    \seq_pop_right:NN
-      \g_@@_latex_themes_seq
-      \l_tmpa_tl
-    \seq_get_right:NN
-      \g_@@_latex_themes_seq
-      \l_tmpa_tl
-    \exp_args:NNV
-      \def
-      \markdownLaTeXThemeName
-      \l_tmpa_tl}
-  \ifmarkdownLaTeXLoaded
-    \@tempa
-  \else
-    \exp_args:No
+\cs_new:Nn
+  \@@_load_theme:nn
+  {
+    \ifmarkdownLaTeXLoaded
+      \RequirePackage
+        { markdown theme #2 }
+    \else
       \AtEndOfPackage
-      { \@tempa }
-  \fi}
+        {
+          \RequirePackage
+            { markdown theme #2 }
+        }
+    \fi
+  }
+\cs_generate_variant:Nn
+  \@@_load_theme:nn
+  { nV }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \begin{markdown}
