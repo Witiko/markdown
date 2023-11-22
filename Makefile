@@ -64,7 +64,7 @@ LASTMODIFIED=$(shell git log -1 --date=format:%Y-%m-%d --format=%ad)
 ifndef DOCKER_TEXLIVE_TAG
 	DOCKER_TEXLIVE_TAG=latest
 endif
-ifeq ($(NO_DOCUMENTATION), true)
+ifeq ($(DOCKER_DEV_IMAGE), true)
 	DOCKER_TAG_POSTFIX=-no_docs
 endif
 DOCKER_TEMPORARY_IMAGE=ghcr.io/witiko/markdown
@@ -88,7 +88,7 @@ base: $(INSTALLABLES) $(LIBRARIES)
 docker-image:
 	docker pull $(DOCKER_TEMPORARY_IMAGE):$(DOCKER_TEMPORARY_TAG) || \
 	DOCKER_BUILDKIT=1 docker build --pull --build-arg TEXLIVE_TAG=$(DOCKER_TEXLIVE_TAG) \
-	                               --build-arg NO_DOCUMENTATION=$(NO_DOCUMENTATION) \
+	                               --build-arg DEV_IMAGE=$(DOCKER_DEV_IMAGE) \
 	                               -t $(DOCKER_TEMPORARY_IMAGE):$(DOCKER_TEMPORARY_TAG) .
 
 # This pseudo-targed pushes the built witiko/markdown Docker image to

@@ -14,7 +14,7 @@ on:
     - cron: '30 4 * * MON'
 env:
   DEBIAN_FRONTEND: noninteractive
-  NO_DOCUMENTATION: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.draft == true }}
+  DOCKER_DEV_IMAGE: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.draft == true }}
 jobs:
   shellcheck:
     name: Style check (Bash)

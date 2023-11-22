@@ -29,13 +29,18 @@ ARG DEPENDENCIES="\
     zip \
 "
 
+ARG DEV_DEPENDENCIES="\
+    less \
+    vim \
+"
+
 ARG BINARY_DIR=/usr/local/bin
 ARG BUILD_DIR=/git-repo
 ARG INSTALL_DIR=/usr/local/texlive/texmf-local
 
 ARG FROM_IMAGE=texlive/texlive
 ARG TEXLIVE_TAG=latest
-ARG NO_DOCUMENTATION=false
+ARG DEV_IMAGE=false
 
 FROM $FROM_IMAGE:$TEXLIVE_TAG as build
 
@@ -44,7 +49,7 @@ ARG DEPENDENCIES
 ARG BUILD_DIR
 ARG INSTALL_DIR
 
-ARG NO_DOCUMENTATION
+ARG DEV_IMAGE
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TERM=xterm
@@ -90,7 +95,7 @@ mtxrun --generate
 texhash
 
 # Produce the complete distribution archive of the Markdown package
-make -C ${BUILD_DIR} dist NO_DOCUMENTATION=${NO_DOCUMENTATION}
+make -C ${BUILD_DIR} dist NO_DOCUMENTATION=${DEV_IMAGE}
 mkdir ${BUILD_DIR}/dist
 unzip ${BUILD_DIR}/markdown.tds.zip -d ${BUILD_DIR}/dist
 
@@ -101,10 +106,13 @@ FROM $FROM_IMAGE:$TEXLIVE_TAG
 
 ARG AUXILIARY_FILES
 ARG DEPENDENCIES
+ARG DEV_DEPENDENCIES
 
 ARG BINARY_DIR
 ARG BUILD_DIR
 ARG INSTALL_DIR
+
+ARG DEV_IMAGE
 
 LABEL authors="Vít Starý Novotný <witiko@mail.muni.cz>"
 
@@ -133,6 +141,10 @@ chmod +x ${BINARY_DIR}/markdown-cli
 # Install dependencies, but this time we clean up after ourselves
 apt-get -qy update
 apt-get -qy install --no-install-recommends ${DEPENDENCIES}
+if [ ${DEV_IMAGE} = true ]
+then
+  apt-get -qy install --no-install-recommends ${DEV_DEPENDENCIES}
+fi
 apt-get -qy autoclean
 apt-get -qy clean
 apt-get -qy autoremove --purge
