@@ -769,12 +769,6 @@ abbr {
   volume    = {B},
   location  = {Reading, MA},
   publisher = {Addison-Wesley}}
-@online{novotny21,
-  author    = {Novotný, Vít},
-  title     = {\Hologo{LaTeX2e} no longer keys packages by pathnames},
-  date      = {2021-02-20},
-  url       = {https://github.com/latex3/latex2e/issues/510},
-  urldate   = {2021-02-21}}
 @book{eijkhout92,
   author    = {Victor Eijkhout},
   title     = {\TeX{} by Topic},
@@ -11843,6 +11837,41 @@ A PDF document named `document.pdf` should be produced and contain the text
 %    \end{macrocode}
 % \iffalse
 %</tex>
+%<*manual-options>
+% \fi
+% \begin{markdown}
+
+#### Themes {#themes}
+
+User-defined themes for the Markdown package provide a domain-specific
+interpretation of Markdown tokens. Themes allow the authors to achieve
+a specific look and other high-level goals without low-level programming.
+
+% The key-values `theme`=\meta{theme name} and `import`=\meta{theme name} load
+% a \TeX{} document (further referred to as *a theme*) named
+% `markdowntheme`\meta{munged theme name}`.tex`, where the *munged theme name*
+% is the *theme name* after the substitution of all forward slashes (`/`) for
+% an underscore (`_`). The theme name is *qualified* and contains no
+% underscores. A theme name is qualified if and only if it contains at least
+% one forward slash. Themes are inspired by the Beamer \LaTeX{} package, which
+% provides similar functionality with its `\usetheme` macro [@tantau21, Section
+% 15.1].
+%
+% Theme names must be qualified to minimize naming conflicts between different
+% themes with a similar purpose. The preferred format of a theme name is
+% \meta{theme author}`/`\meta{theme purpose}`/`\meta{private naming
+% scheme}, where the *private naming scheme* may contain additional forward
+% slashes. For example, a theme by a user `witiko` for the MU theme of the
+% Beamer document class may have the name `witiko/beamer/MU`.
+%
+% Theme names are munged to allow structure inside theme names without
+% dictating where the themes should be located inside the \TeX{} directory
+% structure. For example, loading a theme named `witiko/beamer/MU` would
+% load a \TeX{} document package named `markdownthemewitiko_beamer_MU.tex`.
+%
+% \end{markdown}
+% \iffalse
+%</manual-options>
 %<*manual-tokens>
 
 ## Markdown Tokens
@@ -20327,46 +20356,38 @@ package. Setting the option after loading the package will have no effect.
 % \fi
 % \begin{markdown}
 
-#### \LaTeX{} themes {#latexthemes}
+#### Themes {#latexthemes}
 
-User-defined \LaTeX{} themes for the Markdown package provide a domain-specific
-interpretation of Markdown tokens. Similarly to \LaTeX{} packages, themes
-allow the authors to achieve a specific look and other high-level goals
-without low-level programming.
+% In Section~\ref{sec:themes}, we described the concept of themes.
+In \LaTeX{}, we expand on the concept of
+% themes
+% \iffalse
+[themes](#themes)
+% \fi
+by allowing a theme to be a full-blown \LaTeX{} package. Specifically, the
+key-values `theme`=\meta{theme name} and `import`=\meta{theme name} load a
+\LaTeX{} package named `markdowntheme`\meta{munged theme name}`.sty` if it
+exists and a \TeX{} document named `markdowntheme`\meta{munged theme
+name}`.tex` otherwise.
 
-% The \LaTeX{} option `import`=\meta{theme name} loads a \LaTeX{} package
-% (further referred to as *a theme*) named `markdowntheme`\meta{munged theme
-% name}`.sty`, where the *munged theme name* is the *theme name* after the
-% substitution of all forward slashes (`/`) for an underscore (`_`), the theme
-% *name* is *qualified* and contains no underscores, and a value is qualified
-% if and only if it contains at least one forward slash. Themes are inspired
-% by the Beamer \LaTeX{} package, which provides similar functionality with
-% its `\usetheme` macro [@tantau21, Section 15.1].
-%
-% Theme names must be qualified to minimize naming conflicts between different
-% themes intended for a single \LaTeX{} document class or for a single \LaTeX{}
-% package. The preferred format of a theme name is \meta{theme author}`/`<!--
-% -->\meta{target \LaTeX{} document class or package}`/`\meta{private naming
-% scheme}, where the *private naming scheme* may contain additional forward
-% slashes. For example, a theme by a user `witiko` for the MU theme of the
-% Beamer document class may have the name `witiko/beamer/MU`.
-%
-% Theme names are munged, because \LaTeX{} packages are identified only by
-% their filenames, not by their pathnames. [@novotny21] Therefore, we can't
-% store the qualified theme names directly using directories, but we must
-% encode the individual segments of the qualified theme in the filename. For
-% example, loading a theme named `witiko/beamer/MU` would load a \LaTeX{}
-% package named `markdownthemewitiko_beamer_MU.sty`.
-%
-% If the \LaTeX{} option with key `theme` is (repeatedly) specified in the
-% `\usepackage` macro, the loading of the theme(s) will be postponed in
-% first-in-first-out order until after the Markdown \LaTeX{} package has been
-% loaded. Otherwise, the theme(s) will be loaded immediately. For example,
-% there is a theme named `witiko/dot`, which typesets fenced code blocks with
-% the `dot` infostring as images of directed graphs rendered by the Graphviz
-% tools. The following code would first load the Markdown package, then the
-% `markdownthemewitiko_beamer_MU.sty` \LaTeX{} package, and finally the
-% `markdownthemewitiko_dot.sty` \LaTeX{} package:
+Having the Markdown package automatically load either the generic `.tex`
+*theme file* or the \LaTeX-specific `.sty` theme file allows developers
+to have a single *theme file*, when the theme is small or the difference
+between \TeX{} formats is unimportant, and scale up to separate theme files
+native to different \TeX{} formats for large multi-format themes, where
+different code is needed for different \TeX{} formats. To enable code reuse,
+developers can load the `.tex` theme file from the `.sty` theme file using the
+\mdef{markdownSuper} command.
+
+% If the \LaTeX{} option with keys `theme` or `import` is (repeatedly)
+% specified in the `\usepackage` macro, the loading of the theme(s) will be
+% postponed in first-in-first-out order until after the Markdown \LaTeX{}
+% package has been loaded. Otherwise, the theme(s) will be loaded immediately.
+% For example, there is a theme named `witiko/dot`, which typesets fenced code
+% blocks with the `dot` infostring as images of directed graphs rendered by the
+% Graphviz tools. The following code would first load the Markdown package,
+% then the `markdownthemewitiko_beamer_MU.sty` \LaTeX{} package, and finally
+% the `markdownthemewitiko_dot.sty` \LaTeX{} package:
 % \end{markdown}
 % \iffalse
 
