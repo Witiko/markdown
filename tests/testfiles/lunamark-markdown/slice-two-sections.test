@@ -205,7 +205,7 @@ interblockSeparator
 interblockSeparator
 ulBegin
 ulItem
-interblockSeparator
+paragraphSeparator
 ulItemEnd
 ulItem
 ulItemEnd
@@ -226,7 +226,7 @@ interblockSeparator
 interblockSeparator
 olBegin
 olItemWithNumber: 5
-interblockSeparator
+paragraphSeparator
 olItemEnd
 olItemWithNumber: 6
 olItemEnd
@@ -237,7 +237,7 @@ interblockSeparator
 interblockSeparator
 olBegin
 olItemWithNumber: 1
-interblockSeparator
+paragraphSeparator
 olItemEnd
 olItemWithNumber: 2
 olItemEnd

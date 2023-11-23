@@ -248,7 +248,7 @@ interblockSeparator
 interblockSeparator
 olBegin
 olItemWithNumber: 1
-interblockSeparator
+paragraphSeparator
 softLineBreak
 olItemEnd
 olItemWithNumber: 2

@@ -1,6 +1,14 @@
-\markdownSetup{headerAttributes=true}
+\markdownSetup{
+  hashEnumerators=true,
+  definitionLists=true,
+  notes=true,
+  inlineNotes=true,
+  smartEllipses=true,
+  contentBlocks=true,
+  headerAttributes=true,
+}
 <<<
-This test ensures that the Lua `slice` option processes the entire document by
+This test ensures that omitting the Lua `slice` option processes the entire document by
 default.
 
 This is an H1
@@ -87,9 +95,9 @@ Term 1
 *Term 2*
 
 :   Definition 2
-
+    
         Some code, part of Definition 2
-
+    
     Third paragraph of Definition 2.
 
 :   Definition 3
@@ -117,14 +125,14 @@ Here is a note reference[^1] and another.[^longnote]
 Here is an inline note.^[Inlines notes are easier to
 write, since you don't have to pick an identifier and
 move down to type the note.]
-
+  
 [^1]: Here is the note.
 
 [^longnote]: Here's one with multiple blocks.
-
+  
     Subsequent paragraphs are indented to show that they
 belong to the previous note.
-
+  
         Some code
 
     The whole paragraph can be indented, or just the first
@@ -156,6 +164,7 @@ interblockSeparator
 BEGIN section
 headingSix: This is an H6
 interblockSeparator
+ellipsis
 interblockSeparator
 thematicBreak
 interblockSeparator
@@ -173,8 +182,13 @@ BEGIN image
 - URI: example-image.pdf
 - title: An example image from Martin Scharrer's mwe package
 END image
-paragraphSeparator
-paragraphSeparator
+interblockSeparator
+BEGIN contentBlock
+- suffix: csv
+- URI: scientists.csv
+- title: The great minds of the 19th century rendered via a content block
+END contentBlock
+interblockSeparator
 interblockSeparator
 BEGIN fencedCode
 - src: ./_markdown_test/4b6b6e5629f4aa0fcfcb9164fca2efa3.verbatim
@@ -195,7 +209,7 @@ interblockSeparator
 interblockSeparator
 ulBegin
 ulItem
-interblockSeparator
+paragraphSeparator
 ulItemEnd
 ulItem
 ulItemEnd
@@ -216,7 +230,7 @@ interblockSeparator
 interblockSeparator
 olBegin
 olItemWithNumber: 5
-interblockSeparator
+paragraphSeparator
 olItemEnd
 olItemWithNumber: 6
 olItemEnd
@@ -224,15 +238,17 @@ olItemWithNumber: 7
 olItemEnd
 olEnd
 interblockSeparator
-paragraphSeparator
-hash
 interblockSeparator
-inputVerbatim: ./_markdown_test/a0fd6fe345e26edf18c330d18cdf4d52.verbatim
-interblockSeparator
-hash
-softLineBreak
-hash
+olBegin
+olItemWithNumber: 1
 paragraphSeparator
+olItemEnd
+olItemWithNumber: 2
+olItemEnd
+olItemWithNumber: 3
+olItemEnd
+olEnd
+interblockSeparator
 interblockSeparator
 olBeginTight
 olItemWithNumber: 5
@@ -243,28 +259,46 @@ olItemWithNumber: 7
 olItemEnd
 olEndTight
 interblockSeparator
-paragraphSeparator
-hash
-softLineBreak
-hash
-softLineBreak
-hash
-paragraphSeparator
-paragraphSeparator
-paragraphSeparator
-paragraphSeparator
-emphasis: Term 2
-paragraphSeparator
 interblockSeparator
-inputVerbatim: ./_markdown_test/c268833f99a7a4a12803144b445357da.verbatim
+olBeginTight
+olItemWithNumber: 1
+olItemEnd
+olItemWithNumber: 2
+olItemEnd
+olItemWithNumber: 3
+olItemEnd
+olEndTight
 interblockSeparator
-paragraphSeparator
-paragraphSeparator
-softLineBreak
-softLineBreak
-emphasis: Term 2
-softLineBreak
-softLineBreak
+interblockSeparator
+dlBegin
+dlItem: Term 1
+dlDefinitionBegin
+dlDefinitionEnd
+dlItemEnd
+dlItem: (emphasis: Term 2)
+dlDefinitionBegin
+interblockSeparator
+inputVerbatim: ./_markdown_test/990a3431517de9eac439b71b42999658.verbatim
+interblockSeparator
+dlDefinitionEnd
+dlDefinitionBegin
+dlDefinitionEnd
+dlItemEnd
+dlEnd
+interblockSeparator
+interblockSeparator
+dlBeginTight
+dlItem: Term 1
+dlDefinitionBegin
+dlDefinitionEnd
+dlItemEnd
+dlItem: (emphasis: Term 2)
+dlDefinitionBegin
+dlDefinitionEnd
+dlDefinitionBegin
+dlDefinitionEnd
+dlItemEnd
+dlEndTight
 interblockSeparator
 END section
 BEGIN section
@@ -278,21 +312,10 @@ blockQuoteEnd
 interblockSeparator
 blockQuoteEnd
 interblockSeparator
-circumflex
-circumflex
+note: Here is the note.
+note: Here's one with multiple blocks.(paragraphSeparator)Subsequent paragraphs are indented to show that they(softLineBreak)belong to the previous note.(interblockSeparator)(inputVerbatim: ./_markdown_test/c92b3efa18315dd3d2ff8cccfb5a26a0.verbatim)(interblockSeparator)The whole paragraph can be indented, or just the first(softLineBreak)line.  In this way, multi-paragraph notes work like(softLineBreak)multi-paragraph list items.
 softLineBreak
-circumflex
-softLineBreak
-softLineBreak
-paragraphSeparator
-circumflex
-paragraphSeparator
-circumflex
-interblockSeparator
-inputVerbatim: ./_markdown_test/abbf8dcafba2274ed2400ea0c2d432ff.verbatim
-interblockSeparator
-interblockSeparator
-inputVerbatim: ./_markdown_test/3372369b5571c25af4e3298ee616142e.verbatim
+note: Inlines notes are easier to write, since you don't have to pick an identifier and move down to type the note.
 END section
 END section
 END document

@@ -1,21 +1,218 @@
+\markdownSetup{fencedDivs=true}
 <<<
 This test ensures that paragraph separators and interblock separators
 are produced where appropriate.
 
-Two markdown *paragraphs* are
+Two markdown paragraphs are
 
-*always separated by a paragraph separator*
+always separated by a paragraph separator
 
 
-*no matter how many blank lines* in between.
+no matter how many blank lines in between.
 
+Here is a list surrounded by interblock separators:
+
+- first item
+- second item
+
+Here is a list with a paragraph separator above it:
+
+
+- first item
+- second item
+
+Here is a list with a paragraph separator below it:
+
+- first item
+- second item
+
+
+Here is a list with a paragraph separator from both sides:
+
+
+- first item
+- second item
+
+
+Paragraph separators should work the same way inside block-level elements such
+as blockquotes and lists:
+
+> first paragraph
+>
+> second paragraph
+>
+>
+> third paragraph
+>
+> - list item
+> - list item
+>
+>
+> 1. list item
+> 2. list item
+
+::: fenced-div
+first paragraph
+
+second paragraph
+
+
+third paragraph
+
+- list item
+- list item
+
+
+1. list item
+2. list item
+:::
+
+- first paragraph
+
+  second paragraph
+
+
+  third paragraph
+
+  - list item
+  - list item
+
+
+  1. list item
+  2. list item
+
+1. first paragraph
+
+   second paragraph
+
+
+   third paragraph
+
+   - list item
+   - list item
+
+
+   1. list item
+   2. list item
 >>>
 BEGIN document
 softLineBreak
 paragraphSeparator
-emphasis: paragraphs
 paragraphSeparator
-emphasis: always separated by a paragraph separator
 paragraphSeparator
-emphasis: no matter how many blank lines
+paragraphSeparator
+interblockSeparator
+ulBeginTight
+ulItem
+ulItemEnd
+ulItem
+ulItemEnd
+ulEndTight
+interblockSeparator
+paragraphSeparator
+ulBeginTight
+ulItem
+ulItemEnd
+ulItem
+ulItemEnd
+ulEndTight
+interblockSeparator
+interblockSeparator
+ulBeginTight
+ulItem
+ulItemEnd
+ulItem
+ulItemEnd
+ulEndTight
+paragraphSeparator
+paragraphSeparator
+ulBeginTight
+ulItem
+ulItemEnd
+ulItem
+ulItemEnd
+ulEndTight
+paragraphSeparator
+softLineBreak
+interblockSeparator
+blockQuoteBegin
+paragraphSeparator
+paragraphSeparator
+interblockSeparator
+ulBeginTight
+ulItem
+ulItemEnd
+ulItem
+ulItemEnd
+ulEndTight
+paragraphSeparator
+olBeginTight
+olItemWithNumber: 1
+olItemEnd
+olItemWithNumber: 2
+olItemEnd
+olEndTight
+blockQuoteEnd
+interblockSeparator
+BEGIN fencedDivAttributeContext
+attributeClassName: fenced-div
+paragraphSeparator
+paragraphSeparator
+interblockSeparator
+ulBeginTight
+ulItem
+ulItemEnd
+ulItem
+ulItemEnd
+ulEndTight
+paragraphSeparator
+olBeginTight
+olItemWithNumber: 1
+olItemEnd
+olItemWithNumber: 2
+olItemEnd
+olEndTight
+END fencedDivAttributeContext
+interblockSeparator
+ulBegin
+ulItem
+paragraphSeparator
+paragraphSeparator
+interblockSeparator
+ulBeginTight
+ulItem
+ulItemEnd
+ulItem
+ulItemEnd
+ulEndTight
+paragraphSeparator
+olBeginTight
+olItemWithNumber: 1
+olItemEnd
+olItemWithNumber: 2
+olItemEnd
+olEndTight
+ulItemEnd
+ulEnd
+interblockSeparator
+olBegin
+olItemWithNumber: 1
+paragraphSeparator
+paragraphSeparator
+interblockSeparator
+ulBeginTight
+ulItem
+ulItemEnd
+ulItem
+ulItemEnd
+ulEndTight
+paragraphSeparator
+olBeginTight
+olItemWithNumber: 1
+olItemEnd
+olItemWithNumber: 2
+olItemEnd
+olEndTight
+olItemEnd
+olEnd
 END document

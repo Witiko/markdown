@@ -7,13 +7,13 @@ the plain TeX interface.
 - [] *another item without a tickbox*
 - [      ] *an item with an unticked box*
 
-    1. [x]     *a loose nested item with a ticked box*
+    1. [x]     *a nested item with a ticked box*
 
-    2. *a loose nested item without a tickbox*
+    2. *a nested item without a tickbox*
 
        [x] *here is a new paragraph, but still no tickbox*
 
-    3. [X] *here is loose nested item with a ticked box*
+    3. [X] *here is nested item with a ticked box*
 
     4. *some item with a Unicode unticked box ☐*
     5. *some item with a Unicode half-ticked box ⌛*
@@ -54,16 +54,16 @@ interblockSeparator
 olBegin
 olItemWithNumber: 1
 tickedBox
-emphasis: a loose nested item with a ticked box
+emphasis: a nested item with a ticked box
 olItemEnd
 olItemWithNumber: 2
-emphasis: a loose nested item without a tickbox
-interblockSeparator
+emphasis: a nested item without a tickbox
+paragraphSeparator
 emphasis: here is a new paragraph, but still no tickbox
 olItemEnd
 olItemWithNumber: 3
 tickedBox
-emphasis: here is loose nested item with a ticked box
+emphasis: here is nested item with a ticked box
 olItemEnd
 olItemWithNumber: 4
 emphasis: some item with a Unicode unticked box (untickedBox)
