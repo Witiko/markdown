@@ -136,7 +136,7 @@ END fencedDivAttributeContext
 interblockSeparator
 BEGIN fencedDivAttributeContext
 attributeClassName: level2-fewer-colons
-interblockSeparator
+paragraphSeparator
 END fencedDivAttributeContext
 interblockSeparator
 BEGIN fencedDivAttributeContext

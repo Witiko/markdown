@@ -30,7 +30,7 @@ BEGIN document
 ulBegin
 ulItem
 emphasis: foo
-interblockSeparator
+paragraphSeparator
 emphasis: notcode
 ulItemEnd
 ulItem
