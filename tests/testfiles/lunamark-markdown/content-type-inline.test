@@ -1,0 +1,47 @@
+\markdownSetup{contentType=inline}
+<<<
+This test ensures that the Lua `contentType` option correctly propagates
+through the plain TeX interface. Setting the `contentType` option to the
+`inline` value should disable the part of the markdown grammar that deals
+with block elements. Instead of separating blocks and paragraphs, blank
+lines should translate to spaces, lists and blockquotes should just be
+understood as plain text.
+
+Here are some inline elements:
+
+- *emphasis* and __strong emphasis__
+- [link](https://example/url "Example title")
+- ![image](https://example/url "Example title")
+- `code`
+
+Here are some block elements:
+
+- > blockquote
+- code
+
+      block
+-
+    * bullet
+    * list
+-
+    1. ordered
+    2. list
+>>>
+BEGIN document
+codeSpan: contentType
+codeSpan: contentType
+codeSpan: inline
+emphasis: emphasis
+strongEmphasis: strong emphasis
+BEGIN link
+- label: link
+- URI: https://example/url
+- title: Example title
+END link
+BEGIN image
+- label: image
+- URI: https://example/url
+- title: Example title
+END image
+codeSpan: code
+END document

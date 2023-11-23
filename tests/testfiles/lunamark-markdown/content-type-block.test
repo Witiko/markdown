@@ -1,0 +1,86 @@
+\markdownSetup{contentType=block}
+<<<
+This test ensures that the Lua `contentType` option correctly propagates
+through the plain TeX interface. Setting the `contentType` option to the
+default value `block` should have no effect.
+
+Here are some inline elements:
+
+- *emphasis* and __strong emphasis__
+- [link](https://example/url "Example title")
+- ![image](https://example/url "Example title")
+- `code`
+
+Here are some block elements:
+
+- > blockquote
+- code
+
+      block
+-
+    * bullet
+    * list
+-
+    1. ordered
+    2. list
+>>>
+BEGIN document
+codeSpan: contentType
+someLineBreak
+codeSpan: contentType
+someLineBreak
+codeSpan: block
+paragraphSeparator
+interblockSeparator
+ulBeginTight
+ulItem
+emphasis: emphasis
+strongEmphasis: strong emphasis
+ulItemEnd
+ulItem
+BEGIN link
+- label: link
+- URI: https://example/url
+- title: Example title
+END link
+ulItemEnd
+ulItem
+BEGIN image
+- label: image
+- URI: https://example/url
+- title: Example title
+END image
+ulItemEnd
+ulItem
+codeSpan: code
+ulItemEnd
+ulEndTight
+interblockSeparator
+interblockSeparator
+ulBegin
+ulItem
+blockQuoteBegin
+blockQuoteEnd
+ulItemEnd
+ulItem
+interblockSeparator
+inputVerbatim: ./_markdown_test/14511f2f5564650d129ca7cabc333278.verbatim
+ulItemEnd
+ulItem
+ulBeginTight
+ulItem
+ulItemEnd
+ulItem
+ulItemEnd
+ulEndTight
+ulItemEnd
+ulItem
+olBeginTight
+olItemWithNumber: 1
+olItemEnd
+olItemWithNumber: 2
+olItemEnd
+olEndTight
+ulItemEnd
+ulEnd
+END document
