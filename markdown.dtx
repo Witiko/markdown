@@ -25132,7 +25132,7 @@ end
     end
 
     if self.is_writing and #normalized_attributes > 0 then
-      table.insert(buf, "\n\\markdownRendererHeaderAttributeContextEnd ")
+      table.insert(buf, "\\markdownRendererHeaderAttributeContextEnd ")
     end
 
     return buf
@@ -30151,7 +30151,7 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
       function self.div_begin(attributes)
         local start_output = {"\\markdownRendererFencedDivAttributeContextBegin\n",
                               self.attributes(attributes)}
-        local end_output = {"\n\\markdownRendererFencedDivAttributeContextEnd "}
+        local end_output = {"\\markdownRendererFencedDivAttributeContextEnd "}
         return self.push_attributes("div", attributes, start_output, end_output)
       end
 %    \end{macrocode}
