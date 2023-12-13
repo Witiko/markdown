@@ -1,5 +1,13 @@
 # Changes
 
+## 3.3.0
+
+Documentation:
+
+- Improve the discoverability of the `\markdownInput` macro.
+  (#381, #382, contributed by @solernou)
+- Encourage alternatives to the `hybrid` option in the user manual. (#382)
+
 ## 3.2.1 (2023-11-23)
 
 Fixes:
