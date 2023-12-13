@@ -2,6 +2,10 @@
 
 ## 3.3.0
 
+Fixes:
+
+- Prevent unwanted space tokens before `*ContextEnd` renderers. (#373)
+
 Documentation:
 
 - Improve the discoverability of the `\markdownInput` macro.
