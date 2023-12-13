@@ -1517,10 +1517,35 @@ Next, invoke LuaTeX from the terminal:
 luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the text
-“Hello *world*!” Invoking pdfTeX should have the same effect:
+“Hello *world*!”
+
+Instead of LuaTeX, you may also use pdfTeX:
 ``` sh
 pdftex --shell-escape document.tex
 ```````
+This should also produce a PDF document named `document.pdf` with the same content.
+
+***
+
+Instead of writing your markdown document between `\markdownBegin` and
+`\markdownEnd`, you can also include markdown documents using the
+`\markdownInput` macro, similarly to how you might use the `\input` TeX
+primitive to include \TeX{} documents.
+
+Using a text editor, create a text document named `hello.md` with the
+following content:
+``` md
+Hello *world*!
+``````
+Create also a text document named `document.tex` with the following content:
+``` tex
+\input markdown
+\markdownInput{hello.md}
+\bye
+```````
+Next, invoke LuaTeX or pdfTeX from the terminal like in the previous example.
+A PDF document named `document.pdf` should be produced and contain the text
+“Hello *world*!”
 
 ### Using \LaTeX{}
 
@@ -1540,10 +1565,39 @@ Next, invoke LuaTeX from the terminal:
 lualatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the text “Hello
-*world*!” Invoking pdfTeX should have the same effect:
+*world*!”
+
+Instead of LuaTeX, you may also use pdfTeX:
 ``` sh
 pdflatex --shell-escape document.tex
 ``````
+This should also produce a PDF document named `document.pdf` with the same content.
+
+***
+
+Instead of writing your markdown document between `\begin{markdown}` and
+`\end{markdown}`, you can also include markdown documents using the
+`\markdownInput` macro, similarly to how you might use the `\input` TeX
+primitive to include \LaTeX{} documents.
+
+Using a text editor, create a text document named `hello.md` with the
+following content:
+``` md
+Hello *world*!
+``````
+Create also a text document named `document.tex` with the following content:
+``` tex
+\documentclass{article}
+\usepackage{markdown}
+\begin{document}
+\begin{markdown}
+\markdownInput{hello.md}
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX or pdfTeX from the terminal like in the previous example.
+A PDF document named `document.pdf` should be produced and contain the text
+“Hello *world*!”
 
 ***
 
@@ -1581,6 +1635,29 @@ context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the text “Hello
 *world*!”
+
+***
+
+Instead of writing your markdown document between `\startmarkdown` and
+`\stopmarkdown`, you can also include markdown documents using the
+`\inputmarkdown` macro, similarly to how you might use the `\input` TeX
+primitive to include \Hologo{ConTeXt} documents.
+
+Using a text editor, create a text document named `hello.md` with the
+following content:
+``` md
+Hello *world*!
+``````
+Create also a text document named `document.tex` with the following content:
+``` tex
+\usemodule[t][markdown]
+\starttext
+\inputmarkdown{hello.md}
+\stoptext
+```````
+Next, invoke LuaTeX from the terminal like in the previous example.
+A PDF document named `document.pdf` should be produced and contain the text
+“Hello *world*!”
 
 ***
 
@@ -11186,9 +11263,11 @@ pdftex --shell-escape document.tex
 % \bye
 % ```````
 %
-% The \mref{markdownInput} macro accepts a single parameter with the filename
-% of a markdown document and expands to the result of the conversion of the
-% input markdown document to plain \TeX{}.
+% You can use the \mref{markdownInput} macro to include markdown documents,
+% similarly to how you can use the \mref{input} \TeX{} primitive to include
+% \TeX{} documents. The \mref{markdownInput} macro accepts a single parameter
+% with the filename of a markdown document and expands to the result of the
+% conversion of the input markdown document to plain \TeX{}.
 %
 % \end{markdown}
 %  \begin{macrocode}
