@@ -1511,10 +1511,35 @@ Next, invoke LuaTeX from the terminal:
 luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the text
-“Hello *world*!” Invoking pdfTeX should have the same effect:
+“Hello *world*!”
+
+Instead of LuaTeX, you may also use pdfTeX:
 ``` sh
 pdftex --shell-escape document.tex
 ```````
+This should also produce a PDF document named `document.pdf` with the same content.
+
+***
+
+Instead of writing your markdown document between `\markdownBegin` and
+`\markdownEnd`, you can also include markdown documents using the
+`\markdownInput` macro, similarly to how you might use the `\input` TeX
+primitive to include \TeX{} documents.
+
+Using a text editor, create a text document named `hello.md` with the
+following content:
+``` md
+Hello *world*!
+``````
+Create also a text document named `document.tex` with the following content:
+``` tex
+\input markdown
+\markdownInput{hello.md}
+\bye
+```````
+Next, invoke LuaTeX or pdfTeX from the terminal like in the previous example.
+A PDF document named `document.pdf` should be produced and contain the text
+“Hello *world*!”
 
 ### Using \LaTeX{}
 
@@ -1534,10 +1559,39 @@ Next, invoke LuaTeX from the terminal:
 lualatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the text “Hello
-*world*!” Invoking pdfTeX should have the same effect:
+*world*!”
+
+Instead of LuaTeX, you may also use pdfTeX:
 ``` sh
 pdflatex --shell-escape document.tex
 ``````
+This should also produce a PDF document named `document.pdf` with the same content.
+
+***
+
+Instead of writing your markdown document between `\begin{markdown}` and
+`\end{markdown}`, you can also include markdown documents using the
+`\markdownInput` macro, similarly to how you might use the `\input` TeX
+primitive to include \LaTeX{} documents.
+
+Using a text editor, create a text document named `hello.md` with the
+following content:
+``` md
+Hello *world*!
+``````
+Create also a text document named `document.tex` with the following content:
+``` tex
+\documentclass{article}
+\usepackage{markdown}
+\begin{document}
+\begin{markdown}
+\markdownInput{hello.md}
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX or pdfTeX from the terminal like in the previous example.
+A PDF document named `document.pdf` should be produced and contain the text
+“Hello *world*!”
 
 ***
 
@@ -1575,6 +1629,29 @@ context --luatex document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the text “Hello
 *world*!”
+
+***
+
+Instead of writing your markdown document between `\startmarkdown` and
+`\stopmarkdown`, you can also include markdown documents using the
+`\inputmarkdown` macro, similarly to how you might use the `\input` TeX
+primitive to include \Hologo{ConTeXt} documents.
+
+Using a text editor, create a text document named `hello.md` with the
+following content:
+``` md
+Hello *world*!
+``````
+Create also a text document named `document.tex` with the following content:
+``` tex
+\usemodule[t][markdown]
+\starttext
+\inputmarkdown{hello.md}
+\stoptext
+```````
+Next, invoke LuaTeX from the terminal like in the previous example.
+A PDF document named `document.pdf` should be produced and contain the text
+“Hello *world*!”
 
 ***
 
@@ -1782,16 +1859,16 @@ following content:
 local kpse = require("kpse")
 kpse.set_program_name("luatex")
 local markdown = require("markdown")
-local input, convert_safe, convert_unsafe, paragraph
+local input, convert_nomath, convert_math, paragraph
 
 input = [[$\sqrt{-1}$ *equals* $i$.]]
-convert_safe = markdown.new()
-convert_unsafe = markdown.new({hybrid = true})
+convert_nomath = markdown.new()
+convert_math = markdown.new({texMathDollars = true})
 paragraph = [[\par]]
 
 print(
-  convert_safe(input) .. paragraph ..
-  convert_unsafe(input)
+  convert_nomath(input) .. paragraph ..
+  convert_math(input)
 )
 ```````
 Next, invoke LuaTeX from the terminal:
@@ -1824,16 +1901,16 @@ named `document.tex` with the following content:
 \input lmfonts
 \directlua{
   local markdown = require("markdown")
-  local input, convert_safe, convert_unsafe, paragraph
+  local input, convert_nomath, convert_math, paragraph
 
   input = [[$\string\sqrt{-1}$ *equals* $i$.]]
-  convert_safe = markdown.new()
-  convert_unsafe = markdown.new({hybrid = true})
+  convert_nomath = markdown.new()
+  convert_math = markdown.new({texMathDollars = true})
   paragraph = [[\par]]
 
   tex.sprint(
-    convert_safe(input) .. paragraph ..
-    convert_unsafe(input)
+    convert_nomath(input) .. paragraph ..
+    convert_math(input)
   )
 }
 \bye
@@ -1872,9 +1949,9 @@ following content:
 \begingroup
 \catcode`\%=12
 \catcode`\#=12
-\input safe
+\input nomath
 \par
-\input unsafe
+\input math
 \endgroup
 \bye
 ```````
@@ -1885,8 +1962,8 @@ $\sqrt{-1}$ *equals* $i$.
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ -- example.md safe.tex
-texlua ⟨CLI pathname⟩ hybrid=true -- example.md unsafe.tex
+texlua ⟨CLI pathname⟩ -- example.md nomath.tex
+texlua ⟨CLI pathname⟩ tex_math_dollars=true -- example.md math.tex
 luatex document.tex
 ``````
 where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
@@ -1906,8 +1983,8 @@ following text:
 
 Invoking pdfTeX should have the same effect:
 ``` sh
-texlua ⟨CLI pathname⟩ -- example.md safe.tex
-texlua ⟨CLI pathname⟩ hybrid=true -- example.md unsafe.tex
+texlua ⟨CLI pathname⟩ -- example.md nomath.tex
+texlua ⟨CLI pathname⟩ tex_math_dollars=true -- example.md math.tex
 pdftex document.tex
 ``````
 
@@ -11068,7 +11145,7 @@ following content:
 $\sqrt{-1}$ *equals* $i$.
 \markdownEnd
 
-\def\markdownOptionHybrid{true}
+\def\markdownOptionTexMathDollars{true}
 \markdownBegin
 $\sqrt{-1}$ *equals* $i$.
 \markdownEnd
@@ -11180,9 +11257,11 @@ pdftex --shell-escape document.tex
 % \bye
 % ```````
 %
-% The \mref{markdownInput} macro accepts a single parameter with the filename
-% of a markdown document and expands to the result of the conversion of the
-% input markdown document to plain \TeX{}.
+% You can use the \mref{markdownInput} macro to include markdown documents,
+% similarly to how you might use the \mref{input} \TeX{} primitive to include
+% \TeX{} documents. The \mref{markdownInput} macro accepts a single parameter
+% with the filename of a markdown document and expands to the result of the
+% conversion of the input markdown document to plain \TeX{}.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -15387,7 +15466,7 @@ following content:
   }^^A
   {^^A
     \everyeof={\noexpand}^^A
-    \edef\filename{\@@input"\jobname.fetched" }^^A
+    \edef\filename{\@@@@input"\jobname.fetched" }^^A
     \includegraphics[width=\textwidth]{\filename}^^A
   }^^A
 }
@@ -20179,7 +20258,7 @@ following content:
 $\sqrt{-1}$ *equals* $i$
 \end{markdown}
 
-\begin{markdown}[hybrid]
+\begin{markdown}[texMathDollars]
 $\sqrt{-1}$ *equals* $i$
 \end{markdown}
 
@@ -21203,7 +21282,7 @@ following content:
 $\sqrt{-1}$ *equals* $i$.
 \stopmarkdown
 
-\setupmarkdown[hybrid = yes]
+\setupmarkdown[texmathdollars = yes]
 \startmarkdown
 $\sqrt{-1}$ *equals* $i$.
 \stopmarkdown
@@ -21292,7 +21371,7 @@ following text:
 %### Typesetting Markdown
 % The interface exposes the \mdef{startmarkdown} and \mdef{stopmarkdown} macro
 % pair for the typesetting of a markdown document fragment, and defines the
-% \mdef{inputmarkdown} command.
+% \mdef{inputmarkdown} macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -34535,7 +34614,7 @@ end
 % \begin{markdown}
 %
 %### Typesetting Markdown
-% The \mref{inputmarkdown} is defined to accept an optional argument with
+% The \mref{inputmarkdown} macro is defined to accept an optional argument with
 % options recognized by the \Hologo{ConTeXt} interface (see Section
 % <#sec:context-options>).
 %

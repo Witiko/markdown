@@ -537,7 +537,7 @@ class BatchResult:
         test_results = list()
         for testfile in testfile_batch:
             if testfile not in all_subresults:
-                LOGGER.warning('Skipping testfile {format_testfile(testfile)}, because it supports no test parameters.')
+                LOGGER.warning(f'Skipping testfile {format_testfile(testfile)}, because it supports no test parameters.')
                 test_results.append(None)
             else:
                 test_result = TestResult(all_subresults[testfile])

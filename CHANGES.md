@@ -2,6 +2,14 @@
 
 ## 3.3.0
 
+Documentation:
+
+- Improve the discoverability of the `\markdownInput` macro.
+  (#381, #382, contributed by @solernou)
+- Encourage alternatives to the `hybrid` option in the user manual. (#382)
+
+## 3.2.1 (2023-11-23)
+
 Fixes:
 
 - Remove the `options.cacheDir` directory if it is empty after conversion.
