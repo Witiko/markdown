@@ -786,8 +786,9 @@ abbr {
   pages     = {196-205},
   doi       = {10.1109/ICPC.2010.41}}
 %</techdoc-bibliography>
+%<@@=markdown>
 %<*latex-themes-witiko-markdown-techdoc>
-\ProvidesPackage{markdownthemewitiko_markdown_techdoc}[2022/02/23]
+\ProvidesPackage{markdownthemewitiko_markdown_techdoc}[2022/12/13]
 \RequirePackage{etoolbox}
 \markdownSetup{
   renderers = {
@@ -802,24 +803,6 @@ abbr {
         {\def\addcontentsline##1##2##3{}\listoffigures}%
       }%
     },
-    headerAttributeContextBegin = {%
-      \begingroup
-      \markdownSetup{
-        rendererPrototypes = {
-          attributeIdentifier = {%
-            \markdownSetup{
-              rendererPrototypes = {
-                headerAttributeContextEnd = {%
-                  \label{sec:##1}%
-                  \endgroup
-                },
-              }
-            }%
-          },
-        },
-      }%
-    },
-    headerAttributeContextEnd = {\endgroup},
   },
   jekyllDataRenderers = {
     /authors/* = {%
@@ -837,6 +820,17 @@ abbr {
     url = {\gdef\ltd@title@url{#1}},
   }
 }
+\ExplSyntaxOn
+\markdownSetup{
+  rendererPrototypes = {
+    headerAttributeContextEnd = {
+      \seq_map_inline:Nn
+        \l_@@_header_identifiers_seq
+        { \label { sec:##1 } }
+    },
+  },
+}
+\ExplSyntaxOff
 \renewcommand\markdownLaTeXRendererDirectOrIndirectLink[4]{%
   #1\footnote{See \url{#3}.}}
 \RequirePackage{varioref}
@@ -1164,7 +1158,6 @@ local uni_algos = require("lua-uni-algos")
 %
 % \end{markdown}
 %  \begin{macrocode}
-%<@@=markdown>
 %</tex>
 %<*context,tex>
 \ifx\ExplSyntaxOn\undefined
@@ -33720,7 +33713,6 @@ end
 \markdownSetup{
   rendererPrototypes = {
     headerAttributeContextBegin = {
-      \group_begin:
       \seq_clear:N \l_@@_header_identifiers_seq
       \markdownSetup
         {
@@ -33737,7 +33729,6 @@ end
       \seq_map_inline:Nn
         \l_@@_header_identifiers_seq
         { \label { ##1 } }
-      \group_end:
     },
   },
 }
