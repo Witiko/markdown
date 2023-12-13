@@ -1865,16 +1865,16 @@ following content:
 local kpse = require("kpse")
 kpse.set_program_name("luatex")
 local markdown = require("markdown")
-local input, convert_safe, convert_unsafe, paragraph
+local input, convert_nomath, convert_math, paragraph
 
 input = [[$\sqrt{-1}$ *equals* $i$.]]
-convert_safe = markdown.new()
-convert_unsafe = markdown.new({hybrid = true})
+convert_nomath = markdown.new()
+convert_math = markdown.new({texMathDollars = true})
 paragraph = [[\par]]
 
 print(
-  convert_safe(input) .. paragraph ..
-  convert_unsafe(input)
+  convert_nomath(input) .. paragraph ..
+  convert_math(input)
 )
 ```````
 Next, invoke LuaTeX from the terminal:
@@ -1907,16 +1907,16 @@ named `document.tex` with the following content:
 \input lmfonts
 \directlua{
   local markdown = require("markdown")
-  local input, convert_safe, convert_unsafe, paragraph
+  local input, convert_nomath, convert_math, paragraph
 
   input = [[$\string\sqrt{-1}$ *equals* $i$.]]
-  convert_safe = markdown.new()
-  convert_unsafe = markdown.new({hybrid = true})
+  convert_nomath = markdown.new()
+  convert_math = markdown.new({texMathDollars = true})
   paragraph = [[\par]]
 
   tex.sprint(
-    convert_safe(input) .. paragraph ..
-    convert_unsafe(input)
+    convert_nomath(input) .. paragraph ..
+    convert_math(input)
   )
 }
 \bye
@@ -1955,9 +1955,9 @@ following content:
 \begingroup
 \catcode`\%=12
 \catcode`\#=12
-\input safe
+\input nomath
 \par
-\input unsafe
+\input math
 \endgroup
 \bye
 ```````
@@ -1968,8 +1968,8 @@ $\sqrt{-1}$ *equals* $i$.
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ -- example.md safe.tex
-texlua ⟨CLI pathname⟩ hybrid=true -- example.md unsafe.tex
+texlua ⟨CLI pathname⟩ -- example.md nomath.tex
+texlua ⟨CLI pathname⟩ tex_math_dollars=true -- example.md math.tex
 luatex document.tex
 ``````
 where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
@@ -1989,8 +1989,8 @@ following text:
 
 Invoking pdfTeX should have the same effect:
 ``` sh
-texlua ⟨CLI pathname⟩ -- example.md safe.tex
-texlua ⟨CLI pathname⟩ hybrid=true -- example.md unsafe.tex
+texlua ⟨CLI pathname⟩ -- example.md nomath.tex
+texlua ⟨CLI pathname⟩ tex_math_dollars=true -- example.md math.tex
 pdftex document.tex
 ``````
 
@@ -11151,7 +11151,7 @@ following content:
 $\sqrt{-1}$ *equals* $i$.
 \markdownEnd
 
-\def\markdownOptionHybrid{true}
+\def\markdownOptionTexMathDollars{true}
 \markdownBegin
 $\sqrt{-1}$ *equals* $i$.
 \markdownEnd
@@ -11264,7 +11264,7 @@ pdftex --shell-escape document.tex
 % ```````
 %
 % You can use the \mref{markdownInput} macro to include markdown documents,
-% similarly to how you can use the \mref{input} \TeX{} primitive to include
+% similarly to how you might use the \mref{input} \TeX{} primitive to include
 % \TeX{} documents. The \mref{markdownInput} macro accepts a single parameter
 % with the filename of a markdown document and expands to the result of the
 % conversion of the input markdown document to plain \TeX{}.
@@ -20100,7 +20100,7 @@ following content:
 $\sqrt{-1}$ *equals* $i$
 \end{markdown}
 
-\begin{markdown}[hybrid]
+\begin{markdown}[texMathDollars]
 $\sqrt{-1}$ *equals* $i$
 \end{markdown}
 
@@ -21197,7 +21197,7 @@ following content:
 $\sqrt{-1}$ *equals* $i$.
 \stopmarkdown
 
-\setupmarkdown[hybrid = yes]
+\setupmarkdown[texmathdollars = yes]
 \startmarkdown
 $\sqrt{-1}$ *equals* $i$.
 \stopmarkdown
@@ -21286,7 +21286,7 @@ following text:
 %### Typesetting Markdown
 % The interface exposes the \mdef{startmarkdown} and \mdef{stopmarkdown} macro
 % pair for the typesetting of a markdown document fragment, and defines the
-% \mdef{inputmarkdown} command.
+% \mdef{inputmarkdown} macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -34541,7 +34541,7 @@ end
 % \begin{markdown}
 %
 %### Typesetting Markdown
-% The \mref{inputmarkdown} is defined to accept an optional argument with
+% The \mref{inputmarkdown} macro is defined to accept an optional argument with
 % options recognized by the \Hologo{ConTeXt} interface (see Section
 % <#sec:context-options>).
 %
