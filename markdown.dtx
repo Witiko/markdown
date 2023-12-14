@@ -20682,23 +20682,6 @@ Due to limitations of \LaTeX{}, themes may not be loaded after the
 beginning of a \LaTeX{} document.
 
 % \end{markdown}
-% \iffalse
-%</manual-options>
-%<*latex>
-% \fi
-%  \begin{macrocode}
-\ExplSyntaxOn
-\iffalse  % TODO: Write logic for loading LaTeX themes after preamble.
-\@onlypreamble
-  \@@_set_latex_theme:n
-\fi
-\ExplSyntaxOff
-%    \end{macrocode}
-% \iffalse
-%</latex>
-%<*manual-options>
-% \fi
-% \par
 % \markdownBegin
 
 Example themes provided with the Markdown package include:
@@ -33122,24 +33105,77 @@ end
 \cs_gset:Nn
   \@@_load_theme:nn
   {
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% If the Markdown package has already been loaded, determine whether
+% a file named `markdowntheme`\meta{munged theme name}`.sty` exists
+% and whether we are still in the preamble.
+%
+% \end{markdown}
+%  \begin{macrocode}
     \ifmarkdownLaTeXLoaded
-      \file_if_exist:nTF
-        { markdown theme #2.sty }
-        {
-          \markdownInfo
-            { Loading~Markdown~theme~#1 }
-          \RequirePackage
-            { markdown theme #2 }
-        }
-        {
-          \@@_load_theme_plain_tex:nn
-            { #1 }
-            { #2 }
-        }
+      \ifx\@onlypreamble\@notprerr
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If the Markdown package has already been loaded and we are already past the
+% preamble, try loading a plain \TeX{} theme instead. Log a warning if there
+% exists a \LaTeX{} theme that we would have loaded if we were still in the
+% preamble.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        \file_if_exist:nT
+          { markdown theme #2.sty }
+          {
+            \markdownWarning
+              {
+                File~markdown theme #2.sty~exists,~but~we~are~past~
+                the~preamble.~Therefore,~I~will~try~loading~file~
+                markdown theme #2.tex~instead.
+              }
+          }
+        \@@_load_theme_plain_tex:nn
+          { #1 }
+          { #2 }
+      \else
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If the Markdown package has already been loaded but we are still in the
+% preamble, load a \LaTeX{} theme if it exists or load a plain \TeX{} theme
+% otherwise.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        \file_if_exist:nTF
+          { markdown theme #2.sty }
+          {
+            \markdownInfo
+              { Loading~Markdown~theme~#1 }
+            \RequirePackage
+              { markdown theme #2 }
+          }
+          {
+            \@@_load_theme_plain_tex:nn
+              { #1 }
+              { #2 }
+          }
+      \fi
     \else
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If the Markdown package has not yet been loaded, postpone the loading until
+% the Markdown package has finished loading.
+%
+% \end{markdown}
+%  \begin{macrocode}
       \markdownInfo
         {
-          Deferring~loading~Markdown~theme~#1~until~
+          Postponing~loading~Markdown~theme~#1~until~
           Markdown~package~has~finished~loading
         }
       \AtEndOfPackage
