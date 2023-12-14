@@ -787,7 +787,7 @@ abbr {
   doi       = {10.1109/ICPC.2010.41}}
 %</techdoc-bibliography>
 %<@@=markdown>
-%<*latex-themes-witiko-markdown-techdoc>
+%<*themes-witiko-markdown-techdoc>
 \ProvidesPackage{markdownthemewitiko_markdown_techdoc}[2022/12/13]
 \RequirePackage{etoolbox}
 \markdownSetup{
@@ -862,7 +862,7 @@ abbr {
     dlEnd = {\end{optionlist}},
   }
 }
-%</latex-themes-witiko-markdown-techdoc>
+%</themes-witiko-markdown-techdoc>
 %<*manual>
 
 ---
@@ -979,7 +979,7 @@ This should produce the following files:
 * `markdown.sty`, the \LaTeX{} package,
 * `markdownthemewitiko_dot.sty`, the `witiko/dot` \LaTeX{} theme,
 * `markdownthemewitiko_graphicx_http.sty`, the `witiko/graphicx/http` \LaTeX{} theme,
-* `markdownthemewitiko_tilde.sty`, the `witiko/tilde` \LaTeX{} theme, and
+* `markdownthemewitiko_tilde.tex`, the `witiko/tilde` \LaTeX{} theme, and
 * `t-markdown.tex`, the \Hologo{ConTeXt} module.
 
 ### Local Installation
@@ -995,7 +995,7 @@ placed:
 * `⟨TEXMF⟩/tex/latex/markdown/markdown.sty`
 * `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_dot.sty`
 * `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_graphicx_http.sty`
-* `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_tilde.sty`
+* `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_tilde.tex`
 * `⟨TEXMF⟩/tex/context/third/markdown/t-markdown.tex`
 
 where `⟨TEXMF⟩` corresponds to a root of your \TeX{} distribution, such as
@@ -1018,7 +1018,7 @@ This is where the individual files should be placed:
 * `./markdown.sty`
 * `./markdownthemewitiko_dot.sty`
 * `./markdownthemewitiko_graphicx_http.sty`
-* `./markdownthemewitiko_tilde.sty`
+* `./markdownthemewitiko_tilde.tex`
 * `./t-markdown.tex`
 
 %</manual>
@@ -1215,13 +1215,13 @@ local uni_algos = require("lua-uni-algos")
 % loaded,
 % \end{markdown}
 % \iffalse
-%<*latex-themes-witiko-dot,latex-themes-witiko-graphicx-http,latex-themes-witiko-tilde>
+%<*themes-witiko-dot,latex-themes-witiko-graphicx-http>
 % \fi
 %  \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}%
 %    \end{macrocode}
 % \iffalse
-%</latex-themes-witiko-dot,latex-themes-witiko-graphicx-http,latex-themes-witiko-tilde>
+%</themes-witiko-dot,latex-themes-witiko-graphicx-http>
 % \fi
 % \begin{markdown}
 % a \TeX{} engine that extends \Hologo{eTeX}, and all the plain \TeX{}
@@ -12072,9 +12072,63 @@ a specific look and other high-level goals without low-level programming.
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*manual-tokens>
+%<*manual-options>
 % \fi
+% \par
 % \begin{markdown}
+
+Example themes provided with the Markdown package include:
+
+\pkg{witiko/tilde}
+
+:    A theme that makes tilde (`~`) always typeset the non-breaking space even
+     when the \Opt{hybrid} Lua option is disabled.
+%    ``` tex
+%    \input markdown
+%    \markdownSetup{import=witiko/tilde}
+%    \markdownBegin
+%    Bartel~Leendert van~der~Waerden
+%    \markdownEnd
+%    \bye
+%    ```````
+%    Typesetting the above document produces the following text:
+%    “Bartel~Leendert van~der~Waerden”.
+%
+% \end{markdown}
+% \iffalse
+
+##### Plain \TeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\input markdown
+\markdownSetup{import=witiko/tilde}
+\markdownBegin
+Bartel~Leendert van~der~Waerden
+\markdownEnd
+\bye
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+luatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text, where the middot (`·`) denotes a non-breaking space:
+
+> Bartel·Leendert van·der·Waerden
+
+% \fi
+% \par
+% \begin{markdown}
+%
+% Please, see Section <#sec:themes-implementation> for implementation
+% details of the example themes.
+%
+% \end{markdown}
+% \iffalse
+%</manual-options>
+%<*manual-tokens>
 
 ## Markdown Tokens
 
@@ -12082,6 +12136,9 @@ A key feature of the Markdown package is the support for manipulating markdown
 tokens, such as headings, emphasized text, links, and lists, in \TeX{}. Instead
 of reducing \TeX{} to a PDF document producer, the Markdown package allows the
 user to specify how every markdown token should be processed and rendered.
+
+% \fi
+% \begin{markdown}
 
 ### Token Renderers {#texrenderersuser}
 
@@ -20570,7 +20627,7 @@ exists and a \TeX{} document named `markdowntheme`\meta{munged theme
 name}`.tex` otherwise.
 
 Having the Markdown package automatically load either the generic `.tex`
-*theme file* or the \LaTeX-specific `.sty` theme file allows developers
+*theme file* or the \LaTeX{}-specific `.sty` theme file allows developers
 to have a single *theme file*, when the theme is small or the difference
 between \TeX{} formats is unimportant, and scale up to separate theme files
 native to different \TeX{} formats for large multi-format themes, where
@@ -20775,13 +20832,13 @@ conference article:
 > <http://ceur-ws.org/Vol-2696/paper_235.pdf>
 
 %</manual-options>
-%<*latex-themes-witiko-dot>
+%<*themes-witiko-dot>
 % \fi
 %  \begin{macrocode}
 \ProvidesPackage{markdownthemewitiko_dot}[2021/03/09]%
 %    \end{macrocode}
 % \iffalse
-%</latex-themes-witiko-dot>
+%</themes-witiko-dot>
 %<*manual-options>
 % \fi
 % \par
@@ -20837,67 +20894,13 @@ following image:
 > ![img](https://github.com/witiko/markdown/raw/main/markdown.png "The banner of the Markdown package")
 
 %</manual-options>
-%<*latex-themes-witiko-graphicx-http>
+%<*themes-witiko-graphicx-http>
 % \fi
 %  \begin{macrocode}
 \ProvidesPackage{markdownthemewitiko_graphicx_http}[2021/03/22]%
 %    \end{macrocode}
 % \iffalse
-%</latex-themes-witiko-graphicx-http>
-%<*manual-options>
-% \fi
-% \par
-% \markdownBegin
-
-\pkg{witiko/tilde}
-
-:    A theme that makes tilde (`~`) always typeset the non-breaking space even
-     when the \Opt{hybrid} Lua option is disabled.
-%    ``` tex
-%    \documentclass{article}
-%    \usepackage[import=witiko/tilde]{markdown}
-%    \begin{document}
-%    \begin{markdown}
-%    Bartel~Leendert van~der~Waerden
-%    \end{markdown}
-%    \end{document}
-%    ```````
-%    Typesetting the above document produces the following text:
-%    “Bartel~Leendert van~der~Waerden”.
-%
-% \markdownEnd
-% \iffalse
-
-##### \LaTeX{} Example {.unnumbered}
-
-Using a text editor, create a text document named `document.tex` with the
-following content:
-``` tex
-\documentclass{article}
-\usepackage[import=witiko/tilde]{markdown}
-\begin{document}
-\begin{markdown}
-Bartel~Leendert van~der~Waerden
-\end{markdown}
-\end{document}
-```````
-Next, invoke LuaTeX from the terminal:
-``` sh
-lualatex document.tex
-``````
-A PDF document named `document.pdf` should be produced and contain the
-following text, where the middot (`·`) denotes a non-breaking space:
-
-> Bartel·Leendert van·der·Waerden
-
-%</manual-options>
-%<*latex-themes-witiko-tilde>
-% \fi
-%  \begin{macrocode}
-\ProvidesPackage{markdownthemewitiko_tilde}[2021/03/22]%
-%    \end{macrocode}
-% \iffalse
-%</latex-themes-witiko-tilde>
+%</themes-witiko-graphicx-http>
 %<*manual-options>
 % \fi
 % \par
@@ -31949,6 +31952,28 @@ end
   { nV }
 \ExplSyntaxOff
 %    \end{macrocode}
+% \iffalse
+%</tex>
+%<*themes-witiko-tilde>
+% \fi
+% \par
+% \begin{markdown}
+%
+% The `witiko/tilde` theme redefines the tilde token renderer prototype,
+% so that it expands to a non-breaking space:
+%
+% \end{markdown}
+%  \begin{macrocode}
+\markdownSetup {
+  rendererPrototypes = {
+    tilde = {~},
+  },
+}
+%    \end{macrocode}
+% \iffalse
+%</themes-witiko-tilde>
+%<*tex>
+% \fi
 % \begin{markdown}
 %
 %### Token Renderer Prototypes {#tex-token-renderer-prototypes}
@@ -33134,7 +33159,7 @@ end
 % \end{markdown}
 % \iffalse
 %</latex>
-%<*latex-themes-witiko-dot>
+%<*themes-witiko-dot>
 % \fi
 %  \begin{macrocode}
 \markdownSetup{fencedCode}%
@@ -33199,8 +33224,8 @@ end
   \next#2 \relax}%
 %    \end{macrocode}
 % \iffalse
-%</latex-themes-witiko-dot>
-%<*latex-themes-witiko-graphicx-http>
+%</themes-witiko-dot>
+%<*themes-witiko-graphicx-http>
 % \fi
 % \par
 % \begin{markdown}
@@ -33336,21 +33361,7 @@ end
 \endgroup
 %    \end{macrocode}
 % \iffalse
-%</latex-themes-witiko-graphicx-http>
-%<*latex-themes-witiko-tilde>
-% \fi
-% \par
-% \begin{markdown}
-%
-% The `witiko/tilde` theme redefines the tilde token renderer prototype,
-% so that it expands to a non-breaking space:
-%
-% \end{markdown}
-%  \begin{macrocode}
-\renewcommand\markdownRendererTildePrototype{~}%
-%    \end{macrocode}
-% \iffalse
-%</latex-themes-witiko-tilde>
+%</themes-witiko-graphicx-http>
 %<*latex>
 % \fi
 % \par
