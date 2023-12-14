@@ -12124,10 +12124,310 @@ following text, where the middot (`·`) denotes a non-breaking space:
 %
 % Please, see Section <#sec:themes-implementation> for implementation
 % details of the example themes.
-%
+
+#### Snippets {#snippets}
+
 % \end{markdown}
 % \iffalse
+
+User-defined themes provide global control over high-level goals.
+However, it is often desirable to change only some local aspects of a document.
+Snippets provide syntactic sugar for defining and invoking various
+options locally.
+
 %</manual-options>
+%<*tex>
+% \fi
+% \par
+% \begin{markdown}
+%
+% We may set up options as *snippets* using the
+% \mdef{markdownSetupSnippet} macro and invoke them later. The
+% \mref{markdownSetupSnippet} macro receives two arguments: the name
+% of the snippet and the options to store.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\cs_new:Nn
+  \@@_setup_snippet:nn
+  {
+    \markdownIfSnippetExists
+      { #1 }
+      {
+        \markdownWarning
+          { Redefined~snippet~\markdownThemeName#1 }
+        \csname markdownLaTeXSetupSnippet%
+          \markdownThemeName#1\endcsname={#2}
+      }
+      {
+        \newtoks\next
+          \next={#2}
+        \expandafter\let\csname markdownLaTeXSetupSnippet%
+          \markdownThemeName#1\endcsname=\next
+      }
+  }
+\let\markdownSetupSnippet=\@@_setup_snippet:nn
+%    \end{macrocode}
+% \begin{markdown}
+%
+% To decide whether a snippet exists, we can use the
+% \mdef{markdownIfSnippetExists} macro.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\cs_new:Npn
+  \markdownIfSnippetExists
+  #1 #2 #3
+  {
+    \@ifundefined
+      { markdownLaTeXSetupSnippet\markdownThemeName#1 }%
+      { #3 }
+      { #2 }
+  }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The option with key `snippet` invokes a snippet named \meta{value}.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\keys_define:nn
+  { markdown/options }
+  {
+    snippet .code:n = {
+      \markdownIfSnippetExists{#1}
+        {
+          \expandafter\markdownSetup\expandafter{
+            \the\csname markdownLaTeXSetupSnippet
+            \markdownThemeName#1\endcsname}
+        }{
+          \markdownError
+            { Can't~invoke~setup~snippet~#1 }
+            { The~setup~snippet~is~undefined }
+        }
+    }
+  }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*manual-options>
+% \fi
+% \par
+% \markdownBegin
+
+Here is how we can use snippets to store options and invoke them later
+in \LaTeX{}:
+
+``` tex
+\markdownSetupSnippet{romanNumerals}{
+  renderers = {
+      olItemWithNumber = {%
+          \item[\romannumeral#1\relax.]%
+      },
+  },
+}
+\begin{markdown}
+
+The following ordered list will be preceded by arabic numerals:
+
+1. wahid
+2. aithnayn
+
+\end{markdown}
+\begin{markdown}[snippet=romanNumerals]
+
+The following ordered list will be preceded by roman numerals:
+
+3. tres
+4. quattuor
+
+\end{markdown}
+```````
+
+If the `romanNumerals` snippet were defined in the `jdoe/lists` theme,
+we could import the `jdoe/lists` theme and use the qualified name
+`jdoe/lists/romanNumerals` to invoke the snippet:
+
+``` tex
+\markdownSetup{import=jdoe/lists}
+\begin{markdown}[snippet=jdoe/lists/romanNumerals]
+
+The following ordered list will be preceded by roman numerals:
+
+3. tres
+4. quattuor
+
+\end{markdown}
+```````
+
+Alternatively, we can use the extended variant of the `import` \LaTeX{}
+option that allows us to import the `romanNumerals` snippet to the
+current namespace for easier access:
+
+``` tex
+\markdownSetup{
+  import = {
+    jdoe/lists = romanNumerals,
+  },
+}
+\begin{markdown}[snippet=romanNumerals]
+
+The following ordered list will be preceded by roman numerals:
+
+3. tres
+4. quattuor
+
+\end{markdown}
+```````
+
+Furthermore, we can also specify the name of the snippet in the current 
+namespace, which can be different from the name of the snippet in the
+`jdoe/lists` theme. For example, we can make the snippet
+`jdoe/lists/romanNumerals` available under the name `roman`.
+
+``` tex
+\markdownSetup{
+  import = {
+    jdoe/lists = romanNumerals as roman,
+  },
+}
+\begin{markdown}[snippet=roman]
+
+The following ordered list will be preceded by roman numerals:
+
+3. tres
+4. quattuor
+
+\end{markdown}
+```````
+
+Several themes and/or snippets can be loaded at once using the extended
+variant of the `import` \LaTeX{} option:
+
+``` tex
+\markdownSetup{
+  import = {
+    jdoe/longpackagename/lists = {
+      arabic as arabic1,
+      roman,
+      alphabetic,
+    },
+    jdoe/anotherlongpackagename/lists = {
+      arabic as arabic2,
+    },
+    jdoe/yetanotherlongpackagename,
+  },
+}
+```````
+
+% \markdownEnd
+% \iffalse
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\ExplSyntaxOn
+\tl_new:N
+  \l_@@_import_current_theme_tl
+\keys_define:nn
+  { markdown/options/import }
+  {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If a theme name is given without a list of snippets to import,
+% we assume that an empty list was given.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    unknown .default:n = {},
+    unknown .code:n = {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% To ensure that keys containing forward slashes get passed correctly, we
+% replace all forward slashes in the input with backslash tokens with category
+% code letter and then undo the replacement. This means that if any unbraced
+% backslash tokens with category code letter exist in the input, they will be
+% replaced with forward slashes. However, this should be extremely rare.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      \tl_set_eq:NN
+        \l_@@_import_current_theme_tl
+        \l_keys_key_str
+      \tl_replace_all:NVn
+        \l_@@_import_current_theme_tl
+        \c_backslash_str
+        { / }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Here, we import the snippets.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      \clist_map_inline:nn
+        { #1 }
+        {
+          \regex_extract_once:nnNTF
+            { ^(.*?)\s+as\s+(.*?)$ }
+            { ##1 }
+            \l_tmpa_seq
+            {
+              \seq_pop:NN
+                \l_tmpa_seq
+                \l_tmpa_tl
+              \seq_pop:NN
+                \l_tmpa_seq
+                \l_tmpa_tl
+              \seq_pop:NN
+                \l_tmpa_seq
+                \l_tmpb_tl
+            }
+            {
+              \tl_set:Nn
+                \l_tmpa_tl
+                { ##1 }
+              \tl_set:Nn
+                \l_tmpb_tl
+                { ##1 }
+            }
+          \tl_put_left:Nn
+            \l_tmpa_tl
+            { / }
+          \tl_put_left:NV
+            \l_tmpa_tl
+            \l_@@_import_current_theme_tl
+          \@@_setup_snippet:Vx
+            \l_tmpb_tl
+            { snippet = { \l_tmpa_tl } }
+        }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Here, we load the theme.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      \@@_set_theme:V
+        \l_@@_import_current_theme_tl
+    },
+  }
+\cs_generate_variant:Nn
+  \tl_replace_all:Nnn
+  { NVn }
+\cs_generate_variant:Nn
+  \@@_set_theme:n
+  { V }
+\cs_generate_variant:Nn
+  \@@_setup_snippet:nn
+  { Vx }
+%    \end{macrocode}
+% \iffalse
+%</tex>
 %<*manual-tokens>
 
 ## Markdown Tokens
@@ -20393,7 +20693,7 @@ pdflatex --shell-escape document.tex
 % base variant of the `import` key that loads a single \LaTeX{} theme
 % (see Section <#sec:latexthemes>) can be used, the extended variant
 % that can load multiple themes and import snippets from them (see
-% Section <#sec:latexsnippets>). This limitation is due to the way
+% Section <#sec:snippets>). This limitation is due to the way
 % \Hologo{LaTeX2e} parses package options.
 %
 % \end{markdown}
@@ -20472,7 +20772,7 @@ pdflatex --shell-escape document.tex
 %
 % Except for the `plain` option described in Section <#sec:latexplain>,
 % the \LaTeX{} themes described in Section <#sec:latexthemes>, and the
-% \LaTeX{} snippets described in Section <#sec:latexsnippets>,
+% snippets described in Section <#sec:snippets>,
 % \LaTeX{} options map directly to the options recognized by the plain
 % \TeX{} interface (see Section <#sec:tex-options>) and to the markdown token
 % renderers and their prototypes recognized by the plain \TeX{} interface (see
@@ -20884,312 +21184,13 @@ following image:
 %    \end{macrocode}
 % \iffalse
 %</themes-witiko-graphicx-http>
-%<*manual-options>
+%<*latex>
 % \fi
 % \par
 % \begin{markdown}
 %
 % Please, see Section <#sec:latex-themes-implementation> for implementation
 % details of the example themes.
-
-#### \LaTeX{} snippets {#latexsnippets}
-
-% \end{markdown}
-% \iffalse
-
-User-defined \LaTeX{} themes provide global control over high-level goals.
-However, it is often desirable to change only some local aspects of a document.
-\LaTeX{} snippets provide syntactic sugar for defining and invoking various
-options locally.
-
-%</manual-options>
-%<*latex>
-% \fi
-% \par
-% \begin{markdown}
-%
-% We may set up \LaTeX{} options as *snippets* using the
-% \mdef{markdownSetupSnippet} macro and invoke them later. The
-% \mref{markdownSetupSnippet} macro receives two arguments: the name
-% of the snippet and the options to store.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\ExplSyntaxOn
-\cs_new:Nn
-  \@@_latex_setup_snippet:nn
-  {
-    \markdownIfSnippetExists
-      { #1 }
-      {
-        \markdownWarning
-          {Redefined~snippet~\markdownThemeName#1}
-        \csname markdownLaTeXSetupSnippet%
-          \markdownThemeName#1\endcsname={#2}
-      }
-      {
-        \newtoks\next
-          \next={#2}
-        \expandafter\let\csname markdownLaTeXSetupSnippet%
-          \markdownThemeName#1\endcsname=\next
-      }
-  }
-\let\markdownSetupSnippet=\@@_latex_setup_snippet:nn
-\ExplSyntaxOff
-%    \end{macrocode}
-% \begin{markdown}
-%
-% To decide whether a snippet exists, we can use the
-% \mdef{markdownIfSnippetExists} macro.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\newcommand\markdownIfSnippetExists[3]{%
-  \@ifundefined
-    {markdownLaTeXSetupSnippet\markdownThemeName#1}%
-    {#3}{#2}}%
-%    \end{macrocode}
-% \begin{markdown}
-%
-% The \LaTeX{} option with key `snippet` invokes a snippet named \meta{value}.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\ExplSyntaxOn
-\keys_define:nn
-  { markdown/options }
-  {
-    snippet .code:n = {
-      \markdownIfSnippetExists{#1}
-        {
-          \expandafter\markdownSetup\expandafter{
-            \the\csname markdownLaTeXSetupSnippet
-            \markdownThemeName#1\endcsname}
-        }{
-          \markdownError
-            {Can't~invoke~setup~snippet~#1}
-            {The~setup~snippet~is~undefined}
-        }
-    }
-  }
-\ExplSyntaxOff
-%    \end{macrocode}
-% \iffalse
-%</latex>
-%<*manual-options>
-% \fi
-% \par
-% \markdownBegin
-
-Here is how we can use snippets to store options and invoke them later:
-
-``` tex
-\markdownSetupSnippet{romanNumerals}{
-  renderers = {
-      olItemWithNumber = {%
-          \item[\romannumeral#1\relax.]%
-      },
-  },
-}
-\begin{markdown}
-
-The following ordered list will be preceded by arabic numerals:
-
-1. wahid
-2. aithnayn
-
-\end{markdown}
-\begin{markdown}[snippet=romanNumerals]
-
-The following ordered list will be preceded by roman numerals:
-
-3. tres
-4. quattuor
-
-\end{markdown}
-```````
-
-If the `romanNumerals` snippet were defined in the `jdoe/lists` theme,
-we could import the `jdoe/lists` theme and use the qualified name
-`jdoe/lists/romanNumerals` to invoke the snippet:
-
-``` tex
-\markdownSetup{import=jdoe/lists}
-\begin{markdown}[snippet=jdoe/lists/romanNumerals]
-
-The following ordered list will be preceded by roman numerals:
-
-3. tres
-4. quattuor
-
-\end{markdown}
-```````
-
-Alternatively, we can use the extended variant of the `import` \LaTeX{}
-option that allows us to import the `romanNumerals` snippet to the
-current namespace for easier access:
-
-``` tex
-\markdownSetup{
-  import = {
-    jdoe/lists = romanNumerals,
-  },
-}
-\begin{markdown}[snippet=romanNumerals]
-
-The following ordered list will be preceded by roman numerals:
-
-3. tres
-4. quattuor
-
-\end{markdown}
-```````
-
-Furthermore, we can also specify the name of the snippet in the current 
-namespace, which can be different from the name of the snippet in the
-`jdoe/lists` theme. For example, we can make the snippet
-`jdoe/lists/romanNumerals` available under the name `roman`.
-
-``` tex
-\markdownSetup{
-  import = {
-    jdoe/lists = romanNumerals as roman,
-  },
-}
-\begin{markdown}[snippet=roman]
-
-The following ordered list will be preceded by roman numerals:
-
-3. tres
-4. quattuor
-
-\end{markdown}
-```````
-
-Several themes and/or snippets can be loaded at once using the extended
-variant of the `import` \LaTeX{} option:
-
-``` tex
-\markdownSetup{
-  import = {
-    jdoe/longpackagename/lists = {
-      arabic as arabic1,
-      roman,
-      alphabetic,
-    },
-    jdoe/anotherlongpackagename/lists = {
-      arabic as arabic2,
-    },
-    jdoe/yetanotherlongpackagename,
-  },
-}
-```````
-
-% \markdownEnd
-% \iffalse
-%</manual-options>
-%<*latex>
-% \fi
-%  \begin{macrocode}
-\ExplSyntaxOn
-\tl_new:N
-  \l_@@_latex_import_current_theme_tl
-\keys_define:nn
-  { markdown/options/import }
-  {
-%    \end{macrocode}
-% \begin{markdown}
-%
-% If a theme name is given without a list of snippets to import,
-% we assume that an empty list was given.
-%
-% \end{markdown}
-%  \begin{macrocode}
-    unknown .default:n = {},
-    unknown .code:n = {
-%    \end{macrocode}
-% \begin{markdown}
-%
-% To ensure that keys containing forward slashes get passed correctly, we
-% replace all forward slashes in the input with backslash tokens with category
-% code letter and then undo the replacement. This means that if any unbraced
-% backslash tokens with category code letter exist in the input, they will be
-% replaced with forward slashes. However, this should be extremely rare.
-%
-% \end{markdown}
-%  \begin{macrocode}
-      \tl_set_eq:NN
-        \l_@@_latex_import_current_theme_tl
-        \l_keys_key_str
-      \tl_replace_all:NVn
-        \l_@@_latex_import_current_theme_tl
-        \c_backslash_str
-        { / }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% Here, we import the \LaTeX{} snippets.
-%
-% \end{markdown}
-%  \begin{macrocode}
-      \clist_map_inline:nn
-        { #1 }
-        {
-          \regex_extract_once:nnNTF
-            { ^(.*?)\s+as\s+(.*?)$ }
-            { ##1 }
-            \l_tmpa_seq
-            {
-              \seq_pop:NN
-                \l_tmpa_seq
-                \l_tmpa_tl
-              \seq_pop:NN
-                \l_tmpa_seq
-                \l_tmpa_tl
-              \seq_pop:NN
-                \l_tmpa_seq
-                \l_tmpb_tl
-            }
-            {
-              \tl_set:Nn
-                \l_tmpa_tl
-                { ##1 }
-              \tl_set:Nn
-                \l_tmpb_tl
-                { ##1 }
-            }
-          \tl_put_left:Nn
-            \l_tmpa_tl
-            { / }
-          \tl_put_left:NV
-            \l_tmpa_tl
-            \l_@@_latex_import_current_theme_tl
-          \@@_latex_setup_snippet:Vx
-            \l_tmpb_tl
-            { snippet = { \l_tmpa_tl } }
-        }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% Here, we load the \LaTeX{} theme.
-%
-% \end{markdown}
-%  \begin{macrocode}
-      \@@_set_theme:V
-        \l_@@_latex_import_current_theme_tl
-    },
-  }
-\cs_generate_variant:Nn
-  \tl_replace_all:Nnn
-  { NVn }
-\cs_generate_variant:Nn
-  \@@_set_theme:n
-  { V }
-\cs_generate_variant:Nn
-  \@@_latex_setup_snippet:nn
-  { Vx }
-%    \end{macrocode}
-% \begin{markdown}
 %
 %#### Generating Plain \TeX{} Option, Token Renderer, and Token Renderer Prototype Macros and Key-Values
 %
@@ -21202,6 +21203,7 @@ variant of the `import` \LaTeX{} option:
 %
 % \end{markdown}
 %  \begin{macrocode}
+\ExplSyntaxOn
 \str_if_eq:VVT
   \c_@@_top_layer_tl
   \c_@@_option_layer_latex_tl
@@ -33420,7 +33422,7 @@ end
 %
 % After processing the options, activate the `code` key, which can be used
 % to immediately expand and execute code. This can be especially useful in
-% \LaTeX{} snippets.
+% snippets.
 %
 % \end{markdown}
 %  \begin{macrocode}
