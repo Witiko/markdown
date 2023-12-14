@@ -12152,18 +12152,25 @@ options locally.
 \cs_new:Nn
   \@@_setup_snippet:nn
   {
+    \tl_if_empty:nT
+      { #1 }
+      {
+        \markdownError
+          { Empty~snippet~name }
+          { Pick~a~non-empty~name~for~your~snippet }
+      }
     \markdownIfSnippetExists
       { #1 }
       {
         \markdownWarning
           { Redefined~snippet~\markdownThemeName#1 }
-        \csname markdownLaTeXSetupSnippet%
+        \csname markdownSetupSnippet%
           \markdownThemeName#1\endcsname={#2}
       }
       {
         \newtoks\next
           \next={#2}
-        \expandafter\let\csname markdownLaTeXSetupSnippet%
+        \expandafter\let\csname markdownSetupSnippet%
           \markdownThemeName#1\endcsname=\next
       }
   }
@@ -12181,7 +12188,7 @@ options locally.
   #1 #2 #3
   {
     \@ifundefined
-      { markdownLaTeXSetupSnippet\markdownThemeName#1 }%
+      { markdownSetupSnippet\markdownThemeName#1 }%
       { #3 }
       { #2 }
   }
@@ -12199,7 +12206,7 @@ options locally.
       \markdownIfSnippetExists{#1}
         {
           \expandafter\markdownSetup\expandafter{
-            \the\csname markdownLaTeXSetupSnippet
+            \the\csname markdownSetupSnippet
             \markdownThemeName#1\endcsname}
         }{
           \markdownError
@@ -33134,12 +33141,8 @@ end
           { markdown theme #2.sty }
           {
             \markdownError
-              {
-                Cannot~load~file~markdown theme #2.sty~after~preamble.
-              }
-              {
-                Load~Markdown~theme~#1~before~\begin{document}.
-              }
+              { Cannot~load~file~markdown theme #2.sty~after~preamble }
+              { Load~Markdown~theme~#1~before~\begin{document} }
           }
           {
             \@@_load_theme_plain_tex:nn
