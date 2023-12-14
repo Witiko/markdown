@@ -12,6 +12,10 @@ Documentation:
   (#381, #382, contributed by @solernou)
 - Encourage alternatives to the `hybrid` option in the user manual. (#382)
 
+Speed Improvements:
+
+- Optimize needless catcode switching in package code. (3eb7231)
+
 Default Renderer Prototypes:
 
 - Fix the typesetting of level four headings with attributes for LaTeX document
