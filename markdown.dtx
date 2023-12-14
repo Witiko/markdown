@@ -33121,25 +33121,29 @@ end
 % \begin{markdown}
 %
 % If the Markdown package has already been loaded and we are already past the
-% preamble, try loading a plain \TeX{} theme instead. Log a warning if there
-% exists a \LaTeX{} theme that we would have loaded if we were still in the
-% preamble.
+% preamble, determine whether a file named `markdowntheme`\meta{munged theme
+% name}`.sty` exists. If it does, end with an error, since we cannot load
+% \LaTeX{} themes after the preamble. Otherwise, try loading a plain \TeX{}
+% theme instead.
 %
 % \end{markdown}
 %  \begin{macrocode}
-        \file_if_exist:nT
+        \file_if_exist:nTF
           { markdown theme #2.sty }
           {
-            \markdownWarning
+            \markdownError
               {
-                File~markdown theme #2.sty~exists,~but~we~are~past~
-                the~preamble.~Therefore,~I~will~try~loading~file~
-                markdown theme #2.tex~instead.
+                Cannot~load~file~markdown theme #2.sty~after~preamble.
+              }
+              {
+                Load~Markdown~theme~#1~before~\begin{document}.
               }
           }
-        \@@_load_theme_plain_tex:nn
-          { #1 }
-          { #2 }
+          {
+            \@@_load_theme_plain_tex:nn
+              { #1 }
+              { #2 }
+          }
       \else
 %    \end{macrocode}
 % \begin{markdown}
