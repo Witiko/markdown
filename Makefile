@@ -126,6 +126,9 @@ $(EXTRACTABLES): $(INSTALLER) $(DTXARCHIVE)
 	    -e 's#(((VERSION)))#$(VERSION)#g' \
 	    -e 's#(((LASTMODIFIED)))#$(LASTMODIFIED)#g' \
 	    $(INSTALLABLES)
+	sed -i \
+	    -e '/\\ExplSyntaxOff/{N;/\\ExplSyntaxOn/d;}' \
+	    $(INSTALLABLES)
 
 # This target produces the version file.
 $(VERSION_FILE): force
