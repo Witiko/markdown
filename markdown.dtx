@@ -31928,6 +31928,29 @@ end
 % \par
 % \begin{markdown}
 %
+%### Plain TeX Themes {#themes-implementation}
+%
+% This section implements the theme-loading mechanism and the example themes
+% provided with the Markdown package.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\cs_new:Nn
+  \@@_load_theme:nn
+  {
+    \markdownInfo
+      { Loading~Markdown~theme~#1 }
+    \file_input:n
+      { markdown theme #2 }
+  }
+\cs_generate_variant:Nn
+  \@@_load_theme:nn
+  { nV }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \begin{markdown}
+%
 %### Token Renderer Prototypes {#tex-token-renderer-prototypes}
 %
 % The following definitions should be considered placeholder.
@@ -33061,37 +33084,47 @@ end
 %
 %#### \LaTeX{} Themes {#latex-themes-implementation}
 %
-% This section implements the theme-loading mechanism and the example themes
-% provided with the Markdown package.
+% This section overrides the plain \TeX{} implementation of the theme-loading
+% mechanism from Section <#sec:themes-implementation>. Futhermore, this section
+% also implements the example themes provided with the Markdown package.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-%    \end{macrocode}
-% \begin{markdown}
-%
-% To keep track of our current place when packages themes have been nested,
-% we will maintain the \mdef{g_\@\@_latex_themes_seq} stack of theme names.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\cs_new:Nn
+\cs_gset_eq:NN
+  \@@_load_theme_plain_tex:nn
+  \@@_load_theme:nn
+\cs_gset:Nn
   \@@_load_theme:nn
   {
     \ifmarkdownLaTeXLoaded
-      \RequirePackage
-        { markdown theme #2 }
-    \else
-      \AtEndOfPackage
+      \file_if_exist:nTF
+        { markdown theme #2.sty }
         {
+          \markdownInfo
+            { Loading~Markdown~theme~#1 }
           \RequirePackage
             { markdown theme #2 }
         }
+        {
+          \@@_load_theme_plain_tex:nn
+            { #1 }
+            { #2 }
+        }
+    \else
+      \markdownInfo
+        {
+          Deferring~loading~Markdown~theme~#1~until~
+          Markdown~package~has~finished~loading
+        }
+      \AtEndOfPackage
+        {
+          \@@_load_theme:nn
+            { #1 }
+            { #2 }
+        }
     \fi
   }
-\cs_generate_variant:Nn
-  \@@_load_theme:nn
-  { nV }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \begin{markdown}
