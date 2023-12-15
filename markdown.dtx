@@ -11913,7 +11913,7 @@ A PDF document named `document.pdf` should be produced and contain the text
 % \fi
 % \begin{markdown}
 
-#### Themes {#themes}
+### Themes {#themes}
 
 User-defined themes for the Markdown package provide a domain-specific
 interpretation of Markdown tokens. Themes allow the authors to achieve
@@ -12125,7 +12125,7 @@ following text, where the middot (`·`) denotes a non-breaking space:
 % Please, see Section <#sec:themes-implementation> for implementation
 % details of the example themes.
 
-#### Snippets {#snippets}
+### Snippets {#snippets}
 
 % \end{markdown}
 % \iffalse
@@ -20958,13 +20958,52 @@ package. Setting the option after loading the package will have no effect.
   { false }
 \ExplSyntaxOff
 %    \end{macrocode}
+% \begin{markdown}
+%
+%#### Generating Plain \TeX{} Option, Token Renderer, and Token Renderer Prototype Macros and Key-Values
+%
+% If \LaTeX{} is the top layer, we use the
+% \mref{@@_define_option_commands_and_keyvals:}, \mref{@@_define_renderers:},
+% and \mref{@@_define_renderer_prototypes:} macro to define plain \TeX{}
+% option, token renderer, and token renderer prototype macros and key-values
+% immediately. Otherwise, we postpone the definition until the upper layers
+% have been loaded.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\str_if_eq:VVT
+  \c_@@_top_layer_tl
+  \c_@@_option_layer_latex_tl
+  {
+    \@@_define_option_commands_and_keyvals:
+    \@@_define_renderers:
+    \@@_define_renderer_prototypes:
+  }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% The following example \LaTeX{} code showcases a possible configuration of
+% plain \TeX{} interface options \Opt{hybrid}, \Opt{smartEllipses}, and
+% \Opt{cacheDir}.
+% ``` tex
+% \markdownSetup{
+%   hybrid,
+%   smartEllipses,
+%   cacheDir = /tmp,
+% }
+% ```````
+%
+% \end{markdown}
 % \iffalse
 %</latex>
 %<*manual-options>
 % \fi
 % \begin{markdown}
 
-#### Themes {#latexthemes}
+### Themes {#latexthemes}
 
 % In Section~\ref{sec:themes}, we described the concept of themes.
 In \LaTeX{}, we expand on the concept of
@@ -21236,54 +21275,13 @@ following image:
 %    \end{macrocode}
 % \iffalse
 %</themes-witiko-graphicx-http>
-%<*latex>
+%<*context>
 % \fi
 % \par
 % \begin{markdown}
 %
 % Please, see Section <#sec:latex-themes-implementation> for implementation
 % details of the example themes.
-%
-%#### Generating Plain \TeX{} Option, Token Renderer, and Token Renderer Prototype Macros and Key-Values
-%
-% If \LaTeX{} is the top layer, we use the
-% \mref{@@_define_option_commands_and_keyvals:}, \mref{@@_define_renderers:},
-% and \mref{@@_define_renderer_prototypes:} macro to define plain \TeX{}
-% option, token renderer, and token renderer prototype macros and key-values
-% immediately. Otherwise, we postpone the definition until the upper layers
-% have been loaded.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\ExplSyntaxOn
-\str_if_eq:VVT
-  \c_@@_top_layer_tl
-  \c_@@_option_layer_latex_tl
-  {
-    \@@_define_option_commands_and_keyvals:
-    \@@_define_renderers:
-    \@@_define_renderer_prototypes:
-  }
-\ExplSyntaxOff
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% The following example \LaTeX{} code showcases a possible configuration of
-% plain \TeX{} interface options \Opt{hybrid}, \Opt{smartEllipses}, and
-% \Opt{cacheDir}.
-% ``` tex
-% \markdownSetup{
-%   hybrid,
-%   smartEllipses,
-%   cacheDir = /tmp,
-% }
-% ```````
-%
-% \iffalse
-%</latex>
-%<*context>
-% \fi
 %
 % \Hologo{ConTeXt} Interface {#contextinterface}
 %----------------------------
@@ -31968,7 +31966,7 @@ end
 % \par
 % \begin{markdown}
 %
-%### Plain TeX Themes {#themes-implementation}
+%### Themes {#themes-implementation}
 %
 % This section implements the theme-loading mechanism and the example themes
 % provided with the Markdown package.
@@ -33141,7 +33139,18 @@ end
 % \par
 % \begin{markdown}
 %
-%#### \LaTeX{} Themes {#latex-themes-implementation}
+%### Options
+% The supplied package options are processed using the \mref{markdownSetup} macro.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\DeclareOption*{%
+  \expandafter\markdownSetup\expandafter{\CurrentOption}}%
+\ProcessOptions\relax
+%    \end{macrocode}
+% \begin{markdown}
+%
+%### Themes {#latex-themes-implementation}
 %
 % This section overrides the plain \TeX{} implementation of the theme-loading
 % mechanism from Section <#sec:themes-implementation>. Futhermore, this section
@@ -33452,17 +33461,6 @@ end
 %<*latex>
 % \fi
 % \par
-% \begin{markdown}
-%
-%### Options
-% The supplied package options are processed using the \mref{markdownSetup} macro.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\DeclareOption*{%
-  \expandafter\markdownSetup\expandafter{\CurrentOption}}%
-\ProcessOptions\relax
-%    \end{macrocode}
 % \begin{markdown}
 %
 %### Token Renderer Prototypes {#latex-default-renderer-prototypes}
