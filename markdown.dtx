@@ -12032,7 +12032,7 @@ a specific look and other high-level goals without low-level programming.
 %
 % \end{markdown}
 %  \begin{macrocode}
-    \tl_set:Nn
+    \str_set:Nn
       \l_tmpa_str
       { #1 }
     \str_replace_all:Nnn
@@ -21024,7 +21024,7 @@ between \TeX{} formats is unimportant, and scale up to separate theme files
 native to different \TeX{} formats for large multi-format themes, where
 different code is needed for different \TeX{} formats. To enable code reuse,
 developers can load the `.tex` theme file from the `.sty` theme file using the
-\mdef{markdownSuper} command.
+\mdef{markdownSuper} macro.
 
 % If the \LaTeX{} option with keys `theme` or `import` is (repeatedly)
 % specified in the `\usepackage` macro, the loading of the theme(s) will be
@@ -33246,6 +33246,66 @@ end
         }
     \fi
   }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Developers can use the \mref{markdownSuper} macro to load a corresponding
+% plain \TeX{} theme from within a \LaTeX{} theme.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\cs_new:Npn
+  \markdownSuper
+  {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% First, we extract the name of the current theme from the
+% \mref{g_@@_current_theme_tl} macro.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \tl_set:NV
+      \l_tmpa_tl
+      \g_@@_current_theme_tl
+    \tl_reverse:N
+      \l_tmpa_tl
+    \tl_set:Ne
+      \l_tmpb_tl
+      {
+        \tl_tail:V
+          \l_tmpa_tl
+      }
+    \tl_reverse:N
+      \l_tmpb_tl
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, we munge the theme name.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \str_set:NV
+      \l_tmpa_str
+      \l_tmpb_tl
+    \str_replace_all:Nnn
+      \l_tmpa_str
+      { / }
+      { _ }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Finally, we load the plain \TeX{} theme.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \@@_load_theme_plain_tex:VV
+      \l_tmpb_tl
+      \l_tmpa_str
+  }
+\cs_generate_variant:Nn
+  \@@_load_theme_plain_tex:nn
+  { VV }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \begin{markdown}
