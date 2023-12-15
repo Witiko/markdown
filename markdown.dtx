@@ -20602,10 +20602,24 @@ following text:
 |endgroup
 %    \end{macrocode}
 % \begin{markdown}
-% The macro is exposed in the interface, so that the user can create their own
+% The macro is exposed in the interface, so that users can create their own
 % markdown environments. Due to the way the arguments are passed to Lua, the
 % first argument may not contain the string `]]` (regardless of the category
-% code of the bracket symbol (`]`)).
+% code of the bracket symbol).
+%
+% The `code` key, which can be used to immediately expand and execute code.
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\keys_define:nn
+  { markdown/options }
+  {
+    code .code:n = { #1 },
+  }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \begin{markdown}
+% This can be especially useful in snippets.
 %
 % \end{markdown}
 % \iffalse
@@ -33448,22 +33462,6 @@ end
 \DeclareOption*{%
   \expandafter\markdownSetup\expandafter{\CurrentOption}}%
 \ProcessOptions\relax
-%    \end{macrocode}
-% \begin{markdown}
-%
-% After processing the options, activate the `code` key, which can be used
-% to immediately expand and execute code. This can be especially useful in
-% snippets.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\ExplSyntaxOn
-\keys_define:nn
-  { markdown/options }
-  {
-    code .code:n = { #1 },
-  }
-\ExplSyntaxOff
 %    \end{macrocode}
 % \begin{markdown}
 %
