@@ -11985,20 +11985,20 @@ a specific look and other high-level goals without low-level programming.
 % To keep track of the current theme when themes are nested, we will
 % maintain the \mdef{g_\@\@_themes_seq} stack of theme names.
 % For convenience, the name of the current theme is also available in the
-% \mdef{markdownThemeName} macro.
+% \mdef{g_@@_current_theme_tl} macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \seq_new:N
   \g_@@_themes_seq
 \tl_new:N
-  \markdownThemeName
+  \g_@@_current_theme_tl
 \tl_gset:Nn
-  \markdownThemeName
+  \g_@@_current_theme_tl
   { }
 \seq_gput_right:NV
   \g_@@_themes_seq
-  \markdownThemeName
+  \g_@@_current_theme_tl
 \cs_new:Nn
   \@@_set_theme:n
   {
@@ -12047,11 +12047,11 @@ a specific look and other high-level goals without low-level programming.
 % \end{markdown}
 %  \begin{macrocode}
     \tl_gset:Nn
-      \markdownThemeName
+      \g_@@_current_theme_tl
       { #1 / }
     \seq_gput_right:NV
       \g_@@_themes_seq
-      \markdownThemeName
+      \g_@@_current_theme_tl
     \@@_load_theme:nV
       { #1 }
       \l_tmpa_str
@@ -12062,7 +12062,7 @@ a specific look and other high-level goals without low-level programming.
       \g_@@_themes_seq
       \l_tmpa_tl
     \tl_gset:NV
-      \markdownThemeName
+      \g_@@_current_theme_tl
       \l_tmpa_tl
   }
 \cs_generate_variant:Nn
@@ -12149,6 +12149,8 @@ options locally.
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
+\prop_new:N
+  \g_@@_snippets_prop
 \cs_new:Nn
   \@@_setup_snippet:nn
   {
@@ -12159,22 +12161,26 @@ options locally.
           { Empty~snippet~name }
           { Pick~a~non-empty~name~for~your~snippet }
       }
-    \markdownIfSnippetExists
+    \@@_if_snippet_exists:nT
       { #1 }
       {
         \markdownWarning
-          { Redefined~snippet~\markdownThemeName#1 }
-        \csname markdownSetupSnippet%
-          \markdownThemeName#1\endcsname={#2}
+          { Redefined~snippet~\g_@@_current_theme_tl #1 }
       }
-      {
-        \newtoks\next
-          \next={#2}
-        \expandafter\let\csname markdownSetupSnippet%
-          \markdownThemeName#1\endcsname=\next
-      }
+    \tl_set:NV
+      \l_tmpa_tl
+      \g_@@_current_theme_tl
+    \tl_put_right:Nn
+      \l_tmpa_tl
+      { #1 }
+    \prop_gput:NVn
+      \g_@@_snippets_prop
+      \l_tmpa_tl
+      { #2 }
   }
-\let\markdownSetupSnippet=\@@_setup_snippet:nn
+\cs_gset_eq:NN
+  \markdownSetupSnippet
+  \@@_setup_snippet:nn
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -12183,15 +12189,26 @@ options locally.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\cs_new:Npn
-  \markdownIfSnippetExists
-  #1 #2 #3
+\prg_new_conditional:Nnn
+  \@@_if_snippet_exists:n
+  { TF, T, F }
   {
-    \@ifundefined
-      { markdownSetupSnippet\markdownThemeName#1 }%
-      { #3 }
-      { #2 }
+    \tl_set:NV
+      \l_tmpa_tl
+      \g_@@_current_theme_tl
+    \tl_put_right:Nn
+      \l_tmpa_tl
+      { #1 }
+    \prop_get:NVNTF
+      \g_@@_snippets_prop
+      \l_tmpa_tl
+      \l_tmpb_tl
+      { \prg_return_true: }
+      { \prg_return_false: }
   }
+\cs_gset_eq:NN
+  \markdownIfSnippetExists
+  \@@_if_snippet_exists:nTF
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -12203,18 +12220,32 @@ options locally.
   { markdown/options }
   {
     snippet .code:n = {
-      \markdownIfSnippetExists{#1}
+      \@@_if_snippet_exists:nTF
+        { #1 }
         {
-          \expandafter\markdownSetup\expandafter{
-            \the\csname markdownSetupSnippet
-            \markdownThemeName#1\endcsname}
-        }{
+          \tl_set:NV
+            \l_tmpa_tl
+            \g_@@_current_theme_tl
+          \tl_put_right:Nn
+            \l_tmpa_tl
+            { #1 }
+          \prop_get:NVN
+            \g_@@_snippets_prop
+            \l_tmpa_tl
+            \l_tmpb_tl
+          \@@_setup:V
+            \l_tmpb_tl
+        }
+        {
           \markdownError
-            { Can't~invoke~setup~snippet~#1 }
-            { The~setup~snippet~is~undefined }
+            { Can't~invoke~snippet~\g_@@_current_theme_tl #1 }
+            { The~snippet~is~undefined }
         }
     }
   }
+\cs_generate_variant:Nn
+  \@@_setup:n
+  { V }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \iffalse
@@ -33068,9 +33099,6 @@ end
       }
   }
   { \markdownEnd }
-\cs_generate_variant:Nn
-  \@@_setup:n
-  { V }
 \ExplSyntaxOff
 \renewenvironment{markdown*}[1]{%
   \markdownWarning{%
