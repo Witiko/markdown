@@ -58,8 +58,10 @@ kpse.set_program_name("luatex")
 \starttext
 
 % Typeset the document `example.md` by letting the Markdown package handle
-% the conversion internally.
-\inputmarkdown{./example.md}
+% the conversion internally. Optionally, we can specify additional options
+% between the square brackets similarly to the command `\setupmarkdown`.
+% Unlike `\setupmarkdown`, the options will only apply for this document.
+\inputmarkdown[smart_ellipses = yes]{./example.md}
 
 % Typeset the document `example.tex` that we prepared separately using the
 % Lua command-line interface and that contains a plain TeX representation
