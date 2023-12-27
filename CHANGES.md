@@ -2,6 +2,11 @@
 
 ## 3.3.0
 
+Fixes:
+
+- Make ConTeXt command `\inputmarkdown` properly process extra options.
+  (#389, #390, contributed by @ibotty)
+
 Documentation:
 
 - Improve the discoverability of the `\markdownInput` macro.
