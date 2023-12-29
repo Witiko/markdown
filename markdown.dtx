@@ -21024,7 +21024,7 @@ between \TeX{} formats is unimportant, and scale up to separate theme files
 native to different \TeX{} formats for large multi-format themes, where
 different code is needed for different \TeX{} formats. To enable code reuse,
 developers can load the `.tex` theme file from the `.sty` theme file using the
-\mdef{markdownSuper} macro.
+\mdef{markdownLoadPlainTeXTheme} macro.
 
 % If the \LaTeX{} option with keys `theme` or `import` is (repeatedly)
 % specified in the `\usepackage` macro, the loading of the theme(s) will be
@@ -33249,13 +33249,13 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Developers can use the \mref{markdownSuper} macro to load a corresponding
-% plain \TeX{} theme from within a \LaTeX{} theme.
+% Developers can use the \mref{markdownLoadPlainTeXTheme} macro to load a
+  % corresponding plain \TeX{} theme from within a \LaTeX{} theme.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \cs_new:Npn
-  \markdownSuper
+  \markdownLoadPlainTeXTheme
   {
 %    \end{macrocode}
 % \begin{markdown}
