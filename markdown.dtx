@@ -31974,14 +31974,35 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
+\prop_new:N \g_@@_plain_tex_loaded_themes_linenos_prop
 \cs_new:Nn
   \@@_load_theme:nn
   {
-    \markdownInfo
-      { Loading~plain~TeX~Markdown~theme~#1 }
-    \file_input:n
-      { markdown theme #2 }
+    \prop_get:NnNTF
+      \g_@@_plain_tex_loaded_themes_linenos_prop
+      { #1 }
+      \l_tmpa_tl
+      {
+        \markdownInfo
+          {
+            Plain~TeX~Markdown~theme~#1~was~previously~
+            loaded~on~line~\l_tmpa_tl,~not~loading~it~again
+          }
+      }
+      {
+        \markdownInfo
+          { Loading~plain~TeX~Markdown~theme~#1 }
+        \prop_gput:Nnx
+          \g_@@_plain_tex_loaded_themes_linenos_prop
+          { #1 }
+          { \tex_the:D \tex_inputlineno:D }
+        \file_input:n
+          { markdown theme #2 }
+      }
   }
+\cs_generate_variant:Nn
+  \prop_gput:Nnn
+  { Nnx }
 \cs_generate_variant:Nn
   \@@_load_theme:nn
   { nV }
