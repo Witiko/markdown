@@ -2,6 +2,10 @@
 
 ## 3.3.0
 
+Development:
+
+- Add support for universal (cross-format) themes. (#276, #373)
+
 Fixes:
 
 - Prevent unwanted space tokens before `*ContextEnd` renderers. (#373)
