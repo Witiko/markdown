@@ -20745,7 +20745,7 @@ pdflatex --shell-escape document.tex
 % base variant of the `import` key that loads a single \LaTeX{} theme
 % (see Section <#sec:latexthemes>) can be used, the extended variant
 % that can load multiple themes and import snippets from them (see
-% Section <#sec:snippets>). This limitation is due to the way
+% Section <#sec:snippets>) cannot. This limitation is due to the way
 % \Hologo{LaTeX2e} parses package options.
 %
 % \end{markdown}
@@ -21520,9 +21520,41 @@ following text:
   }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
+% \iffalse
+%</context>
+%<*manual-options>
+% \fi
 % \begin{markdown}
-%
+
+### Themes
+
+% In Section~\ref{sec:themes}, we described the concept of themes.
+In \Hologo{ConTeXt}, we expand on the concept of
+% themes\iffalse
+[themes](#themes)
+% \fi
+by allowing a theme to be a full-blown \Hologo{ConTeXt} module. Specifically,
+the key-values `theme`=\meta{theme name} and `import`=\meta{theme name} load a
+\Hologo{ConTeXt} module named `t-markdowntheme`\meta{munged theme name}`.tex`
+if it exists and a \TeX{} document named `markdowntheme`\meta{munged theme
+name}`.tex` otherwise.
+
+Having the Markdown package automatically load either the generic `.tex`
+*theme file* or the \Hologo{ConTeXt}-specific `t-*.tex` theme file allows
+developers to have a single *theme file*, when the theme is small or the
+difference between \TeX{} formats is unimportant, and scale up to separate
+theme files native to different \TeX{} formats for large multi-format themes,
+where different code is needed for different \TeX{} formats. To enable code
+reuse, developers can load the `.tex` theme file from the `t-*.tex` theme file
+using the \mref{markdownLoadPlainTeXTheme} macro.
+
+For example, to load a theme named `witiko/tilde` in your document:
+
+``` tex
+\usemodule[t][markdown]
+\setupmarkdown[import=witiko/tilde]
+```````
+
 % Implementation {#implementation}
 %================
 %
@@ -21539,7 +21571,7 @@ following text:
 %
 % \end{markdown}
 % \iffalse
-%</context>
+%</manual-options>
 %<*lua>
 % \fi
 % \begin{markdown}
@@ -31976,7 +32008,7 @@ end
 \ExplSyntaxOn
 \prop_new:N \g_@@_plain_tex_loaded_themes_linenos_prop
 \cs_new:Nn
-  \@@_load_theme:nn
+  \@@_plain_tex_load_theme:nn
   {
     \prop_get:NnNTF
       \g_@@_plain_tex_loaded_themes_linenos_prop
@@ -32003,9 +32035,73 @@ end
 \cs_generate_variant:Nn
   \prop_gput:Nnn
   { Nnx }
+\cs_gset_eq:NN
+  \@@_load_theme:nn
+  \@@_plain_tex_load_theme:nn
 \cs_generate_variant:Nn
   \@@_load_theme:nn
   { nV }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Developers can use the \mref{markdownLoadPlainTeXTheme} macro to load a
+% corresponding plain \TeX{} theme from within themes for higher-level \TeX{}
+% formats such as \LaTeX{} and \Hologo{ConTeXt}.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\cs_new:Npn
+  \markdownLoadPlainTeXTheme
+  {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% First, we extract the name of the current theme from the
+% \mref{g_@@_current_theme_tl} macro.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \tl_set:NV
+      \l_tmpa_tl
+      \g_@@_current_theme_tl
+    \tl_reverse:N
+      \l_tmpa_tl
+    \tl_set:Ne
+      \l_tmpb_tl
+      {
+        \tl_tail:V
+          \l_tmpa_tl
+      }
+    \tl_reverse:N
+      \l_tmpb_tl
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, we munge the theme name.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \str_set:NV
+      \l_tmpa_str
+      \l_tmpb_tl
+    \str_replace_all:Nnn
+      \l_tmpa_str
+      { / }
+      { _ }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Finally, we load the plain \TeX{} theme.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \@@_plain_tex_load_theme:VV
+      \l_tmpb_tl
+      \l_tmpa_str
+  }
+\cs_generate_variant:Nn
+  \@@_plain_tex_load_theme:nn
+  { VV }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \iffalse
@@ -33180,9 +33276,6 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\cs_gset_eq:NN
-  \@@_load_theme_plain_tex:nn
-  \@@_load_theme:nn
 \cs_gset:Nn
   \@@_load_theme:nn
   {
@@ -33201,9 +33294,7 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% If the Markdown package has already been loaded and we are already past the
-% preamble, determine whether a file named `markdowntheme`\meta{munged theme
-% name}`.sty` exists. If it does, end with an error, since we cannot load
+% If both conditions are true does, end with an error, since we cannot load
 % \LaTeX{} themes after the preamble. Otherwise, try loading a plain \TeX{}
 % theme instead.
 %
@@ -33217,7 +33308,7 @@ end
               { Load~Markdown~theme~#1~before~\begin{document} }
           }
           {
-            \@@_load_theme_plain_tex:nn
+            \@@_plain_tex_load_theme:nn
               { #1 }
               { #2 }
           }
@@ -33240,7 +33331,7 @@ end
               { markdown theme #2 }
           }
           {
-            \@@_load_theme_plain_tex:nn
+            \@@_plain_tex_load_theme:nn
               { #1 }
               { #2 }
           }
@@ -33267,66 +33358,6 @@ end
         }
     \fi
   }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% Developers can use the \mref{markdownLoadPlainTeXTheme} macro to load a
-  % corresponding plain \TeX{} theme from within a \LaTeX{} theme.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\cs_new:Npn
-  \markdownLoadPlainTeXTheme
-  {
-%    \end{macrocode}
-% \begin{markdown}
-%
-% First, we extract the name of the current theme from the
-% \mref{g_@@_current_theme_tl} macro.
-%
-% \end{markdown}
-%  \begin{macrocode}
-    \tl_set:NV
-      \l_tmpa_tl
-      \g_@@_current_theme_tl
-    \tl_reverse:N
-      \l_tmpa_tl
-    \tl_set:Ne
-      \l_tmpb_tl
-      {
-        \tl_tail:V
-          \l_tmpa_tl
-      }
-    \tl_reverse:N
-      \l_tmpb_tl
-%    \end{macrocode}
-% \begin{markdown}
-%
-% Next, we munge the theme name.
-%
-% \end{markdown}
-%  \begin{macrocode}
-    \str_set:NV
-      \l_tmpa_str
-      \l_tmpb_tl
-    \str_replace_all:Nnn
-      \l_tmpa_str
-      { / }
-      { _ }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% Finally, we load the plain \TeX{} theme.
-%
-% \end{markdown}
-%  \begin{macrocode}
-    \@@_load_theme_plain_tex:VV
-      \l_tmpb_tl
-      \l_tmpa_str
-  }
-\cs_generate_variant:Nn
-  \@@_load_theme_plain_tex:nn
-  { VV }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \begin{markdown}
@@ -34854,6 +34885,46 @@ end
 |endgroup
 %    \end{macrocode}
 % \par
+% \begin{markdown}
+%
+%### Themes
+%
+% This section overrides the plain \TeX{} implementation of the theme-loading
+% mechanism from Section <#sec:themes-implementation>.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\cs_gset:Nn
+  \@@_load_theme:nn
+  {
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Determine whether a file named `t-markdowntheme`\meta{munged theme
+% name}`.tex` exists. If it does, load it. Otherwise, try loading a plain
+% \TeX{} theme instead.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \file_if_exist:nTF
+      { t - markdown theme #2.tex }
+      {
+        \markdownInfo
+          { Loading~ConTeXt~Markdown~theme~#1 }
+        \usemodule
+          [ t ]
+          [ markdown theme #2 ]
+      }
+      {
+        \@@_plain_tex_load_theme:nn
+          { #1 }
+          { #2 }
+      }
+  }
+\ExplSyntaxOff
+%    \end{macrocode}
 % \begin{markdown}
 %
 %### Token Renderer Prototypes
