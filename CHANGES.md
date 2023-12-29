@@ -2,8 +2,13 @@
 
 ## 3.3.0
 
+Development:
+
+- Add support for universal (cross-format) themes. (#276, #373)
+
 Fixes:
 
+- Prevent unwanted space tokens before `*ContextEnd` renderers. (#373)
 - Make ConTeXt command `\inputmarkdown` properly process extra options.
   (#389, #390, contributed by @ibotty)
 
@@ -12,6 +17,17 @@ Documentation:
 - Improve the discoverability of the `\markdownInput` macro.
   (#381, #382, contributed by @solernou)
 - Encourage alternatives to the `hybrid` option in the user manual. (#382)
+
+Speed Improvements:
+
+- Optimize needless catcode switching in package code. (3eb7231)
+
+Default Renderer Prototypes:
+
+- Fix the typesetting of level four headings with attributes for LaTeX document
+  classes without the `\chapter` command such as `article` and level five
+  headings for LaTeX document classes with the `\chapter` command such as
+  `book`. (86eefc0)
 
 ## 3.2.1 (2023-11-23)
 

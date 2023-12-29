@@ -2,5 +2,8 @@
 \input markdown
 
 % Load the support files.
-\input setup
-\input plain-setup
+\markdownSetup{
+  import = {
+    witiko/markdown/test = snippet as testSnippet,
+  }
+}

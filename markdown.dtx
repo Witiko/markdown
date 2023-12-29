@@ -769,12 +769,6 @@ abbr {
   volume    = {B},
   location  = {Reading, MA},
   publisher = {Addison-Wesley}}
-@online{novotny21,
-  author    = {Novotný, Vít},
-  title     = {\Hologo{LaTeX2e} no longer keys packages by pathnames},
-  date      = {2021-02-20},
-  url       = {https://github.com/latex3/latex2e/issues/510},
-  urldate   = {2021-02-21}}
 @book{eijkhout92,
   author    = {Victor Eijkhout},
   title     = {\TeX{} by Topic},
@@ -792,8 +786,9 @@ abbr {
   pages     = {196-205},
   doi       = {10.1109/ICPC.2010.41}}
 %</techdoc-bibliography>
-%<*latex-themes-witiko-markdown-techdoc>
-\ProvidesPackage{markdownthemewitiko_markdown_techdoc}[2022/02/23]
+%<@@=markdown>
+%<*themes-witiko-markdown-techdoc>
+\ProvidesPackage{markdownthemewitiko_markdown_techdoc}[2022/12/13]
 \RequirePackage{etoolbox}
 \markdownSetup{
   renderers = {
@@ -808,24 +803,6 @@ abbr {
         {\def\addcontentsline##1##2##3{}\listoffigures}%
       }%
     },
-    headerAttributeContextBegin = {%
-      \begingroup
-      \markdownSetup{
-        rendererPrototypes = {
-          attributeIdentifier = {%
-            \markdownSetup{
-              rendererPrototypes = {
-                headerAttributeContextEnd = {%
-                  \label{sec:##1}%
-                  \endgroup
-                },
-              }
-            }%
-          },
-        },
-      }%
-    },
-    headerAttributeContextEnd = {\endgroup},
   },
   jekyllDataRenderers = {
     /authors/* = {%
@@ -843,6 +820,17 @@ abbr {
     url = {\gdef\ltd@title@url{#1}},
   }
 }
+\ExplSyntaxOn
+\markdownSetup{
+  rendererPrototypes = {
+    headerAttributeContextEnd = {
+      \seq_map_inline:Nn
+        \l_@@_header_identifiers_seq
+        { \label { sec:##1 } }
+    },
+  },
+}
+\ExplSyntaxOff
 \renewcommand\markdownLaTeXRendererDirectOrIndirectLink[4]{%
   #1\footnote{See \url{#3}.}}
 \RequirePackage{varioref}
@@ -874,7 +862,7 @@ abbr {
     dlEnd = {\end{optionlist}},
   }
 }
-%</latex-themes-witiko-markdown-techdoc>
+%</themes-witiko-markdown-techdoc>
 %<*manual>
 
 ---
@@ -991,7 +979,7 @@ This should produce the following files:
 * `markdown.sty`, the \LaTeX{} package,
 * `markdownthemewitiko_dot.sty`, the `witiko/dot` \LaTeX{} theme,
 * `markdownthemewitiko_graphicx_http.sty`, the `witiko/graphicx/http` \LaTeX{} theme,
-* `markdownthemewitiko_tilde.sty`, the `witiko/tilde` \LaTeX{} theme, and
+* `markdownthemewitiko_tilde.tex`, the `witiko/tilde` \LaTeX{} theme, and
 * `t-markdown.tex`, the \Hologo{ConTeXt} module.
 
 ### Local Installation
@@ -1007,7 +995,7 @@ placed:
 * `⟨TEXMF⟩/tex/latex/markdown/markdown.sty`
 * `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_dot.sty`
 * `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_graphicx_http.sty`
-* `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_tilde.sty`
+* `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_tilde.tex`
 * `⟨TEXMF⟩/tex/context/third/markdown/t-markdown.tex`
 
 where `⟨TEXMF⟩` corresponds to a root of your \TeX{} distribution, such as
@@ -1030,7 +1018,7 @@ This is where the individual files should be placed:
 * `./markdown.sty`
 * `./markdownthemewitiko_dot.sty`
 * `./markdownthemewitiko_graphicx_http.sty`
-* `./markdownthemewitiko_tilde.sty`
+* `./markdownthemewitiko_tilde.tex`
 * `./t-markdown.tex`
 
 %</manual>
@@ -1170,7 +1158,6 @@ local uni_algos = require("lua-uni-algos")
 %
 % \end{markdown}
 %  \begin{macrocode}
-%<@@=markdown>
 %</tex>
 %<*context,tex>
 \ifx\ExplSyntaxOn\undefined
@@ -1228,13 +1215,13 @@ local uni_algos = require("lua-uni-algos")
 % loaded,
 % \end{markdown}
 % \iffalse
-%<*latex-themes-witiko-dot,latex-themes-witiko-graphicx-http,latex-themes-witiko-tilde>
+%<*themes-witiko-dot,latex-themes-witiko-graphicx-http>
 % \fi
 %  \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}%
 %    \end{macrocode}
 % \iffalse
-%</latex-themes-witiko-dot,latex-themes-witiko-graphicx-http,latex-themes-witiko-tilde>
+%</themes-witiko-dot,latex-themes-witiko-graphicx-http>
 % \fi
 % \begin{markdown}
 % a \TeX{} engine that extends \Hologo{eTeX}, and all the plain \TeX{}
@@ -11922,6 +11909,563 @@ A PDF document named `document.pdf` should be produced and contain the text
 %    \end{macrocode}
 % \iffalse
 %</tex>
+%<*manual-options>
+% \fi
+% \begin{markdown}
+
+### Themes {#themes}
+
+User-defined themes for the Markdown package provide a domain-specific
+interpretation of Markdown tokens. Themes allow the authors to achieve
+a specific look and other high-level goals without low-level programming.
+
+% The key-values `theme`=\meta{theme name} and `import`=\meta{theme name} load
+% a \TeX{} document (further referred to as *a theme*) named
+% `markdowntheme`\meta{munged theme name}`.tex`, where the *munged theme name*
+% is the *theme name* after the substitution of all forward slashes (`/`) for
+% an underscore (`_`). The theme name is *qualified* and contains no
+% underscores. A theme name is qualified if and only if it contains at least
+% one forward slash. Themes are inspired by the Beamer \LaTeX{} package, which
+% provides similar functionality with its `\usetheme` macro [@tantau21, Section
+% 15.1].
+%
+% Theme names must be qualified to minimize naming conflicts between different
+% themes with a similar purpose. The preferred format of a theme name is
+% \meta{theme author}`/`\meta{theme purpose}`/`\meta{private naming
+% scheme}, where the *private naming scheme* may contain additional forward
+% slashes. For example, a theme by a user `witiko` for the MU theme of the
+% Beamer document class may have the name `witiko/beamer/MU`.
+%
+% Theme names are munged to allow structure inside theme names without
+% dictating where the themes should be located inside the \TeX{} directory
+% structure. For example, loading a theme named `witiko/beamer/MU` would
+% load a \TeX{} document package named `markdownthemewitiko_beamer_MU.tex`.
+%
+% \end{markdown}
+% \iffalse
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\ExplSyntaxOn
+\keys_define:nn
+  { markdown/options }
+  {
+    theme .code:n = {
+      \@@_set_theme:n
+        { #1 }
+    },
+    import .code:n = {
+      \tl_set:Nn
+        \l_tmpa_tl
+        { #1 }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% To ensure that keys containing forward slashes get passed correctly, we
+% replace all forward slashes in the input with backslash tokens with category
+% code letter and then undo the replacement. This means that if any unbraced
+% backslash tokens with category code letter exist in the input, they will be
+% replaced with forward slashes. However, this should be extremely rare.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      \tl_replace_all:NnV
+        \l_tmpa_tl
+        { / }
+        \c_backslash_str
+      \keys_set:nV
+        { markdown/options/import }
+        \l_tmpa_tl
+    },
+  }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% To keep track of the current theme when themes are nested, we will
+% maintain the \mdef{g_\@\@_themes_seq} stack of theme names.
+% For convenience, the name of the current theme is also available in the
+% \mdef{g_@@_current_theme_tl} macro.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\seq_new:N
+  \g_@@_themes_seq
+\tl_new:N
+  \g_@@_current_theme_tl
+\tl_gset:Nn
+  \g_@@_current_theme_tl
+  { }
+\seq_gput_right:NV
+  \g_@@_themes_seq
+  \g_@@_current_theme_tl
+\cs_new:Nn
+  \@@_set_theme:n
+  {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% First, we validate the theme name.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \str_if_in:nnF
+      { #1 }
+      { / }
+      {
+        \markdownError
+        { Won't~load~theme~with~unqualified~name~#1 }
+        { Theme~names~must~contain~at~least~one~forward~slash }
+      }
+    \str_if_in:nnT
+      { #1 }
+      { _ }
+      {
+        \markdownError
+        { Won't~load~theme~with~an~underscore~in~its~name~#1 }
+        { Theme~names~must~not~contain~underscores~in~their~names }
+      }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, we munge the theme name.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \str_set:Nn
+      \l_tmpa_str
+      { #1 }
+    \str_replace_all:Nnn
+      \l_tmpa_str
+      { / }
+      { _ }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Finally, we load the theme.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \tl_gset:Nn
+      \g_@@_current_theme_tl
+      { #1 / }
+    \seq_gput_right:NV
+      \g_@@_themes_seq
+      \g_@@_current_theme_tl
+    \@@_load_theme:nV
+      { #1 }
+      \l_tmpa_str
+    \seq_gpop_right:NN
+      \g_@@_themes_seq
+      \l_tmpa_tl
+    \seq_get_right:NN
+      \g_@@_themes_seq
+      \l_tmpa_tl
+    \tl_gset:NV
+      \g_@@_current_theme_tl
+      \l_tmpa_tl
+  }
+\cs_generate_variant:Nn
+  \tl_replace_all:Nnn
+  { NnV }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*manual-options>
+% \fi
+% \par
+% \begin{markdown}
+
+Example themes provided with the Markdown package include:
+
+\pkg{witiko/tilde}
+
+:    A theme that makes tilde (`~`) always typeset the non-breaking space even
+     when the \Opt{hybrid} Lua option is disabled.
+%    ``` tex
+%    \input markdown
+%    \markdownSetup{import=witiko/tilde}
+%    \markdownBegin
+%    Bartel~Leendert van~der~Waerden
+%    \markdownEnd
+%    \bye
+%    ```````
+%    Typesetting the above document produces the following text:
+%    “Bartel~Leendert van~der~Waerden”.
+%
+% \end{markdown}
+% \iffalse
+
+##### Plain \TeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\input markdown
+\markdownSetup{import=witiko/tilde}
+\markdownBegin
+Bartel~Leendert van~der~Waerden
+\markdownEnd
+\bye
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+luatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text, where the middot (`·`) denotes a non-breaking space:
+
+> Bartel·Leendert van·der·Waerden
+
+% \fi
+% \par
+% \begin{markdown}
+%
+% Please, see Section <#sec:themes-implementation> for implementation
+% details of the example themes.
+
+### Snippets {#snippets}
+
+% \end{markdown}
+% \iffalse
+
+User-defined themes provide global control over high-level goals.
+However, it is often desirable to change only some local aspects of a document.
+Snippets provide syntactic sugar for defining and invoking various
+options locally.
+
+%</manual-options>
+%<*tex>
+% \fi
+% \par
+% \begin{markdown}
+%
+% We may set up options as *snippets* using the
+% \mdef{markdownSetupSnippet} macro and invoke them later. The
+% \mref{markdownSetupSnippet} macro receives two arguments: the name
+% of the snippet and the options to store.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\prop_new:N
+  \g_@@_snippets_prop
+\cs_new:Nn
+  \@@_setup_snippet:nn
+  {
+    \tl_if_empty:nT
+      { #1 }
+      {
+        \markdownError
+          { Empty~snippet~name }
+          { Pick~a~non-empty~name~for~your~snippet }
+      }
+    \@@_if_snippet_exists:nT
+      { #1 }
+      {
+        \markdownWarning
+          { Redefined~snippet~\g_@@_current_theme_tl #1 }
+      }
+    \tl_set:NV
+      \l_tmpa_tl
+      \g_@@_current_theme_tl
+    \tl_put_right:Nn
+      \l_tmpa_tl
+      { #1 }
+    \prop_gput:NVn
+      \g_@@_snippets_prop
+      \l_tmpa_tl
+      { #2 }
+  }
+\cs_gset_eq:NN
+  \markdownSetupSnippet
+  \@@_setup_snippet:nn
+%    \end{macrocode}
+% \begin{markdown}
+%
+% To decide whether a snippet exists, we can use the
+% \mdef{markdownIfSnippetExists} macro.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\prg_new_conditional:Nnn
+  \@@_if_snippet_exists:n
+  { TF, T, F }
+  {
+    \tl_set:NV
+      \l_tmpa_tl
+      \g_@@_current_theme_tl
+    \tl_put_right:Nn
+      \l_tmpa_tl
+      { #1 }
+    \prop_get:NVNTF
+      \g_@@_snippets_prop
+      \l_tmpa_tl
+      \l_tmpb_tl
+      { \prg_return_true: }
+      { \prg_return_false: }
+  }
+\cs_gset_eq:NN
+  \markdownIfSnippetExists
+  \@@_if_snippet_exists:nTF
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The option with key `snippet` invokes a snippet named \meta{value}.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\keys_define:nn
+  { markdown/options }
+  {
+    snippet .code:n = {
+      \@@_if_snippet_exists:nTF
+        { #1 }
+        {
+          \tl_set:NV
+            \l_tmpa_tl
+            \g_@@_current_theme_tl
+          \tl_put_right:Nn
+            \l_tmpa_tl
+            { #1 }
+          \prop_get:NVN
+            \g_@@_snippets_prop
+            \l_tmpa_tl
+            \l_tmpb_tl
+          \@@_setup:V
+            \l_tmpb_tl
+        }
+        {
+          \markdownError
+            { Can't~invoke~snippet~\g_@@_current_theme_tl #1 }
+            { The~snippet~is~undefined }
+        }
+    }
+  }
+\cs_generate_variant:Nn
+  \@@_setup:n
+  { V }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*manual-options>
+% \fi
+% \par
+% \markdownBegin
+
+Here is how we can use snippets to store options and invoke them later
+in \LaTeX{}:
+
+``` tex
+\markdownSetupSnippet{romanNumerals}{
+  renderers = {
+      olItemWithNumber = {%
+          \item[\romannumeral#1\relax.]%
+      },
+  },
+}
+\begin{markdown}
+
+The following ordered list will be preceded by arabic numerals:
+
+1. wahid
+2. aithnayn
+
+\end{markdown}
+\begin{markdown}[snippet=romanNumerals]
+
+The following ordered list will be preceded by roman numerals:
+
+3. tres
+4. quattuor
+
+\end{markdown}
+```````
+
+If the `romanNumerals` snippet were defined in the `jdoe/lists` theme,
+we could import the `jdoe/lists` theme and use the qualified name
+`jdoe/lists/romanNumerals` to invoke the snippet:
+
+``` tex
+\markdownSetup{import=jdoe/lists}
+\begin{markdown}[snippet=jdoe/lists/romanNumerals]
+
+The following ordered list will be preceded by roman numerals:
+
+3. tres
+4. quattuor
+
+\end{markdown}
+```````
+
+Alternatively, we can use the extended variant of the `import` \LaTeX{}
+option that allows us to import the `romanNumerals` snippet to the
+current namespace for easier access:
+
+``` tex
+\markdownSetup{
+  import = {
+    jdoe/lists = romanNumerals,
+  },
+}
+\begin{markdown}[snippet=romanNumerals]
+
+The following ordered list will be preceded by roman numerals:
+
+3. tres
+4. quattuor
+
+\end{markdown}
+```````
+
+Furthermore, we can also specify the name of the snippet in the current 
+namespace, which can be different from the name of the snippet in the
+`jdoe/lists` theme. For example, we can make the snippet
+`jdoe/lists/romanNumerals` available under the name `roman`.
+
+``` tex
+\markdownSetup{
+  import = {
+    jdoe/lists = romanNumerals as roman,
+  },
+}
+\begin{markdown}[snippet=roman]
+
+The following ordered list will be preceded by roman numerals:
+
+3. tres
+4. quattuor
+
+\end{markdown}
+```````
+
+Several themes and/or snippets can be loaded at once using the extended
+variant of the `import` \LaTeX{} option:
+
+``` tex
+\markdownSetup{
+  import = {
+    jdoe/longpackagename/lists = {
+      arabic as arabic1,
+      roman,
+      alphabetic,
+    },
+    jdoe/anotherlongpackagename/lists = {
+      arabic as arabic2,
+    },
+    jdoe/yetanotherlongpackagename,
+  },
+}
+```````
+
+% \markdownEnd
+% \iffalse
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\ExplSyntaxOn
+\tl_new:N
+  \l_@@_import_current_theme_tl
+\keys_define:nn
+  { markdown/options/import }
+  {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If a theme name is given without a list of snippets to import,
+% we assume that an empty list was given.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    unknown .default:n = {},
+    unknown .code:n = {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% To ensure that keys containing forward slashes get passed correctly, we
+% replace all forward slashes in the input with backslash tokens with category
+% code letter and then undo the replacement. This means that if any unbraced
+% backslash tokens with category code letter exist in the input, they will be
+% replaced with forward slashes. However, this should be extremely rare.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      \tl_set_eq:NN
+        \l_@@_import_current_theme_tl
+        \l_keys_key_str
+      \tl_replace_all:NVn
+        \l_@@_import_current_theme_tl
+        \c_backslash_str
+        { / }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Here, we import the snippets.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      \clist_map_inline:nn
+        { #1 }
+        {
+          \regex_extract_once:nnNTF
+            { ^(.*?)\s+as\s+(.*?)$ }
+            { ##1 }
+            \l_tmpa_seq
+            {
+              \seq_pop:NN
+                \l_tmpa_seq
+                \l_tmpa_tl
+              \seq_pop:NN
+                \l_tmpa_seq
+                \l_tmpa_tl
+              \seq_pop:NN
+                \l_tmpa_seq
+                \l_tmpb_tl
+            }
+            {
+              \tl_set:Nn
+                \l_tmpa_tl
+                { ##1 }
+              \tl_set:Nn
+                \l_tmpb_tl
+                { ##1 }
+            }
+          \tl_put_left:Nn
+            \l_tmpa_tl
+            { / }
+          \tl_put_left:NV
+            \l_tmpa_tl
+            \l_@@_import_current_theme_tl
+          \@@_setup_snippet:Vx
+            \l_tmpb_tl
+            { snippet = { \l_tmpa_tl } }
+        }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Here, we load the theme.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      \@@_set_theme:V
+        \l_@@_import_current_theme_tl
+    },
+  }
+\cs_generate_variant:Nn
+  \tl_replace_all:Nnn
+  { NVn }
+\cs_generate_variant:Nn
+  \@@_set_theme:n
+  { V }
+\cs_generate_variant:Nn
+  \@@_setup_snippet:nn
+  { Vx }
+%    \end{macrocode}
+% \iffalse
+%</tex>
 %<*manual-tokens>
 
 ## Markdown Tokens
@@ -20058,10 +20602,24 @@ following text:
 |endgroup
 %    \end{macrocode}
 % \begin{markdown}
-% The macro is exposed in the interface, so that the user can create their own
+% The macro is exposed in the interface, so that users can create their own
 % markdown environments. Due to the way the arguments are passed to Lua, the
 % first argument may not contain the string `]]` (regardless of the category
-% code of the bracket symbol (`]`)).
+% code of the bracket symbol).
+%
+% The `code` key, which can be used to immediately expand and execute code.
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\keys_define:nn
+  { markdown/options }
+  {
+    code .code:n = { #1 },
+  }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \begin{markdown}
+% This can be especially useful in snippets.
 %
 % \end{markdown}
 % \iffalse
@@ -20187,7 +20745,7 @@ pdflatex --shell-escape document.tex
 % base variant of the `import` key that loads a single \LaTeX{} theme
 % (see Section <#sec:latexthemes>) can be used, the extended variant
 % that can load multiple themes and import snippets from them (see
-% Section <#sec:latexsnippets>). This limitation is due to the way
+% Section <#sec:snippets>) cannot. This limitation is due to the way
 % \Hologo{LaTeX2e} parses package options.
 %
 % \end{markdown}
@@ -20266,7 +20824,7 @@ pdflatex --shell-escape document.tex
 %
 % Except for the `plain` option described in Section <#sec:latexplain>,
 % the \LaTeX{} themes described in Section <#sec:latexthemes>, and the
-% \LaTeX{} snippets described in Section <#sec:latexsnippets>,
+% snippets described in Section <#sec:snippets>,
 % \LaTeX{} options map directly to the options recognized by the plain
 % \TeX{} interface (see Section <#sec:tex-options>) and to the markdown token
 % renderers and their prototypes recognized by the plain \TeX{} interface (see
@@ -20400,52 +20958,82 @@ package. Setting the option after loading the package will have no effect.
   { false }
 \ExplSyntaxOff
 %    \end{macrocode}
+% \begin{markdown}
+%
+%#### Generating Plain \TeX{} Option, Token Renderer, and Token Renderer Prototype Macros and Key-Values
+%
+% If \LaTeX{} is the top layer, we use the
+% \mref{@@_define_option_commands_and_keyvals:}, \mref{@@_define_renderers:},
+% and \mref{@@_define_renderer_prototypes:} macro to define plain \TeX{}
+% option, token renderer, and token renderer prototype macros and key-values
+% immediately. Otherwise, we postpone the definition until the upper layers
+% have been loaded.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\str_if_eq:VVT
+  \c_@@_top_layer_tl
+  \c_@@_option_layer_latex_tl
+  {
+    \@@_define_option_commands_and_keyvals:
+    \@@_define_renderers:
+    \@@_define_renderer_prototypes:
+  }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% The following example \LaTeX{} code showcases a possible configuration of
+% plain \TeX{} interface options \Opt{hybrid}, \Opt{smartEllipses}, and
+% \Opt{cacheDir}.
+% ``` tex
+% \markdownSetup{
+%   hybrid,
+%   smartEllipses,
+%   cacheDir = /tmp,
+% }
+% ```````
+%
+% \end{markdown}
 % \iffalse
 %</latex>
 %<*manual-options>
 % \fi
 % \begin{markdown}
 
-#### \LaTeX{} themes {#latexthemes}
+### Themes {#latexthemes}
 
-User-defined \LaTeX{} themes for the Markdown package provide a domain-specific
-interpretation of Markdown tokens. Similarly to \LaTeX{} packages, themes
-allow the authors to achieve a specific look and other high-level goals
-without low-level programming.
+% In Section~\ref{sec:themes}, we described the concept of themes.
+In \LaTeX{}, we expand on the concept of
+% themes\iffalse
+[themes](#themes)
+% \fi
+by allowing a theme to be a full-blown \LaTeX{} package. Specifically, the
+key-values `theme`=\meta{theme name} and `import`=\meta{theme name} load a
+\LaTeX{} package named `markdowntheme`\meta{munged theme name}`.sty` if it
+exists and a \TeX{} document named `markdowntheme`\meta{munged theme
+name}`.tex` otherwise.
 
-% The \LaTeX{} option `import`=\meta{theme name} loads a \LaTeX{} package
-% (further referred to as *a theme*) named `markdowntheme`\meta{munged theme
-% name}`.sty`, where the *munged theme name* is the *theme name* after the
-% substitution of all forward slashes (`/`) for an underscore (`_`), the theme
-% *name* is *qualified* and contains no underscores, and a value is qualified
-% if and only if it contains at least one forward slash. Themes are inspired
-% by the Beamer \LaTeX{} package, which provides similar functionality with
-% its `\usetheme` macro [@tantau21, Section 15.1].
-%
-% Theme names must be qualified to minimize naming conflicts between different
-% themes intended for a single \LaTeX{} document class or for a single \LaTeX{}
-% package. The preferred format of a theme name is \meta{theme author}`/`<!--
-% -->\meta{target \LaTeX{} document class or package}`/`\meta{private naming
-% scheme}, where the *private naming scheme* may contain additional forward
-% slashes. For example, a theme by a user `witiko` for the MU theme of the
-% Beamer document class may have the name `witiko/beamer/MU`.
-%
-% Theme names are munged, because \LaTeX{} packages are identified only by
-% their filenames, not by their pathnames. [@novotny21] Therefore, we can't
-% store the qualified theme names directly using directories, but we must
-% encode the individual segments of the qualified theme in the filename. For
-% example, loading a theme named `witiko/beamer/MU` would load a \LaTeX{}
-% package named `markdownthemewitiko_beamer_MU.sty`.
-%
-% If the \LaTeX{} option with key `theme` is (repeatedly) specified in the
-% `\usepackage` macro, the loading of the theme(s) will be postponed in
-% first-in-first-out order until after the Markdown \LaTeX{} package has been
-% loaded. Otherwise, the theme(s) will be loaded immediately. For example,
-% there is a theme named `witiko/dot`, which typesets fenced code blocks with
-% the `dot` infostring as images of directed graphs rendered by the Graphviz
-% tools. The following code would first load the Markdown package, then the
-% `markdownthemewitiko_beamer_MU.sty` \LaTeX{} package, and finally the
-% `markdownthemewitiko_dot.sty` \LaTeX{} package:
+Having the Markdown package automatically load either the generic `.tex`
+*theme file* or the \LaTeX{}-specific `.sty` theme file allows developers
+to have a single *theme file*, when the theme is small or the difference
+between \TeX{} formats is unimportant, and scale up to separate theme files
+native to different \TeX{} formats for large multi-format themes, where
+different code is needed for different \TeX{} formats. To enable code reuse,
+developers can load the `.tex` theme file from the `.sty` theme file using the
+\mdef{markdownLoadPlainTeXTheme} macro.
+
+% If the \LaTeX{} option with keys `theme` or `import` is (repeatedly)
+% specified in the `\usepackage` macro, the loading of the theme(s) will be
+% postponed in first-in-first-out order until after the Markdown \LaTeX{}
+% package has been loaded. Otherwise, the theme(s) will be loaded immediately.
+% For example, there is a theme named `witiko/dot`, which typesets fenced code
+% blocks with the `dot` infostring as images of directed graphs rendered by the
+% Graphviz tools. The following code would first load the Markdown package,
+% then the `markdownthemewitiko_beamer_MU.sty` \LaTeX{} package, and finally
+% the `markdownthemewitiko_dot.sty` \LaTeX{} package:
 % \end{markdown}
 % \iffalse
 
@@ -20472,73 +21060,6 @@ would use the following code in the preamble of your document:
 \newif\ifmarkdownLaTeXLoaded
   \markdownLaTeXLoadedfalse
 \AtEndOfPackage{\markdownLaTeXLoadedtrue}
-\ExplSyntaxOn
-\tl_new:N \markdownLaTeXThemePackageName
-\cs_new:Nn
-  \@@_set_latex_theme:n
-  {
-    \str_if_in:nnF
-      { #1 }
-      { / }
-      {
-        \markdownError
-        { Won't~load~theme~with~unqualified~name~#1 }
-        { Theme~names~must~contain~at~least~one~forward~slash }
-      }
-    \str_if_in:nnT
-      { #1 }
-      { _ }
-      {
-        \markdownError
-        { Won't~load~theme~with~an~underscore~in~its~name~#1 }
-        { Theme~names~must~not~contain~underscores~in~their~names }
-      }
-    \tl_set:Nn \markdownLaTeXThemePackageName { #1 }
-    \str_replace_all:Nnn
-      \markdownLaTeXThemePackageName
-      { / }
-      { _ }
-    \edef\markdownLaTeXThemePackageName{
-      markdowntheme\markdownLaTeXThemePackageName}
-    \expandafter\markdownLaTeXThemeLoad\expandafter{
-      \markdownLaTeXThemePackageName}{#1/}
-  }
-\keys_define:nn
-  { markdown/options }
-  {
-    import .code:n = {
-      \tl_set:Nn
-        \l_tmpa_tl
-        { #1 }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% To ensure that keys containing forward slashes get passed correctly, we
-% replace all forward slashes in the input with backslash tokens with category
-% code letter and then undo the replacement. This means that if any unbraced
-% backslash tokens with category code letter exist in the input, they will be
-% replaced with forward slashes. However, this should be extremely rare.
-%
-% \end{markdown}
-%  \begin{macrocode}
-      \tl_replace_all:NnV
-        \l_tmpa_tl
-        { / }
-        \c_backslash_str
-      \keys_set:nV
-        { markdown/options/import }
-        \l_tmpa_tl
-    },
-  }
-\cs_generate_variant:Nn
-  \tl_replace_all:Nnn
-  { NnV }
-\keys_define:nn
-  { markdown/options }
-  {
-    theme .code:n = { \@@_set_latex_theme:n { #1 } },
-  }
-\ExplSyntaxOff
 %    \end{macrocode}
 % \iffalse
 %</latex>
@@ -20551,20 +21072,6 @@ Due to limitations of \LaTeX{}, themes may not be loaded after the
 beginning of a \LaTeX{} document.
 
 % \end{markdown}
-% \iffalse
-%</manual-options>
-%<*latex>
-% \fi
-%  \begin{macrocode}
-\ExplSyntaxOn
-\@onlypreamble
-  \@@_set_latex_theme:n
-\ExplSyntaxOff
-%    \end{macrocode}
-% \iffalse
-%</latex>
-%<*manual-options>
-% \fi
 % \par
 % \markdownBegin
 
@@ -20699,13 +21206,13 @@ conference article:
 > <http://ceur-ws.org/Vol-2696/paper_235.pdf>
 
 %</manual-options>
-%<*latex-themes-witiko-dot>
+%<*themes-witiko-dot>
 % \fi
 %  \begin{macrocode}
 \ProvidesPackage{markdownthemewitiko_dot}[2021/03/09]%
 %    \end{macrocode}
 % \iffalse
-%</latex-themes-witiko-dot>
+%</themes-witiko-dot>
 %<*manual-options>
 % \fi
 % \par
@@ -20761,413 +21268,20 @@ following image:
 > ![img](https://github.com/witiko/markdown/raw/main/markdown.png "The banner of the Markdown package")
 
 %</manual-options>
-%<*latex-themes-witiko-graphicx-http>
+%<*themes-witiko-graphicx-http>
 % \fi
 %  \begin{macrocode}
 \ProvidesPackage{markdownthemewitiko_graphicx_http}[2021/03/22]%
 %    \end{macrocode}
 % \iffalse
-%</latex-themes-witiko-graphicx-http>
-%<*manual-options>
-% \fi
-% \par
-% \markdownBegin
-
-\pkg{witiko/tilde}
-
-:    A theme that makes tilde (`~`) always typeset the non-breaking space even
-     when the \Opt{hybrid} Lua option is disabled.
-%    ``` tex
-%    \documentclass{article}
-%    \usepackage[import=witiko/tilde]{markdown}
-%    \begin{document}
-%    \begin{markdown}
-%    Bartel~Leendert van~der~Waerden
-%    \end{markdown}
-%    \end{document}
-%    ```````
-%    Typesetting the above document produces the following text:
-%    “Bartel~Leendert van~der~Waerden”.
-%
-% \markdownEnd
-% \iffalse
-
-##### \LaTeX{} Example {.unnumbered}
-
-Using a text editor, create a text document named `document.tex` with the
-following content:
-``` tex
-\documentclass{article}
-\usepackage[import=witiko/tilde]{markdown}
-\begin{document}
-\begin{markdown}
-Bartel~Leendert van~der~Waerden
-\end{markdown}
-\end{document}
-```````
-Next, invoke LuaTeX from the terminal:
-``` sh
-lualatex document.tex
-``````
-A PDF document named `document.pdf` should be produced and contain the
-following text, where the middot (`·`) denotes a non-breaking space:
-
-> Bartel·Leendert van·der·Waerden
-
-%</manual-options>
-%<*latex-themes-witiko-tilde>
-% \fi
-%  \begin{macrocode}
-\ProvidesPackage{markdownthemewitiko_tilde}[2021/03/22]%
-%    \end{macrocode}
-% \iffalse
-%</latex-themes-witiko-tilde>
-%<*manual-options>
+%</themes-witiko-graphicx-http>
+%<*context>
 % \fi
 % \par
 % \begin{markdown}
 %
 % Please, see Section <#sec:latex-themes-implementation> for implementation
 % details of the example themes.
-
-#### \LaTeX{} snippets {#latexsnippets}
-
-% \end{markdown}
-% \iffalse
-
-User-defined \LaTeX{} themes provide global control over high-level goals.
-However, it is often desirable to change only some local aspects of a document.
-\LaTeX{} snippets provide syntactic sugar for defining and invoking various
-options locally.
-
-%</manual-options>
-%<*latex>
-% \fi
-% \par
-% \begin{markdown}
-%
-% We may set up \LaTeX{} options as *snippets* using the
-% \mdef{markdownSetupSnippet} macro and invoke them later. The
-% \mref{markdownSetupSnippet} macro receives two arguments: the name
-% of the snippet and the options to store.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\ExplSyntaxOn
-\cs_new:Nn
-  \@@_latex_setup_snippet:nn
-  {
-    \markdownIfSnippetExists
-      { #1 }
-      {
-        \markdownWarning
-          {Redefined~snippet~\markdownLaTeXThemeName#1}
-        \csname markdownLaTeXSetupSnippet%
-          \markdownLaTeXThemeName#1\endcsname={#2}
-      }
-      {
-        \newtoks\next
-          \next={#2}
-        \expandafter\let\csname markdownLaTeXSetupSnippet%
-          \markdownLaTeXThemeName#1\endcsname=\next
-      }
-  }
-\let\markdownSetupSnippet=\@@_latex_setup_snippet:nn
-\ExplSyntaxOff
-%    \end{macrocode}
-% \begin{markdown}
-%
-% To decide whether a snippet exists, we can use the
-% \mdef{markdownIfSnippetExists} macro.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\newcommand\markdownIfSnippetExists[3]{%
-  \@ifundefined
-    {markdownLaTeXSetupSnippet\markdownLaTeXThemeName#1}%
-    {#3}{#2}}%
-%    \end{macrocode}
-% \begin{markdown}
-%
-% The \LaTeX{} option with key `snippet` invokes a snippet named \meta{value}.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\ExplSyntaxOn
-\keys_define:nn
-  { markdown/options }
-  {
-    snippet .code:n = {
-      \markdownIfSnippetExists{#1}
-        {
-          \expandafter\markdownSetup\expandafter{
-            \the\csname markdownLaTeXSetupSnippet
-            \markdownLaTeXThemeName#1\endcsname}
-        }{
-          \markdownError
-            {Can't~invoke~setup~snippet~#1}
-            {The~setup~snippet~is~undefined}
-        }
-    }
-  }
-\ExplSyntaxOff
-%    \end{macrocode}
-% \iffalse
-%</latex>
-%<*manual-options>
-% \fi
-% \par
-% \markdownBegin
-
-Here is how we can use snippets to store options and invoke them later:
-
-``` tex
-\markdownSetupSnippet{romanNumerals}{
-  renderers = {
-      olItemWithNumber = {%
-          \item[\romannumeral#1\relax.]%
-      },
-  },
-}
-\begin{markdown}
-
-The following ordered list will be preceded by arabic numerals:
-
-1. wahid
-2. aithnayn
-
-\end{markdown}
-\begin{markdown}[snippet=romanNumerals]
-
-The following ordered list will be preceded by roman numerals:
-
-3. tres
-4. quattuor
-
-\end{markdown}
-```````
-
-If the `romanNumerals` snippet were defined in the `jdoe/lists` theme,
-we could import the `jdoe/lists` theme and use the qualified name
-`jdoe/lists/romanNumerals` to invoke the snippet:
-
-``` tex
-\markdownSetup{import=jdoe/lists}
-\begin{markdown}[snippet=jdoe/lists/romanNumerals]
-
-The following ordered list will be preceded by roman numerals:
-
-3. tres
-4. quattuor
-
-\end{markdown}
-```````
-
-Alternatively, we can use the extended variant of the `import` \LaTeX{}
-option that allows us to import the `romanNumerals` snippet to the
-current namespace for easier access:
-
-``` tex
-\markdownSetup{
-  import = {
-    jdoe/lists = romanNumerals,
-  },
-}
-\begin{markdown}[snippet=romanNumerals]
-
-The following ordered list will be preceded by roman numerals:
-
-3. tres
-4. quattuor
-
-\end{markdown}
-```````
-
-Furthermore, we can also specify the name of the snippet in the current 
-namespace, which can be different from the name of the snippet in the
-`jdoe/lists` theme. For example, we can make the snippet
-`jdoe/lists/romanNumerals` available under the name `roman`.
-
-``` tex
-\markdownSetup{
-  import = {
-    jdoe/lists = romanNumerals as roman,
-  },
-}
-\begin{markdown}[snippet=roman]
-
-The following ordered list will be preceded by roman numerals:
-
-3. tres
-4. quattuor
-
-\end{markdown}
-```````
-
-Several themes and/or snippets can be loaded at once using the extended
-variant of the `import` \LaTeX{} option:
-
-``` tex
-\markdownSetup{
-  import = {
-    jdoe/longpackagename/lists = {
-      arabic as arabic1,
-      roman,
-      alphabetic,
-    },
-    jdoe/anotherlongpackagename/lists = {
-      arabic as arabic2,
-    },
-    jdoe/yetanotherlongpackagename,
-  },
-}
-```````
-
-% \markdownEnd
-% \iffalse
-%</manual-options>
-%<*latex>
-% \fi
-%  \begin{macrocode}
-\ExplSyntaxOn
-\tl_new:N
-  \l_@@_latex_import_current_theme_tl
-\keys_define:nn
-  { markdown/options/import }
-  {
-%    \end{macrocode}
-% \begin{markdown}
-%
-% If a theme name is given without a list of snippets to import,
-% we assume that an empty list was given.
-%
-% \end{markdown}
-%  \begin{macrocode}
-    unknown .default:n = {},
-    unknown .code:n = {
-%    \end{macrocode}
-% \begin{markdown}
-%
-% To ensure that keys containing forward slashes get passed correctly, we
-% replace all forward slashes in the input with backslash tokens with category
-% code letter and then undo the replacement. This means that if any unbraced
-% backslash tokens with category code letter exist in the input, they will be
-% replaced with forward slashes. However, this should be extremely rare.
-%
-% \end{markdown}
-%  \begin{macrocode}
-      \tl_set_eq:NN
-        \l_@@_latex_import_current_theme_tl
-        \l_keys_key_str
-      \tl_replace_all:NVn
-        \l_@@_latex_import_current_theme_tl
-        \c_backslash_str
-        { / }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% Here, we import the \LaTeX{} snippets.
-%
-% \end{markdown}
-%  \begin{macrocode}
-      \clist_map_inline:nn
-        { #1 }
-        {
-          \regex_extract_once:nnNTF
-            { ^(.*?)\s+as\s+(.*?)$ }
-            { ##1 }
-            \l_tmpa_seq
-            {
-              \seq_pop:NN
-                \l_tmpa_seq
-                \l_tmpa_tl
-              \seq_pop:NN
-                \l_tmpa_seq
-                \l_tmpa_tl
-              \seq_pop:NN
-                \l_tmpa_seq
-                \l_tmpb_tl
-            }
-            {
-              \tl_set:Nn
-                \l_tmpa_tl
-                { ##1 }
-              \tl_set:Nn
-                \l_tmpb_tl
-                { ##1 }
-            }
-          \tl_put_left:Nn
-            \l_tmpa_tl
-            { / }
-          \tl_put_left:NV
-            \l_tmpa_tl
-            \l_@@_latex_import_current_theme_tl
-          \@@_latex_setup_snippet:Vx
-            \l_tmpb_tl
-            { snippet = { \l_tmpa_tl } }
-        }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% Here, we load the \LaTeX{} theme.
-%
-% \end{markdown}
-%  \begin{macrocode}
-      \@@_set_latex_theme:V
-        \l_@@_latex_import_current_theme_tl
-    },
-  }
-\cs_generate_variant:Nn
-  \tl_replace_all:Nnn
-  { NVn }
-\cs_generate_variant:Nn
-  \@@_set_latex_theme:n
-  { V }
-\cs_generate_variant:Nn
-  \@@_latex_setup_snippet:nn
-  { Vx }
-%    \end{macrocode}
-% \begin{markdown}
-%
-%#### Generating Plain \TeX{} Option, Token Renderer, and Token Renderer Prototype Macros and Key-Values
-%
-% If \LaTeX{} is the top layer, we use the
-% \mref{@@_define_option_commands_and_keyvals:}, \mref{@@_define_renderers:},
-% and \mref{@@_define_renderer_prototypes:} macro to define plain \TeX{}
-% option, token renderer, and token renderer prototype macros and key-values
-% immediately. Otherwise, we postpone the definition until the upper layers
-% have been loaded.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\str_if_eq:VVT
-  \c_@@_top_layer_tl
-  \c_@@_option_layer_latex_tl
-  {
-    \@@_define_option_commands_and_keyvals:
-    \@@_define_renderers:
-    \@@_define_renderer_prototypes:
-  }
-\ExplSyntaxOff
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% The following example \LaTeX{} code showcases a possible configuration of
-% plain \TeX{} interface options \Opt{hybrid}, \Opt{smartEllipses}, and
-% \Opt{cacheDir}.
-% ``` tex
-% \markdownSetup{
-%   hybrid,
-%   smartEllipses,
-%   cacheDir = /tmp,
-% }
-% ```````
-%
-% \iffalse
-%</latex>
-%<*context>
-% \fi
 %
 % \Hologo{ConTeXt} Interface {#contextinterface}
 %----------------------------
@@ -21406,9 +21520,41 @@ following text:
   }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
+% \iffalse
+%</context>
+%<*manual-options>
+% \fi
 % \begin{markdown}
-%
+
+### Themes
+
+% In Section~\ref{sec:themes}, we described the concept of themes.
+In \Hologo{ConTeXt}, we expand on the concept of
+% themes\iffalse
+[themes](#themes)
+% \fi
+by allowing a theme to be a full-blown \Hologo{ConTeXt} module. Specifically,
+the key-values `theme`=\meta{theme name} and `import`=\meta{theme name} load a
+\Hologo{ConTeXt} module named `t-markdowntheme`\meta{munged theme name}`.tex`
+if it exists and a \TeX{} document named `markdowntheme`\meta{munged theme
+name}`.tex` otherwise.
+
+Having the Markdown package automatically load either the generic `.tex`
+*theme file* or the \Hologo{ConTeXt}-specific `t-*.tex` theme file allows
+developers to have a single *theme file*, when the theme is small or the
+difference between \TeX{} formats is unimportant, and scale up to separate
+theme files native to different \TeX{} formats for large multi-format themes,
+where different code is needed for different \TeX{} formats. To enable code
+reuse, developers can load the `.tex` theme file from the `t-*.tex` theme file
+using the \mref{markdownLoadPlainTeXTheme} macro.
+
+For example, to load a theme named `witiko/tilde` in your document:
+
+``` tex
+\usemodule[t][markdown]
+\setupmarkdown[import=witiko/tilde]
+```````
+
 % Implementation {#implementation}
 %================
 %
@@ -21425,7 +21571,7 @@ following text:
 %
 % \end{markdown}
 % \iffalse
-%</context>
+%</manual-options>
 %<*lua>
 % \fi
 % \begin{markdown}
@@ -25126,7 +25272,7 @@ end
     end
 
     if self.is_writing and #normalized_attributes > 0 then
-      table.insert(buf, "\n\\markdownRendererHeaderAttributeContextEnd ")
+      table.insert(buf, "\\markdownRendererHeaderAttributeContextEnd ")
     end
 
     return buf
@@ -30145,7 +30291,7 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
       function self.div_begin(attributes)
         local start_output = {"\\markdownRendererFencedDivAttributeContextBegin\n",
                               self.attributes(attributes)}
-        local end_output = {"\n\\markdownRendererFencedDivAttributeContextEnd "}
+        local end_output = {"\\markdownRendererFencedDivAttributeContextEnd "}
         return self.push_attributes("div", attributes, start_output, end_output)
       end
 %    \end{macrocode}
@@ -31852,6 +31998,139 @@ end
 % \par
 % \begin{markdown}
 %
+%### Themes {#themes-implementation}
+%
+% This section implements the theme-loading mechanism and the example themes
+% provided with the Markdown package.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\prop_new:N \g_@@_plain_tex_loaded_themes_linenos_prop
+\cs_new:Nn
+  \@@_plain_tex_load_theme:nn
+  {
+    \prop_get:NnNTF
+      \g_@@_plain_tex_loaded_themes_linenos_prop
+      { #1 }
+      \l_tmpa_tl
+      {
+        \markdownInfo
+          {
+            Plain~TeX~Markdown~theme~#1~was~previously~
+            loaded~on~line~\l_tmpa_tl,~not~loading~it~again
+          }
+      }
+      {
+        \markdownInfo
+          { Loading~plain~TeX~Markdown~theme~#1 }
+        \prop_gput:Nnx
+          \g_@@_plain_tex_loaded_themes_linenos_prop
+          { #1 }
+          { \tex_the:D \tex_inputlineno:D }
+        \file_input:n
+          { markdown theme #2 }
+      }
+  }
+\cs_generate_variant:Nn
+  \prop_gput:Nnn
+  { Nnx }
+\cs_gset_eq:NN
+  \@@_load_theme:nn
+  \@@_plain_tex_load_theme:nn
+\cs_generate_variant:Nn
+  \@@_load_theme:nn
+  { nV }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Developers can use the \mref{markdownLoadPlainTeXTheme} macro to load a
+% corresponding plain \TeX{} theme from within themes for higher-level \TeX{}
+% formats such as \LaTeX{} and \Hologo{ConTeXt}.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\cs_new:Npn
+  \markdownLoadPlainTeXTheme
+  {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% First, we extract the name of the current theme from the
+% \mref{g_@@_current_theme_tl} macro.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \tl_set:NV
+      \l_tmpa_tl
+      \g_@@_current_theme_tl
+    \tl_reverse:N
+      \l_tmpa_tl
+    \tl_set:Ne
+      \l_tmpb_tl
+      {
+        \tl_tail:V
+          \l_tmpa_tl
+      }
+    \tl_reverse:N
+      \l_tmpb_tl
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, we munge the theme name.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \str_set:NV
+      \l_tmpa_str
+      \l_tmpb_tl
+    \str_replace_all:Nnn
+      \l_tmpa_str
+      { / }
+      { _ }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Finally, we load the plain \TeX{} theme.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \@@_plain_tex_load_theme:VV
+      \l_tmpb_tl
+      \l_tmpa_str
+  }
+\cs_generate_variant:Nn
+  \tl_set:Nn
+  { Ne }
+\cs_generate_variant:Nn
+  \@@_plain_tex_load_theme:nn
+  { VV }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*themes-witiko-tilde>
+% \fi
+% \par
+% \begin{markdown}
+%
+% The `witiko/tilde` theme redefines the tilde token renderer prototype,
+% so that it expands to a non-breaking space:
+%
+% \end{markdown}
+%  \begin{macrocode}
+\markdownSetup {
+  rendererPrototypes = {
+    tilde = {~},
+  },
+}
+%    \end{macrocode}
+% \iffalse
+%</themes-witiko-tilde>
+%<*tex>
+% \fi
+% \begin{markdown}
+%
 %### Token Renderer Prototypes {#tex-token-renderer-prototypes}
 %
 % The following definitions should be considered placeholder.
@@ -32952,9 +33231,6 @@ end
       }
   }
   { \markdownEnd }
-\cs_generate_variant:Nn
-  \@@_setup:n
-  { V }
 \ExplSyntaxOff
 \renewenvironment{markdown*}[1]{%
   \markdownWarning{%
@@ -32983,51 +33259,108 @@ end
 % \par
 % \begin{markdown}
 %
-%#### \LaTeX{} Themes {#latex-themes-implementation}
+%### Options
+% The supplied package options are processed using the \mref{markdownSetup} macro.
 %
-% This section implements the theme-loading mechanism and the example themes
-% provided with the Markdown package.
+% \end{markdown}
+%  \begin{macrocode}
+\DeclareOption*{%
+  \expandafter\markdownSetup\expandafter{\CurrentOption}}%
+\ProcessOptions\relax
+%    \end{macrocode}
+% \begin{markdown}
+%
+%### Themes {#latex-themes-implementation}
+%
+% This section overrides the plain \TeX{} implementation of the theme-loading
+% mechanism from Section <#sec:themes-implementation>. Futhermore, this section
+% also implements the example themes provided with the Markdown package.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
+\cs_gset:Nn
+  \@@_load_theme:nn
+  {
 %    \end{macrocode}
+% \par
 % \begin{markdown}
 %
-% To keep track of our current place when packages themes have been nested,
-% we will maintain the \mdef{g_\@\@_latex_themes_seq} stack of theme names.
+% If the Markdown package has already been loaded, determine whether
+% a file named `markdowntheme`\meta{munged theme name}`.sty` exists
+% and whether we are still in the preamble.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\newcommand\markdownLaTeXThemeName{}
-\seq_new:N \g_@@_latex_themes_seq
-\seq_gput_right:NV
-  \g_@@_latex_themes_seq
-  \markdownLaTeXThemeName
-\newcommand\markdownLaTeXThemeLoad[2]{
-  \def\@tempa{%
-    \def\markdownLaTeXThemeName{#2}
-    \seq_gput_right:NV
-      \g_@@_latex_themes_seq
-      \markdownLaTeXThemeName
-    \RequirePackage{#1}
-    \seq_pop_right:NN
-      \g_@@_latex_themes_seq
-      \l_tmpa_tl
-    \seq_get_right:NN
-      \g_@@_latex_themes_seq
-      \l_tmpa_tl
-    \exp_args:NNV
-      \def
-      \markdownLaTeXThemeName
-      \l_tmpa_tl}
-  \ifmarkdownLaTeXLoaded
-    \@tempa
-  \else
-    \exp_args:No
+    \ifmarkdownLaTeXLoaded
+      \ifx\@onlypreamble\@notprerr
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If both conditions are true does, end with an error, since we cannot load
+% \LaTeX{} themes after the preamble. Otherwise, try loading a plain \TeX{}
+% theme instead.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        \file_if_exist:nTF
+          { markdown theme #2.sty }
+          {
+            \markdownError
+              { Cannot~load~file~markdown theme #2.sty~after~preamble }
+              { Load~Markdown~theme~#1~before~\begin{document} }
+          }
+          {
+            \@@_plain_tex_load_theme:nn
+              { #1 }
+              { #2 }
+          }
+      \else
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If the Markdown package has already been loaded but we are still in the
+% preamble, load a \LaTeX{} theme if it exists or load a plain \TeX{} theme
+% otherwise.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        \file_if_exist:nTF
+          { markdown theme #2.sty }
+          {
+            \markdownInfo
+              { Loading~LaTeX~Markdown~theme~#1 }
+            \RequirePackage
+              { markdown theme #2 }
+          }
+          {
+            \@@_plain_tex_load_theme:nn
+              { #1 }
+              { #2 }
+          }
+      \fi
+    \else
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If the Markdown package has not yet been loaded, postpone the loading until
+% the Markdown package has finished loading.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      \markdownInfo
+        {
+          Postponing~loading~Markdown~theme~#1~until~
+          Markdown~package~has~finished~loading
+        }
       \AtEndOfPackage
-      { \@tempa }
-  \fi}
+        {
+          \@@_load_theme:nn
+            { #1 }
+            { #2 }
+        }
+    \fi
+  }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \begin{markdown}
@@ -33037,7 +33370,7 @@ end
 % \end{markdown}
 % \iffalse
 %</latex>
-%<*latex-themes-witiko-dot>
+%<*themes-witiko-dot>
 % \fi
 %  \begin{macrocode}
 \markdownSetup{fencedCode}%
@@ -33102,8 +33435,8 @@ end
   \next#2 \relax}%
 %    \end{macrocode}
 % \iffalse
-%</latex-themes-witiko-dot>
-%<*latex-themes-witiko-graphicx-http>
+%</themes-witiko-dot>
+%<*themes-witiko-graphicx-http>
 % \fi
 % \par
 % \begin{markdown}
@@ -33239,51 +33572,10 @@ end
 \endgroup
 %    \end{macrocode}
 % \iffalse
-%</latex-themes-witiko-graphicx-http>
-%<*latex-themes-witiko-tilde>
-% \fi
-% \par
-% \begin{markdown}
-%
-% The `witiko/tilde` theme redefines the tilde token renderer prototype,
-% so that it expands to a non-breaking space:
-%
-% \end{markdown}
-%  \begin{macrocode}
-\renewcommand\markdownRendererTildePrototype{~}%
-%    \end{macrocode}
-% \iffalse
-%</latex-themes-witiko-tilde>
+%</themes-witiko-graphicx-http>
 %<*latex>
 % \fi
 % \par
-% \begin{markdown}
-%
-%### Options
-% The supplied package options are processed using the \mref{markdownSetup} macro.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\DeclareOption*{%
-  \expandafter\markdownSetup\expandafter{\CurrentOption}}%
-\ProcessOptions\relax
-%    \end{macrocode}
-% \begin{markdown}
-%
-% After processing the options, activate the `code` key, which can be used
-% to immediately expand and execute code. This can be especially useful in
-% \LaTeX{} snippets.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\ExplSyntaxOn
-\keys_define:nn
-  { markdown/options }
-  {
-    code .code:n = { #1 },
-  }
-\ExplSyntaxOff
-%    \end{macrocode}
 % \begin{markdown}
 %
 %### Token Renderer Prototypes {#latex-default-renderer-prototypes}
@@ -33647,7 +33939,6 @@ end
 \markdownSetup{
   rendererPrototypes = {
     headerAttributeContextBegin = {
-      \group_begin:
       \seq_clear:N \l_@@_header_identifiers_seq
       \markdownSetup
         {
@@ -33664,7 +33955,6 @@ end
       \seq_map_inline:Nn
         \l_@@_header_identifiers_seq
         { \label { ##1 } }
-      \group_end:
     },
   },
 }
@@ -34598,6 +34888,46 @@ end
 |endgroup
 %    \end{macrocode}
 % \par
+% \begin{markdown}
+%
+%### Themes
+%
+% This section overrides the plain \TeX{} implementation of the theme-loading
+% mechanism from Section <#sec:themes-implementation>.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\cs_gset:Nn
+  \@@_load_theme:nn
+  {
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Determine whether a file named `t-markdowntheme`\meta{munged theme
+% name}`.tex` exists. If it does, load it. Otherwise, try loading a plain
+% \TeX{} theme instead.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \file_if_exist:nTF
+      { t - markdown theme #2.tex }
+      {
+        \markdownInfo
+          { Loading~ConTeXt~Markdown~theme~#1 }
+        \usemodule
+          [ t ]
+          [ markdown theme #2 ]
+      }
+      {
+        \@@_plain_tex_load_theme:nn
+          { #1 }
+          { #2 }
+      }
+  }
+\ExplSyntaxOff
+%    \end{macrocode}
 % \begin{markdown}
 %
 %### Token Renderer Prototypes

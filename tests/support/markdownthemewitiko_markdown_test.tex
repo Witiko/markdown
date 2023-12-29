@@ -1,3 +1,6 @@
+% Load support file `setup.tex` with helper macros.
+\input setup
+
 \ExplSyntaxOn
 
 \cs_gset:Npn
@@ -17,11 +20,12 @@
           { ##1 }
       }
 
-    % Expand `\markdownSetup{<content of keyval-setup.tex>}`.
+    % Expand `\markdownSetupSnippet{snippet}{<content of keyval-setup.tex>}`.
     \cs_generate_variant:Nn
-      \__markdown_setup:n
-      { V }
-    \__markdown_setup:V
+      \__markdown_setup_snippet:nn
+      { nV }
+    \__markdown_setup_snippet:nV
+      { snippet }
       \l_tmpa_tl
   }
 

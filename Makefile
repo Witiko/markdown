@@ -45,7 +45,7 @@ DOCUMENTATION=$(TECHNICAL_DOCUMENTATION) $(HTML_USER_MANUAL) $(ROOT_README) $(VE
 LIBRARIES=libraries/markdown-tinyyaml.lua
 INSTALLABLES=markdown.lua markdown-cli.lua markdown.tex markdown.sty t-markdown.tex \
   markdownthemewitiko_dot.sty markdownthemewitiko_graphicx_http.sty \
-  markdownthemewitiko_tilde.sty
+  markdownthemewitiko_tilde.tex
 EXTRACTABLES=$(INSTALLABLES) $(MARKDOWN_USER_MANUAL) $(TECHNICAL_DOCUMENTATION_RESOURCES)
 MAKEABLES=$(TECHNICAL_DOCUMENTATION) $(USER_MANUAL) $(INSTALLABLES) $(EXAMPLES)
 RESOURCES=$(DOCUMENTATION) $(EXAMPLES_RESOURCES) $(EXAMPLES_SOURCES) $(EXAMPLES) \
@@ -126,6 +126,9 @@ $(EXTRACTABLES): $(INSTALLER) $(DTXARCHIVE)
 	    -e 's#(((VERSION)))#$(VERSION)#g' \
 	    -e 's#(((LASTMODIFIED)))#$(LASTMODIFIED)#g' \
 	    $(INSTALLABLES)
+	sed -i \
+	    -e '/\\ExplSyntaxOff/{N;/\\ExplSyntaxOn/d;}' \
+	    $(INSTALLABLES)
 
 # This target produces the version file.
 $(VERSION_FILE): force
@@ -138,10 +141,12 @@ $(LIBRARIES): force
 # This target typesets the manual.
 $(TECHNICAL_DOCUMENTATION): $(DTXARCHIVE) $(TECHNICAL_DOCUMENTATION_RESOURCES)
 	latexmk -silent $< || (cat $(basename $@).log 1>&2; exit 1)
-	test `tail $(basename $<).log | sed -rn 's/.*\(([0-9]*) pages.*/\1/p'` -gt 350
+	test `tail $(basename $<).log | sed -rn 's/.*\(([0-9]*) pages.*/\1/p'` -ge 380
 
 # This pseudotarget continuously typesets the manual.
 preview: $(DTXARCHIVE) $(TECHNICAL_DOCUMENTATION_RESOURCES)
+	-mkdir markdown/
+	-ln -s ../markdown.tex markdown/markdown.tex
 	latexmk -silent -pvc $<
 
 # These targets typeset the examples.
@@ -209,9 +214,9 @@ $(TDSARCHIVE): $(DTXARCHIVE) $(INSTALLER) $(INSTALLABLES) $(DOCUMENTATION) $(EXA
 	  tex/context/third/markdown scripts/markdown
 	cp markdown.lua $(LIBRARIES) tex/luatex/markdown/
 	cp markdown-cli.lua scripts/markdown/
-	cp markdown.sty markdownthemewitiko_dot.sty markdownthemewitiko_graphicx_http.sty \
-	  markdownthemewitiko_tilde.sty tex/latex/markdown/
-	cp markdown.tex tex/generic/markdown/
+	cp markdown.sty markdownthemewitiko_graphicx_http.sty markdownthemewitiko_dot.sty \
+	  tex/latex/markdown/
+	cp markdown.tex markdownthemewitiko_tilde.tex tex/generic/markdown/
 	cp t-markdown.tex tex/context/third/markdown/
 	@# Installing the documentation.
 	mkdir -p doc/generic/markdown doc/latex/markdown/examples \
