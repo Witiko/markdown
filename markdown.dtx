@@ -34840,7 +34840,7 @@ end
 \long\def\doinputmarkdown[#1]#2{%
   \begingroup
     \iffirstargument
-      \setupmarkdown{#1}%
+      \setupmarkdown[#1]%
     \fi
     \markdownInput{#2}%
   \endgroup}%

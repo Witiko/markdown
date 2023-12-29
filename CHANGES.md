@@ -5,6 +5,8 @@
 Fixes:
 
 - Prevent unwanted space tokens before `*ContextEnd` renderers. (#373)
+- Make ConTeXt command `\inputmarkdown` properly process extra options.
+  (#389, #390, contributed by @ibotty)
 
 Documentation:
 
