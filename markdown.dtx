@@ -12087,7 +12087,7 @@ a specific look and other high-level goals without low-level programming.
 % \par
 % \begin{markdown}
 
-Example themes provided with the Markdown package include:
+Built-in plain \TeX{} themes provided with the Markdown package include:
 
 \pkg{witiko/tilde}
 
@@ -21091,7 +21091,7 @@ beginning of a \LaTeX{} document.
 % \par
 % \markdownBegin
 
-Example themes provided with the Markdown package include:
+Built-in \LaTeX{} themes provided with the Markdown package include:
 
 \pkg{witiko/dot}
 
@@ -21555,7 +21555,7 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</context>
-%<*manual-options>
+%<*themes-witiko-markdown-defaults-context>
 % \fi
 % \begin{markdown}
 
@@ -21588,6 +21588,25 @@ For example, to load a theme named `witiko/tilde` in your document:
 \setupmarkdown[import=witiko/tilde]
 ```````
 
+Built-in \Hologo{ConTeXt} themes provided with the Markdown package include:
+
+\pkg{witiko/markdown/defaults}
+
+:    A \Hologo{ConTeXt} theme with the default definitions of token renderer
+     prototypes for plain \TeX{}. This theme is loaded automatically together
+     with the package and explicitly loading it has no effect.
+
+% \end{markdown}
+%  \begin{macrocode}
+\startmodule[markdownthemewitiko_markdown_defaults]
+\unprotect
+%    \end{macrocode}
+% \iffalse
+%</themes-witiko-markdown-defaults-context>
+%<*manual-options>
+% \fi
+% \begin{markdown}
+%
 % Implementation {#implementation}
 %================
 %
@@ -35278,7 +35297,8 @@ end
   \markdownRendererInputRawBlockPrototype
   \markdownRendererInputRawInlinePrototype
 \ExplSyntaxOff
-\stopmodule\protect
+\stopmodule
+\protect
 %    \end{macrocode}
 % \iffalse
 %</context>
