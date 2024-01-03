@@ -21075,7 +21075,6 @@ would use the following code in the preamble of your document:
 %  \begin{macrocode}
 \newif\ifmarkdownLaTeXLoaded
   \markdownLaTeXLoadedfalse
-\AtEndOfPackage{\markdownLaTeXLoadedtrue}
 %    \end{macrocode}
 % \iffalse
 %</latex>
@@ -21291,7 +21290,7 @@ following image:
 %    \end{macrocode}
 % \iffalse
 %</themes-witiko-graphicx-http>
-%<*themes-witiko-markdown-defaults-latex>
+%<*manual-options>
 % \fi
 % \par
 % \begin{markdown}
@@ -21303,6 +21302,20 @@ following image:
      package and explicitly loading it has no effect.
 
 % \end{markdown}
+% \iffalse
+%</manual-options>
+%<*latex>
+% \fi
+%  \begin{macrocode}
+\AtEndOfPackage{
+  \markdownLaTeXLoadedtrue
+  \markdownSetup{theme=witiko/markdown/defaults}
+}
+%    \end{macrocode}
+% \iffalse
+%</latex>
+%<*themes-witiko-markdown-defaults-latex>
+% \fi
 %  \begin{macrocode}
 \ProvidesPackage{markdownthemewitiko_markdown_defaults}[2024/01/03]%
 %    \end{macrocode}
@@ -21555,7 +21568,7 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</context>
-%<*themes-witiko-markdown-defaults-context>
+%<*manual-options>
 % \fi
 % \begin{markdown}
 
@@ -21597,6 +21610,10 @@ Built-in \Hologo{ConTeXt} themes provided with the Markdown package include:
      with the package and explicitly loading it has no effect.
 
 % \end{markdown}
+% \iffalse
+%</manual-options>
+%<*themes-witiko-markdown-defaults-context>
+% \fi
 %  \begin{macrocode}
 \startmodule[markdownthemewitiko_markdown_defaults]
 \unprotect
@@ -32610,6 +32627,26 @@ end
 % \fi
 % \begin{markdown}
 %
+% If plain \TeX{} is the top layer, we load the `witiko/markdown/defaults`
+% plain \TeX{} theme with the default definitions for token renderer
+% prototypes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\str_if_eq:VVT
+  \c_@@_top_layer_tl
+  \c_@@_option_layer_plain_tex_tl
+  {
+    \ExplSyntaxOff
+    \@@_setup:n
+      {theme = witiko/markdown/defaults}
+    \ExplSyntaxOn
+  }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \begin{markdown}
+%
 %### Lua Snippets
 % After the \mdef{markdownPrepareLuaOptions} macro has been fully expanded,
 % the \mdef{markdownLuaOptions} macro will expands to a Lua table that
@@ -35012,8 +35049,6 @@ end
       }
   }
 \ExplSyntaxOff
-\stopmodule
-\protect
 %    \end{macrocode}
 % \iffalse
 %</context>
@@ -35331,4 +35366,21 @@ end
 %    \end{macrocode}
 % \iffalse
 %</themes-witiko-markdown-defaults-context>
+%<*context>
+% \fi
+% \par
+% \begin{markdown}
+%
+% At the end of the \Hologo{ConTeXt} implementation, we load the
+% The `witiko/markdown/defaults` \Hologo{ConTeXt} theme with the default
+% definitions for token renderer prototypes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\setupmarkdown[theme=witiko/markdown/defaults]
+\stopmodule
+\protect
+%    \end{macrocode}
+% \iffalse
+%</context>
 % \fi
