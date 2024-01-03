@@ -12134,9 +12134,9 @@ following text, where the middot (`·`) denotes a non-breaking space:
 
 \pkg{witiko/markdown/defaults}
 
-:    A theme with the default definitions of token renderer prototypes for
-     plain \TeX{}. This theme is loaded automatically together with the package
-     and explicitly loading it has no effect.
+:    A plain \TeX{} theme with the default definitions of token renderer
+     prototypes for plain \TeX{}. This theme is loaded automatically together
+     with the package and explicitly loading it has no effect.
 
 % Please, see Section <#sec:themes-implementation> for implementation
 % details of the built-in themes.
@@ -21298,9 +21298,9 @@ following image:
 
 \pkg{witiko/markdown/defaults}
 
-:    A theme with the default definitions of token renderer prototypes for
-     plain \TeX{}. This theme is loaded automatically together with the package
-     and explicitly loading it has no effect.
+:    A \LaTeX{} theme with the default definitions of token renderer prototypes
+     for plain \TeX{}. This theme is loaded automatically together with the
+     package and explicitly loading it has no effect.
 
 % \end{markdown}
 %  \begin{macrocode}
@@ -32164,8 +32164,8 @@ end
 % \fi
 % \begin{markdown}
 %
-% The `witiko/markdown/defaults` theme provides default definitions
-% for token renderer prototypes. See Section
+% The `witiko/markdown/defaults` plain \TeX{} theme provides default
+% definitions for token renderer prototypes. See Section
 % <#sec:tex-token-renderer-prototypes> for the actual definitions.
 %
 %### Token Renderer Prototypes {#tex-token-renderer-prototypes}
@@ -33614,10 +33614,25 @@ end
 %    \end{macrocode}
 % \iffalse
 %</themes-witiko-graphicx-http>
-%<*latex>
+%<*themes-witiko-markdown-defaults-latex>
 % \fi
 % \par
 % \begin{markdown}
+%
+% The `witiko/markdown/defaults` \LaTeX{} theme provides default definitions
+% for token renderer prototypes. First, the theme loads the plain \TeX{}
+% theme with the default definitions for plain \TeX{}:
+%
+% \end{markdown}
+%  \begin{macrocode}
+\markdownLoadPlainTeXTheme
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Next, the \LaTeX{} theme overrides some of the plain \TeX{} definitions.
+% See Section <#sec:latex-default-renderer-prototypes> for the actual
+% definitions.
 %
 %### Token Renderer Prototypes {#latex-default-renderer-prototypes}
 %
@@ -34806,8 +34821,12 @@ end
       }
   }
 \ExplSyntaxOff
-\fi % Closes `\markdownIfOption{Plain}{\iffalse}{iftrue}`
+\fi % Closes `\markdownIfOption{Plain}{\iffalse}{\iftrue}`
 %    \end{macrocode}
+% \iffalse
+%</themes-witiko-markdown-defaults-latex>
+%<*latex>
+% \fi
 % \par
 % \begin{markdown}
 %
