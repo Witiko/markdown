@@ -73,20 +73,23 @@ mtxrun --generate
 # Install the Markdown package
 make -C ${BUILD_DIR} implode
 make -C ${BUILD_DIR} base
-mkdir -p                                               ${INSTALL_DIR}/tex/luatex/markdown/
-cp ${BUILD_DIR}/markdown.lua                           ${INSTALL_DIR}/tex/luatex/markdown/
-cp ${BUILD_DIR}/libraries/markdown-tinyyaml.lua        ${INSTALL_DIR}/tex/luatex/markdown/
-mkdir -p                                               ${INSTALL_DIR}/scripts/markdown/
-cp ${BUILD_DIR}/markdown-cli.lua                       ${INSTALL_DIR}/scripts/markdown/
-mkdir -p                                               ${INSTALL_DIR}/tex/generic/markdown/
-cp ${BUILD_DIR}/markdown.tex                           ${INSTALL_DIR}/tex/generic/markdown/
-cp ${BUILD_DIR}/markdownthemewitiko_tilde.tex          ${INSTALL_DIR}/tex/generic/markdown/
-mkdir -p                                               ${INSTALL_DIR}/tex/latex/markdown/
-cp ${BUILD_DIR}/markdown.sty                           ${INSTALL_DIR}/tex/latex/markdown/
-cp ${BUILD_DIR}/markdownthemewitiko_dot.sty            ${INSTALL_DIR}/tex/latex/markdown/
-cp ${BUILD_DIR}/markdownthemewitiko_graphicx_http.sty  ${INSTALL_DIR}/tex/latex/markdown/
-mkdir -p                                               ${INSTALL_DIR}/tex/context/third/markdown/
-cp ${BUILD_DIR}/t-markdown.tex                         ${INSTALL_DIR}/tex/context/third/markdown/
+mkdir -p                                                     ${INSTALL_DIR}/tex/luatex/markdown/
+cp ${BUILD_DIR}/markdown.lua                                 ${INSTALL_DIR}/tex/luatex/markdown/
+cp ${BUILD_DIR}/libraries/markdown-tinyyaml.lua              ${INSTALL_DIR}/tex/luatex/markdown/
+mkdir -p                                                     ${INSTALL_DIR}/scripts/markdown/
+cp ${BUILD_DIR}/markdown-cli.lua                             ${INSTALL_DIR}/scripts/markdown/
+mkdir -p                                                     ${INSTALL_DIR}/tex/generic/markdown/
+cp ${BUILD_DIR}/markdown.tex                                 ${INSTALL_DIR}/tex/generic/markdown/
+cp ${BUILD_DIR}/markdownthemewitiko_tilde.tex                ${INSTALL_DIR}/tex/generic/markdown/
+cp ${BUILD_DIR}/markdownthemewitiko_markdown_defaults.tex    ${INSTALL_DIR}/tex/generic/markdown/
+mkdir -p                                                     ${INSTALL_DIR}/tex/latex/markdown/
+cp ${BUILD_DIR}/markdown.sty                                 ${INSTALL_DIR}/tex/latex/markdown/
+cp ${BUILD_DIR}/markdownthemewitiko_dot.sty                  ${INSTALL_DIR}/tex/latex/markdown/
+cp ${BUILD_DIR}/markdownthemewitiko_graphicx_http.sty        ${INSTALL_DIR}/tex/latex/markdown/
+cp ${BUILD_DIR}/markdownthemewitiko_markdown_defaults.sty    ${INSTALL_DIR}/tex/latex/markdown/
+mkdir -p                                                     ${INSTALL_DIR}/tex/context/third/markdown/
+cp ${BUILD_DIR}/t-markdown.tex                               ${INSTALL_DIR}/tex/context/third/markdown/
+cp ${BUILD_DIR}/t-markdownthemewitiko_markdown_defaults.tex  ${INSTALL_DIR}/tex/context/third/markdown/
 
 # Generate the ConTeXt file database
 mtxrun --generate

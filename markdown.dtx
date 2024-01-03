@@ -972,15 +972,19 @@ make base
 ``````
 This should produce the following files:
 
-* `markdown.lua`, the Lua module,
-* `libraries/markdown-tinyyaml.lua`, an external library for reading \acro{yaml},
-* `markdown-cli.lua`, the Lua command-line interface,
-* `markdown.tex`, the plain \TeX{} macro package,
-* `markdown.sty`, the \LaTeX{} package,
-* `markdownthemewitiko_dot.sty`, the `witiko/dot` \LaTeX{} theme,
-* `markdownthemewitiko_graphicx_http.sty`, the `witiko/graphicx/http` \LaTeX{} theme,
-* `markdownthemewitiko_tilde.tex`, the `witiko/tilde` \LaTeX{} theme, and
-* `t-markdown.tex`, the \Hologo{ConTeXt} module.
+* `markdown.lua`: The Lua module
+* `libraries/markdown-tinyyaml.lua`: An external library for reading \acro{yaml}
+* `markdown-cli.lua`: The Lua command-line interface
+* `markdown.tex`: The plain \TeX{} macro package
+* `markdown.sty`: The \LaTeX{} package
+* `markdownthemewitiko_dot.sty`: The `witiko/dot` \LaTeX{} theme
+* `markdownthemewitiko_graphicx_http.sty`: The `witiko/graphicx/http` \LaTeX{} theme
+* `markdownthemewitiko_tilde.tex`: The `witiko/tilde` theme
+* `markdownthemewitiko_markdown_defaults.tex`,
+  `markdownthemewitiko_markdown_defaults.sty`, and
+  `t-markdownthemewitiko_markdown_defaults.tex`: The `witiko/markdown/defaults`
+  theme
+* `t-markdown.tex`: The \Hologo{ConTeXt} module
 
 ### Local Installation
 
@@ -992,11 +996,14 @@ placed:
 * `⟨TEXMF⟩/tex/luatex/markdown/markdown-tinyyaml.lua`
 * `⟨TEXMF⟩/scripts/markdown/markdown-cli.lua`
 * `⟨TEXMF⟩/tex/generic/markdown/markdown.tex`
+* `⟨TEXMF⟩/tex/generic/markdown/markdownthemewitiko_tilde.tex`
+* `⟨TEXMF⟩/tex/generic/markdown/markdownthemewitiko_markdown_defaults.tex`
 * `⟨TEXMF⟩/tex/latex/markdown/markdown.sty`
 * `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_dot.sty`
 * `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_graphicx_http.sty`
-* `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_tilde.tex`
+* `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_markdown_defaults.sty`
 * `⟨TEXMF⟩/tex/context/third/markdown/t-markdown.tex`
+* `⟨TEXMF⟩/tex/context/third/markdown/t-markdownthemewitiko_markdown_defaults.tex`
 
 where `⟨TEXMF⟩` corresponds to a root of your \TeX{} distribution, such as
 `/usr/share/texmf` and `~/texmf` on UN\*X systems or
@@ -1016,10 +1023,13 @@ This is where the individual files should be placed:
 * `./markdown-cli.lua`
 * `./markdown/markdown.tex`
 * `./markdown.sty`
+* `./t-markdown.tex`
 * `./markdownthemewitiko_dot.sty`
 * `./markdownthemewitiko_graphicx_http.sty`
 * `./markdownthemewitiko_tilde.tex`
-* `./t-markdown.tex`
+* `./markdownthemewitiko_markdown_defaults.tex`
+* `./markdownthemewitiko_markdown_defaults.sty`
+* `./t-markdownthemewitiko_markdown_defaults.tex`
 
 %</manual>
 %<*lua>
