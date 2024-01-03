@@ -1,5 +1,12 @@
 # Changes
 
+## 3.4.0
+
+Development:
+
+- Separate default token renderer prototype definitions to a universal theme
+  `witiko/markdown/defaults`. (#391, #392)
+
 ## 3.3.0 (2023-12-30)
 
 Development:
