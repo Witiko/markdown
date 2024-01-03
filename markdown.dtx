@@ -1240,7 +1240,7 @@ local uni_algos = require("lua-uni-algos")
 % The following packages are soft prerequisites. They are only used to provide
 % default token renderer prototypes (see sections
 % <#sec:texrendererprototypes> and
-% <#sec:latex-default-renderer-prototypes>) or \LaTeX{} themes (see Section
+% <#sec:latex-token-renderer-prototypes>) or \LaTeX{} themes (see Section
 % <#sec:latexthemes>) and will not be loaded if the `plain` package option
 % has been enabled (see Section <#sec:latexplain>):
 %
@@ -12139,7 +12139,7 @@ following text, where the middot (`·`) denotes a non-breaking space:
      with the package and explicitly loading it has no effect.
 
 % Please, see Section <#sec:themes-implementation> for implementation
-% details of the built-in themes.
+% details of the built-in plain \TeX{} themes.
 
 ### Snippets {#snippets}
 
@@ -21314,7 +21314,7 @@ following image:
 % \begin{markdown}
 %
 % Please, see Section <#sec:latex-themes-implementation> for implementation
-% details of the built-in themes.
+% details of the built-in \LaTeX{} themes.
 %
 % \Hologo{ConTeXt} Interface {#contextinterface}
 %----------------------------
@@ -21606,6 +21606,9 @@ Built-in \Hologo{ConTeXt} themes provided with the Markdown package include:
 %<*manual-options>
 % \fi
 % \begin{markdown}
+%
+% Please, see Section <#sec:context-themes-implementation> for implementation
+% details of the built-in \Hologo{ConTeXt} themes.
 %
 % Implementation {#implementation}
 %================
@@ -32053,7 +32056,8 @@ end
 %### Themes {#themes-implementation}
 %
 % This section implements the theme-loading mechanism and the built-in themes
-% provided with the Markdown package.
+% provided with the Markdown package. Futhermore, this section also implements
+% the built-in plain \TeX{} themes provided with the Markdown package.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -33334,7 +33338,7 @@ end
 %
 % This section overrides the plain \TeX{} implementation of the theme-loading
 % mechanism from Section <#sec:themes-implementation>. Futhermore, this section
-% also implements the built-in themes provided with the Markdown package.
+% also implements the built-in \LaTeX{} themes provided with the Markdown package.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -33639,8 +33643,8 @@ end
 % \begin{markdown}
 %
 % The `witiko/markdown/defaults` \LaTeX{} theme provides default definitions
-% for token renderer prototypes. First, the theme loads the plain \TeX{}
-% theme with the default definitions for plain \TeX{}:
+% for token renderer prototypes. First, the \LaTeX{} theme loads the plain
+% \TeX{} theme with the default definitions for plain \TeX{}:
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -33650,10 +33654,10 @@ end
 % \begin{markdown}
 %
 % Next, the \LaTeX{} theme overrides some of the plain \TeX{} definitions.
-% See Section <#sec:latex-default-renderer-prototypes> for the actual
+% See Section <#sec:latex-token-renderer-prototypes> for the actual
 % definitions.
 %
-%### Token Renderer Prototypes {#latex-default-renderer-prototypes}
+%### Token Renderer Prototypes {#latex-token-renderer-prototypes}
 %
 % The following configuration should be considered placeholder. If the `plain`
 % package option has been enabled (see Section <#sec:latexplain>), none of
@@ -34969,10 +34973,12 @@ end
 % \par
 % \begin{markdown}
 %
-%### Themes
+%### Themes {#context-themes-implementation}
 %
 % This section overrides the plain \TeX{} implementation of the theme-loading
-% mechanism from Section <#sec:themes-implementation>.
+% mechanism from Section <#sec:themes-implementation>. Futhermore, this section
+% also implements the built-in \Hologo{ConTeXt} themes provided with the
+% Markdown package.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -35006,10 +35012,33 @@ end
       }
   }
 \ExplSyntaxOff
+\stopmodule
+\protect
 %    \end{macrocode}
+% \iffalse
+%</context>
+%<*themes-witiko-markdown-defaults-context>
+% \fi
+% \par
 % \begin{markdown}
 %
-%### Token Renderer Prototypes
+% The `witiko/markdown/defaults` \Hologo{ConTeXt} theme provides default
+% definitions for token renderer prototypes. First, the \Hologo{ConTeXt} theme
+% loads the plain \TeX{} theme with the default definitions for plain \TeX{}:
+%
+% \end{markdown}
+%  \begin{macrocode}
+\markdownLoadPlainTeXTheme
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Next, the \Hologo{ConTeXt} theme overrides some of the plain \TeX{} definitions.
+% See Section <#sec:context-token-renderer-prototypes> for the actual
+% definitions.
+%
+%### Token Renderer Prototypes {#context-token-renderer-prototypes}
+%
 % The following configuration should be considered placeholder.
 %
 % \end{markdown}
@@ -35301,5 +35330,5 @@ end
 \protect
 %    \end{macrocode}
 % \iffalse
-%</context>
+%</themes-witiko-markdown-defaults-context>
 % \fi
