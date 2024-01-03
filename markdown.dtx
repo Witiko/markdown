@@ -12139,7 +12139,7 @@ following text, where the middot (`·`) denotes a non-breaking space:
      and explicitly loading it has no effect.
 
 % Please, see Section <#sec:themes-implementation> for implementation
-% details of the example themes.
+% details of the built-in themes.
 
 ### Snippets {#snippets}
 
@@ -20952,7 +20952,7 @@ other packages used in a document.  Additionally, if we redefine token
 renderers and renderer prototypes ourselves, the default definitions will bring
 no benefit to us. Using the `plain` package option, we can keep the default
 definitions from the plain \TeX{} implementation
-% (see Section <#sec:tex-token-renderer-prototypes>)
+% (see Section <#sec:themes-implementation>)
 and prevent the soft \LaTeX{} prerequisites
 % in Section <#sec:latex-prerequisites>
 from being loaded: The plain option must be set before or when loading the
@@ -21314,7 +21314,7 @@ following image:
 % \begin{markdown}
 %
 % Please, see Section <#sec:latex-themes-implementation> for implementation
-% details of the example themes.
+% details of the built-in themes.
 %
 % \Hologo{ConTeXt} Interface {#contextinterface}
 %----------------------------
@@ -32033,7 +32033,7 @@ end
 %
 %### Themes {#themes-implementation}
 %
-% This section implements the theme-loading mechanism and the example themes
+% This section implements the theme-loading mechanism and the built-in themes
 % provided with the Markdown package.
 %
 % \end{markdown}
@@ -32160,9 +32160,13 @@ end
 %    \end{macrocode}
 % \iffalse
 %</themes-witiko-tilde>
-%<*tex>
+%<*themes-witiko-markdown-defaults-tex>
 % \fi
 % \begin{markdown}
+%
+% The `witiko/markdown/defaults` theme provides default definitions
+% for token renderer prototypes. See Section
+% <#sec:tex-token-renderer-prototypes> for the actual definitions.
 %
 %### Token Renderer Prototypes {#tex-token-renderer-prototypes}
 %
@@ -32342,7 +32346,7 @@ end
 % \par
 % \begin{markdown}
 %
-%#### YAML Metadata Renderer Prototypes {#expl3-yaml-metadata-implementation}
+%#### YAML Metadata Renderer Prototypes
 %
 % To keep track of the current type of structure we inhabit when we are
 % traversing a \acro{yaml} document, we will maintain the
@@ -32577,6 +32581,10 @@ end
 }
 \ExplSyntaxOff
 %    \end{macrocode}
+% \iffalse
+%</themes-witiko-markdown-defaults-tex>
+%<*tex>
+% \fi
 % \begin{markdown}
 %
 %### Lua Snippets
@@ -33307,7 +33315,7 @@ end
 %
 % This section overrides the plain \TeX{} implementation of the theme-loading
 % mechanism from Section <#sec:themes-implementation>. Futhermore, this section
-% also implements the example themes provided with the Markdown package.
+% also implements the built-in themes provided with the Markdown package.
 %
 % \end{markdown}
 %  \begin{macrocode}
