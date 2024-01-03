@@ -45,7 +45,8 @@ DOCUMENTATION=$(TECHNICAL_DOCUMENTATION) $(HTML_USER_MANUAL) $(ROOT_README) $(VE
 LIBRARIES=libraries/markdown-tinyyaml.lua
 INSTALLABLES=markdown.lua markdown-cli.lua markdown.tex markdown.sty t-markdown.tex \
   markdownthemewitiko_dot.sty markdownthemewitiko_graphicx_http.sty \
-  markdownthemewitiko_tilde.tex
+  markdownthemewitiko_tilde.tex markdownthemewitiko_markdown_defaults.tex \
+	markdownthemewitiko_markdown_defaults.sty t-markdownthemewitiko_markdown_defaults.tex
 EXTRACTABLES=$(INSTALLABLES) $(MARKDOWN_USER_MANUAL) $(TECHNICAL_DOCUMENTATION_RESOURCES)
 MAKEABLES=$(TECHNICAL_DOCUMENTATION) $(USER_MANUAL) $(INSTALLABLES) $(EXAMPLES)
 RESOURCES=$(DOCUMENTATION) $(EXAMPLES_RESOURCES) $(EXAMPLES_SOURCES) $(EXAMPLES) \
@@ -214,10 +215,12 @@ $(TDSARCHIVE): $(DTXARCHIVE) $(INSTALLER) $(INSTALLABLES) $(DOCUMENTATION) $(EXA
 	  tex/context/third/markdown scripts/markdown
 	cp markdown.lua $(LIBRARIES) tex/luatex/markdown/
 	cp markdown-cli.lua scripts/markdown/
+	cp markdown.tex markdownthemewitiko_tilde.tex \
+	  markdownthemewitiko_markdown_defaults.tex tex/generic/markdown/
 	cp markdown.sty markdownthemewitiko_graphicx_http.sty markdownthemewitiko_dot.sty \
-	  tex/latex/markdown/
-	cp markdown.tex markdownthemewitiko_tilde.tex tex/generic/markdown/
-	cp t-markdown.tex tex/context/third/markdown/
+	  markdownthemewitiko_markdown_defaults.sty tex/latex/markdown/
+	cp t-markdown.tex t-markdownthemewitiko_markdown_defaults.tex \
+	  tex/context/third/markdown/
 	@# Installing the documentation.
 	mkdir -p doc/generic/markdown doc/latex/markdown/examples \
 	  doc/context/third/markdown/examples doc/optex/markdown/examples
