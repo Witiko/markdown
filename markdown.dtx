@@ -11705,12 +11705,26 @@ A PDF document named `document.pdf` should be produced and contain the text
 \cs_new:Nn
   \@@_define_option_command:n
   {
-    \@@_get_default_option_value:nN
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Do not override options defined before loading the package.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \@@_option_tl_to_csname:nN
       { #1 }
       \l_tmpa_tl
-    \@@_set_option_value:nV
-      { #1 }
-      \l_tmpa_tl
+    \cs_if_exist:cF
+      { \l_tmpa_tl }
+      {
+        \@@_get_default_option_value:nN
+          { #1 }
+          \l_tmpa_tl
+        \@@_set_option_value:nV
+          { #1 }
+          \l_tmpa_tl
+      }
   }
 \cs_new:Nn
   \@@_set_option_value:nn
