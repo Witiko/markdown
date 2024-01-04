@@ -11581,6 +11581,39 @@ Text document named `temporary-output.md` should be produced in the folder
 named `output-directory`.  The document will contain the input markdown
 document converted to \TeX{}.
 
+%</manual-options>
+%<*tex>
+% \fi
+% \begin{markdown}
+%
+%#### Miscellaneous Options
+%
+% The \mdef{markdownOptionStripPercentSigns} macro controls whether a percent
+% sign (`\%`) at the beginning of a line will be discarded when buffering
+% Markdown input (see Section <#sec:buffering>) or not. Notably, this
+% enables the use of markdown when writing \TeX{} package documentation using
+% the \pkg{Doc} \LaTeX{}~package~[@mittelbach17] or similar. The recognized
+% values of the macro are `true` (discard) and `false` (retain). It defaults
+% to `false`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\seq_gput_right:Nn
+  \g_@@_plain_tex_options_seq
+  { stripPercentSigns }
+\prop_gput:Nnn
+  \g_@@_plain_tex_option_types_prop
+  { stripPercentSigns }
+  { boolean }
+\prop_gput:Nnx
+  \g_@@_default_plain_tex_options_prop
+  { stripPercentSigns }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*manual-options>
+
 #### Package Documentation
 
 The \mdef{markdownOptionStripPercentSigns} macro controls whether a percent
@@ -11619,32 +11652,6 @@ A PDF document named `document.pdf` should be produced and contain the text
 %</manual-options>
 %<*tex>
 % \fi
-% \begin{markdown}
-%
-%#### Miscellaneous Options
-%
-% The \mdef{markdownOptionStripPercentSigns} macro controls whether a percent
-% sign (`\%`) at the beginning of a line will be discarded when buffering
-% Markdown input (see Section <#sec:buffering>) or not. Notably, this
-% enables the use of markdown when writing \TeX{} package documentation using
-% the \pkg{Doc} \LaTeX{}~package~[@mittelbach17] or similar. The recognized
-% values of the macro are `true` (discard) and `false` (retain). It defaults
-% to `false`.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\seq_gput_right:Nn
-  \g_@@_plain_tex_options_seq
-  { stripPercentSigns }
-\prop_gput:Nnn
-  \g_@@_plain_tex_option_types_prop
-  { stripPercentSigns }
-  { boolean }
-\prop_gput:Nnx
-  \g_@@_default_plain_tex_options_prop
-  { stripPercentSigns }
-  { false }
-%    \end{macrocode}
 % \begin{markdown}
 %
 %#### Generating Plain \TeX{} Option Macros and Key-Values
