@@ -6,6 +6,8 @@ Development:
 
 - Separate default token renderer prototype definitions to a universal theme
   `witiko/markdown/defaults`. (#391, #392)
+- Add format-independent options `noDefaults` and `plain`, which control the
+  loading of theme `witiko/markdown/defaults`. (#393, #394)
 
 ## 3.3.0 (2023-12-30)
 

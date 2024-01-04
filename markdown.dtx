@@ -1241,8 +1241,8 @@ local uni_algos = require("lua-uni-algos")
 % default token renderer prototypes (see sections
 % <#sec:texrendererprototypes> and
 % <#sec:latex-token-renderer-prototypes>) or \LaTeX{} themes (see Section
-% <#sec:latexthemes>) and will not be loaded if the `plain` package option
-% has been enabled (see Section <#sec:latexplain>):
+% <#sec:latexthemes>) and will not be loaded if the option `plain` has been
+% enabled (see Section <#sec:plain>):
 %
 % \pkg{url}
 %
@@ -11421,6 +11421,51 @@ you would include the following code in your plain \TeX{} document:
 % \par
 % \begin{markdown}
 %
+% The
+% \mdef{markdownIfOption}`{`\meta{name}`}{`\meta{iftrue}`}{`\meta{iffalse}`}`
+% macro is provided for testing, whether the value of
+% `\markdownOption`\meta{name} is `true`. If the value is `true`, then
+% \meta{iftrue} is expanded, otherwise \meta{iffalse} is expanded.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\prg_new_conditional:Nnn
+  \@@_if_option:n
+  { TF, T, F }
+  {
+    \@@_get_option_type:nN
+      { #1 }
+      \l_tmpa_tl
+    \str_if_eq:NNF
+      \l_tmpa_tl
+      \c_@@_option_type_boolean_tl
+      {
+        \msg_error:nnxx
+          { markdown }
+          { expected-boolean-option }
+          { #1 }
+          { \l_tmpa_tl }
+      }
+    \@@_get_option_value:nN
+      { #1 }
+      \l_tmpa_tl
+    \str_if_eq:NNTF
+      \l_tmpa_tl
+      \c_@@_option_value_true_tl
+      { \prg_return_true: }
+      { \prg_return_false: }
+  }
+\msg_new:nnn
+  { markdown }
+  { expected-boolean-option }
+  {
+    Option~#1~has~type~#2,~
+    but~a~boolean~was~expected.
+  }
+\let\markdownIfOption=\@@_if_option:nTF
+%    \end{macrocode}
+% \begin{markdown}
+%
 %#### Finalizing and Freezing the Cache
 % The \mdef{markdownOptionFinalizeCache} option corresponds to the Lua
 % interface \Opt{finalizeCache} option, which creates an output file
@@ -11581,6 +11626,127 @@ Text document named `temporary-output.md` should be produced in the folder
 named `output-directory`.  The document will contain the input markdown
 document converted to \TeX{}.
 
+% \fi
+% \begin{markdown}
+
+#### No default token renderer prototypes {#plain}
+
+The Markdown package provides default definitions for token renderer prototypes
+using the `witiko/markdown/defaults`
+% theme (see Section~<sec:#themes>).
+% \iffalse
+theme.
+% \fi
+Although these default definitions provide a useful starting point for authors,
+they use extra resources, especially with higher-level \TeX{} formats such as
+\LaTeX{} and \Hologo{ConTeXt}. Furthermore, the default definitions may change
+at any time, which may pose a problem for maintainers of Markdown themes and
+templates who may require a stable output.
+
+The \mdef{markdownOptionPlain} macro specifies whether higher-level \TeX{}
+formats should only use the plain \TeX{} default definitions or whether they
+should also use the format-specific default definitions. Whereas plain \TeX{}
+default definitions only provide definitions for simple elements such as
+emphasis, strong emphasis, and paragraph separators, format-specific default
+definitions add support for more complex elements such as lists, tables, and
+citations. On the flip side, plain \TeX{} default definitions load no extra
+resources and are rather stable, whereas format-specific default definitions
+load extra resources and are subject to a more rapid change.
+
+Here is how you would enable the macro in a \LaTeX{} document:
+
+``` tex
+\usepackage[plain]{markdown}
+```````
+
+Here is how you would enable the macro in a \Hologo{ConTeXt} document:
+
+``` tex
+\def\markdownOptionPlain{true}
+\usemodule[t][markdown]
+```````
+
+The macro must be set before or during the loading of the package. Setting the
+macro after loading the package has no effect.
+
+% \end{markdown}
+% \iffalse
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_plain_tex_option:nnn
+  { plain }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*manual-options>
+% \fi
+% \begin{markdown}
+
+The \mdef{markdownOptionNoDefaults} macro specifies whether we should prevent
+the loading of default definitions or not. This is useful in contexts, where
+we want to have total control over how all elements are rendered.
+
+Here is how you would enable the macro in a \LaTeX{} document:
+
+``` tex
+\usepackage[noDefaults]{markdown}
+```````
+
+Here is how you would enable the macro in a \Hologo{ConTeXt} document:
+
+``` tex
+\def\markdownOptionNoDefaults{true}
+\usemodule[t][markdown]
+```````
+
+The macro must be set before or during the loading of the package. Setting the
+macro after loading the package has no effect.
+
+% \end{markdown}
+% \iffalse
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_plain_tex_option:nnn
+  { noDefaults }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \begin{markdown}
+%
+%#### Miscellaneous Options
+%
+% The \mdef{markdownOptionStripPercentSigns} macro controls whether a percent
+% sign (`\%`) at the beginning of a line will be discarded when buffering
+% Markdown input (see Section <#sec:buffering>) or not. Notably, this
+% enables the use of markdown when writing \TeX{} package documentation using
+% the \pkg{Doc} \LaTeX{}~package~[@mittelbach17] or similar. The recognized
+% values of the macro are `true` (discard) and `false` (retain). It defaults
+% to `false`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\seq_gput_right:Nn
+  \g_@@_plain_tex_options_seq
+  { stripPercentSigns }
+\prop_gput:Nnn
+  \g_@@_plain_tex_option_types_prop
+  { stripPercentSigns }
+  { boolean }
+\prop_gput:Nnx
+  \g_@@_default_plain_tex_options_prop
+  { stripPercentSigns }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*manual-options>
+
 #### Package Documentation
 
 The \mdef{markdownOptionStripPercentSigns} macro controls whether a percent
@@ -11619,32 +11785,6 @@ A PDF document named `document.pdf` should be produced and contain the text
 %</manual-options>
 %<*tex>
 % \fi
-% \begin{markdown}
-%
-%#### Miscellaneous Options
-%
-% The \mdef{markdownOptionStripPercentSigns} macro controls whether a percent
-% sign (`\%`) at the beginning of a line will be discarded when buffering
-% Markdown input (see Section <#sec:buffering>) or not. Notably, this
-% enables the use of markdown when writing \TeX{} package documentation using
-% the \pkg{Doc} \LaTeX{}~package~[@mittelbach17] or similar. The recognized
-% values of the macro are `true` (discard) and `false` (retain). It defaults
-% to `false`.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\seq_gput_right:Nn
-  \g_@@_plain_tex_options_seq
-  { stripPercentSigns }
-\prop_gput:Nnn
-  \g_@@_plain_tex_option_types_prop
-  { stripPercentSigns }
-  { boolean }
-\prop_gput:Nnx
-  \g_@@_default_plain_tex_options_prop
-  { stripPercentSigns }
-  { false }
-%    \end{macrocode}
 % \begin{markdown}
 %
 %#### Generating Plain \TeX{} Option Macros and Key-Values
@@ -11705,12 +11845,26 @@ A PDF document named `document.pdf` should be produced and contain the text
 \cs_new:Nn
   \@@_define_option_command:n
   {
-    \@@_get_default_option_value:nN
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Do not override options defined before loading the package.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \@@_option_tl_to_csname:nN
       { #1 }
       \l_tmpa_tl
-    \@@_set_option_value:nV
-      { #1 }
-      \l_tmpa_tl
+    \cs_if_exist:cF
+      { \l_tmpa_tl }
+      {
+        \@@_get_default_option_value:nN
+          { #1 }
+          \l_tmpa_tl
+        \@@_set_option_value:nV
+          { #1 }
+          \l_tmpa_tl
+      }
   }
 \cs_new:Nn
   \@@_set_option_value:nn
@@ -20838,9 +20992,6 @@ pdflatex --shell-escape document.tex
 % part is optional, and \meta{key} will be interpreted as \meta{key}`=true`
 % if the `=`\meta{value} part has been omitted.
 %
-% Except for the `plain` option described in Section <#sec:latexplain>,
-% the \LaTeX{} themes described in Section <#sec:latexthemes>, and the
-% snippets described in Section <#sec:snippets>,
 % \LaTeX{} options map directly to the options recognized by the plain
 % \TeX{} interface (see Section <#sec:tex-options>) and to the markdown token
 % renderers and their prototypes recognized by the plain \TeX{} interface (see
@@ -20850,37 +21001,6 @@ pdflatex --shell-escape document.tex
 % using the \envmref{markdown*} \LaTeX{} environment or the \mref{markdownInput}
 % macro (see Section <#sec:latexinterface>), or via the \mref{markdownSetup}
 % macro.
-%
-% To enable the enumeration of \LaTeX{} options, we will maintain the
-% \mdef{g_\@\@_latex_options_seq} sequence.
-%
-% \markdownEnd
-%  \begin{macrocode}
-\ExplSyntaxOn
-\seq_new:N \g_@@_latex_options_seq
-%    \end{macrocode}
-% \begin{markdown}
-%
-% To enable the reflection of default \LaTeX{} options and their types, we
-% will maintain the \mdef{g_\@\@_default_latex_options_prop} and
-% \mdef{g_\@\@_latex_option_types_prop} property lists, respectively.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\prop_new:N \g_@@_latex_option_types_prop
-\prop_new:N \g_@@_default_latex_options_prop
-\seq_gput_right:NV \g_@@_option_layers_seq \c_@@_option_layer_latex_tl
-\cs_new:Nn
-  \@@_add_latex_option:nnn
-  {
-    \@@_add_option:Vnnn
-      \c_@@_option_layer_latex_tl
-      { #1 }
-      { #2 }
-      { #3 }
-  }
-%    \end{macrocode}
-% \begin{markdown}
 %
 %#### Finalizing and Freezing the Cache
 %
@@ -20904,7 +21024,7 @@ pdflatex --shell-escape document.tex
 % `frozencache` package options in the future, so that they can become a
 % standard interface for preparing \LaTeX{} document sources for distribution.
 %
-% \end{markdown}
+% \markdownEnd
 %  \begin{macrocode}
 \DeclareOption{finalizecache}{\markdownSetup{finalizeCache}}
 \DeclareOption{frozencache}{\markdownSetup{frozenCache}}
@@ -20942,38 +21062,9 @@ document:
 }
 ```
 
-% \fi
-% \begin{markdown}
-
-#### No default token renderer prototypes {#latexplain}
-
-Default token renderer prototypes require \LaTeX{} packages that may clash with
-other packages used in a document.  Additionally, if we redefine token
-renderers and renderer prototypes ourselves, the default definitions will bring
-no benefit to us. Using the `plain` package option, we can keep the default
-definitions from the plain \TeX{} implementation
-% (see Section <#sec:themes-implementation>)
-and prevent the soft \LaTeX{} prerequisites
-% in Section <#sec:latex-prerequisites>
-from being loaded: The plain option must be set before or when loading the
-package. Setting the option after loading the package will have no effect.
-
-``` tex
-\usepackage[plain]{markdown}
-```````
-
-% \end{markdown}
-% \iffalse
 %</manual-options>
 %<*latex>
 % \fi
-%  \begin{macrocode}
-\@@_add_latex_option:nnn
-  { plain }
-  { boolean }
-  { false }
-\ExplSyntaxOff
-%    \end{macrocode}
 % \begin{markdown}
 %
 %#### Generating Plain \TeX{} Option, Token Renderer, and Token Renderer Prototype Macros and Key-Values
@@ -21309,7 +21400,19 @@ following image:
 %  \begin{macrocode}
 \AtEndOfPackage{
   \markdownLaTeXLoadedtrue
-  \markdownSetup{theme=witiko/markdown/defaults}
+%    \end{macrocode}
+% \begin{markdown}
+%
+% At the end of the \LaTeX{} module, we load the
+% `witiko/markdown/defaults` \LaTeX{} theme (see Section <#sec:themes>) with
+% the default definitions for token renderer prototypes unless the option
+% `noDefaults` has been enabled (see Section <#sec:plain>).
+%
+% \end{markdown}
+%  \begin{macrocode}
+  \markdownIfOption{noDefaults}{}{
+    \markdownSetup{theme=witiko/markdown/defaults}
+  }
 }
 %    \end{macrocode}
 % \iffalse
@@ -32629,7 +32732,8 @@ end
 %
 % If plain \TeX{} is the top layer, we load the `witiko/markdown/defaults`
 % plain \TeX{} theme with the default definitions for token renderer
-% prototypes.
+% prototypes unless the option `noDefaults` has been enabled (see Section
+% <#sec:plain>).
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -32639,8 +32743,12 @@ end
   \c_@@_option_layer_plain_tex_tl
   {
     \ExplSyntaxOff
-    \@@_setup:n
-      {theme = witiko/markdown/defaults}
+    \@@_if_option:nF
+      { noDefaults }
+      {
+        \@@_setup:n
+          {theme = witiko/markdown/defaults}
+      }
     \ExplSyntaxOn
   }
 \ExplSyntaxOff
@@ -32785,54 +32893,6 @@ end
 % \begin{markdown}
 %
 %### Buffering Markdown Input {#buffering}
-%
-% The
-% \mdef{markdownIfOption}`{`\meta{name}`}{`\meta{iftrue}`}{`\meta{iffalse}`}`
-% macro is provided for testing, whether the value of
-% `\markdownOption`\meta{name} is `true`. If the value is `true`, then
-% \meta{iftrue} is expanded, otherwise \meta{iffalse} is expanded.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\ExplSyntaxOn
-\prg_new_conditional:Nnn
-  \@@_if_option:n
-  { TF, T, F }
-  {
-    \@@_get_option_type:nN
-      { #1 }
-      \l_tmpa_tl
-    \str_if_eq:NNF
-      \l_tmpa_tl
-      \c_@@_option_type_boolean_tl
-      {
-        \msg_error:nnxx
-          { markdown }
-          { expected-boolean-option }
-          { #1 }
-          { \l_tmpa_tl }
-      }
-    \@@_get_option_value:nN
-      { #1 }
-      \l_tmpa_tl
-    \str_if_eq:NNTF
-      \l_tmpa_tl
-      \c_@@_option_value_true_tl
-      { \prg_return_true: }
-      { \prg_return_false: }
-  }
-\msg_new:nnn
-  { markdown }
-  { expected-boolean-option }
-  {
-    Option~#1~has~type~#2,~
-    but~a~boolean~was~expected.
-  }
-\let\markdownIfOption=\@@_if_option:nTF
-\ExplSyntaxOff
-%    \end{macrocode}
-% \par
-% \begin{markdown}
 %
 % The macros \mdef{markdownInputFileStream} and \mdef{markdownOutputFileStream}
 % contain the number of the input and output file streams that will be used for
@@ -33696,9 +33756,9 @@ end
 %
 %### Token Renderer Prototypes {#latex-token-renderer-prototypes}
 %
-% The following configuration should be considered placeholder. If the `plain`
-% package option has been enabled (see Section <#sec:latexplain>), none of
-% it will take effect.
+% The following configuration should be considered placeholder. If the option
+% `plain` has been enabled (see Section <#sec:plain>), none of the definitions
+% will take effect.
 % \end{markdown}
 %  \begin{macrocode}
 \markdownIfOption{plain}{\iffalse}{\iftrue}
@@ -34881,7 +34941,7 @@ end
       }
   }
 \ExplSyntaxOff
-\fi % Closes `\markdownIfOption{Plain}{\iffalse}{\iftrue}`
+\fi % Closes `\markdownIfOption{plain}{\iffalse}{\iftrue}`
 %    \end{macrocode}
 % \iffalse
 %</themes-witiko-markdown-defaults-latex>
@@ -35074,10 +35134,13 @@ end
 %
 %### Token Renderer Prototypes {#context-token-renderer-prototypes}
 %
-% The following configuration should be considered placeholder.
+% The following configuration should be considered placeholder. If the option
+% `plain` has been enabled (see Section <#sec:plain>), none of the definitions
+% will take effect.
 %
 % \end{markdown}
 %  \begin{macrocode}
+\markdownIfOption{plain}{\iffalse}{\iftrue}
 \def\markdownRendererHardLineBreakPrototype{\blank}%
 \def\markdownRendererLeftBracePrototype{\textbraceleft}%
 \def\markdownRendererRightBracePrototype{\textbraceright}%
@@ -35360,6 +35423,7 @@ end
 \cs_gset_eq:NN
   \markdownRendererInputRawBlockPrototype
   \markdownRendererInputRawInlinePrototype
+\fi % Closes `\markdownIfOption{plain}{\iffalse}{\iftrue}`
 \ExplSyntaxOff
 \stopmodule
 \protect
@@ -35371,13 +35435,16 @@ end
 % \par
 % \begin{markdown}
 %
-% At the end of the \Hologo{ConTeXt} implementation, we load the
-% The `witiko/markdown/defaults` \Hologo{ConTeXt} theme with the default
-% definitions for token renderer prototypes.
+% At the end of the \Hologo{ConTeXt} module, we load the
+% `witiko/markdown/defaults` \Hologo{ConTeXt} theme with the default
+% definitions for token renderer prototypes unless the option `noDefaults`
+% has been enabled (see Section <#sec:plain>).
 %
 % \end{markdown}
 %  \begin{macrocode}
-\setupmarkdown[theme=witiko/markdown/defaults]
+\markdownIfOption{noDefaults}{}{
+  \setupmarkdown[theme=witiko/markdown/defaults]
+}
 \stopmodule
 \protect
 %    \end{macrocode}
