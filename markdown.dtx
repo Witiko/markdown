@@ -34138,8 +34138,6 @@ end
 \markdownSetup{rendererPrototypes={
   superscript = {\textsuperscript{#1}},
   subscript = {\textsubscript{#1}},
-  displayMath = {\begin{displaymath}#1\end{displaymath}},
-  inlineMath = {\begin{math}#1\end{math}},
   blockQuoteBegin = {\begin{quotation}},
   blockQuoteEnd = {\end{quotation}},
   inputVerbatim = {\VerbatimInput{#1}},
@@ -35295,7 +35293,6 @@ end
 \def\markdownRendererSuperscriptPrototype#1{\high{#1}}
 \def\markdownRendererSubscriptPrototype#1{\low{#1}}
 \def\markdownRendererDisplayMathPrototype#1{\startformula#1\stopformula}%
-\def\markdownRendererInlineMathPrototype#1{$#1$}%
 %    \end{macrocode}
 % \par
 % \begin{markdown}
