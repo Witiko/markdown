@@ -9,6 +9,11 @@ Development:
 - Add format-independent options `noDefaults` and `plain`, which control the
   loading of theme `witiko/markdown/defaults`. (#393, #394)
 
+Default Renderer Prototypes:
+
+- Do not unnecessarily override math renderer prototypes in LaTeX/ConTeXt.
+  (#387, #396, contributed by @zousiyu1995)
+
 ## 3.3.0 (2023-12-30)
 
 Development:
