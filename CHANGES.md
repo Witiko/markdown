@@ -14,6 +14,10 @@ Default Renderer Prototypes:
 - Do not unnecessarily override math renderer prototypes in LaTeX/ConTeXt.
   (#387, #396, contributed by @zousiyu1995)
 
+Unit Tests:
+
+- In pull requests, process added and modified testfiles first. (feafe9b9)
+
 ## 3.3.0 (2023-12-30)
 
 Development:
