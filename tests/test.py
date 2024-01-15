@@ -19,6 +19,7 @@ import sys
 from tempfile import mkdtemp
 
 import click
+from git import Repo, InvalidGitRepositoryError
 from more_itertools import chunked, zip_equal
 from tqdm import tqdm
 import yaml
@@ -66,6 +67,8 @@ TestFileBatch = List[TestFile]
 TeXFormat = str
 Template = Path
 Command = Tuple[str, ...]
+
+NegativePriority = int
 
 Metadata = str
 SetupText = str
@@ -688,6 +691,40 @@ def format_testfile(testfile: TestFile) -> str:
     return format_testfiles([testfile])
 
 
+@cache
+def get_added_and_modified_paths(repo_path=Path('..')):
+    added_paths, modified_paths = set(), set()
+    try:
+        repo = Repo(str(repo_path))
+        main_commit = repo.commit('main')
+        diffs = main_commit.diff(repo.head.commit)
+
+        for diff in diffs:
+            if diff.change_type == 'A':
+                added_paths.add((repo_path / diff.b_path).resolve())
+            elif diff.change_type == 'M':
+                modified_paths.add((repo_path / diff.b_path).resolve())
+    except InvalidGitRepositoryError:
+        pass
+    return added_paths, modified_paths
+
+
+def modified_first_sort_key(path: Path) -> Tuple[NegativePriority, Path]:
+    added_paths, modified_paths = get_added_and_modified_paths()
+
+    resolved_path = path.resolve()
+    if resolved_path in added_paths:
+        LOGGER.info(f'Running testfile {path} with top priority.')
+        priority = 2
+    elif resolved_path in modified_paths:
+        LOGGER.info(f'Running testfile {path} with high priority.')
+        priority = 1
+    else:
+        priority = 0
+
+    return (-priority, path)
+
+
 def should_process_testfile(read_testfile_result: ReadTestFile, test_parameters: TestParameters) -> bool:
     metadata = yaml.safe_load(read_testfile_result.metadata)
     if not isinstance(metadata, dict) or 'if' not in metadata:
@@ -795,7 +832,7 @@ def main(testfiles: Iterable[str], update_tests: Optional[bool], fail_fast: Opti
         raise ValueError('Options --fail-fast and --update-tests are mutually exclusive')
 
     # Print information about the run.
-    testfiles: List[TestFile] = sorted(map(Path, testfiles))
+    testfiles: List[TestFile] = sorted(map(Path, testfiles), key=modified_first_sort_key if fail_fast else None)
     plural = 's' if len(testfiles) > 1 else ''
     LOGGER.info(f'Running tests for {len(testfiles)} testfile{plural}.')
 
