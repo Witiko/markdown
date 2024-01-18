@@ -18,6 +18,12 @@ Unit Tests:
 
 - In pull requests, process added and modified testfiles first. (feafe9b9)
 
+Deprecation:
+
+- Replace all instances of `\markdownInfo`, `\markdownWarning`, and
+  `\markdownError` with l3msg functions and deprecate `\markdownInfo`,
+  `\markdownWarning`, and `\markdownError`. (#383, #398)
+
 ## 3.3.0 (2023-12-30)
 
 Development:
