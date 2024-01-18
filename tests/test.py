@@ -692,11 +692,11 @@ def format_testfile(testfile: TestFile) -> str:
 
 
 @cache
-def get_added_and_modified_paths(repo_path=Path('..')):
+def get_added_and_modified_paths(repo_path=Path('..'), main_branch='origin/main'):
     added_paths, modified_paths = set(), set()
     try:
         repo = Repo(str(repo_path))
-        main_commit = repo.commit('main')
+        main_commit = repo.commit(main_branch)
         diffs = main_commit.diff(repo.head.commit)
 
         for diff in diffs:
