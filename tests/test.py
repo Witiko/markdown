@@ -11,6 +11,7 @@ import logging
 from logging import getLogger
 from math import ceil
 from multiprocessing import Pool, cpu_count
+import os
 from pathlib import Path
 from typing import Dict, Iterable, Iterator, List, NamedTuple, Optional, Set, Tuple, TypeVar
 from shutil import copyfile, rmtree
@@ -695,6 +696,7 @@ def format_testfile(testfile: TestFile) -> str:
 def get_added_and_modified_paths(repo_path=Path('..'), main_branch='origin/main'):
     added_paths, modified_paths = set(), set()
     try:
+        os.system('git config --global --add safe.directory /__w/markdown/markdown')  # XXX: Remove me
         repo = Repo(str(repo_path))
         main_commit = repo.commit(main_branch)
         diffs = main_commit.diff(repo.head.commit)
