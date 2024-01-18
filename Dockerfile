@@ -37,6 +37,7 @@ ARG DEV_DEPENDENCIES="\
 ARG BINARY_DIR=/usr/local/bin
 ARG BUILD_DIR=/git-repo
 ARG INSTALL_DIR=/usr/local/texlive/texmf-local
+ARG PREINSTALLED_DIR=/usr/local/texlive/*/texmf-dist
 
 ARG FROM_IMAGE=texlive/texlive
 ARG TEXLIVE_TAG=latest
@@ -48,6 +49,7 @@ ARG DEPENDENCIES
 
 ARG BUILD_DIR
 ARG INSTALL_DIR
+ARG PREINSTALLED_DIR
 
 ARG DEV_IMAGE
 
@@ -70,7 +72,14 @@ apt-get -qy install --no-install-recommends ${DEPENDENCIES}
 # Generate the ConTeXt file database
 mtxrun --generate
 
-# Install the Markdown package
+# Uninstall the distribution Markdown package
+rm -rfv ${PREINSTALLED_DIR}/tex/luatex/markdown/
+rm -rfv ${PREINSTALLED_DIR}/scripts/markdown/
+rm -rfv ${PREINSTALLED_DIR}/tex/generic/markdown/
+rm -rfv ${PREINSTALLED_DIR}/tex/latex/markdown/
+rm -rfv ${PREINSTALLED_DIR}/tex/context/third/markdown/
+
+# Install the current Markdown package
 make -C ${BUILD_DIR} implode
 make -C ${BUILD_DIR} base
 mkdir -p                                                     ${INSTALL_DIR}/tex/luatex/markdown/
@@ -114,6 +123,7 @@ ARG DEV_DEPENDENCIES
 ARG BINARY_DIR
 ARG BUILD_DIR
 ARG INSTALL_DIR
+ARG PREINSTALLED_DIR
 
 ARG DEV_IMAGE
 
@@ -122,6 +132,21 @@ LABEL authors="Vít Starý Novotný <witiko@mail.muni.cz>"
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TERM=xterm
 ENV TEXMFLOCAL=${INSTALL_DIR}
+
+RUN <<EOF
+
+set -o errexit
+set -o nounset
+set -o xtrace
+
+# Uninstall the distribution Markdown package
+rm -rfv ${PREINSTALLED_DIR}/tex/luatex/markdown/
+rm -rfv ${PREINSTALLED_DIR}/scripts/markdown/
+rm -rfv ${PREINSTALLED_DIR}/tex/generic/markdown/
+rm -rfv ${PREINSTALLED_DIR}/tex/latex/markdown/
+rm -rfv ${PREINSTALLED_DIR}/tex/context/third/markdown/
+
+EOF
 
 # Install the Markdown package
 COPY --from=build ${BUILD_DIR}/dist ${INSTALL_DIR}/
@@ -151,7 +176,7 @@ fi
 apt-get -qy autoclean
 apt-get -qy clean
 apt-get -qy autoremove --purge
-rm -rf ${AUXILIARY_FILES}
+rm -rfv ${AUXILIARY_FILES}
 
 # Generate the ConTeXt file database
 mtxrun --generate

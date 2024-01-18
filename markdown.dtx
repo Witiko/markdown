@@ -12177,17 +12177,19 @@ a specific look and other high-level goals without low-level programming.
       { #1 }
       { / }
       {
-        \markdownError
-        { Won't~load~theme~with~unqualified~name~#1 }
-        { Theme~names~must~contain~at~least~one~forward~slash }
+        \msg_error:nnn
+          { markdown }
+          { unqualified-theme-name }
+          { #1 }
       }
     \str_if_in:nnT
       { #1 }
       { _ }
       {
-        \markdownError
-        { Won't~load~theme~with~an~underscore~in~its~name~#1 }
-        { Theme~names~must~not~contain~underscores~in~their~names }
+        \msg_error:nnn
+          { markdown }
+          { underscores-in-theme-name }
+          { #1 }
       }
 %    \end{macrocode}
 % \begin{markdown}
@@ -12229,6 +12231,16 @@ a specific look and other high-level goals without low-level programming.
       \g_@@_current_theme_tl
       \l_tmpa_tl
   }
+\msg_new:nnnn
+  { markdown }
+  { unqualified-theme-name }
+  { Won't~load~theme~with~unqualified~name~#1 }
+  { Theme~names~must~contain~at~least~one~forward~slash }
+\msg_new:nnnn
+  { markdown }
+  { underscores-in-theme-name }
+  { Won't~load~theme~with~an~underscore~in~its~name~#1 }
+  { Theme~names~must~not~contain~underscores~in~their~names }
 \cs_generate_variant:Nn
   \tl_replace_all:Nnn
   { NnV }
@@ -12327,15 +12339,10 @@ options locally.
     \tl_if_empty:nT
       { #1 }
       {
-        \markdownError
-          { Empty~snippet~name }
-          { Pick~a~non-empty~name~for~your~snippet }
-      }
-    \@@_if_snippet_exists:nT
-      { #1 }
-      {
-        \markdownWarning
-          { Redefined~snippet~\g_@@_current_theme_tl #1 }
+        \msg_error:nnn
+          { markdown }
+          { empty-snippet-name }
+          { #1 }
       }
     \tl_set:NV
       \l_tmpa_tl
@@ -12343,6 +12350,14 @@ options locally.
     \tl_put_right:Nn
       \l_tmpa_tl
       { #1 }
+    \@@_if_snippet_exists:nT
+      { #1 }
+      {
+        \msg_warning:nnV
+          { markdown }
+          { redefined-snippet }
+          \l_tmpa_tl
+      }
     \prop_gput:NVn
       \g_@@_snippets_prop
       \l_tmpa_tl
@@ -12351,6 +12366,15 @@ options locally.
 \cs_gset_eq:NN
   \markdownSetupSnippet
   \@@_setup_snippet:nn
+\msg_new:nnnn
+  { markdown }
+  { empty-snippet-name }
+  { Empty~snippet~name~#1 }
+  { Pick~a~non-empty~name~for~your~snippet }
+\msg_new:nnn
+  { markdown }
+  { redefined-snippet }
+  { Redefined~snippet~#1 }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -12390,15 +12414,15 @@ options locally.
   { markdown/options }
   {
     snippet .code:n = {
+      \tl_set:NV
+        \l_tmpa_tl
+        \g_@@_current_theme_tl
+      \tl_put_right:Nn
+        \l_tmpa_tl
+        { #1 }
       \@@_if_snippet_exists:nTF
         { #1 }
         {
-          \tl_set:NV
-            \l_tmpa_tl
-            \g_@@_current_theme_tl
-          \tl_put_right:Nn
-            \l_tmpa_tl
-            { #1 }
           \prop_get:NVN
             \g_@@_snippets_prop
             \l_tmpa_tl
@@ -12407,12 +12431,17 @@ options locally.
             \l_tmpb_tl
         }
         {
-          \markdownError
-            { Can't~invoke~snippet~\g_@@_current_theme_tl #1 }
-            { The~snippet~is~undefined }
+          \msg_error:nnV
+            { markdown }
+            { undefined-snippet }
+            \l_tmpa_tl
         }
     }
   }
+\msg_new:nnn
+  { markdown }
+  { undefined-snippet }
+  { Can't~invoke~undefined~snippet~#1 }
 \cs_generate_variant:Nn
   \@@_setup:n
   { V }
@@ -20728,6 +20757,10 @@ following text:
 % The \mref{markdownError} macro receives a second argument that provides a help
 % text. You may redefine these macros to redirect and process the info,
 % warning, and error messages.
+%
+% The \mref{markdownInfo}, \mref{markdownWarning}, and \mref{markdownError}
+% macros have been deprecated and will be removed in the next major version of
+% the Markdown package.
 %
 %### Miscellanea
 % The \mdef{markdownMakeOther} macro is used by the package, when a \TeX{}
@@ -32191,15 +32224,17 @@ end
       { #1 }
       \l_tmpa_tl
       {
-        \markdownInfo
-          {
-            Plain~TeX~Markdown~theme~#1~was~previously~
-            loaded~on~line~\l_tmpa_tl,~not~loading~it~again
-          }
+        \msg_warning:nnnV
+          { markdown }
+          { repeatedly-loaded-plain-tex-theme }
+          { #1 }
+          \l_tmpa_tl
       }
       {
-        \markdownInfo
-          { Loading~plain~TeX~Markdown~theme~#1 }
+        \msg_info:nnn
+          { markdown }
+          { loading-plain-tex-theme }
+          { #1 }
         \prop_gput:Nnx
           \g_@@_plain_tex_loaded_themes_linenos_prop
           { #1 }
@@ -32207,6 +32242,17 @@ end
         \file_input:n
           { markdown theme #2 }
       }
+  }
+\msg_new:nnn
+  { markdown }
+  { loading-plain-tex-theme }
+  { Loading~plain~TeX~Markdown~theme~#1 }
+\msg_new:nnn
+  { markdown }
+  { repeatedly-loaded-plain-tex-theme }
+  {
+    Plain~TeX~Markdown~theme~#1~was~previously~
+    loaded~on~line~#2,~not~loading~it~again
   }
 \cs_generate_variant:Nn
   \prop_gput:Nnn
@@ -33392,14 +33438,27 @@ end
       }
   }
   { \markdownEnd }
+\renewenvironment
+  { markdown* }
+  [ 1 ]
+  {
+    \msg_warning:nnn
+      { markdown }
+      { latex-markdown-star-deprecated }
+      { #1 }
+    \@@_setup:n
+      { #1 }
+    \markdownReadAndConvert@markdown *
+  }
+  { \markdownEnd }
+\msg_new:nnn
+  { markdown }
+  { latex-markdown-star-deprecated }
+  {
+    The~markdown*~LaTeX~environment~has~been~deprecated~and~will~
+    be~removed~in~the~next~major~version~of~the~Markdown~package.
+  }
 \ExplSyntaxOff
-\renewenvironment{markdown*}[1]{%
-  \markdownWarning{%
-    The markdown* LaTeX environment has been deprecated and will
-    be removed in the next major version of the Markdown package.}%
-  \markdownSetup{#1}%
-  \markdownReadAndConvert@markdown*}{%
-  \markdownEnd}%
 \begingroup
 %    \end{macrocode}
 % \begin{markdown}
@@ -33467,9 +33526,10 @@ end
         \file_if_exist:nTF
           { markdown theme #2.sty }
           {
-            \markdownError
-              { Cannot~load~file~markdown theme #2.sty~after~preamble }
-              { Load~Markdown~theme~#1~before~\begin{document} }
+            \msg_error:nnn
+              { markdown }
+              { latex-theme-after-preamble }
+              { #1 }
           }
           {
             \@@_plain_tex_load_theme:nn
@@ -33489,8 +33549,10 @@ end
         \file_if_exist:nTF
           { markdown theme #2.sty }
           {
-            \markdownInfo
-              { Loading~LaTeX~Markdown~theme~#1 }
+            \msg_info:nnn
+              { markdown }
+              { loading-latex-theme }
+              { #1 }
             \RequirePackage
               { markdown theme #2 }
           }
@@ -33509,11 +33571,10 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-      \markdownInfo
-        {
-          Postponing~loading~Markdown~theme~#1~until~
-          Markdown~package~has~finished~loading
-        }
+      \msg_info:nnn
+        { markdown }
+        { theme-loading-postponed }
+        { #1 }
       \AtEndOfPackage
         {
           \@@_load_theme:nn
@@ -33522,6 +33583,43 @@ end
         }
     \fi
   }
+\msg_new:nnn
+  { markdown }
+  { theme-loading-postponed }
+  {
+    Postponing~loading~Markdown~theme~#1~until~
+    Markdown~package~has~finished~loading
+  }
+\msg_new:nnn
+  { markdown }
+  { loading-latex-theme }
+  { Loading~LaTeX~Markdown~theme~#1 }
+\cs_generate_variant:Nn
+  \msg_new:nnnn
+  { nnVV }
+\tl_set:Nn
+  \l_tmpa_tl
+  { Cannot~load~LaTeX~Markdown~theme~#1~after~ }
+\tl_put_right:NV
+  \l_tmpa_tl
+  \c_backslash_str
+\tl_put_right:Nn
+  \l_tmpa_tl
+  { begin{document} }
+\tl_set:Nn
+  \l_tmpb_tl
+  { Load~Markdown~theme~#1~before~ }
+\tl_put_right:NV
+  \l_tmpb_tl
+  \c_backslash_str
+\tl_put_right:Nn
+  \l_tmpb_tl
+  { begin{document} }
+\msg_new:nnVV
+  { markdown }
+  { latex-theme-after-preamble }
+  \l_tmpa_tl
+  \l_tmpb_tl
 \ExplSyntaxOff
 %    \end{macrocode}
 % \begin{markdown}
@@ -35094,8 +35192,10 @@ end
     \file_if_exist:nTF
       { t - markdown theme #2.tex }
       {
-        \markdownInfo
-          { Loading~ConTeXt~Markdown~theme~#1 }
+        \msg_info:nnn
+          { markdown }
+          { loading-context-theme }
+          { #1 }
         \usemodule
           [ t ]
           [ markdown theme #2 ]
@@ -35106,6 +35206,10 @@ end
           { #2 }
       }
   }
+\msg_new:nnn
+  { markdown }
+  { loading-context-theme }
+  { Loading~ConTeXt~Markdown~theme~#1 }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \iffalse

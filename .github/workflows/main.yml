@@ -171,6 +171,11 @@ jobs:
           repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
           ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
+      - name: Set safe Git directory
+        # This should have been done by the previous step.
+        # See also: <https://github.com/actions/checkout/issues/915>.
+        run: |
+          git config --global --add safe.directory ${GITHUB_WORKSPACE}
       - name: Test Lua command-line interface
         run: |
           set -ex
