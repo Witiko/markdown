@@ -25,6 +25,10 @@ Deprecation:
   `\markdownError` with l3msg functions and deprecate `\markdownInfo`,
   `\markdownWarning`, and `\markdownError`. (#383, #398)
 
+Docker:
+
+- Uninstall the distribution Markdown package. (258a73d4)
+
 ## 3.3.0 (2023-12-30)
 
 Development:
