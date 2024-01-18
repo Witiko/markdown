@@ -16,7 +16,8 @@ Default Renderer Prototypes:
 
 Unit Tests:
 
-- In pull requests, process added and modified testfiles first. (feafe9b9)
+- In pull requests, process added and modified testfiles first.
+  (feafe9b9, 9ff530da)
 
 Deprecation:
 
