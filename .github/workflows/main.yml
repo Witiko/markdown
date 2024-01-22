@@ -8,6 +8,7 @@ on:
       - 'CHANGES.md'
       - 'contributions/*'
       - '.github/**/*'
+      - 'experiments/**/*'
   pull_request_target:
   workflow_dispatch:
   schedule:
