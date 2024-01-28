@@ -31457,8 +31457,13 @@ M.extensions.tex_math = function(tex_math_dollars,
         return (starter * Cs(p * (p - ender)^0) * ender)
       end
 
+      local function strip_preceding_whitespaces(str)
+        return str:gsub("^%s*(.-)$", "%1")
+      end
+
       local allowed_before_closing = B( parsers.backslash * parsers.any
-                                      + parsers.any * (parsers.nonspacechar - parsers.backslash))
+                                      + parsers.any * (parsers.any - parsers.backslash))
+
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -31514,9 +31519,9 @@ M.extensions.tex_math = function(tex_math_dollars,
       local inline_math_opening_double  = parsers.backslash
                                         * parsers.backslash
                                         * parsers.lparent
-                                        * #(parsers.nonspacechar)
 
       local inline_math_closing_double  = allowed_before_closing
+                                        * parsers.spacechar^0
                                         * parsers.backslash
                                         * parsers.backslash
                                         * parsers.rparent
@@ -31530,6 +31535,7 @@ M.extensions.tex_math = function(tex_math_dollars,
                                         * parsers.lbracket
 
       local display_math_closing_double = allowed_before_closing
+                                        * parsers.spacechar^0
                                         * parsers.backslash
                                         * parsers.backslash
                                         * parsers.rbracket
@@ -31547,9 +31553,9 @@ M.extensions.tex_math = function(tex_math_dollars,
 %  \begin{macrocode}
       local inline_math_opening_single  = parsers.backslash
                                         * parsers.lparent
-                                        * #(parsers.nonspacechar)
 
       local inline_math_closing_single  = allowed_before_closing
+                                        * parsers.spacechar^0
                                         * parsers.backslash
                                         * parsers.rparent
 
@@ -31561,6 +31567,7 @@ M.extensions.tex_math = function(tex_math_dollars,
                                         * parsers.lbracket
 
       local display_math_closing_single = allowed_before_closing
+                                        * parsers.spacechar^0
                                         * parsers.backslash
                                         * parsers.rbracket
 
@@ -31587,8 +31594,8 @@ M.extensions.tex_math = function(tex_math_dollars,
         inline_math = inline_math + inline_math_single
       end
 
-      local TexMath = display_math / writer.display_math
-                    + inline_math / writer.inline_math
+      local TexMath = display_math / strip_preceding_whitespaces / writer.display_math
+                    + inline_math / strip_preceding_whitespaces / writer.inline_math
 
       self.insert_pattern("Inline after LinkAndEmph",
                           TexMath, "TexMath")
