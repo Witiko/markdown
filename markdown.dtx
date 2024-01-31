@@ -11339,7 +11339,7 @@ pdftex --shell-escape document.tex
 %### Typesetting Markdown {#tex-typesetting}
 %
 % The interface exposes the \mdef{markdownBegin}, \mdef{markdownEnd},
-% \mdef{markdownInput}, \mdef{markinline} and \mdef{markdownEscape} macros.
+% \mdef{markdownInput}, and \mdef{markdownEscape} macros.
 %
 % The \mref{markdownBegin} macro marks the beginning of a markdown document
 % fragment and the \mref{markdownEnd} macro marks its end.
@@ -11419,31 +11419,6 @@ pdftex --shell-escape document.tex
 % ``` tex
 % \input markdown
 % \markdownInput{hello.md}
-% \bye
-% ```````
-%
-% You can use the \mref{markinline} macro to include 
-% just inline elements.
-% The \mref{markinline} macro accepts a single parameter
-% with the input markdown and expands to the result of the
-% conversion of the input markdown to plain \TeX{}.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\let\markinline\relax
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% This macro is not subject to the abovelisted limitations of the
-% \mref{markdownBegin} and \mref{markdownEnd} macros.
-%
-% The following example plain \TeX{} code showcases the usage of the
-% \mref{markinline} macro:
-%
-% ``` tex
-% \input markdown
-% Hello, \markinline{*world*} !
 % \bye
 % ```````
 %
@@ -33436,84 +33411,6 @@ end
   }%
 |endgroup
 %    \end{macrocode}
-% \begin{markdown}
-% The \mref{markinline} macro uses an implementation of the
-% \mref{markdownLuaExecute} macro to convert inline markdown to plain
-% \TeX{}.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\begingroup
-%    \end{macrocode}
-% \begin{markdown}
-% Swap the category code of the backslash symbol and the pipe symbol, so that
-% we may use the backslash symbol freely inside the Lua code. Furthermore,
-% use the ampersand symbol to specify parameters.
-% \end{markdown}
-%  \begin{macrocode}
-  \catcode`|=0%
-  \catcode`\\=12%
-  \catcode`|&=6%
-  |gdef|markinline#1{%
-%    \end{macrocode}
-% \begin{markdown}
-% Change the category code of the percent sign (`\%`) to other, so that a user
-% of the \Opt{hybrid} Lua option or a malevolent actor can't produce TeX
-% comments in the plain TeX output of the Markdown package.
-% \end{markdown}
-%  \begin{macrocode}
-    |begingroup
-    |catcode`|%=12
-%    \end{macrocode}
-% \begin{markdown}
-% Furthermore, also change the category code of the hash sign (`#`) to other,
-% so that it's safe to tokenize the plain TeX output without mistaking hash
-% signs with TeX's parameter numbers.
-% \end{markdown}
-%  \begin{macrocode}
-    |catcode`|#=12
-%    \end{macrocode}
-% \begin{markdown}
-% Set the content type as inline.
-% \end{markdown}
-%  \begin{macrocode}
-    |markdownSetup{contentType=inline}
-%    \end{macrocode}
-% \begin{markdown}
-% If we are reading from the frozen cache, input it, expand the corresponding
-% `\markdownFrozenCache`\meta{number} macro, and increment
-% \Opt{frozenCacheCounter}.
-% \end{markdown}
-%  \begin{macrocode}
-    |markdownIfOption{frozenCache}{%
-      |ifnum|markdownOptionFrozenCacheCounter=0|relax
-        |markdownInfo{Reading frozen cache from
-          "|markdownOptionFrozenCacheFileName"}%
-        |input|markdownOptionFrozenCacheFileName|relax
-      |fi
-      |markdownInfo{Including markdown document number
-        "|the|markdownOptionFrozenCacheCounter" from frozen cache}%
-      |csname markdownFrozenCache|the|markdownOptionFrozenCacheCounter|endcsname
-      |global|advance|markdownOptionFrozenCacheCounter by 1|relax
-    }{%
-      |markdownPrepareLuaOptions
-      |markdownLuaExecute{%
-        |markdownPrepare
-        local input = "&1"
-        print(convert(input))
-        |markdownCleanup}%
-%    \end{macrocode}
-% \begin{markdown}
-% If we are finalizing the frozen cache, increment \Opt{frozenCacheCounter}.
-% \end{markdown}
-%  \begin{macrocode}
-      |markdownIfOption{finalizeCache}{%
-        |global|advance|markdownOptionFrozenCacheCounter by 1|relax}{}%
-    }%
-    |endgroup
-  }%
-|endgroup
-%    \end{macrocode}
 % \par
 % \begin{markdown}
 % The \mref{markdownEscape} macro resets the category codes of the percent sign
@@ -33579,24 +33476,6 @@ end
     \markdownSetup{#1}%
     \markdownInputPlainTeX{#2}%
   \endgroup}%
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% The \mdef{markinlinePlainTeX} macro is used to store the original plain
-% \TeX{} implementation of the \mref{markinline} macro. The \mref{markinline}
-% is then redefined to accept an optional argument with options recognized by
-% the \LaTeX{} interface (see Section <#sec:latex-options>).
-%
-% \end{markdown}
-%  \begin{macrocode}
-\let\markinlinePlainTeX\markinline
-\renewcommand\markinline[2][]{%
-  \begingroup
-    \markdownSetup{#1}%
-    \markinlinePlainTeX{#2}%
-  \endgroup}%
-
 %    \end{macrocode}
 % \par
 % \begin{markdown}
