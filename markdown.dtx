@@ -5209,6 +5209,143 @@ defaultOptions.contentBlocks = false
 %</lua,lua-cli>
 %<*manual-options>
 
+#### Option `contentType`
+
+`contentType` (default value: `block`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[block]{contentType}{\opt{block}, \opt{inline}}
+%
+:    block
+     
+     :  Treat content as a sequence of blocks.
+        ``` md
+        - this is a list
+        - it contains two items
+        ``````
+
+:    inline
+     
+     :  Treat all content as inline content.
+        ``` md
+        - this is a text
+        - not a list
+        ``````
+
+% \end{markdown}
+% \iffalse
+
+##### Plain \TeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\input markdown
+\def\markdownOptionContentType{inline}
+\markdownBegin
+- this is
+- a text
+\markdownEnd
+\bye
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+luatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> \- this is - a text
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage{markdown}
+\begin{document}
+
+\begin{markdown}
+- this is
+- a list
+\end{markdown}
+
+\begin{markdown}[contentType=inline]
+- this is
+- a text
+\end{markdown}
+
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> - this is
+> - a list
+>
+> \- this is - a text
+
+##### \Hologo{ConTeXt} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\usemodule[t][markdown]
+\starttext
+
+\startmarkdown
+- this is
+- a list
+\stopmarkdown
+
+\setupmarkdown[contentType = inline]
+\startmarkdown
+- this is
+- a text
+\stopmarkdown
+
+\stoptext
+````````
+Next, invoke LuaTeX from the terminal:
+``` sh
+context --luatex document.tex
+`````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> - this is
+> - a list
+>
+> \- this is - a text
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { contentType }
+  { string }
+  { block }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.contentType = "block"
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
 #### Option `debugExtensions`
 
 `debugExtensions` (default value: `false`)
@@ -29297,6 +29434,15 @@ end
 
     if not options.relativeReferences then
       syntax.AutoLinkRelativeReference = parsers.fail
+    end
+
+    if options.contentType == "inline" then
+      syntax[1] = "Inlines"
+      syntax.Inlines = V("InitializeState")
+                      * parsers.Inline^0
+                      * ( parsers.spacing^0
+                        * parsers.eof / "")
+      syntax.Space = parsers.Space + parsers.blankline / writer.space
     end
 
     local blocks_nested_t = util.table_copy(syntax)
