@@ -26,9 +26,9 @@ Here are some block elements:
 >>>
 BEGIN document
 codeSpan: contentType
-someLineBreak
+softLineBreak
 codeSpan: contentType
-someLineBreak
+softLineBreak
 codeSpan: block
 paragraphSeparator
 interblockSeparator
