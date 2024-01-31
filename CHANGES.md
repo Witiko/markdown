@@ -8,6 +8,8 @@ Development:
   `witiko/markdown/defaults`. (#391, #392)
 - Add format-independent options `noDefaults` and `plain`, which control the
   loading of theme `witiko/markdown/defaults`. (#393, #394)
+- Add `contentLevel` Lua option.
+  (#300, #375, #400, contributed by @lostenderman)
 
 Default Renderer Prototypes:
 
