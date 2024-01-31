@@ -1,6 +1,6 @@
 # Changes
 
-## 3.4.0
+## 3.4.0 (2024-01-31)
 
 Development:
 
@@ -10,6 +10,21 @@ Development:
   loading of theme `witiko/markdown/defaults`. (#393, #394)
 - Add `contentLevel` Lua option.
   (#300, #375, #400, contributed by @lostenderman)
+
+Fixes:
+
+- Make Pandoc syntax extensions `tex_single_backslash_math` and
+  `tex_double_backslash_math` robust against extra spaces at the beginning /
+  end of inline / display math. (#386, #399, contributed by @lostenderman)
+
+Libraries:
+
+- Update `tinyyaml` to v0.4.4. (e2a59ba)
+
+Contributed Software:
+
+- Remove private GitHub repository `contributions/istqb_latex`. (cc21fe2)
+- Add `contributions/37c3-beamer`. (f5bb26b, contributed by @TeXhackse)
 
 Default Renderer Prototypes:
 
@@ -30,12 +45,6 @@ Deprecation:
 Docker:
 
 - Uninstall the distribution Markdown package. (258a73d4)
-
-Fixes:
-
-- Make Pandoc syntax extensions `tex_single_backslash_math` and
-  `tex_double_backslash_math` robust against extra spaces at the beginning /
-  end of inline / display math. (#386, #399, contributed by @lostenderman)
 
 ## 3.3.0 (2023-12-30)
 
