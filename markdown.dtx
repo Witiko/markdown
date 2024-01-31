@@ -5216,22 +5216,23 @@ defaultOptions.contentBlocks = false
 % \fi
 % \begin{markdown}
 %
-% \Optitem[block]{contentType}{\opt{inline}, \opt{block}}
+% \Optitem[block]{contentType}{\opt{block}, \opt{inline}}
 %
+:    block
+     
+     :  Treat content as a sequence of blocks.
+        ``` md
+        - this is a list
+        - it contains two items
+        ``````
+
 :    inline
-
-     :  Treat all content as inline elements. Blank lines are
-        replaced with spaces.
-
+     
+     :  Treat all content as inline content.
         ``` md
         - this is a text
         - not a list
         ``````
-
-:    block
-
-     :  Render block and inline elements normally, 
-        no behaviour is changed.
 
 % \end{markdown}
 % \iffalse
