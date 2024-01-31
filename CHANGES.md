@@ -31,6 +31,12 @@ Docker:
 
 - Uninstall the distribution Markdown package. (258a73d4)
 
+Fixes:
+
+- Make Pandoc syntax extensions `tex_single_backslash_math` and
+  `tex_double_backslash_math` robust against extra spaces at the beginning /
+  end of inline / display math. (#386, #399, contributed by @lostenderman)
+
 ## 3.3.0 (2023-12-30)
 
 Development:

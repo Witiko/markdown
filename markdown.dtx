@@ -31603,8 +31603,16 @@ M.extensions.tex_math = function(tex_math_dollars,
         return (starter * Cs(p * (p - ender)^0) * ender)
       end
 
+      local function strip_preceding_whitespaces(str)
+        return str:gsub("^%s*(.-)$", "%1")
+      end
+
       local allowed_before_closing = B( parsers.backslash * parsers.any
-                                      + parsers.any * (parsers.nonspacechar - parsers.backslash))
+                                      + parsers.any * (parsers.any - parsers.backslash))
+
+      local allowed_before_closing_no_space = B( parsers.backslash * parsers.any
+                                               + parsers.any * (parsers.nonspacechar - parsers.backslash))
+
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -31621,7 +31629,7 @@ M.extensions.tex_math = function(tex_math_dollars,
       local inline_math_opening_dollars = parsers.dollar
                                         * #(parsers.nonspacechar)
 
-      local inline_math_closing_dollars = allowed_before_closing
+      local inline_math_closing_dollars = allowed_before_closing_no_space
                                         * parsers.dollar
                                         * -#(parsers.digit)
 
@@ -31660,9 +31668,9 @@ M.extensions.tex_math = function(tex_math_dollars,
       local inline_math_opening_double  = parsers.backslash
                                         * parsers.backslash
                                         * parsers.lparent
-                                        * #(parsers.nonspacechar)
 
       local inline_math_closing_double  = allowed_before_closing
+                                        * parsers.spacechar^0
                                         * parsers.backslash
                                         * parsers.backslash
                                         * parsers.rparent
@@ -31670,12 +31678,14 @@ M.extensions.tex_math = function(tex_math_dollars,
       local inline_math_double  = between(Cs( backslash_math_content),
                                           inline_math_opening_double,
                                           inline_math_closing_double)
+                                / strip_preceding_whitespaces
 
       local display_math_opening_double = parsers.backslash
                                         * parsers.backslash
                                         * parsers.lbracket
 
       local display_math_closing_double = allowed_before_closing
+                                        * parsers.spacechar^0
                                         * parsers.backslash
                                         * parsers.backslash
                                         * parsers.rbracket
@@ -31683,6 +31693,7 @@ M.extensions.tex_math = function(tex_math_dollars,
       local display_math_double = between(Cs( backslash_math_content),
                                           display_math_opening_double,
                                           display_math_closing_double)
+                                / strip_preceding_whitespaces
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -31693,26 +31704,29 @@ M.extensions.tex_math = function(tex_math_dollars,
 %  \begin{macrocode}
       local inline_math_opening_single  = parsers.backslash
                                         * parsers.lparent
-                                        * #(parsers.nonspacechar)
 
       local inline_math_closing_single  = allowed_before_closing
+                                        * parsers.spacechar^0
                                         * parsers.backslash
                                         * parsers.rparent
 
       local inline_math_single  = between(Cs( backslash_math_content),
                                           inline_math_opening_single,
                                           inline_math_closing_single)
+                                / strip_preceding_whitespaces
 
       local display_math_opening_single = parsers.backslash
                                         * parsers.lbracket
 
       local display_math_closing_single = allowed_before_closing
+                                        * parsers.spacechar^0
                                         * parsers.backslash
                                         * parsers.rbracket
 
       local display_math_single = between(Cs( backslash_math_content),
                                           display_math_opening_single,
                                           display_math_closing_single)
+                                / strip_preceding_whitespaces
 
       local display_math = parsers.fail
 
