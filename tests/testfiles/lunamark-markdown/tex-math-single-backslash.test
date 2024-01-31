@@ -39,11 +39,15 @@ The following is inline math with two backslashes:
 
 \\\(a\\\)
 
-Whitespace characters are allowed at the beginning or the end of inline math:
+Whitespace characters are allowed at the beginning or the end of inline math or display math:
 
 \( 1+2=3 \)
 
 \(	1+2=3	\)
+
+\[ 1+2=3 \]
+
+\[	1+2=3	\]
 
 Whitespace-only content is allowed:
 
@@ -78,6 +82,10 @@ paragraphSeparator
 inlineMath: 1+2=3
 paragraphSeparator
 inlineMath: 1+2=3
+paragraphSeparator
+displayMath: 1+2=3
+paragraphSeparator
+displayMath: 1+2=3
 paragraphSeparator
 paragraphSeparator
 inlineMath: 
