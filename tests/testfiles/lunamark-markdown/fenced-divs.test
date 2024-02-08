@@ -184,7 +184,7 @@ BEGIN fencedDivAttributeContext
 attributeIdentifier: some-identifier
 interblockSeparator
 blockQuoteBegin
-interblockSeparator
+paragraphSeparator
 blockQuoteEnd
 interblockSeparator
 END fencedDivAttributeContext
