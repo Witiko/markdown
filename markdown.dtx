@@ -27533,40 +27533,38 @@ function M.reader.new(writer, options)
           + blank^0
   end
 
-  local blank = parsers.minimally_indented_blankline
+  parsers.content_blank = parsers.minimally_indented_blankline
 
-  local sep_group_no_output = parsers.sep_group_no_output(blank)
-  local block_sep_group = parsers.block_sep_group(blank)
-  local par_sep_group = parsers.par_sep_group(blank)
+  parsers.ref_or_block_separated  = parsers.sep_group_no_output(parsers.content_blank) 
+                                * ( parsers.minimally_indented_ref 
+                                  - parsers.content_blank)
+                                + parsers.block_sep_group(parsers.content_blank)
+                                * ( parsers.minimally_indented_block 
+                                  - parsers.content_blank)
 
-  local ref_or_block_separated  = sep_group_no_output 
-                                * (parsers.minimally_indented_ref - blank)
-                                + block_sep_group
-                                * (parsers.minimally_indented_block - blank)
-
-  local loop_body_pair  = 
-    parsers.create_loop_body_pair(ref_or_block_separated,
+  parsers.loop_body_pair  = 
+    parsers.create_loop_body_pair(parsers.ref_or_block_separated,
                                   parsers.minimally_indented_par_or_plain_no_blank,
-                                  block_sep_group,
-                                  par_sep_group)
+                                  parsers.block_sep_group(parsers.content_blank),
+                                  parsers.par_sep_group(parsers.content_blank))
 
   parsers.content_loop  = ( V("Block")
-                          * loop_body_pair.block^0
+                          * parsers.loop_body_pair.block^0
                           + (V("Paragraph") + V("Plain"))
-                          * ref_or_block_separated
-                          * loop_body_pair.block^0
+                          * parsers.ref_or_block_separated
+                          * parsers.loop_body_pair.block^0
                           + (V("Paragraph") + V("Plain"))
-                          * loop_body_pair.par^0)
-                        * blank^0
+                          * parsers.loop_body_pair.par^0)
+                        * parsers.content_blank^0
 
   parsers.indented_content = function()
     return Ct(
       (V("Reference") + (parsers.blankline / ""))
-        * blank^0
+        * parsers.content_blank^0
         * parsers.check_minimal_indent 
         * parsers.content_loop
       + (V("Reference") + (parsers.blankline / ""))
-        * blank^0
+        * parsers.content_blank^0
       + parsers.content_loop
     )
   end
@@ -28771,15 +28769,11 @@ end
      parsers.tickbox = parsers.fail
   end
 
-  local list_blank = parsers.conditionally_indented_blankline
+  parsers.list_blank = parsers.conditionally_indented_blankline
 
-  local sep_group_no_output = parsers.sep_group_no_output(list_blank)
-  local block_sep_group = parsers.block_sep_group(list_blank)
-  local par_sep_group = parsers.par_sep_group(list_blank)
-
-  parsers.ref_or_block_list_separated = sep_group_no_output 
+  parsers.ref_or_block_list_separated = parsers.sep_group_no_output(parsers.list_blank) 
                                       * parsers.minimally_indented_ref
-                                      + block_sep_group
+                                      + parsers.block_sep_group(parsers.list_blank)
                                       * parsers.minimally_indented_block
 
   parsers.ref_or_block_non_separated  = parsers.minimally_indented_ref
@@ -28796,8 +28790,8 @@ end
   parsers.loose_list_loop_body_pair  = 
     parsers.create_loop_body_pair(parsers.ref_or_block_list_separated,
                                   parsers.minimally_indented_par_or_plain,
-                                  block_sep_group,
-                                  par_sep_group)
+                                  parsers.block_sep_group(parsers.list_blank),
+                                  parsers.par_sep_group(parsers.list_blank))
 
   parsers.tight_list_content_loop = V("Block")
                                   * parsers.tight_list_loop_body_pair.block^0
@@ -28815,14 +28809,14 @@ end
                                   + (V("Paragraph") + V("Plain"))
                                   * parsers.loose_list_loop_body_pair.par^0
 
-  parsers.list_item_tightness_condition = -#( parsers.conditionally_indented_blankline^0
+  parsers.list_item_tightness_condition = -#( parsers.list_blank^0
                                             * parsers.minimally_indented_ref_or_block_or_par)
                                         * remove_indent("li")
                                         + remove_indent("li")
                                         * parsers.fail
 
   parsers.indented_content_tight  = Ct( (parsers.blankline / "")
-                                      * #parsers.conditionally_indented_blankline
+                                      * #parsers.list_blank
                                       * remove_indent("li")
                                       + ( (V("Reference") + (parsers.blankline / ""))
                                         * parsers.check_minimal_indent 
@@ -28835,7 +28829,7 @@ end
                                   )
   
   parsers.indented_content_loose  = Ct( (parsers.blankline / "")
-                                      * #parsers.conditionally_indented_blankline
+                                      * #parsers.list_blank
                                       + ( (V("Reference") + (parsers.blankline / ""))
                                         * parsers.check_minimal_indent 
                                         * parsers.loose_list_content_loop
@@ -28866,12 +28860,12 @@ end
                   )^0
               )
               * Cc(true)
-              * -#( (parsers.conditionally_indented_blankline^0 / "")
+              * -#( (parsers.list_blank^0 / "")
                   * parsers.check_minimal_indent
                   * (bullet - parsers.ThematicBreak)
               )
               + Ct( parsers.LooseListItem(bullet)
-                  * ( (parsers.conditionally_indented_blankline^0 / "")
+                  * ( (parsers.list_blank^0 / "")
                     * (parsers.check_minimal_indent / "")
                     * parsers.LooseListItem(bullet)
                     )^0
@@ -28903,10 +28897,10 @@ end
           * (Ct( parsers.TightListItem(Cb("listtype"))
                * ((parsers.check_minimal_indent / "") * parsers.TightListItem(enumerator))^0)
           * Cc(true) 
-          * -#((parsers.conditionally_indented_blankline^0 / "") 
+          * -#((parsers.list_blank^0 / "") 
               * parsers.check_minimal_indent * enumerator)
           + Ct( parsers.LooseListItem(Cb("listtype"))
-              * ((parsers.conditionally_indented_blankline^0 / "") 
+              * ((parsers.list_blank^0 / "") 
                 * (parsers.check_minimal_indent / "") * parsers.LooseListItem(enumerator))^0)
           * Cc(false)
           ) * Ct(Cb("listtype")) / ordered_list
@@ -30681,16 +30675,13 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
 
       local blank = parsers.minimally_indented_blank
 
-      local block_sep_group = parsers.block_sep_group(blank)
-      local par_sep_group = parsers.par_sep_group(blank)
-
-      local block_separated  = block_sep_group
+      local block_separated  = parsers.block_sep_group(blank)
                              * non_fenced_div_block
 
       local loop_body_pair  = parsers.create_loop_body_pair(block_separated,
                                                   non_fenced_div_paragraph,
-                                                  block_sep_group,
-                                                  par_sep_group)
+                                                  parsers.block_sep_group(blank),
+                                                  parsers.par_sep_group(blank))
 
       local content_loop  = non_fenced_div_block
                           * loop_body_pair.block^0
