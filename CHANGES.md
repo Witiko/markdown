@@ -6,6 +6,12 @@ Fixes:
 
 - Rename option `contentType` to `contentLevel`. (#300, #400, ca98e039)
 
+Deprecation:
+
+- Replace all instances of `\markdownInfo`, `\markdownWarning`, and
+  `\markdownError` with l3msg functions and deprecate `\markdownInfo`,
+  `\markdownWarning`, and `\markdownError`. (#383, #398, e3ca682c)
+
 ## 3.4.0 (2024-01-31)
 
 Development:
