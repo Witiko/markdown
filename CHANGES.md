@@ -1,5 +1,11 @@
 # Changes
 
+## 3.4.1 (2024-02-17)
+
+Fixes:
+
+- Rename option `contentType` to `contentLevel`. (#300, #400, ca98e039)
+
 ## 3.4.0 (2024-01-31)
 
 Development:
