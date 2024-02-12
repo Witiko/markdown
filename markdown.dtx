@@ -21054,18 +21054,6 @@ pdflatex --shell-escape document.tex
       \c_@@_option_layer_latex_tl
   }
 \ExplSyntaxOff
-%    \end{macrocode}
-% \begin{markdown}
-%
-% The \LaTeX{} implementation redefines the plain \TeX{} logging macros (see
-% Section <#sec:tex-interface-logging>) to use the \LaTeX{} `\PackageInfo`,
-% `\PackageWarning`, and `\PackageError` macros.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\newcommand\markdownInfo[1]{\PackageInfo{markdown}{#1}}%
-\newcommand\markdownWarning[1]{\PackageWarning{markdown}{#1}}%
-\newcommand\markdownError[2]{\PackageError{markdown}{#1}{#2.}}%
 \input markdown/markdown
 %    \end{macrocode}
 % \begin{markdown}
@@ -21689,18 +21677,6 @@ following text:
 \writestatus{loading}{ConTeXt User Module / markdown}%
 \startmodule[markdown]
 \unprotect
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% The \Hologo{ConTeXt} implementation redefines the plain \TeX{} logging macros
-% (see Section <#sec:tex-interface-logging>) to use the \Hologo{ConTeXt}
-% `\writestatus` macro.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\def\markdownInfo#1{\writestatus{markdown}{#1.}}%
-\def\markdownWarning#1{\writestatus{markdown\space warn}{#1.}}%
 \def\dospecials{\do\ \do\\\do\{\do\}\do\$\do\&%
   \do\#\do\^\do\_\do\%\do\~}%
 \input markdown/markdown
@@ -32349,19 +32325,63 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\ifx\markdownInfo\undefined
-  \def\markdownInfo#1{%
-    \immediate\write-1{(l.\the\inputlineno) markdown.tex info: #1.}}%
-\fi
-\ifx\markdownWarning\undefined
-  \def\markdownWarning#1{%
-    \immediate\write16{(l.\the\inputlineno) markdown.tex warning: #1}}%
-\fi
-\ifx\markdownError\undefined
-  \def\markdownError#1#2{%
-    \errhelp{#2.}%
-    \errmessage{(l.\the\inputlineno) markdown.tex error: #1}}%
-\fi
+\ExplSyntaxOn
+\cs_if_free:NT
+  \markdownInfo
+  {
+    \cs_new:Npn
+      \markdownInfo #1
+      {
+        \msg_info:nne
+          { markdown }
+          { generic-message }
+          { #1 }
+      }
+  }
+\cs_if_free:NT
+  \markdownWarning
+  {
+    \cs_new:Npn
+      \markdownWarning #1
+      {
+        \msg_warning:nne
+          { markdown }
+          { generic-message }
+          { #1 }
+      }
+  }
+\cs_if_free:NT
+  \markdownError
+  {
+    \cs_new:Npn
+      \markdownError #1 #2
+      {
+        \msg_error:nnee
+          { markdown }
+          { generic-message-with-help-text }
+          { #1 }
+          { #2 }
+      }
+  }
+\msg_new:nnn
+  { markdown }
+  { generic-message }
+  { #1 }
+\msg_new:nnnn
+  { markdown }
+  { generic-message-with-help-text }
+  { #1 }
+  { #2 }
+\cs_generate_variant:Nn
+  \msg_info:nnn
+  { nne }
+\cs_generate_variant:Nn
+  \msg_warning:nnn
+  { nne }
+\cs_generate_variant:Nn
+  \msg_error:nnnn
+  { nnee }
+\ExplSyntaxOff
 %    \end{macrocode}
 % \par
 % \begin{markdown}
