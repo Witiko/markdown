@@ -5209,17 +5209,17 @@ defaultOptions.contentBlocks = false
 %</lua,lua-cli>
 %<*manual-options>
 
-#### Option `contentType`
+#### Option `contentLevel`
 
-`contentType` (default value: `block`)
+`contentLevel` (default value: `block`)
 
 % \fi
 % \begin{markdown}
 %
-% \Optitem[block]{contentType}{\opt{block}, \opt{inline}}
+% \Optitem[block]{contentLevel}{\opt{block}, \opt{inline}}
 %
 :    block
-     
+
      :  Treat content as a sequence of blocks.
         ``` md
         - this is a list
@@ -5227,7 +5227,7 @@ defaultOptions.contentBlocks = false
         ``````
 
 :    inline
-     
+
      :  Treat all content as inline content.
         ``` md
         - this is a text
@@ -5243,7 +5243,7 @@ Using a text editor, create a text document named `document.tex` with the
 following content:
 ``` tex
 \input markdown
-\def\markdownOptionContentType{inline}
+\def\markdownOptionContentLevel{inline}
 \markdownBegin
 - this is
 - a text
@@ -5273,7 +5273,7 @@ following content:
 - a list
 \end{markdown}
 
-\begin{markdown}[contentType=inline]
+\begin{markdown}[contentLevel=inline]
 - this is
 - a text
 \end{markdown}
@@ -5305,7 +5305,7 @@ following content:
 - a list
 \stopmarkdown
 
-\setupmarkdown[contentType = inline]
+\setupmarkdown[contentLevel = inline]
 \startmarkdown
 - this is
 - a text
@@ -5330,7 +5330,7 @@ following text:
 % \fi
 %  \begin{macrocode}
 \@@_add_lua_option:nnn
-  { contentType }
+  { contentLevel }
   { string }
   { block }
 %    \end{macrocode}
@@ -5339,7 +5339,7 @@ following text:
 %<*lua,lua-cli>
 % \fi
 %  \begin{macrocode}
-defaultOptions.contentType = "block"
+defaultOptions.contentLevel = "block"
 %    \end{macrocode}
 % \par
 % \iffalse
@@ -29436,7 +29436,7 @@ end
       syntax.AutoLinkRelativeReference = parsers.fail
     end
 
-    if options.contentType == "inline" then
+    if options.contentLevel == "inline" then
       syntax[1] = "Inlines"
       syntax.Inlines = V("InitializeState")
                       * parsers.Inline^0
