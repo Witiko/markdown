@@ -104,13 +104,7 @@
 \newunicodechar{☒}{\markdownRendererTickedBox}
 \newunicodechar{⌛}{\markdownRendererHalfTickedBox}
 \newunicodechar{☐}{\markdownRendererUntickedBox}
-\usepackage{emoji}
-\makeatletter
-\@ifpackagelater{emoji}{2020/03/16}{
-  \newunicodechar{😉}{\emoji{winking-face}}
-}{
-  \newunicodechar{😉}{;-)}
-}
+\newunicodechar{😉}{;-)}
 \makeatother
 
 % Set up the catcodes.
@@ -5203,6 +5197,143 @@ following text:
 % \fi
 %  \begin{macrocode}
 defaultOptions.contentBlocks = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
+#### Option `contentLevel`
+
+`contentLevel` (default value: `block`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[block]{contentLevel}{\opt{block}, \opt{inline}}
+%
+:    block
+
+     :  Treat content as a sequence of blocks.
+        ``` md
+        - this is a list
+        - it contains two items
+        ``````
+
+:    inline
+
+     :  Treat all content as inline content.
+        ``` md
+        - this is a text
+        - not a list
+        ``````
+
+% \end{markdown}
+% \iffalse
+
+##### Plain \TeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\input markdown
+\def\markdownOptionContentLevel{inline}
+\markdownBegin
+- this is
+- a text
+\markdownEnd
+\bye
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+luatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> \- this is - a text
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage{markdown}
+\begin{document}
+
+\begin{markdown}
+- this is
+- a list
+\end{markdown}
+
+\begin{markdown}[contentLevel=inline]
+- this is
+- a text
+\end{markdown}
+
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> - this is
+> - a list
+>
+> \- this is - a text
+
+##### \Hologo{ConTeXt} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\usemodule[t][markdown]
+\starttext
+
+\startmarkdown
+- this is
+- a list
+\stopmarkdown
+
+\setupmarkdown[contentLevel = inline]
+\startmarkdown
+- this is
+- a text
+\stopmarkdown
+
+\stoptext
+````````
+Next, invoke LuaTeX from the terminal:
+``` sh
+context --luatex document.tex
+`````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> - this is
+> - a list
+>
+> \- this is - a text
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { contentLevel }
+  { string }
+  { block }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.contentLevel = "block"
 %    \end{macrocode}
 % \par
 % \iffalse
@@ -20917,18 +21048,6 @@ pdflatex --shell-escape document.tex
       \c_@@_option_layer_latex_tl
   }
 \ExplSyntaxOff
-%    \end{macrocode}
-% \begin{markdown}
-%
-% The \LaTeX{} implementation redefines the plain \TeX{} logging macros (see
-% Section <#sec:tex-interface-logging>) to use the \LaTeX{} `\PackageInfo`,
-% `\PackageWarning`, and `\PackageError` macros.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\newcommand\markdownInfo[1]{\PackageInfo{markdown}{#1}}%
-\newcommand\markdownWarning[1]{\PackageWarning{markdown}{#1}}%
-\newcommand\markdownError[2]{\PackageError{markdown}{#1}{#2.}}%
 \input markdown/markdown
 %    \end{macrocode}
 % \begin{markdown}
@@ -21552,18 +21671,6 @@ following text:
 \writestatus{loading}{ConTeXt User Module / markdown}%
 \startmodule[markdown]
 \unprotect
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% The \Hologo{ConTeXt} implementation redefines the plain \TeX{} logging macros
-% (see Section <#sec:tex-interface-logging>) to use the \Hologo{ConTeXt}
-% `\writestatus` macro.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\def\markdownInfo#1{\writestatus{markdown}{#1.}}%
-\def\markdownWarning#1{\writestatus{markdown\space warn}{#1.}}%
 \def\dospecials{\do\ \do\\\do\{\do\}\do\$\do\&%
   \do\#\do\^\do\_\do\%\do\~}%
 \input markdown/markdown
@@ -29405,6 +29512,15 @@ end
       syntax.AutoLinkRelativeReference = parsers.fail
     end
 
+    if options.contentLevel == "inline" then
+      syntax[1] = "Inlines"
+      syntax.Inlines = V("InitializeState")
+                      * parsers.Inline^0
+                      * ( parsers.spacing^0
+                        * parsers.eof / "")
+      syntax.Space = parsers.Space + parsers.blankline / writer.space
+    end
+
     local blocks_nested_t = util.table_copy(syntax)
     blocks_nested_t.ExpectedJekyllData = parsers.fail
     parsers.blocks_nested = Ct(blocks_nested_t)
@@ -31580,8 +31696,16 @@ M.extensions.tex_math = function(tex_math_dollars,
         return (starter * Cs(p * (p - ender)^0) * ender)
       end
 
+      local function strip_preceding_whitespaces(str)
+        return str:gsub("^%s*(.-)$", "%1")
+      end
+
       local allowed_before_closing = B( parsers.backslash * parsers.any
-                                      + parsers.any * (parsers.nonspacechar - parsers.backslash))
+                                      + parsers.any * (parsers.any - parsers.backslash))
+
+      local allowed_before_closing_no_space = B( parsers.backslash * parsers.any
+                                               + parsers.any * (parsers.nonspacechar - parsers.backslash))
+
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -31598,7 +31722,7 @@ M.extensions.tex_math = function(tex_math_dollars,
       local inline_math_opening_dollars = parsers.dollar
                                         * #(parsers.nonspacechar)
 
-      local inline_math_closing_dollars = allowed_before_closing
+      local inline_math_closing_dollars = allowed_before_closing_no_space
                                         * parsers.dollar
                                         * -#(parsers.digit)
 
@@ -31637,9 +31761,9 @@ M.extensions.tex_math = function(tex_math_dollars,
       local inline_math_opening_double  = parsers.backslash
                                         * parsers.backslash
                                         * parsers.lparent
-                                        * #(parsers.nonspacechar)
 
       local inline_math_closing_double  = allowed_before_closing
+                                        * parsers.spacechar^0
                                         * parsers.backslash
                                         * parsers.backslash
                                         * parsers.rparent
@@ -31647,12 +31771,14 @@ M.extensions.tex_math = function(tex_math_dollars,
       local inline_math_double  = between(Cs( backslash_math_content),
                                           inline_math_opening_double,
                                           inline_math_closing_double)
+                                / strip_preceding_whitespaces
 
       local display_math_opening_double = parsers.backslash
                                         * parsers.backslash
                                         * parsers.lbracket
 
       local display_math_closing_double = allowed_before_closing
+                                        * parsers.spacechar^0
                                         * parsers.backslash
                                         * parsers.backslash
                                         * parsers.rbracket
@@ -31660,6 +31786,7 @@ M.extensions.tex_math = function(tex_math_dollars,
       local display_math_double = between(Cs( backslash_math_content),
                                           display_math_opening_double,
                                           display_math_closing_double)
+                                / strip_preceding_whitespaces
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -31670,26 +31797,29 @@ M.extensions.tex_math = function(tex_math_dollars,
 %  \begin{macrocode}
       local inline_math_opening_single  = parsers.backslash
                                         * parsers.lparent
-                                        * #(parsers.nonspacechar)
 
       local inline_math_closing_single  = allowed_before_closing
+                                        * parsers.spacechar^0
                                         * parsers.backslash
                                         * parsers.rparent
 
       local inline_math_single  = between(Cs( backslash_math_content),
                                           inline_math_opening_single,
                                           inline_math_closing_single)
+                                / strip_preceding_whitespaces
 
       local display_math_opening_single = parsers.backslash
                                         * parsers.lbracket
 
       local display_math_closing_single = allowed_before_closing
+                                        * parsers.spacechar^0
                                         * parsers.backslash
                                         * parsers.rbracket
 
       local display_math_single = between(Cs( backslash_math_content),
                                           display_math_opening_single,
                                           display_math_closing_single)
+                                / strip_preceding_whitespaces
 
       local display_math = parsers.fail
 
@@ -32312,19 +32442,63 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\ifx\markdownInfo\undefined
-  \def\markdownInfo#1{%
-    \immediate\write-1{(l.\the\inputlineno) markdown.tex info: #1.}}%
-\fi
-\ifx\markdownWarning\undefined
-  \def\markdownWarning#1{%
-    \immediate\write16{(l.\the\inputlineno) markdown.tex warning: #1}}%
-\fi
-\ifx\markdownError\undefined
-  \def\markdownError#1#2{%
-    \errhelp{#2.}%
-    \errmessage{(l.\the\inputlineno) markdown.tex error: #1}}%
-\fi
+\ExplSyntaxOn
+\cs_if_free:NT
+  \markdownInfo
+  {
+    \cs_new:Npn
+      \markdownInfo #1
+      {
+        \msg_info:nne
+          { markdown }
+          { generic-message }
+          { #1 }
+      }
+  }
+\cs_if_free:NT
+  \markdownWarning
+  {
+    \cs_new:Npn
+      \markdownWarning #1
+      {
+        \msg_warning:nne
+          { markdown }
+          { generic-message }
+          { #1 }
+      }
+  }
+\cs_if_free:NT
+  \markdownError
+  {
+    \cs_new:Npn
+      \markdownError #1 #2
+      {
+        \msg_error:nnee
+          { markdown }
+          { generic-message-with-help-text }
+          { #1 }
+          { #2 }
+      }
+  }
+\msg_new:nnn
+  { markdown }
+  { generic-message }
+  { #1 }
+\msg_new:nnnn
+  { markdown }
+  { generic-message-with-help-text }
+  { #1 }
+  { #2 }
+\cs_generate_variant:Nn
+  \msg_info:nnn
+  { nne }
+\cs_generate_variant:Nn
+  \msg_warning:nnn
+  { nne }
+\cs_generate_variant:Nn
+  \msg_error:nnnn
+  { nnee }
+\ExplSyntaxOff
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -33534,7 +33708,6 @@ end
 % \end{markdown}
 %  \begin{macrocode}
         \c { group_end: }
-        \c { markdownInfo } { \1 }
         \c { tl_set_rescan:Nnn } \c { l_tmpa_tl } { } { \1 }
 %    \end{macrocode}
 % \begin{markdown}

@@ -121,9 +121,11 @@ jobs:
         texlive:
           - TL2022-historic
           - latest
+          - latest-pretest
     outputs:
       TL2022-historic: ${{ steps.temporary-tags.outputs.TL2022-historic }}
       latest: ${{ steps.temporary-tags.outputs.latest }}
+      latest-pretest: ${{ steps.temporary-tags.outputs.latest-pretest }}
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -162,6 +164,7 @@ jobs:
         texlive:
           - TL2022-historic
           - latest
+          - latest-pretest
     runs-on: self-hosted
     container:
       image: ghcr.io/witiko/markdown:${{ needs.build-docker-image.outputs[matrix.texlive] }}
@@ -196,6 +199,7 @@ jobs:
         texlive:
           - TL2022-historic
           - latest
+          - latest-pretest
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request_target' && github.ref == 'refs/heads/main'
     env:
@@ -223,6 +227,7 @@ jobs:
         texlive:
           - TL2022-historic
           - latest
+          - latest-pretest
     runs-on: ubuntu-latest
     permissions:
       contents: write

@@ -1,6 +1,22 @@
 # Changes
 
-## 3.4.0
+## 3.4.1 (2024-02-17)
+
+Fixes:
+
+- Rename option `contentType` to `contentLevel`. (#300, #400, ca98e039)
+
+Deprecation:
+
+- Replace all instances of `\markdownInfo`, `\markdownWarning`, and
+  `\markdownError` with l3msg functions and deprecate `\markdownInfo`,
+  `\markdownWarning`, and `\markdownError`. (#383, #398, e3ca682c)
+
+Docker:
+
+- Add support for TeX Live 2024 pretest. (#404, #406, e51738ba)
+
+## 3.4.0 (2024-01-31)
 
 Development:
 
@@ -8,6 +24,23 @@ Development:
   `witiko/markdown/defaults`. (#391, #392)
 - Add format-independent options `noDefaults` and `plain`, which control the
   loading of theme `witiko/markdown/defaults`. (#393, #394)
+- Add `contentLevel` Lua option.
+  (#300, #375, #400, contributed by @lostenderman)
+
+Fixes:
+
+- Make Pandoc syntax extensions `tex_single_backslash_math` and
+  `tex_double_backslash_math` robust against extra spaces at the beginning /
+  end of inline / display math. (#386, #399, contributed by @lostenderman)
+
+Libraries:
+
+- Update `tinyyaml` to v0.4.4. (e2a59ba)
+
+Contributed Software:
+
+- Remove private GitHub repository `contributions/istqb_latex`. (cc21fe2)
+- Add `contributions/37c3-beamer`. (f5bb26b, contributed by @TeXhackse)
 
 Default Renderer Prototypes:
 

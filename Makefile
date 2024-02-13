@@ -46,7 +46,7 @@ LIBRARIES=libraries/markdown-tinyyaml.lua
 INSTALLABLES=markdown.lua markdown-cli.lua markdown.tex markdown.sty t-markdown.tex \
   markdownthemewitiko_dot.sty markdownthemewitiko_graphicx_http.sty \
   markdownthemewitiko_tilde.tex markdownthemewitiko_markdown_defaults.tex \
-	markdownthemewitiko_markdown_defaults.sty t-markdownthemewitiko_markdown_defaults.tex
+  markdownthemewitiko_markdown_defaults.sty t-markdownthemewitiko_markdown_defaults.tex
 EXTRACTABLES=$(INSTALLABLES) $(MARKDOWN_USER_MANUAL) $(TECHNICAL_DOCUMENTATION_RESOURCES)
 MAKEABLES=$(TECHNICAL_DOCUMENTATION) $(USER_MANUAL) $(INSTALLABLES) $(EXAMPLES)
 RESOURCES=$(DOCUMENTATION) $(EXAMPLES_RESOURCES) $(EXAMPLES_SOURCES) $(EXAMPLES) \
@@ -64,6 +64,13 @@ LASTMODIFIED=$(shell git log -1 --date=format:%Y-%m-%d --format=%ad)
 
 ifndef DOCKER_TEXLIVE_TAG
 	DOCKER_TEXLIVE_TAG=latest
+endif
+ifeq ($(DOCKER_TEXLIVE_TAG), latest-pretest)
+	DOCKER_FROM_IMAGE=witiko/texlive-pretest
+	DOCKER_FROM_TAG=latest
+else
+	DOCKER_FROM_IMAGE=texlive/texlive
+	DOCKER_FROM_TAG=$(DOCKER_TEXLIVE_TAG)
 endif
 ifeq ($(DOCKER_DEV_IMAGE), true)
 	DOCKER_TAG_POSTFIX=-no_docs
@@ -88,7 +95,8 @@ base: $(INSTALLABLES) $(LIBRARIES)
 # This pseudo-target builds a witiko/markdown Docker image.
 docker-image:
 	docker pull $(DOCKER_TEMPORARY_IMAGE):$(DOCKER_TEMPORARY_TAG) || \
-	DOCKER_BUILDKIT=1 docker build --pull --build-arg TEXLIVE_TAG=$(DOCKER_TEXLIVE_TAG) \
+	DOCKER_BUILDKIT=1 docker build --pull --build-arg TEXLIVE_TAG=$(DOCKER_FROM_TAG) \
+	                               --build-arg FROM_IMAGE=$(DOCKER_FROM_IMAGE) \
 	                               --build-arg DEV_IMAGE=$(DOCKER_DEV_IMAGE) \
 	                               -t $(DOCKER_TEMPORARY_IMAGE):$(DOCKER_TEMPORARY_TAG) .
 

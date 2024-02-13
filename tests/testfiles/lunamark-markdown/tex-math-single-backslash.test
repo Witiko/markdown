@@ -31,10 +31,6 @@ c\)
 
 c\]
 
-No spaces are allowed at the beginning or the end of inline math:
-
-\( \infty \)
-
 Escaped spaces are allowed at the beginning or the end of inline math:
 
 \(\ \)
@@ -42,6 +38,22 @@ Escaped spaces are allowed at the beginning or the end of inline math:
 The following is inline math with two backslashes:
 
 \\\(a\\\)
+
+Whitespace characters are allowed at the beginning or the end of inline math or display math:
+
+\( 1+2=3 \)
+
+\(	1+2=3	\)
+
+\[ 1+2=3 \]
+
+\[	1+2=3	\]
+
+Whitespace-only content is allowed:
+
+\( \)
+
+\[ \]
 >>>
 BEGIN document
 codeSpan: texMathSingleBackslash
@@ -60,12 +72,23 @@ paragraphSeparator
 paragraphSeparator
 paragraphSeparator
 paragraphSeparator
-backslash
-paragraphSeparator
-paragraphSeparator
 inlineMath: \ 
 paragraphSeparator
 paragraphSeparator
 backslash
 inlineMath: a\\
+paragraphSeparator
+paragraphSeparator
+inlineMath: 1+2=3
+paragraphSeparator
+inlineMath: 1+2=3
+paragraphSeparator
+displayMath: 1+2=3
+paragraphSeparator
+displayMath: 1+2=3
+paragraphSeparator
+paragraphSeparator
+inlineMath: 
+paragraphSeparator
+displayMath: 
 END document

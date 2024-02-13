@@ -13,6 +13,6 @@
 [submodule "contributions/MarkX"]
 	path = contributions/MarkX
 	url = https://github.com/lostenderman/MarkX
-[submodule "contributions/istqb_latex"]
-	path = contributions/istqb_latex
-	url = https://github.com/danopolan/istqb_latex.git
+[submodule "contributions/37c3-beamer"]
+	path = contributions/37c3-beamer
+	url = https://github.com/TeXhackse/37c3-beamer.git
