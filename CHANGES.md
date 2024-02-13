@@ -5,6 +5,8 @@
 Fixes:
 
 - Rename option `contentType` to `contentLevel`. (#300, #400, ca98e039)
+- Correctly produce paragraph separators inside block-level elements.
+  (#376, #377, #403, contributed by @lostenderman)
 
 Deprecation:
 
