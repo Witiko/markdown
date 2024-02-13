@@ -28743,7 +28743,7 @@ end
   parsers.Reference    = parsers.define_reference_parser
                        / self.register_link
 
-  parsers.Paragraph   = parsers.freeze_trail * (parsers.check_trail / "")
+  parsers.Paragraph   = parsers.freeze_trail
                       * (Ct((parsers.Inline)^1)
                       * (parsers.newline + parsers.eof)
                       * parsers.unfreeze_trail

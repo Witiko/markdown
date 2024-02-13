@@ -165,7 +165,7 @@ rightBrace
 softLineBreak
 interblockSeparator
 blockQuoteBegin
-interblockSeparator
+paragraphSeparator
 leftBrace
 rightBrace
 softLineBreak
