@@ -36,7 +36,8 @@ UPDATE_TESTS: bool = False
 FAIL_FAST: bool = True
 
 NUM_PROCESSES: int = cpu_count()
-TESTFILE_BATCH_SIZE: int = 50
+MIN_NUM_BATCHES: int = 16  # Using a smaller value will increase batch size, speed, and memory footprint.
+# If `NUM_PROCESSES` > `MIN_NUM_BATCHES`, we will decrease the batch size and create `NUM_PROCESSES` batches.
 
 MAX_TESTFILE_NAMES_SHOWN: int = 5
 MAX_TESTFILE_NAMES_SHOWN_COLLAPSED: int = 3
@@ -766,7 +767,6 @@ def run_tests(testfiles: Iterable[TestFile], fail_fast: bool) -> Iterable[Option
     testfiles: List[TestFile] = list(testfiles)
 
     def get_all_results() -> Iterable[Iterable[TestResult]]:
-        testfile_batch_size = TESTFILE_BATCH_SIZE
         if NUM_PROCESSES > 1:
             # Populate caches by running the first testfile sequentially.
             first_testfile, *remaining_testfiles = testfiles
@@ -776,6 +776,8 @@ def run_tests(testfiles: Iterable[TestFile], fail_fast: bool) -> Iterable[Option
 
             # Run the remaining batches in parallel.
             if remaining_testfiles:
+                testfile_batch_size = int(ceil(len(remaining_testfiles) / MIN_NUM_BATCHES))
+                LOGGER.debug(f'Using batch size {testfile_batch_size}.')
                 num_batches = int(ceil(len(remaining_testfiles) / testfile_batch_size))
                 if num_batches < NUM_PROCESSES:
                     updated_testfile_batch_size = int(ceil(len(remaining_testfiles) / NUM_PROCESSES))
@@ -798,6 +800,8 @@ def run_tests(testfiles: Iterable[TestFile], fail_fast: bool) -> Iterable[Option
                 yield from sequential_results
         # If there is just a single hyperthread, run all batches sequentially.
         else:
+            testfile_batch_size = int(ceil(len(testfiles) / MIN_NUM_BATCHES))
+            LOGGER.debug(f'Using batch size {testfile_batch_size}.')
             testfile_batches: Iterable[TestFileBatch] = chunked(testfiles, testfile_batch_size)
             all_batches = zip(testfile_batches, repeat(fail_fast))
             all_results = map(BatchResult.run_test_batch, all_batches)
