@@ -12,6 +12,10 @@ Deprecation:
   `\markdownError` with l3msg functions and deprecate `\markdownInfo`,
   `\markdownWarning`, and `\markdownError`. (#383, #398, e3ca682c)
 
+Docker:
+
+- Add support for TeX Live 2024 pretest. (#404, #406)
+
 ## 3.4.0 (2024-01-31)
 
 Development:
