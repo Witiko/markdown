@@ -65,7 +65,7 @@ LASTMODIFIED=$(shell git log -1 --date=format:%Y-%m-%d --format=%ad)
 ifndef DOCKER_TEXLIVE_TAG
 	DOCKER_TEXLIVE_TAG=latest
 endif
-ifeq ($(DOCKER_TEXLIVE_TAG), latest-pretest)
+ifeq ($(DOCKER_TEXLIVE_TAG), pretest)
 	DOCKER_FROM_IMAGE=witiko/texlive-pretest
 	DOCKER_FROM_TAG=latest
 else

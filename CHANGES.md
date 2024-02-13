@@ -10,7 +10,7 @@ Deprecation:
 
 - Replace all instances of `\markdownInfo`, `\markdownWarning`, and
   `\markdownError` with l3msg functions and deprecate `\markdownInfo`,
-  `\markdownWarning`, and `\markdownError`. (#383, #398, e3ca682c)
+  `\markdownWarning`, and `\markdownError`. (#383, #398, e3ca682c, 48002f84)
 
 Docker:
 
