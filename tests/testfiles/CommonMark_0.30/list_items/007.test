@@ -24,7 +24,7 @@ blockQuoteBegin
 olBegin
 olItemWithNumber: 1
 emphasis: one
-interblockSeparator
+paragraphSeparator
 emphasis: two
 olItemEnd
 olEnd

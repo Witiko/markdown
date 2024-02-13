@@ -29,7 +29,7 @@ emphasis: a
 ulItemEnd
 ulItem
 emphasis: b
-interblockSeparator
+paragraphSeparator
 emphasis: c
 ulItemEnd
 ulItem

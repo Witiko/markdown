@@ -17,7 +17,7 @@
 BEGIN document
 ulBegin
 ulItem
-interblockSeparator
+paragraphSeparator
 ulItemEnd
 ulEnd
 END document

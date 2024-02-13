@@ -37,7 +37,7 @@ interblockSeparator
 ulBegin
 ulItem
 emphasis: baz
-interblockSeparator
+paragraphSeparator
 emphasis: bim
 ulItemEnd
 ulEnd

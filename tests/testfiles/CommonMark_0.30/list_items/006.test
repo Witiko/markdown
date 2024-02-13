@@ -18,7 +18,7 @@ BEGIN document
 ulBegin
 ulItem
 emphasis: one
-interblockSeparator
+paragraphSeparator
 emphasis: two
 ulItemEnd
 ulEnd
