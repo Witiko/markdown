@@ -27524,7 +27524,7 @@ function M.reader.new(writer, options)
   end
 
   parsers.par_sep_group = function(blank)
-    return blank^0 * parsers.eof
+    return  blank^0 * parsers.eof
           + blank^0 / writer.paragraphsep
   end
 
@@ -27536,11 +27536,11 @@ function M.reader.new(writer, options)
   parsers.content_blank = parsers.minimally_indented_blankline
 
   parsers.ref_or_block_separated  = parsers.sep_group_no_output(parsers.content_blank) 
-                                * ( parsers.minimally_indented_ref 
-                                  - parsers.content_blank)
-                                + parsers.block_sep_group(parsers.content_blank)
-                                * ( parsers.minimally_indented_block 
-                                  - parsers.content_blank)
+                                  * ( parsers.minimally_indented_ref 
+                                    - parsers.content_blank)
+                                  + parsers.block_sep_group(parsers.content_blank)
+                                  * ( parsers.minimally_indented_block 
+                                    - parsers.content_blank)
 
   parsers.loop_body_pair  = 
     parsers.create_loop_body_pair(parsers.ref_or_block_separated,
@@ -27558,15 +27558,13 @@ function M.reader.new(writer, options)
                         * parsers.content_blank^0
 
   parsers.indented_content = function()
-    return Ct(
-      (V("Reference") + (parsers.blankline / ""))
-        * parsers.content_blank^0
-        * parsers.check_minimal_indent 
-        * parsers.content_loop
-      + (V("Reference") + (parsers.blankline / ""))
-        * parsers.content_blank^0
-      + parsers.content_loop
-    )
+    return  Ct( (V("Reference") + (parsers.blankline / ""))
+              * parsers.content_blank^0
+              * parsers.check_minimal_indent 
+              * parsers.content_loop
+              + (V("Reference") + (parsers.blankline / ""))
+              * parsers.content_blank^0
+              + parsers.content_loop)
   end
 
   parsers.add_indent = function(pattern, name, breakable)
@@ -30679,19 +30677,17 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
                              * non_fenced_div_block
 
       local loop_body_pair  = parsers.create_loop_body_pair(block_separated,
-                                                  non_fenced_div_paragraph,
-                                                  parsers.block_sep_group(blank),
-                                                  parsers.par_sep_group(blank))
+                                                            non_fenced_div_paragraph,
+                                                            parsers.block_sep_group(blank),
+                                                            parsers.par_sep_group(blank))
 
-      local content_loop  = non_fenced_div_block
-                          * loop_body_pair.block^0
-                          * blank^0
-                          + non_fenced_div_paragraph
-                          * block_separated
-                          * loop_body_pair.block^0
-                          * blank^0
-                          + non_fenced_div_paragraph
-                          * loop_body_pair.par^0
+      local content_loop  = ( non_fenced_div_block
+                            * loop_body_pair.block^0
+                            + non_fenced_div_paragraph
+                            * block_separated
+                            * loop_body_pair.block^0
+                            + non_fenced_div_paragraph
+                            * loop_body_pair.par^0)
                           * blank^0
 
       local FencedDiv = fenced_div_begin
