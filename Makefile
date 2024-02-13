@@ -46,7 +46,7 @@ LIBRARIES=libraries/markdown-tinyyaml.lua
 INSTALLABLES=markdown.lua markdown-cli.lua markdown.tex markdown.sty t-markdown.tex \
   markdownthemewitiko_dot.sty markdownthemewitiko_graphicx_http.sty \
   markdownthemewitiko_tilde.tex markdownthemewitiko_markdown_defaults.tex \
-	markdownthemewitiko_markdown_defaults.sty t-markdownthemewitiko_markdown_defaults.tex
+  markdownthemewitiko_markdown_defaults.sty t-markdownthemewitiko_markdown_defaults.tex
 EXTRACTABLES=$(INSTALLABLES) $(MARKDOWN_USER_MANUAL) $(TECHNICAL_DOCUMENTATION_RESOURCES)
 MAKEABLES=$(TECHNICAL_DOCUMENTATION) $(USER_MANUAL) $(INSTALLABLES) $(EXAMPLES)
 RESOURCES=$(DOCUMENTATION) $(EXAMPLES_RESOURCES) $(EXAMPLES_SOURCES) $(EXAMPLES) \
