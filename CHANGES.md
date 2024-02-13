@@ -14,7 +14,7 @@ Deprecation:
 
 Docker:
 
-- Add support for TeX Live 2024 pretest. (#404, #406)
+- Add support for TeX Live 2024 pretest. (#404, #406, e51738ba)
 
 ## 3.4.0 (2024-01-31)
 
