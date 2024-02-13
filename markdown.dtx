@@ -27518,14 +27518,20 @@ function M.reader.new(writer, options)
 
   parsers.block_sep_group = function(blank)
     return  blank^0 * parsers.eof
-          + ( blank^2 / writer.paragraphsep
-            + blank^0 / writer.interblocksep
+          + ( blank^2 / function()
+                          return writer.paragraphsep
+                        end
+            + blank^0 / function()
+                          return writer.interblocksep
+                        end
             )
   end
 
   parsers.par_sep_group = function(blank)
     return  blank^0 * parsers.eof
-          + blank^0 / writer.paragraphsep
+          + blank^0 / function()
+                        return writer.paragraphsep
+                      end
   end
 
   parsers.sep_group_no_output = function(blank)
