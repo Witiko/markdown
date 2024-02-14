@@ -67,9 +67,12 @@ set -o nounset
 set -o xtrace
 
 # Update packages in non-historic TeX Live versions
-if echo ${TEXLIVE_TAG} | grep -qv historic
+if echo ${TEXLIVE_TAG} | grep -q latest
 then
   tlmgr update --self --all
+elif echo ${TEXLIVE_TAG} | grep -q pretest
+then
+  tlmgr update --self --all --repository ftp://ftp.cstug.cz/pub/tex/local/tlpretest/
 fi
 
 # Install dependencies
@@ -148,9 +151,12 @@ set -o nounset
 set -o xtrace
 
 # Update packages in non-historic TeX Live versions
-if echo ${TEXLIVE_TAG} | grep -qv historic
+if echo ${TEXLIVE_TAG} | grep -q latest
 then
   tlmgr update --self --all
+elif echo ${TEXLIVE_TAG} | grep -q pretest
+then
+  tlmgr update --self --all --repository ftp://ftp.cstug.cz/pub/tex/local/tlpretest/
 fi
 
 # Uninstall the distribution Markdown package
