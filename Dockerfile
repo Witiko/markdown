@@ -51,6 +51,7 @@ ARG BUILD_DIR
 ARG INSTALL_DIR
 ARG PREINSTALLED_DIR
 
+ARG TEXLIVE_TAG
 ARG DEV_IMAGE
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -64,6 +65,12 @@ RUN <<EOF
 set -o errexit
 set -o nounset
 set -o xtrace
+
+# Update packages in non-historic TeX Live versions
+if echo ${TEXLIVE_TAG} | grep -qv historic
+then
+  tlmgr update --self --all
+fi
 
 # Install dependencies
 apt-get -qy update
@@ -125,6 +132,7 @@ ARG BUILD_DIR
 ARG INSTALL_DIR
 ARG PREINSTALLED_DIR
 
+ARG TEXLIVE_TAG
 ARG DEV_IMAGE
 
 LABEL authors="Vít Starý Novotný <witiko@mail.muni.cz>"
@@ -138,6 +146,12 @@ RUN <<EOF
 set -o errexit
 set -o nounset
 set -o xtrace
+
+# Update packages in non-historic TeX Live versions
+if echo ${TEXLIVE_TAG} | grep -qv historic
+then
+  tlmgr update --self --all
+fi
 
 # Uninstall the distribution Markdown package
 rm -rfv ${PREINSTALLED_DIR}/tex/luatex/markdown/
