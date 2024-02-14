@@ -11690,7 +11690,8 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 % The \mdef{markdownOptionOutputDir} macro sets the path to the directory that
 % will contain the auxiliary cache files produced by the Lua implementation and
 % also the auxiliary files produced by the plain \TeX{} implementation. The
-% option defaults to `.`.
+% option defaults to `.` or, since \TeX{} Live 2024, to the value of the
+% `-output-directory` option of your \TeX{} engine.
 %
 % The path must be set to the same value as the `-output-directory` option of
 % your \TeX{} engine for the package to function correctly. We need this macro
@@ -11698,12 +11699,54 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 % The same limitations apply here as in the case of the
 % \Opt{inputTempFileName} macro.
 %
+% The \mref{markdownOptionOutputDir} macro has been deprecated and will be
+% removed in the next major version of the Markdown package. <!-- After the
+% macro has been removed, we should remove support for TeX Live 2023 and
+% earlier, where the automatic detection does not work. -->
+%
 % \end{markdown}
 %  \begin{macrocode}
-\@@_add_plain_tex_option:nnn
+\cs_generate_variant:Nn
+  \@@_add_plain_tex_option:nnn
+  { nnV }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Use the \pkg{lt3luabridge} library to determine the default value of the
+% \mref{markdownOptionOutputDir} macro by using the environmental variable
+% `TEXMF_OUTPUT_DIRECTORY` that is available since TeX~Live 2024.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOff
+\input lt3luabridge.tex
+\ExplSyntaxOn
+\bool_if:nTF
+  {
+    \cs_if_exist_p:N
+      \luabridge_tl_set:Nn &&
+    (
+      \int_compare_p:nNn
+        { \g_luabridge_method_int }
+        =
+        { \c_luabridge_method_directlua_int } ||
+      \sys_if_shell_unrestricted_p:
+    )
+  }
+  {
+    \luabridge_tl_set:Nn
+      \l_tmpa_tl
+      { print(os.getenv("TEXMF_OUTPUT_DIRECTORY") or ".") }
+  }
+  {
+    \tl_set:Nn
+      \l_tmpa_tl
+      { . }
+  }
+\@@_add_plain_tex_option:nnV
   { outputDir }
   { path }
-  { . }
+  \l_tmpa_tl
 %    \end{macrocode}
 % \iffalse
 %</tex>
@@ -33412,11 +33455,12 @@ end
 % \par
 % \begin{markdown}
 %
-% Load the Lua shell escape bridge.
+% Use the \pkg{lt3luabridge} library to define the \mdef{markdownLuaExecute}
+% macro, which takes in a Lua scripts and expands to the standard output
+% produced by its execution.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\input lt3luabridge.tex
 \ExplSyntaxOn
 \cs_new:Npn
   \markdownLuaExecute
