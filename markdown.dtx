@@ -1163,6 +1163,9 @@ local uni_algos = require("lua-uni-algos")
 % \end{markdown}
 %  \begin{macrocode}
 %</tex>
+%<*context>
+\unprotect
+%</context>
 %<*context,tex>
 \ifx\ExplSyntaxOn\undefined
   \input expl3-generic
@@ -21713,7 +21716,6 @@ following text:
 %  \begin{macrocode}
 \writestatus{loading}{ConTeXt User Module / markdown}%
 \startmodule[markdown]
-\unprotect
 \def\dospecials{\do\ \do\\\do\{\do\}\do\$\do\&%
   \do\#\do\^\do\_\do\%\do\~}%
 \input markdown/markdown
