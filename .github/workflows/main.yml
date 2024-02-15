@@ -12,7 +12,7 @@ on:
   pull_request_target:
   workflow_dispatch:
   schedule:
-    - cron: '30 4 * * MON'
+    - cron: '30 4 * * *'
 env:
   DEBIAN_FRONTEND: noninteractive
   DOCKER_DEV_IMAGE: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.draft == true }}
