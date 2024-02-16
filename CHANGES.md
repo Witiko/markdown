@@ -22,7 +22,7 @@ Deprecation:
 Docker:
 
 - Add support for TeX Live 2024 pretest.
-  (#404, #406, e51738ba, #410, 7ef64dd9)
+  (#404, #406, e51738ba, #410, 7ef64dd9, a7cff81d)
 
 ## 3.4.0 (2024-01-31)
 
