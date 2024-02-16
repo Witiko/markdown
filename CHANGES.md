@@ -10,11 +10,10 @@ Fixes:
 
 Deprecation:
 
-- Replace all instances of `\markdownInfo`, `\markdownWarning`, and
-  `\markdownError` with l3msg functions and deprecate `\markdownInfo`,
-  `\markdownWarning`, and `\markdownError`. (#383, #398, e3ca682c, 48002f84)
+- Replace `\markdownInfo`, `\markdownWarning`, and `\markdownError` with l3msg
+  functions and deprecate them. (#383, #398, e3ca682c, 48002f84)
 - Use the `TEXMF_OUTPUT_DIRECTORY` environmental variable to set
-  `\markdownOptionOutputDir` and deprecate `\markdownOptionOutputDir`.
+  `\markdownOptionOutputDir` and deprecate it.
   (#405, #409, [matrix.org][matrix-405])
 
  [matrix-405]: https://matrix.to/#/!efVbynJpCMjlOTfose:matrix.org/$8oUA2Bn3ch3q9K6RU-1EgpO9uQOd_3Mky4YwT325Ib0?via=matrix.org&via=im.f3l.de
