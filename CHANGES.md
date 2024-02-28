@@ -1,5 +1,11 @@
 # Changes
 
+## 3.4.2
+
+Contributed Software:
+
+- Add `contributions/istqb_product_base`. (8e727c9b)
+
 ## 3.4.1 (2024-02-16)
 
 Fixes:
