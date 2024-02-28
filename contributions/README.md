@@ -4,6 +4,7 @@ been contributed to the Markdown package:
 - [37c3-beamer][] from [TeXhackse][]: Unofficial beamer theme for [37c3][]
 - [book-templates][] from [xvrabcov][]: Open-source Markdown LaTeX themes for typesetting books and marketing colaterals
 - [doctoral-thesis][] from [witiko][]: A doctoral thesis written using the Markdown package
+- [istbq_product_base][] from [istqborg][]: Document templates for the International Software Testing Qualifications Board (ISTBQ) syllabi
 - [MarkX][] from [lostenderman][]: A tool for converting XML examples from CommonMark to test files used in the Markdown package
   - For more information, see also [the bachelor's thesis][thesis-r7z7l] of [lostenderman][].
 - [pandoc-to-markdown][] from [drehak][]: A proof-of-concept that shows how Pandoc can be integrated with the Markdown package
@@ -13,6 +14,7 @@ been contributed to the Markdown package:
  [37c3-beamer]: https://github.com/TeXhackse/37c3-beamer
  [book-templates]: https://github.com/xvrabcov/md-templates
  [doctoral-thesis]: https://github.com/witiko/doctoral-thesis
+ [istbq_product_base]: https://github.com/istqborg/istqb_product_base
  [MarkX]: https://github.com/lostenderman/MarkX
  [pandoc-to-markdown]: https://github.com/drehak/pandoc-to-markdown
 
@@ -27,6 +29,7 @@ package but cannot be directly included as Git submodules:
  [l4070]: https://gitlab.com/l4070
 
  [drehak]: https://github.com/drehak
+ [istqborg]: https://github.com/istqborg
  [lostenderman]: https://github.com/lostenderman
  [TeXhackse]: https://github.com/TeXhackse
  [witiko]: https://github.com/witiko
