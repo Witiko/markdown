@@ -1,15 +1,5 @@
 \documentclass{book}
 \usepackage{polyglossia}
-% work around a bug in polyglossia
-\makeatletter
-\ExplSyntaxOn
-\pretocmd\xpg@set@alias@values{%
-	\prop_if_exist:cF { xpg@alias@keyvals@#1@#4 }
-	{ \prop_new:c {xpg@alias@keyvals@#1@#4} }
-}{}{}
-\ExplSyntaxOff
-\makeatother
-% end of workaround
 \setmainlanguage{english}
 \usepackage{fontspec}
 \usepackage{booktabs}
