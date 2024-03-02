@@ -30873,6 +30873,7 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
                       * increment_div_level(1)
                       * parsers.skipblanklines
                       * Ct(content_loop)
+                      * change_is_top_level("true")
                       * parsers.minimally_indented_blank^0
                       * parsers.check_minimal_indent_and_trail * fenced_div_end * increment_div_level(-1)
                       * (Cc("") / writer.div_end)
