@@ -30829,7 +30829,7 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
       end
 
       local function change_is_top_level(new_value)
-        local function update_is_top_level(s, i, value) -- luacheck: ignore s i
+        local function update_is_top_level(s, i, value) -- luacheck: ignore s i value
           return true, new_value
         end
 
