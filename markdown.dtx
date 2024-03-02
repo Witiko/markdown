@@ -30815,6 +30815,8 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
 %  \begin{macrocode}
       self.initialize_named_group("div_level", "0")
 
+      self.initialize_named_group("is_top_level", "true")
+
       local function increment_div_level(increment)
         local function update_div_level(s, i, current_level) -- luacheck: ignore s i
           current_level = tonumber(current_level)
@@ -30825,12 +30827,20 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
         return Cg( Cmt(Cb("div_level"), update_div_level)
                  , "div_level")
       end
+
+      local function change_is_top_level(new_value)
+        local function update_is_top_level(s, i, value) -- luacheck: ignore s i
+          return true, new_value
+        end
+
+        return Cg( Cmt(Cb("is_top_level"), update_is_top_level), "is_top_level")
+      end
       
-      local non_fenced_div_block  = parsers.check_minimal_indent * V("Block")
+      local non_fenced_div_block  = change_is_top_level("false") * parsers.check_minimal_indent * V("Block")
                                   - parsers.check_minimal_indent_and_trail * fenced_div_end
 
-      local non_fenced_div_paragraph  = parsers.check_minimal_indent * V("Paragraph")
-                                      - parsers.check_minimal_indent_and_trail * fenced_div_end
+      local non_fenced_div_paragraph  = change_is_top_level("true") * parsers.check_minimal_indent * V("Paragraph")
+                                      - parsers.check_minimal_indent_and_trail * fenced_div_end - fenced_div_end
 
       local blank = parsers.minimally_indented_blank
 
@@ -30887,8 +30897,13 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
         return current_level > 0
       end
 
+      local function check_is_top_level(s, i, current_is_top_level) -- luacheck: ignore s i
+        return current_is_top_level == "true"
+      end
+
       local is_inside_div = Cmt(Cb("div_level"), check_div_level)
-      local fencestart = is_inside_div * fenced_div_end
+      local is_top_level = Cmt(Cb("is_top_level"), check_is_top_level)
+      local fencestart = is_inside_div * is_top_level * fenced_div_end
 
       if not blank_before_div_fence then
         self.update_rule("EndlineExceptions", function(previous_pattern)
