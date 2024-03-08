@@ -5,6 +5,7 @@
 Contributed Software:
 
 - Add `contributions/istqb_product_base`. (8e727c9b)
+- Add `contributions/fithesis`. (0b6a436c)
 
 ## 3.4.1 (2024-02-16)
 
