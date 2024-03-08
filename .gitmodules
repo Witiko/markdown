@@ -19,3 +19,6 @@
 [submodule "contributions/istqb_product_base"]
 	path = contributions/istqb_product_base
 	url = https://github.com/istqborg/istqb_product_base.git
+[submodule "contributions/fithesis"]
+	path = contributions/fithesis
+	url = https://gitlab.fi.muni.cz/external_relations/document_templates/fithesis.git
