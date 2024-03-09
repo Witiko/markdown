@@ -4,6 +4,11 @@
 
 ## 3.4.2 (2024-03-09)
 
+Fixes:
+
+- In `\begin{markdown}[options]`, allow a new line before `options`.
+  (#414, #415)
+
 Contributed Software:
 
 - Add `contributions/istqb_product_base`. (8e727c9b)

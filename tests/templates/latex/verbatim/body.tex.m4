@@ -11,7 +11,9 @@
 \catcode"7E=12%  Tildes (U+007E)
 
 % Perform the test.
-\begin{markdown}[snippet=testSnippet]
+\begin{markdown}[
+  snippet=testSnippet,
+]
 undivert(TEST_INPUT_FILENAME)dnl
 \end{markdown}
 
