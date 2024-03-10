@@ -26956,7 +26956,7 @@ parsers.html_comment = Cs( parsers.html_comment_start
  
 parsers.html_inline_comment = (parsers.html_comment_start / "")
                             * -P(">") * -P("->")
-                            * Cs((V("NoSoftLineBreakEndline") + parsers.any - P("--") 
+                            * Cs((V("NoSoftLineBreakEndline") + parsers.any
                                 - parsers.nested_breaking_blank - parsers.html_comment_end)^0)
                             * (parsers.html_comment_end / "")
 
