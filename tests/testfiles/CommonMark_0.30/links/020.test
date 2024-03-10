@@ -1,17 +1,17 @@
 %   ---RESULT--- "example": 500,
 %   
 %   <p><a href="#fragment">link</a></p>
-%   <p><a href="http://example.com#fragment">link</a></p>
-%   <p><a href="http://example.com?foo=3#frag">link</a></p>
+%   <p><a href="https://example.com#fragment">link</a></p>
+%   <p><a href="https://example.com?foo=3#frag">link</a></p>
 %   
 %   ---\RESULT---
 
 <<<
 [link](#fragment)
 
-[link](http://example.com#fragment)
+[link](https://example.com#fragment)
 
-[link](http://example.com?foo=3#frag)
+[link](https://example.com?foo=3#frag)
 >>>
 BEGIN document
 BEGIN link
@@ -22,13 +22,13 @@ END link
 paragraphSeparator
 BEGIN link
 - label: link
-- URI: http://example.com#fragment
+- URI: https://example.com#fragment
 - title: 
 END link
 paragraphSeparator
 BEGIN link
 - label: link
-- URI: http://example.com?foo=3#frag
+- URI: https://example.com?foo=3#frag
 - title: 
 END link
 END document

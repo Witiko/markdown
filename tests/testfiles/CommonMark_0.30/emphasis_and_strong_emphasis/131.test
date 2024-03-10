@@ -1,18 +1,18 @@
 %   ---RESULT--- "example": 480,
 %   
-%   <p>__a<a href="http://foo.bar/?q=__">http://foo.bar/?q=__</a></p>
+%   <p>__a<a href="https://foo.bar/?q=__">https://foo.bar/?q=__</a></p>
 %   
 %   ---\RESULT---
 
 <<<
-__a<http://foo.bar/?q=__>
+__a<https://foo.bar/?q=__>
 >>>
 BEGIN document
 underscore
 underscore
 BEGIN link
-- label: http://foo.bar/?q=(underscore)(underscore)
-- URI: http://foo.bar/?q=__
+- label: https://foo.bar/?q=(underscore)(underscore)
+- URI: https://foo.bar/?q=__
 - title: 
 END link
 END document

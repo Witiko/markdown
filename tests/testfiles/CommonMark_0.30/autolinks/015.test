@@ -1,11 +1,11 @@
 %   ---RESULT--- "example": 607,
 %   
-%   <p>&lt; http://foo.bar &gt;</p>
+%   <p>&lt; https://foo.bar &gt;</p>
 %   
 %   ---\RESULT---
 
 <<<
-< http://foo.bar >
+< https://foo.bar >
 >>>
 BEGIN document
 END document

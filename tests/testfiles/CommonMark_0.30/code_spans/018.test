@@ -1,12 +1,12 @@
 %   ---RESULT--- "example": 345,
 %   
-%   <p><code>&lt;http://foo.bar.</code>baz&gt;`</p>
+%   <p><code>&lt;https://foo.bar.</code>baz&gt;`</p>
 %   
 %   ---\RESULT---
 
 <<<
-`<http://foo.bar.`baz>`
+`<https://foo.bar.`baz>`
 >>>
 BEGIN document
-codeSpan: <http://foo.bar.
+codeSpan: <https://foo.bar.
 END document

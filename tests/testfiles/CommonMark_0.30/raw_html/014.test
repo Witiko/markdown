@@ -1,11 +1,13 @@
 %   ---RESULT--- "example": 625,
 %   
-%   <p>foo &lt;!-- not a comment -- two hyphens --&gt;</p>
+%   <p>foo <!-- this is a --\ncomment - with hyphens --></p>
 %   
 %   ---\RESULT---
 
 <<<
-foo <!-- not a comment -- two hyphens -->
+foo <!-- this is a --
+comment - with hyphens -->
 >>>
 BEGIN document
+inlineHtmlTag: <!-- this is a -- comment - with hyphens -->
 END document

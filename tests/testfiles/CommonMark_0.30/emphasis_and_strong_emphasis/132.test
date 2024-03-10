@@ -1,0 +1,20 @@
+%   ---RESULT--- "example": 354, (new)
+%   
+%   <p>*$*alpha.</p>
+%   <p>*£*bravo.</p>
+%   <p>*€*charlie.</p>
+%   
+%   ---\RESULT---
+
+<<<
+*$*alpha.
+
+*£*bravo.
+
+*€*charlie.
+>>>
+BEGIN document
+dollarSign
+paragraphSeparator
+paragraphSeparator
+END document
