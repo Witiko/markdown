@@ -10,5 +10,5 @@ foo <!-- this is a --
 comment - with hyphens -->
 >>>
 BEGIN document
-inlineHtmlTag: <!-- this is a -- comment - with hyphens -->
+inlineHtmlComment:  this is a -- comment - with hyphens 
 END document
