@@ -1,6 +1,7 @@
 %   ---RESULT--- "example": 625,
 %   
-%   <p>foo <!-- this is a --\ncomment - with hyphens --></p>
+%   <p>foo <!-- this is a --
+%   comment - with hyphens --></p>
 %   
 %   ---\RESULT---
 
