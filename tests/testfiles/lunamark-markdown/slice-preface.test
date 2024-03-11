@@ -149,6 +149,5 @@ softLineBreak
 interblockSeparator
 BEGIN section
 headingOne: This is an H1
-interblockSeparator
 END section
 END document
