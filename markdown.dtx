@@ -25394,6 +25394,7 @@ function M.writer.new(options)
     if attributes["#" .. self.slice_end_identifier] ~= nil and
        self.slice_end_type == "^" then
       if self.is_writing then
+        table.insert(buf, self.undosep())
         table.insert(buf, tear_down_attributes())
       end
       self.is_writing = false
@@ -25445,6 +25446,7 @@ function M.writer.new(options)
       if attributes["#" .. self.slice_end_identifier] ~= nil
          and self.slice_end_type == "$" then
         if self.is_writing then
+          table.insert(buf, self.undosep())
           table.insert(buf, tear_down_attributes())
         end
         self.is_writing = false
