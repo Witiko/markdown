@@ -2,6 +2,11 @@
 
 ## 3.5.0
 
+Fixes:
+
+- Remove trailing paragraph/interblock separators in right-open slice
+  intervals. (#408, #419)
+
 ## 3.4.2 (2024-03-09)
 
 Fixes:
