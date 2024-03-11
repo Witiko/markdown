@@ -25582,6 +25582,8 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
+  self.secbegin_text = "\\markdownRendererSectionBegin\n"
+  self.secend_text = "\n\\markdownRendererSectionEnd "
   function self.heading(s, level, attributes)
     local buf = {}
     local flat_text, inlines = table.unpack(s)
@@ -25591,8 +25593,8 @@ end
       table.insert(buf,
                    self.push_attributes("heading",
                                         nil,
-                                        "\\markdownRendererSectionBegin\n",
-                                        "\n\\markdownRendererSectionEnd "))
+                                        self.secbegin_text,
+                                        self.secend_text))
     end
 
     -- pop attributes for sections that have ended
@@ -25613,8 +25615,8 @@ end
     -- push attributes for the new section
     local start_output = {}
     local end_output = {}
-    table.insert(start_output, "\\markdownRendererSectionBegin\n")
-    table.insert(end_output, "\n\\markdownRendererSectionEnd ")
+    table.insert(start_output, self.secbegin_text)
+    table.insert(end_output, self.secend_text)
 
     table.insert(buf, self.push_attributes("heading",
                                            normalized_attributes,
@@ -29661,13 +29663,45 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 % Remove block element / paragraph separators immediately followed by the
-% output of \luamref{writer->undosep}. Then, remove any leftover output of
-% \luamref{writer->undosep}.
+% output of \luamref{writer->undosep}, possibly interleaved by section ends.
+% Then, remove any leftover output of \luamref{writer->undosep}.
 % \end{markdown}
 %  \begin{macrocode}
-        output = output:gsub(writer.interblocksep_text .. writer.undosep_text, '')
-        output = output:gsub(writer.paragraphsep_text .. writer.undosep_text, '')
-        output = output:gsub(writer.undosep_text, '')
+        local undosep_start, undosep_end
+        local potential_secend_start, secend_start
+        local potential_sep_start, sep_start
+        while true do
+          -- find a `writer->undosep`
+          undosep_start, undosep_end = output:find(writer.undosep_text, 1, true)
+          if undosep_start == nil then break end
+          -- skip any preceding section ends
+          secend_start = undosep_start
+          while true do
+            potential_secend_start = secend_start - #writer.secend_text
+            if potential_secend_start < 1
+               or output:sub(potential_secend_start, secend_start - 1) ~= writer.secend_text then
+              break
+            end
+            secend_start = potential_secend_start
+          end
+          -- find an immediately preceding block element / paragraph separator
+          sep_start = secend_start
+          potential_sep_start = sep_start - #writer.interblocksep_text
+          if potential_sep_start >= 1
+             and output:sub(potential_sep_start, sep_start - 1) == writer.interblocksep_text then
+            sep_start = potential_sep_start
+          else
+            potential_sep_start = sep_start - #writer.paragraphsep_text
+            if potential_sep_start >= 1
+               and output:sub(potential_sep_start, sep_start - 1) == writer.paragraphsep_text then
+              sep_start = potential_sep_start
+            end
+          end
+          -- remove `writer->undosep` and immediately preceding block element / paragraph separator
+          output = output:sub(1, sep_start - 1)
+                .. output:sub(secend_start, undosep_start - 1)
+                .. output:sub(undosep_end + 1)
+        end
         return output
       end
 %    \end{macrocode}
