@@ -24689,9 +24689,10 @@ function M.writer.new(options)
 %
 % \end{markdown}
 %  \begin{macrocode}
+  self.interblocksep_text = "\\markdownRendererInterblockSeparator\n{}"
   function self.interblocksep()
     if not self.is_writing then return "" end
-    return "\\markdownRendererInterblockSeparator\n{}"
+    return self.interblocksep_text
   end
 %    \end{macrocode}
 % \par
@@ -24704,9 +24705,24 @@ function M.writer.new(options)
 %
 % \end{markdown}
 %  \begin{macrocode}
+  self.paragraphsep_text = "\\markdownRendererParagraphSeparator\n{}"
   function self.paragraphsep()
     if not self.is_writing then return "" end
-    return "\\markdownRendererParagraphSeparator\n{}"
+    return self.paragraphsep_text
+  end
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define \luamdef{writer->undosep} as a function that will remove the output
+% produced by an immediately preceding block element / paragraph separator.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  self.undosep_text = "\\markdownRendererUndoSeparator\n{}"
+  function self.undosep()
+    if not self.is_writing then return "" end
+    return self.undosep_text
   end
 %    \end{macrocode}
 % \par
@@ -29637,16 +29653,27 @@ end
       table.sort(opt_string)
       local salt = table.concat(opt_string, ",") .. "," .. metadata.version
       local output
+      local function convert(input)
+        local document = self.parser_functions.parse_blocks(input)
+        local output = util.rope_to_string(writer.document(document))
+%    \end{macrocode}
+% \begin{markdown}
+% Remove block element / paragraph separators immediately followed by the
+% output of \luamref{writer->undosep}. Then, remove any leftover output of
+% \luamref{writer->undosep}.
+% \end{markdown}
+%  \begin{macrocode}
+        output = output:gsub(writer.interblocksep_text .. writer.undosep_text, '')
+        output = output:gsub(writer.paragraphsep_text .. writer.undosep_text, '')
+        output = output:gsub(writer.undosep_text, '')
+        return output
+      end
 %    \end{macrocode}
 % \begin{markdown}
 % If we cache markdown documents, produce the cache file and transform its
 % filename to plain \TeX{} output via the \luamref{writer->pack} method.
 % \end{markdown}
 %  \begin{macrocode}
-      local function convert(input)
-        local document = self.parser_functions.parse_blocks(input)
-        return util.rope_to_string(writer.document(document))
-      end
       if options.eagerCache or options.finalizeCache then
         local name = util.cache(options.cacheDir, input, salt, convert,
                                 ".md" .. writer.suffix)
