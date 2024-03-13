@@ -204,9 +204,10 @@ For further information, consult one of the following:
 6. Talks:
     - [Five Years of Markdown in LaTeX: What, Why, How, and Whereto][pv212-fall2020] (in Czech),
     - [Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX][tb131-video] ([slides][tb131-slides]),
-    - [A Self-Publisher's Take on Markdown and TeX][tb134-01-video] ([slides][tb134-01-slides]), and
-    - [A Gentle Introduction to Markdown for Writers][tb134-02-video] ([slides][tb134-02-slides], [example][tb134-02-example]), and
-    - [Markdown 3: What's New, What's Next?][tb137-video] ([slides][tb137-slides]).
+    - [A Self-Publisher's Take on Markdown and TeX][tb134-01-video] ([slides][tb134-01-slides]),
+    - [A Gentle Introduction to Markdown for Writers][tb134-02-video] ([slides][tb134-02-slides], [example][tb134-02-example]),
+    - [Markdown 3: What's New, What's Next?][tb137-video] ([slides][tb137-slides]), and
+    - An Implementation of the CommonMark Standard and new Syntax Extensions to the Markdown Package for TeX ([slides][gencur-defense-slides]).
 7. Theses:
     - [Generic TeX Writer for the Pandoc Document Converter][thesis-umhg5]
     - [An implementation of the CommonMark standard into the Markdown package for TeX][thesis-r7z7l]
@@ -247,6 +248,8 @@ For further information, consult one of the following:
  [10.5300/2023-?-?/??]: https://github.com/witiko/markdown-3-whats-new-whats-next/releases/download/latest/main.pdf "Markdown 3: What's New, What's Next?"
 
  [pv212-fall2020]: https://is.muni.cz/elearning/io/?qurl=%2Fel%2Ffi%2Fpodzim2020%2FPV212%2Findex.qwarp;prejit=5595952
+
+ [gencur-defense-slides]: https://docs.google.com/presentation/d/e/2PACX-1vRbgJZ-UJlj5WMOjgWnq0BeNWKdA9ZhFqCKajhCjXtv3OarSKmojl5-X8tDp1ivnKtujuyEDmD2z_Z0/pub "An Implementation of the CommonMark Standard and new Syntax Extensions to the Markdown Package for TeX"
 
  [install]:  https://mirrors.ctan.org/macros/generic/markdown/markdown.html#installation "Markdown Package User Manual"
  [liantze]:  http://liantze.penguinattack.org/                                           "Rants from the Lab"
