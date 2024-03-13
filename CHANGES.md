@@ -12,6 +12,10 @@ Documentation:
 - Add slides from the defense of projects MUNI/33/1654/2022 and
   MUNI/33/1658/2022 to `README.md`. (49f01ccf)
 
+Contributed Software:
+
+- Make the documentation of contributions more detailed. (3f928162)
+
 ## 3.4.2 (2024-03-09)
 
 Fixes:
