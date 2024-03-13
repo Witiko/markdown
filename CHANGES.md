@@ -7,6 +7,11 @@ Fixes:
 - Remove trailing paragraph/interblock separators in right-open slice
   intervals. (#408, #419)
 
+Documentation:
+
+- Add slides from the defense of projects MUNI/33/1654/2022 and
+  MUNI/33/1658/2022 to `README.md`. (49f01ccf)
+
 ## 3.4.2 (2024-03-09)
 
 Fixes:
