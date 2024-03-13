@@ -74,7 +74,8 @@ apt-get -qy install --no-install-recommends ${DEPENDENCIES}
 # Update packages in non-historic TeX Live versions
 if echo ${TEXLIVE_TAG} | grep -q latest
 then
-  retry -t 30 -d 60 tlmgr update --self --all
+  # retry -t 30 -d 60 tlmgr update --self --all
+  :
 elif echo ${TEXLIVE_TAG} | grep -q pretest
 then
   retry -t 30 -d 60 tlmgr update --self --all --repository ftp://ftp.cstug.cz/pub/tex/local/tlpretest/
@@ -166,7 +167,8 @@ rm -rfv ${AUXILIARY_FILES}
 # Update packages in non-historic TeX Live versions
 if echo ${TEXLIVE_TAG} | grep -q latest
 then
-  retry -t 30 -d 60 tlmgr update --self --all
+  # retry -t 30 -d 60 tlmgr update --self --all
+  :
 elif echo ${TEXLIVE_TAG} | grep -q pretest
 then
   retry -t 30 -d 60 tlmgr update --self --all --repository ftp://ftp.cstug.cz/pub/tex/local/tlpretest/
