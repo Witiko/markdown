@@ -23,6 +23,7 @@ ARG DEPENDENCIES="\
     poppler-utils \
     python3-pygments \
     python3-venv \
+    retry \
     ruby \
     unzip \
     wget \
@@ -66,18 +67,18 @@ set -o errexit
 set -o nounset
 set -o xtrace
 
-# Update packages in non-historic TeX Live versions
-if echo ${TEXLIVE_TAG} | grep -q latest
-then
-  tlmgr update --self --all
-elif echo ${TEXLIVE_TAG} | grep -q pretest
-then
-  tlmgr update --self --all --repository ftp://ftp.cstug.cz/pub/tex/local/tlpretest/
-fi
-
 # Install dependencies
 apt-get -qy update
 apt-get -qy install --no-install-recommends ${DEPENDENCIES}
+
+# Update packages in non-historic TeX Live versions
+if echo ${TEXLIVE_TAG} | grep -q latest
+then
+  retry -t 30 -d 60 tlmgr update --self --all
+elif echo ${TEXLIVE_TAG} | grep -q pretest
+then
+  retry -t 30 -d 60 tlmgr update --self --all --repository ftp://ftp.cstug.cz/pub/tex/local/tlpretest/
+fi
 
 # Generate the ConTeXt file database
 mtxrun --generate
@@ -150,13 +151,25 @@ set -o errexit
 set -o nounset
 set -o xtrace
 
+# Install dependencies, but this time we clean up after ourselves
+apt-get -qy update
+apt-get -qy install --no-install-recommends ${DEPENDENCIES}
+if [ ${DEV_IMAGE} = true ]
+then
+  apt-get -qy install --no-install-recommends ${DEV_DEPENDENCIES}
+fi
+apt-get -qy autoclean
+apt-get -qy clean
+apt-get -qy autoremove --purge
+rm -rfv ${AUXILIARY_FILES}
+
 # Update packages in non-historic TeX Live versions
 if echo ${TEXLIVE_TAG} | grep -q latest
 then
-  tlmgr update --self --all
+  retry -t 30 -d 60 tlmgr update --self --all
 elif echo ${TEXLIVE_TAG} | grep -q pretest
 then
-  tlmgr update --self --all --repository ftp://ftp.cstug.cz/pub/tex/local/tlpretest/
+  retry -t 30 -d 60 tlmgr update --self --all --repository ftp://ftp.cstug.cz/pub/tex/local/tlpretest/
 fi
 
 # Uninstall the distribution Markdown package
@@ -185,18 +198,6 @@ set -o xtrace
 
 # Make the markdown-cli script executable
 chmod +x ${BINARY_DIR}/markdown-cli
-
-# Install dependencies, but this time we clean up after ourselves
-apt-get -qy update
-apt-get -qy install --no-install-recommends ${DEPENDENCIES}
-if [ ${DEV_IMAGE} = true ]
-then
-  apt-get -qy install --no-install-recommends ${DEV_DEPENDENCIES}
-fi
-apt-get -qy autoclean
-apt-get -qy clean
-apt-get -qy autoremove --purge
-rm -rfv ${AUXILIARY_FILES}
 
 # Generate the ConTeXt file database
 mtxrun --generate
