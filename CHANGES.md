@@ -11,6 +11,8 @@ Documentation:
 
 - Add slides from the defense of projects MUNI/33/1654/2022 and
   MUNI/33/1658/2022 to `README.md`. (49f01ccf)
+- Remove `<mroot>` from MathML in the user manual. (#420, #422,
+  contributed by @quark67)
 
 Contributed Software:
 
