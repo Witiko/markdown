@@ -18,6 +18,12 @@ Contributed Software:
 
 - Make the documentation of contributions more detailed. (3f928162)
 
+Docker:
+
+- Add support for TeX Live 2024.
+  (#411, e51738ba, 7ef64dd9, bafbb164, a7cff81d, #413, 04957eee,
+   16000aa4, #425)
+
 ## 3.4.2 (2024-03-09)
 
 Fixes:

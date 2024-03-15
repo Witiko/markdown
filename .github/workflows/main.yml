@@ -120,9 +120,11 @@ jobs:
       matrix:
         texlive:
           - TL2022-historic
+          - TL2023-historic
           - latest
     outputs:
       TL2022-historic: ${{ steps.temporary-tags.outputs.TL2022-historic }}
+      TL2023-historic: ${{ steps.temporary-tags.outputs.TL2023-historic }}
       latest: ${{ steps.temporary-tags.outputs.latest }}
     runs-on: ubuntu-latest
     permissions:
@@ -161,6 +163,7 @@ jobs:
       matrix:
         texlive:
           - TL2022-historic
+          - TL2023-historic
           - latest
     runs-on: self-hosted
     container:
@@ -195,6 +198,7 @@ jobs:
       matrix:
         texlive:
           - TL2022-historic
+          - TL2023-historic
           - latest
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request_target' && github.ref == 'refs/heads/main'
@@ -222,6 +226,7 @@ jobs:
       matrix:
         texlive:
           - TL2022-historic
+          - TL2023-historic
           - latest
     runs-on: ubuntu-latest
     permissions:
