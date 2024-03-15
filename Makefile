@@ -65,6 +65,11 @@ LASTMODIFIED=$(shell git log -1 --date=format:%Y-%m-%d --format=%ad)
 ifndef DOCKER_TEXLIVE_TAG
 	DOCKER_TEXLIVE_TAG=latest
 endif
+ifeq ($(DOCKER_TEXLIVE_TAG), latest)
+	DOCKER_FROM_TAG=pretest
+else
+	DOCKER_FROM_TAG=$(DOCKER_TEXLIVE_TAG)
+endif
 ifeq ($(DOCKER_DEV_IMAGE), true)
 	DOCKER_TAG_POSTFIX=-no_docs
 endif
@@ -87,7 +92,7 @@ base: $(INSTALLABLES) $(LIBRARIES)
 
 # This pseudo-target builds a witiko/markdown Docker image.
 docker-image:
-	DOCKER_BUILDKIT=1 docker build --pull --build-arg TEXLIVE_TAG=$(DOCKER_TEXLIVE_TAG) \
+	DOCKER_BUILDKIT=1 docker build --pull --build-arg TEXLIVE_TAG=$(DOCKER_FROM_TAG) \
 	                               --build-arg DEV_IMAGE=$(DOCKER_DEV_IMAGE) \
 	                               -t $(DOCKER_TEMPORARY_IMAGE):$(DOCKER_TEMPORARY_TAG) .
 
