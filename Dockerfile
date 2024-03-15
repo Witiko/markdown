@@ -75,9 +75,6 @@ apt-get -qy install --no-install-recommends ${DEPENDENCIES}
 if echo ${TEXLIVE_TAG} | grep -q latest
 then
   retry -t 30 -d 60 tlmgr update --self --all
-elif echo ${TEXLIVE_TAG} | grep -q pretest
-then
-  retry -t 30 -d 60 tlmgr update --self --all --repository ftp://ftp.cstug.cz/pub/tex/local/tlpretest/
 fi
 
 # Generate the ConTeXt file database
@@ -167,9 +164,6 @@ rm -rfv ${AUXILIARY_FILES}
 if echo ${TEXLIVE_TAG} | grep -q latest
 then
   retry -t 30 -d 60 tlmgr update --self --all
-elif echo ${TEXLIVE_TAG} | grep -q pretest
-then
-  retry -t 30 -d 60 tlmgr update --self --all --repository ftp://ftp.cstug.cz/pub/tex/local/tlpretest/
 fi
 
 # Uninstall the distribution Markdown package
