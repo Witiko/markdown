@@ -21,7 +21,8 @@ Contributed Software:
 Docker:
 
 - Add support for TeX Live 2024.
-  (#411, bafbb164, #413, 04957eee, 16000aa4, #425, 9549a5d8, 8f8e1315)
+  (#411, bafbb164, #413, 04957eee, 16000aa4, #425, 9549a5d8, 8f8e1315,
+   844beafc, cf592003)
 
 ## 3.4.2 (2024-03-09)
 
