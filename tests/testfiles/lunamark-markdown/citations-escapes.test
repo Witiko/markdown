@@ -59,14 +59,14 @@ END cite
 END cites
 softLineBreak
 softLineBreak
-BEGIN cites
-BEGIN cite
+BEGIN textCites
+BEGIN textCite
 - suppressAuthor: false
-- prenote: -
+- prenote: 
 - postnote: 
 - name: smith04
-END cite
-END cites
+END textCite
+END textCites
 paragraphSeparator
 softLineBreak
 BEGIN textCites
