@@ -29909,11 +29909,11 @@ M.extensions.citations = function(citation_nbsps)
                          + parsers.bracketed
                          + parsers.inticks
                          + parsers.autolink
-                        + V("InlineHtml")
+                         + V("InlineHtml")
                          + V("Space") + V("Endline")
                          + (parsers.anyescaped
                            - (parsers.newline + parsers.rbracket + parsers.blankline^2))
-                         - (parsers.spnl * parsers.dash^-1 * parsers.at))^0)
+                         - (parsers.spnl * parsers.dash^-1 * parsers.at))^1)
 
       local citation_body_postnote
                     = Cs((parsers.alphanumeric^1
@@ -29925,18 +29925,28 @@ M.extensions.citations = function(citation_nbsps)
                          + (parsers.anyescaped
                            - (parsers.newline + parsers.rbracket + parsers.semicolon
                              + parsers.blankline^2))
-                         - (parsers.spnl * parsers.rbracket))^0)
+                         - (parsers.spnl * parsers.rbracket))^1)
 
       local citation_body_chunk
-                    = citation_body_prenote
-                    * parsers.spnlc * citation_name
+                    = ( citation_body_prenote
+                      * parsers.spnlc_sep
+                      + Cc("")
+                      * parsers.spnlc
+                    )
+                    * citation_name
                     * (parsers.internal_punctuation - parsers.semicolon)^-1
-                    * parsers.spnlc * citation_body_postnote
+                    * ( parsers.spnlc
+                      * citation_body_postnote
+                      + Cc("")
+                      * parsers.spnlc
+                    )
 
       local citation_body
                     = citation_body_chunk
-                    * (parsers.semicolon * parsers.spnlc
-                      * citation_body_chunk)^0
+                    * ( parsers.semicolon
+                      * parsers.spnlc
+                      * citation_body_chunk
+                    )^0
 
       local citation_headless_body_postnote
                     = Cs((parsers.alphanumeric^1
@@ -29952,8 +29962,10 @@ M.extensions.citations = function(citation_nbsps)
 
       local citation_headless_body
                     = citation_headless_body_postnote
-                    * (parsers.sp * parsers.semicolon * parsers.spnlc
-                      * citation_body_chunk)^0
+                    * ( parsers.semicolon
+                      * parsers.spnlc
+                      * citation_body_chunk
+                    )^0
 
       local citations
                     = function(text_cites, raw_cites)
