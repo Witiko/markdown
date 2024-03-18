@@ -29931,12 +29931,14 @@ M.extensions.citations = function(citation_nbsps)
                     = ( citation_body_prenote
                       * parsers.spnlc_sep
                       + Cc("")
+                      * parsers.spnlc
                     )
                     * citation_name
                     * ( (parsers.internal_punctuation - parsers.semicolon)^-1
                       * parsers.spnlc
                       * citation_body_postnote
                       + Cc("")
+                      * parsers.spnlc
                     )
 
       local citation_body
