@@ -29956,7 +29956,7 @@ M.extensions.citations = function(citation_nbsps)
                          + (parsers.anyescaped
                            - (parsers.newline + parsers.rbracket + parsers.at
                              + parsers.semicolon + parsers.blankline^2))
-                         - (parsers.spnl * parsers.rbracket))^1)
+                         - (parsers.spnl * parsers.rbracket))^0)
 
       local citation_headless_body
                     = citation_headless_body_postnote
