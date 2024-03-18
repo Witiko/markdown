@@ -1,3 +1,5 @@
+comment: This comment was added to bump this testfile during testing on 2024-03-18.
+---
 <<<
 This test ensures that the Lua `citations` option is disabled by default.
 
