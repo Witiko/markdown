@@ -6,6 +6,8 @@ Fixes:
 
 - Remove trailing paragraph/interblock separators in right-open slice
   intervals. (#408, #419)
+- Do not misinterpret bracketed e-mails as citations. (#424, #426,
+  sponsored by @istqborg)
 
 Documentation:
 
@@ -141,7 +143,7 @@ Fixes:
 - Remove the `options.cacheDir` directory if it is empty after conversion.
   (5cfcea6)
 - Allow tables inside lists. (#368, #371, contributed by @lostenderman,
-  sponsored by ISTQB)
+  sponsored by @istqborg)
 - Check that shell access is unrestricted before attempting shell escape.
   (#365, witiko/lt3luabridge#22, latex3/latex3#1339, #372)
 
@@ -174,7 +176,7 @@ Development:
 Fixes:
 
 - Make the `import` LaTeX option correctly handle recursive imports.
-  (68c7a2f5, danopolan/istqb_latex#87)
+  (68c7a2f5, istqborg/istqb_shared_documents#87)
 - Support attributes on multi-line setext headings.
   (#315, #355, #356, contributed by @lostenderman)
 - Correctly process the combination of Lua options `fancyLists` and
@@ -182,8 +184,8 @@ Fixes:
 - Properly parse emphasis at line endings in headings.
   (#358, #360, contributed by @lostenderman)
 - Fix fancy lists that use roman numerals as markers.
-  (danopolan/istqb_latex#87, #359, #364,
-   contributed by @lostenderman, sponsored by ISTQB)
+  (istqborg/istqb_shared_documents#87, #359, #364,
+   contributed by @lostenderman, sponsored by @istqborg)
 
 Documentation:
 
@@ -254,7 +256,7 @@ Documentation:
 Fixes:
 
 - Correctly parse paragraphs with trailing spaces.
-  (danopolan/istqb_latex#77, #345, #347)
+  (istqborg/istqb_shared_documents#77, #345, #347)
 
 ## 3.0.0 (2023-08-25)
 
