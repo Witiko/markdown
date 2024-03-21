@@ -1,6 +1,44 @@
 # Changes
 
-## 3.4.1 (2024-02-17)
+## 3.5.0
+
+Fixes:
+
+- Remove trailing paragraph/interblock separators in right-open slice
+  intervals. (#408, #419)
+- Do not misinterpret bracketed e-mails as citations. (#424, #426,
+  sponsored by @istqborg)
+
+Documentation:
+
+- Add slides from the defense of projects MUNI/33/1654/2022 and
+  MUNI/33/1658/2022 to `README.md`. (49f01ccf)
+- Remove `<mroot>` from MathML in the user manual. (#420, #422,
+  contributed by @quark67)
+
+Contributed Software:
+
+- Make the documentation of contributions more detailed. (3f928162)
+
+Docker:
+
+- Add support for TeX Live 2024.
+  (#411, bafbb164, #413, 04957eee, 16000aa4, #425, 9549a5d8, 8f8e1315,
+   844beafc, cf592003)
+
+## 3.4.2 (2024-03-09)
+
+Fixes:
+
+- In `\begin{markdown}[options]`, allow a new line before `options`.
+  (#414, #415)
+
+Contributed Software:
+
+- Add `contributions/istqb_product_base`. (8e727c9b)
+- Add `contributions/fithesis`. (0b6a436c, 0725b20c, 7daf2b5e)
+
+## 3.4.1 (2024-02-16)
 
 Fixes:
 
@@ -10,11 +48,10 @@ Fixes:
 
 Deprecation:
 
-- Replace all instances of `\markdownInfo`, `\markdownWarning`, and
-  `\markdownError` with l3msg functions and deprecate `\markdownInfo`,
-  `\markdownWarning`, and `\markdownError`. (#383, #398, e3ca682c, 48002f84)
+- Replace `\markdownInfo`, `\markdownWarning`, and `\markdownError` with l3msg
+  functions and deprecate them. (#383, #398, e3ca682c, 48002f84)
 - Use the `TEXMF_OUTPUT_DIRECTORY` environmental variable to set
-  `\markdownOptionOutputDir` and deprecate `\markdownOptionOutputDir`.
+  `\markdownOptionOutputDir` and deprecate it.
   (#405, #409, [matrix.org][matrix-405])
 
  [matrix-405]: https://matrix.to/#/!efVbynJpCMjlOTfose:matrix.org/$8oUA2Bn3ch3q9K6RU-1EgpO9uQOd_3Mky4YwT325Ib0?via=matrix.org&via=im.f3l.de
@@ -22,7 +59,7 @@ Deprecation:
 Docker:
 
 - Add support for TeX Live 2024 pretest.
-  (#404, #406, e51738ba, #410, 7ef64dd9)
+  (#404, #406, e51738ba, #410, 7ef64dd9, a7cff81d, contributed by @jspitz)
 
 ## 3.4.0 (2024-01-31)
 
@@ -106,7 +143,7 @@ Fixes:
 - Remove the `options.cacheDir` directory if it is empty after conversion.
   (5cfcea6)
 - Allow tables inside lists. (#368, #371, contributed by @lostenderman,
-  sponsored by ISTQB)
+  sponsored by @istqborg)
 - Check that shell access is unrestricted before attempting shell escape.
   (#365, witiko/lt3luabridge#22, latex3/latex3#1339, #372)
 
@@ -139,7 +176,7 @@ Development:
 Fixes:
 
 - Make the `import` LaTeX option correctly handle recursive imports.
-  (68c7a2f5, danopolan/istqb_latex#87)
+  (68c7a2f5, istqborg/istqb_shared_documents#87)
 - Support attributes on multi-line setext headings.
   (#315, #355, #356, contributed by @lostenderman)
 - Correctly process the combination of Lua options `fancyLists` and
@@ -147,8 +184,8 @@ Fixes:
 - Properly parse emphasis at line endings in headings.
   (#358, #360, contributed by @lostenderman)
 - Fix fancy lists that use roman numerals as markers.
-  (danopolan/istqb_latex#87, #359, #364,
-   contributed by @lostenderman, sponsored by ISTQB)
+  (istqborg/istqb_shared_documents#87, #359, #364,
+   contributed by @lostenderman, sponsored by @istqborg)
 
 Documentation:
 
@@ -219,7 +256,7 @@ Documentation:
 Fixes:
 
 - Correctly parse paragraphs with trailing spaces.
-  (danopolan/istqb_latex#77, #345, #347)
+  (istqborg/istqb_shared_documents#77, #345, #347)
 
 ## 3.0.0 (2023-08-25)
 

@@ -12,7 +12,7 @@ on:
   pull_request_target:
   workflow_dispatch:
   schedule:
-    - cron: '30 4 * * *'
+    - cron: '30 4 * * MON'
 env:
   DEBIAN_FRONTEND: noninteractive
   DOCKER_DEV_IMAGE: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.draft == true }}
@@ -120,12 +120,12 @@ jobs:
       matrix:
         texlive:
           - TL2022-historic
+          - TL2023-historic
           - latest
-          - pretest
     outputs:
       TL2022-historic: ${{ steps.temporary-tags.outputs.TL2022-historic }}
+      TL2023-historic: ${{ steps.temporary-tags.outputs.TL2023-historic }}
       latest: ${{ steps.temporary-tags.outputs.latest }}
-      pretest: ${{ steps.temporary-tags.outputs.pretest }}
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -163,8 +163,8 @@ jobs:
       matrix:
         texlive:
           - TL2022-historic
+          - TL2023-historic
           - latest
-          - pretest
     runs-on: self-hosted
     container:
       image: ghcr.io/witiko/markdown:${{ needs.build-docker-image.outputs[matrix.texlive] }}
@@ -198,8 +198,8 @@ jobs:
       matrix:
         texlive:
           - TL2022-historic
+          - TL2023-historic
           - latest
-          - pretest
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request_target' && github.ref == 'refs/heads/main'
     env:
@@ -226,8 +226,8 @@ jobs:
       matrix:
         texlive:
           - TL2022-historic
+          - TL2023-historic
           - latest
-          - pretest
     runs-on: ubuntu-latest
     permissions:
       contents: write

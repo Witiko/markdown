@@ -104,7 +104,13 @@
 \newunicodechar{☒}{\markdownRendererTickedBox}
 \newunicodechar{⌛}{\markdownRendererHalfTickedBox}
 \newunicodechar{☐}{\markdownRendererUntickedBox}
-\newunicodechar{😉}{;-)}
+\usepackage{emoji}
+\makeatletter
+\@ifpackagelater{emoji}{2020/03/16}{
+  \newunicodechar{😉}{\emoji{winking-face}}
+}{
+  \newunicodechar{😉}{;-)}
+}
 \makeatother
 
 % Set up the catcodes.
@@ -938,7 +944,7 @@ Requirements
 
 The package requires either [our official Docker image][docker], which contains
 the latest development version of the Markdown package, or a \TeX{}
-distribution: [\TeX{} Live][tl] ≥ 2020 is known to work with the current
+distribution: [\TeX{} Live][tl] ≥ 2022 is known to work with the current
 version of the Markdown package and so are recent versions of [Mik\TeX{}][mik].
 If you are using an older, incomplete, or atypical \TeX{} distribution, please
 consult the [technical documentation][techdoc] for a detailed list of
@@ -1881,7 +1887,7 @@ following text:
 
 > \$\\sqrt{-1}\$ *equals* \$i\$.
 >
-> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> <math><msqrt><mo>−</mo><mn>1</mn></msqrt></math>
 > *equals*
 > <math><mi>i</mi></math>.
 
@@ -1924,7 +1930,7 @@ following text:
 
 > \$\\sqrt{-1}\$ *equals* \$i\$.
 >
-> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> <math><msqrt><mo>−</mo><mn>1</mn></msqrt></math>
 > *equals*
 > <math><mi>i</mi></math>.
 
@@ -1977,7 +1983,7 @@ following text:
 
 > \$\\sqrt{-1}\$ *equals* \$i\$.
 >
-> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> <math><msqrt><mo>−</mo><mn>1</mn></msqrt></math>
 > *equals*
 > <math><mi>i</mi></math>.
 
@@ -7157,7 +7163,7 @@ following text:
 
 > \$\\sqrt {-1}\$ *equals* \$i\$.
 >
-> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> <math><msqrt><mo>−</mo><mn>1</mn></msqrt></math>
 > *equals*
 > <math><mi>i</mi></math>.
 
@@ -7199,7 +7205,7 @@ following text:
 
 > \$\\sqrt {-1}\$ *equals* \$i\$.
 >
-> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> <math><msqrt><mo>−</mo><mn>1</mn></msqrt></math>
 > *equals*
 > <math><mi>i</mi></math>.
 
@@ -7231,7 +7237,7 @@ following text:
 
 > \$\\sqrt {-1}\$ *equals* \$i\$.
 >
-> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> <math><msqrt><mo>−</mo><mn>1</mn></msqrt></math>
 > *equals*
 > <math><mi>i</mi></math>.
 
@@ -7263,7 +7269,7 @@ following text:
 
 > \$\\sqrt {-1}\$ *equals* \$i\$.
 >
-> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> <math><msqrt><mo>−</mo><mn>1</mn></msqrt></math>
 > *equals*
 > <math><mi>i</mi></math>.
 
@@ -7295,7 +7301,7 @@ following text:
 
 > \$\\sqrt {-1}\$ *equals* \$i\$.
 >
-> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> <math><msqrt><mo>−</mo><mn>1</mn></msqrt></math>
 > *equals*
 > <math><mi>i</mi></math>.
 
@@ -11298,7 +11304,7 @@ following text:
 
 > \$\\sqrt{-1}\$ *equals* \$i\$.
 >
-> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> <math><msqrt><mo>−</mo><mn>1</mn></msqrt></math>
 > *equals*
 > <math><mi>i</mi></math>.
 
@@ -14083,7 +14089,7 @@ following text:
 >
 > \$\\sqrt{-1}\$ *equals* \$i\$.
 >
-> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> <math><msqrt><mo>−</mo><mn>1</mn></msqrt></math>
 > *equals*
 > <math><mi>i</mi></math>.
 
@@ -14124,7 +14130,7 @@ following text:
 >
 > \$\\sqrt{-1}\$ *equals* \$i\$.
 >
-> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> <math><msqrt><mo>−</mo><mn>1</mn></msqrt></math>
 > *equals*
 > <math><mi>i</mi></math>.
 
@@ -14161,7 +14167,7 @@ following text:
 >
 > \$\\sqrt{-1}\$ *equals* \$i\$.
 >
-> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> <math><msqrt><mo>−</mo><mn>1</mn></msqrt></math>
 > *equals*
 > <math><mi>i</mi></math>.
 
@@ -21053,7 +21059,7 @@ following text:
 
 > \$\\sqrt{-1}\$ *equals* \$i\$.
 >
-> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> <math><msqrt><mo>−</mo><mn>1</mn></msqrt></math>
 > *equals*
 > <math><mi>i</mi></math>.
 
@@ -21674,7 +21680,7 @@ following text:
 
 > \$\\sqrt{-1}\$ *equals* \$i\$.
 >
-> <math><mroot><msqrt><mo>−</mo><mn>1</mn></msqrt></mroot></math>
+> <math><msqrt><mo>−</mo><mn>1</mn></msqrt></math>
 > *equals*
 > <math><mi>i</mi></math>.
 
@@ -24689,9 +24695,10 @@ function M.writer.new(options)
 %
 % \end{markdown}
 %  \begin{macrocode}
+  self.interblocksep_text = "\\markdownRendererInterblockSeparator\n{}"
   function self.interblocksep()
     if not self.is_writing then return "" end
-    return "\\markdownRendererInterblockSeparator\n{}"
+    return self.interblocksep_text
   end
 %    \end{macrocode}
 % \par
@@ -24704,9 +24711,24 @@ function M.writer.new(options)
 %
 % \end{markdown}
 %  \begin{macrocode}
+  self.paragraphsep_text = "\\markdownRendererParagraphSeparator\n{}"
   function self.paragraphsep()
     if not self.is_writing then return "" end
-    return "\\markdownRendererParagraphSeparator\n{}"
+    return self.paragraphsep_text
+  end
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define \luamdef{writer->undosep} as a function that will remove the output
+% produced by an immediately preceding block element / paragraph separator.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  self.undosep_text = "\\markdownRendererUndoSeparator\n{}"
+  function self.undosep()
+    if not self.is_writing then return "" end
+    return self.undosep_text
   end
 %    \end{macrocode}
 % \par
@@ -25378,6 +25400,7 @@ function M.writer.new(options)
     if attributes["#" .. self.slice_end_identifier] ~= nil and
        self.slice_end_type == "^" then
       if self.is_writing then
+        table.insert(buf, self.undosep())
         table.insert(buf, tear_down_attributes())
       end
       self.is_writing = false
@@ -25429,6 +25452,7 @@ function M.writer.new(options)
       if attributes["#" .. self.slice_end_identifier] ~= nil
          and self.slice_end_type == "$" then
         if self.is_writing then
+          table.insert(buf, self.undosep())
           table.insert(buf, tear_down_attributes())
         end
         self.is_writing = false
@@ -25564,6 +25588,8 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
+  self.secbegin_text = "\\markdownRendererSectionBegin\n"
+  self.secend_text = "\n\\markdownRendererSectionEnd "
   function self.heading(s, level, attributes)
     local buf = {}
     local flat_text, inlines = table.unpack(s)
@@ -25573,8 +25599,8 @@ end
       table.insert(buf,
                    self.push_attributes("heading",
                                         nil,
-                                        "\\markdownRendererSectionBegin\n",
-                                        "\n\\markdownRendererSectionEnd "))
+                                        self.secbegin_text,
+                                        self.secend_text))
     end
 
     -- pop attributes for sections that have ended
@@ -25595,8 +25621,8 @@ end
     -- push attributes for the new section
     local start_output = {}
     local end_output = {}
-    table.insert(start_output, "\\markdownRendererSectionBegin\n")
-    table.insert(end_output, "\n\\markdownRendererSectionEnd ")
+    table.insert(start_output, self.secbegin_text)
+    table.insert(end_output, self.secend_text)
 
     table.insert(buf, self.push_attributes("heading",
                                            normalized_attributes,
@@ -29637,16 +29663,59 @@ end
       table.sort(opt_string)
       local salt = table.concat(opt_string, ",") .. "," .. metadata.version
       local output
+      local function convert(input)
+        local document = self.parser_functions.parse_blocks(input)
+        local output = util.rope_to_string(writer.document(document))
+%    \end{macrocode}
+% \begin{markdown}
+% Remove block element / paragraph separators immediately followed by the
+% output of \luamref{writer->undosep}, possibly interleaved by section ends.
+% Then, remove any leftover output of \luamref{writer->undosep}.
+% \end{markdown}
+%  \begin{macrocode}
+        local undosep_start, undosep_end
+        local potential_secend_start, secend_start
+        local potential_sep_start, sep_start
+        while true do
+          -- find a `writer->undosep`
+          undosep_start, undosep_end = output:find(writer.undosep_text, 1, true)
+          if undosep_start == nil then break end
+          -- skip any preceding section ends
+          secend_start = undosep_start
+          while true do
+            potential_secend_start = secend_start - #writer.secend_text
+            if potential_secend_start < 1
+               or output:sub(potential_secend_start, secend_start - 1) ~= writer.secend_text then
+              break
+            end
+            secend_start = potential_secend_start
+          end
+          -- find an immediately preceding block element / paragraph separator
+          sep_start = secend_start
+          potential_sep_start = sep_start - #writer.interblocksep_text
+          if potential_sep_start >= 1
+             and output:sub(potential_sep_start, sep_start - 1) == writer.interblocksep_text then
+            sep_start = potential_sep_start
+          else
+            potential_sep_start = sep_start - #writer.paragraphsep_text
+            if potential_sep_start >= 1
+               and output:sub(potential_sep_start, sep_start - 1) == writer.paragraphsep_text then
+              sep_start = potential_sep_start
+            end
+          end
+          -- remove `writer->undosep` and immediately preceding block element / paragraph separator
+          output = output:sub(1, sep_start - 1)
+                .. output:sub(secend_start, undosep_start - 1)
+                .. output:sub(undosep_end + 1)
+        end
+        return output
+      end
 %    \end{macrocode}
 % \begin{markdown}
 % If we cache markdown documents, produce the cache file and transform its
 % filename to plain \TeX{} output via the \luamref{writer->pack} method.
 % \end{markdown}
 %  \begin{macrocode}
-      local function convert(input)
-        local document = self.parser_functions.parse_blocks(input)
-        return util.rope_to_string(writer.document(document))
-      end
       if options.eagerCache or options.finalizeCache then
         local name = util.cache(options.cacheDir, input, salt, convert,
                                 ".md" .. writer.suffix)
@@ -29840,11 +29909,11 @@ M.extensions.citations = function(citation_nbsps)
                          + parsers.bracketed
                          + parsers.inticks
                          + parsers.autolink
-                        + V("InlineHtml")
+                         + V("InlineHtml")
                          + V("Space") + V("Endline")
                          + (parsers.anyescaped
                            - (parsers.newline + parsers.rbracket + parsers.blankline^2))
-                         - (parsers.spnl * parsers.dash^-1 * parsers.at))^0)
+                         - (parsers.spnl * parsers.dash^-1 * parsers.at))^1)
 
       local citation_body_postnote
                     = Cs((parsers.alphanumeric^1
@@ -29856,18 +29925,28 @@ M.extensions.citations = function(citation_nbsps)
                          + (parsers.anyescaped
                            - (parsers.newline + parsers.rbracket + parsers.semicolon
                              + parsers.blankline^2))
-                         - (parsers.spnl * parsers.rbracket))^0)
+                         - (parsers.spnl * parsers.rbracket))^1)
 
       local citation_body_chunk
-                    = citation_body_prenote
-                    * parsers.spnlc * citation_name
+                    = ( citation_body_prenote
+                      * parsers.spnlc_sep
+                      + Cc("")
+                      * parsers.spnlc
+                    )
+                    * citation_name
                     * (parsers.internal_punctuation - parsers.semicolon)^-1
-                    * parsers.spnlc * citation_body_postnote
+                    * ( parsers.spnlc
+                      * citation_body_postnote
+                      + Cc("")
+                      * parsers.spnlc
+                    )
 
       local citation_body
                     = citation_body_chunk
-                    * (parsers.semicolon * parsers.spnlc
-                      * citation_body_chunk)^0
+                    * ( parsers.semicolon
+                      * parsers.spnlc
+                      * citation_body_chunk
+                    )^0
 
       local citation_headless_body_postnote
                     = Cs((parsers.alphanumeric^1
@@ -29883,8 +29962,10 @@ M.extensions.citations = function(citation_nbsps)
 
       local citation_headless_body
                     = citation_headless_body_postnote
-                    * (parsers.sp * parsers.semicolon * parsers.spnlc
-                      * citation_body_chunk)^0
+                    * ( parsers.semicolon
+                      * parsers.spnlc
+                      * citation_body_chunk
+                    )^0
 
       local citations
                     = function(text_cites, raw_cites)
@@ -33748,7 +33829,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
     \peek_regex_replace_once:nnF
-      { \ *\[([^]]*)\][^\r]* }
+      { \ *\[\r*([^]]*)\][^\r]* }
       {
 %    \end{macrocode}
 % \begin{markdown}

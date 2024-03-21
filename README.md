@@ -204,9 +204,10 @@ For further information, consult one of the following:
 6. Talks:
     - [Five Years of Markdown in LaTeX: What, Why, How, and Whereto][pv212-fall2020] (in Czech),
     - [Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX][tb131-video] ([slides][tb131-slides]),
-    - [A Self-Publisher's Take on Markdown and TeX][tb134-01-video] ([slides][tb134-01-slides]), and
-    - [A Gentle Introduction to Markdown for Writers][tb134-02-video] ([slides][tb134-02-slides], [example][tb134-02-example]), and
-    - [Markdown 3: What's New, What's Next?][tb137-video] ([slides][tb137-slides]).
+    - [A Self-Publisher's Take on Markdown and TeX][tb134-01-video] ([slides][tb134-01-slides]),
+    - [A Gentle Introduction to Markdown for Writers][tb134-02-video] ([slides][tb134-02-slides], [example][tb134-02-example]),
+    - [Markdown 3: What's New, What's Next?][tb137-video] ([slides][tb137-slides]), and
+    - An Implementation of the CommonMark Standard and new Syntax Extensions to the Markdown Package for TeX ([slides][gencur-defense-slides]).
 7. Theses:
     - [Generic TeX Writer for the Pandoc Document Converter][thesis-umhg5]
     - [An implementation of the CommonMark standard into the Markdown package for TeX][thesis-r7z7l]
@@ -248,6 +249,8 @@ For further information, consult one of the following:
 
  [pv212-fall2020]: https://is.muni.cz/elearning/io/?qurl=%2Fel%2Ffi%2Fpodzim2020%2FPV212%2Findex.qwarp;prejit=5595952
 
+ [gencur-defense-slides]: https://docs.google.com/presentation/d/e/2PACX-1vRbgJZ-UJlj5WMOjgWnq0BeNWKdA9ZhFqCKajhCjXtv3OarSKmojl5-X8tDp1ivnKtujuyEDmD2z_Z0/pub "An Implementation of the CommonMark Standard and new Syntax Extensions to the Markdown Package for TeX"
+
  [install]:  https://mirrors.ctan.org/macros/generic/markdown/markdown.html#installation "Markdown Package User Manual"
  [liantze]:  http://liantze.penguinattack.org/                                           "Rants from the Lab"
  [overleaf]: https://www.overleaf.com/                                                   "Overleaf: Real-time Collaborative Writing and Publishing Tools with Integrated PDF Preview"
@@ -271,16 +274,17 @@ Acknowledgements
 | [<img width="150" src="https://www.fi.muni.cz/images/fi-logo.png">][fimu] | I gratefully acknowledge the funding from the [Faculty of Informatics][fimu] at the [Masaryk University][mu] in Brno, Czech Republic, for the development of the Markdown package in projects [MUNI/33/12/2015][], [MUNI/33/1784/2020][], [MUNI/33/0776/2021][], [MUNI/33/1654/2022][], and [MUNI/33/1658/2022][]. |
 | [<img width="150" src="https://cdn.overleaf.com/img/ol-brand/overleaf_og_logo.png">][overleaf] | Extensive user documentation for the Markdown package was kindly written by [Lian Tze Lim][liantze] and published by [Overleaf][]. |
 | [<img width="150" src="https://pbs.twimg.com/profile_images/1004769879319334912/6Bh1UthD.jpg">][omedym] | Support for content slicing (Lua options [`shiftHeadings`][option-shift-headings] and [`slice`][option-slice]) and pipe tables (Lua options [`pipeTables`][option-pipe-tables] and [`tableCaptions`][option-table-captions]) was graciously sponsored by [David Vins][dvins] and [Omedym][]. |
-| [<img width="150" src="https://www.istqb.org/static/istqb-logo-1b043e800a580724ad223567f9ea57c0.png">][istqb] | Fixes for issues [#359][issue-359] and [#368][issue-368] were graciously sponsored by the [International Software Testing Qualifications Board (ISTQB)][istqb]. |
+| [<img width="150" src="https://www.istqb.org/static/istqb-logo-1b043e800a580724ad223567f9ea57c0.png">][istqb] | Fixes for issues [#359][issue-359], [#368][issue-368], and [#424][issue-424] were graciously sponsored by the [International Software Testing Qualifications Board (ISTQB)][istqb]. |
 
  [dvins]:  https://github.com/dvins             "David Vins"
  [fimu]:   https://www.fi.muni.cz/index.html.en "Faculty of Informatics, Masaryk University"
- [ISTQB]:  https://www.istqb.org/               "International Software Testing Qualifications Board"
+ [ISTQB]:  https://github.com/istqborg          "ISTQB.ORG: Official ISTQB® GitHub account"
  [mu]:     https://www.muni.cz/en               "Masaryk University"
  [Omedym]: https://www.omedym.com/              "Omedym"
 
  [issue-359]: https://github.com/witiko/markdown/issues/359 "First item of a fancy list forms a separate list"
  [issue-368]: https://github.com/witiko/markdown/issues/368 "Tables nested in list items have empty lines"
+ [issue-424]: https://github.com/witiko/markdown/issues/424 "E-mail addresses are incorrectly interpreted as bracketed citations"
 
  [option-pipe-tables]:    https://mirrors.ctan.org/macros/generic/markdown/markdown.html#pipe-tables          "Markdown Package User Manual"
  [option-shift-headings]: https://mirrors.ctan.org/macros/generic/markdown/markdown.html#option-shiftheadings "Markdown Package User Manual"
