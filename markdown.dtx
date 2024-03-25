@@ -30889,24 +30889,59 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
 % \par
 % \begin{markdown}
 %
-% Initialize a named group named `div_level` for tracking how deep we are
-% nested in divs.
+% Initialize a named group named `fenced_div_level` for tracking how deep
+% we are nested in divs and the named group `fenced_div_indent_info` for
+% tracking the indent of the starting div fence. The former named group
+% is immutable and should roll back properly when we fail to match a fenced
+% div. The latter is mutable and may contain items from unsuccessful matches
+% on top. However, we always know how many items at the head of the latter we
+% can trust by consulting the former.
 %
 % \end{markdown}
 %  \begin{macrocode}
-      self.initialize_named_group("div_level", "0")
+      self.initialize_named_group("fenced_div_level", "0")
+      self.initialize_named_group("fenced_div_indent_info")
 
-      local function increment_div_level(increment)
-        local function update_div_level(s, i, current_level) -- luacheck: ignore s i
-          current_level = tonumber(current_level)
-          local next_level = tostring(current_level + increment)
-          return true, next_level
+      local function increment_div_level()
+        local function push_indent_table(s, i, indent_table, -- luacheck: ignore s i
+                                         fenced_div_indent_table, fenced_div_level)
+          fenced_div_level = tonumber(fenced_div_level) + 1
+          local indent_table_copy = {}
+          if indent_table.trail ~= nil then
+            indent_table_copy.trail = util.table_copy(indent_table.trail)
+          end
+          if indent_table.indents ~= nil then
+            indent_table_copy.indents = util.table_copy(indent_table.indents)
+          end
+          fenced_div_indent_table[fenced_div_level] = indent_table_copy
+          return true, fenced_div_indent_table
         end
 
-        return Cg( Cmt(Cb("div_level"), update_div_level)
-                 , "div_level")
+        local function increment_level(s, i, fenced_div_level) -- luacheck: ignore s i
+          fenced_div_level = tonumber(fenced_div_level) + 1
+          return true, tostring(fenced_div_level)
+        end
+
+        return Cg( Cmt( Cb("indent_info")
+                      * Cb("fenced_div_indent_info")
+                      * Cb("fenced_div_level"), push_indent_table)
+                 , "fenced_div_indent_info")
+             * Cg( Cmt( Cb("fenced_div_level"), increment_level)
+                 , "fenced_div_level")
       end
-      
+
+      local function decrement_div_level()
+        local function pop_indent_table(s, i, fenced_div_indent_table, fenced_div_level) -- luacheck: ignore s i
+          fenced_div_level = tonumber(fenced_div_level)
+          fenced_div_indent_table[fenced_div_level] = nil
+          return true, tostring(fenced_div_level - 1)
+        end
+
+        return Cg( Cmt( Cb("fenced_div_indent_info")
+                      * Cb("fenced_div_level"), pop_indent_table)
+                 , "fenced_div_level")
+      end
+
       local non_fenced_div_block  = parsers.check_minimal_indent * V("Block")
                                   - parsers.check_minimal_indent_and_trail * fenced_div_end
 
@@ -30941,11 +30976,12 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
                           return attr
                         end
                       / writer.div_begin
-                      * increment_div_level(1)
+                      * increment_div_level()
                       * parsers.skipblanklines
                       * Ct(content_loop)
                       * parsers.minimally_indented_blank^0
-                      * parsers.check_minimal_indent_and_trail * fenced_div_end * increment_div_level(-1)
+                      * parsers.check_minimal_indent_and_trail * fenced_div_end
+                      * decrement_div_level()
                       * (Cc("") / writer.div_end)
 
       self.insert_pattern("Block after Verbatim",
@@ -30959,17 +30995,44 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
 %
 % If the `blank_before_div_fence` parameter is `false`, we will have the
 % closing div at the beginning of a line break the current paragraph if
-% we are currently nested in a div.
+% we are currently nested in a div and the indentat matches the opening
+% div fence.
 %
 % \end{markdown}
 %  \begin{macrocode}
-      local function check_div_level(s, i, current_level) -- luacheck: ignore s i
-        current_level = tonumber(current_level)
-        return current_level > 0
+      local function is_inside_div()
+        local function check_div_level(s, i, fenced_div_level) -- luacheck: ignore s i
+          fenced_div_level = tonumber(fenced_div_level)
+          return fenced_div_level > 0
+        end
+
+        return Cmt(Cb("fenced_div_level"), check_div_level)
       end
 
-      local is_inside_div = Cmt(Cb("div_level"), check_div_level)
-      local fencestart = is_inside_div * fenced_div_end
+      local function check_indent()
+        local function compare_indent(s, i, indent_table, -- luacheck: ignore s i
+                                      fenced_div_indent_table, fenced_div_level)
+          fenced_div_level = tonumber(fenced_div_level)
+          local num_current_indents = 0
+          local num_opening_indents = 0
+          if indent_table.indents ~= nil then
+            num_current_indents = #indent_table.indents
+          end
+          fenced_div_indent_table = fenced_div_indent_table[fenced_div_level]
+          if fenced_div_indent_table.indents ~= nil then
+            num_opening_indents = #fenced_div_indent_table.indents
+          end
+          return num_current_indents == num_opening_indents
+        end
+
+        return Cmt( Cb("indent_info")
+                  * Cb("fenced_div_indent_info")
+                  * Cb("fenced_div_level"), compare_indent)
+      end
+
+      local fencestart = is_inside_div()
+                       * fenced_div_end
+                       * check_indent()
 
       if not blank_before_div_fence then
         self.update_rule("EndlineExceptions", function(previous_pattern)
