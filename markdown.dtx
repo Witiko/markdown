@@ -25838,6 +25838,7 @@ end)()
 % \end{markdown}
 %  \begin{macrocode}
 punctuation = nil
+collectgarbage("collect")
 
 parsers.escapable              = parsers.ascii_punctuation
 parsers.anyescaped             = parsers.backslash / "" * parsers.escapable
