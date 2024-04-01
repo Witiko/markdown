@@ -25829,6 +25829,15 @@ parsers.punctuation            = {}
     parsers.punctuation[size] = codepoint_parser
   end
 end)()
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Here, we garbage-collect the \luamref{punctuation} table, since we won't need it anymore.
+%
+% \end{markdown}
+%  \begin{macrocode}
+punctuation = nil
 
 parsers.escapable              = parsers.ascii_punctuation
 parsers.anyescaped             = parsers.backslash / "" * parsers.escapable
