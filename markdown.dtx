@@ -22063,19 +22063,6 @@ end
 % \par
 % \begin{markdown}
 %
-% The \luamdef{util.lookup_files} method looks up files with filename `f`
-% and returns their paths. Further options for the \pkg{Kpathsea} library
-% can be specified in table `options`. [@luatex21, Section 10.7.4]
-%
-% \end{markdown}
-%  \begin{macrocode}
-function util.lookup_files(f, options)
-  return kpse.lookup(f, options)
-end
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
 % The \luamdef{util.expand_tabs_in_line} expands tabs in string `s`. If
 % `tabstop` is specified, it is used as the tab stop width. Otherwise,
 % the tab stop width of 4 characters is used. The method is a copy of the tab
@@ -24523,6 +24510,38 @@ end
 % \par
 % \begin{markdown}
 %
+%### Unicode punctuation
+% This section documents [the Unicode punctuation][unicode-punctuation]
+% recognized by the markdown reader. The punctuation is organized in the
+% \luamdef{punctuation} table according to the number of bytes occupied after
+% conversion to \acro{utf}8.
+%
+% [unicode-punctuation]: https://spec.commonmark.org/0.31.2/#unicode-punctuation-character
+%                        (CommonMark Spec, Version 0.31.2 (2024-01-28))
+%
+% \end{markdown}
+%  \begin{macrocode}
+local punctuation = {}
+(function()
+  local pathname = kpse.lookup("UnicodeData.txt")
+  local file = assert(io.open(pathname, "r"),
+    [[Could not open file "UnicodeData.txt"]])
+  for line in file:lines() do
+    local codepoint, major_category = line:match("^(%x+);[^;]*;(%a)")
+    if major_category == "P" or major_category == "S" then
+      local code = unicode.utf8.char(tonumber(codepoint, 16))
+      if punctuation[#code] == nil then
+        punctuation[#code] = {}
+      end
+      table.insert(punctuation[#code], code)
+    end
+  end
+  assert(file:close())
+end)()
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
 %### Plain \TeX{} Writer {#tex-writer}
 %
 % This section documents the \luamref{writer} object, which implements the
@@ -25778,7 +25797,6 @@ parsers.letter                 = R("AZ","az")
 parsers.alphanumeric           = R("AZ","az","09")
 parsers.keyword                = parsers.letter
                                * (parsers.alphanumeric + parsers.dash)^0
-parsers.internal_punctuation   = S(":;,.?")
 
 parsers.doubleasterisks        = P("**")
 parsers.doubleunderscores      = P("__")
@@ -25789,7 +25807,40 @@ parsers.any                    = P(1)
 parsers.succeed                = P(true)
 parsers.fail                   = P(false)
 
-parsers.escapable              = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
+parsers.internal_punctuation   = S(":;,.?")
+parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
+parsers.punctuation            = {}
+(function()
+  for size = 1, 4 do
+    local codepoint_parser = parsers.fail
+    if size == 1 then
+      codepoint_parser = codepoint_parser + parsers.ascii_punctuation
+    end
+    for _, code in ipairs(punctuation[size] or {}) do
+      local code_parser = parsers.succeed
+      assert(#code == size)
+      for i = 1, size do
+        local byte = code:sub(i, i)
+        local byte_parser = S(byte)
+        code_parser = code_parser * byte_parser
+      end
+      codepoint_parser = codepoint_parser + code_parser
+    end
+    parsers.punctuation[size] = codepoint_parser
+  end
+end)()
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Here, we garbage-collect the \luamref{punctuation} table, since we won't need it anymore.
+%
+% \end{markdown}
+%  \begin{macrocode}
+punctuation = nil
+collectgarbage("collect")
+
+parsers.escapable              = parsers.ascii_punctuation
 parsers.anyescaped             = parsers.backslash / "" * parsers.escapable
                                + parsers.any
 
@@ -26982,7 +27033,7 @@ parsers.html_comment = Cs( parsers.html_comment_start
 
 parsers.html_inline_comment = (parsers.html_comment_start / "")
                             * -P(">") * -P("->")
-                            * Cs((V("NoSoftLineBreakEndline") + parsers.any - P("--")
+                            * Cs((V("NoSoftLineBreakEndline") + parsers.any
                                 - parsers.nested_breaking_blank - parsers.html_comment_end)^0)
                             * (parsers.html_comment_end / "")
 
@@ -28032,7 +28083,6 @@ function M.reader.new(writer, options)
       return lpeg.R("\240\244") * cont * cont * cont
     end
   end
-
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -28050,15 +28100,22 @@ function M.reader.new(writer, options)
       else
         char_length = pos + 1
       end
-      c = lpeg.match({ C(utf8_by_byte_count(char_length)) },s,i+pos)
-      if (c ~= nil) and (unicode.utf8.match(c, chartype)) then
-        return i
+
+      if (chartype == "punctuation") then
+        if lpeg.match(parsers.punctuation[char_length], s, i+pos) then
+          return i
+        end
+      else
+        c = lpeg.match({ C(utf8_by_byte_count(char_length)) },s,i+pos)
+        if (c ~= nil) and (unicode.utf8.match(c, chartype)) then
+          return i
+        end
       end
     end
   end
 
   local function check_preceding_unicode_punctuation(s, i)
-    return check_unicode_type(s, i, -4, -1, "%p")
+    return check_unicode_type(s, i, -4, -1, "punctuation")
   end
 
   local function check_preceding_unicode_whitespace(s, i)
@@ -28066,7 +28123,7 @@ function M.reader.new(writer, options)
   end
 
   local function check_following_unicode_punctuation(s, i)
-    return check_unicode_type(s, i, 0, 3, "%p")
+    return check_unicode_type(s, i, 0, 3, "punctuation")
   end
 
   local function check_following_unicode_whitespace(s, i)
@@ -30050,7 +30107,7 @@ M.extensions.content_blocks = function(language_map)
 %  \begin{macrocode}
   local languages_json = (function()
     local base, prev, curr
-    for _, pathname in ipairs{util.lookup_files(language_map, { all=true })} do
+    for _, pathname in ipairs{kpse.lookup(language_map, { all=true })} do
       local file = io.open(pathname, "r")
       if not file then goto continue end
       local input = assert(file:read("*a"))
@@ -32327,7 +32384,7 @@ function M.new(options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-      local pathname = util.lookup_files(filename)
+      local pathname = kpse.lookup(filename)
       local input_file = assert(io.open(pathname, "r"),
         [[Could not open user-defined syntax extension "]]
         .. pathname .. [[" for reading]])
