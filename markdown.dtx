@@ -22057,19 +22057,6 @@ end
 % \par
 % \begin{markdown}
 %
-% The \luamdef{util.lookup_files} method looks up files with filename `f`
-% and returns their paths. Further options for the \pkg{Kpathsea} library
-% can be specified in table `options`. [@luatex21, Section 10.7.4]
-%
-% \end{markdown}
-%  \begin{macrocode}
-function util.lookup_files(f, options)
-  return kpse.lookup(f, options)
-end
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
 % The \luamdef{util.expand_tabs_in_line} expands tabs in string `s`. If
 % `tabstop` is specified, it is used as the tab stop width. Otherwise,
 % the tab stop width of 4 characters is used. The method is a copy of the tab
@@ -29996,7 +29983,7 @@ M.extensions.content_blocks = function(language_map)
 %  \begin{macrocode}
   local languages_json = (function()
     local base, prev, curr
-    for _, pathname in ipairs{util.lookup_files(language_map, { all=true })} do
+    for _, pathname in ipairs{kpse.lookup(language_map, { all=true })} do
       local file = io.open(pathname, "r")
       if not file then goto continue end
       local input = assert(file:read("*a"))
@@ -32273,7 +32260,7 @@ function M.new(options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-      local pathname = util.lookup_files(filename)
+      local pathname = kpse.lookup(filename)
       local input_file = assert(io.open(pathname, "r"),
         [[Could not open user-defined syntax extension "]]
         .. pathname .. [[" for reading]])
