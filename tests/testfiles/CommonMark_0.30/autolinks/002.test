@@ -1,16 +1,16 @@
 %   ---RESULT--- "example": 594,
 %   
-%   <p><a href="https://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean">https://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean</a></p>
+%   <p><a href="http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean">http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean</a></p>
 %   
 %   ---\RESULT---
 
 <<<
-<https://foo.bar.baz/test?q=hello&id=22&boolean>
+<http://foo.bar.baz/test?q=hello&id=22&boolean>
 >>>
 BEGIN document
 BEGIN link
-- label: https://foo.bar.baz/test?q=hello(ampersand)id=22(ampersand)boolean
-- URI: https://foo.bar.baz/test?q=hello&id=22&boolean
+- label: http://foo.bar.baz/test?q=hello(ampersand)id=22(ampersand)boolean
+- URI: http://foo.bar.baz/test?q=hello&id=22&boolean
 - title: 
 END link
 END document

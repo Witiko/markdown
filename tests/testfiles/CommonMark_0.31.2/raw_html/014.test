@@ -1,0 +1,14 @@
+%   ---RESULT--- "example": 625,
+%   
+%   <p>foo <!-- this is a --
+%   comment - with hyphens --></p>
+%   
+%   ---\RESULT---
+
+<<<
+foo <!-- this is a --
+comment - with hyphens -->
+>>>
+BEGIN document
+inlineHtmlComment:  this is a -- comment - with hyphens 
+END document

@@ -1,16 +1,16 @@
 %   ---RESULT--- "example": 602,
 %   
-%   <p><a href="https://example.com/%5C%5B%5C">https://example.com/\[\</a></p>
+%   <p><a href="http://example.com/%5C%5B%5C">http://example.com/\[\</a></p>
 %   
 %   ---\RESULT---
 
 <<<
-<https://example.com/\[\>
+<http://example.com/\[\>
 >>>
 BEGIN document
 BEGIN link
-- label: https://example.com/(backslash)[(backslash)
-- URI: https://example.com/(backslash)[(backslash)
+- label: http://example.com/(backslash)[(backslash)
+- URI: http://example.com/(backslash)[(backslash)
 - title: 
 END link
 END document
