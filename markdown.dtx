@@ -24504,6 +24504,38 @@ end
 % \par
 % \begin{markdown}
 %
+%### Unicode punctuation
+% This section documents [the Unicode punctuation][unicode-punctuation]
+% recognized by the markdown reader. The punctuation is organized in the
+% \luamdef{punctuation} table according to the number of bytes occupied after
+% conversion to \acro{utf}8.
+%
+% [unicode-punctuation]: https://spec.commonmark.org/0.31.2/#unicode-punctuation-character
+%                        (CommonMark Spec, Version 0.31.2 (2024-01-28))
+%
+% \end{markdown}
+%  \begin{macrocode}
+local punctuation = {}
+(function()
+  local pathname = kpse.lookup("UnicodeData.txt")
+  local file = assert(io.open(pathname, "r"),
+    [[Could not open file "UnicodeData.txt"]])
+  for line in file:lines() do
+    local codepoint, major_category = line:match("^(%x+);[^;]*;(%a)")
+    if major_category == "P" or major_category == "S" then
+      local code = unicode.utf8.char(tonumber(codepoint, 16))
+      if punctuation[#code] == nil then
+        punctuation[#code] = {}
+      end
+      table.insert(punctuation[#code], code)
+    end
+  end
+  assert(file:close())
+end)()
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
 %### Plain \TeX{} Writer {#tex-writer}
 %
 % This section documents the \luamref{writer} object, which implements the
@@ -25739,7 +25771,6 @@ parsers.letter                 = R("AZ","az")
 parsers.alphanumeric           = R("AZ","az","09")
 parsers.keyword                = parsers.letter
                                * (parsers.alphanumeric + parsers.dash)^0
-parsers.internal_punctuation   = S(":;,.?")
 
 parsers.doubleasterisks        = P("**")
 parsers.doubleunderscores      = P("__")
@@ -25750,7 +25781,30 @@ parsers.any                    = P(1)
 parsers.succeed                = P(true)
 parsers.fail                   = P(false)
 
-parsers.escapable              = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
+parsers.internal_punctuation   = S(":;,.?")
+parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
+parsers.punctuation            = {}
+(function()
+  for size = 1, 4 do
+    local codepoint_parser = parsers.fail
+    if size == 1 then
+      codepoint_parser = codepoint_parser + parsers.ascii_punctuation
+    end
+    for _, code in ipairs(punctuation[size] or {}) do
+      local code_parser = parsers.succeed
+      assert(#code == size)
+      for i = 1, size do
+        local byte = code:sub(i, i)
+        local byte_parser = S(byte)
+        code_parser = code_parser * byte_parser
+      end
+      codepoint_parser = codepoint_parser + code_parser
+    end
+    parsers.punctuation[size] = codepoint_parser
+  end
+end)()
+
+parsers.escapable              = parsers.ascii_punctuation
 parsers.anyescaped             = parsers.backslash / "" * parsers.escapable
                                + parsers.any
 
@@ -27993,27 +28047,6 @@ function M.reader.new(writer, options)
       return lpeg.R("\240\244") * cont * cont * cont
     end
   end
-
-  local punctuation_3_byte_ungrouped = 
-    lpeg.S("\226\134\184\226\134\185\226\134\143\226\134\147\226\134\186\226\134\187\z
-            \226\134\188\226\134\189\226\137\141\226\137\142\226\137\160\226\137\161\z
-            \226\137\163\226\137\164\226\137\166\226\137\168\226\137\169\226\137\170\z
-            \226\137\171\226\137\173\226\137\175\226\137\177\226\137\178\226\137\179\z
-            \226\137\180\226\137\181\226\137\182\226\137\183\226\137\184\226\137\185\z
-            \226\137\187\226\137\188\226\137\189\226\137\191")
-
-  local punctuation_3_byte_grouped  = lpeg.S("\226")
-                                    * ( lpeg.S("\138") * (lpeg.R("\129\191") - lpeg.S("\165"))
-                                      + lpeg.S("\139") * lpeg.R("\128\191")
-                                      + lpeg.S("\140") * lpeg.R("\128\191")
-                                      + lpeg.S("\141") * lpeg.R("\128\191")) 
-                                    + lpeg.S("\239\191") * lpeg.R("\140\191")
-
-  local punctuation_by_size = { lpeg.S("!\"#$%&'()*+,-./:;<=>?@[]\\^_`{|}~"),
-                                lpeg.S("\194\161\194\167\194\171\194\182\194\183\194\187\194\191\z
-                                \206\131\206\137\206\171\206\182\206\183\206\181\206\191\207\131\207\134"),
-                                punctuation_3_byte_ungrouped + punctuation_3_byte_grouped,
-                                lpeg.S("")}
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -28033,7 +28066,7 @@ function M.reader.new(writer, options)
       end
 
       if (chartype == "punctuation") then
-        if lpeg.match(punctuation_by_size[char_length], s, i+pos) then
+        if lpeg.match(parsers.punctuation[char_length], s, i+pos) then
           return i
         end
       else
