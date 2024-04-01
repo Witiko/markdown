@@ -8,7 +8,8 @@ Fixes:
   intervals. (#408, #419)
 - Do not misinterpret bracketed e-mails as citations. (#424, #426,
   sponsored by @istqborg)
-- Comply with CommonMark 0.31.2. (#416, contributed by @lostenderman)
+- Comply with CommonMark 0.31.2.
+  (#416, 40b516ee, contributed by @lostenderman)
 
 Documentation:
 
