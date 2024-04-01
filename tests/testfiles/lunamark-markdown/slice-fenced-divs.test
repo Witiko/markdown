@@ -26,7 +26,6 @@ attributeClassName: class-name
 BEGIN fencedDivAttributeContext
 attributeIdentifier: sliced-div
 emphasis: displayed
-interblockSeparator
 END fencedDivAttributeContext
 END fencedDivAttributeContext
 END document

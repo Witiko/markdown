@@ -190,7 +190,6 @@ BEGIN fencedCode
 - src: ./_markdown_test/4b6b6e5629f4aa0fcfcb9164fca2efa3.verbatim
 - infostring: latex
 END fencedCode
-interblockSeparator
 END section
 END section
 END section

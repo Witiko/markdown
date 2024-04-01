@@ -295,7 +295,6 @@ dlDefinitionBegin
 dlDefinitionEnd
 dlItemEnd
 dlEndTight
-interblockSeparator
 END section
 END section
 END document

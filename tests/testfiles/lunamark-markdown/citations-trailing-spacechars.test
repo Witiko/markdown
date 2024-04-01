@@ -1,19 +1,27 @@
 \markdownSetup{citations=true}
 <<<
 This test ensures that the Lua `citations` option correctly propagates through
-the plain TeX interface and that space characters are required before a text
-citation.
+the plain TeX interface and that whitespaces are required before citations.
 
 foo@bar
-
+<foo@bar>
 foo @bar
+
+[foo@bar]
+[foo@bar](mailto:foo@bar)
+[foo @bar]
 >>>
 BEGIN document
 codeSpan: citations
 softLineBreak
+paragraphSeparator
 softLineBreak
-paragraphSeparator
-paragraphSeparator
+BEGIN link
+- label: foo@bar
+- URI: mailto:foo@bar
+- title: 
+END link
+softLineBreak
 BEGIN textCites
 BEGIN textCite
 - suppressAuthor: false
@@ -22,4 +30,20 @@ BEGIN textCite
 - name: bar
 END textCite
 END textCites
+paragraphSeparator
+softLineBreak
+BEGIN link
+- label: foo@bar
+- URI: mailto:foo@bar
+- title: 
+END link
+softLineBreak
+BEGIN cites
+BEGIN cite
+- suppressAuthor: false
+- prenote: foo
+- postnote: 
+- name: bar
+END cite
+END cites
 END document

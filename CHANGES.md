@@ -1,6 +1,34 @@
 # Changes
 
-## 3.5.0
+## 3.4.3
+
+Fixes:
+
+- Remove trailing paragraph/interblock separators in right-open slice
+  intervals. (#408, #419)
+- Do not misinterpret bracketed e-mails as citations. (#424, #426,
+  sponsored by @istqborg)
+
+Documentation:
+
+- Add slides from the defense of projects MUNI/33/1654/2022 and
+  MUNI/33/1658/2022 to `README.md`. (49f01ccf)
+- Remove `<mroot>` from MathML in the user manual. (#420, #422,
+  contributed by @quark67)
+
+Contributed Software:
+
+- Make the documentation of contributions more detailed. (3f928162)
+
+Docker:
+
+- Add support for TeX Live 2024.
+  (#411, bafbb164, #413, 04957eee, 16000aa4, #425, 9549a5d8, 8f8e1315,
+   844beafc, cf592003)
+
+Continuous Integration:
+
+- Style-check tabs and trailing spaces in `markdown.dtx`. (a0c941ca)
 
 ## 3.4.2 (2024-03-09)
 
@@ -119,7 +147,7 @@ Fixes:
 - Remove the `options.cacheDir` directory if it is empty after conversion.
   (5cfcea6)
 - Allow tables inside lists. (#368, #371, contributed by @lostenderman,
-  sponsored by ISTQB)
+  sponsored by @istqborg)
 - Check that shell access is unrestricted before attempting shell escape.
   (#365, witiko/lt3luabridge#22, latex3/latex3#1339, #372)
 
@@ -152,7 +180,7 @@ Development:
 Fixes:
 
 - Make the `import` LaTeX option correctly handle recursive imports.
-  (68c7a2f5, danopolan/istqb_latex#87)
+  (68c7a2f5, istqborg/istqb_shared_documents#87)
 - Support attributes on multi-line setext headings.
   (#315, #355, #356, contributed by @lostenderman)
 - Correctly process the combination of Lua options `fancyLists` and
@@ -160,8 +188,8 @@ Fixes:
 - Properly parse emphasis at line endings in headings.
   (#358, #360, contributed by @lostenderman)
 - Fix fancy lists that use roman numerals as markers.
-  (danopolan/istqb_latex#87, #359, #364,
-   contributed by @lostenderman, sponsored by ISTQB)
+  (istqborg/istqb_shared_documents#87, #359, #364,
+   contributed by @lostenderman, sponsored by @istqborg)
 
 Documentation:
 
@@ -232,7 +260,7 @@ Documentation:
 Fixes:
 
 - Correctly parse paragraphs with trailing spaces.
-  (danopolan/istqb_latex#77, #345, #347)
+  (istqborg/istqb_shared_documents#77, #345, #347)
 
 ## 3.0.0 (2023-08-25)
 
