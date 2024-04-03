@@ -30948,8 +30948,8 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
 % \begin{markdown}
 %
 % Initialize a named group named `fenced_div_level` for tracking how deep
-% we are nested in divs and the named group `fenced_div_indent_info` for
-% tracking the indent of the starting div fence. The former named group
+% we are nested in divs and the named group `fenced_div_num_opening_indents`
+% for tracking the indent of the starting div fence. The former named group
 % is immutable and should roll back properly when we fail to match a fenced
 % div. The latter is mutable and may contain items from unsuccessful matches
 % on top. However, we always know how many items at the head of the latter we
@@ -30958,21 +30958,18 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
 % \end{markdown}
 %  \begin{macrocode}
       self.initialize_named_group("fenced_div_level", "0")
-      self.initialize_named_group("fenced_div_indent_info")
+      self.initialize_named_group("fenced_div_num_opening_indents")
 
       local function increment_div_level()
         local function push_indent_table(s, i, indent_table, -- luacheck: ignore s i
-                                         fenced_div_indent_table, fenced_div_level)
+                                         fenced_div_num_opening_indents, fenced_div_level)
           fenced_div_level = tonumber(fenced_div_level) + 1
-          local indent_table_copy = {}
-          if indent_table.trail ~= nil then
-            indent_table_copy.trail = util.table_copy(indent_table.trail)
-          end
+          local num_opening_indents = 0
           if indent_table.indents ~= nil then
-            indent_table_copy.indents = util.table_copy(indent_table.indents)
+            num_opening_indents = #indent_table.indents
           end
-          fenced_div_indent_table[fenced_div_level] = indent_table_copy
-          return true, fenced_div_indent_table
+          fenced_div_num_opening_indents[fenced_div_level] = num_opening_indents
+          return true, fenced_div_num_opening_indents
         end
 
         local function increment_level(s, i, fenced_div_level) -- luacheck: ignore s i
@@ -30981,9 +30978,9 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
         end
 
         return Cg( Cmt( Cb("indent_info")
-                      * Cb("fenced_div_indent_info")
+                      * Cb("fenced_div_num_opening_indents")
                       * Cb("fenced_div_level"), push_indent_table)
-                 , "fenced_div_indent_info")
+                 , "fenced_div_num_opening_indents")
              * Cg( Cmt( Cb("fenced_div_level"), increment_level)
                  , "fenced_div_level")
       end
@@ -30995,7 +30992,7 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
           return true, tostring(fenced_div_level - 1)
         end
 
-        return Cg( Cmt( Cb("fenced_div_indent_info")
+        return Cg( Cmt( Cb("fenced_div_num_opening_indents")
                       * Cb("fenced_div_level"), pop_indent_table)
                  , "fenced_div_level")
       end
@@ -31070,23 +31067,18 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
 
       local function check_indent()
         local function compare_indent(s, i, indent_table, -- luacheck: ignore s i
-                                      fenced_div_indent_table, fenced_div_level)
+                                      fenced_div_num_opening_indents, fenced_div_level)
           fenced_div_level = tonumber(fenced_div_level)
           local num_current_indents = 0
-          local num_opening_indents = 0
           if indent_table.indents ~= nil then
             num_current_indents = #indent_table.indents
           end
-          fenced_div_indent_table = fenced_div_indent_table[fenced_div_level]
-          if fenced_div_indent_table.indents ~= nil then
-            num_opening_indents = #fenced_div_indent_table.indents
-          end
-
+          local num_opening_indents = fenced_div_num_opening_indents[fenced_div_level]
           return num_current_indents == num_opening_indents or indent_table.continues
         end
 
         return Cmt( Cb("indent_info")
-                  * Cb("fenced_div_indent_info")
+                  * Cb("fenced_div_num_opening_indents")
                   * Cb("fenced_div_level"), compare_indent)
       end
 
