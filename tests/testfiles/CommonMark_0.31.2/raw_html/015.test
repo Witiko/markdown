@@ -1,14 +1,14 @@
 %   ---RESULT--- "example": 626,
 %   
-%   <p>foo &lt;!--&gt; foo --&gt;</p>
-%   <p>foo &lt;!-- foo---&gt;</p>
+%   <p>foo <!--> foo --&gt;</p>
+%   <p>foo <!---> foo --&gt;</p>
 %   
 %   ---\RESULT---
 
 <<<
 foo <!--> foo -->
 
-foo <!-- foo--->
+foo <!---> foo -->
 >>>
 BEGIN document
 paragraphSeparator

@@ -17,6 +17,18 @@ env:
   DEBIAN_FRONTEND: noninteractive
   DOCKER_DEV_IMAGE: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.draft == true }}
 jobs:
+  spacecheck:
+    name: Style check (Tabs and spaces)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
+          ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
+      - name: Check for tabs and trailing spaces
+        run: |
+          ! grep -n -P '\t|\s+$' markdown.dtx
   shellcheck:
     name: Style check (Bash)
     runs-on: ubuntu-latest
@@ -111,6 +123,7 @@ jobs:
   build-docker-image:
     name: Build Docker image
     needs:
+      - spacecheck
       - shellcheck
       - luacheck
       - markdownlint
