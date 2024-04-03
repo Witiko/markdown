@@ -10,7 +10,7 @@ Fixes:
   intervals. (#408, #419)
 - Do not misinterpret bracketed e-mails as citations. (#424, #426,
   sponsored by @istqborg)
-- Comply with CommonMark 0.31.2. (#416, 40b516ee, de8d137d,
+- Comply with CommonMark 0.31.2. (#416, 40b516ee, de8d137d, #432,
   contributed by @lostenderman)
 
 Documentation:
