@@ -26229,8 +26229,6 @@ local function traverse_indent(s, i, indent_table, is_optional, is_blank, curr_i
       return traverse_indent(s, tonumber(blankline_end.pos), indent_table, is_optional, is_blank, curr_indent)
     end
 
-    curr_indent[#curr_indent + 1] = new_indent_info
-
     local raw_last_trail = new_indent_info[1]
     local delimiter = new_indent_info[2]
     local raw_new_trail = new_indent_info[3]
@@ -26293,6 +26291,8 @@ local function traverse_indent(s, i, indent_table, is_optional, is_blank, curr_i
 
     current_trail = {is_code=sp.is_code, remainder=sp.remainder, internal_remainder=sp.minimum_remainder,
                      total_length=sp.total_length, full_remainder=sp.full_remainder}
+
+    curr_indent[#curr_indent + 1] = new_indent_info                 
     new_index = next_index
   end
 
