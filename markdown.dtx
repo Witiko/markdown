@@ -24510,38 +24510,6 @@ end
 % \par
 % \begin{markdown}
 %
-%### Unicode punctuation
-% This section documents [the Unicode punctuation][unicode-punctuation]
-% recognized by the markdown reader. The punctuation is organized in the
-% \luamdef{punctuation} table according to the number of bytes occupied after
-% conversion to \acro{utf}8.
-%
-% [unicode-punctuation]: https://spec.commonmark.org/0.31.2/#unicode-punctuation-character
-%                        (CommonMark Spec, Version 0.31.2 (2024-01-28))
-%
-% \end{markdown}
-%  \begin{macrocode}
-local punctuation = {}
-(function()
-  local pathname = kpse.lookup("UnicodeData.txt")
-  local file = assert(io.open(pathname, "r"),
-    [[Could not open file "UnicodeData.txt"]])
-  for line in file:lines() do
-    local codepoint, major_category = line:match("^(%x+);[^;]*;(%a)")
-    if major_category == "P" or major_category == "S" then
-      local code = unicode.utf8.char(tonumber(codepoint, 16))
-      if punctuation[#code] == nil then
-        punctuation[#code] = {}
-      end
-      table.insert(punctuation[#code], code)
-    end
-  end
-  assert(file:close())
-end)()
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
 %### Plain \TeX{} Writer {#tex-writer}
 %
 % This section documents the \luamref{writer} object, which implements the
@@ -25809,36 +25777,46 @@ parsers.fail                   = P(false)
 
 parsers.internal_punctuation   = S(":;,.?")
 parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
-parsers.punctuation            = {}
-(function()
-  for size = 1, 4 do
-    local codepoint_parser = parsers.fail
-    if size == 1 then
-      codepoint_parser = codepoint_parser + parsers.ascii_punctuation
-    end
-    for _, code in ipairs(punctuation[size] or {}) do
-      local code_parser = parsers.succeed
-      assert(#code == size)
-      for i = 1, size do
-        local byte = code:sub(i, i)
-        local byte_parser = S(byte)
-        code_parser = code_parser * byte_parser
-      end
-      codepoint_parser = codepoint_parser + code_parser
-    end
-    parsers.punctuation[size] = codepoint_parser
-  end
-end)()
 %    \end{macrocode}
 % \par
 % \begin{markdown}
 %
-% Here, we garbage-collect the \luamref{punctuation} table, since we won't need it anymore.
+%### Unicode punctuation
+% This section documents [the Unicode punctuation][unicode-punctuation]
+% recognized by the markdown reader. The punctuation is organized in the
+% \luamdef{parsers.punctuation} table according to the number of bytes occupied
+% after conversion to \acro{utf}8.
+%
+% [unicode-punctuation]: https://spec.commonmark.org/0.31.2/#unicode-punctuation-character
+%                        (CommonMark Spec, Version 0.31.2 (2024-01-28))
 %
 % \end{markdown}
 %  \begin{macrocode}
-punctuation = nil
-collectgarbage("collect")
+parsers.punctuation            = {}
+(function()
+  local pathname = kpse.lookup("UnicodeData.txt")
+  local file = assert(io.open(pathname, "r"),
+    [[Could not open file "UnicodeData.txt"]])
+  for line in file:lines() do
+    local codepoint, major_category = line:match("^(%x+);[^;]*;(%a)")
+    if major_category == "P" or major_category == "S" then
+      local code = unicode.utf8.char(tonumber(codepoint, 16))
+      if parsers.punctuation[#code] == nil then
+        parsers.punctuation[#code] = parsers.fail
+      end
+      local code_parser = parsers.succeed
+      for i = 1, #code do
+        local byte = code:sub(i, i)
+        local byte_parser = S(byte)
+        code_parser = code_parser
+                    * byte_parser
+      end
+      parsers.punctuation[#code] = parsers.punctuation[#code]
+                                 + code_parser
+    end
+  end
+  assert(file:close())
+end)()
 
 parsers.escapable              = parsers.ascii_punctuation
 parsers.anyescaped             = parsers.backslash / "" * parsers.escapable
