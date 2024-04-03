@@ -12,6 +12,9 @@ Fixes:
   sponsored by @istqborg)
 - Comply with CommonMark 0.31.2. (#416, 40b516ee, de8d137d,
   contributed by @lostenderman)
+- Do not end a paragraph before a `:::` in fenced divs.
+  (#407, lostenderman/markdown#157, #427, #428, lostenderman/markdown#158,
+   #431, contributed by @lostenderman)
 
 Documentation:
 
