@@ -26202,13 +26202,17 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-local function traverse_indent(s, i, indent_table, is_optional, is_blank)
+local function traverse_indent(s, i, indent_table, is_optional, is_blank, curr_indent)
   local new_index = i
 
   local preceding_indentation = 0
   local current_trail = {}
 
   local blank_starter = left_blank_starter(indent_table)
+
+  if curr_indent == nil then
+    curr_indent = {}
+  end
 
   for index = 1,#indent_table.indents do
     local value = indent_table.indents[index]
@@ -26219,11 +26223,13 @@ local function traverse_indent(s, i, indent_table, is_optional, is_blank)
     if new_indent_info == nil then
       local blankline_end = lpeg.match(Ct(parsers.blankline * Cg(Cp(), "pos")), s, new_index)
       if is_optional or not indent_table.ignore_blockquote_blank or not blankline_end then
-        return is_optional, new_index, current_trail, true
+        return is_optional, new_index, current_trail, curr_indent
       end
 
-      return traverse_indent(s, tonumber(blankline_end.pos), indent_table, is_optional, is_blank)
+      return traverse_indent(s, tonumber(blankline_end.pos), indent_table, is_optional, is_blank, curr_indent)
     end
+
+    curr_indent[#curr_indent + 1] = new_indent_info
 
     local raw_last_trail = new_indent_info[1]
     local delimiter = new_indent_info[2]
@@ -26241,7 +26247,7 @@ local function traverse_indent(s, i, indent_table, is_optional, is_blank)
 
     if next(current_trail) ~= nil then
       if not space_only and current_trail.is_code then
-        return is_optional, new_index, current_trail, false
+        return is_optional, new_index, current_trail, curr_indent
       end
       if current_trail.internal_remainder ~= nil then
         raw_last_trail = current_trail.internal_remainder
@@ -26273,7 +26279,7 @@ local function traverse_indent(s, i, indent_table, is_optional, is_blank)
     local sp = process_starter_spacing(total_indent_level, spacing_to_process, minimum, left_strip_length)
 
     if space_only and not sp.is_minimum then
-      return is_optional or (is_blank and blank_starter <= index), new_index, current_trail, false
+      return is_optional or (is_blank and blank_starter <= index), new_index, current_trail, curr_indent
     end
 
     local indent_length = raw_last_trail_length + delimiter_length + sp.left_total_stripped
@@ -26290,7 +26296,7 @@ local function traverse_indent(s, i, indent_table, is_optional, is_blank)
     new_index = next_index
   end
 
-  return true, new_index, current_trail, false
+  return true, new_index, current_trail, curr_indent
 end
 
 %    \end{macrocode}
@@ -31070,11 +31076,11 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
                                       fenced_div_num_opening_indents, fenced_div_level)
           fenced_div_level = tonumber(fenced_div_level)
           local num_current_indents = 0
-          if indent_table.indents ~= nil then
+                    if indent_table.indents ~= nil then
             num_current_indents = #indent_table.indents
           end
           local num_opening_indents = fenced_div_num_opening_indents[fenced_div_level]
-          return num_current_indents == num_opening_indents or indent_table.continues
+          return num_current_indents == num_opening_indents or #indent_table.continues == num_opening_indents
         end
 
         return Cmt( Cb("indent_info")
