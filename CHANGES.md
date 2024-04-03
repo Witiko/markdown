@@ -8,7 +8,7 @@ Default Renderer Prototypes:
   (#401, istqborg/istqb_product_base#23, #430, reported by @felinecrp,
    sponsored by @istqborg)
 
-## 3.4.3
+## 3.4.3 (2024-04-04)
 
 Fixes:
 
