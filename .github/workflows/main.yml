@@ -117,7 +117,7 @@ jobs:
           set -ex
           pip install -U pip wheel setuptools
           pip install -r tests/requirements.txt
-          pip install pytype
+          pip install pytype libcst==1.2.0
       - name: Run Pytype
         run: pytype tests/test.py
   build-docker-image:
