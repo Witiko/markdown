@@ -34677,35 +34677,73 @@ end
 % \par
 % \begin{markdown}
 %
-% If identifier attributes appear at the beginning of a section, we make them
-% produce the `\label` macro.
+% If identifier attributes appear after a heading, we make them produce
+% `\label` macros. If the `.unnumbered` class name (or the `{-}` shorthand)
+% appears after a heading the heading and all its subheadings will be
+% unnumbered.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
 \seq_new:N \l_@@_header_identifiers_seq
-\markdownSetup{
-  rendererPrototypes = {
-    headerAttributeContextBegin = {
-      \seq_clear:N \l_@@_header_identifiers_seq
-      \markdownSetup
-        {
-          renderers = {
-            attributeIdentifier = {
-              \seq_put_right:Nn
-                \l_@@_header_identifiers_seq
-                { ##1 }
+\bool_new:N \l_@@_header_unnumbered_bool
+\markdownSetup
+  {
+    rendererPrototypes = {
+      headerAttributeContextBegin = {
+        \seq_clear:N \l_@@_header_identifiers_seq
+        \markdownSetup
+          {
+            rendererPrototypes = {
+              attributeIdentifier = {
+                \seq_put_right:Nn
+                  \l_@@_header_identifiers_seq
+                  { ##1 }
+              },
+              attributeClassName = {
+                \bool_if:nT
+                  {
+                    \str_if_eq_p:nn
+                      { ##1 }
+                      { unnumbered } &&
+                    ! \l_@@_header_unnumbered_bool
+                  }
+                  {
+                    \group_begin:
+                    \bool_set_true:N
+                      \l_@@_header_unnumbered_bool
+                    \c@secnumdepth = 0
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Count the number of nested sections, so that we only start numbering sections
+% again when the top-level unnumbered section has ended.
+%
+% \end{markdown}
+%  \begin{macrocode}
+                    \markdownSetup
+                      {
+                        rendererPrototypes = {
+                          sectionBegin = {
+                            \group_begin:
+                          },
+                          sectionEnd = {
+                            \group_end:
+                          },
+                        },
+                      }
+                  }
+              },
             },
-          },
-        }
+          }
+      },
+      headerAttributeContextEnd = {
+        \seq_map_inline:Nn
+          \l_@@_header_identifiers_seq
+          { \label { ##1 } }
+      },
     },
-    headerAttributeContextEnd = {
-      \seq_map_inline:Nn
-        \l_@@_header_identifiers_seq
-        { \label { ##1 } }
-    },
-  },
-}
+  }
 \ExplSyntaxOff
 \markdownSetup{rendererPrototypes={
   superscript = {\textsuperscript{#1}},
