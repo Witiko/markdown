@@ -26202,7 +26202,7 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-local function traverse_indent(s, i, indent_table, is_optional, is_blank, curr_indent)
+local function traverse_indent(s, i, indent_table, is_optional, is_blank, current_line_indents)
   local new_index = i
 
   local preceding_indentation = 0
@@ -26210,8 +26210,8 @@ local function traverse_indent(s, i, indent_table, is_optional, is_blank, curr_i
 
   local blank_starter = left_blank_starter(indent_table)
 
-  if curr_indent == nil then
-    curr_indent = {}
+  if current_line_indents == nil then
+    current_line_indents = {}
   end
 
   for index = 1,#indent_table.indents do
@@ -26223,10 +26223,10 @@ local function traverse_indent(s, i, indent_table, is_optional, is_blank, curr_i
     if new_indent_info == nil then
       local blankline_end = lpeg.match(Ct(parsers.blankline * Cg(Cp(), "pos")), s, new_index)
       if is_optional or not indent_table.ignore_blockquote_blank or not blankline_end then
-        return is_optional, new_index, current_trail, curr_indent
+        return is_optional, new_index, current_trail, current_line_indents
       end
 
-      return traverse_indent(s, tonumber(blankline_end.pos), indent_table, is_optional, is_blank, curr_indent)
+      return traverse_indent(s, tonumber(blankline_end.pos), indent_table, is_optional, is_blank, current_line_indents)
     end
 
     local raw_last_trail = new_indent_info[1]
@@ -26245,7 +26245,7 @@ local function traverse_indent(s, i, indent_table, is_optional, is_blank, curr_i
 
     if next(current_trail) ~= nil then
       if not space_only and current_trail.is_code then
-        return is_optional, new_index, current_trail, curr_indent
+        return is_optional, new_index, current_trail, current_line_indents
       end
       if current_trail.internal_remainder ~= nil then
         raw_last_trail = current_trail.internal_remainder
@@ -26277,7 +26277,7 @@ local function traverse_indent(s, i, indent_table, is_optional, is_blank, curr_i
     local sp = process_starter_spacing(total_indent_level, spacing_to_process, minimum, left_strip_length)
 
     if space_only and not sp.is_minimum then
-      return is_optional or (is_blank and blank_starter <= index), new_index, current_trail, curr_indent
+      return is_optional or (is_blank and blank_starter <= index), new_index, current_trail, current_line_indents
     end
 
     local indent_length = raw_last_trail_length + delimiter_length + sp.left_total_stripped
@@ -26292,11 +26292,11 @@ local function traverse_indent(s, i, indent_table, is_optional, is_blank, curr_i
     current_trail = {is_code=sp.is_code, remainder=sp.remainder, internal_remainder=sp.minimum_remainder,
                      total_length=sp.total_length, full_remainder=sp.full_remainder}
 
-    curr_indent[#curr_indent + 1] = new_indent_info
+    current_line_indents[#current_line_indents + 1] = new_indent_info
     new_index = next_index
   end
 
-  return true, new_index, current_trail, curr_indent
+  return true, new_index, current_trail, current_line_indents
 end
 
 %    \end{macrocode}
@@ -26384,10 +26384,11 @@ local function check_continuation_indentation(s, i, indent_table, is_optional, i
     return true
   end
 
-  local passes, new_index, current_trail, is_cont_line = traverse_indent(s, i, indent_table, is_optional, is_blank)
+  local passes, new_index, current_trail, current_line_indents =
+    traverse_indent(s, i, indent_table, is_optional, is_blank)
 
   if passes then
-    indent_table.continues = is_cont_line
+    indent_table.current_line_indents = current_line_indents
     indent_table = add_trail(indent_table, current_trail)
     return new_index, indent_table
   end
@@ -31075,12 +31076,10 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
         local function compare_indent(s, i, indent_table, -- luacheck: ignore s i
                                       fenced_div_num_opening_indents, fenced_div_level)
           fenced_div_level = tonumber(fenced_div_level)
-          local num_current_indents = 0
-                    if indent_table.indents ~= nil then
-            num_current_indents = #indent_table.indents
-          end
+          local num_current_indents = (indent_table.current_line_indents ~= nil and
+                                      #indent_table.current_line_indents) or 0
           local num_opening_indents = fenced_div_num_opening_indents[fenced_div_level]
-          return num_current_indents == num_opening_indents or #indent_table.continues == num_opening_indents
+          return num_current_indents == num_opening_indents
         end
 
         return Cmt( Cb("indent_info")
