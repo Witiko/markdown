@@ -200,7 +200,7 @@ For further information, consult one of the following:
     - [Markdown 2.10.0: LaTeX Themes & Snippets][10.5300/2021-1-4/76],
     - [Direct Typesetting of Various Document Formats in TeX Using the Pandoc Utility][10.5300/2021-1-4/83],
     - [High-Level Languages for TeX][10.5300/2022-1-4/35], and
-    - Markdown 3: What's New, What's Next? ([preprint][10.5300/2023-?-?/??]).
+    - [Markdown 3: What's New, What's Next?][10.5300/2023-3-4/111].
 6. Talks:
     - [Five Years of Markdown in LaTeX: What, Why, How, and Whereto][pv212-fall2020] (in Czech),
     - [Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX][tb131-video] ([slides][tb131-slides]),
@@ -239,13 +239,13 @@ For further information, consult one of the following:
  [tb137-slides]:     https://tug.org/tug2023/files/sa-03-novotny-markdown3/novotny-markdown3-slides.pdf       "Markdown 3: What's New, What's Next?"
  [tb137-video]:      https://youtu.be/U8XjTOhJkg0                                                             "Markdown 3: What's New, What's Next?"
 
- [10.5300/2016-1-4/78]: https://www.doi.org/10.5300/2016-1-4/78 "Rendering Markdown inside TeX Documents"
- [10.5300/2020-1-2/48]: https://www.doi.org/10.5300/2020-1-2/48 "Markdown 2.8.1: Boldly Unto the Throne of Lightweight Markup in TeX"
- [10.5300/2021-1-4/76]: https://www.doi.org/10.5300/2021-1-4/76 "Markdown 2.10.0: LaTeX Themes & Snippets"
- [10.5300/2021-1-4/83]: https://www.doi.org/10.5300/2021-1-4/83 "Direct Typesetting of Various Document Formats in TeX Using the Pandoc Utility"
- [10.5300/2022-1-4/35]: https://www.doi.org/10.5300/2022-1-4/35 "High-Level Languages for TeX"
+ [10.5300/2016-1-4/78]:  https://www.doi.org/10.5300/2016-1-4/78  "Rendering Markdown inside TeX Documents"
+ [10.5300/2020-1-2/48]:  https://www.doi.org/10.5300/2020-1-2/48  "Markdown 2.8.1: Boldly Unto the Throne of Lightweight Markup in TeX"
+ [10.5300/2021-1-4/76]:  https://www.doi.org/10.5300/2021-1-4/76  "Markdown 2.10.0: LaTeX Themes & Snippets"
+ [10.5300/2021-1-4/83]:  https://www.doi.org/10.5300/2021-1-4/83  "Direct Typesetting of Various Document Formats in TeX Using the Pandoc Utility"
+ [10.5300/2022-1-4/35]:  https://www.doi.org/10.5300/2022-1-4/35  "High-Level Languages for TeX"
 
- [10.5300/2023-?-?/??]: https://github.com/witiko/markdown-3-whats-new-whats-next/releases/download/latest/main.pdf "Markdown 3: What's New, What's Next?"
+ [10.5300/2023-3-4/111]: https://www.doi.org/10.5300/2023-3-4/111 "Markdown 3: What's New, What's Next?"
 
  [pv212-fall2020]: https://is.muni.cz/elearning/io/?qurl=%2Fel%2Ffi%2Fpodzim2020%2FPV212%2Findex.qwarp;prejit=5595952
 
