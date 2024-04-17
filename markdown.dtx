@@ -20290,28 +20290,15 @@ following text:
               \seq_map_inline:Nn
                 \l_@@_renderer_glob_results_seq
                 {
-                  \@@_renderer_tl_to_csname:nN
-                    { ##1 }
+                  \tl_set:Nn
                     \l_tmpa_tl
-                  \prop_get:NnN
-                    \g_@@_renderer_arities_prop
-                    { ##1 }
-                    \l_tmpb_tl
-                  \int_set:Nn
-                    \l_tmpa_int
-                    \l_tmpb_tl
-                  \tl_set:NV
-                    \l_tmpb_tl
-                    \l_@@_renderer_definition_tl
-                  \regex_replace_all:nnN
-                    { \cP\#0 }
-                    { ##1 }
-                    \l_tmpb_tl
-                  \cs_generate_from_arg_count:cNVV
-                    { \l_tmpa_tl }
-                    \cs_set:Npn
-                    \l_tmpa_int
-                    \l_tmpb_tl
+                    { { ##1 } = }
+                  \tl_put_right:No
+                    \l_tmpa_tl
+                    { { \l_@@_renderer_definition_tl } }
+                  \keys_set:nV
+                    { markdown/options/renderers }
+                    \l_tmpa_tl
                 }
             }
         }
@@ -20898,28 +20885,15 @@ following text:
               \seq_map_inline:Nn
                 \l_@@_renderer_glob_results_seq
                 {
-                  \@@_renderer_prototype_tl_to_csname:nN
-                    { ##1 }
+                  \tl_set:Nn
                     \l_tmpa_tl
-                  \prop_get:NnN
-                    \g_@@_renderer_arities_prop
-                    { ##1 }
-                    \l_tmpb_tl
-                  \int_set:Nn
-                    \l_tmpa_int
-                    \l_tmpb_tl
-                  \tl_set:NV
-                    \l_tmpb_tl
-                    \l_@@_renderer_prototype_definition_tl
-                  \regex_replace_all:nnN
-                    { \cP\#0 }
-                    { ##1 }
-                    \l_tmpb_tl
-                  \cs_generate_from_arg_count:cNVV
-                    { \l_tmpa_tl }
-                    \cs_set:Npn
-                    \l_tmpa_int
-                    \l_tmpb_tl
+                    { { ##1 } = }
+                  \tl_put_right:No
+                    \l_tmpa_tl
+                    { { \l_@@_renderer_prototype_definition_tl } }
+                  \keys_set:nV
+                    { markdown/options/renderer-prototypes }
+                    \l_tmpa_tl
                 }
             }
         }
