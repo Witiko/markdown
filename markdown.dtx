@@ -20843,8 +20843,6 @@ following text:
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\seq_new:N
-  \l_@@_renderer_prototype_glob_results_seq
 \keys_define:nn
   { markdown/options/renderer-prototypes }
   {
@@ -20852,9 +20850,9 @@ following text:
       \@@_glob_seq:VnN
         \l_keys_key_str
         { g_@@_renderers_seq }
-        \l_@@_renderer_prototype_glob_results_seq
+        \l_@@_renderer_glob_results_seq
       \seq_if_empty:NTF
-        \l_@@_renderer_prototype_glob_results_seq
+        \l_@@_renderer_glob_results_seq
         {
           \msg_error:nnV
             { markdown }
@@ -20866,7 +20864,7 @@ following text:
             \l_@@_renderer_prototype_definition_tl
             { #1 }
           \seq_map_inline:Nn
-            \l_@@_renderer_prototype_glob_results_seq
+            \l_@@_renderer_glob_results_seq
             {
               \@@_renderer_prototype_tl_to_csname:nN
                 { ##1 }
