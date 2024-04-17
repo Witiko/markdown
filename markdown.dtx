@@ -20215,20 +20215,20 @@ following text:
 \seq_new:N
   \l_@@_renderer_glob_results_seq
 \regex_const:Nn
-  \c_@@_prepending_key
+  \c_@@_prepending_key_regex
   { \^\s*$ }
 \regex_const:Nn
-  \c_@@_appending_key
+  \c_@@_appending_key_regex
   { \$\s*$ }
 \regex_const:Nn
-  \c_@@_prepending_or_appending_key
+  \c_@@_prepending_or_appending_key_regex
   { [\^\$]\s*$ }
 \keys_define:nn
   { markdown/options/renderers }
   {
     unknown .code:n = {
       \regex_match:NVTF
-        \c_@@_prepending_or_appending_key
+        \c_@@_prepending_or_appending_key_regex
         \l_keys_key_str
         {
           % TODO
@@ -20822,7 +20822,7 @@ following text:
   {
     unknown .code:n = {
       \regex_match:NVTF
-        \c_@@_prepending_or_appending_key
+        \c_@@_prepending_or_appending_key_regex
         \l_keys_key_str
         {
           % TODO
