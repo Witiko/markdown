@@ -1317,7 +1317,9 @@ local uni_algos = require("lua-uni-algos")
 %:    A package that is used to polyfill the general hook management system in
 %     the default renderer prototypes for \acro{yaml} metadata, see Section
 %     <#sec:latex-yaml-metadata>, and also in the default renderer prototype
-%     for identifier attributes.
+%     for identifier attributes. Furthermore, the package is used to implement
+%     partial redefinitions of renderers and renderer prototypes in \LaTeX.
+%     <!-- TODO: Redo this in pure expl3, so all \TeX{} formats are supported. -->
 %
 % \pkg{soulutf8}
 %
@@ -20158,6 +20160,10 @@ following text:
   }
 \tl_new:N
   \l_@@_renderer_definition_tl
+\bool_new:N
+  \g_@@_prepending_bool
+\bool_new:N
+  \g_@@_prepending_or_appending_bool
 \cs_new:Nn \@@_define_renderer:nNn
   {
     \keys_define:nn
@@ -20171,20 +20177,68 @@ following text:
             { \cP\#0 }
             { #1 }
             \l_@@_renderer_definition_tl
-          \cs_generate_from_arg_count:NNnV
-            #2
-            \cs_set:Npn
-            { #3 }
-            \l_@@_renderer_definition_tl
+          \bool_if:NTF
+            \g_@@_prepending_or_appending_bool
+            {
+              \bool_if:NTF
+                \g_@@_prepending_bool
+              {
+                % TODO: Redo this in pure expl3, so all \TeX{} formats are supported.
+                \exp_args:NnV
+                  \pretocmd
+                    { #2 }
+                    \l_@@_renderer_definition_tl
+                    { }
+                    {
+                      \msg_error:nnn
+                        { markdown }
+                        { failed-to-prepend-renderer }
+                        { #1 }
+                    }
+              }
+              {
+                % TODO: Redo this in pure expl3, so all \TeX{} formats are supported.
+                \exp_args:NnV
+                  \apptocmd
+                    { #2 }
+                    \l_@@_renderer_definition_tl
+                    { }
+                    {
+                      \msg_error:nnn
+                        { markdown }
+                        { failed-to-append-renderer }
+                        { #1 }
+                    }
+              }
+            }
+            {
+              \cs_generate_from_arg_count:nnnv
+                #2
+                \cs_set:npn
+                { #3 }
+                \l_@@_renderer_definition_tl
+            }
         },
       }
   }
-\cs_generate_variant:Nn
-  \@@_define_renderer:nNn
-  { ncV }
-\cs_generate_variant:Nn
-  \cs_generate_from_arg_count:NNnn
-  { NNnV }
+\cs_generate_variant:nn
+  \@@_define_renderer:nnn
+  { ncv }
+\cs_generate_variant:nn
+  \cs_generate_from_arg_count:nnnn
+  { nnnv }
+\msg_new:nnn
+  { markdown }
+  { failed-to-prepend-renderer }
+  {
+    Failed~to~prepend~to~renderer~#1.
+  }
+\msg_new:nnn
+  { markdown }
+  { failed-to-append-renderer }
+  {
+    Failed~to~append~to~renderer~#1.
+  }
 \keys_define:nn
   { markdown/options }
   {
@@ -20227,11 +20281,45 @@ following text:
   { markdown/options/renderers }
   {
     unknown .code:n = {
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% <!-- TODO: Document prepending and appending to renderer prototypes. -->
+%
+% \end{markdown}
+%  \begin{macrocode}
       \regex_match:NVTF
         \c_@@_prepending_or_appending_key_regex
         \l_keys_key_str
         {
-          % TODO
+          \bool_gset_true:N
+            \g_@@_prepending_or_appending_bool
+          \regex_match:NVTF
+            \c_@@_prepending_key_regex
+            \l_keys_key_str
+            {
+              \bool_gset_true:N
+                \g_@@_prepending_bool
+            }
+          \tl_set:NV
+            \l_tmpa_tl
+            \l_keys_key_str
+          \regex_replace_once:NVN
+            \c_@@_prepending_or_appending_key_regex
+            { }
+            \l_tmpa_tl
+          \tl_set:No
+            \l_tmpb_tl
+            { { \l_tmpa_tl } = }
+          \tl_put_right:Nn
+            \l_tmpb_tl
+            { { #1 } }
+          \keys_set:nV
+            { markdown/options/renderers }
+            \l_tmpb_tl
+          \bool_gset_false:N
+            \g_@@_prepending_or_appending_bool
         }
 %    \end{macrocode}
 % \par
@@ -20771,13 +20859,61 @@ following text:
             { \cP\#0 }
             { #1 }
             \l_@@_renderer_prototype_definition_tl
-          \cs_generate_from_arg_count:NNnV
-            #2
-            \cs_set:Npn
-            { #3 }
-            \l_@@_renderer_prototype_definition_tl
+          \bool_if:NTF
+            \g_@@_prepending_or_appending_bool
+            {
+              \bool_if:NTF
+                \g_@@_prepending_bool
+              {
+                % TODO: Redo this in pure expl3, so different \TeX{} formats are supported.
+                \exp_args:NnV
+                  \pretocmd
+                    { #2 }
+                    \l_@@_renderer_prototype_definition_tl
+                    { }
+                    {
+                      \msg_error:nnn
+                        { markdown }
+                        { failed-to-prepend-renderer-prototype }
+                        { #1 }
+                    }
+              }
+              {
+                % TODO: Redo this in pure expl3, so different \TeX{} formats are supported.
+                \exp_args:NnV
+                  \apptocmd
+                    { #2 }
+                    \l_@@_renderer_prototype_definition_tl
+                    { }
+                    {
+                      \msg_error:nnn
+                        { markdown }
+                        { failed-to-append-renderer-prototype }
+                        { #1 }
+                    }
+              }
+            }
+            {
+              \cs_generate_from_arg_count:NNnV
+                #2
+                \cs_set:Npn
+                { #3 }
+                \l_@@_renderer_prototype_definition_tl
+            }
         },
       }
+\msg_new:nnn
+  { markdown }
+  { failed-to-prepend-renderer-prototype }
+  {
+    Failed~to~prepend~to~renderer~prototype~#1.
+  }
+\msg_new:nnn
+  { markdown }
+  { failed-to-append-renderer-prototype }
+  {
+    Failed~to~append~to~renderer~prototype~#1.
+  }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -20821,11 +20957,45 @@ following text:
   { markdown/options/renderer-prototypes }
   {
     unknown .code:n = {
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% <!-- TODO: Document prepending and appending to renderer prototypes. -->
+%
+% \end{markdown}
+%  \begin{macrocode}
       \regex_match:NVTF
         \c_@@_prepending_or_appending_key_regex
         \l_keys_key_str
         {
-          % TODO
+          \bool_gset_true:N
+            \g_@@_prepending_or_appending_bool
+          \regex_match:NVTF
+            \c_@@_prepending_key_regex
+            \l_keys_key_str
+            {
+              \bool_gset_true:N
+                \g_@@_prepending_bool
+            }
+          \tl_set:NV
+            \l_tmpa_tl
+            \l_keys_key_str
+          \regex_replace_once:NVN
+            \c_@@_prepending_or_appending_key_regex
+            { }
+            \l_tmpa_tl
+          \tl_set:No
+            \l_tmpb_tl
+            { { \l_tmpa_tl } = }
+          \tl_put_right:Nn
+            \l_tmpb_tl
+            { { #1 } }
+          \keys_set:nV
+            { markdown/options/renderer-prototypes }
+            \l_tmpb_tl
+          \bool_gset_false:N
+            \g_@@_prepending_or_appending_bool
         }
 %    \end{macrocode}
 % \par
@@ -34746,6 +34916,7 @@ end
                   \l_@@_header_identifiers_seq
                   { ##1 }
               },
+              % TODO: Rewrite with appending syntax.
               attributeClassName = {
                 \bool_if:nT
                   {
