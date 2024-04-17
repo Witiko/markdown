@@ -20194,7 +20194,6 @@ following text:
         { #1 }
     },
   }
-\ExplSyntaxOff
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -20210,6 +20209,33 @@ following text:
 %   }
 % }
 % ```````
+%
+% \end{markdown}
+%  \begin{macrocode}
+\seq_new:N
+  \l_@@_renderer_glob_results_seq
+\regex_const:Nn
+  \c_@@_prepending_key
+  { \^\s*$ }
+\regex_const:Nn
+  \c_@@_appending_key
+  { \$\s*$ }
+\regex_const:Nn
+  \c_@@_prepending_or_appending_key
+  { [\^\$]\s*$ }
+\keys_define:nn
+  { markdown/options/renderers }
+  {
+    unknown .code:n = {
+      \regex_match:NVTF
+        \c_@@_prepending_or_appending_key
+        \l_keys_key_str
+        {
+          % TODO
+        }
+%    \end{macrocode}
+% \par
+% \begin{markdown}
 %
 % In addition to exact token renderer names, we also support wildcards
 % and enumerations that match multiple token renderer names:
@@ -20244,7 +20270,68 @@ following text:
 %
 % \end{markdown}
 %  \begin{macrocode}
-\ExplSyntaxOn
+        {
+          \@@_glob_seq:VnN
+            \l_keys_key_str
+            { g_@@_renderers_seq }
+            \l_@@_renderer_glob_results_seq
+          \seq_if_empty:NTF
+            \l_@@_renderer_glob_results_seq
+            {
+              \msg_error:nnV
+                { markdown }
+                { undefined-renderer }
+                \l_keys_key_str
+            }
+            {
+              \tl_set:Nn
+                \l_@@_renderer_definition_tl
+                { #1 }
+              \seq_map_inline:Nn
+                \l_@@_renderer_glob_results_seq
+                {
+                  \@@_renderer_tl_to_csname:nN
+                    { ##1 }
+                    \l_tmpa_tl
+                  \prop_get:NnN
+                    \g_@@_renderer_arities_prop
+                    { ##1 }
+                    \l_tmpb_tl
+                  \int_set:Nn
+                    \l_tmpa_int
+                    \l_tmpb_tl
+                  \tl_set:NV
+                    \l_tmpb_tl
+                    \l_@@_renderer_definition_tl
+                  \regex_replace_all:nnN
+                    { \cP\#0 }
+                    { ##1 }
+                    \l_tmpb_tl
+                  \cs_generate_from_arg_count:cNVV
+                    { \l_tmpa_tl }
+                    \cs_set:Npn
+                    \l_tmpa_int
+                    \l_tmpb_tl
+                }
+            }
+        }
+    },
+  }
+\msg_new:nnn
+  { markdown }
+  { undefined-renderer }
+  {
+    Renderer~#1~is~undefined.
+  }
+\cs_generate_variant:Nn
+  \@@_glob_seq:nnN
+  { VnN }
+\cs_generate_variant:Nn
+  \cs_generate_from_arg_count:NNnn
+  { cNVV }
+\cs_generate_variant:Nn
+  \msg_error:nnn
+  { nnV }
 \prop_new:N
   \g_@@_glob_cache_prop
 \tl_new:N
@@ -20306,72 +20393,6 @@ following text:
 \cs_generate_variant:Nn
   \prop_gput:Nnn
   { NeV }
-\seq_new:N
-  \l_@@_renderer_glob_results_seq
-\keys_define:nn
-  { markdown/options/renderers }
-  {
-    unknown .code:n = {
-      \@@_glob_seq:VnN
-        \l_keys_key_str
-        { g_@@_renderers_seq }
-        \l_@@_renderer_glob_results_seq
-      \seq_if_empty:NTF
-        \l_@@_renderer_glob_results_seq
-        {
-          \msg_error:nnV
-            { markdown }
-            { undefined-renderer }
-            \l_keys_key_str
-        }
-        {
-          \tl_set:Nn
-            \l_@@_renderer_definition_tl
-            { #1 }
-          \seq_map_inline:Nn
-            \l_@@_renderer_glob_results_seq
-            {
-              \@@_renderer_tl_to_csname:nN
-                { ##1 }
-                \l_tmpa_tl
-              \prop_get:NnN
-                \g_@@_renderer_arities_prop
-                { ##1 }
-                \l_tmpb_tl
-              \int_set:Nn
-                \l_tmpa_int
-                \l_tmpb_tl
-              \tl_set:NV
-                \l_tmpb_tl
-                \l_@@_renderer_definition_tl
-              \regex_replace_all:nnN
-                { \cP\#0 }
-                { ##1 }
-                \l_tmpb_tl
-              \cs_generate_from_arg_count:cNVV
-                { \l_tmpa_tl }
-                \cs_set:Npn
-                \l_tmpa_int
-                \l_tmpb_tl
-            }
-        }
-    },
-  }
-\msg_new:nnn
-  { markdown }
-  { undefined-renderer }
-  {
-    Renderer~#1~is~undefined.
-  }
-\cs_generate_variant:Nn
-  \@@_glob_seq:nnN
-  { VnN }
-\cs_generate_variant:Nn
-  \cs_generate_from_arg_count:NNnn
-  { cNVV }
-\cs_generate_variant:Nn
-  \msg_error:nnn
-  { nnV }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -20791,7 +20812,6 @@ following text:
 \cs_generate_variant:Nn
   \@@_define_renderer_prototype:nNn
   { ncV }
-\ExplSyntaxOff
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -20807,6 +20827,22 @@ following text:
 %   }
 % }
 % ```````
+%
+% \end{markdown}
+%  \begin{macrocode}
+\keys_define:nn
+  { markdown/options/renderer-prototypes }
+  {
+    unknown .code:n = {
+      \regex_match:NVTF
+        \c_@@_prepending_or_appending_key
+        \l_keys_key_str
+        {
+          % TODO
+        }
+%    \end{macrocode}
+% \par
+% \begin{markdown}
 %
 % In addition to exact token renderer names, we also support wildcards
 % and enumerations that match multiple token renderer prototype names:
@@ -20842,52 +20878,49 @@ following text:
 %
 % \end{markdown}
 %  \begin{macrocode}
-\ExplSyntaxOn
-\keys_define:nn
-  { markdown/options/renderer-prototypes }
-  {
-    unknown .code:n = {
-      \@@_glob_seq:VnN
-        \l_keys_key_str
-        { g_@@_renderers_seq }
-        \l_@@_renderer_glob_results_seq
-      \seq_if_empty:NTF
-        \l_@@_renderer_glob_results_seq
         {
-          \msg_error:nnV
-            { markdown }
-            { undefined-renderer-prototype }
+          \@@_glob_seq:VnN
             \l_keys_key_str
-        }
-        {
-          \tl_set:Nn
-            \l_@@_renderer_prototype_definition_tl
-            { #1 }
-          \seq_map_inline:Nn
+            { g_@@_renderers_seq }
+            \l_@@_renderer_glob_results_seq
+          \seq_if_empty:NTF
             \l_@@_renderer_glob_results_seq
             {
-              \@@_renderer_prototype_tl_to_csname:nN
-                { ##1 }
-                \l_tmpa_tl
-              \prop_get:NnN
-                \g_@@_renderer_arities_prop
-                { ##1 }
-                \l_tmpb_tl
-              \int_set:Nn
-                \l_tmpa_int
-                \l_tmpb_tl
-              \tl_set:NV
-                \l_tmpb_tl
+              \msg_error:nnV
+                { markdown }
+                { undefined-renderer-prototype }
+                \l_keys_key_str
+            }
+            {
+              \tl_set:Nn
                 \l_@@_renderer_prototype_definition_tl
-              \regex_replace_all:nnN
-                { \cP\#0 }
-                { ##1 }
-                \l_tmpb_tl
-              \cs_generate_from_arg_count:cNVV
-                { \l_tmpa_tl }
-                \cs_set:Npn
-                \l_tmpa_int
-                \l_tmpb_tl
+                { #1 }
+              \seq_map_inline:Nn
+                \l_@@_renderer_glob_results_seq
+                {
+                  \@@_renderer_prototype_tl_to_csname:nN
+                    { ##1 }
+                    \l_tmpa_tl
+                  \prop_get:NnN
+                    \g_@@_renderer_arities_prop
+                    { ##1 }
+                    \l_tmpb_tl
+                  \int_set:Nn
+                    \l_tmpa_int
+                    \l_tmpb_tl
+                  \tl_set:NV
+                    \l_tmpb_tl
+                    \l_@@_renderer_prototype_definition_tl
+                  \regex_replace_all:nnN
+                    { \cP\#0 }
+                    { ##1 }
+                    \l_tmpb_tl
+                  \cs_generate_from_arg_count:cNVV
+                    { \l_tmpa_tl }
+                    \cs_set:Npn
+                    \l_tmpa_int
+                    \l_tmpb_tl
+                }
             }
         }
     },
