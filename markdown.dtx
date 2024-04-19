@@ -20161,9 +20161,7 @@ following text:
 \tl_new:N
   \l_@@_renderer_definition_tl
 \bool_new:N
-  \g_@@_prepending_bool
-\bool_new:N
-  \g_@@_prepending_or_appending_bool
+  \g_@@_appending_bool
 \cs_new:Nn \@@_define_renderer:nNn
   {
     \keys_define:nn
@@ -20178,38 +20176,20 @@ following text:
             { #1 }
             \l_@@_renderer_definition_tl
           \bool_if:NTF
-            \g_@@_prepending_or_appending_bool
+            \g_@@_appending_bool
             {
-              \bool_if:NTF
-                \g_@@_prepending_bool
-              {
-                % TODO: Redo this in pure expl3, so all \TeX{} formats are supported.
-                \exp_args:NnV
-                  \pretocmd
-                    { #2 }
-                    \l_@@_renderer_definition_tl
-                    { }
-                    {
-                      \msg_error:nnn
-                        { markdown }
-                        { failed-to-prepend-renderer }
-                        { #1 }
-                    }
-              }
-              {
-                % TODO: Redo this in pure expl3, so all \TeX{} formats are supported.
-                \exp_args:NnV
-                  \apptocmd
-                    { #2 }
-                    \l_@@_renderer_definition_tl
-                    { }
-                    {
-                      \msg_error:nnn
-                        { markdown }
-                        { failed-to-append-renderer }
-                        { #1 }
-                    }
-              }
+              % TODO: Redo this in pure expl3, so all \TeX{} formats are supported.
+              \exp_args:NnV
+                \apptocmd
+                  { #2 }
+                  \l_@@_renderer_definition_tl
+                  { }
+                  {
+                    \msg_error:nnn
+                      { markdown }
+                      { failed-to-append-renderer }
+                      { #1 }
+                  }
             }
             {
               \cs_generate_from_arg_count:NNnV
@@ -20227,12 +20207,6 @@ following text:
 \cs_generate_variant:Nn
   \cs_generate_from_arg_count:NNnn
   { NNnV }
-\msg_new:nnn
-  { markdown }
-  { failed-to-prepend-renderer }
-  {
-    Failed~to~prepend~to~renderer~#1.
-  }
 \msg_new:nnn
   { markdown }
   { failed-to-append-renderer }
@@ -20271,14 +20245,8 @@ following text:
 \seq_new:N
   \l_@@_renderer_glob_results_seq
 \regex_const:Nn
-  \c_@@_prepending_key_regex
-  { \^\s*$ }
-\regex_const:Nn
   \c_@@_appending_key_regex
-  { \$\s*$ }
-\regex_const:Nn
-  \c_@@_prepending_or_appending_key_regex
-  { [\^\$]\s*$ }
+  { \s*\+$ }
 \keys_define:nn
   { markdown/options/renderers }
   {
@@ -20287,28 +20255,21 @@ following text:
 % \par
 % \begin{markdown}
 %
-% <!-- TODO: Document prepending and appending to renderer prototypes. -->
+% <!-- TODO: Document appending to renderer prototypes. -->
 %
 % \end{markdown}
 %  \begin{macrocode}
       \regex_match:NVTF
-        \c_@@_prepending_or_appending_key_regex
+        \c_@@_appending_key_regex
         \l_keys_key_str
         {
           \bool_gset_true:N
-            \g_@@_prepending_or_appending_bool
-          \regex_match:NVTF
-            \c_@@_prepending_key_regex
-            \l_keys_key_str
-            {
-              \bool_gset_true:N
-                \g_@@_prepending_bool
-            }
+            \g_@@_appending_bool
           \tl_set:NV
             \l_tmpa_tl
             \l_keys_key_str
           \regex_replace_once:NVN
-            \c_@@_prepending_or_appending_key_regex
+            \c_@@_appending_key_regex
             { }
             \l_tmpa_tl
           \tl_set:Nx
@@ -20321,7 +20282,7 @@ following text:
             { markdown/options/renderers }
             \l_tmpb_tl
           \bool_gset_false:N
-            \g_@@_prepending_or_appending_bool
+            \g_@@_appending_bool
         }
 %    \end{macrocode}
 % \par
@@ -20866,38 +20827,20 @@ following text:
             { #1 }
             \l_@@_renderer_prototype_definition_tl
           \bool_if:NTF
-            \g_@@_prepending_or_appending_bool
+            \g_@@_appending_bool
             {
-              \bool_if:NTF
-                \g_@@_prepending_bool
-              {
-                % TODO: Redo this in pure expl3, so different \TeX{} formats are supported.
-                \exp_args:NnV
-                  \pretocmd
-                    { #2 }
-                    \l_@@_renderer_prototype_definition_tl
-                    { }
-                    {
-                      \msg_error:nnn
-                        { markdown }
-                        { failed-to-prepend-renderer-prototype }
-                        { #1 }
-                    }
-              }
-              {
-                % TODO: Redo this in pure expl3, so different \TeX{} formats are supported.
-                \exp_args:NnV
-                  \apptocmd
-                    { #2 }
-                    \l_@@_renderer_prototype_definition_tl
-                    { }
-                    {
-                      \msg_error:nnn
-                        { markdown }
-                        { failed-to-append-renderer-prototype }
-                        { #1 }
-                    }
-              }
+              % TODO: Redo this in pure expl3, so different \TeX{} formats are supported.
+              \exp_args:NnV
+                \apptocmd
+                  { #2 }
+                  \l_@@_renderer_prototype_definition_tl
+                  { }
+                  {
+                    \msg_error:nnn
+                      { markdown }
+                      { failed-to-append-renderer-prototype }
+                      { #1 }
+                  }
             }
             {
               \cs_generate_from_arg_count:NNnV
@@ -20931,12 +20874,6 @@ following text:
   { ncV }
 \msg_new:nnn
   { markdown }
-  { failed-to-prepend-renderer-prototype }
-  {
-    Failed~to~prepend~to~renderer~prototype~#1.
-  }
-\msg_new:nnn
-  { markdown }
   { failed-to-append-renderer-prototype }
   {
     Failed~to~append~to~renderer~prototype~#1.
@@ -20967,28 +20904,21 @@ following text:
 % \par
 % \begin{markdown}
 %
-% <!-- TODO: Document prepending and appending to renderer prototypes. -->
+% <!-- TODO: Document appending to renderer prototypes. -->
 %
 % \end{markdown}
 %  \begin{macrocode}
       \regex_match:NVTF
-        \c_@@_prepending_or_appending_key_regex
+        \c_@@_appending_key_regex
         \l_keys_key_str
         {
           \bool_gset_true:N
-            \g_@@_prepending_or_appending_bool
-          \regex_match:NVTF
-            \c_@@_prepending_key_regex
-            \l_keys_key_str
-            {
-              \bool_gset_true:N
-                \g_@@_prepending_bool
-            }
+            \g_@@_appending_bool
           \tl_set:NV
             \l_tmpa_tl
             \l_keys_key_str
           \regex_replace_once:NVN
-            \c_@@_prepending_or_appending_key_regex
+            \c_@@_appending_key_regex
             { }
             \l_tmpa_tl
           \tl_set:Nx
@@ -21001,7 +20931,7 @@ following text:
             { markdown/options/renderer-prototypes }
             \l_tmpb_tl
           \bool_gset_false:N
-            \g_@@_prepending_or_appending_bool
+            \g_@@_appending_bool
         }
 %    \end{macrocode}
 % \par
