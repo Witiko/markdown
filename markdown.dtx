@@ -20266,6 +20266,8 @@ following text:
 %
 % \end{markdown}
 %  \begin{macrocode}
+\tl_new:N
+  \l_@@_renderer_glob_definition_tl
 \seq_new:N
   \l_@@_renderer_glob_results_seq
 \regex_const:Nn
@@ -20373,17 +20375,17 @@ following text:
             }
             {
               \tl_set:Nn
-                \l_@@_renderer_definition_tl
-                { #1 }
+                \l_@@_renderer_glob_definition_tl
+                { \exp_not:n { #1 } }
               \seq_map_inline:Nn
                 \l_@@_renderer_glob_results_seq
                 {
                   \tl_set:Nn
                     \l_tmpa_tl
                     { { ##1 } = }
-                  \tl_put_right:No
+                  \tl_put_right:Nx
                     \l_tmpa_tl
-                    { { \l_@@_renderer_definition_tl } }
+                    { { \l_@@_renderer_glob_definition_tl } }
                   \keys_set:nV
                     { markdown/options/renderers }
                     \l_tmpa_tl
@@ -21050,17 +21052,17 @@ following text:
             }
             {
               \tl_set:Nn
-                \l_@@_renderer_prototype_definition_tl
-                { #1 }
+                \l_@@_renderer_glob_definition_tl
+                { \exp_not:n { #1 } }
               \seq_map_inline:Nn
                 \l_@@_renderer_glob_results_seq
                 {
                   \tl_set:Nn
                     \l_tmpa_tl
                     { { ##1 } = }
-                  \tl_put_right:No
+                  \tl_put_right:Nx
                     \l_tmpa_tl
-                    { { \l_@@_renderer_prototype_definition_tl } }
+                    { { \l_@@_renderer_glob_definition_tl } }
                   \keys_set:nV
                     { markdown/options/renderer-prototypes }
                     \l_tmpa_tl
