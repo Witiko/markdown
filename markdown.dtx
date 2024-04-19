@@ -20212,21 +20212,21 @@ following text:
               }
             }
             {
-              \cs_generate_from_arg_count:nnnv
+              \cs_generate_from_arg_count:NNnV
                 #2
-                \cs_set:npn
+                \cs_set:Npn
                 { #3 }
                 \l_@@_renderer_definition_tl
             }
         },
       }
   }
-\cs_generate_variant:nn
-  \@@_define_renderer:nnn
-  { ncv }
-\cs_generate_variant:nn
-  \cs_generate_from_arg_count:nnnn
-  { nnnv }
+\cs_generate_variant:Nn
+  \@@_define_renderer:nNn
+  { ncV }
+\cs_generate_variant:Nn
+  \cs_generate_from_arg_count:NNnn
+  { NNnV }
 \msg_new:nnn
   { markdown }
   { failed-to-prepend-renderer }
@@ -20311,7 +20311,7 @@ following text:
             \c_@@_prepending_or_appending_key_regex
             { }
             \l_tmpa_tl
-          \tl_set:No
+          \tl_set:Nx
             \l_tmpb_tl
             { { \l_tmpa_tl } = }
           \tl_put_right:Nn
@@ -20409,6 +20409,10 @@ following text:
 \cs_generate_variant:Nn
   \msg_error:nnn
   { nnV }
+\prg_generate_conditional_variant:Nnn
+  \regex_match:Nn
+  { NV }
+  { TF }
 \prop_new:N
   \g_@@_glob_cache_prop
 \tl_new:N
@@ -20904,18 +20908,6 @@ following text:
             }
         },
       }
-\msg_new:nnn
-  { markdown }
-  { failed-to-prepend-renderer-prototype }
-  {
-    Failed~to~prepend~to~renderer~prototype~#1.
-  }
-\msg_new:nnn
-  { markdown }
-  { failed-to-append-renderer-prototype }
-  {
-    Failed~to~append~to~renderer~prototype~#1.
-  }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -20937,6 +20929,18 @@ following text:
 \cs_generate_variant:Nn
   \@@_define_renderer_prototype:nNn
   { ncV }
+\msg_new:nnn
+  { markdown }
+  { failed-to-prepend-renderer-prototype }
+  {
+    Failed~to~prepend~to~renderer~prototype~#1.
+  }
+\msg_new:nnn
+  { markdown }
+  { failed-to-append-renderer-prototype }
+  {
+    Failed~to~append~to~renderer~prototype~#1.
+  }
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -20987,7 +20991,7 @@ following text:
             \c_@@_prepending_or_appending_key_regex
             { }
             \l_tmpa_tl
-          \tl_set:No
+          \tl_set:Nx
             \l_tmpb_tl
             { { \l_tmpa_tl } = }
           \tl_put_right:Nn
