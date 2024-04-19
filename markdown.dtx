@@ -20246,7 +20246,7 @@ following text:
   \l_@@_renderer_glob_results_seq
 \regex_const:Nn
   \c_@@_appending_key_regex
-  { \s*\+$ }
+  { \s*+$ }
 \keys_define:nn
   { markdown/options/renderers }
   {
@@ -20268,7 +20268,7 @@ following text:
           \tl_set:NV
             \l_tmpa_tl
             \l_keys_key_str
-          \regex_replace_once:NVN
+          \regex_replace_once:NnN
             \c_@@_appending_key_regex
             { }
             \l_tmpa_tl
@@ -20917,7 +20917,7 @@ following text:
           \tl_set:NV
             \l_tmpa_tl
             \l_keys_key_str
-          \regex_replace_once:NVN
+          \regex_replace_once:NnN
             \c_@@_appending_key_regex
             { }
             \l_tmpa_tl
