@@ -20259,7 +20259,36 @@ following text:
 % \par
 % \begin{markdown}
 %
-% <!-- TODO: Document appending to renderer prototypes. -->
+% Besides defining renderers at once, we can also define them incrementally
+% using the appending operator (`+=`). This can be especially useful in
+% defining rules for processing different \acro{HTML} class names and
+% identifiers:
+% ``` tex
+% \markdownSetup{
+%   renderers = {
+%     \% Start with empty renderer prototypes.
+%     headerAttributeContextBegin = {},
+%     attributeClassName = {},
+%     attributeIdentifier = {},
+%     \% Define the processing of a single specific HTML class name.
+%     headerAttributeContextBegin += {
+%       \markdownSetup{
+%         renderers = {
+%           attributeClassName += {...},
+%         },
+%       }
+%     },
+%     \% Define the processing of a single specific HTML attribute.
+%     headerAttributeContextBegin += {
+%       \markdownSetup{
+%         renderers = {
+%           attributeIdentifier += {...},
+%         },
+%       }
+%     },
+%   },
+% }
+% ```````
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -20292,13 +20321,13 @@ following text:
 % \par
 % \begin{markdown}
 %
-% In addition to exact token renderer names, we also support wildcards
-% and enumerations that match multiple token renderer names:
+% In addition to exact token renderer names, we also support wildcards (`*`)
+% and enumerations ('|') that match multiple token renderer names:
 % ``` tex
 % \markdownSetup{
 %   renderers = {
 %     heading* = {{\bf #1}},    \% Render headings using the bold face.
-%     jekyllData(String|Number) = {   \% Render YAML string and numbers
+%     jekyllData(String|Number) = {\%  \% Render YAML string and numbers
 %       {\it #2}\%                                     \% using italics.
 %     },
 %   }
@@ -20314,7 +20343,8 @@ following text:
 % }
 % ```````
 %
-% To determine the current token renderer, you can use the parameter `#0`:
+% To determine the current token renderer, you can use the
+% pseudo-parameter `#0`:
 % ``` tex
 % \markdownSetup{
 %   renderers = {
@@ -20916,7 +20946,36 @@ following text:
 % \par
 % \begin{markdown}
 %
-% <!-- TODO: Document appending to renderer prototypes. -->
+% Besides defining renderer prototypes at once, we can also define them
+% incrementally using the appending operator (`+=`). This can be especially
+% useful in defining rules for processing different \acro{HTML} class names
+% and identifiers:
+% ``` tex
+% \markdownSetup{
+%   rendererPrototypes = {
+%     \% Start with empty renderer prototypes.
+%     headerAttributeContextBegin = {},
+%     attributeClassName = {},
+%     attributeIdentifier = {},
+%     \% Define the processing of a single specific HTML class name.
+%     headerAttributeContextBegin += {
+%       \markdownSetup{
+%         rendererPrototypes = {
+%           attributeClassName += {...},
+%         },
+%       }
+%     },
+%     \% Define the processing of a single specific HTML attribute.
+%     headerAttributeContextBegin += {
+%       \markdownSetup{
+%         rendererPrototypes = {
+%           attributeIdentifier += {...},
+%         },
+%       }
+%     },
+%   },
+% }
+% ```````
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -20949,8 +21008,9 @@ following text:
 % \par
 % \begin{markdown}
 %
-% In addition to exact token renderer names, we also support wildcards
-% and enumerations that match multiple token renderer prototype names:
+% In addition to exact token renderer prototype names, we also support
+% wildcards (`*`) and enumerations ('|') that match multiple token renderer
+% prototype names:
 % ``` tex
 % \markdownSetup{
 %   rendererPrototypes = {
@@ -20972,7 +21032,7 @@ following text:
 % ```````
 %
 % To determine the current token renderer prototype, you can use the
-% parameter `#0`:
+% pseudo-parameter `#0`:
 % ``` tex
 % \markdownSetup{
 %   rendererPrototypes = {
