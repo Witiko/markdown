@@ -1317,9 +1317,7 @@ local uni_algos = require("lua-uni-algos")
 %:    A package that is used to polyfill the general hook management system in
 %     the default renderer prototypes for \acro{yaml} metadata, see Section
 %     <#sec:latex-yaml-metadata>, and also in the default renderer prototype
-%     for identifier attributes. Furthermore, the package is used to implement
-%     partial redefinitions of renderers and renderer prototypes in \LaTeX.
-%     <!-- TODO: Redo this in pure expl3, so all \TeX{} formats are supported. -->
+%     for identifier attributes.
 %
 % \pkg{soulutf8}
 %
@@ -20160,6 +20158,8 @@ following text:
   }
 \tl_new:N
   \l_@@_renderer_definition_tl
+\prop_new:N
+  \g_@@_renderer_definitions_prop
 \bool_new:N
   \g_@@_appending_renderer_bool
 \cs_new:Nn \@@_define_renderer:nNn
@@ -20175,29 +20175,34 @@ following text:
             { \cP\#0 }
             { #1 }
             \l_@@_renderer_definition_tl
-          \bool_if:NTF
+          \bool_if:NT
             \g_@@_appending_renderer_bool
             {
-              % TODO: Redo this in pure expl3, so all \TeX{} formats are supported.
-              \exp_args:NnV
-                \apptocmd
-                  { #2 }
-                  \l_@@_renderer_definition_tl
-                  { }
-                  {
-                    \msg_error:nnn
-                      { markdown }
-                      { failed-to-append-renderer }
-                      { #1 }
-                  }
+              \prop_get:NnNTF
+                \g_@@_renderer_definitions_prop
+                { #1 }
+                \l_tmpa_tl
+                {
+                  \tl_put_left:NV
+                    \l_@@_renderer_definition_tl
+                    \l_tmpa_tl
+                }
+                {
+                  \msg_error:nnn
+                    { markdown }
+                    { failed-to-append-renderer }
+                    { #1 }
+                }
             }
-            {
-              \cs_generate_from_arg_count:NNnV
-                #2
-                \cs_set:Npn
-                { #3 }
-                \l_@@_renderer_definition_tl
-            }
+          \prop_put:NnV
+            \g_@@_renderer_definitions_prop
+            { #1 }
+            \l_@@_renderer_definition_tl
+          \cs_generate_from_arg_count:NNnV
+            #2
+            \cs_set:Npn
+            { #3 }
+            \l_@@_renderer_definition_tl
         },
       }
   }
@@ -20207,12 +20212,11 @@ following text:
 \cs_generate_variant:Nn
   \cs_generate_from_arg_count:NNnn
   { NNnV }
-\msg_new:nnn
+\msg_new:nnnn
   { markdown }
   { failed-to-append-renderer }
-  {
-    Failed~to~append~to~renderer~#1.
-  }
+  { Failed~to~append~(+=)~to~renderer~#1. }
+  { Have~you~assigned~(=)~to~renderer~#1~previously? }
 \keys_define:nn
   { markdown/options }
   {
@@ -20813,6 +20817,8 @@ following text:
   }
 \tl_new:N
   \l_@@_renderer_prototype_definition_tl
+\prop_new:N
+  \g_@@_renderer_prototype_definitions_prop
 \bool_new:N
   \g_@@_appending_renderer_prototype_bool
 \cs_new:Nn \@@_define_renderer_prototype:nNn
@@ -20831,26 +20837,31 @@ following text:
           \bool_if:NTF
             \g_@@_appending_renderer_prototype_bool
             {
-              % TODO: Redo this in pure expl3, so different \TeX{} formats are supported.
-              \exp_args:NnV
-                \apptocmd
-                  { #2 }
-                  \l_@@_renderer_prototype_definition_tl
-                  { }
-                  {
-                    \msg_error:nnn
-                      { markdown }
-                      { failed-to-append-renderer-prototype }
-                      { #1 }
-                  }
+              \prop_get:NnNTF
+                \g_@@_renderer_prototype_definitions_prop
+                { #1 }
+                \l_tmpa_tl
+                {
+                  \tl_put_left:NV
+                    \l_@@_renderer_prototype_definition_tl
+                    \l_tmpa_tl
+                }
+                {
+                  \msg_error:nnn
+                    { markdown }
+                    { failed-to-append-renderer-prototype }
+                    { #1 }
+                }
             }
-            {
-              \cs_generate_from_arg_count:NNnV
-                #2
-                \cs_set:Npn
-                { #3 }
-                \l_@@_renderer_prototype_definition_tl
-            }
+          \prop_put:NnV
+            \g_@@_renderer_prototype_definitions_prop
+            { #1 }
+            \l_@@_renderer_prototype_definition_tl
+          \cs_generate_from_arg_count:NNnV
+            #2
+            \cs_set:Npn
+            { #3 }
+            \l_@@_renderer_prototype_definition_tl
         },
       }
 %    \end{macrocode}
@@ -20874,12 +20885,11 @@ following text:
 \cs_generate_variant:Nn
   \@@_define_renderer_prototype:nNn
   { ncV }
-\msg_new:nnn
+\msg_new:nnnn
   { markdown }
   { failed-to-append-renderer-prototype }
-  {
-    Failed~to~append~to~renderer~prototype~#1.
-  }
+  { Failed~to~append~(+=)~to~renderer~prototype~#1. }
+  { Have~you~assigned~(=)~to~renderer~prototype~#1~previously? }
 %    \end{macrocode}
 % \par
 % \begin{markdown}
