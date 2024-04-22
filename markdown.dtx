@@ -20161,7 +20161,7 @@ following text:
 \tl_new:N
   \l_@@_renderer_definition_tl
 \bool_new:N
-  \g_@@_appending_bool
+  \g_@@_appending_renderer_bool
 \cs_new:Nn \@@_define_renderer:nNn
   {
     \keys_define:nn
@@ -20176,7 +20176,7 @@ following text:
             { #1 }
             \l_@@_renderer_definition_tl
           \bool_if:NTF
-            \g_@@_appending_bool
+            \g_@@_appending_renderer_bool
             {
               % TODO: Redo this in pure expl3, so all \TeX{} formats are supported.
               \exp_args:NnV
@@ -20264,7 +20264,7 @@ following text:
         \l_keys_key_str
         {
           \bool_gset_true:N
-            \g_@@_appending_bool
+            \g_@@_appending_renderer_bool
           \tl_set:NV
             \l_tmpa_tl
             \l_keys_key_str
@@ -20282,7 +20282,7 @@ following text:
             { markdown/options/renderers }
             \l_tmpb_tl
           \bool_gset_false:N
-            \g_@@_appending_bool
+            \g_@@_appending_renderer_bool
         }
 %    \end{macrocode}
 % \par
@@ -20813,6 +20813,8 @@ following text:
   }
 \tl_new:N
   \l_@@_renderer_prototype_definition_tl
+\bool_new:N
+  \g_@@_appending_renderer_prototype_bool
 \cs_new:Nn \@@_define_renderer_prototype:nNn
   {
     \keys_define:nn
@@ -20827,7 +20829,7 @@ following text:
             { #1 }
             \l_@@_renderer_prototype_definition_tl
           \bool_if:NTF
-            \g_@@_appending_bool
+            \g_@@_appending_renderer_prototype_bool
             {
               % TODO: Redo this in pure expl3, so different \TeX{} formats are supported.
               \exp_args:NnV
@@ -20913,7 +20915,7 @@ following text:
         \l_keys_key_str
         {
           \bool_gset_true:N
-            \g_@@_appending_bool
+            \g_@@_appending_renderer_prototype_bool
           \tl_set:NV
             \l_tmpa_tl
             \l_keys_key_str
@@ -20931,7 +20933,7 @@ following text:
             { markdown/options/renderer-prototypes }
             \l_tmpb_tl
           \bool_gset_false:N
-            \g_@@_appending_bool
+            \g_@@_appending_renderer_prototype_bool
         }
 %    \end{macrocode}
 % \par
