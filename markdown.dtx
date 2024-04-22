@@ -20158,10 +20158,6 @@ following text:
         \tl_tail:n { #1 }
       }
   }
-\tl_new:N
-  \l_@@_renderer_definition_tl
-\prop_new:N
-  \g_@@_renderer_definitions_prop
 \bool_new:N
   \g_@@_appending_renderer_bool
 \cs_new:Nn \@@_define_renderer:nNn
@@ -20171,23 +20167,21 @@ following text:
       {
         #1 .code:n = {
           \tl_set:Nn
-            \l_@@_renderer_definition_tl
+            \l_tmpa_tl
             { ##1 }
           \regex_replace_all:nnN
             { \cP\#0 }
             { #1 }
-            \l_@@_renderer_definition_tl
+            \l_tmpa_tl
           \bool_if:NT
             \g_@@_appending_renderer_bool
             {
-              \prop_get:NnNTF
-                \g_@@_renderer_definitions_prop
-                { #1 }
-                \l_tmpa_tl
+              \tl_if_exist:cTF
+                { l_@@_renderers_ #1 }
                 {
-                  \tl_put_left:NV
-                    \l_@@_renderer_definition_tl
+                  \tl_put_left:Nv
                     \l_tmpa_tl
+                    { l_@@_renderers_ #1 }
                 }
                 {
                   \msg_error:nnn
@@ -20196,15 +20190,14 @@ following text:
                     { #1 }
                 }
             }
-          \prop_put:NnV
-            \g_@@_renderer_definitions_prop
-            { #1 }
-            \l_@@_renderer_definition_tl
+          \tl_set:cV
+            { l_@@_renderers_ #1 }
+            \l_tmpa_tl
           \cs_generate_from_arg_count:NNnV
             #2
             \cs_set:Npn
             { #3 }
-            \l_@@_renderer_definition_tl
+            \l_tmpa_tl
         },
       }
   }
@@ -20214,6 +20207,9 @@ following text:
 \cs_generate_variant:Nn
   \cs_generate_from_arg_count:NNnn
   { NNnV }
+\cs_generate_variant:Nn
+  \tl_put_left:Nn
+  { Nv }
 \msg_new:nnnn
   { markdown }
   { failed-to-append-renderer }
@@ -20847,10 +20843,6 @@ following text:
         Prototype
       }
   }
-\tl_new:N
-  \l_@@_renderer_prototype_definition_tl
-\prop_new:N
-  \g_@@_renderer_prototype_definitions_prop
 \bool_new:N
   \g_@@_appending_renderer_prototype_bool
 \cs_new:Nn \@@_define_renderer_prototype:nNn
@@ -20860,23 +20852,21 @@ following text:
       {
         #1 .code:n = {
           \tl_set:Nn
-            \l_@@_renderer_prototype_definition_tl
+            \l_tmpa_tl
             { ##1 }
           \regex_replace_all:nnN
             { \cP\#0 }
             { #1 }
-            \l_@@_renderer_prototype_definition_tl
+            \l_tmpa_tl
           \bool_if:NT
             \g_@@_appending_renderer_prototype_bool
             {
-              \prop_get:NnNTF
-                \g_@@_renderer_prototype_definitions_prop
-                { #1 }
-                \l_tmpa_tl
+              \tl_if_exist:cTF
+                { l_@@_renderer_prototypes_ #1 }
                 {
-                  \tl_put_left:NV
-                    \l_@@_renderer_prototype_definition_tl
+                  \tl_put_left:Nv
                     \l_tmpa_tl
+                    { l_@@_renderer_prototypes_ #1 }
                 }
                 {
                   \msg_error:nnn
@@ -20885,15 +20875,14 @@ following text:
                     { #1 }
                 }
             }
-          \prop_put:NnV
-            \g_@@_renderer_prototype_definitions_prop
-            { #1 }
-            \l_@@_renderer_prototype_definition_tl
+          \tl_set:cV
+            { l_@@_renderer_prototypes_ #1 }
+            \l_tmpa_tl
           \cs_generate_from_arg_count:NNnV
             #2
             \cs_set:Npn
             { #3 }
-            \l_@@_renderer_prototype_definition_tl
+            \l_tmpa_tl
         },
       }
 %    \end{macrocode}
