@@ -827,6 +827,8 @@ abbr {
       \seq_map_inline:Nn
         \l_@@_header_identifiers_seq
         { \label { sec:##1 } }
+      \seq_clear:N
+        \l_@@_header_identifiers_seq
     },
   },
 }
