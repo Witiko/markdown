@@ -34842,20 +34842,17 @@ end
 % \begin{markdown}
 %
 % If identifier attributes appear after a heading, we make them produce
-% `\label` macros. If the `.unnumbered` class name (or the `{-}` shorthand)
-% appears after a heading the heading and all its subheadings will be
-% unnumbered.
+% `\label` macros.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\seq_new:N \l_@@_header_identifiers_seq
-\bool_new:N \l_@@_header_unnumbered_bool
+\seq_new:N
+  \l_@@_header_identifiers_seq
 \markdownSetup
   {
     rendererPrototypes = {
       headerAttributeContextBegin = {
-        \seq_clear:N \l_@@_header_identifiers_seq
         \markdownSetup
           {
             rendererPrototypes = {
@@ -34864,7 +34861,35 @@ end
                   \l_@@_header_identifiers_seq
                   { ##1 }
               },
-              % TODO: Rewrite with appending syntax.
+            },
+          }
+      },
+      headerAttributeContextEnd = {
+        \seq_map_inline:Nn
+          \l_@@_header_identifiers_seq
+          { \label { ##1 } }
+        \seq_clear:N
+          \l_@@_header_identifiers_seq
+      },
+    },
+  }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If the `.unnumbered` class name (or the `{-}` shorthand) appears after a
+% heading the heading and all its subheadings will be unnumbered.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\bool_new:N
+  \l_@@_header_unnumbered_bool
+\markdownSetup
+  {
+    rendererPrototypes = {
+      headerAttributeContextBegin += {
+        \markdownSetup
+          {
+            rendererPrototypes = {
               attributeClassName = {
                 \bool_if:nT
                   {
@@ -34878,14 +34903,6 @@ end
                     \bool_set_true:N
                       \l_@@_header_unnumbered_bool
                     \c@secnumdepth = 0
-%    \end{macrocode}
-% \begin{markdown}
-%
-% Count the number of nested sections, so that we only start numbering sections
-% again when the top-level unnumbered section has ended.
-%
-% \end{markdown}
-%  \begin{macrocode}
                     \markdownSetup
                       {
                         rendererPrototypes = {
@@ -34901,11 +34918,6 @@ end
               },
             },
           }
-      },
-      headerAttributeContextEnd = {
-        \seq_map_inline:Nn
-          \l_@@_header_identifiers_seq
-          { \label { ##1 } }
       },
     },
   }
