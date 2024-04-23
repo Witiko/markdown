@@ -20276,7 +20276,7 @@ following text:
 %         },
 %       }
 %     },
-%     \% Define the processing of a single specific HTML attribute.
+%     \% Define the processing of a single specific HTML identifier.
 %     headerAttributeContextBegin += {
 %       \markdownSetup{
 %         renderers = {
@@ -20320,7 +20320,7 @@ following text:
 % \begin{markdown}
 %
 % In addition to exact token renderer names, we also support wildcards (`*`)
-% and enumerations ('|') that match multiple token renderer names:
+% and enumerations (`|`) that match multiple token renderer names:
 % ``` tex
 % \markdownSetup{
 %   renderers = {
@@ -20956,7 +20956,7 @@ following text:
 %         },
 %       }
 %     },
-%     \% Define the processing of a single specific HTML attribute.
+%     \% Define the processing of a single specific HTML identifier.
 %     headerAttributeContextBegin += {
 %       \markdownSetup{
 %         rendererPrototypes = {
@@ -21000,7 +21000,7 @@ following text:
 % \begin{markdown}
 %
 % In addition to exact token renderer prototype names, we also support
-% wildcards (`*`) and enumerations ('|') that match multiple token renderer
+% wildcards (`*`) and enumerations (`|`) that match multiple token renderer
 % prototype names:
 % ``` tex
 % \markdownSetup{
@@ -34892,8 +34892,8 @@ end
 % \par
 % \begin{markdown}
 %
-% If identifier attributes appear after a heading, we make them produce
-% `\label` macros.
+% If \acro{HTML} identifiers appear after a heading, we make them
+% produce `\label` macros.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -34927,8 +34927,8 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% If the `.unnumbered` class name (or the `{-}` shorthand) appears after a
-% heading the heading and all its subheadings will be unnumbered.
+% If the `unnumbered` \acro{HTML} class (or the `{-}` shorthand) appears after
+% a heading the heading and all its subheadings will be unnumbered.
 %
 % \end{markdown}
 %  \begin{macrocode}
