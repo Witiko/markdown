@@ -827,6 +827,8 @@ abbr {
       \seq_map_inline:Nn
         \l_@@_header_identifiers_seq
         { \label { sec:##1 } }
+      \seq_clear:N
+        \l_@@_header_identifiers_seq
     },
   },
 }
@@ -20156,8 +20158,8 @@ following text:
         \tl_tail:n { #1 }
       }
   }
-\tl_new:N
-  \l_@@_renderer_definition_tl
+\bool_new:N
+  \g_@@_appending_renderer_bool
 \cs_new:Nn \@@_define_renderer:nNn
   {
     \keys_define:nn
@@ -20165,17 +20167,37 @@ following text:
       {
         #1 .code:n = {
           \tl_set:Nn
-            \l_@@_renderer_definition_tl
+            \l_tmpa_tl
             { ##1 }
           \regex_replace_all:nnN
             { \cP\#0 }
             { #1 }
-            \l_@@_renderer_definition_tl
+            \l_tmpa_tl
+          \bool_if:NT
+            \g_@@_appending_renderer_bool
+            {
+              \tl_if_exist:cTF
+                { l_@@_renderers_ #1 }
+                {
+                  \tl_put_left:Nv
+                    \l_tmpa_tl
+                    { l_@@_renderers_ #1 }
+                }
+                {
+                  \msg_error:nnn
+                    { markdown }
+                    { failed-to-append-renderer }
+                    { #1 }
+                }
+            }
+          \tl_set:cV
+            { l_@@_renderers_ #1 }
+            \l_tmpa_tl
           \cs_generate_from_arg_count:NNnV
             #2
             \cs_set:Npn
             { #3 }
-            \l_@@_renderer_definition_tl
+            \l_tmpa_tl
         },
       }
   }
@@ -20185,6 +20207,14 @@ following text:
 \cs_generate_variant:Nn
   \cs_generate_from_arg_count:NNnn
   { NNnV }
+\cs_generate_variant:Nn
+  \tl_put_left:Nn
+  { Nv }
+\msg_new:nnnn
+  { markdown }
+  { failed-to-append-renderer }
+  { Failed~to~append~(+=)~to~renderer~#1. }
+  { Have~you~assigned~(=)~to~renderer~#1~previously? }
 \keys_define:nn
   { markdown/options }
   {
@@ -20194,7 +20224,6 @@ following text:
         { #1 }
     },
   }
-\ExplSyntaxOff
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -20211,13 +20240,92 @@ following text:
 % }
 % ```````
 %
-% In addition to exact token renderer names, we also support wildcards
-% and enumerations that match multiple token renderer names:
+% \end{markdown}
+%  \begin{macrocode}
+\tl_new:N
+  \l_@@_renderer_glob_definition_tl
+\seq_new:N
+  \l_@@_renderer_glob_results_seq
+\regex_const:Nn
+  \c_@@_appending_key_regex
+  { \s*+$ }
+\keys_define:nn
+  { markdown/options/renderers }
+  {
+    unknown .code:n = {
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Besides defining renderers at once, we can also define them incrementally
+% using the appending operator (`+=`). This can be especially useful in
+% defining rules for processing different \acro{HTML} class names and
+% identifiers:
+% ``` tex
+% \markdownSetup{
+%   renderers = {
+%     \% Start with empty renderer prototypes.
+%     headerAttributeContextBegin = {},
+%     attributeClassName = {},
+%     attributeIdentifier = {},
+%     \% Define the processing of a single specific HTML class name.
+%     headerAttributeContextBegin += {
+%       \markdownSetup{
+%         renderers = {
+%           attributeClassName += {...},
+%         },
+%       }
+%     },
+%     \% Define the processing of a single specific HTML identifier.
+%     headerAttributeContextBegin += {
+%       \markdownSetup{
+%         renderers = {
+%           attributeIdentifier += {...},
+%         },
+%       }
+%     },
+%   },
+% }
+% ```````
+%
+% \end{markdown}
+%  \begin{macrocode}
+      \regex_match:NVTF
+        \c_@@_appending_key_regex
+        \l_keys_key_str
+        {
+          \bool_gset_true:N
+            \g_@@_appending_renderer_bool
+          \tl_set:NV
+            \l_tmpa_tl
+            \l_keys_key_str
+          \regex_replace_once:NnN
+            \c_@@_appending_key_regex
+            { }
+            \l_tmpa_tl
+          \tl_set:Nx
+            \l_tmpb_tl
+            { { \l_tmpa_tl } = }
+          \tl_put_right:Nn
+            \l_tmpb_tl
+            { { #1 } }
+          \keys_set:nV
+            { markdown/options/renderers }
+            \l_tmpb_tl
+          \bool_gset_false:N
+            \g_@@_appending_renderer_bool
+        }
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% In addition to exact token renderer names, we also support wildcards (`*`)
+% and enumerations (`|`) that match multiple token renderer names:
 % ``` tex
 % \markdownSetup{
 %   renderers = {
 %     heading* = {{\bf #1}},    \% Render headings using the bold face.
-%     jekyllData(String|Number) = {   \% Render YAML string and numbers
+%     jekyllData(String|Number) = {\%  \% Render YAML string and numbers
 %       {\it #2}\%                                     \% using italics.
 %     },
 %   }
@@ -20233,7 +20341,8 @@ following text:
 % }
 % ```````
 %
-% To determine the current token renderer, you can use the parameter `#0`:
+% To determine the current token renderer, you can use the
+% pseudo-parameter `#0`:
 % ``` tex
 % \markdownSetup{
 %   renderers = {
@@ -20244,7 +20353,59 @@ following text:
 %
 % \end{markdown}
 %  \begin{macrocode}
-\ExplSyntaxOn
+        {
+          \@@_glob_seq:VnN
+            \l_keys_key_str
+            { g_@@_renderers_seq }
+            \l_@@_renderer_glob_results_seq
+          \seq_if_empty:NTF
+            \l_@@_renderer_glob_results_seq
+            {
+              \msg_error:nnV
+                { markdown }
+                { undefined-renderer }
+                \l_keys_key_str
+            }
+            {
+              \tl_set:Nn
+                \l_@@_renderer_glob_definition_tl
+                { \exp_not:n { #1 } }
+              \seq_map_inline:Nn
+                \l_@@_renderer_glob_results_seq
+                {
+                  \tl_set:Nn
+                    \l_tmpa_tl
+                    { { ##1 } = }
+                  \tl_put_right:Nx
+                    \l_tmpa_tl
+                    { { \l_@@_renderer_glob_definition_tl } }
+                  \keys_set:nV
+                    { markdown/options/renderers }
+                    \l_tmpa_tl
+                }
+            }
+        }
+    },
+  }
+\msg_new:nnn
+  { markdown }
+  { undefined-renderer }
+  {
+    Renderer~#1~is~undefined.
+  }
+\cs_generate_variant:Nn
+  \@@_glob_seq:nnN
+  { VnN }
+\cs_generate_variant:Nn
+  \cs_generate_from_arg_count:NNnn
+  { cNVV }
+\cs_generate_variant:Nn
+  \msg_error:nnn
+  { nnV }
+\prg_generate_conditional_variant:Nnn
+  \regex_match:Nn
+  { NV }
+  { TF }
 \prop_new:N
   \g_@@_glob_cache_prop
 \tl_new:N
@@ -20306,72 +20467,6 @@ following text:
 \cs_generate_variant:Nn
   \prop_gput:Nnn
   { NeV }
-\seq_new:N
-  \l_@@_renderer_glob_results_seq
-\keys_define:nn
-  { markdown/options/renderers }
-  {
-    unknown .code:n = {
-      \@@_glob_seq:VnN
-        \l_keys_key_str
-        { g_@@_renderers_seq }
-        \l_@@_renderer_glob_results_seq
-      \seq_if_empty:NTF
-        \l_@@_renderer_glob_results_seq
-        {
-          \msg_error:nnV
-            { markdown }
-            { undefined-renderer }
-            \l_keys_key_str
-        }
-        {
-          \tl_set:Nn
-            \l_@@_renderer_definition_tl
-            { #1 }
-          \seq_map_inline:Nn
-            \l_@@_renderer_glob_results_seq
-            {
-              \@@_renderer_tl_to_csname:nN
-                { ##1 }
-                \l_tmpa_tl
-              \prop_get:NnN
-                \g_@@_renderer_arities_prop
-                { ##1 }
-                \l_tmpb_tl
-              \int_set:Nn
-                \l_tmpa_int
-                \l_tmpb_tl
-              \tl_set:NV
-                \l_tmpb_tl
-                \l_@@_renderer_definition_tl
-              \regex_replace_all:nnN
-                { \cP\#0 }
-                { ##1 }
-                \l_tmpb_tl
-              \cs_generate_from_arg_count:cNVV
-                { \l_tmpa_tl }
-                \cs_set:Npn
-                \l_tmpa_int
-                \l_tmpb_tl
-            }
-        }
-    },
-  }
-\msg_new:nnn
-  { markdown }
-  { undefined-renderer }
-  {
-    Renderer~#1~is~undefined.
-  }
-\cs_generate_variant:Nn
-  \@@_glob_seq:nnN
-  { VnN }
-\cs_generate_variant:Nn
-  \cs_generate_from_arg_count:NNnn
-  { cNVV }
-\cs_generate_variant:Nn
-  \msg_error:nnn
-  { nnV }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -20748,8 +20843,8 @@ following text:
         Prototype
       }
   }
-\tl_new:N
-  \l_@@_renderer_prototype_definition_tl
+\bool_new:N
+  \g_@@_appending_renderer_prototype_bool
 \cs_new:Nn \@@_define_renderer_prototype:nNn
   {
     \keys_define:nn
@@ -20757,17 +20852,37 @@ following text:
       {
         #1 .code:n = {
           \tl_set:Nn
-            \l_@@_renderer_prototype_definition_tl
+            \l_tmpa_tl
             { ##1 }
           \regex_replace_all:nnN
             { \cP\#0 }
             { #1 }
-            \l_@@_renderer_prototype_definition_tl
+            \l_tmpa_tl
+          \bool_if:NT
+            \g_@@_appending_renderer_prototype_bool
+            {
+              \tl_if_exist:cTF
+                { l_@@_renderer_prototypes_ #1 }
+                {
+                  \tl_put_left:Nv
+                    \l_tmpa_tl
+                    { l_@@_renderer_prototypes_ #1 }
+                }
+                {
+                  \msg_error:nnn
+                    { markdown }
+                    { failed-to-append-renderer-prototype }
+                    { #1 }
+                }
+            }
+          \tl_set:cV
+            { l_@@_renderer_prototypes_ #1 }
+            \l_tmpa_tl
           \cs_generate_from_arg_count:NNnV
             #2
             \cs_set:Npn
             { #3 }
-            \l_@@_renderer_prototype_definition_tl
+            \l_tmpa_tl
         },
       }
 %    \end{macrocode}
@@ -20791,7 +20906,11 @@ following text:
 \cs_generate_variant:Nn
   \@@_define_renderer_prototype:nNn
   { ncV }
-\ExplSyntaxOff
+\msg_new:nnnn
+  { markdown }
+  { failed-to-append-renderer-prototype }
+  { Failed~to~append~(+=)~to~renderer~prototype~#1. }
+  { Have~you~assigned~(=)~to~renderer~prototype~#1~previously? }
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -20808,8 +20927,81 @@ following text:
 % }
 % ```````
 %
-% In addition to exact token renderer names, we also support wildcards
-% and enumerations that match multiple token renderer prototype names:
+% \end{markdown}
+%  \begin{macrocode}
+\keys_define:nn
+  { markdown/options/renderer-prototypes }
+  {
+    unknown .code:n = {
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Besides defining renderer prototypes at once, we can also define them
+% incrementally using the appending operator (`+=`). This can be especially
+% useful in defining rules for processing different \acro{HTML} class names
+% and identifiers:
+% ``` tex
+% \markdownSetup{
+%   rendererPrototypes = {
+%     \% Start with empty renderer prototypes.
+%     headerAttributeContextBegin = {},
+%     attributeClassName = {},
+%     attributeIdentifier = {},
+%     \% Define the processing of a single specific HTML class name.
+%     headerAttributeContextBegin += {
+%       \markdownSetup{
+%         rendererPrototypes = {
+%           attributeClassName += {...},
+%         },
+%       }
+%     },
+%     \% Define the processing of a single specific HTML identifier.
+%     headerAttributeContextBegin += {
+%       \markdownSetup{
+%         rendererPrototypes = {
+%           attributeIdentifier += {...},
+%         },
+%       }
+%     },
+%   },
+% }
+% ```````
+%
+% \end{markdown}
+%  \begin{macrocode}
+      \regex_match:NVTF
+        \c_@@_appending_key_regex
+        \l_keys_key_str
+        {
+          \bool_gset_true:N
+            \g_@@_appending_renderer_prototype_bool
+          \tl_set:NV
+            \l_tmpa_tl
+            \l_keys_key_str
+          \regex_replace_once:NnN
+            \c_@@_appending_key_regex
+            { }
+            \l_tmpa_tl
+          \tl_set:Nx
+            \l_tmpb_tl
+            { { \l_tmpa_tl } = }
+          \tl_put_right:Nn
+            \l_tmpb_tl
+            { { #1 } }
+          \keys_set:nV
+            { markdown/options/renderer-prototypes }
+            \l_tmpb_tl
+          \bool_gset_false:N
+            \g_@@_appending_renderer_prototype_bool
+        }
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% In addition to exact token renderer prototype names, we also support
+% wildcards (`*`) and enumerations (`|`) that match multiple token renderer
+% prototype names:
 % ``` tex
 % \markdownSetup{
 %   rendererPrototypes = {
@@ -20831,7 +21023,7 @@ following text:
 % ```````
 %
 % To determine the current token renderer prototype, you can use the
-% parameter `#0`:
+% pseudo-parameter `#0`:
 % ``` tex
 % \markdownSetup{
 %   rendererPrototypes = {
@@ -20842,54 +21034,36 @@ following text:
 %
 % \end{markdown}
 %  \begin{macrocode}
-\ExplSyntaxOn
-\seq_new:N
-  \l_@@_renderer_prototype_glob_results_seq
-\keys_define:nn
-  { markdown/options/renderer-prototypes }
-  {
-    unknown .code:n = {
-      \@@_glob_seq:VnN
-        \l_keys_key_str
-        { g_@@_renderers_seq }
-        \l_@@_renderer_prototype_glob_results_seq
-      \seq_if_empty:NTF
-        \l_@@_renderer_prototype_glob_results_seq
         {
-          \msg_error:nnV
-            { markdown }
-            { undefined-renderer-prototype }
+          \@@_glob_seq:VnN
             \l_keys_key_str
-        }
-        {
-          \tl_set:Nn
-            \l_@@_renderer_prototype_definition_tl
-            { #1 }
-          \seq_map_inline:Nn
-            \l_@@_renderer_prototype_glob_results_seq
+            { g_@@_renderers_seq }
+            \l_@@_renderer_glob_results_seq
+          \seq_if_empty:NTF
+            \l_@@_renderer_glob_results_seq
             {
-              \@@_renderer_prototype_tl_to_csname:nN
-                { ##1 }
-                \l_tmpa_tl
-              \prop_get:NnN
-                \g_@@_renderer_arities_prop
-                { ##1 }
-                \l_tmpb_tl
-              \int_set:Nn
-                \l_tmpa_int
-                \l_tmpb_tl
-              \tl_set:NV
-                \l_tmpb_tl
-                \l_@@_renderer_prototype_definition_tl
-              \regex_replace_all:nnN
-                { \cP\#0 }
-                { ##1 }
-                \l_tmpb_tl
-              \cs_generate_from_arg_count:cNVV
-                { \l_tmpa_tl }
-                \cs_set:Npn
-                \l_tmpa_int
-                \l_tmpb_tl
+              \msg_error:nnV
+                { markdown }
+                { undefined-renderer-prototype }
+                \l_keys_key_str
+            }
+            {
+              \tl_set:Nn
+                \l_@@_renderer_glob_definition_tl
+                { \exp_not:n { #1 } }
+              \seq_map_inline:Nn
+                \l_@@_renderer_glob_results_seq
+                {
+                  \tl_set:Nn
+                    \l_tmpa_tl
+                    { { ##1 } = }
+                  \tl_put_right:Nx
+                    \l_tmpa_tl
+                    { { \l_@@_renderer_glob_definition_tl } }
+                  \keys_set:nV
+                    { markdown/options/renderer-prototypes }
+                    \l_tmpa_tl
+                }
             }
         }
     },
@@ -34718,21 +34892,18 @@ end
 % \par
 % \begin{markdown}
 %
-% If identifier attributes appear after a heading, we make them produce
-% `\label` macros. If the `.unnumbered` class name (or the `{-}` shorthand)
-% appears after a heading the heading and all its subheadings will be
-% unnumbered.
+% If \acro{HTML} identifiers appear after a heading, we make them
+% produce `\label` macros.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\seq_new:N \l_@@_header_identifiers_seq
-\bool_new:N \l_@@_header_unnumbered_bool
+\seq_new:N
+  \l_@@_header_identifiers_seq
 \markdownSetup
   {
     rendererPrototypes = {
       headerAttributeContextBegin = {
-        \seq_clear:N \l_@@_header_identifiers_seq
         \markdownSetup
           {
             rendererPrototypes = {
@@ -34741,6 +34912,35 @@ end
                   \l_@@_header_identifiers_seq
                   { ##1 }
               },
+            },
+          }
+      },
+      headerAttributeContextEnd = {
+        \seq_map_inline:Nn
+          \l_@@_header_identifiers_seq
+          { \label { ##1 } }
+        \seq_clear:N
+          \l_@@_header_identifiers_seq
+      },
+    },
+  }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If the `unnumbered` \acro{HTML} class (or the `{-}` shorthand) appears after
+% a heading the heading and all its subheadings will be unnumbered.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\bool_new:N
+  \l_@@_header_unnumbered_bool
+\markdownSetup
+  {
+    rendererPrototypes = {
+      headerAttributeContextBegin += {
+        \markdownSetup
+          {
+            rendererPrototypes = {
               attributeClassName = {
                 \bool_if:nT
                   {
@@ -34754,14 +34954,6 @@ end
                     \bool_set_true:N
                       \l_@@_header_unnumbered_bool
                     \c@secnumdepth = 0
-%    \end{macrocode}
-% \begin{markdown}
-%
-% Count the number of nested sections, so that we only start numbering sections
-% again when the top-level unnumbered section has ended.
-%
-% \end{markdown}
-%  \begin{macrocode}
                     \markdownSetup
                       {
                         rendererPrototypes = {
@@ -34777,11 +34969,6 @@ end
               },
             },
           }
-      },
-      headerAttributeContextEnd = {
-        \seq_map_inline:Nn
-          \l_@@_header_identifiers_seq
-          { \label { ##1 } }
       },
     },
   }
