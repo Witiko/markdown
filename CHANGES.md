@@ -5,7 +5,8 @@
 Development:
 
 - Support incremental definitions of token renderers and renderer prototypes
-  in the `\markdownSetup` command. (#232, #435, [matrix.org][matrix-435])
+  in the `\markdownSetup` command.
+  (#232, #435, 540a83c0, [matrix.org][matrix-435])
 
  [matrix-435]: https://matrix.to/#/!UeAwznpYwwsinVTetR:matrix.org/$k4ky6I-uvxdp8ipVlHvef5JXfIfPQvFtXOAD_ogF2uU?via=matrix.org&via=im.f3l.de
 
