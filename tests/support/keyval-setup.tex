@@ -19,33 +19,41 @@ renderers = {%
   bracketedSpanAttributeContextBegin = {%
     \TYPE{BEGIN bracketedSpanAttributeContext}},
   bracketedSpanAttributeContextEnd = {%
-    \TYPE{END bracketedSpanAttributeContext}},
+    \TYPE{END bracketedSpanAttributeContext}%
+    \GOBBLE},
   linkAttributeContextBegin = {%
     \TYPE{BEGIN linkAttributeContext}},
   linkAttributeContextEnd = {%
-    \TYPE{END linkAttributeContext}},
+    \TYPE{END linkAttributeContext}%
+    \GOBBLE},
   imageAttributeContextBegin = {%
     \TYPE{BEGIN imageAttributeContext}},
   imageAttributeContextEnd = {%
-    \TYPE{END imageAttributeContext}},
+    \TYPE{END imageAttributeContext}%
+    \GOBBLE},
   codeSpanAttributeContextBegin = {%
     \TYPE{BEGIN codeSpanAttributeContext}},
   codeSpanAttributeContextEnd = {%
-    \TYPE{END codeSpanAttributeContext}},
+    \TYPE{END codeSpanAttributeContext}%
+    \GOBBLE},
   tableAttributeContextBegin = {%
     \TYPE{BEGIN tableAttributeContext}},
   tableAttributeContextEnd = {%
-    \TYPE{END tableAttributeContext}},
+    \TYPE{END tableAttributeContext}%
+    \GOBBLE},
   documentBegin = {%
     \TYPE{BEGIN document}},
   documentEnd = {%
     \TYPE{END document}},
   *Separator = {%
-    \TYPE{#0}},
+    \TYPE{#0}%
+    \GOBBLE},
   *LineBreak = {%
-    \TYPE{#0}},
+    \TYPE{#0}%
+    \GOBBLE},
   ellipsis = {%
-    \TYPE{#0}},
+    \TYPE{#0}%
+    \GOBBLE},
   sectionBegin = {%
     \TYPE{BEGIN section}},
   sectionEnd = {%
@@ -55,29 +63,41 @@ renderers = {%
   headerAttributeContextEnd = {%
     \TYPE{END headerAttributeContext}},
   nbsp = {%
-    \TYPE{#0}},
+    \TYPE{#0}%
+    \GOBBLE},
   leftBrace = {%
-    \TYPE{#0}},
+    \TYPE{#0}%
+    \GOBBLE},
   rightBrace = {%
-    \TYPE{#0}},
+    \TYPE{#0}%
+    \GOBBLE},
   dollarSign = {%
-    \TYPE{#0}},
+    \TYPE{#0}%
+    \GOBBLE},
   percentSign = {%
-    \TYPE{#0}},
+    \TYPE{#0}%
+    \GOBBLE},
   ampersand = {%
-    \TYPE{#0}},
+    \TYPE{#0}%
+    \GOBBLE},
   underscore = {%
-    \TYPE{#0}},
+    \TYPE{#0}%
+    \GOBBLE},
   hash = {%
-    \TYPE{#0}},
+    \TYPE{#0}%
+    \GOBBLE},
   circumflex = {%
-    \TYPE{#0}},
+    \TYPE{#0}%
+    \GOBBLE},
   backslash = {%
-    \TYPE{#0}},
+    \TYPE{#0}%
+    \GOBBLE},
   tilde = {%
-    \TYPE{#0}},
+    \TYPE{#0}%
+    \GOBBLE},
   pipe = {%
-    \TYPE{#0}},
+    \TYPE{#0}%
+    \GOBBLE},
   codeSpan = {%
     \TYPE{#0: #1}},
   (link|image) = {%
@@ -146,7 +166,8 @@ renderers = {%
   inputBlockHtmlElement = {%
     \TYPE{#0: #1}},
   (ticked|halfTicked|unticked)Box = {%
-    \TYPE{#0}},
+    \TYPE{#0}%
+    \GOBBLE},
   jekyllData(Boolean|Number|String) = {%
     \TYPE{BEGIN #0}%
     \TYPE{- key:   #1}%
@@ -182,10 +203,6 @@ renderers = {%
     \TYPE{- raw attribute: #2}%
     \TYPE{END rawBlock}},
   replacementCharacter = {%
-    \TYPE{#0}},
-  % Some parameterless renderers are finished with a pair of curly braces that we should gobble.
-  *ContextEnd += {\GOBBLE},
-  *(Separator|LineBreak) += {\GOBBLE},
-  (ellipsis|nbsp|*Brace|*Sign|ampersand|underscore|hash|circumflex|backslash|tilde|pipe|replacementCharacter) += {\GOBBLE},
-  (ticked|halfTicked|unticked)Box += {\GOBBLE},
+    \TYPE{#0}%
+    \GOBBLE},
 }%
