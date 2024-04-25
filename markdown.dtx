@@ -20158,6 +20158,8 @@ following text:
         \tl_tail:n { #1 }
       }
   }
+\tl_new:N
+  \l_@@_renderer_definition_tl
 \bool_new:N
   \g_@@_appending_renderer_bool
 \cs_new:Nn \@@_define_renderer:nNn
@@ -20167,28 +20169,28 @@ following text:
       {
         #1 .code:n = {
           \tl_set:Nn
-            \l_tmpa_tl
+            \l_@@_renderer_definition_tl
             { ##1 }
           \regex_replace_all:nnN
             { \cP\#0 }
             { #1 }
-            \l_tmpa_tl
+            \l_@@_renderer_definition_tl
           \bool_if:NT
             \g_@@_appending_renderer_bool
             {
               \@@_tl_set_from_cs:NNn
-                \l_tmpb_tl
+                \l_tmpa_tl
                 #2
                 { #3 }
               \tl_put_left:NV
+                \l_@@_renderer_definition_tl
                 \l_tmpa_tl
-                \l_tmpb_tl
             }
           \cs_generate_from_arg_count:NNnV
             #2
             \cs_set:Npn
             { #3 }
-            \l_tmpa_tl
+            \l_@@_renderer_definition_tl
         },
       }
   }
@@ -20847,6 +20849,8 @@ following text:
         Prototype
       }
   }
+\tl_new:N
+  \l_@@_renderer_prototype_definition_tl
 \bool_new:N
   \g_@@_appending_renderer_prototype_bool
 \cs_new:Nn \@@_define_renderer_prototype:nNn
@@ -20856,28 +20860,28 @@ following text:
       {
         #1 .code:n = {
           \tl_set:Nn
-            \l_tmpa_tl
+            \l_@@_renderer_prototype_definition_tl
             { ##1 }
           \regex_replace_all:nnN
             { \cP\#0 }
             { #1 }
-            \l_tmpa_tl
+            \l_@@_renderer_prototype_definition_tl
           \bool_if:NT
             \g_@@_appending_renderer_prototype_bool
             {
               \@@_tl_set_from_cs:NNn
-                \l_tmpb_tl
+                \l_tmpa_tl
                 #2
                 { #3 }
               \tl_put_left:NV
+                \l_@@_renderer_prototype_definition_tl
                 \l_tmpa_tl
-                \l_tmpb_tl
             }
           \cs_generate_from_arg_count:NNnV
             #2
             \cs_set:Npn
             { #3 }
-            \l_tmpa_tl
+            \l_@@_renderer_prototype_definition_tl
         },
       }
 %    \end{macrocode}
