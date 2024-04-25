@@ -20176,23 +20176,14 @@ following text:
           \bool_if:NT
             \g_@@_appending_renderer_bool
             {
-              \tl_if_exist:cTF
-                { l_@@_renderers_ #1 }
-                {
-                  \tl_put_left:Nv
-                    \l_tmpa_tl
-                    { l_@@_renderers_ #1 }
-                }
-                {
-                  \msg_error:nnn
-                    { markdown }
-                    { failed-to-append-renderer }
-                    { #1 }
-                }
+              \@@_tl_set_from_cs:NNn
+                \l_tmpb_tl
+                #2
+                { #3 }
+              \tl_put_left:NV
+                \l_tmpa_tl
+                \l_tmpb_tl
             }
-          \tl_set:cV
-            { l_@@_renderers_ #1 }
-            \l_tmpa_tl
           \cs_generate_from_arg_count:NNnV
             #2
             \cs_set:Npn
@@ -20200,6 +20191,24 @@ following text:
             \l_tmpa_tl
         },
       }
+  }
+\cs_new:Nn
+  \@@_tl_set_from_cs:NNn
+  {
+    \tl_set:Nn
+      \l_tmpa_tl
+      { #2 }
+    \int_step_inline:nn
+      { #3 }
+      {
+        \tl_put_right:Nn
+          \l_tmpa_tl
+          { { #### ##1 } }
+      }
+    \exp_args:NNV
+      \tl_set:No
+      #1
+      \l_tmpa_tl
   }
 \cs_generate_variant:Nn
   \@@_define_renderer:nNn
@@ -20210,11 +20219,6 @@ following text:
 \cs_generate_variant:Nn
   \tl_put_left:Nn
   { Nv }
-\msg_new:nnnn
-  { markdown }
-  { failed-to-append-renderer }
-  { Failed~to~append~(+=)~to~renderer~#1. }
-  { Have~you~assigned~(=)~to~renderer~#1~previously? }
 \keys_define:nn
   { markdown/options }
   {
@@ -20861,23 +20865,14 @@ following text:
           \bool_if:NT
             \g_@@_appending_renderer_prototype_bool
             {
-              \tl_if_exist:cTF
-                { l_@@_renderer_prototypes_ #1 }
-                {
-                  \tl_put_left:Nv
-                    \l_tmpa_tl
-                    { l_@@_renderer_prototypes_ #1 }
-                }
-                {
-                  \msg_error:nnn
-                    { markdown }
-                    { failed-to-append-renderer-prototype }
-                    { #1 }
-                }
+              \@@_tl_set_from_cs:NNn
+                \l_tmpb_tl
+                #2
+                { #3 }
+              \tl_put_left:NV
+                \l_tmpa_tl
+                \l_tmpb_tl
             }
-          \tl_set:cV
-            { l_@@_renderer_prototypes_ #1 }
-            \l_tmpa_tl
           \cs_generate_from_arg_count:NNnV
             #2
             \cs_set:Npn
@@ -20906,11 +20901,6 @@ following text:
 \cs_generate_variant:Nn
   \@@_define_renderer_prototype:nNn
   { ncV }
-\msg_new:nnnn
-  { markdown }
-  { failed-to-append-renderer-prototype }
-  { Failed~to~append~(+=)~to~renderer~prototype~#1. }
-  { Have~you~assigned~(=)~to~renderer~prototype~#1~previously? }
 %    \end{macrocode}
 % \par
 % \begin{markdown}
