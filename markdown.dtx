@@ -25829,7 +25829,7 @@ function M.writer.new(options)
     end
 
     if self.is_writing and #normalized_attributes > 0 then
-      table.insert(buf, "\\markdownRendererHeaderAttributeContextEnd ")
+      table.insert(buf, "\\markdownRendererHeaderAttributeContextEnd{}")
     end
 
     return buf
