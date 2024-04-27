@@ -20203,14 +20203,30 @@ following text:
     \int_step_inline:nn
       { #3 }
       {
-        \tl_put_right:Nn
+        \exp_args:NNc
+          \tl_put_right:Nn
           \l_tmpa_tl
-          { { #### ##1 } }
+          { @@_cs_parameter_ ##1 }
       }
     \exp_args:NNV
       \tl_set:No
-      #1
+      \l_tmpb_tl
       \l_tmpa_tl
+    \regex_replace_all:nnN
+      { \cP. }
+      { \0\0 }
+      \l_tmpb_tl
+    \int_step_inline:nn
+      { #3 }
+      {
+        \regex_replace_all:nnN
+          { \c { @@_cs_parameter_ ##1 } }
+          { \cP\# ##1 }
+          \l_tmpb_tl
+      }
+    \tl_set:NV
+      #1
+      \l_tmpb_tl
   }
 \cs_generate_variant:Nn
   \@@_define_renderer:nNn
