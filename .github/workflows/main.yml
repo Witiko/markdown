@@ -200,6 +200,7 @@ jobs:
           test "$RESULT" = '\markdownRendererDocumentBegin
           Hello \markdownRendererEmphasis{Markdown}! $a_x + b_x = c_x$\markdownRendererDocumentEnd'
       - name: Run unit tests
+        if: matrix.texlive == 'latest' || github.event_name != 'pull_request_target' || github.event.pull_request.draft == false
         run: make FAIL_FAST=${{ github.event_name == 'pull_request_target' }} test
   publish-docker-image:
     name: Publish Docker image
