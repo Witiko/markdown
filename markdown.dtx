@@ -25357,7 +25357,7 @@ function M.writer.new(options)
   function self.blockquote(s)
     if not self.is_writing then return "" end
     return {"\\markdownRendererBlockQuoteBegin\n",s,
-      "\n\\markdownRendererBlockQuoteEnd "}
+      "\\markdownRendererBlockQuoteEnd "}
   end
 %    \end{macrocode}
 % \par
@@ -31086,7 +31086,7 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
       function self.div_begin(attributes)
         local start_output = {"\\markdownRendererFencedDivAttributeContextBegin\n",
                               self.attributes(attributes)}
-        local end_output = {"\\markdownRendererFencedDivAttributeContextEnd "}
+        local end_output = {"\\markdownRendererFencedDivAttributeContextEnd{}"}
         return self.push_attributes("div", attributes, start_output, end_output)
       end
 %    \end{macrocode}
