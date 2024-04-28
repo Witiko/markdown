@@ -30847,7 +30847,7 @@ M.extensions.fenced_code = function(blank_before_code_fence,
         table.insert(buf, {"\\markdownRendererInputFencedCode{",
                            name,"}{",self.string(i),"}{",self.infostring(i),"}"})
         if attr ~= nil then
-          table.insert(buf, "\\markdownRendererFencedCodeAttributeContextEnd")
+          table.insert(buf, "\\markdownRendererFencedCodeAttributeContextEnd{}")
         end
         return buf
       end
