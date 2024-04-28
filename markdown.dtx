@@ -20224,7 +20224,7 @@ following text:
         \exp_args:NNc
           \tl_put_right:Nn
           \l_tmpa_tl
-          { @@_cs_parameter_ ##1 }
+          { @@_tl_set_from_cs_parameter_ ##1 }
       }
     \exp_args:NNV
       \tl_set:No
@@ -20238,7 +20238,7 @@ following text:
       { #3 }
       {
         \regex_replace_all:nnN
-          { \c { @@_cs_parameter_ ##1 } }
+          { \c { @@_tl_set_from_cs_parameter_ ##1 } }
           { \cP\# ##1 }
           \l_tmpb_tl
       }
