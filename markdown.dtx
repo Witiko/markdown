@@ -683,6 +683,12 @@ abbr {
 \endgroup
 %</techdoc-block-diagram>
 %<*techdoc-bibliography>
+@online{starynovotny24,
+  author    = {Starý Novotný, Vít and Enrico Gregorio and Max Chernoff and P. Spratte, Jonathan},
+  title     = {Convert control sequence with a variable number of undelimited parameters into a token list},
+  url       = {https://tex.stackexchange.com/q/716362/70941},
+  urldate   = {2024-04-28},
+}
 @book{tantau21,
   author    = {Till Tantau and Joseph Wright and Vedran Miletić},
   title     = {The Beamer class},
@@ -20158,6 +20164,8 @@ following text:
         \tl_tail:n { #1 }
       }
   }
+\tl_new:N
+  \l_@@_renderer_definition_tl
 \bool_new:N
   \g_@@_appending_renderer_bool
 \cs_new:Nn \@@_define_renderer:nNn
@@ -20167,39 +20175,76 @@ following text:
       {
         #1 .code:n = {
           \tl_set:Nn
-            \l_tmpa_tl
+            \l_@@_renderer_definition_tl
             { ##1 }
           \regex_replace_all:nnN
             { \cP\#0 }
             { #1 }
-            \l_tmpa_tl
+            \l_@@_renderer_definition_tl
           \bool_if:NT
             \g_@@_appending_renderer_bool
             {
-              \tl_if_exist:cTF
-                { l_@@_renderers_ #1 }
-                {
-                  \tl_put_left:Nv
-                    \l_tmpa_tl
-                    { l_@@_renderers_ #1 }
-                }
-                {
-                  \msg_error:nnn
-                    { markdown }
-                    { failed-to-append-renderer }
-                    { #1 }
-                }
+              \@@_tl_set_from_cs:NNn
+                \l_tmpa_tl
+                #2
+                { #3 }
+              \tl_put_left:NV
+                \l_@@_renderer_definition_tl
+                \l_tmpa_tl
             }
-          \tl_set:cV
-            { l_@@_renderers_ #1 }
-            \l_tmpa_tl
           \cs_generate_from_arg_count:NNnV
             #2
             \cs_set:Npn
             { #3 }
-            \l_tmpa_tl
+            \l_@@_renderer_definition_tl
         },
       }
+  }
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% We define the function \mdef{@@_tl_set_from_cs:NNn}
+% [@starynovotny24]. The function takes a token list, a control sequence with
+% undelimited parameters, and the number of parameters the control sequence
+% accepts, and locally assigns the replacement text of the control sequence
+% to the token list.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\cs_new_protected:Nn
+  \@@_tl_set_from_cs:NNn
+  {
+    \tl_set:Nn
+      \l_tmpa_tl
+      { #2 }
+    \int_step_inline:nn
+      { #3 }
+      {
+        \exp_args:NNc
+          \tl_put_right:Nn
+          \l_tmpa_tl
+          { @@_tl_set_from_cs_parameter_ ##1 }
+      }
+    \exp_args:NNV
+      \tl_set:No
+      \l_tmpb_tl
+      \l_tmpa_tl
+    \regex_replace_all:nnN
+      { \cP. }
+      { \0\0 }
+      \l_tmpb_tl
+    \int_step_inline:nn
+      { #3 }
+      {
+        \regex_replace_all:nnN
+          { \c { @@_tl_set_from_cs_parameter_ ##1 } }
+          { \cP\# ##1 }
+          \l_tmpb_tl
+      }
+    \tl_set:NV
+      #1
+      \l_tmpb_tl
   }
 \cs_generate_variant:Nn
   \@@_define_renderer:nNn
@@ -20210,11 +20255,6 @@ following text:
 \cs_generate_variant:Nn
   \tl_put_left:Nn
   { Nv }
-\msg_new:nnnn
-  { markdown }
-  { failed-to-append-renderer }
-  { Failed~to~append~(+=)~to~renderer~#1. }
-  { Have~you~assigned~(=)~to~renderer~#1~previously? }
 \keys_define:nn
   { markdown/options }
   {
@@ -20843,6 +20883,8 @@ following text:
         Prototype
       }
   }
+\tl_new:N
+  \l_@@_renderer_prototype_definition_tl
 \bool_new:N
   \g_@@_appending_renderer_prototype_bool
 \cs_new:Nn \@@_define_renderer_prototype:nNn
@@ -20852,37 +20894,28 @@ following text:
       {
         #1 .code:n = {
           \tl_set:Nn
-            \l_tmpa_tl
+            \l_@@_renderer_prototype_definition_tl
             { ##1 }
           \regex_replace_all:nnN
             { \cP\#0 }
             { #1 }
-            \l_tmpa_tl
+            \l_@@_renderer_prototype_definition_tl
           \bool_if:NT
             \g_@@_appending_renderer_prototype_bool
             {
-              \tl_if_exist:cTF
-                { l_@@_renderer_prototypes_ #1 }
-                {
-                  \tl_put_left:Nv
-                    \l_tmpa_tl
-                    { l_@@_renderer_prototypes_ #1 }
-                }
-                {
-                  \msg_error:nnn
-                    { markdown }
-                    { failed-to-append-renderer-prototype }
-                    { #1 }
-                }
+              \@@_tl_set_from_cs:NNn
+                \l_tmpa_tl
+                #2
+                { #3 }
+              \tl_put_left:NV
+                \l_@@_renderer_prototype_definition_tl
+                \l_tmpa_tl
             }
-          \tl_set:cV
-            { l_@@_renderer_prototypes_ #1 }
-            \l_tmpa_tl
           \cs_generate_from_arg_count:NNnV
             #2
             \cs_set:Npn
             { #3 }
-            \l_tmpa_tl
+            \l_@@_renderer_prototype_definition_tl
         },
       }
 %    \end{macrocode}
@@ -20906,11 +20939,6 @@ following text:
 \cs_generate_variant:Nn
   \@@_define_renderer_prototype:nNn
   { ncV }
-\msg_new:nnnn
-  { markdown }
-  { failed-to-append-renderer-prototype }
-  { Failed~to~append~(+=)~to~renderer~prototype~#1. }
-  { Have~you~assigned~(=)~to~renderer~prototype~#1~previously? }
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -25329,7 +25357,7 @@ function M.writer.new(options)
   function self.blockquote(s)
     if not self.is_writing then return "" end
     return {"\\markdownRendererBlockQuoteBegin\n",s,
-      "\n\\markdownRendererBlockQuoteEnd "}
+      "\\markdownRendererBlockQuoteEnd "}
   end
 %    \end{macrocode}
 % \par
@@ -25819,7 +25847,7 @@ function M.writer.new(options)
     end
 
     if self.is_writing and #normalized_attributes > 0 then
-      table.insert(buf, "\\markdownRendererHeaderAttributeContextEnd ")
+      table.insert(buf, "\\markdownRendererHeaderAttributeContextEnd{}")
     end
 
     return buf
@@ -30837,7 +30865,7 @@ M.extensions.fenced_code = function(blank_before_code_fence,
         table.insert(buf, {"\\markdownRendererInputFencedCode{",
                            name,"}{",self.string(i),"}{",self.infostring(i),"}"})
         if attr ~= nil then
-          table.insert(buf, "\\markdownRendererFencedCodeAttributeContextEnd")
+          table.insert(buf, "\\markdownRendererFencedCodeAttributeContextEnd{}")
         end
         return buf
       end
@@ -31058,7 +31086,7 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
       function self.div_begin(attributes)
         local start_output = {"\\markdownRendererFencedDivAttributeContextBegin\n",
                               self.attributes(attributes)}
-        local end_output = {"\\markdownRendererFencedDivAttributeContextEnd "}
+        local end_output = {"\\markdownRendererFencedDivAttributeContextEnd{}"}
         return self.push_attributes("div", attributes, start_output, end_output)
       end
 %    \end{macrocode}
