@@ -683,6 +683,12 @@ abbr {
 \endgroup
 %</techdoc-block-diagram>
 %<*techdoc-bibliography>
+@online{starynovotny24,
+  author    = {Starý Novotný, Vít and Enrico Gregorio and Max Chernoff and P. Spratte, Jonathan},
+  title     = {Convert control sequence with a variable number of undelimited parameters into a token list},
+  url       = {https://tex.stackexchange.com/q/716362/70941},
+  urldate   = {2024-04-28},
+}
 @book{tantau21,
   author    = {Till Tantau and Joseph Wright and Vedran Miletić},
   title     = {The Beamer class},
@@ -20194,6 +20200,18 @@ following text:
         },
       }
   }
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% We define the function \mdef{@@_tl_set_from_cs:NNn}
+% [@starynovotny24]. The function takes a token list, a control sequence with
+% undelimited parameters, and the number of parameters the control sequence
+% accepts, and locally assigns the replacement text of the control sequence
+% to the token list.
+%
+% \end{markdown}
+%  \begin{macrocode}
 \cs_new_protected:Nn
   \@@_tl_set_from_cs:NNn
   {
