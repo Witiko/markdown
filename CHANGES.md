@@ -7,7 +7,8 @@ Development:
 - Support incremental definitions of token renderers and renderer prototypes
   in the `\markdownSetup` command.
   (#232, #435, 540a83c0, [matrix.org][matrix-435], #437, #438,
-   contributed by @eg9 and @gucci-on-fleek [on TeX StackExchange][tse-716400])
+   contributed by @eg9, @gucci-on-fleek, and @Skillmon
+   [on TeX StackExchange][tse-716400])
 
  [matrix-435]: https://matrix.to/#/!UeAwznpYwwsinVTetR:matrix.org/$k4ky6I-uvxdp8ipVlHvef5JXfIfPQvFtXOAD_ogF2uU?via=matrix.org&via=im.f3l.de
  [tse-716400]: https://tex.stackexchange.com/questions/716362/convert-control-sequence-with-a-variable-number-of-parameters-into-a-token-list/716400#716400
