@@ -6,7 +6,7 @@
 
 Development:
 
-- Add `\markinline` plain TeX command. (#300, #439)
+- Add `\markinline` plain TeX command. (#300, #439, [matrix.org][matrix-439])
 - Support incremental definitions of token renderers and renderer prototypes
   in the `\markdownSetup` command.
   (#232, #435, 540a83c0, [matrix.org][matrix-435], #437, #438,
@@ -14,6 +14,7 @@ Development:
    [on TeX StackExchange][tse-716400])
 
  [matrix-435]: https://matrix.to/#/!UeAwznpYwwsinVTetR:matrix.org/$k4ky6I-uvxdp8ipVlHvef5JXfIfPQvFtXOAD_ogF2uU?via=matrix.org&via=im.f3l.de
+ [matrix-439]: https://matrix.to/#/!pznomuvubVyxElflTe:matrix.org/$Gp9CYKWP3h_gyFyArnW3Y3CJzVXefWYThjlyB58zvP8?via=matrix.org&via=im.f3l.de
  [tse-716400]: https://tex.stackexchange.com/questions/716362/convert-control-sequence-with-a-variable-number-of-parameters-into-a-token-list/716400#716400
 
 Default Renderer Prototypes:
