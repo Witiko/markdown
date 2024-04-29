@@ -11350,7 +11350,7 @@ pdftex --shell-escape document.tex
 %### Typesetting Markdown {#tex-typesetting}
 %
 % The interface exposes the \mdef{markdownBegin}, \mdef{markdownEnd},
-% \mdef{markdownInput}, and \mdef{markdownEscape} macros.
+% \mdef{markinline}, \mdef{markdownInput}, and \mdef{markdownEscape} macros.
 %
 % The \mref{markdownBegin} macro marks the beginning of a markdown document
 % fragment and the \mref{markdownEnd} macro marks its end.
@@ -11408,6 +11408,38 @@ pdftex --shell-escape document.tex
 % \bye
 % ```````
 %
+% You can use the \mref{markinline} macro to input inline markdown content.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\let\markinline\relax
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% The following example plain \TeX{} code showcases the usage of the
+% \mref{markinline} macro:
+%
+% ``` tex
+% \input markdown
+% \markinline{_Hello_ **world**}
+% \bye
+% ```````
+%
+% The above code has the same effect as the below code:
+%
+% ``` tex
+% \input markdown
+% \markdownSetup{contentLevel=inline}
+% \markdownBegin
+% _Hello_ **world** ...
+% \markdownEnd
+% \bye
+% ```````
+%
+% The \mref{markinline} macro is subject to the same limitations as the
+% \mref{markdownBegin} and \mref{markdownEnd} macros.
+%
 % You can use the \mref{markdownInput} macro to include markdown documents,
 % similarly to how you might use the \mref{input} \TeX{} primitive to include
 % \TeX{} documents. The \mref{markdownInput} macro accepts a single parameter
@@ -11421,7 +11453,7 @@ pdftex --shell-escape document.tex
 % \par
 % \begin{markdown}
 %
-% This macro is not subject to the abovelisted limitations of the
+% This macro is not subject to the limitations of the
 % \mref{markdownBegin} and \mref{markdownEnd} macros.
 %
 % The following example plain \TeX{} code showcases the usage of the
@@ -11914,11 +11946,11 @@ macro after loading the package has no effect.
 %
 % The \mdef{markdownOptionStripPercentSigns} macro controls whether a percent
 % sign (`\%`) at the beginning of a line will be discarded when buffering
-% Markdown input (see Section <#sec:buffering>) or not. Notably, this
-% enables the use of markdown when writing \TeX{} package documentation using
-% the \pkg{Doc} \LaTeX{}~package~[@mittelbach17] or similar. The recognized
-% values of the macro are `true` (discard) and `false` (retain). It defaults
-% to `false`.
+% Markdown input (see sections <#sec:buffering-block> and
+% <#sec:buffering-inline>) or not. Notably, this enables the use of markdown
+% when writing \TeX{} package documentation using the \pkg{Doc}
+% \LaTeX{}~package~[@mittelbach17] or similar. The recognized values of the
+% macro are `true` (discard) and `false` (retain). It defaults to `false`.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -33655,7 +33687,7 @@ end
 % \par
 % \begin{markdown}
 %
-%### Buffering Markdown Input {#buffering}
+%### Buffering Block-Level Markdown Input {#buffering-block}
 %
 % The macros \mdef{markdownInputFileStream} and \mdef{markdownOutputFileStream}
 % contain the number of the input and output file streams that will be used for
@@ -33714,7 +33746,8 @@ end
     |markdownIfOption{frozenCache}{}{@
       |immediate|openout|markdownOutputFileStream@
         |markdownOptionInputTempFileName|relax@
-      |markdownInfo{Buffering markdown input into the temporary @
+      |markdownInfo{@
+        Buffering block-level markdown input into the temporary @
         input file "|markdownOptionInputTempFileName" and scanning @
         for the closing token sequence "#1"}@
     }@
@@ -33892,6 +33925,112 @@ end
   { disabled-shell-access }
   { Shell~escape~is~disabled }
   \l_tmpa_tl
+\ExplSyntaxOff
+%    \end{macrocode}
+% \begin{markdown}
+%
+%### Buffering Inline Markdown Input {#buffering-inline}
+%
+% This section describes the implementation of the macro \mref{markinline}.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\cs_new:Npn
+  \markinline
+  {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Locally change the category of the special plain \TeX{} characters
+% to *other* in order to prevent unwanted interpretation of the input
+% markdown text as \TeX{} code.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \group_begin:
+    \cctab_select:N
+      \c_other_cctab
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Unless we are reading markdown documents from the frozen cache,
+% open the file \Opt{inputTempFileName} for writing.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \@@_if_option:nF
+      { frozenCache }
+      {
+        \immediate
+          \openout
+          \markdownOutputFileStream
+          \markdownOptionInputTempFileName
+          \relax
+        \msg_info:nne
+          { markdown }
+          { buffering-markinline }
+          { \markdownOptionInputTempFileName }
+      }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Peek ahead and extract the inline markdown text.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \peek_regex_replace_once:nnF
+      { { (.*?) } }
+      {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Unless we are reading markdown documents from the frozen cache,
+% store the text in the file \Opt{inputTempFileName} and close it.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        \c { @@_if_option:nF }
+          \cB { frozenCache \cE }
+          \cB {
+            \c { immediate }
+              \c { write }
+              \c { markdownOutputFileStream }
+              \cB { \1 \cE }
+            \c { immediate }
+              \c { closeout }
+              \c { markdownOutputFileStream }
+          \cE }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Reset the category codes and `\input` the result of the conversion.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        \c { group_end: }
+        \c { markdownInput }
+          \cB {
+            \c { markdownOptionOutputDir } /
+            \c { markdownOptionInputTempFileName }
+          \cE }
+      }
+      {
+        \msg_error:nn
+          { markdown }
+          { markinline-peek-failure }
+        \group_end:
+      }
+  }
+\msg_new:nnn
+  { markdown }
+  { buffering-markinline }
+  { Buffering~inline~markdown~input~into~the~temporary~input~file~"#1". }
+\msg_new:nnnn
+  { markdown }
+  { markinline-peek-failure }
+  { Use~of~\iow_char:N \\ markinline~doesn't~match~its~definition }
+  { The~macro~should~be~followed~by~inline~markdown~text~in~curly~braces }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \begin{markdown}
