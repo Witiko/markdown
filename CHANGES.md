@@ -4,6 +4,7 @@
 
 Development:
 
+- Add `\markinline` plain TeX command. (#300, #439)
 - Support incremental definitions of token renderers and renderer prototypes
   in the `\markdownSetup` command.
   (#232, #435, 540a83c0, [matrix.org][matrix-435], #437, #438,
