@@ -34019,11 +34019,15 @@ end
 % \end{markdown}
 %  \begin{macrocode}
         \c { group_end: }
+        \c { group_begin: }
+        \c { @@_setup:n }
+          \cB { contentLevel = inline \cE }
         \c { markdownInput }
           \cB {
             \c { markdownOptionOutputDir } /
             \c { markdownOptionInputTempFileName }
           \cE }
+        \c { group_end: }
         \c { tl_use:N }
           \c { l_@@_after_markinline_tl }
       }
