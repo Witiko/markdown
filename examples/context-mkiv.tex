@@ -72,16 +72,15 @@ kpse.set_program_name("luatex")
 \catcode`\%=14\relax
 \catcode`\#=6\relax
 
-% Typeset some further examples with inline markdown text.
+% Besides inputting external files, Markdown text can we written directly
+% into a LaTeX document. Markdown text and LaTeX code can be freely combined.
 \startmarkdown
 
-Here are some non-ASCII characters: *ěščřžýáíé*
-and ConTeXt special characters: *|*.
+This is a paragraph of *Markdown text* with inline `\LaTeX`{=tex} code.
 
-Here is a hard line break that we inserted directly from the TeX source
-by typing two spaces at the end of a line.  
-This is stretching TeX's abilities and is only supported in ConTeXt MkIV
-and later.
+``` {=tex}
+This is a paragraph of \LaTeX{} code with inline \markinline{*Markdown text*}.
+```
 
 \stopmarkdown
 

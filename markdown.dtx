@@ -11350,7 +11350,7 @@ pdftex --shell-escape document.tex
 %### Typesetting Markdown {#tex-typesetting}
 %
 % The interface exposes the \mdef{markdownBegin}, \mdef{markdownEnd},
-% \mdef{markdownInput}, and \mdef{markdownEscape} macros.
+% \mdef{markinline}, \mdef{markdownInput}, and \mdef{markdownEscape} macros.
 %
 % The \mref{markdownBegin} macro marks the beginning of a markdown document
 % fragment and the \mref{markdownEnd} macro marks its end.
@@ -11408,6 +11408,38 @@ pdftex --shell-escape document.tex
 % \bye
 % ```````
 %
+% You can use the \mref{markinline} macro to input inline markdown content.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\let\markinline\relax
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% The following example plain \TeX{} code showcases the usage of the
+% \mref{markinline} macro:
+%
+% ``` tex
+% \input markdown
+% \markinline{_Hello_ **world**}
+% \bye
+% ```````
+%
+% The above code has the same effect as the below code:
+%
+% ``` tex
+% \input markdown
+% \markdownSetup{contentLevel=inline}
+% \markdownBegin
+% _Hello_ **world** ...
+% \markdownEnd
+% \bye
+% ```````
+%
+% The \mref{markinline} macro is subject to the same limitations as the
+% \mref{markdownBegin} and \mref{markdownEnd} macros.
+%
 % You can use the \mref{markdownInput} macro to include markdown documents,
 % similarly to how you might use the \mref{input} \TeX{} primitive to include
 % \TeX{} documents. The \mref{markdownInput} macro accepts a single parameter
@@ -11421,7 +11453,7 @@ pdftex --shell-escape document.tex
 % \par
 % \begin{markdown}
 %
-% This macro is not subject to the abovelisted limitations of the
+% This macro is not subject to the limitations of the
 % \mref{markdownBegin} and \mref{markdownEnd} macros.
 %
 % The following example plain \TeX{} code showcases the usage of the
@@ -11914,11 +11946,11 @@ macro after loading the package has no effect.
 %
 % The \mdef{markdownOptionStripPercentSigns} macro controls whether a percent
 % sign (`\%`) at the beginning of a line will be discarded when buffering
-% Markdown input (see Section <#sec:buffering>) or not. Notably, this
-% enables the use of markdown when writing \TeX{} package documentation using
-% the \pkg{Doc} \LaTeX{}~package~[@mittelbach17] or similar. The recognized
-% values of the macro are `true` (discard) and `false` (retain). It defaults
-% to `false`.
+% Markdown input (see sections <#sec:buffering-block> and
+% <#sec:buffering-inline>) or not. Notably, this enables the use of markdown
+% when writing \TeX{} package documentation using the \pkg{Doc}
+% \LaTeX{}~package~[@mittelbach17] or similar. The recognized values of the
+% macro are `true` (discard) and `false` (retain). It defaults to `false`.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -21330,7 +21362,8 @@ pdflatex --shell-escape document.tex
 %
 %### Typesetting Markdown
 % The interface exposes the \envmdef{markdown} and \envmdef{markdown*}
-% \LaTeX{} environments, and redefines the \mref{markdownInput} command.
+% \LaTeX{} environments, and redefines the \mref{markinline} and
+% \mref{markdownInput} commands.
 %
 % The \envmref{markdown} and \envmref{markdown*} \LaTeX{} environments are used
 % to typeset markdown document fragments. Both \LaTeX{} environments accept
@@ -21370,6 +21403,13 @@ pdflatex --shell-escape document.tex
 % \% ...                              \% ...
 % \end{document}                     \end{document}
 % ```````
+%
+% The \mref{markinline} macro accepts a single mandatory parameter containing
+% inline markdown content and expands to the result of the conversion of the
+% input markdown document to plain \TeX{}.  Unlike the \mref{markinline} macro
+% provided by the plain \TeX{} interface, this macro also accepts \LaTeX{}
+% interface options (see Section <#sec:latex-options>) as its optional
+% argument. These options will only influnce this markdown content.
 %
 % The \mref{markdownInput} macro accepts a single mandatory parameter containing
 % the filename of a markdown document and expands to the result of the
@@ -33655,7 +33695,7 @@ end
 % \par
 % \begin{markdown}
 %
-%### Buffering Markdown Input {#buffering}
+%### Buffering Block-Level Markdown Input {#buffering-block}
 %
 % The macros \mdef{markdownInputFileStream} and \mdef{markdownOutputFileStream}
 % contain the number of the input and output file streams that will be used for
@@ -33714,7 +33754,8 @@ end
     |markdownIfOption{frozenCache}{}{@
       |immediate|openout|markdownOutputFileStream@
         |markdownOptionInputTempFileName|relax@
-      |markdownInfo{Buffering markdown input into the temporary @
+      |markdownInfo{@
+        Buffering block-level markdown input into the temporary @
         input file "|markdownOptionInputTempFileName" and scanning @
         for the closing token sequence "#1"}@
     }@
@@ -33896,6 +33937,125 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
+%### Buffering Inline Markdown Input {#buffering-inline}
+%
+% This section describes the implementation of the macro \mref{markinline}.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\tl_new:N
+  \g_@@_after_markinline_tl
+\tl_gset:Nn
+  \g_@@_after_markinline_tl
+  { \unskip }
+\cs_new:Npn
+  \markinline
+  {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Locally change the category of the special plain \TeX{} characters
+% to *other* in order to prevent unwanted interpretation of the input
+% markdown text as \TeX{} code.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \group_begin:
+    \cctab_select:N
+      \c_other_cctab
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Unless we are reading markdown documents from the frozen cache,
+% open the file \Opt{inputTempFileName} for writing.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \@@_if_option:nF
+      { frozenCache }
+      {
+        \immediate
+          \openout
+          \markdownOutputFileStream
+          \markdownOptionInputTempFileName
+          \relax
+        \msg_info:nne
+          { markdown }
+          { buffering-markinline }
+          { \markdownOptionInputTempFileName }
+      }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Peek ahead and extract the inline markdown text.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \peek_regex_replace_once:nnF
+      { { (.*?) } }
+      {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Unless we are reading markdown documents from the frozen cache,
+% store the text in the file \Opt{inputTempFileName} and close it.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        \c { @@_if_option:nF }
+          \cB { frozenCache \cE }
+          \cB {
+            \c { immediate }
+              \c { write }
+              \c { markdownOutputFileStream }
+              \cB { \1 \cE }
+            \c { immediate }
+              \c { closeout }
+              \c { markdownOutputFileStream }
+          \cE }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Reset the category codes and `\input` the result of the conversion.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        \c { group_end: }
+        \c { group_begin: }
+        \c { @@_setup:n }
+          \cB { contentLevel = inline \cE }
+        \c { markdownInput }
+          \cB {
+            \c { markdownOptionOutputDir } /
+            \c { markdownOptionInputTempFileName }
+          \cE }
+        \c { group_end: }
+        \c { tl_use:N }
+          \c { g_@@_after_markinline_tl }
+      }
+      {
+        \msg_error:nn
+          { markdown }
+          { markinline-peek-failure }
+        \group_end:
+        \tl_use:N
+          \g_@@_after_markinline_tl
+      }
+  }
+\msg_new:nnn
+  { markdown }
+  { buffering-markinline }
+  { Buffering~inline~markdown~input~into~the~temporary~input~file~"#1". }
+\msg_new:nnnn
+  { markdown }
+  { markinline-peek-failure }
+  { Use~of~\iow_char:N \\ markinline~doesn't~match~its~definition }
+  { The~macro~should~be~followed~by~inline~markdown~text~in~curly~braces }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \begin{markdown}
+%
 %### Typesetting Markdown
 %
 % The \mref{markdownInput} macro uses an implementation of the
@@ -34023,21 +34183,49 @@ end
 % \par
 % \begin{markdown}
 %
-%### Logging Facilities
-% The \LaTeX{} implementation redefines the plain \TeX{} logging macros (see
-% Section <#sec:tex-interface-logging>) to use the \LaTeX{} `\PackageInfo`,
-% `\PackageWarning`, and `\PackageError` macros.
+%### Typesetting Markdown
+% The \mdef{markinlinePlainTeX} macro is used to store the original plain
+% \TeX{} implementation of the \mref{markinline} macro. The \mref{markinline}
+% macro is then redefined to accept an optional argument with options
+% recognized by the \LaTeX{} interface (see Section <#sec:latex-options>).
 %
 % \end{markdown}
 %  \begin{macrocode}
+\ExplSyntaxOn
+\cs_gset_eq:NN
+  \markinlinePlainTeX
+  \markinline
+\cs_gset:Npn
+  \markinline
+  {
+    \peek_regex_replace_once:nn
+      { ( \[ (.*?) \] ) ? }
+      {
 %    \end{macrocode}
 % \par
 % \begin{markdown}
 %
-%### Typesetting Markdown
+% Apply the options locally.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        \c { group_begin: }
+        \c { @@_setup:n }
+          \cB { \2 \cE }
+        \c { tl_put_right:Nn }
+          \c { g_@@_after_markinline_tl }
+          \cB { \c { group_end: } \cE }
+        \c { markinlinePlainTeX }
+      }
+  }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
 % The \mdef{markdownInputPlainTeX} macro is used to store the original plain
 % \TeX{} implementation of the \mref{markdownInput} macro. The \mref{markdownInput}
-% is then redefined to accept an optional argument with options recognized by
+% macro is then redefined to accept an optional argument with options recognized by
 % the \LaTeX{} interface (see Section <#sec:latex-options>).
 %
 % \end{markdown}
