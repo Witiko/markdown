@@ -21362,7 +21362,8 @@ pdflatex --shell-escape document.tex
 %
 %### Typesetting Markdown
 % The interface exposes the \envmdef{markdown} and \envmdef{markdown*}
-% \LaTeX{} environments, and redefines the \mref{markdownInput} command.
+% \LaTeX{} environments, and redefines the \mref{markinline} and
+% \mref{markdownInput} commands.
 %
 % The \envmref{markdown} and \envmref{markdown*} \LaTeX{} environments are used
 % to typeset markdown document fragments. Both \LaTeX{} environments accept
@@ -21402,6 +21403,13 @@ pdflatex --shell-escape document.tex
 % \% ...                              \% ...
 % \end{document}                     \end{document}
 % ```````
+%
+% The \mref{markinline} macro accepts a single mandatory parameter containing
+% inline markdown content and expands to the result of the conversion of the
+% input markdown document to plain \TeX{}.  Unlike the \mref{markinline} macro
+% provided by the plain \TeX{} interface, this macro also accepts \LaTeX{}
+% interface options (see Section <#sec:latex-options>) as its optional
+% argument. These options will only influnce this markdown content.
 %
 % The \mref{markdownInput} macro accepts a single mandatory parameter containing
 % the filename of a markdown document and expands to the result of the
@@ -33936,6 +33944,8 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
+\tl_new:N
+  \l_@@_after_markinline_tl
 \cs_new:Npn
   \markinline
   {
@@ -34014,12 +34024,16 @@ end
             \c { markdownOptionOutputDir } /
             \c { markdownOptionInputTempFileName }
           \cE }
+        \c { tl_use:N }
+          \c { l_@@_after_markinline_tl }
       }
       {
         \msg_error:nn
           { markdown }
           { markinline-peek-failure }
         \group_end:
+        \tl_use:N
+          \l_@@_after_markinline_tl
       }
   }
 \msg_new:nnn
@@ -34162,21 +34176,59 @@ end
 % \par
 % \begin{markdown}
 %
-%### Logging Facilities
-% The \LaTeX{} implementation redefines the plain \TeX{} logging macros (see
-% Section <#sec:tex-interface-logging>) to use the \LaTeX{} `\PackageInfo`,
-% `\PackageWarning`, and `\PackageError` macros.
+%### Typesetting Markdown
+% The \mdef{markinlinePlainTeX} macro is used to store the original plain
+% \TeX{} implementation of the \mref{markinline} macro. The \mref{markinline}
+% macro is then redefined to accept an optional argument with options
+% recognized by the \LaTeX{} interface (see Section <#sec:latex-options>).
 %
 % \end{markdown}
 %  \begin{macrocode}
+\ExplSyntaxOn
+\cs_gset_eq:NN
+  \markinlinePlainTeX
+  \markinline
+\cs_gset:Npn
+  \markinline
+  {
+    \peek_regex_replace_once:nn
+      { ( \[ (.*?) \] ) ? }
+      {
 %    \end{macrocode}
 % \par
 % \begin{markdown}
 %
-%### Typesetting Markdown
+% Apply the options locally.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        \c { group_begin: }
+        \c { @@_setup:n }
+          \cB { \2 \cE }
+        \c { tl_set:Nn }
+          \c { l_@@_after_markinline_tl }
+          \cB { \c { group_end: } \cE }
+        \c { markinlinePlainTeX }
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Reintroduce the opening brace of \mref{markdownInput} that we removed
+% from the input stream by peeking.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        \cO \{
+      }
+  }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
 % The \mdef{markdownInputPlainTeX} macro is used to store the original plain
 % \TeX{} implementation of the \mref{markdownInput} macro. The \mref{markdownInput}
-% is then redefined to accept an optional argument with options recognized by
+% macro is then redefined to accept an optional argument with options recognized by
 % the \LaTeX{} interface (see Section <#sec:latex-options>).
 %
 % \end{markdown}
