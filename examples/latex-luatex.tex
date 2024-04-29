@@ -49,8 +49,33 @@ date:   \today
 \catcode`\%=14\relax
 \catcode`\#=6\relax
 
-% Typeset some further examples with inline markdown text.
+% Besides inputting external files, Markdown text can we written directly
+% into a LaTeX document. Markdown text and LaTeX code can be freely combined.
 \begin{markdown}
-Here are some non-ASCII characters: *ěščřžýáíé*.
+This is a paragraph of *Markdown text* with inline `\LaTeX`{=tex} code.
+
+``` {=tex}
+This is a paragraph of \LaTeX{} code with inline \markinline{*Markdown text*}.
+```
+\end{markdown}
+
+% Besides YAML, LaTeX, and Markdown, you can also type HTML in your documents.
+\begin{markdown}
+Here is some <b>HTML code</b> mixed *with Markdown*. In `\TeX`{=tex}, the HTML
+code will be silently ignored, whereas in `\TeX`{=tex}4ht, the HTML code will
+be passed through to the output:
+
+<table border="1">
+  <tr>
+    <td>Emil</td>
+    <td>Tobias</td>
+    <td>Linus</td>
+  </tr>
+  <tr>
+    <td>16</td>
+    <td>14</td>
+    <td>10</td>
+  </tr>
+</table>
 \end{markdown}
 \end{document}
