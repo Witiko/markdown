@@ -33945,7 +33945,10 @@ end
 %  \begin{macrocode}
 \ExplSyntaxOn
 \tl_new:N
-  \l_@@_after_markinline_tl
+  \g_@@_after_markinline_tl
+\tl_gset:Nn
+  \g_@@_after_markinline_tl
+  { \unskip }
 \cs_new:Npn
   \markinline
   {
@@ -34029,7 +34032,7 @@ end
           \cE }
         \c { group_end: }
         \c { tl_use:N }
-          \c { l_@@_after_markinline_tl }
+          \c { g_@@_after_markinline_tl }
       }
       {
         \msg_error:nn
@@ -34037,7 +34040,7 @@ end
           { markinline-peek-failure }
         \group_end:
         \tl_use:N
-          \l_@@_after_markinline_tl
+          \g_@@_after_markinline_tl
       }
   }
 \msg_new:nnn
@@ -34209,7 +34212,7 @@ end
         \c { group_begin: }
         \c { @@_setup:n }
           \cB { \2 \cE }
-        \c { tl_set:Nn }
+        \c { tl_put_right:Nn }
           \c { l_@@_after_markinline_tl }
           \cB { \c { group_end: } \cE }
         \c { markinlinePlainTeX }
