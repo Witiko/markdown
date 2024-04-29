@@ -19,7 +19,7 @@ Development:
 Default Renderer Prototypes:
 
 - Add default renderers for unnumbered sections in LaTeX.
-  (#401, istqborg/istqb_product_base#23, #430, reported by @felinecrp,
+  (#401, istqborg/istqb_product_base#23, #430, reported by @felipecrp,
    sponsored by @istqborg)
 
 ## 3.4.3 (2024-04-04)
