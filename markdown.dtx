@@ -32445,7 +32445,7 @@ M.extensions.jekyll_data = function(expect_jekyll_data)
           end
         end
 
-        if #d > 0 then
+        if is_sequence then
           table.insert(buf, "\\markdownRendererJekyllDataSequenceEnd")
         else
           table.insert(buf, "\\markdownRendererJekyllDataMappingEnd")
