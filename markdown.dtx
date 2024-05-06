@@ -32379,7 +32379,18 @@ M.extensions.jekyll_data = function(expect_jekyll_data)
           table.insert(buf, "\\markdownRendererJekyllDataBegin")
         end
 
-        if #d > 0 then
+        local is_sequence = false
+        if #d > 0 and #d == #keys then
+          for i=1, #d do
+            if d[i] == nil then
+              goto not_a_sequence
+            end
+          end
+          is_sequence = true
+        end
+        ::not_a_sequence::
+
+        if is_sequence then
             table.insert(buf, "\\markdownRendererJekyllDataSequenceBegin{")
             table.insert(buf, self.identifier(p or "null"))
             table.insert(buf, "}{")
