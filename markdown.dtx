@@ -32359,7 +32359,21 @@ M.extensions.jekyll_data = function(expect_jekyll_data)
         for k, _ in pairs(d) do
           table.insert(keys, k)
         end
-        table.sort(keys)
+%    \end{macrocode}
+% \begin{markdown}
+%
+% For reproducibility, sort the keys. For mixed string-and-numeric keys, sort
+% numeric keys before string keys.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        table.sort(keys, function(first, second)
+          if type(first) ~= type(second) then
+            return type(first) < type(second)
+          else
+            return first < second
+          end
+        end)
 
         if not p then
           table.insert(buf, "\\markdownRendererJekyllDataBegin")
