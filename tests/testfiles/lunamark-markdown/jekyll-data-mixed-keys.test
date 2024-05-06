@@ -1,0 +1,31 @@
+\markdownSetup{jekyllData=true}
+<<<
+This test ensures that the Lua `jekyllData` option correctly propagates
+through the plain TeX interface and that mixed numeric and string keys
+are correctly sorted.
+
+---
+1: foo
+a: bar
+---
+>>>
+BEGIN document
+codeSpan: jekyllData
+softLineBreak
+interblockSeparator
+jekyllDataBegin
+BEGIN jekyllDataMappingBegin
+- key: null
+- length: 2
+END jekyllDataMappingBegin
+BEGIN jekyllDataString
+- key: 1
+- value: foo
+END jekyllDataString
+BEGIN jekyllDataString
+- key: a
+- value: bar
+END jekyllDataString
+jekyllDataMappingEnd
+jekyllDataEnd
+END document
