@@ -2,6 +2,10 @@
 
 ## 3.5.1
 
+Fixes:
+
+- Correctly sort YAML map keys with mixed types. (#433, #441)
+
 ## 3.5.0 (2024-04-29)
 
 Development:
