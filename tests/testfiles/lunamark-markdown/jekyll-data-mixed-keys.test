@@ -12,6 +12,7 @@ a: bar
 BEGIN document
 codeSpan: jekyllData
 softLineBreak
+softLineBreak
 interblockSeparator
 jekyllDataBegin
 BEGIN jekyllDataMappingBegin
