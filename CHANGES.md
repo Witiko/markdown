@@ -1,6 +1,12 @@
 # Changes
 
-## 3.5.1
+## 3.6.0
+
+Development:
+
+- Add Lua options `unicodeNormalization` and `unicodeNormalizationForm` for
+  normalizing markdown text using Unicode normalization.
+  (#434, #442, sponsored by @istqborg)
 
 Fixes:
 
