@@ -2574,6 +2574,48 @@ local singletonCache = {
 % \iffalse
 %</lua>
 %<*manual-options>
+
+#### Option `unicodeNormalization`
+
+`unicodeNormalization` (default value: `nfc`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[nfc]{unicodeNormalization}{\opt{nfc}, \opt{nfd}, \opt{nkfc}, \opt{nkfd}, \opt{false}}
+%
+:    nfc, nfd, nkfc, nkfd
+
+     :  Markdown documents will be normalized using one of the four [Unicode
+        normalization forms][unicode-normalization] before conversion.
+
+:    false
+
+     :  Markdown documents will not be Unicode-normalized before conversion.
+
+ [unicode-normalization]: https://unicode.org/faq/normalization.html
+
+% \end{markdown}
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { unicodeNormalization }
+  { maybeString }
+  { nfc }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.unicodeNormalization = "nfc"
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
 % \fi
 % \begin{markdown}
 %
