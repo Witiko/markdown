@@ -1,0 +1,12 @@
+<<<
+This test ensures that the Lua `unicodeNormalization` option is enabled by default
+and uses the Unicode Normalization Form C (NFC).
+
+The Unicode character *ϔ* (U+03D2 U+0308) should be normalized to U+03D4.
+>>>
+BEGIN document
+codeSpan: unicodeNormalization
+softLineBreak
+paragraphSeparator
+emphasis: ϔ
+END document

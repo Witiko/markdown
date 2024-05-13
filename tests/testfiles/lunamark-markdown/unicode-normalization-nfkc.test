@@ -1,0 +1,16 @@
+\markdownSetup{unicodeNormalizationForm=nfkc}
+<<<
+This test ensures that the Lua `unicodeNormalization` option is enabled by default
+and that the Lua `unicodeNormalizationForm` option correctly propagates through
+the plain TeX interface.
+
+The Unicode character *ϔ* (U+03D2 U+0308) should be normalized to U+03AB.
+>>>
+BEGIN document
+codeSpan: unicodeNormalization
+softLineBreak
+codeSpan: unicodeNormalizationForm
+softLineBreak
+paragraphSeparator
+emphasis: Ϋ
+END document

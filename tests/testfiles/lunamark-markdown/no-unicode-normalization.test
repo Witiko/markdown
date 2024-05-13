@@ -1,0 +1,13 @@
+\markdownSetup{unicodeNormalization=false}
+<<<
+This test ensures that the Lua `unicodeNormalization` option correctly
+propagates through the plain TeX interface.
+
+The Unicode character *ϔ* (U+03D2 U+0308) should be left unnormalized.
+>>>
+BEGIN document
+codeSpan: unicodeNormalization
+softLineBreak
+paragraphSeparator
+emphasis: ϔ
+END document
