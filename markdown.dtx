@@ -2577,17 +2577,19 @@ local singletonCache = {
 
 #### Option `unicodeNormalization`
 
-`unicodeNormalization` (default value: `nfc`)
+`unicodeNormalization` (default value: `true`)
 
 % \fi
 % \begin{markdown}
 %
-% \Optitem[nfc]{unicodeNormalization}{\opt{nfc}, \opt{nfd}, \opt{nkfc}, \opt{nkfd}, \opt{false}}
+% \Optitem[true]{unicodeNormalization}{\opt{true}, \opt{false}}
 %
-:    nfc, nfd, nkfc, nkfd
+:    true
 
      :  Markdown documents will be normalized using one of the four [Unicode
-        normalization forms][unicode-normalization] before conversion.
+        normalization forms][unicode-normalization] before conversion. The
+        Unicode normalization norm used is determined by option
+        \Opt{unicodeNormalizationNorm}.
 
 :    false
 
@@ -2602,7 +2604,67 @@ local singletonCache = {
 %  \begin{macrocode}
 \@@_add_lua_option:nnn
   { unicodeNormalization }
-  { maybeString }
+  { boolean }
+  { true }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.unicodeNormalization = true
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
+#### Option `unicodeNormalizationNorm`
+
+`unicodeNormalizationNorm` (default value: `nfc`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[nfc]{unicodeNormalizationNorm}{\opt{nfc}, \opt{nfd}, \opt{nfkc}, \opt{nfkd}}
+%
+:    nfc
+
+     :  When option \Opt{unicodeNormalization} has been enabled, markdown documents
+        will be normalized using [Unicode Normalization Form C (NFC)][nfc]
+        before conversion.
+
+:    nfd
+
+     :  When option \Opt{unicodeNormalization} has been enabled, markdown documents
+        will be normalized using [Unicode Normalization Form D (NFD)][nfd]
+        before conversion.
+
+:    nfkc
+
+     :  When option \Opt{unicodeNormalization} has been enabled, markdown documents
+        will be normalized using [Unicode Normalization Form KC (NFKC)][nfkc]
+        before conversion.
+
+:    nfkd
+
+     :  When option \Opt{unicodeNormalization} has been enabled, markdown documents
+        will be normalized using [Unicode Normalization Form KD (NFKD)][nfkd]
+        before conversion.
+
+ [nfc]: https://www.unicode.org/glossary/#normalization_form_c
+ [nfd]: https://www.unicode.org/glossary/#normalization_form_d
+ [nfkc]: https://www.unicode.org/glossary/#normalization_form_kc
+ [nfkd]: https://www.unicode.org/glossary/#normalization_form_kd
+
+% \end{markdown}
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { unicodeNormalizationNorm }
+  { string }
   { nfc }
 %    \end{macrocode}
 % \iffalse
@@ -2610,7 +2672,7 @@ local singletonCache = {
 %<*lua,lua-cli>
 % \fi
 %  \begin{macrocode}
-defaultOptions.unicodeNormalization = "nfc"
+defaultOptions.unicodeNormalizationNorm = "nfc"
 %    \end{macrocode}
 % \par
 % \iffalse
