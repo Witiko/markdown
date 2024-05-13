@@ -2589,7 +2589,7 @@ local singletonCache = {
      :  Markdown documents will be normalized using one of the four [Unicode
         normalization forms][unicode-normalization] before conversion. The
         Unicode normalization norm used is determined by option
-        \Opt{unicodeNormalizationNorm}.
+        \Opt{unicodeNormalizationForm}.
 
 :    false
 
@@ -2619,14 +2619,14 @@ defaultOptions.unicodeNormalization = true
 %</lua,lua-cli>
 %<*manual-options>
 
-#### Option `unicodeNormalizationNorm`
+#### Option `unicodeNormalizationForm`
 
-`unicodeNormalizationNorm` (default value: `nfc`)
+`unicodeNormalizationForm` (default value: `nfc`)
 
 % \fi
 % \begin{markdown}
 %
-% \Optitem[nfc]{unicodeNormalizationNorm}{\opt{nfc}, \opt{nfd}, \opt{nfkc}, \opt{nfkd}}
+% \Optitem[nfc]{unicodeNormalizationForm}{\opt{nfc}, \opt{nfd}, \opt{nfkc}, \opt{nfkd}}
 %
 :    nfc
 
@@ -2663,7 +2663,7 @@ defaultOptions.unicodeNormalization = true
 % \fi
 %  \begin{macrocode}
 \@@_add_lua_option:nnn
-  { unicodeNormalizationNorm }
+  { unicodeNormalizationForm }
   { string }
   { nfc }
 %    \end{macrocode}
@@ -2672,7 +2672,7 @@ defaultOptions.unicodeNormalization = true
 %<*lua,lua-cli>
 % \fi
 %  \begin{macrocode}
-defaultOptions.unicodeNormalizationNorm = "nfc"
+defaultOptions.unicodeNormalizationForm = "nfc"
 %    \end{macrocode}
 % \par
 % \iffalse
@@ -25810,7 +25810,7 @@ function M.writer.new(options)
     local prev_space = false
     local letter_found = false
     local normalized_s = s
-    if not options.unicodeNormalization or options.unicodeNormalizationNorm ~= "nfc" then
+    if not options.unicodeNormalization or options.unicodeNormalizationForm ~= "nfc" then
       normalized_s = uni_algos.normalize.NFC(normalized_s)
     end
 
@@ -25870,7 +25870,7 @@ function M.writer.new(options)
     local prev_space = false
     local letter_found = false
     local normalized_s = s
-    if not options.unicodeNormalization or options.unicodeNormalizationNorm ~= "nfc" then
+    if not options.unicodeNormalization or options.unicodeNormalizationForm ~= "nfc" then
       normalized_s = uni_algos.normalize.NFC(normalized_s)
     end
 
@@ -30032,17 +30032,17 @@ end
 % \end{markdown}
 %  \begin{macrocode}
       if options.unicodeNormalization then
-        local norm = options.unicodeNormalizationNorm
-        if norm == "nfc" then
+        local form = options.unicodeNormalizationForm
+        if form == "nfc" then
           input = uni_algos.normalize.NFC(input)
-        elseif norm == "nfd" then
+        elseif form == "nfd" then
           input = uni_algos.normalize.NFD(input)
-        elseif norm == "nfkc" then
+        elseif form == "nfkc" then
           input = uni_algos.normalize.NFKC(input)
-        elseif norm == "nfkd" then
+        elseif form == "nfkd" then
           input = uni_algos.normalize.NFKD(input)
         else
-          error(format("Unknown normalization form %s", norm))
+          error(format("Unknown normalization form %s", form))
         end
       end
 %    \end{macrocode}
