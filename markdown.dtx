@@ -2574,6 +2574,107 @@ local singletonCache = {
 % \iffalse
 %</lua>
 %<*manual-options>
+
+#### Option `unicodeNormalization`
+
+`unicodeNormalization` (default value: `true`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[true]{unicodeNormalization}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Markdown documents will be normalized using one of the four [Unicode
+        normalization forms][unicode-normalization] before conversion. The
+        Unicode normalization norm used is determined by option
+        \Opt{unicodeNormalizationForm}.
+
+:    false
+
+     :  Markdown documents will not be Unicode-normalized before conversion.
+
+ [unicode-normalization]: https://unicode.org/faq/normalization.html
+
+% \end{markdown}
+% \iffalse
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { unicodeNormalization }
+  { boolean }
+  { true }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.unicodeNormalization = true
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
+#### Option `unicodeNormalizationForm`
+
+`unicodeNormalizationForm` (default value: `nfc`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[nfc]{unicodeNormalizationForm}{\opt{nfc}, \opt{nfd}, \opt{nfkc}, \opt{nfkd}}
+%
+:    nfc
+
+     :  When option \Opt{unicodeNormalization} has been enabled, markdown documents
+        will be normalized using Unicode Normalization Form C (NFC) before
+        conversion.
+
+:    nfd
+
+     :  When option \Opt{unicodeNormalization} has been enabled, markdown documents
+        will be normalized using Unicode Normalization Form D (NFD) before
+        conversion.
+
+:    nfkc
+
+     :  When option \Opt{unicodeNormalization} has been enabled, markdown documents
+        will be normalized using Unicode Normalization Form KC (NFKC) before
+        conversion.
+
+:    nfkd
+
+     :  When option \Opt{unicodeNormalization} has been enabled, markdown documents
+        will be normalized using Unicode Normalization Form KD (NFKD) before
+        conversion.
+
+% \end{markdown}
+% \iffalse
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { unicodeNormalizationForm }
+  { string }
+  { nfc }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.unicodeNormalizationForm = "nfc"
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
 % \fi
 % \begin{markdown}
 %
@@ -25705,8 +25806,12 @@ function M.writer.new(options)
     local buffer = {}
     local prev_space = false
     local letter_found = false
+    local normalized_s = s
+    if not options.unicodeNormalization or options.unicodeNormalizationForm ~= "nfc" then
+      normalized_s = uni_algos.normalize.NFC(normalized_s)
+    end
 
-    for _, code in utf8.codes(uni_algos.normalize.NFC(s)) do
+    for _, code in utf8.codes(normalized_s) do
       local char = utf8.char(code)
 
       -- Remove everything up to the first letter.
@@ -25761,8 +25866,12 @@ function M.writer.new(options)
     local buffer = {}
     local prev_space = false
     local letter_found = false
+    local normalized_s = s
+    if not options.unicodeNormalization or options.unicodeNormalizationForm ~= "nfc" then
+      normalized_s = uni_algos.normalize.NFC(normalized_s)
+    end
 
-    for _, code in utf8.codes(uni_algos.normalize.NFC(s)) do
+    for _, code in utf8.codes(normalized_s) do
       local char = utf8.char(code)
 
       -- Remove everything up to the first non-space.
@@ -29914,6 +30023,25 @@ end
 % \end{markdown}
 %  \begin{macrocode}
     return function(input)
+%    \end{macrocode}
+% \begin{markdown}
+% Unicode-normalize the input.
+% \end{markdown}
+%  \begin{macrocode}
+      if options.unicodeNormalization then
+        local form = options.unicodeNormalizationForm
+        if form == "nfc" then
+          input = uni_algos.normalize.NFC(input)
+        elseif form == "nfd" then
+          input = uni_algos.normalize.NFD(input)
+        elseif form == "nfkc" then
+          input = uni_algos.normalize.NFKC(input)
+        elseif form == "nfkd" then
+          input = uni_algos.normalize.NFKD(input)
+        else
+          error(format("Unknown normalization form %s", form))
+        end
+      end
 %    \end{macrocode}
 % \begin{markdown}
 % Since the Lua converter expects \acro{unix} line endings, normalize the
