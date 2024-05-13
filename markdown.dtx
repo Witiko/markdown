@@ -25809,8 +25809,12 @@ function M.writer.new(options)
     local buffer = {}
     local prev_space = false
     local letter_found = false
+    local normalized_s = s
+    if not options.unicodeNormalization or options.unicodeNormalizationNorm ~= "nfc" then
+      normalized_s = uni_algos.normalize.NFC(normalized_s)
+    end
 
-    for _, code in utf8.codes(uni_algos.normalize.NFC(s)) do
+    for _, code in utf8.codes(normalized_s) do
       local char = utf8.char(code)
 
       -- Remove everything up to the first letter.
@@ -25865,8 +25869,12 @@ function M.writer.new(options)
     local buffer = {}
     local prev_space = false
     local letter_found = false
+    local normalized_s = s
+    if not options.unicodeNormalization or options.unicodeNormalizationNorm ~= "nfc" then
+      normalized_s = uni_algos.normalize.NFC(normalized_s)
+    end
 
-    for _, code in utf8.codes(uni_algos.normalize.NFC(s)) do
+    for _, code in utf8.codes(normalized_s) do
       local char = utf8.char(code)
 
       -- Remove everything up to the first non-space.
@@ -30018,6 +30026,25 @@ end
 % \end{markdown}
 %  \begin{macrocode}
     return function(input)
+%    \end{macrocode}
+% \begin{markdown}
+% Unicode-normalize the input.
+% \end{markdown}
+%  \begin{macrocode}
+      if options.unicodeNormalization then
+        if options.unicodeNormalizationNorm == "nfc" then
+          input = uni_algos.normalize.NFC(input)
+        elseif options.unicodeNormalizationNorm == "nfd" then
+          input = uni_algos.normalize.NFD(input)
+        if options.unicodeNormalizationNorm == "nfkc" then
+          input = uni_algos.normalize.NFKC(input)
+        elseif options.unicodeNormalizationNorm == "nfkd" then
+          input = uni_algos.normalize.NFKD(input)
+        else
+          error(format("Unknown normalization form %s",
+                       options.unicodeNormalizationNorm))
+        end
+      end
 %    \end{macrocode}
 % \begin{markdown}
 % Since the Lua converter expects \acro{unix} line endings, normalize the
