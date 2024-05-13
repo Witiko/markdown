@@ -30032,17 +30032,17 @@ end
 % \end{markdown}
 %  \begin{macrocode}
       if options.unicodeNormalization then
-        if options.unicodeNormalizationNorm == "nfc" then
+        local norm = options.unicodeNormalizationNorm
+        if norm == "nfc" then
           input = uni_algos.normalize.NFC(input)
-        elseif options.unicodeNormalizationNorm == "nfd" then
+        elseif norm == "nfd" then
           input = uni_algos.normalize.NFD(input)
-        elseif options.unicodeNormalizationNorm == "nfkc" then
+        elseif norm == "nfkc" then
           input = uni_algos.normalize.NFKC(input)
-        elseif options.unicodeNormalizationNorm == "nfkd" then
+        elseif norm == "nfkd" then
           input = uni_algos.normalize.NFKD(input)
         else
-          error(format("Unknown normalization form %s",
-                       options.unicodeNormalizationNorm))
+          error(format("Unknown normalization form %s", norm))
         end
       end
 %    \end{macrocode}
