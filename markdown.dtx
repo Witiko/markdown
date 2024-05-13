@@ -30036,7 +30036,7 @@ end
           input = uni_algos.normalize.NFC(input)
         elseif options.unicodeNormalizationNorm == "nfd" then
           input = uni_algos.normalize.NFD(input)
-        if options.unicodeNormalizationNorm == "nfkc" then
+        elseif options.unicodeNormalizationNorm == "nfkc" then
           input = uni_algos.normalize.NFKC(input)
         elseif options.unicodeNormalizationNorm == "nfkd" then
           input = uni_algos.normalize.NFKD(input)
