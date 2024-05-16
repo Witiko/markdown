@@ -8,6 +8,11 @@ Development:
   normalizing markdown text using Unicode normalization.
   (#434, #442, sponsored by @istqborg)
 
+Documentation:
+
+- Add a link to a work-in-progress article for TUGboat 45:2 to `README.md`.
+  (7a1a7ea0)
+
 Fixes:
 
 - Correctly sort YAML map keys with mixed types. (#433, #441)
