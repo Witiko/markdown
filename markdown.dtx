@@ -34218,6 +34218,42 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
+\ExplSyntaxOn
+\cs_new:Npn
+  \markdownInput
+  #1
+  {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If the file does not exist in the current directory, we will search for it in
+% the directories specified in \mref{l_file_search_path_seq}. On \LaTeX, this
+% also includes the directories specified in \mref{input@path}.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \file_get_full_name:nNTF
+      { #1 }
+      \l_tmpa_tl
+      {
+        \exp_args:NV
+          \markdownInputRaw
+          \l_tmpa_tl
+      }
+      {
+        \msg_error:nnnV
+          { markdown }
+          { markdown-file-does-not-exist }
+          { #1 }
+      }
+  }
+\msg_new:nnn
+  { markdown }
+  { markdown-file-does-not-exist }
+  {
+    Markdown~file~#1~does~not~exist
+  }
+\ExplSyntaxOff
 \begingroup
 %    \end{macrocode}
 % \begin{markdown}
@@ -34229,7 +34265,7 @@ end
   \catcode`|=0%
   \catcode`\\=12%
   \catcode`|&=6%
-  |gdef|markdownInput#1{%
+  |gdef|markdownInputRaw#1{%
 %    \end{macrocode}
 % \begin{markdown}
 % Change the category code of the percent sign (`\%`) to other, so that a user
