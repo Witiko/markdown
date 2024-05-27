@@ -8,6 +8,11 @@ Development:
   normalizing markdown text using Unicode normalization.
   (#434, #442, sponsored by @istqborg)
 
+Fixes:
+
+- Make `\markdownInput` search in `\l_file_search_path_seq`.
+  (#443, reported by @robertjlee)
+
 Documentation:
 
 - Add a link to a work-in-progress article for TUGboat 45:2 to `README.md`.
