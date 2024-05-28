@@ -2,6 +2,10 @@
 
 ## 3.7.0
 
+Continuous Integration:
+
+- Remove warnings from Pandoc and GitHub Actions. (2b3f3469..71f174b1)
+
 ## 3.6.0 (2024-05-27)
 
 Development:
