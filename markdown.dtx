@@ -1691,9 +1691,6 @@ In this section, I will describe the individual parts of the Markdown package.
 Each part will be shown by example, leaving the implementation details to the
 [technical documentation][techdoc].
 
- [techdoc]: https://mirrors.ctan.org/macros/generic/markdown/markdown.pdf
-            (A Markdown Interpreter for \TeX{})
-
 /markdown-interfaces.md
 /markdown-options.md
 /markdown-tokens.md
@@ -2502,11 +2499,12 @@ defaultOptions.eagerCache = false
      :  Every call to the function \luamref{new}`(options)` will produce a new
         conversion function that will not be cached. This is slower than
         caching conversion functions and may expose bugs related to memory
-        leaks in the creation of conversion functions, see also issue [#226][1].
+        leaks in the creation of conversion functions, see also issue
+        [#226][issue-226].
 
         This was the default behavior until version 3.0.0 of the Markdown package.
 
- [1]: https://github.com/witiko/markdown/pull/226#issuecomment-1599641634
+ [issue-226]: https://github.com/witiko/markdown/pull/226#issuecomment-1599641634
 
 % \end{markdown}
 % \iffalse
@@ -8182,10 +8180,6 @@ following text:
 
 > Here is a note reference,[^1] and another.[^longnote]
 >
-> [^1]: Here is the note.
->
-> [^longnote]: Here's one with multiple blocks.
->
 >     Subsequent paragraphs are indented to show that they
 > belong to the previous note.
 >
@@ -8235,10 +8229,6 @@ A PDF document named `document.pdf` should be produced and contain the
 following text:
 
 > Here is a note reference,[^1] and another.[^longnote]
->
-> [^1]: Here is the note.
->
-> [^longnote]: Here's one with multiple blocks.
 >
 >     Subsequent paragraphs are indented to show that they
 > belong to the previous note.
@@ -8528,7 +8518,7 @@ defaultOptions.rawAttribute = false
 %
 :    true
 
-     :  Enable [relative references][1] in autolinks:
+     :  Enable [relative references][rfc3986] in autolinks:
 
         ``` md
         I conclude in Section <#conclusion>.
@@ -8544,7 +8534,7 @@ defaultOptions.rawAttribute = false
 
     :   Disable relative references in autolinks.
 
- [1]: https://datatracker.ietf.org/doc/html/rfc3986#section-4.2
+ [rfc3986]: https://datatracker.ietf.org/doc/html/rfc3986#section-4.2
 
 % \end{markdown}
 % \iffalse
@@ -10486,9 +10476,9 @@ luatex document.tex
 A PDF document named `document.pdf` should be produced and contain the
 following text:
 
-> \\(E=mc^2\\)
+> \(E=mc^2\)
 >
-> \\[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\\]
+> \[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\]
 
 ##### Lua CLI Example {.unnumbered}
 
@@ -10528,13 +10518,13 @@ script file using [Kpathsea][].
 A PDF document named `document.pdf` should be produced and contain the
 following text:
 
-> \\\(E=mc^2\\)
->
-> \\\[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\\]
->
 > \\(E=mc^2\\)
 >
 > \\[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\\]
+>
+> \(E=mc^2\)
+>
+> \[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\]
 
 ##### Plain \TeX{} Example {.unnumbered}
 
@@ -10559,9 +10549,9 @@ luatex document.tex
 A PDF document named `document.pdf` should be produced and contain the
 following text:
 
-> \\(E=mc^2\\)
+> \(E=mc^2\)
 >
-> \\[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\\]
+> \[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\]
 
 ##### \LaTeX{} Example {.unnumbered}
 
@@ -10587,9 +10577,9 @@ lualatex document.tex
 A PDF document named `document.pdf` should be produced and contain the
 following text:
 
-> \\(E=mc^2\\)
+> \(E=mc^2\)
 >
-> \\[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\\]
+> \[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\]
 
 ##### \Hologo{ConTeXt} Example {.unnumbered}
 
@@ -10615,9 +10605,9 @@ context --luatex document.tex
 A PDF document named `document.pdf` should be produced and contain the
 following text:
 
-> \\(E=mc^2\\)
+> \(E=mc^2\)
 >
-> \\[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\\]
+> \[\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\]
 
 %</manual-options>
 %<*tex>
@@ -19454,7 +19444,7 @@ following content:
 \input markdown
 \def\markdownOptionTexMathDollars{true}
 \def\markdownRendererInlineMath#1{$#1\dots$}
-\def\markdownRendererDisplayMath#1{$$#1\eqno(1)$$}
+\def\markdownRendererDisplayMath#1{$$#1\nonumber$$}
 \markdownBegin
 $E=mc^2$
 
@@ -19471,7 +19461,7 @@ following text:
 
 > $E=mc^2\dots$
 >
-> $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\eqno(1)$$
+> $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\nonumber$$
 
 ##### \LaTeX{} Example {.unnumbered}
 

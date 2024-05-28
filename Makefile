@@ -73,7 +73,7 @@ DOCKER_TEMPORARY_TAG=$(VERSION)-$(DOCKER_TEXLIVE_TAG)$(DOCKER_TAG_POSTFIX)
 DOCKER_RELEASE_IMAGE=witiko/markdown
 DOCKER_RELEASE_TAG=$(DOCKER_TEXLIVE_TAG)$(DOCKER_TAG_POSTFIX)
 
-PANDOC_INPUT_FORMAT=markdown+tex_math_single_backslash+tex_math_double_backslash-raw_tex
+PANDOC_INPUT_FORMAT=markdown+tex_math_single_backslash-raw_tex
 
 # This is the default pseudo-target. It typesets the manual,
 # the examples, and extracts the package files.
@@ -192,7 +192,7 @@ markdown-transcluded.md: markdown.md markdown-interfaces.md markdown-options.md 
 	    -e 's#\\mdef{\([^}]*\)}#`\\\1`#g' \
 	    -e 's#\\mref{\([^}]*\)}#`\\\1`#g' \
 	<$< | \
-	pandoc -f $(PANDOC_INPUT_FORMAT) -t html -N -s --toc --toc-depth=3 --css=$(word 2, $^) >$@
+	pandoc -f $(PANDOC_INPUT_FORMAT) -t html -N -s --toc --toc-depth=3 --fail-if-warnings --css=$(word 2, $^) >$@
 
 # This pseudo-target runs all the tests in the `tests/` directory.
 test:
