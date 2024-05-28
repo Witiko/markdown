@@ -162,15 +162,18 @@ examples/example.tex: force
 	  $(MAKE) -C examples $(notdir $@); \
 	fi
 
-# This target converts the markdown user manual to an HTML page.
-%.html: %.md %.css
+# These targets convert the markdown user manual to an HTML page.
+markdown-transcluded.md: markdown.md markdown-interfaces.md markdown-options.md markdown-tokens.md
 	awk '{ \
 	    filename = gensub(/^\/(.*\.md)$$/, "\\1", "g"); \
 	    if(filename != $$0) \
 	        system("cat " filename); \
 	    else \
 	        print($$0); \
-	}' <$< | \
+	}' <$< >$@
+	rm $^
+
+%.html: %-transcluded.md %.css
 	sed -e 's#\\markdownVersion{}#$(VERSION)#g' \
 	    -e 's#\\markdownLastModified{}#$(LASTMODIFIED)#g' \
 	    -e 's#\\TeX{}#<span class="tex">T<sub>e</sub>X</span>#g' \
@@ -188,7 +191,7 @@ examples/example.tex: force
 	    -e 's#\\m{\([^}]*\)}#`\\\1`#g' \
 	    -e 's#\\mdef{\([^}]*\)}#`\\\1`#g' \
 	    -e 's#\\mref{\([^}]*\)}#`\\\1`#g' \
-	| \
+	<$< | \
 	pandoc -f $(PANDOC_INPUT_FORMAT) -t html -N -s --toc --toc-depth=3 --css=$(word 2, $^) >$@
 
 # This pseudo-target runs all the tests in the `tests/` directory.

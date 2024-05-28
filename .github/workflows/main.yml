@@ -75,7 +75,7 @@ jobs:
           sudo apt -qy update
           sudo apt -qy install --no-install-recommends git latexmk lua-check make texlive-xetex
       - name: Extract user manual
-        run: make markdown.md
+        run: make markdown-transcluded.md
       - name: Run MarkdownLint
         uses: nosborn/github-action-markdown-cli@v3.3.0
         with:
