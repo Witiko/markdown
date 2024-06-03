@@ -2,6 +2,11 @@
 
 ## 3.7.0
 
+Documentation:
+
+- Improve the documentation of portable installation.
+  (#444, 9afac050, contributed by @l0th3r)
+
 Continuous Integration:
 
 - Remove warnings from Pandoc and GitHub Actions. (2b3f3469..71f174b1)
