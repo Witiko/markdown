@@ -1,0 +1,30 @@
+\markdownSetup{
+  inlineNotes=true,
+  notes=true,
+}
+<<<
+Example *emphasis* bold outside footnote^[Example *emphasis* bold inside footnote.].
+Example emphasis **bold** outside footnote^[Example emphasis **bold** inside footnote.].
+Example *emphasis* bold outside footnote^[Example emphasis **bold** inside footnote.].
+Example emphasis **bold** outside footnote^[Example *emphasis* bold inside footnote.].
+
+*note* [^a *a* a]
+
+[^a *a* a]: note
+>>>
+BEGIN document
+emphasis: emphasis
+note: Example (emphasis: emphasis) bold inside footnote.
+softLineBreak
+strongEmphasis: bold
+note: Example emphasis (strongEmphasis: bold) inside footnote.
+softLineBreak
+emphasis: emphasis
+note: Example emphasis (strongEmphasis: bold) inside footnote.
+softLineBreak
+strongEmphasis: bold
+note: Example (emphasis: emphasis) bold inside footnote.
+paragraphSeparator
+emphasis: note
+note: note
+END document

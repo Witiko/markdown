@@ -24,12 +24,12 @@ EXAMPLES=examples/context-mkiv.pdf \
   examples/optex.pdf
 TESTS=tests/test.sh tests/test.py tests/requirements.txt tests/support/*.tex \
   tests/templates/*/*/head.tex tests/templates/*/*/body.tex.m4 \
-  tests/templates/*/*/foot.tex tests/templates/*/COMMANDS.m4 tests/testfiles/*/*.test
+  tests/templates/*/*/foot.tex tests/templates/*/COMMANDS.m4 tests/testfiles/*/*/*.test
 MAKES=Makefile $(addsuffix /Makefile, $(SUBDIRECTORIES)) latexmkrc
 ROOT_README=README.md markdown.png
 READMES=$(ROOT_README) LICENSE examples/README.md tests/README.md \
   tests/support/README.md tests/templates/README.md tests/testfiles/README.md \
-  tests/templates/*/README.md tests/testfiles/*/README.md
+  tests/templates/*/README.md tests/testfiles/*/README.md tests/testfiles/*/*/README.md
 VERSION_FILE=VERSION
 CHANGES_FILE=CHANGES.md
 DTXARCHIVE=markdown.dtx
