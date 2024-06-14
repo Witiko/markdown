@@ -35104,21 +35104,15 @@ end
       \tl_set:Nn
         \l_@@_latex_fancy_list_item_label_delimiter_style_tl
         { #2 }
-      \tl_set:Nn
-        \l_tmpa_tl
-        {
-          \plpartopsep=\partopsep
-          \pltopsep=\topsep
-        }
       \@@_if_option:nTF
         { startNumber }
         {
-          \tl_put_right:Nn
+          \tl_set:Nn
             \l_tmpa_tl
             { \begin{compactenum} }
         }
         {
-          \tl_put_right:Nn
+          \tl_set:Nn
             \l_tmpa_tl
             { \begin{compactenum}[ }
           \tl_put_right:Nx
@@ -35127,6 +35121,12 @@ end
           \tl_put_right:Nn
             \l_tmpa_tl
             { ] }
+        }
+      \tl_put_left:Nn
+        \l_tmpa_tl
+        {
+          \plpartopsep=\partopsep
+          \pltopsep=\topsep
         }
       \tl_use:N
         \l_tmpa_tl
