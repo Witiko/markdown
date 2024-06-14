@@ -11,6 +11,11 @@ Continuous Integration:
 
 - Remove warnings from Pandoc and GitHub Actions. (2b3f3469..71f174b1)
 
+Defaults:
+
+- Fix default definitions for fancy tight ordered lists.
+  (#446, f978e818, reported by @l0th3r)
+
 ## 3.6.0 (2024-05-27)
 
 Development:
