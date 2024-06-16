@@ -14,7 +14,7 @@ Continuous Integration:
 Defaults:
 
 - Fix default definitions for fancy tight ordered lists.
-  (#446, 8a640f52, reported by @l0th3r)
+  (#446, f978e818, reported by @l0th3r)
 
 ## 3.6.0 (2024-05-27)
 

@@ -192,9 +192,9 @@ For further information, consult one of the following:
     - [Markdown 2.15.0: What's New?][tb133],
     - [Markdown 2.17.1: What's New, What's Next?][tb135],
     - [Attributes in Markdown][tb136],
-    - Markdown 3 at TUG 2023: Reflections from the Q&A session ([preprint][tb138]),
+    - [Markdown 3 at TUG 2023: Reflections from the Q&A session][tb138],
     - Fast Regression Testing of TeX Packages: The Unreasonable Effectiveness of Batching ([preprint][tb139]), and
-    - Markdown Themes in Practice ([work in progress][tb140]).
+    - Markdown Themes in Practice ([preprint][tb140]).
 5. Journal articles published by [CSTUG Bulletin][csbul] (in Czech and Slovak):
     - [Rendering Markdown inside TeX Documents][10.5300/2016-1-4/78],
     - [Markdown 2.8.1: Boldly Unto the Throne of Lightweight Markup in TeX][10.5300/2020-1-2/48],
@@ -227,7 +227,7 @@ For further information, consult one of the following:
  [tb133]: https://www.tug.org/TUGboat/tb43-1/tb133novotny-markdown.pdf                                                   "Markdown 2.15.0: What's New?"
  [tb135]: https://www.tug.org/TUGboat/tb43-3/tb135novotny-markdown.pdf                                                   "Markdown 2.17.1: What's New, What's Next?"
  [tb136]: https://www.tug.org/TUGboat/tb44-1/tb136novotny-markdown-attr.pdf                                              "Attributes in Markdown"
- [tb138]: https://www.overleaf.com/read/mjghwhrbgmfj                                                                     "Markdown 3 at TUG 2023: Reflections from the Q&A session"
+ [tb138]: https://www.tug.org/TUGboat/tb44-3/tb138starynovotny-markdown-qa.pdf                                           "Markdown 3 at TUG 2023: Reflections from the Q&A session"
  [tb139]: https://github.com/Witiko/fast-regression-testing/releases/download/latest/tb139starynovotny-testing.pdf       "Fast Regression Testing of TeX Packages: The Unreasonable Effectiveness of Batching"
  [tb140]: https://github.com/witiko/markdown-themes-in-practice/releases/download/latest/tb140starynovotny-markdown.pdf  "Markdown Themes in Practice"
 
