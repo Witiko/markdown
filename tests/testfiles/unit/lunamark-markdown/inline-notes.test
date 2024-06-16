@@ -13,7 +13,7 @@ codeSpan: notes
 codeSpan: inlineNotes
 softLineBreak
 paragraphSeparator
-note: Here is the note. It can go anywhere after the note reference. It need (emphasis: not) be placed at the end of the document.
+note: Here is the note. It can go anywhere after the note(softLineBreak)reference. It need (emphasis: not) be placed at the end of the document.
 paragraphSeparator
 circumflex
 emphasis: not

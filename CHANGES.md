@@ -2,10 +2,20 @@
 
 ## 3.7.0
 
+Fixes:
+
+- Fix the interplay between (strong) emphasis and (inline) notes.
+  (#447, #450, lostenderman/markdown#159, reported by @l0th3r,
+   contributed by @lostenderman)
+- Produce soft line break renderers in inline notes.
+  (#450, lostenderman/markdown#159, contributed by @lostenderman)
+
 Documentation:
 
 - Improve the documentation of portable installation.
   (#444, 9afac050, contributed by @l0th3r)
+- Document that the Markdown package can be installed from GitHub releases.
+  (#449, #450, reported by @l0th3r)
 
 Continuous Integration:
 
