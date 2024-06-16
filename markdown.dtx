@@ -21187,28 +21187,28 @@ following text:
 %
 % \end{markdown}
 %  \begin{macrocode}
+  {
+      \@@_glob_seq:VnN
+        \l_keys_key_str
+        { g_@@_renderers_seq }
+            \l_@@_renderer_glob_results_seq
+      \seq_if_empty:NTF
+            \l_@@_renderer_glob_results_seq
         {
-          \@@_glob_seq:VnN
+          \msg_error:nnV
+            { markdown }
+            { undefined-renderer-prototype }
             \l_keys_key_str
-            { g_@@_renderers_seq }
-            \l_@@_renderer_glob_results_seq
-          \seq_if_empty:NTF
-            \l_@@_renderer_glob_results_seq
-            {
-              \msg_error:nnV
-                { markdown }
-                { undefined-renderer-prototype }
-                \l_keys_key_str
-            }
-            {
-              \tl_set:Nn
+        }
+        {
+          \tl_set:Nn
                 \l_@@_renderer_glob_definition_tl
                 { \exp_not:n { #1 } }
-              \seq_map_inline:Nn
+          \seq_map_inline:Nn
                 \l_@@_renderer_glob_results_seq
-                {
+            {
                   \tl_set:Nn
-                    \l_tmpa_tl
+                \l_tmpa_tl
                     { { ##1 } = }
                   \tl_put_right:Nx
                     \l_tmpa_tl
@@ -27652,19 +27652,21 @@ parsers.link_text  = parsers.lbracket
                             - (parsers.newline + parsers.lbracket + parsers.rbracket + parsers.blankline^2))))^0)
                     * parsers.rbracket
 
+parsers.link_label_body = -#(parsers.sp * parsers.rbracket)
+                        * #((parsers.any - parsers.rbracket)^-999 * parsers.rbracket)
+                        * Cs((parsers.alphanumeric^1
+                            + parsers.inticks
+                            + parsers.autolink
+                            + V("InlineHtml")
+                            + ( parsers.backslash * parsers.backslash)
+                            + ( parsers.backslash * (parsers.lbracket + parsers.rbracket)
+                              + V("NoSoftLineBreakSpace")
+                              + V("NoSoftLineBreakEndline")
+                              + (parsers.any
+                                - (parsers.newline + parsers.lbracket + parsers.rbracket + parsers.blankline^2))))^1)
+
 parsers.link_label  = parsers.lbracket
-                    * -#(parsers.sp * parsers.rbracket)
-                    * #((parsers.any - parsers.rbracket)^-999 * parsers.rbracket)
-                    * Cs((parsers.alphanumeric^1
-                        + parsers.inticks
-                        + parsers.autolink
-                        + V("InlineHtml")
-                        + ( parsers.backslash * parsers.backslash)
-                        + ( parsers.backslash * (parsers.lbracket + parsers.rbracket)
-                          + V("NoSoftLineBreakSpace")
-                          + V("NoSoftLineBreakEndline")
-                          + (parsers.any
-                            - (parsers.newline + parsers.lbracket + parsers.rbracket + parsers.blankline^2))))^1)
+                    * parsers.link_label_body
                     * parsers.rbracket
 
 parsers.inparens_url  = P{ parsers.lparent
@@ -28591,6 +28593,19 @@ function M.reader.new(writer, options)
     return references[self.normalize_tag(tag)]
   end
 
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% The \luamdef{reader->lookup_note_reference} method looks up a
+% note reference with label `tag`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  function self.lookup_note_reference(tag)
+    return rawnotes[self.normalize_tag(tag)]
+  end
+
   parsers.title_s_direct_ref  = parsers.squote
                               * Cs((parsers.html_entities
                                   + (parsers.anyescaped - parsers.squote - parsers.blankline^2))^0)
@@ -28661,15 +28676,49 @@ function M.reader.new(writer, options)
                         + #parsers.link_text
                         * Cg(Cc("link_text"), "link_type")
 
+  parsers.note_opening  = #(parsers.circumflex * parsers.shortcut_link)
+                        * Cg(Cc("note_inline"), "link_type")
+  
+  parsers.raw_note_opening  = #( parsers.lbracket 
+                               * parsers.circumflex
+                               * parsers.link_label_body
+                               * parsers.rbracket)
+                            * Cg(Cc("raw_note"), "link_type")
+
+  local inline_note_element = Cg(Cc("note"), "element")
+                            * parsers.note_opening
+                            * Cg(parsers.circumflex * parsers.lbracket, "content")
+
+  local image_element = Cg(Cc("image"), "element")
+                      * parsers.image_opening
+                      * Cg(parsers.exclamation * parsers.lbracket, "content")
+
+  local note_element  = Cg(Cc("note"), "element")
+                      * parsers.raw_note_opening
+                      * Cg(parsers.lbracket * parsers.circumflex, "content")
+
+  local link_element  = Cg(Cc("link"), "element")
+                      * parsers.link_opening
+                      * Cg(parsers.lbracket, "content")
+
+  local opening_elements = parsers.fail
+
+  if options.inlineNotes then
+    opening_elements = opening_elements + inline_note_element
+  end
+
+  opening_elements = opening_elements + image_element
+
+  if options.notes then
+    opening_elements = opening_elements + note_element
+  end
+
+  opening_elements = opening_elements + link_element
+
   parsers.link_image_opening  = Ct( Cg(Cc("delimiter"), "type")
                                   * Cg(Cc(true), "is_opening")
                                   * Cg(Cc(false), "is_closing")
-                                  * ( Cg(Cc("image"), "element")
-                                    * parsers.image_opening
-                                    * Cg(parsers.exclamation * parsers.lbracket, "content")
-                                    + Cg(Cc("link"), "element")
-                                    * parsers.link_opening
-                                    * Cg(parsers.lbracket, "content")))
+                                  * opening_elements)
 
   parsers.link_image_closing  = Ct( Cg(Cc("delimiter"), "type")
                                   * Cg(Cc("link"), "element")
@@ -28742,7 +28791,7 @@ function M.reader.new(writer, options)
       local value = t[i]
       if value.type == "delimiter" and
          value.is_opening and
-         (value.element == "link" or value.element == "image")
+         (value.element == "link" or value.element == "image" or value.element == "note")
          and not value.removed then
         if value.is_active then
           return i
@@ -28885,6 +28934,15 @@ function M.reader.new(writer, options)
       rendered = writer.image(mapped, reference.url, reference.title, reference.attributes)
     end
 
+    if (t[opening_index].element == "note") then
+      if (t[opening_index].link_type == "note_inline") then
+        rendered = writer.note(mapped)
+      end
+      if (t[opening_index].link_type == "raw_note") then
+        rendered = writer.note(reference)
+      end
+    end
+
     t[opening_index].rendered = rendered
     delete_parsed_content_in_range(t, opening_index + 1, closing_index)
     empty_content_in_range(t, opening_index, closing_index)
@@ -28963,6 +29021,19 @@ function M.reader.new(writer, options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+% Resolve an inline note ^[a] from the delimiters at `opening_index` and `closing_index`
+% within a delimiter table `t`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function resolve_note_inline_link(t, opening_index, closing_index)
+    local inline_content = resolve_inline_following_content(t, closing_index, false, false)
+    render_link_or_image(t, opening_index, closing_index, closing_index, inline_content)
+  end
+
+%    \end{macrocode}
+% \begin{markdown}
+%
 % Resolve a shortcut link [a] from the delimiters at `opening_index` and `closing_index` within a delimiter table `t`.
 % Continue if a tag `a` is not found in the references.
 %
@@ -28976,6 +29047,24 @@ function M.reader.new(writer, options)
       local inline_content = resolve_inline_following_content(t, closing_index, false, t.match_link_attributes)
       r.attributes = join_attributes(r.attributes, inline_content.attributes)
       render_link_or_image(t, opening_index, closing_index, closing_index, r)
+    end
+  end
+
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Resolve a note [^a] from the delimiters at `opening_index` and `closing_index` within a delimiter table `t`.
+% Continue if a tag `a` is not found in the rawnotes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function resolve_raw_note_link(t, opening_index, closing_index)
+    local content = collect_link_content(t, opening_index + 1, closing_index - 1)
+    local r = self.lookup_note_reference(content)
+
+    if r then
+      local parsed_ref = self.parser_functions.parse_blocks_nested(r)
+      render_link_or_image(t, opening_index, closing_index, closing_index, parsed_ref)
     end
   end
 
@@ -29039,7 +29128,7 @@ function M.reader.new(writer, options)
     for i,value in ipairs(t) do
       if not value.is_closing or
         value.type ~= "delimiter" or
-        not (value.element == "link" or value.element == "image") then
+        not (value.element == "link" or value.element == "image" or value.element == "note") then
         goto continue
       end
 
@@ -29064,6 +29153,12 @@ function M.reader.new(writer, options)
       end
       if (link_type == "collapsed") then
         resolve_collapsed_link(t, opener_position, i)
+      end
+      if (link_type == "note_inline") then
+        resolve_note_inline_link(t, opener_position, i)
+      end
+      if (link_type == "raw_note") then
+        resolve_raw_note_link(t, opener_position, i)
       end
 
       ::continue::
@@ -30054,6 +30149,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
       references = {}
+      rawnotes = {}
       local opt_string = {}
       for k, _ in pairs(defaultOptions) do
         local v = options[k]
@@ -31790,8 +31886,6 @@ M.extensions.notes = function(notes, inline_notes)
         local RawNoteRef
                       = #(parsers.lbracket * parsers.circumflex)
                       * parsers.link_label / strip_first_char
-
-        local rawnotes = {}
 
         -- like indirect_link
         local function lookup_note(ref)
@@ -35299,23 +35393,23 @@ end
   \l_@@_header_identifiers_seq
 \markdownSetup
   {
-    rendererPrototypes = {
-      headerAttributeContextBegin = {
-        \markdownSetup
-          {
+  rendererPrototypes = {
+    headerAttributeContextBegin = {
+      \markdownSetup
+        {
             rendererPrototypes = {
-              attributeIdentifier = {
-                \seq_put_right:Nn
-                  \l_@@_header_identifiers_seq
-                  { ##1 }
-              },
+            attributeIdentifier = {
+              \seq_put_right:Nn
+                \l_@@_header_identifiers_seq
+                { ##1 }
             },
-          }
-      },
-      headerAttributeContextEnd = {
-        \seq_map_inline:Nn
-          \l_@@_header_identifiers_seq
-          { \label { ##1 } }
+          },
+        }
+    },
+    headerAttributeContextEnd = {
+      \seq_map_inline:Nn
+        \l_@@_header_identifiers_seq
+        { \label { ##1 } }
         \seq_clear:N
           \l_@@_header_identifiers_seq
       },
@@ -35366,9 +35460,9 @@ end
               },
             },
           }
-      },
     },
-  }
+  },
+}
 \ExplSyntaxOff
 \markdownSetup{rendererPrototypes={
   superscript = {\textsuperscript{#1}},
