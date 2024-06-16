@@ -60,7 +60,7 @@ ifeq ($(NO_DOCUMENTATION), true)
 endif
 
 VERSION=$(shell git describe --tags --always --long --exclude latest)
-SHORT_VERSION=$(shell git describe --tags --always --long --exclude latest | sed 's/-.*//')
+SHORTVERSION=$(shell git describe --tags --always --long --exclude latest | sed 's/-.*//')
 LASTMODIFIED=$(shell git log -1 --date=format:%Y-%m-%d --format=%ad)
 
 ifndef DOCKER_TEXLIVE_TAG
@@ -125,8 +125,8 @@ $(EXTRACTABLES): $(INSTALLER) $(DTXARCHIVE)
 	luatex $<
 	sed -i \
 	    -e 's#(((VERSION)))#$(VERSION)#g' \
+	    -e 's#(((SHORTVERSION)))#$(SHORTVERSION)#g' \
 	    -e 's#(((LASTMODIFIED)))#$(LASTMODIFIED)#g' \
-	    -e 's#(((SHORT_VERSION)))#$(SHORT_VERSION)#g' \
 	    $(INSTALLABLES)
 	sed -i \
 	    -e '/\\ExplSyntaxOff/{N;/\\ExplSyntaxOn/d;}' \
@@ -177,6 +177,7 @@ markdown-transcluded.md: markdown.md markdown-interfaces.md markdown-options.md 
 
 %.html: %-transcluded.md %.css
 	sed -e 's#\\markdownVersion{}#$(VERSION)#g' \
+	    -e 's#\\markdownShortVersion{}#$(SHORTVERSION)#g' \
 	    -e 's#\\markdownLastModified{}#$(LASTMODIFIED)#g' \
 	    -e 's#\\TeX{}#<span class="tex">T<sub>e</sub>X</span>#g' \
 	    -e 's#\\LaTeX{}#<span class="latex">L<sup>a</sup>T<sub>e</sub>X</span>#g' \
