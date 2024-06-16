@@ -21187,28 +21187,28 @@ following text:
 %
 % \end{markdown}
 %  \begin{macrocode}
-  {
-      \@@_glob_seq:VnN
-        \l_keys_key_str
-        { g_@@_renderers_seq }
-            \l_@@_renderer_glob_results_seq
-      \seq_if_empty:NTF
-            \l_@@_renderer_glob_results_seq
         {
-          \msg_error:nnV
-            { markdown }
-            { undefined-renderer-prototype }
+          \@@_glob_seq:VnN
             \l_keys_key_str
-        }
-        {
-          \tl_set:Nn
+            { g_@@_renderers_seq }
+            \l_@@_renderer_glob_results_seq
+          \seq_if_empty:NTF
+            \l_@@_renderer_glob_results_seq
+            {
+              \msg_error:nnV
+                { markdown }
+                { undefined-renderer-prototype }
+                \l_keys_key_str
+            }
+            {
+              \tl_set:Nn
                 \l_@@_renderer_glob_definition_tl
                 { \exp_not:n { #1 } }
-          \seq_map_inline:Nn
+              \seq_map_inline:Nn
                 \l_@@_renderer_glob_results_seq
-            {
+                {
                   \tl_set:Nn
-                \l_tmpa_tl
+                    \l_tmpa_tl
                     { { ##1 } = }
                   \tl_put_right:Nx
                     \l_tmpa_tl
@@ -35397,23 +35397,23 @@ end
   \l_@@_header_identifiers_seq
 \markdownSetup
   {
-  rendererPrototypes = {
-    headerAttributeContextBegin = {
-      \markdownSetup
-        {
+    rendererPrototypes = {
+      headerAttributeContextBegin = {
+        \markdownSetup
+          {
             rendererPrototypes = {
-            attributeIdentifier = {
-              \seq_put_right:Nn
-                \l_@@_header_identifiers_seq
-                { ##1 }
+              attributeIdentifier = {
+                \seq_put_right:Nn
+                  \l_@@_header_identifiers_seq
+                  { ##1 }
+              },
             },
-          },
-        }
-    },
-    headerAttributeContextEnd = {
-      \seq_map_inline:Nn
-        \l_@@_header_identifiers_seq
-        { \label { ##1 } }
+          }
+      },
+      headerAttributeContextEnd = {
+        \seq_map_inline:Nn
+          \l_@@_header_identifiers_seq
+          { \label { ##1 } }
         \seq_clear:N
           \l_@@_header_identifiers_seq
       },
@@ -35464,9 +35464,9 @@ end
               },
             },
           }
+      },
     },
-  },
-}
+  }
 \ExplSyntaxOff
 \markdownSetup{rendererPrototypes={
   superscript = {\textsuperscript{#1}},
