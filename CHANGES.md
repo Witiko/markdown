@@ -2,6 +2,12 @@
 
 ## 3.7.0
 
+Fixes:
+
+- Fix the interplay between (strong) emphasis and (inline) notes.
+  (#447, 450, lostenderman/markdown#159, reported by @l0th3r,
+   contributed by @lostenderman)
+
 Documentation:
 
 - Improve the documentation of portable installation.
