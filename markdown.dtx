@@ -29020,7 +29020,7 @@ function M.reader.new(writer, options)
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Resolve an inline link [a](b "c") from the delimiters at `opening_index` and `closing_index`
+% Resolve an inline link `[a](b "c")` from the delimiters at `opening_index` and `closing_index`
 % within a delimiter table `t`. Here, compared to other types of links, no reference definition is needed.
 %
 % \end{markdown}
@@ -29033,7 +29033,7 @@ function M.reader.new(writer, options)
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Resolve an inline note ^[a] from the delimiters at `opening_index` and `closing_index`
+% Resolve an inline note `^[a]` from the delimiters at `opening_index` and `closing_index`
 % within a delimiter table `t`.
 %
 % \end{markdown}
@@ -29046,7 +29046,7 @@ function M.reader.new(writer, options)
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Resolve a shortcut link [a] from the delimiters at `opening_index` and `closing_index` within a delimiter table `t`.
+% Resolve a shortcut link `[a]` from the delimiters at `opening_index` and `closing_index` within a delimiter table `t`.
 % Continue if a tag `a` is not found in the references.
 %
 % \end{markdown}
@@ -29065,7 +29065,7 @@ function M.reader.new(writer, options)
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Resolve a note [^a] from the delimiters at `opening_index` and `closing_index` within a delimiter table `t`.
+% Resolve a note `[^a]` from the delimiters at `opening_index` and `closing_index` within a delimiter table `t`.
 % Continue if a tag `a` is not found in the rawnotes.
 %
 % \end{markdown}
@@ -29083,7 +29083,7 @@ function M.reader.new(writer, options)
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Resolve a full link [a][b] from the delimiters at `opening_index` and `closing_index` within a delimiter table `t`.
+% Resolve a full link `[a][b]` from the delimiters at `opening_index` and `closing_index` within a delimiter table `t`.
 % Continue if a tag `b` is not found in the references.
 %
 % \end{markdown}
@@ -29104,7 +29104,7 @@ function M.reader.new(writer, options)
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Resolve a collapsed link [a][] from the delimiters at `opening_index` and `closing_index`
+% Resolve a collapsed link `[a][]` from the delimiters at `opening_index` and `closing_index`
 % within a delimiter table `t`.
 % Continue if a tag `a` is not found in the references.
 %
