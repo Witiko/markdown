@@ -28556,6 +28556,9 @@ function M.reader.new(writer, options)
   -- List of references defined in the document
   local references
 
+  -- List of note references defined in the codument
+  parsers.rawnotes = {}
+
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -28603,7 +28606,7 @@ function M.reader.new(writer, options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.lookup_note_reference(tag)
-    return rawnotes[self.normalize_tag(tag)]
+    return parsers.rawnotes[self.normalize_tag(tag)]
   end
 
   parsers.title_s_direct_ref  = parsers.squote
@@ -28678,8 +28681,8 @@ function M.reader.new(writer, options)
 
   parsers.note_opening  = #(parsers.circumflex * parsers.shortcut_link)
                         * Cg(Cc("note_inline"), "link_type")
-  
-  parsers.raw_note_opening  = #( parsers.lbracket 
+
+  parsers.raw_note_opening  = #( parsers.lbracket
                                * parsers.circumflex
                                * parsers.link_label_body
                                * parsers.rbracket)
@@ -30149,7 +30152,6 @@ end
 % \end{markdown}
 %  \begin{macrocode}
       references = {}
-      rawnotes = {}
       local opt_string = {}
       for k, _ in pairs(defaultOptions) do
         local v = options[k]
@@ -31868,6 +31870,8 @@ M.extensions.notes = function(notes, inline_notes)
     end, extend_reader = function(self)
       local parsers = self.parsers
       local writer = self.writer
+
+      local rawnotes = parsers.rawnotes
 
       if inline_notes then
         local InlineNote
