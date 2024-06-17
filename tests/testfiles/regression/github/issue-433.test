@@ -19,14 +19,22 @@ BEGIN jekyllDataMappingBegin
 - key: null
 - length: 2
 END jekyllDataMappingBegin
-BEGIN jekyllDataString
+BEGIN jekyllDataProgrammaticString
 - key: 1
 - value: foo
-END jekyllDataString
-BEGIN jekyllDataString
+END jekyllDataProgrammaticString
+BEGIN jekyllDataTypographicString
+- key: 1
+- value: foo
+END jekyllDataTypographicString
+BEGIN jekyllDataProgrammaticString
 - key: a
 - value: bar
-END jekyllDataString
+END jekyllDataProgrammaticString
+BEGIN jekyllDataTypographicString
+- key: a
+- value: bar
+END jekyllDataTypographicString
 jekyllDataMappingEnd
 jekyllDataEnd
 END document
