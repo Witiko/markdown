@@ -706,7 +706,7 @@ Development:
 
 - Add support for strike-throughs, fenced divs, subscripts, superscripts,
   and fancy lists. (#149, #160, #162, #168, #170)
-- Add facade in front of expl3 inferface for YAML metadata. (#118, #175)
+- Add facade in front of expl3 interface for YAML metadata. (#118, #175)
 - Add `\setupmarkdown` and `\inputmarkdown` commands to ConTeXt. (#17, #176)
 
 Fixes:
@@ -786,7 +786,7 @@ Docker:
 
 Documentation:
 
-- Remove disfunctional badges for Docker from `README.md`. (ad00b58, 707cad9)
+- Remove dysfunctional badges for Docker from `README.md`. (ad00b58, 707cad9)
 - Link to TUG's version of the TUG 2021 video in `README.md`. (1462411)
 
 Miscellaneous:
@@ -1047,7 +1047,7 @@ Fixes:
 Fixes:
 
 - String text and parenthetical citations. (e6026c1)
-- Escape autolink labels even when hybrid mode is enabled. (repored by @iwelch,
+- Escape autolink labels even when hybrid mode is enabled. (reported by @iwelch,
   693e134)
 - Protect LaTeX strong emphasis renderer prototype and make it detect font.
   (reported by @iwelch, 89a031a)
