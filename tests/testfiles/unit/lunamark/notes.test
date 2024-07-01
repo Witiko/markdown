@@ -19,6 +19,10 @@ This paragraph should not be part of the note, as it is not indented.
   [^1]: Here is the note. It can go anywhere after the note
   reference. It need not be placed at the end of the document.
 
+The following is not a note as label cannot contain brackets: [^a [a] a].
+
+[^a [a] a]: This is not a note.
+
 >>>
 BEGIN document
 note: Here is the note. It can go anywhere after the note(softLineBreak)reference. It need not be placed at the end of the document.
@@ -28,4 +32,8 @@ emphasis: not
 softLineBreak
 circumflex
 paragraphSeparator
+paragraphSeparator
+circumflex
+paragraphSeparator
+circumflex
 END document
