@@ -890,7 +890,7 @@ Introduction
 The [Markdown package][pkg] converts [CommonMark][] markup to \TeX{} commands. The
 functionality is provided both as a Lua module and as plain \TeX{}, \LaTeX{}, and
 \Hologo{ConTeXt} macro packages that can be used to directly typeset \TeX{} documents
-containing markdown markup. Unlike other convertors, the Markdown package
+containing markdown markup. Unlike other converters, the Markdown package
 does not require any external programs, and makes it easy to redefine how each
 and every markdown element is rendered.  Creative abuse of the markdown
 syntax is encouraged. 😉
@@ -7238,7 +7238,7 @@ defaultOptions.html = true
 :    false
 
      :  Enable the escaping of special plain \TeX{} characters outside verbatim
-        environments, so that they are not interpretted by \TeX{}. This is
+        environments, so that they are not interpreted by \TeX{}. This is
         encouraged when typesetting automatically generated content or
         markdown documents that were not prepared with this package in mind.
 
@@ -11323,7 +11323,7 @@ for i = 1, #arg do
   end
 %    \end{macrocode}
 % \begin{markdown}
-% The first argument that matches none of the above patters is assumed to be
+% The first argument that matches none of the above patterns is assumed to be
 % the input filename. The input filename should correspond to the Markdown
 % document that is going to be converted to a \TeX{} document.
 % \end{markdown}
@@ -11332,7 +11332,7 @@ for i = 1, #arg do
     input_filename = arg[i]
 %    \end{macrocode}
 % \begin{markdown}
-% The first argument that matches none of the above patters is assumed to be
+% The first argument that matches none of the above patterns is assumed to be
 % the output filename. The output filename should correspond to the \TeX{}
 % document that will result from the conversion.
 % \end{markdown}
@@ -14040,7 +14040,7 @@ following text:
 #### Code Block Renderers
 The \mdef{markdownRendererInputVerbatim} macro represents a code
 block. The macro receives a single argument that corresponds to the
-filename of a file contaning the code block contents.
+filename of a file containing the code block contents.
 
 % \end{markdown}
 %
@@ -14074,7 +14074,7 @@ filename of a file contaning the code block contents.
 The \mdef{markdownRendererInputFencedCode} macro represents a fenced code
 block. This macro will only be produced, when the \Opt{fencedCode} option is
 enabled. The macro receives three arguments that correspond to the filename of
-a file contaning the code block contents, the fully escaped code fence infostring
+a file containing the code block contents, the fully escaped code fence infostring
 that can be directly typeset, and the raw code fence infostring that can be used
 outside typesetting.
 
@@ -15290,7 +15290,7 @@ following text:
 % \begin{markdown}
 
 #### Ellipsis Renderer
-The \mdef{markdownRendererEllipsis} macro replaces any occurance of ASCII
+The \mdef{markdownRendererEllipsis} macro replaces any occurrence of ASCII
 ellipses in the input text. This macro will only be produced, when the
 \Opt{smartEllipses} option is enabled.  The macro receives no arguments.
 
@@ -18436,7 +18436,7 @@ following text:
 
 #### Raw Content Renderers
 The \mdef{markdownRendererInputRawInline} macro represents an inline raw span.
-The macro receives two arguments: the filename of a file contaning the inline
+The macro receives two arguments: the filename of a file containing the inline
 raw span contents and the raw attribute that designates the format of the
 inline raw span. This macro will only be produced, when the \Opt{rawAttribute}
 option is enabled.
@@ -18471,7 +18471,7 @@ option is enabled.
 % \begin{markdown}
 
 The \mdef{markdownRendererInputRawBlock} macro represents a raw block. The
-macro receives two arguments: the filename of a file contaning the raw block
+macro receives two arguments: the filename of a file containing the raw block
 and the raw attribute that designates the format of the raw block. This macro
 will only be produced, when the \Opt{rawAttribute} and \Opt{fencedCode} options
 are enabled.
@@ -19369,7 +19369,7 @@ following content:
 \markdownSetup{
   renderers = {
     table = {%
-      This is a table with caption \emph{#1} that is #3 colums wide
+      This is a table with caption \emph{#1} that is #3 columns wide
       and #2 rows long.
       \rowCounter=0%
       \def\rowTotal{#2}%
@@ -19398,7 +19398,7 @@ A PDF document named `document.pdf` should be produced and contain the
 following text:
 
 > This is a table with caption *Demonstration of pipe table syntax* that is 4
-> colums wide and 4 rows long. As for the alignment, column number 1 is
+> columns wide and 4 rows long. As for the alignment, column number 1 is
 > right-aligned, column number 2 is left-aligned, column number 3 has default
 > alignment, and column number 4 is centered. In row 1, column number 1 says
 > *Right*, column number 2 says *Left*, column number 3 says *Default*, and
@@ -20257,7 +20257,7 @@ following text:
 %#### Generating Plain \TeX{} Token Renderer Macros and Key-Values {#plain-tex-renderers}
 %
 % We define the command \mdef{@@_define_renderers:} that defines plain \TeX{}
-% macros for token renderers. Futhermore, the `\markdownSetup` macro also accepts
+% macros for token renderers. Furthermore, the `\markdownSetup` macro also accepts
 % the `renderers` key, whose value must be a list of key-values, where the keys
 % correspond to the markdown token renderer macros and the values are new
 % definitions of these token renderers.
@@ -20975,7 +20975,7 @@ following text:
 %#### Generating Plain \TeX{} Token Renderer Prototype Macros and Key-Values {#plain-tex-renderer-prototypes}
 %
 % We define the command \mdef{@@_define_renderer_prototypes:} that defines plain \TeX{}
-% macros for token renderer prototypes. Futhermore, the `\markdownSetup` macro also accepts
+% macros for token renderer prototypes. Furthermore, the `\markdownSetup` macro also accepts
 % the `rendererPrototype` key, whose value must be a list of key-values, where the keys
 % correspond to the markdown token renderer prototype macros and the values are new
 % definitions of these token renderer prototypes.
@@ -21601,7 +21601,7 @@ following code in our \LaTeX{} document:
 
 We can also set all plain \TeX{} options directly from \LaTeX{}. For example,
 to set the `\markdownOptionInputTempFileName` plain \TeX{} option to
-`helper-script.lua`, we would inclde the following code in our \LaTeX{}
+`helper-script.lua`, we would include the following code in our \LaTeX{}
 document:
 
 ``` tex
@@ -22560,7 +22560,7 @@ end
 % Given a table `char_escapes` mapping escapable characters to escaped
 % strings and optionally a table `string_escapes` mapping escapable strings
 % to escaped strings, the \luamdef{util.escaper} method returns an escaper
-% function that escapes all occurances of escapable strings and characters (in
+% function that escapes all occurrences of escapable strings and characters (in
 % this order).
 %
 % The method uses \pkg{LPeg}, which is faster than the Lua `string.gsub`
@@ -22589,7 +22589,7 @@ function util.escaper(char_escapes, string_escapes)
 % \begin{markdown}
 % If `string_escapes` is provided, turn `escapable` into the
 % $$\sum^^B{(`k`, `v`)\in`string_escapes`}`P(k) / v` + `escapable`$$
-% capture that replaces any occurance of the string `k` with the string
+% capture that replaces any occurrence of the string `k` with the string
 % `v` for each $(`k`, `v`)\in`string_escapes`$. Note that the pattern
 % summation is not commutative and its operands are inspected in the
 % summation order during the matching. As a corrolary, the strings always
@@ -33218,7 +33218,7 @@ end
 %### Themes {#themes-implementation}
 %
 % This section implements the theme-loading mechanism and the built-in themes
-% provided with the Markdown package. Futhermore, this section also implements
+% provided with the Markdown package. Furthermore, this section also implements
 % the built-in plain \TeX{} themes provided with the Markdown package.
 %
 % \end{markdown}
@@ -34457,7 +34457,7 @@ end
 % \LaTeX{} Implementation {#lateximplementation}
 %-------------------------
 %
-% The \LaTeX{} implemenation makes use of the fact that, apart from some subtle
+% The \LaTeX{} implementation makes use of the fact that, apart from some subtle
 % differences, \LaTeX{} implements the majority of the plain \TeX{}
 % format~[@latex17, Section 9]. As a consequence, we can directly reuse the
 % existing plain \TeX{} implementation.
@@ -34686,7 +34686,7 @@ end
 %### Themes {#latex-themes-implementation}
 %
 % This section overrides the plain \TeX{} implementation of the theme-loading
-% mechanism from Section <#sec:themes-implementation>. Futhermore, this section
+% mechanism from Section <#sec:themes-implementation>. Furthermore, this section
 % also implements the built-in \LaTeX{} themes provided with the Markdown package.
 %
 % \end{markdown}
@@ -36413,7 +36413,7 @@ end
 %### Themes {#context-themes-implementation}
 %
 % This section overrides the plain \TeX{} implementation of the theme-loading
-% mechanism from Section <#sec:themes-implementation>. Futhermore, this section
+% mechanism from Section <#sec:themes-implementation>. Furthermore, this section
 % also implements the built-in \Hologo{ConTeXt} themes provided with the
 % Markdown package.
 %
