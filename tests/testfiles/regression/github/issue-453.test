@@ -17,7 +17,7 @@
 
 *inline note - backslash-escaped bracket*^[a \[ a]
 
-*not a note - label cannot contain brackets* [^a [a] a]
+*not a note - label cannot contain brackets* ^[a [a] a]
 
 [^a [a] a]: note
 >>>

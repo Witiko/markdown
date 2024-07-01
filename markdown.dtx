@@ -29137,10 +29137,10 @@ function M.reader.new(writer, options)
     end
 
     for i,value in ipairs(t) do
-      if not value.is_closing or
-        value.type ~= "delimiter" or
-        not (value.element == "link" or value.element == "image" or value.element == "note") or
-        value.removed then
+      if not value.is_closing
+          or value.type ~= "delimiter"
+          or not (value.element == "link" or value.element == "image" or value.element == "note")
+          or value.removed then
         goto continue
       end
 
