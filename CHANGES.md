@@ -2,6 +2,11 @@
 
 ## 3.7.0
 
+Fixes:
+
+- Fix the interplay between inline notes and square brackets.
+  (#453, #456, reported by @nopria, contributed by @lostenderman)
+
 ## 3.6.1 (2024-06-20)
 
 Fixes:
