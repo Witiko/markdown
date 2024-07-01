@@ -1,0 +1,38 @@
+\markdownSetup{
+  inlineNotes=true,
+  notes=true,
+}
+<<<
+*inline note*^[a [a] a]
+
+*inline note with inline link*^[a [a]() a]
+
+*inline note with full link*^[a [a][label] a]
+
+[label]: /url "title"
+
+*inline note with backslash-escaped brackets*^[a \[a\] a]
+
+*not an inline note - unbalanced brackets*^[a [ a]
+
+*inline note - backslash-escaped bracket*^[a \[ a]
+>>>
+BEGIN document
+emphasis: inline note
+note: a [a] a
+paragraphSeparator
+emphasis: inline note with inline link
+note: a (BEGIN link)(- label: a)(- URI: )(- title: )(END link) a
+paragraphSeparator
+emphasis: inline note with full link
+note: a (BEGIN link)(- label: a)(- URI: /url)(- title: title)(END link) a
+paragraphSeparator
+emphasis: inline note with backslash-escaped brackets
+note: a [a] a
+paragraphSeparator
+emphasis: not an inline note - unbalanced brackets
+circumflex
+paragraphSeparator
+emphasis: inline note - backslash-escaped bracket
+note: a [ a
+END document

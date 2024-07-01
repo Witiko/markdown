@@ -28688,7 +28688,7 @@ function M.reader.new(writer, options)
                         + #parsers.link_text
                         * Cg(Cc("link_text"), "link_type")
 
-  parsers.note_opening  = #(parsers.circumflex * parsers.shortcut_link)
+  parsers.note_opening  = #(parsers.circumflex * parsers.link_text)
                         * Cg(Cc("note_inline"), "link_type")
 
   parsers.raw_note_opening  = #( parsers.lbracket
@@ -29138,9 +29138,10 @@ function M.reader.new(writer, options)
     end
 
     for i,value in ipairs(t) do
-      if not value.is_closing or
-        value.type ~= "delimiter" or
-        not (value.element == "link" or value.element == "image" or value.element == "note") then
+      if not value.is_closing
+          or value.type ~= "delimiter"
+          or not (value.element == "link" or value.element == "image" or value.element == "note")
+          or value.removed then
         goto continue
       end
 
