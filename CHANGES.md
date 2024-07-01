@@ -6,6 +6,10 @@ Documentation:
 
 - Fix various typos. (#454, contributed by @mbertucci47)
 
+Continuous Integration:
+
+- Only test latest TeX Live in pull requests. (81927ca1)
+
 ## 3.6.1 (2024-06-20)
 
 Fixes:

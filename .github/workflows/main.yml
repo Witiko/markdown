@@ -135,6 +135,13 @@ jobs:
           - TL2022-historic
           - TL2023-historic
           - latest
+        # Only test latest TeX Live in pull requests.
+        is_pr:
+          - ${{ github.event_name == 'pull_request_target' }}
+        exclude:
+          - { is_pr: true }
+        include:
+          - { texlive: latest }
     outputs:
       TL2022-historic: ${{ steps.temporary-tags.outputs.TL2022-historic }}
       TL2023-historic: ${{ steps.temporary-tags.outputs.TL2023-historic }}
@@ -178,6 +185,13 @@ jobs:
           - TL2022-historic
           - TL2023-historic
           - latest
+        # Only test latest TeX Live in pull requests.
+        is_pr:
+          - ${{ github.event_name == 'pull_request_target' }}
+        exclude:
+          - { is_pr: true }
+        include:
+          - { texlive: latest }
     runs-on: self-hosted
     container:
       image: ghcr.io/witiko/markdown:${{ needs.build-docker-image.outputs[matrix.texlive] }}
@@ -214,6 +228,13 @@ jobs:
           - TL2022-historic
           - TL2023-historic
           - latest
+        # Only test latest TeX Live in pull requests.
+        is_pr:
+          - ${{ github.event_name == 'pull_request_target' }}
+        exclude:
+          - { is_pr: true }
+        include:
+          - { texlive: latest }
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request_target' && github.ref == 'refs/heads/main'
     env:
@@ -242,6 +263,13 @@ jobs:
           - TL2022-historic
           - TL2023-historic
           - latest
+        # Only test latest TeX Live in pull requests.
+        is_pr:
+          - ${{ github.event_name == 'pull_request_target' }}
+        exclude:
+          - { is_pr: true }
+        include:
+          - { texlive: latest }
     runs-on: ubuntu-latest
     permissions:
       contents: write
