@@ -2,6 +2,10 @@
 
 ## 3.7.0
 
+Documentation:
+
+- Fix various typos. (#454, contributed by @mbertucci47)
+
 ## 3.6.1 (2024-06-20)
 
 Fixes:
