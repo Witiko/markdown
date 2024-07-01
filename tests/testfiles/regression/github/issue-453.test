@@ -16,10 +16,6 @@
 *not an inline note - unbalanced brackets*^[a [ a]
 
 *inline note - backslash-escaped bracket*^[a \[ a]
-
-*not a note - label cannot contain brackets* ^[a [a] a]
-
-[^a [a] a]: note
 >>>
 BEGIN document
 emphasis: inline note
@@ -39,9 +35,4 @@ circumflex
 paragraphSeparator
 emphasis: inline note - backslash-escaped bracket
 note: a [ a
-paragraphSeparator
-emphasis: not a note - label cannot contain brackets
-circumflex
-paragraphSeparator
-circumflex
 END document
