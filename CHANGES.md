@@ -15,6 +15,10 @@ Continuous Integration:
 
 - Only test latest TeX Live in pull requests. (81927ca1)
 
+Libraries:
+
+- Update `tinyyaml` to v0.4.5-dev (commit 197632c). (1e83ac94)
+
 ## 3.6.1 (2024-06-20)
 
 Fixes:
