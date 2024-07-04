@@ -17,7 +17,7 @@ Continuous Integration:
 
 Libraries:
 
-- Update `tinyyaml` to v0.4.5-dev (commit 197632c). (1e83ac94)
+- Update `tinyyaml` to v0.4.4-1-g197632c. (1e83ac94)
 
 ## 3.6.1 (2024-06-20)
 
