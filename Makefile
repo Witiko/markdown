@@ -50,7 +50,7 @@ INSTALLABLES=markdown.lua markdown-cli.lua markdown.tex markdown.sty t-markdown.
   markdownthemewitiko_markdown_defaults.sty t-markdownthemewitiko_markdown_defaults.tex
 EXTRACTABLES=$(INSTALLABLES) $(MARKDOWN_USER_MANUAL) $(TECHNICAL_DOCUMENTATION_RESOURCES) \
   $(DEPENDENCIES)
-MAKEABLES=$(TECHNICAL_DOCUMENTATION) $(USER_MANUAL) $(INSTALLABLES) $(EXAMPLES)
+MAKEABLES=$(TECHNICAL_DOCUMENTATION) $(USER_MANUAL) $(INSTALLABLES) $(EXAMPLES) $(DEPENDENCIES)
 RESOURCES=$(DOCUMENTATION) $(EXAMPLES_RESOURCES) $(EXAMPLES_SOURCES) $(EXAMPLES) \
   $(MAKES) $(READMES) $(INSTALLER) $(DTXARCHIVE) $(TESTS) $(DEPENDENCIES)
 EVERYTHING=$(RESOURCES) $(INSTALLABLES) $(LIBRARIES)
@@ -70,6 +70,9 @@ ifndef DOCKER_TEXLIVE_TAG
 endif
 ifeq ($(DOCKER_DEV_IMAGE), true)
 	DOCKER_TAG_POSTFIX=-no_docs
+ifeq ($(DOCKER_TEXLIVE_TAG), latest)
+	DOCKER_TEXLIVE_TAG=latest-minimal
+endif
 endif
 DOCKER_TEMPORARY_IMAGE=ghcr.io/witiko/markdown
 DOCKER_TEMPORARY_TAG=$(VERSION)-$(DOCKER_TEXLIVE_TAG)$(DOCKER_TAG_POSTFIX)
@@ -131,9 +134,11 @@ $(EXTRACTABLES): $(INSTALLER) $(DTXARCHIVE)
 	    -e 's#(((LASTMODIFIED)))#$(LASTMODIFIED)#g' \
 	    $(INSTALLABLES)
 	sed -i \
-	    -e '/\\ExplSyntaxOff/{N;/\\ExplSyntaxOn/d;}' \
+	    -e '/\\ExplSyntaxOff/ { N; /\\ExplSyntaxOn/d; }' \
 	    $(INSTALLABLES)
-	grep -v '^#' $(DEPENDENCIES) | sort -u -o $(DEPENDENCIES)
+	( \
+	  sed -n '/^#/ ! { s/\s*#.*//; p }' $(DEPENDENCIES); \
+	) | sort -u -o $(DEPENDENCIES)
 
 # This target produces the version file.
 $(VERSION_FILE): force

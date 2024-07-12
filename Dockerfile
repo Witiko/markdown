@@ -24,7 +24,6 @@ ARG DEPENDENCIES="\
     python3-pygments \
     python3-venv \
     retry \
-    ruby \
     unzip \
     wget \
     zip \
@@ -33,6 +32,13 @@ ARG DEPENDENCIES="\
 ARG DEV_DEPENDENCIES="\
     less \
     vim \
+"
+
+ARG TEXLIVE_DEPENDENCIES="\
+    l3kernel \
+    latex \
+    latexmk \
+    luatex \
 "
 
 ARG BINARY_DIR=/usr/local/bin
@@ -47,6 +53,7 @@ ARG DEV_IMAGE=false
 FROM $FROM_IMAGE:$TEXLIVE_TAG as build
 
 ARG DEPENDENCIES
+ARG TEXLIVE_DEPENDENCIES
 
 ARG BUILD_DIR
 ARG INSTALL_DIR
@@ -67,7 +74,7 @@ set -o errexit
 set -o nounset
 set -o xtrace
 
-# Install dependencies
+# Install OS dependencies
 apt-get -qy update
 apt-get -qy install --no-install-recommends ${DEPENDENCIES}
 
@@ -80,8 +87,12 @@ then
   retry -t 30 -d 60 tlmgr update --self --all --repository ftp://ftp.cstug.cz/pub/tex/local/tlpretest/
 fi
 
-# Generate the ConTeXt file database
-mtxrun --generate
+# Install basic TeX Live dependencies
+if echo ${TEXLIVE_TAG} | grep -q latest-minimal
+then
+  retry -t 30 -d 60 tlmgr install ${TEXLIVE_DEPENDENCIES}
+  tlmgr path add
+fi
 
 # Uninstall the distribution Markdown package
 rm -rfv ${PREINSTALLED_DIR}/tex/luatex/markdown/
@@ -112,7 +123,13 @@ cp ${BUILD_DIR}/t-markdown.tex                               ${INSTALL_DIR}/tex/
 cp ${BUILD_DIR}/t-markdownthemewitiko_markdown_defaults.tex  ${INSTALL_DIR}/tex/context/third/markdown/
 
 # Generate the ConTeXt file database
-mtxrun --generate
+if test ${DEV_IMAGE} != true
+then
+  mtxrun --generate
+  texlua /usr/bin/mtxrun.lua --luatex --generate
+  context --make
+  context --luatex --make
+fi
 
 # Reindex the TeX directory structure
 texhash
@@ -145,6 +162,9 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV TERM=xterm
 ENV TEXMFLOCAL=${INSTALL_DIR}
 
+COPY --from=build ${BUILD_DIR}/DEPENDS.txt ${BUILD_DIR}/DEPENDS.txt
+COPY --from=build ${BUILD_DIR}/tests/DEPENDS.txt ${BUILD_DIR}/tests/DEPENDS.txt
+
 RUN <<EOF
 
 set -o errexit
@@ -170,6 +190,13 @@ then
 elif echo ${TEXLIVE_TAG} | grep -q pretest
 then
   retry -t 30 -d 60 tlmgr update --self --all --repository ftp://ftp.cstug.cz/pub/tex/local/tlpretest/
+fi
+
+# Install TeX Live dependencies
+if echo ${TEXLIVE_TAG} | grep -q latest-minimal
+then
+  retry -t 30 -d 60 tlmgr install $(awk '{ print $2 }' ${BUILD_DIR}/DEPENDS.txt ${BUILD_DIR}/tests/DEPENDS.txt | sort -u)
+  tlmgr path add
 fi
 
 # Uninstall the distribution Markdown package
@@ -200,9 +227,20 @@ set -o xtrace
 chmod +x ${BINARY_DIR}/markdown-cli
 
 # Generate the ConTeXt file database
+if echo ${TEXLIVE_TAG} | grep -q latest-minimal
+then
+  # A temporary fix for ConTeXt, see <https://gitlab.com/islandoftex/images/texlive/-/issues/30>.
+  sed -i '/package.loaded\["data-ini"\]/a if os.selfpath then environment.ownbin=lfs.symlinktarget(os.selfpath..io.fileseparator..os.selfname);environment.ownpath=environment.ownbin:match("^.*"..io.fileseparator) else environment.ownpath=kpse.new("luatex"):var_value("SELFAUTOLOC");environment.ownbin=environment.ownpath..io.fileseparator..(arg[-2] or arg[-1] or arg[0] or "luatex"):match("[^"..io.fileseparator.."]*$") end' /usr/bin/mtxrun.lua || true
+fi
 mtxrun --generate
+texlua /usr/bin/mtxrun.lua --luatex --generate
+context --make
+context --luatex --make
 
 # Reindex the TeX directory structure
 texhash
+
+# Remove the build directory
+rm -rfv ${BUILD_DIR}
 
 EOF

@@ -1359,6 +1359,7 @@ soft paralist
 % \end{markdown}
 %  \begin{macrocode}
 soft latex
+soft epstopdf-pkg  # required by `latex`
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -1382,6 +1383,8 @@ soft fancyvrb
 % \end{markdown}
 %  \begin{macrocode}
 soft csvsimple
+soft pgf  # required by `csvsimple`, which loads `pgfkeys.sty`
+soft tools  # required by `csvsimple`, which loads `shellesc.sty`
 %    \end{macrocode}
 % \begin{markdown}
 %
