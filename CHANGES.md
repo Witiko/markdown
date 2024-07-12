@@ -10,6 +10,7 @@ Fixes:
 Documentation:
 
 - Fix various typos. (#454, contributed by @mbertucci47)
+- Add file `DEPENDS.txt`. (#462, #463)
 
 Continuous Integration:
 

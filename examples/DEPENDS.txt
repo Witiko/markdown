@@ -1,0 +1,10 @@
+soft babel-english
+soft collection-context
+soft collection-latex
+soft collection-latexrecommended
+soft collection-luatex
+soft dvipng
+soft latex-bin
+soft make4ht
+soft optex
+soft xetex

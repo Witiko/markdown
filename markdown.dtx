@@ -1148,6 +1148,17 @@ end)()
 %:    A package that implements Unicode case-folding in \TeX{} Live${}\geq{}2020$.
 %
 % \end{markdown}
+% \iffalse
+%</lua>
+%<*depends>
+% \fi
+%  \begin{macrocode}
+hard lua-uni-algos
+%    \end{macrocode}
+% \iffalse
+%</depends>
+%<*lua>
+% \fi
 %  \begin{macrocode}
 local uni_algos = require("lua-uni-algos")
 %    \end{macrocode}
@@ -1166,6 +1177,13 @@ local uni_algos = require("lua-uni-algos")
 % \end{markdown}
 % \iffalse
 %</lua>
+%<*depends>
+% \fi
+%  \begin{macrocode}
+# hard lua-tinyyaml  # TODO: Uncomment after TeX Live 2022 has been deprecated.
+%    \end{macrocode}
+% \iffalse
+%</depends>
 %<*tex>
 % \fi
 % \par
@@ -1185,18 +1203,33 @@ local uni_algos = require("lua-uni-algos")
 %     such as options, renderers, and renderer prototypes.
 %
 % \end{markdown}
-%  \begin{macrocode}
+% \iffalse
 %</tex>
+%<*depends>
+% \fi
+%  \begin{macrocode}
+hard l3kernel
+%    \end{macrocode}
+% \iffalse
+%</depends>
 %<*context>
+% \fi
+%  \begin{macrocode}
 \unprotect
+%    \end{macrocode}
+% \iffalse
 %</context>
 %<*context,tex>
+% \fi
+%  \begin{macrocode}
 \ifx\ExplSyntaxOn\undefined
   \input expl3-generic
 \fi
+%    \end{macrocode}
+% \iffalse
 %</context,tex>
 %<*tex>
-%    \end{macrocode}
+% \fi
 % \begin{markdown}
 %
 % \pkg{lt3luabridge}
@@ -1204,6 +1237,20 @@ local uni_algos = require("lua-uni-algos")
 %:    A package that allows us to execute Lua code with LuaTeX as well as
 %     with other TeX engines that provide the *shell escape* capability,
 %     which allows them to execute code with the system's shell.
+%
+% \end{markdown}
+% \iffalse
+%</tex>
+%<*depends>
+% \fi
+%  \begin{macrocode}
+hard lt3luabridge
+%    \end{macrocode}
+% \iffalse
+%</depends>
+%<*tex>
+% \fi
+% \begin{markdown}
 %
 % The plain \TeX{} part of the package also requires the following Lua module:
 %
@@ -1249,10 +1296,13 @@ local uni_algos = require("lua-uni-algos")
 %<*themes-witiko-dot,latex-themes-witiko-graphicx-http>
 % \fi
 %  \begin{macrocode}
-\NeedsTeXFormat{LaTeX2e}%
+\NeedsTeXFormat{LaTeX2e}
+\RequirePackage{expl3}
 %    \end{macrocode}
 % \iffalse
 %</themes-witiko-dot,latex-themes-witiko-graphicx-http>
+%</latex>
+%<*depends>
 % \fi
 % \begin{markdown}
 % a \TeX{} engine that extends \Hologo{eTeX}, and all the plain \TeX{}
@@ -1269,10 +1319,23 @@ local uni_algos = require("lua-uni-algos")
 %
 %:    A package that provides the `\url` macro for the typesetting of links.
 %
+% \end{markdown}
+%  \begin{macrocode}
+soft url
+%    \end{macrocode}
+% \begin{markdown}
+%
 % \pkg{graphicx}
 %
 %:    A package that provides the `\includegraphics` macro for the typesetting
-%     of images.
+%     of images.Furthermore, it also provides a key-value interface that is
+%     used in the default renderer prototypes for image attribute contexts.
+%
+% \end{markdown}
+%  \begin{macrocode}
+soft graphics
+%    \end{macrocode}
+% \begin{markdown}
 %
 % \pkg{paralist}
 %
@@ -1281,16 +1344,35 @@ local uni_algos = require("lua-uni-algos")
 %     ordered lists, and definition lists as well as the rendering of
 %     fancy lists.
 %
+% \end{markdown}
+%  \begin{macrocode}
+soft paralist
+%    \end{macrocode}
+% \begin{markdown}
+%
 % \pkg{ifthen}
 %
 %:    A package that provides a concise syntax for the inspection of macro
 %     values. It is used in the `witiko/dot` \LaTeX{} theme (see Section
 %     <#sec:latexthemes>).
 %
+% \end{markdown}
+%  \begin{macrocode}
+soft latex
+soft epstopdf-pkg  # required by `latex`
+%    \end{macrocode}
+% \begin{markdown}
+%
 % \pkg{fancyvrb}
 %
 %:    A package that provides the `\VerbatimInput` macros for the verbatim
 %     inclusion of files containing code.
+%
+% \end{markdown}
+%  \begin{macrocode}
+soft fancyvrb
+%    \end{macrocode}
+% \begin{markdown}
 %
 % \pkg{csvsimple}
 %
@@ -1298,16 +1380,37 @@ local uni_algos = require("lua-uni-algos")
 %     \acro{csv} files in the default renderer prototypes for iA\\,Writer
 %     content blocks.
 %
+% \end{markdown}
+%  \begin{macrocode}
+soft csvsimple
+soft pgf  # required by `csvsimple`, which loads `pgfkeys.sty`
+soft tools  # required by `csvsimple`, which loads `shellesc.sty`
+%    \end{macrocode}
+% \begin{markdown}
+%
 % \pkg{gobble}
 %
 %:    A package that provides the `\@gobblethree` \TeX{} command that
 %     is used in the default renderer prototype for citations. The package
 %     is included in \TeX Live${}\geq{}2016$.
 %
+% \end{markdown}
+%  \begin{macrocode}
+soft gobble
+%    \end{macrocode}
+% \begin{markdown}
+%
 % \pkg{amsmath} and \pkg{amssymb}
 %
 %:    Packages that provide symbols used for drawing ticked and unticked
 %     boxes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+soft amsmath
+soft amsfonts
+%    \end{macrocode}
+% \begin{markdown}
 %
 % \pkg{catchfile}
 %
@@ -1315,11 +1418,11 @@ local uni_algos = require("lua-uni-algos")
 %     is used in the `witiko/graphicx/http` \LaTeX{} theme, see Section
 %     <#sec:latexthemes>.
 %
-% \pkg{graphicx}
-%
-%:    A package that builds upon the \pkg{graphics} package, which is part of
-%     the \LaTeXe{} kernel. It provides a key-value interface that is used in
-%     the default renderer prototypes for image attribute contexts.
+% \end{markdown}
+%  \begin{macrocode}
+soft catchfile
+%    \end{macrocode}
+% \begin{markdown}
 %
 % \pkg{grffile}
 %
@@ -1330,6 +1433,12 @@ local uni_algos = require("lua-uni-algos")
 %     the `witiko/dot` and `witiko/graphicx/http` \LaTeX{} themes, see Section
 %     <#sec:latexthemes>.
 %
+% \end{markdown}
+%  \begin{macrocode}
+soft grffile
+%    \end{macrocode}
+% \begin{markdown}
+%
 % \pkg{etoolbox}
 %
 %:    A package that is used to polyfill the general hook management system in
@@ -1337,17 +1446,35 @@ local uni_algos = require("lua-uni-algos")
 %     <#sec:latex-yaml-metadata>, and also in the default renderer prototype
 %     for identifier attributes.
 %
+% \end{markdown}
+%  \begin{macrocode}
+soft etoolbox
+%    \end{macrocode}
+% \begin{markdown}
+%
 % \pkg{soulutf8}
 %
 %:    A package that is used in the default renderer prototype for
 %     strike-throughs and marked text.
 %     <!-- TODO: 1,$s/soulutf8/soul/g in TeX Live 2023. -->
 %
+% \end{markdown}
+%  \begin{macrocode}
+soft soul
+%    \end{macrocode}
+% \begin{markdown}
+%
 % \pkg{ltxcmds}
 %
 %:    A package that is used to detect whether the \pkg{minted} and
 %     \pkg{listings} packages are loaded in the default renderer prototype
 %     for fenced code blocks.
+%
+% \end{markdown}
+%  \begin{macrocode}
+soft ltxcmds
+%    \end{macrocode}
+% \begin{markdown}
 %
 % \pkg{verse}
 %
@@ -1356,10 +1483,13 @@ local uni_algos = require("lua-uni-algos")
 %
 % \end{markdown}
 %  \begin{macrocode}
-\RequirePackage{expl3}
+soft verse
 %    \end{macrocode}
+% \begin{markdown}
+%
+% \end{markdown}
 % \iffalse
-%</latex>
+%</depends>
 %<*context>
 % \fi
 % \par
