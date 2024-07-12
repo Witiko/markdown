@@ -126,9 +126,6 @@ cp ${BUILD_DIR}/t-markdownthemewitiko_markdown_defaults.tex  ${INSTALL_DIR}/tex/
 if test ${DEV_IMAGE} != true
 then
   mtxrun --generate
-  texlua /usr/bin/mtxrun.lua --luatex --generate
-  context --make
-  context --luatex --make
 fi
 
 # Reindex the TeX directory structure
@@ -233,9 +230,12 @@ then
   sed -i '/package.loaded\["data-ini"\]/a if os.selfpath then environment.ownbin=lfs.symlinktarget(os.selfpath..io.fileseparator..os.selfname);environment.ownpath=environment.ownbin:match("^.*"..io.fileseparator) else environment.ownpath=kpse.new("luatex"):var_value("SELFAUTOLOC");environment.ownbin=environment.ownpath..io.fileseparator..(arg[-2] or arg[-1] or arg[0] or "luatex"):match("[^"..io.fileseparator.."]*$") end' /usr/bin/mtxrun.lua || true
 fi
 mtxrun --generate
-texlua /usr/bin/mtxrun.lua --luatex --generate
-context --make
-context --luatex --make
+if echo ${TEXLIVE_TAG} | grep -q latest-minimal
+then
+  texlua /usr/bin/mtxrun.lua --luatex --generate
+  context --make
+  context --luatex --make
+fi
 
 # Reindex the TeX directory structure
 texhash
