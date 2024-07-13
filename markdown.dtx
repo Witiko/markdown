@@ -30448,7 +30448,7 @@ M.extensions.citations = function(citation_nbsps)
                     )
                     * citation_name
                     * (parsers.internal_punctuation - parsers.semicolon)^-1
-                    * ( parsers.spnlc
+                    * ( parsers.spnlc / function(_) return end
                       * citation_body_postnote
                       + Cc("")
                       * parsers.spnlc
