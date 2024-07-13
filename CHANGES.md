@@ -8,6 +8,9 @@ Fixes:
   (#453, #456, reported by @nopria, contributed by @lostenderman)
 - Fix the interplay between lists and citations.
   (witiko/expltools#3, #460, #461, contributed by @lostenderman)
+- Do not override the `outputDir` option if if has been defined
+  before loading the package and pass it to lt3luabridge library.
+  (#457, #459)
 
 Documentation:
 
@@ -17,6 +20,10 @@ Documentation:
 Continuous Integration:
 
 - Only test latest TeX Live in pull requests. (81927ca1)
+
+Unit Tests:
+
+- Test the `outputDir` plain TeX option. (#457, #459)
 
 Libraries:
 
