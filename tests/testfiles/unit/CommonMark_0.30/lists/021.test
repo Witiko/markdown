@@ -31,7 +31,7 @@ emphasis: b
 blockQuoteEnd
 interblockSeparator
 BEGIN fencedCode
-- src: ./_markdown_test/627c418cd3ebbc37d157dfe5ce0d1983.verbatim
+- src: 627c418cd3ebbc37d157dfe5ce0d1983.verbatim
 - infostring: 
 END fencedCode
 ulItemEnd

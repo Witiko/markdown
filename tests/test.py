@@ -44,19 +44,21 @@ MAX_TESTFILE_NAMES_SHOWN_COLLAPSED: int = 3
 
 TEMPLATE_DIRECTORY: Path = Path('templates')
 SUPPORT_DIRECTORY: Path = Path('support')
+OUTPUT_DIRECTORY: Path = Path('output')
 
 COMMANDS_FILENAME = 'COMMANDS.m4'
-TEMPLATE_HEAD_FILENAME: str = 'head.tex'
+TEMPLATE_HEAD_FILENAME: str = 'head.tex.m4'
 TEMPLATE_BODY_FILENAME: str = 'body.tex.m4'
-TEMPLATE_FOOT_FILENAME: str = 'foot.tex'
-TEST_FILENAME: str = 'test.tex'
-TEST_OUTPUT_FILENAME: str = 'test.log'
-TEST_ACTUAL_OUTPUT_FILENAME: str = 'test-actual.log'
+TEMPLATE_FOOT_FILENAME: str = 'foot.tex.m4'
+TEST_BASENAME: str = 'test'
+TEST_FILENAME: str = f'{TEST_BASENAME}.tex'
+TEST_OUTPUT_FILENAME: str = f'{TEST_BASENAME}.log'
+TEST_ACTUAL_OUTPUT_FILENAME: str = f'{TEST_BASENAME}-actual.log'
 
-TEST_SETUP_FILENAME_FORMAT: str = 'test-setup-{:03d}.tex'
-TEST_INPUT_FILENAME_FORMAT: str = 'test-input-{:03d}.md'
-TEST_EXPECTED_OUTPUT_FILENAME_FORMAT: str = 'test-expected-{:03d}.log'
-TEST_ACTUAL_OUTPUT_FILENAME_FORMAT: str = 'test-actual-{:03d}.log'
+TEST_SETUP_FILENAME_FORMAT: str = f'{TEST_BASENAME}-setup-{{:03d}}.tex'
+TEST_INPUT_FILENAME_FORMAT: str = f'{TEST_BASENAME}-input-{{:03d}}.md'
+TEST_EXPECTED_OUTPUT_FILENAME_FORMAT: str = f'{TEST_BASENAME}-expected-{{:03d}}.log'
+TEST_ACTUAL_OUTPUT_FILENAME_FORMAT: str = f'{TEST_BASENAME}-actual-{{:03d}}.log'
 
 
 # Types
@@ -67,7 +69,7 @@ TestFileBatch = List[TestFile]
 
 TeXFormat = str
 Template = Path
-Command = Tuple[str, ...]
+Command = str
 
 NegativePriority = int
 
@@ -123,6 +125,11 @@ class TestSubResult:
         return temporary_directory
 
     @property
+    def output_directory(self) -> Optional[Path]:
+        output_directory = self.batch_result.output_directory
+        return output_directory
+
+    @property
     def exit_code(self) -> int:
         exit_code = self.batch_result.exit_code
         return exit_code
@@ -153,8 +160,8 @@ class TestSubResult:
         expected_output_filename = TEST_EXPECTED_OUTPUT_FILENAME_FORMAT.format(self.testfile_number)
         actual_output_filename = TEST_ACTUAL_OUTPUT_FILENAME_FORMAT.format(self.testfile_number)
 
-        expected_output_file = self.temporary_directory / expected_output_filename
-        actual_output_file = self.temporary_directory / actual_output_filename
+        expected_output_file = self.output_directory / expected_output_filename
+        actual_output_file = self.output_directory / actual_output_filename
 
         output_diff_lines = context_diff(
             expected_output_lines, actual_output_lines, fromfile=str(expected_output_file), tofile=str(actual_output_file), lineterm='')
@@ -173,7 +180,7 @@ class TestSubResult:
 
     @property
     def output_matches(self) -> bool:
-        if self.temporary_directory is None:
+        if self.output_directory is None:
             return True  # We have already deleted temporary directory, output must have been the same.
         return not self.output_diff
 
@@ -375,11 +382,13 @@ class TestResult:
 
 class BatchResult:
     def __init__(self, testfile_batch: TestFileBatch, test_parameters: TestParameters, temporary_directory: Path,
-                 test_process: CompletedProcess, fail_fast: bool) -> None:
+                 output_directory: Path, test_process: CompletedProcess, fail_fast: bool) -> None:
         self.testfile_batch = testfile_batch
         assert len(self) >= 1
         self.test_parameters = test_parameters
         self.temporary_directory = temporary_directory
+        self.output_directory = output_directory
+        assert output_directory.is_relative_to(temporary_directory)
         self.exit_code = test_process.returncode
         self.fail_fast = fail_fast
 
@@ -387,6 +396,7 @@ class BatchResult:
         if self:
             rmtree(self.temporary_directory)
             self.temporary_directory = None
+            self.output_directory = None
 
     @cached_property
     def subresults(self) -> Tuple[TestSubResult, ...]:
@@ -427,14 +437,14 @@ class BatchResult:
     @cached_property
     def actual_output_texts(self) -> Tuple[OutputText, ...]:
         try:
-            actual_output_file = self.temporary_directory / TEST_ACTUAL_OUTPUT_FILENAME
+            actual_output_file = self.output_directory / TEST_ACTUAL_OUTPUT_FILENAME
             with actual_output_file.open('rt') as f:
                 actual_output_text = f.read()
             actual_output_texts = split_batch_output_text(actual_output_text)
             actual_output_texts = tuple(actual_output_texts)
             for actual_output_text_number, actual_output_text in enumerate(actual_output_texts):
                 actual_output_filename = TEST_ACTUAL_OUTPUT_FILENAME_FORMAT.format(actual_output_text_number)
-                actual_output_file = self.temporary_directory / actual_output_filename
+                actual_output_file = self.output_directory / actual_output_filename
                 with actual_output_file.open('wt') as f:
                     for line in actual_output_text.splitlines():
                         print(line, file=f)
@@ -460,6 +470,8 @@ class BatchResult:
 
         # Create a temporary directory.
         temporary_directory = Path(mkdtemp())
+        output_directory = temporary_directory / OUTPUT_DIRECTORY
+        output_directory.mkdir()
 
         # Copy support files.
         for support_file in SUPPORT_DIRECTORY.glob('*'):
@@ -469,8 +481,11 @@ class BatchResult:
         test_texts: List[str] = []
 
         # Create test file fragment with header.
-        with (template / TEMPLATE_HEAD_FILENAME).open('rt') as f:
-            head_text = f.read()
+        head_text = run_m4(
+            template / TEMPLATE_HEAD_FILENAME,
+            cwd=temporary_directory,
+            OUTPUT_DIRECTORY=OUTPUT_DIRECTORY,
+        )
         test_texts.append(head_text)
 
         for testfile_number, (testfile, read_testfile_result) in enumerate(zip_equal(testfile_batch, read_testfile_results)):
@@ -487,7 +502,7 @@ class BatchResult:
             with (temporary_directory / test_input_filename).open('wt') as f:
                 print(input_text, file=f, end='')
 
-            with (temporary_directory / test_expected_output_filename).open('wt') as f:
+            with (output_directory / test_expected_output_filename).open('wt') as f:
                 print(expected_output_text, file=f, end='')
 
             # Create testfile-specific test file fragments.
@@ -495,12 +510,17 @@ class BatchResult:
                 template / TEMPLATE_BODY_FILENAME,
                 cwd=temporary_directory,
                 TEST_SETUP_FILENAME=test_setup_filename,
-                TEST_INPUT_FILENAME=test_input_filename)
+                TEST_INPUT_FILENAME=test_input_filename,
+                OUTPUT_DIRECTORY=OUTPUT_DIRECTORY,
+            )
             test_texts.append(body_text)
 
         # Create test file fragment with footer.
-        with (template / TEMPLATE_FOOT_FILENAME).open('rt') as f:
-            foot_text = f.read()
+        foot_text = run_m4(
+            template / TEMPLATE_FOOT_FILENAME,
+            cwd=temporary_directory,
+            OUTPUT_DIRECTORY=OUTPUT_DIRECTORY,
+        )
         test_texts.append(foot_text)
 
         test_text = '\n'.join(test_text.strip('\r\n') for test_text in test_texts)
@@ -508,19 +528,19 @@ class BatchResult:
             print(test_text, file=f)
 
         # Run test.
-        test_process = run(command, cwd=temporary_directory, capture_output=True)
+        test_process = run(command, cwd=temporary_directory, capture_output=True, shell=True)
 
         # Extract test output.
         try:
-            actual_output_file = temporary_directory / TEST_OUTPUT_FILENAME
+            actual_output_file = output_directory / TEST_OUTPUT_FILENAME
             actual_output_text = read_test_output_from_tex_log_file(actual_output_file)
-            with (temporary_directory / TEST_ACTUAL_OUTPUT_FILENAME).open('wt') as f:
+            with (output_directory / TEST_ACTUAL_OUTPUT_FILENAME).open('wt') as f:
                 print(actual_output_text, file=f)
         except IOError as e:
             LOGGER.debug(f'Failed to extract test output from log file: {e}.')
 
         # Store test batch result.
-        batch_result = BatchResult(testfile_batch, test_parameters, temporary_directory, test_process, fail_fast)
+        batch_result = BatchResult(testfile_batch, test_parameters, temporary_directory, output_directory, test_process, fail_fast)
         return batch_result
 
     @classmethod
@@ -576,11 +596,15 @@ def run_m4(input_file: Path, cwd: Optional[Path] = None, **variables) -> str:
 def get_commands(tex_format: str) -> Tuple[Command, ...]:
     commands: List[Command] = []
     commands_file = TEMPLATE_DIRECTORY / tex_format / COMMANDS_FILENAME
-    commands_text = run_m4(commands_file, TEST_FILENAME=TEST_FILENAME)
-    for command_str in commands_text.splitlines():
-        command_str = command_str.strip()
-        if command_str:
-            command = tuple(command_str.split())
+    commands_text = run_m4(
+        commands_file,
+        TEST_FILENAME=TEST_FILENAME,
+        TEST_BASENAME=TEST_BASENAME,
+        OUTPUT_DIRECTORY=OUTPUT_DIRECTORY,
+    )
+    for command in commands_text.splitlines():
+        command = command.strip()
+        if command:
             commands.append(command)
     return tuple(commands)
 
@@ -657,25 +681,14 @@ def split_batch_output_text(output_text: OutputText) -> Iterable[OutputText]:
 
 def format_commands_with_templates(commands_with_templates: Iterable[Tuple[Command, Optional[Template]]]) -> str:
     commands, templates = zip(*commands_with_templates)
-    command_texts = [' '.join(command) for command in commands]
     template_texts = [f' (template {template.name})' if template is not None else '' for template in templates]
     command_with_template_texts = [
         f'{command_text}{template_text}'
         for command_text, template_text
-        in zip_equal(command_texts, template_texts)
+        in zip_equal(commands, template_texts)
     ]
     commands_with_templates_text = ', '.join(command_with_template_texts)
     return commands_with_templates_text
-
-
-def format_commands(commands: Iterable[Command]) -> str:
-    command_texts = [' '.join(command) for command in commands]
-    commands_text = ', '.join(command_texts)
-    return commands_text
-
-
-def format_command(command: Command) -> str:
-    return format_commands([command])
 
 
 def format_testfiles(testfiles: Iterable[TestFile]) -> str:
@@ -748,7 +761,7 @@ def get_test_parameters(testfile_batch: TestFileBatch) -> Iterable[Tuple[TestPar
         for template in get_templates(tex_format):
             LOGGER.debug(f'    Template {template.name}')
             for command in get_commands(tex_format):
-                LOGGER.debug(f'      Command {format_command(command)}')
+                LOGGER.debug(f'      Command {command}')
                 # Filter out testfiles that do not support the current parameters.
                 test_parameters = TestParameters(read_testfile_results, tex_format, template, command)
                 filtered_testfile_batch, filtered_read_testfile_results = list(), list()

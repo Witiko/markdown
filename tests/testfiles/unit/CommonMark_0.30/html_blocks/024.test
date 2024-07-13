@@ -20,5 +20,5 @@ _bar_
 </textarea>
 >>>
 BEGIN document
-inputBlockHtmlElement: ./_markdown_test/ce1481883d73c79685d49fe56582c08b.verbatim
+inputBlockHtmlElement: ce1481883d73c79685d49fe56582c08b.verbatim
 END document

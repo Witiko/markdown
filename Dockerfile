@@ -23,6 +23,7 @@ ARG DEPENDENCIES="\
     poppler-utils \
     python3-pygments \
     python3-venv \
+    rename \
     retry \
     unzip \
     wget \

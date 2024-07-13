@@ -10,7 +10,7 @@
 *baz*
 >>>
 BEGIN document
-inputBlockHtmlElement: ./_markdown_test/de8d24e05988c7a46dfe41128df9973b.verbatim
+inputBlockHtmlElement: de8d24e05988c7a46dfe41128df9973b.verbatim
 interblockSeparator
 emphasis: baz
 END document

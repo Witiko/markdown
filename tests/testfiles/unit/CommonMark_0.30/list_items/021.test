@@ -22,10 +22,10 @@
 BEGIN document
 olBegin
 olItemWithNumber: 1
-inputVerbatim: ./_markdown_test/bf995e3b2610078e871b00000c1fb65f.verbatim
+inputVerbatim: bf995e3b2610078e871b00000c1fb65f.verbatim
 interblockSeparator
 interblockSeparator
-inputVerbatim: ./_markdown_test/edf19530665eedd599d1228679ec3a65.verbatim
+inputVerbatim: edf19530665eedd599d1228679ec3a65.verbatim
 olItemEnd
 olEnd
 END document

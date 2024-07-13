@@ -21,7 +21,7 @@ BEGIN document
 olBegin
 olItemWithNumber: 1
 BEGIN fencedCode
-- src: ./_markdown_test/543bbf7878c5aca988a5ea83b1554394.verbatim
+- src: 543bbf7878c5aca988a5ea83b1554394.verbatim
 - infostring: 
 END fencedCode
 interblockSeparator

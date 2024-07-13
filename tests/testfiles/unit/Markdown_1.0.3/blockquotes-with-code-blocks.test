@@ -15,9 +15,9 @@
 BEGIN document
 blockQuoteBegin
 interblockSeparator
-inputVerbatim: ./_markdown_test/9d1287e577b61c6969fcf3c6f5f56068.verbatim
+inputVerbatim: 9d1287e577b61c6969fcf3c6f5f56068.verbatim
 interblockSeparator
 interblockSeparator
-inputVerbatim: ./_markdown_test/8be451539403358f26932093849e3c95.verbatim
+inputVerbatim: 8be451539403358f26932093849e3c95.verbatim
 blockQuoteEnd
 END document

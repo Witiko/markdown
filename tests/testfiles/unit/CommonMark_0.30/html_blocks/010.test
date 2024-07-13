@@ -10,5 +10,5 @@
 foo
 >>>
 BEGIN document
-inputBlockHtmlElement: ./_markdown_test/ed6f44f52e344dd6061d149a442bca56.verbatim
+inputBlockHtmlElement: ed6f44f52e344dd6061d149a442bca56.verbatim
 END document

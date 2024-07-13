@@ -11,7 +11,7 @@ BEGIN document
 olBegin
 olItemWithNumber: 1
 interblockSeparator
-inputVerbatim: ./_markdown_test/c2b16b0c158a933ad44f3aa1a463d7df.verbatim
+inputVerbatim: c2b16b0c158a933ad44f3aa1a463d7df.verbatim
 interblockSeparator
 olItemEnd
 olEnd

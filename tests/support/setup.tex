@@ -61,3 +61,23 @@
   \CITATIONSCOUNTER=1%
   \def\CITATIONSTOTAL{#2}%
   \DOCITATIONS{#1}}%
+
+% Normalize pathnames by stripping all but the last fragment.
+\ExplSyntaxOn
+\cs_new:Npn
+  \NORMALIZEPATH
+  #1
+  {
+    \DONORMALIZEPATH
+      #1 / /
+  }
+\cs_new:Npn
+  \DONORMALIZEPATH
+  #1 / #2 /
+  {
+    \tl_if_empty:nTF
+      { #2 }
+      { #1 }
+      { \DONORMALIZEPATH #2 / }
+  }
+\ExplSyntaxOff

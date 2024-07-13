@@ -12,7 +12,7 @@ foo
 >>>
 BEGIN document
 BEGIN fencedCode
-- src: ./_markdown_test/acbd18db4cc2f85cedef654fccc4a4d8.verbatim
+- src: acbd18db4cc2f85cedef654fccc4a4d8.verbatim
 - infostring: foo+bar
 END fencedCode
 END document

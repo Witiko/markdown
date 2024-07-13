@@ -1,2 +1,2 @@
-pdflatex --shell-escape                  --interaction=nonstopmode  TEST_FILENAME
-lualatex                                 --interaction=nonstopmode  TEST_FILENAME
+pdflatex -shell-escape -output-directory OUTPUT_DIRECTORY -interaction=nonstopmode TEST_FILENAME
+lualatex               -output-directory OUTPUT_DIRECTORY -interaction=nonstopmode TEST_FILENAME

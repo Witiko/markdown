@@ -34,25 +34,25 @@ paragraphSeparator
 paragraphSeparator
 interblockSeparator
 BEGIN fencedCode
-- src: ./_markdown_test/37b51d194a7513e45b56f6524f2d51f2.verbatim
+- src: 37b51d194a7513e45b56f6524f2d51f2.verbatim
 - infostring: foo
 END fencedCode
 interblockSeparator
 interblockSeparator
 BEGIN fencedCode
-- src: ./_markdown_test/37b51d194a7513e45b56f6524f2d51f2.verbatim
+- src: 37b51d194a7513e45b56f6524f2d51f2.verbatim
 - infostring: foo
 END fencedCode
 interblockSeparator
 interblockSeparator
 BEGIN fencedCode
-- src: ./_markdown_test/37b51d194a7513e45b56f6524f2d51f2.verbatim
+- src: 37b51d194a7513e45b56f6524f2d51f2.verbatim
 - infostring: foo
 END fencedCode
 interblockSeparator
 interblockSeparator
 BEGIN fencedCode
-- src: ./_markdown_test/37b51d194a7513e45b56f6524f2d51f2.verbatim
+- src: 37b51d194a7513e45b56f6524f2d51f2.verbatim
 - infostring: foo
 END fencedCode
 END document

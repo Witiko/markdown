@@ -125,10 +125,10 @@ renderers = {%
   lineBlock(Begin|End) = {%
     \TYPE{#0}},
   inputVerbatim = {%
-    \TYPE{#0: #1}},
+    \TYPE{#0: \NORMALIZEPATH{#1}}},
   inputFencedCode = {%
     \TYPE{BEGIN fencedCode}%
-    \TYPE{- src:        #1}%
+    \TYPE{- src:        \NORMALIZEPATH{#1}}%
     \TYPE{- infostring: #3}%
     \TYPE{END fencedCode}},
   heading* = {%
@@ -144,7 +144,7 @@ renderers = {%
   inlineHtml(Comment|Tag) = {%
     \TYPE{#0: #1}},
   inputBlockHtmlElement = {%
-    \TYPE{#0: #1}},
+    \TYPE{#0: \NORMALIZEPATH{#1}}},
   (ticked|halfTicked|unticked)Box = {%
     \TYPE{#0}},
   jekyllData(Boolean|Number|String) = {%
@@ -173,12 +173,12 @@ renderers = {%
     \TYPE{#0: #1}},
   inputRawInline = {%
     \TYPE{BEGIN rawInline}%
-    \TYPE{- src:           #1}%
+    \TYPE{- src:           \NORMALIZEPATH{#1}}%
     \TYPE{- raw attribute: #2}%
     \TYPE{END rawInline}},
   inputRawBlock = {%
     \TYPE{BEGIN rawBlock}%
-    \TYPE{- src:           #1}%
+    \TYPE{- src:           \NORMALIZEPATH{#1}}%
     \TYPE{- raw attribute: #2}%
     \TYPE{END rawBlock}},
   replacementCharacter = {%

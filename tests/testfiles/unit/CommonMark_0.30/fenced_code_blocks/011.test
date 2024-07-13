@@ -17,7 +17,7 @@ if: template == 'input'
 >>>
 BEGIN document
 BEGIN fencedCode
-- src: ./_markdown_test/f67be96ce768fb5b40aecf0438f97886.verbatim
+- src: f67be96ce768fb5b40aecf0438f97886.verbatim
 - infostring: 
 END fencedCode
 END document

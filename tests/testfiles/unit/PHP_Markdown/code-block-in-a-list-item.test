@@ -19,15 +19,15 @@ BEGIN document
 ulBegin
 ulItem
 interblockSeparator
-inputVerbatim: ./_markdown_test/7da7e1c6a1b06ee08ec9ef848a4fb61d.verbatim
+inputVerbatim: 7da7e1c6a1b06ee08ec9ef848a4fb61d.verbatim
 interblockSeparator
 ulItemEnd
 ulItem
-inputVerbatim: ./_markdown_test/1773a229d66d87b36aa64f998e4d03d4.verbatim
+inputVerbatim: 1773a229d66d87b36aa64f998e4d03d4.verbatim
 ulItemEnd
 ulItem
 interblockSeparator
-inputVerbatim: ./_markdown_test/76f4166a488956dfe5082ca0ab4ca21f.verbatim
+inputVerbatim: 76f4166a488956dfe5082ca0ab4ca21f.verbatim
 ulItemEnd
 ulEnd
 END document

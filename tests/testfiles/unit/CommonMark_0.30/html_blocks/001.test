@@ -19,11 +19,11 @@ _world_.
 </td></tr></table>
 >>>
 BEGIN document
-inputBlockHtmlElement: ./_markdown_test/5a8e413f9b0ef97790d0c9da301a6149.verbatim
+inputBlockHtmlElement: 5a8e413f9b0ef97790d0c9da301a6149.verbatim
 interblockSeparator
 emphasis: world
 softLineBreak
 inlineHtmlTag: </pre>
 interblockSeparator
-inputBlockHtmlElement: ./_markdown_test/3cf13bd6294e965d41514d92b4a04186.verbatim
+inputBlockHtmlElement: 3cf13bd6294e965d41514d92b4a04186.verbatim
 END document
