@@ -6,6 +6,8 @@ Fixes:
 
 - Fix the interplay between inline notes and square brackets.
   (#453, #456, reported by @nopria, contributed by @lostenderman)
+- Fix the interplay between lists and citations.
+  (witiko/expltools#3, #460, #461, contributed by @lostenderman)
 
 Documentation:
 
