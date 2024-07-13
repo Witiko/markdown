@@ -12,7 +12,7 @@
     <div>
 >>>
 BEGIN document
-inputBlockHtmlElement: ./_markdown_test/532313b1c7b8e07e4b735f09b33a756d.verbatim
+inputBlockHtmlElement: 532313b1c7b8e07e4b735f09b33a756d.verbatim
 interblockSeparator
-inputVerbatim: ./_markdown_test/32125540a649ecc646413c37c588775d.verbatim
+inputVerbatim: 32125540a649ecc646413c37c588775d.verbatim
 END document

@@ -26,13 +26,13 @@ softLineBreak
 paragraphSeparator
 interblockSeparator
 BEGIN rawBlock
-- src: ./_markdown_test/b43c6cb44864821760ccce3596fbc5e2.verbatim
+- src: b43c6cb44864821760ccce3596fbc5e2.verbatim
 - raw attribute: openxml
 END rawBlock
 interblockSeparator
 paragraphSeparator
 BEGIN rawInline
-- src: ./_markdown_test/fd6a1b0756c054889635f876357a8ca1.verbatim
+- src: fd6a1b0756c054889635f876357a8ca1.verbatim
 - raw attribute: html
 END rawInline
 END document

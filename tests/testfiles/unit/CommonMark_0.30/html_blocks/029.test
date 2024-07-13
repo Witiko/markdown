@@ -10,7 +10,7 @@
 *foo*
 >>>
 BEGIN document
-inputBlockHtmlElement: ./_markdown_test/4d76715587a9156205320c1e87caf447.verbatim
+inputBlockHtmlElement: 4d76715587a9156205320c1e87caf447.verbatim
 interblockSeparator
 emphasis: foo
 END document

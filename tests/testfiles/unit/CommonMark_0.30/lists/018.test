@@ -29,7 +29,7 @@ emphasis: a
 ulItemEnd
 ulItem
 BEGIN fencedCode
-- src: ./_markdown_test/22762555f9c2a5d1e04bbb2a385e5987.verbatim
+- src: 22762555f9c2a5d1e04bbb2a385e5987.verbatim
 - infostring: 
 END fencedCode
 ulItemEnd

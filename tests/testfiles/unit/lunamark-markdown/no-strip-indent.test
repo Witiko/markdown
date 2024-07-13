@@ -4,5 +4,5 @@
 	as a verbatim code block, not a paragraph of text.
 >>>
 BEGIN document
-inputVerbatim: ./_markdown_test/246af0077a2035dc75c94878e91f43ba.verbatim
+inputVerbatim: 246af0077a2035dc75c94878e91f43ba.verbatim
 END document

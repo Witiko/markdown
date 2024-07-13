@@ -196,7 +196,7 @@ rightBrace
 softLineBreak
 interblockSeparator
 BEGIN fencedCode
-- src: ./_markdown_test/e441fcf4a7686817fe868bf38a5c2c07.verbatim
+- src: e441fcf4a7686817fe868bf38a5c2c07.verbatim
 - infostring: 
 END fencedCode
 interblockSeparator
@@ -218,7 +218,7 @@ rightBrace
 softLineBreak
 interblockSeparator
 BEGIN fencedCode
-- src: ./_markdown_test/e441fcf4a7686817fe868bf38a5c2c07.verbatim
+- src: e441fcf4a7686817fe868bf38a5c2c07.verbatim
 - infostring: 
 END fencedCode
 interblockSeparator

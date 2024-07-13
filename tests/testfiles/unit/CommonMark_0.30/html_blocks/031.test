@@ -12,5 +12,5 @@ foo
 </script>1. *bar*
 >>>
 BEGIN document
-inputBlockHtmlElement: ./_markdown_test/d45637b2c8a75cfdedab999cd0cfdc33.verbatim
+inputBlockHtmlElement: d45637b2c8a75cfdedab999cd0cfdc33.verbatim
 END document

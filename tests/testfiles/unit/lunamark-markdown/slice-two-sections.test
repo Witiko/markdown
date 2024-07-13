@@ -187,7 +187,7 @@ END contentBlock
 interblockSeparator
 interblockSeparator
 BEGIN fencedCode
-- src: ./_markdown_test/4b6b6e5629f4aa0fcfcb9164fca2efa3.verbatim
+- src: 4b6b6e5629f4aa0fcfcb9164fca2efa3.verbatim
 - infostring: latex
 END fencedCode
 interblockSeparator
@@ -274,7 +274,7 @@ dlItemEnd
 dlItem: (emphasis: Term 2)
 dlDefinitionBegin
 interblockSeparator
-inputVerbatim: ./_markdown_test/990a3431517de9eac439b71b42999658.verbatim
+inputVerbatim: 990a3431517de9eac439b71b42999658.verbatim
 interblockSeparator
 dlDefinitionEnd
 dlDefinitionBegin

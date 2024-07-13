@@ -15,7 +15,7 @@ aaa
 >>>
 BEGIN document
 BEGIN fencedCode
-- src: ./_markdown_test/bf41e9999cfc44d815c2a227bc67b1ab.verbatim
+- src: bf41e9999cfc44d815c2a227bc67b1ab.verbatim
 - infostring: 
 END fencedCode
 END document

@@ -140,7 +140,7 @@ dlItemEnd
 dlItem: (emphasis: orange)
 dlDefinitionBegin
 interblockSeparator
-inputVerbatim: ./_markdown_test/e23a4f1a615f1d171556f2678d4ea912.verbatim
+inputVerbatim: e23a4f1a615f1d171556f2678d4ea912.verbatim
 interblockSeparator
 blockQuoteBegin
 blockQuoteEnd

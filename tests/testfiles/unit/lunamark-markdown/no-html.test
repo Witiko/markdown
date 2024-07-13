@@ -32,9 +32,9 @@ Unrecognized character entities are ignored: &nonsense;
 BEGIN document
 codeSpan: html
 interblockSeparator
-inputBlockHtmlElement: ./_markdown_test/34d8e769cc46adbf7aeb7c22322cce98.verbatim
+inputBlockHtmlElement: 34d8e769cc46adbf7aeb7c22322cce98.verbatim
 interblockSeparator
-inputBlockHtmlElement: ./_markdown_test/39d398563da05b15636873d96cc50e51.verbatim
+inputBlockHtmlElement: 39d398563da05b15636873d96cc50e51.verbatim
 interblockSeparator
 interblockSeparator
 ulBeginTight

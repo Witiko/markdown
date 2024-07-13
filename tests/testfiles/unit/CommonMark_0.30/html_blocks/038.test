@@ -15,5 +15,5 @@ bar
 >>>
 BEGIN document
 interblockSeparator
-inputBlockHtmlElement: ./_markdown_test/c9dd120ae3847c13e8c50a74781845a9.verbatim
+inputBlockHtmlElement: c9dd120ae3847c13e8c50a74781845a9.verbatim
 END document

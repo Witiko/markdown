@@ -11,7 +11,7 @@
 *bar*
 >>>
 BEGIN document
-inputVerbatim: ./_markdown_test/acbd18db4cc2f85cedef654fccc4a4d8.verbatim
+inputVerbatim: acbd18db4cc2f85cedef654fccc4a4d8.verbatim
 interblockSeparator
 emphasis: bar
 END document

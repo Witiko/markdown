@@ -11987,47 +11987,10 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\cs_generate_variant:Nn
-  \@@_add_plain_tex_option:nnn
-  { nnV }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% Use the \pkg{lt3luabridge} library to determine the default value of the
-% \mref{markdownOptionOutputDir} macro by using the environmental variable
-% `TEXMF_OUTPUT_DIRECTORY` that is available since TeX~Live 2024.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\ExplSyntaxOff
-\input lt3luabridge.tex
-\ExplSyntaxOn
-\bool_if:nTF
-  {
-    \cs_if_exist_p:N
-      \luabridge_tl_set:Nn &&
-    (
-      \int_compare_p:nNn
-        { \g_luabridge_method_int }
-        =
-        { \c_luabridge_method_directlua_int } ||
-      \sys_if_shell_unrestricted_p:
-    )
-  }
-  {
-    \luabridge_tl_set:Nn
-      \l_tmpa_tl
-      { print(os.getenv("TEXMF_OUTPUT_DIRECTORY") or ".") }
-  }
-  {
-    \tl_set:Nn
-      \l_tmpa_tl
-      { . }
-  }
-\@@_add_plain_tex_option:nnV
+\@@_add_plain_tex_option:nnn
   { outputDir }
   { path }
-  \l_tmpa_tl
+  { . }
 %    \end{macrocode}
 % \iffalse
 %</tex>
@@ -12303,22 +12266,73 @@ A PDF document named `document.pdf` should be produced and contain the text
 %    \end{macrocode}
 % \begin{markdown}
 %
+% Use the \pkg{lt3luabridge} library to determine the default value of the
+% \mref{markdownOptionOutputDir} macro by using the environmental variable
+% `TEXMF_OUTPUT_DIRECTORY` that is available since TeX~Live 2024.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \str_if_eq:nnTF
+      { #1 }
+      { outputDir }
+      { \@@_define_option_command_output_dir: }
+      {
+%    \end{macrocode}
+% \begin{markdown}
+%
 % Do not override options defined before loading the package.
 %
 % \end{markdown}
 %  \begin{macrocode}
-    \@@_option_tl_to_csname:nN
-      { #1 }
-      \l_tmpa_tl
-    \cs_if_exist:cF
-      { \l_tmpa_tl }
+        \@@_option_tl_to_csname:nN
+          { #1 }
+          \l_tmpa_tl
+        \cs_if_exist:cF
+          { \l_tmpa_tl }
+          {
+            \@@_get_default_option_value:nN
+              { #1 }
+              \l_tmpa_tl
+            \@@_set_option_value:nV
+              { #1 }
+              \l_tmpa_tl
+          }
+      }
+  }
+\ExplSyntaxOff
+\input lt3luabridge.tex
+\ExplSyntaxOn
+\cs_new:Nn
+  \@@_define_option_command_output_dir:
+  {
+    \cs_if_free:NT
+      \markdownOptionOutputDir
       {
-        \@@_get_default_option_value:nN
-          { #1 }
-          \l_tmpa_tl
-        \@@_set_option_value:nV
-          { #1 }
-          \l_tmpa_tl
+        \bool_if:nTF
+          {
+            \cs_if_exist_p:N
+              \luabridge_tl_set:Nn &&
+            (
+              \int_compare_p:nNn
+                { \g_luabridge_method_int }
+                =
+                { \c_luabridge_method_directlua_int } ||
+              \sys_if_shell_unrestricted_p:
+            )
+          }
+          {
+            \luabridge_tl_set:Nn
+              \l_tmpa_tl
+              { print(os.getenv("TEXMF_OUTPUT_DIRECTORY") or ".") }
+            \tl_gset:NV
+              \markdownOptionOutputDir
+              \l_tmpa_tl
+          }
+          {
+            \tl_gset:Nn
+              \markdownOptionOutputDir
+              { . }
+          }
       }
   }
 \cs_new:Nn
@@ -34293,6 +34307,9 @@ end
               }
           }
       }
+    \str_gset:NV
+      \g_luabridge_output_dirname_str
+      \markdownOptionOutputDir
     \luabridge_now:e
       { #1 }
   }

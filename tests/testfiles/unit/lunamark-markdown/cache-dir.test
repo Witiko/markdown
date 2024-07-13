@@ -1,4 +1,5 @@
 \markdownSetup{cacheDir=some-other-directory}
+\def\NORMALIZEPATH#1{#1}  % Show full path in the output of `inputVerbatim`.
 <<<
 This test ensures that the Lua `cacheDir` option correctly propagates through
 the plain TeX interface and causes a change in the cache directory location.

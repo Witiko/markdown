@@ -11,5 +11,5 @@
     bar
 >>>
 BEGIN document
-inputVerbatim: ./_markdown_test/e87053b57f73339dc60f9a7c9e8728d9.verbatim
+inputVerbatim: e87053b57f73339dc60f9a7c9e8728d9.verbatim
 END document

@@ -14,5 +14,5 @@ bar
 *foo*
 >>>
 BEGIN document
-inputBlockHtmlElement: ./_markdown_test/7001f3dd24898bf2401acb6c9979b65d.verbatim
+inputBlockHtmlElement: 7001f3dd24898bf2401acb6c9979b65d.verbatim
 END document

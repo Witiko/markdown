@@ -89,7 +89,7 @@ BEGIN link
 END link
 paragraphSeparator
 paragraphSeparator
-inputVerbatim: ./_markdown_test/1d6cdc132aafa7c2999b741379103fae.verbatim
+inputVerbatim: 1d6cdc132aafa7c2999b741379103fae.verbatim
 paragraphSeparator
 thematicBreak
 interblockSeparator

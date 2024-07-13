@@ -11,7 +11,7 @@
 *bbb*
 >>>
 BEGIN document
-inputVerbatim: ./_markdown_test/b0c8f0811c40c47c6c172fc9882daaf9.verbatim
+inputVerbatim: b0c8f0811c40c47c6c172fc9882daaf9.verbatim
 interblockSeparator
 emphasis: bbb
 END document

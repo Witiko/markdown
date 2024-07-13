@@ -19,7 +19,7 @@ BEGIN document
 ulBegin
 ulItem
 interblockSeparator
-inputVerbatim: ./_markdown_test/e5d16c973faf1d458c867e719c7a1e52.verbatim
+inputVerbatim: e5d16c973faf1d458c867e719c7a1e52.verbatim
 ulItemEnd
 ulEnd
 END document

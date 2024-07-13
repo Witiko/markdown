@@ -27,7 +27,7 @@ olBegin
 olItemWithNumber: 1
 softLineBreak
 interblockSeparator
-inputVerbatim: ./_markdown_test/bf995e3b2610078e871b00000c1fb65f.verbatim
+inputVerbatim: bf995e3b2610078e871b00000c1fb65f.verbatim
 interblockSeparator
 blockQuoteBegin
 blockQuoteEnd

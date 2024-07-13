@@ -1,14 +1,10 @@
-\documentclass{minimal}
-\csname UseRawInputEncoding\endcsname
-
 % Load the package.
-\usepackage[plain]{markdown}
+\input markdown
 
 % Load the support files.
 \markdownSetup{
+  outputDir = OUTPUT_DIRECTORY,
   import = {
     witiko/markdown/test = snippet as testSnippet,
   }
 }
-
-\begin{document}

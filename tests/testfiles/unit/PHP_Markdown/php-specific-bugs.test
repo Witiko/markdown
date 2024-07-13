@@ -43,7 +43,7 @@ headingThree: Header "quoted" again (backslash)""
 paragraphSeparator
 codeSpan: (underscore)Detab
 interblockSeparator
-inputVerbatim: ./_markdown_test/49593f3a94665fea149e78f87b7e1b70.verbatim
+inputVerbatim: 49593f3a94665fea149e78f87b7e1b70.verbatim
 END section
 END section
 END section
