@@ -1,0 +1,21 @@
+\markdownSetup{
+  citations=true,
+}
+<<<
+- Color export targets [@latexteam2024interfaces,
+  Section 37.8]
+>>>
+BEGIN document
+ulBeginTight
+ulItem
+BEGIN cites
+BEGIN cite
+- suppressAuthor: false
+- prenote: 
+- postnote: Section(nbsp)37.8
+- name: latexteam2024interfaces
+END cite
+END cites
+ulItemEnd
+ulEndTight
+END document
