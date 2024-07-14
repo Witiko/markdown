@@ -36,7 +36,7 @@ DTXARCHIVE=markdown.dtx
 INSTALLER=markdown.ins docstrip.cfg
 TECHNICAL_DOCUMENTATION_RESOURCES=markdown.bib markdown-figure-block-diagram.tex \
   markdownthemewitiko_markdown_techdoc.sty
-RAW_DEPENDENCIES=DEPENDS
+RAW_DEPENDENCIES=DEPENDS-raw.txt
 DEPENDENCIES=DEPENDS.txt
 TECHNICAL_DOCUMENTATION=markdown.pdf
 MARKDOWN_USER_MANUAL=markdown.md markdown.css
