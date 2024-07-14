@@ -8,7 +8,7 @@ AUXFILES=markdown.bbl markdown.cb markdown.cb2 markdown.glo markdown.bbl \
   markdown.run.xml markdown.markdown.in markdown.markdown.lua \
   markdown.markdown.out markdown-interfaces.md markdown-miscellanea.md \
   markdown-options.md markdown-tokens.md $(TECHNICAL_DOCUMENTATION_RESOURCES) \
-  $(VERSION_FILE)
+  $(VERSION_FILE) $(RAW_DEPENDENCIES)
 AUXDIRS=_minted-markdown _markdown_markdown markdown pkgcheck
 TDSARCHIVE=markdown.tds.zip
 CTANARCHIVE=markdown.ctan.zip
@@ -36,6 +36,7 @@ DTXARCHIVE=markdown.dtx
 INSTALLER=markdown.ins docstrip.cfg
 TECHNICAL_DOCUMENTATION_RESOURCES=markdown.bib markdown-figure-block-diagram.tex \
   markdownthemewitiko_markdown_techdoc.sty
+RAW_DEPENDENCIES=DEPENDS
 DEPENDENCIES=DEPENDS.txt
 TECHNICAL_DOCUMENTATION=markdown.pdf
 MARKDOWN_USER_MANUAL=markdown.md markdown.css
@@ -49,7 +50,7 @@ INSTALLABLES=markdown.lua markdown-cli.lua markdown.tex markdown.sty t-markdown.
   markdownthemewitiko_tilde.tex markdownthemewitiko_markdown_defaults.tex \
   markdownthemewitiko_markdown_defaults.sty t-markdownthemewitiko_markdown_defaults.tex
 EXTRACTABLES=$(INSTALLABLES) $(MARKDOWN_USER_MANUAL) $(TECHNICAL_DOCUMENTATION_RESOURCES) \
-  $(DEPENDENCIES)
+  $(RAW_DEPENDENCIES)
 MAKEABLES=$(TECHNICAL_DOCUMENTATION) $(USER_MANUAL) $(INSTALLABLES) $(EXAMPLES) $(DEPENDENCIES)
 RESOURCES=$(DOCUMENTATION) $(EXAMPLES_RESOURCES) $(EXAMPLES_SOURCES) $(EXAMPLES) \
   $(MAKES) $(READMES) $(INSTALLER) $(DTXARCHIVE) $(TESTS) $(DEPENDENCIES)
@@ -136,8 +137,11 @@ $(EXTRACTABLES): $(INSTALLER) $(DTXARCHIVE)
 	sed -i \
 	    -e '/\\ExplSyntaxOff/ { N; /\\ExplSyntaxOn/d; }' \
 	    $(INSTALLABLES)
+
+# This target produces the file with package dependencies.
+$(DEPENDENCIES): $(RAW_DEPENDENCIES)
 	( \
-	  sed -n '/^#/ ! { s/\s*#.*//; p }' $(DEPENDENCIES); \
+	  sed -n '/^#/ ! { s/\s*#.*//; p }' $(RAW_DEPENDENCIES); \
 	) | sort -u -o $(DEPENDENCIES)
 
 # This target produces the version file.
