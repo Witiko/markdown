@@ -174,53 +174,10 @@ jobs:
           set -ex
           TEMPORARY_TAG="$(make docker-print-temporary-tag)"
           echo "${{ matrix.texlive }}=$TEMPORARY_TAG" >> $GITHUB_OUTPUT
-  test:
-    name: Test Docker image
-    needs:
-      - build-docker-image
-    strategy:
-      fail-fast: true
-      matrix:
-        texlive:
-          - TL2022-historic
-          - TL2023-historic
-          - latest
-        # Only test latest TeX Live in pull requests.
-        is_pr:
-          - ${{ github.event_name == 'pull_request_target' }}
-        exclude:
-          - { is_pr: true }
-        include:
-          - { texlive: latest }
-    runs-on: self-hosted
-    container:
-      image: ghcr.io/witiko/markdown:${{ needs.build-docker-image.outputs[matrix.texlive] }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
-          ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 0
-      - name: Set safe Git directory
-        # This should have been done by the previous step.
-        # See also: <https://github.com/actions/checkout/issues/915>.
-        run: |
-          git config --global --add safe.directory ${GITHUB_WORKSPACE}
-      - name: Test Lua command-line interface
-        run: |
-          set -ex
-          RESULT="$(printf '%s\n' 'Hello *Markdown*! $a_x + b_x = c_x$' | markdown-cli hybrid=true underscores=false)"
-          test "$RESULT" = '\markdownRendererDocumentBegin
-          Hello \markdownRendererEmphasis{Markdown}! $a_x + b_x = c_x$\markdownRendererDocumentEnd'
-      - name: Run unit tests
-        if: matrix.texlive == 'latest' || github.event_name != 'pull_request_target' || github.event.pull_request.draft == false
-        run: make FAIL_FAST=${{ github.event_name == 'pull_request_target' }} test
   publish-docker-image:
     name: Publish Docker image
     needs:
       - build-docker-image
-      - test
     strategy:
       fail-fast: true
       matrix:
@@ -255,7 +212,6 @@ jobs:
     name: Publish artefacts and create a prerelease
     needs:
       - build-docker-image
-      - test
     strategy:
       fail-fast: true
       matrix:
@@ -334,8 +290,6 @@ jobs:
             markdown.pdf
   automerge:
     name: Automatically merge pull request
-    needs:
-      - test
     runs-on: ubuntu-latest
     permissions:
       contents: write

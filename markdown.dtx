@@ -796,6 +796,7 @@ abbr {
 %<*themes-witiko-markdown-techdoc>
 \ProvidesPackage{markdownthemewitiko_markdown_techdoc}[2022/12/13]
 \RequirePackage{etoolbox}
+\gdef\ltd@title@author{\@gobble}%
 \markdownSetup{
   renderers = {
     head*Four = {\paragraph{#1}\leavevmode},
@@ -804,6 +805,7 @@ abbr {
     codeSpan = {\inline{#1}},
     jekyllData(End) = {%
       \AfterEndPreamble{%
+        \hypersetup{pdfauthor=\ltd@title@author}%
         \printtitlepage
         \tableofcontents
         {\def\addcontentsline##1##2##3{}\listoffigures}%
@@ -812,8 +814,7 @@ abbr {
   },
   jekyllDataRenderers = {
     /authors/* = {%
-      \gdef\ltd@title@author{#1}%
-      \hypersetup{pdfauthor={#1}}%
+      \expandafter\gdef\expandafter\ltd@title@author\expandafter{\ltd@title@author, #1}%
     },
     title = {%
       \gdef\ltd@title@title{#1}%
