@@ -194,7 +194,7 @@ For further information, consult one of the following:
     - [Attributes in Markdown][tb136],
     - [Markdown 3 at TUG 2023: Reflections from the Q&A session][tb138],
     - Fast Regression Testing of TeX Packages: The Unreasonable Effectiveness of Batching ([preprint][tb139]), and
-    - Markdown Themes in Practice ([preprint][tb140]).
+    - Markdown Themes in Practice ([preprint][tb140-preprint]).
 5. Journal articles published by [CSTUG Bulletin][csbul] (in Czech and Slovak):
     - [Rendering Markdown inside TeX Documents][10.5300/2016-1-4/78],
     - [Markdown 2.8.1: Boldly Unto the Throne of Lightweight Markup in TeX][10.5300/2020-1-2/48],
@@ -207,8 +207,9 @@ For further information, consult one of the following:
     - [Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX][tb131-video] ([mirror][tb131-video-mirror], [slides][tb131-slides]),
     - [A Self-Publisher's Take on Markdown and TeX][tb134-01-video] ([slides][tb134-01-slides]),
     - [A Gentle Introduction to Markdown for Writers][tb134-02-video] ([slides][tb134-02-slides], [example][tb134-02-example]),
-    - [Markdown 3: What's New, What's Next?][tb137-video] ([mirror][tb137-video-mirror], [slides][tb137-slides]), and
-    - An Implementation of the CommonMark Standard and new Syntax Extensions to the Markdown Package for TeX ([slides][gencur-defense-slides]).
+    - [Markdown 3: What's New, What's Next?][tb137-video] ([mirror][tb137-video-mirror], [slides][tb137-slides]),
+    - An Implementation of the CommonMark Standard and new Syntax Extensions to the Markdown Package for TeX ([slides][gencur-defense-slides]), and
+    - [Markdown Themes in Practice][tb140-video] ([preprint][tb140-preprint], [slides][tb140-slides])
 7. Theses:
     - [Generic TeX Writer for the Pandoc Document Converter][thesis-umhg5]
     - [An implementation of the CommonMark standard into the Markdown package for TeX][thesis-r7z7l]
@@ -229,7 +230,6 @@ For further information, consult one of the following:
  [tb136]: https://www.tug.org/TUGboat/tb44-1/tb136novotny-markdown-attr.pdf                                        "Attributes in Markdown"
  [tb138]: https://www.tug.org/TUGboat/tb44-3/tb138starynovotny-markdown-qa.pdf                                     "Markdown 3 at TUG 2023: Reflections from the Q&A session"
  [tb139]: https://github.com/Witiko/fast-regression-testing/releases/download/latest/tb139starynovotny-testing.pdf "Fast Regression Testing of TeX Packages: The Unreasonable Effectiveness of Batching"
- [tb140]: https://www.tug.org/tug2024/preprints/starynovotny-markdown-themes.pdf                                   "Markdown Themes in Practice"
 
  [tb131-slides]:       https://tug.org/tug2021/assets/pdf/tug2021-novotny-slides.pdf                            "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"
  [tb131-video]:        https://youtu.be/i2GJMnLCZls                                                             "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"
@@ -242,6 +242,9 @@ For further information, consult one of the following:
  [tb137-slides]:       https://tug.org/tug2023/files/sa-03-novotny-markdown3/novotny-markdown3-slides.pdf       "Markdown 3: What's New, What's Next?"
  [tb137-video]:        https://youtu.be/U8XjTOhJkg0                                                             "Markdown 3: What's New, What's Next?"
  [tb137-video-mirror]: https://youtu.be/W15bBpVTA-c                                                             "Markdown 3: What's New, What's Next? (mirror)"
+ [tb140-preprint]:     https://www.tug.org/tug2024/preprints/starynovotny-markdown-themes.pdf                   "Markdown Themes in Practice"
+ [tb140-video]:        https://youtu.be/d7vTW7PR0B4?t=5h3m10s                                                   "Markdown Themes in Practice"
+ [tb140-slides]:       https://www.tug.org/tug2024/slides/starynovotny-markdown-themes.pdf                      "Markdown Themes in Practice"
 
  [10.5300/2016-1-4/78]:  https://www.doi.org/10.5300/2016-1-4/78  "Rendering Markdown inside TeX Documents"
  [10.5300/2020-1-2/48]:  https://www.doi.org/10.5300/2020-1-2/48  "Markdown 2.8.1: Boldly Unto the Throne of Lightweight Markup in TeX"
