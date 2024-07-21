@@ -204,10 +204,10 @@ For further information, consult one of the following:
     - [Markdown 3: What's New, What's Next?][10.5300/2023-3-4/111].
 6. Talks:
     - [Five Years of Markdown in LaTeX: What, Why, How, and Whereto][pv212-fall2020] (in Czech),
-    - [Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX][tb131-video] ([slides][tb131-slides]),
+    - [Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX][tb131-video] ([mirror][tb131-video-mirror], [slides][tb131-slides]),
     - [A Self-Publisher's Take on Markdown and TeX][tb134-01-video] ([slides][tb134-01-slides]),
     - [A Gentle Introduction to Markdown for Writers][tb134-02-video] ([slides][tb134-02-slides], [example][tb134-02-example]),
-    - [Markdown 3: What's New, What's Next?][tb137-video] ([slides][tb137-slides]), and
+    - [Markdown 3: What's New, What's Next?][tb137-video] ([mirror][tb137-video-mirror], [slides][tb137-slides]), and
     - An Implementation of the CommonMark Standard and new Syntax Extensions to the Markdown Package for TeX ([slides][gencur-defense-slides]).
 7. Theses:
     - [Generic TeX Writer for the Pandoc Document Converter][thesis-umhg5]
@@ -231,15 +231,17 @@ For further information, consult one of the following:
  [tb139]: https://github.com/Witiko/fast-regression-testing/releases/download/latest/tb139starynovotny-testing.pdf "Fast Regression Testing of TeX Packages: The Unreasonable Effectiveness of Batching"
  [tb140]: https://www.tug.org/tug2024/preprints/starynovotny-markdown-themes.pdf                                   "Markdown Themes in Practice"
 
- [tb131-slides]:     https://tug.org/tug2021/assets/pdf/tug2021-novotny-slides.pdf                            "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"
- [tb131-video]:      https://youtu.be/i2GJMnLCZls                                                             "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"
- [tb134-01-slides]:  https://tug.org/tug2022/assets/served/Lloyd_Prentice-TUG2022-prentice-selfpub-slides.pdf "A Self-Publisher's Take on Markdown and TeX"
- [tb134-01-video]:   https://youtu.be/OhwzT3TcLj8                                                             "A Self-Publisher's Take on Markdown and TeX"
- [tb134-02-slides]:  https://tug.org/tug2022/assets/pdf/Tereza_Vrabcová-TUG2022-slides.pdf                    "A Gentle Introduction to Markdown for Writers"
- [tb134-02-example]: https://tug.org/tug2022/assets/pdf/Tereza_Vrabcová-TUG2022-example.pdf                   "A Gentle Introduction to Markdown for Writers"
- [tb134-02-video]:   https://youtu.be/FhN_x9rsR4M                                                             "A Gentle Introduction to Markdown for Writers"
- [tb137-slides]:     https://tug.org/tug2023/files/sa-03-novotny-markdown3/novotny-markdown3-slides.pdf       "Markdown 3: What's New, What's Next?"
- [tb137-video]:      https://youtu.be/U8XjTOhJkg0                                                             "Markdown 3: What's New, What's Next?"
+ [tb131-slides]:       https://tug.org/tug2021/assets/pdf/tug2021-novotny-slides.pdf                            "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"
+ [tb131-video]:        https://youtu.be/i2GJMnLCZls                                                             "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"
+ [tb131-video-mirror]: https://youtu.be/THmPkAncMnc                                                             "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX (mirror)"
+ [tb134-01-slides]:    https://tug.org/tug2022/assets/served/Lloyd_Prentice-TUG2022-prentice-selfpub-slides.pdf "A Self-Publisher's Take on Markdown and TeX"
+ [tb134-01-video]:     https://youtu.be/OhwzT3TcLj8                                                             "A Self-Publisher's Take on Markdown and TeX"
+ [tb134-02-slides]:    https://tug.org/tug2022/assets/pdf/Tereza_Vrabcová-TUG2022-slides.pdf                    "A Gentle Introduction to Markdown for Writers"
+ [tb134-02-example]:   https://tug.org/tug2022/assets/pdf/Tereza_Vrabcová-TUG2022-example.pdf                   "A Gentle Introduction to Markdown for Writers"
+ [tb134-02-video]:     https://youtu.be/FhN_x9rsR4M                                                             "A Gentle Introduction to Markdown for Writers"
+ [tb137-slides]:       https://tug.org/tug2023/files/sa-03-novotny-markdown3/novotny-markdown3-slides.pdf       "Markdown 3: What's New, What's Next?"
+ [tb137-video]:        https://youtu.be/U8XjTOhJkg0                                                             "Markdown 3: What's New, What's Next?"
+ [tb137-video-mirror]: https://youtu.be/W15bBpVTA-c                                                             "Markdown 3: What's New, What's Next? (mirror)"
 
  [10.5300/2016-1-4/78]:  https://www.doi.org/10.5300/2016-1-4/78  "Rendering Markdown inside TeX Documents"
  [10.5300/2020-1-2/48]:  https://www.doi.org/10.5300/2020-1-2/48  "Markdown 2.8.1: Boldly Unto the Throne of Lightweight Markup in TeX"
