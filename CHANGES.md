@@ -4,8 +4,8 @@
 
 Fixes:
 
-- Produce more meaningful error message when KPathSea has failed
-  to locate a file. (#458, #472, reported by @Yggdrasil128)
+- Produce more meaningful error message when KPathSea fails to
+  locate a file. (#458, #472, 33e6eef2, reported by @Yggdrasil128)
 
 ## 3.6.2 (2024-07-14)
 
