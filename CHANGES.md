@@ -2,6 +2,11 @@
 
 ## 3.7.0
 
+Fixes:
+
+- Produce more meaningful error message when KPathSea has failed
+  to locate a file. (#458, #472, reported by @Yggdrasil128)
+
 ## 3.6.2 (2024-07-14)
 
 Fixes:
