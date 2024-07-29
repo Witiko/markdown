@@ -33068,7 +33068,7 @@ function M.new(options)
 %  \begin{macrocode}
       local pathname = assert(kpse.find_file(filename),
         [[Could not locate user-defined syntax extension "]]
-        .. pathname .. [[" for reading]])
+        .. filename .. [[" for reading]])
       local input_file = assert(io.open(pathname, "r"),
         [[Could not open user-defined syntax extension "]]
         .. pathname .. [[" for reading]])
