@@ -26291,7 +26291,7 @@ parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
 %  \begin{macrocode}
 parsers.punctuation            = {}
 (function()
-  local pathname = assert(kpse.lookup("UnicodeData.txt"),
+  local pathname = assert(kpse.find_file("UnicodeData.txt"),
     [[Could not locate file "UnicodeData.txt"]])
   local file = assert(io.open(pathname, "r"),
     [[Could not open file "UnicodeData.txt"]])
@@ -33066,7 +33066,7 @@ function M.new(options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-      local pathname = assert(kpse.lookup(filename),
+      local pathname = assert(kpse.find_file(filename),
         [[Could not locate user-defined syntax extension "]]
         .. pathname .. [[" for reading]])
       local input_file = assert(io.open(pathname, "r"),
