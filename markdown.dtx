@@ -32741,7 +32741,8 @@ M.extensions.jekyll_data = function(expect_jekyll_data)
 % the key `p` in the parent table; if `p` is nil, then the table has no parent.
 % All scalar keys and values encountered in the table will be cast to a string
 % following \acro{yaml} serialization rules. String values will also be
-% transformed using the function `t`.
+% transformed using the function `t` for the typographic output format used by
+% the \mref{markdownRendererJekyllDataString} macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -32824,6 +32825,11 @@ M.extensions.jekyll_data = function(expect_jekyll_data)
               table.insert(buf, v)
               table.insert(buf, "}")
             elseif typ == "string" then
+              table.insert(buf, "\\markdownRendererJekyllDataProgrammaticString{")
+              table.insert(buf, k)
+              table.insert(buf, "}{")
+              table.insert(buf, self.escape_programmatic_text(v))
+              table.insert(buf, "}")
               table.insert(buf, "\\markdownRendererJekyllDataString{")
               table.insert(buf, k)
               table.insert(buf, "}{")
