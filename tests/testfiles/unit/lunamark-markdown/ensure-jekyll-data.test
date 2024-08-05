@@ -1,0 +1,38 @@
+\markdownSetup{jekyllData=true, expectJekyllData=true, ensureJekyllData=true}
+<<<
+title: The document title
+author:
+
+- name: Author *One*
+  affiliation: University of Somewhere
+- name: Author **Two**
+  affiliation: University of Nowhere
+date: 2022-01-12
+...
+
+This test ensures that the Lua `jekyllData`, `expectJekyllData`, and
+`ensureJekyllData` correctly propagate through the plain TeX interface.
+
+A document may contain *multiple* metadata blocks:
+
+---
+title:  'This is the title: it contains a colon'
+author:
+- Author One with `inline` markup in *their name*
+- Author Two
+keywords:
+  - nothing
+  - 123
+  - true
+  - false
+  - ~
+  - null
+abstract: |
+  This is *the abstract*.
+
+  It consists of two paragraphs.
+---
+>>>
+BEGIN document
+error: parse_blocks failed on: title: The document 
+END document
