@@ -20495,9 +20495,26 @@ following text:
 \ExplSyntaxOn
 \cs_new:Nn \@@_define_renderers:
   {
-    \seq_map_function:NN
+    \seq_map_inline:Nn
       \g_@@_renderers_seq
-      \@@_define_renderer:n
+      {
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% The \mdef{markdownRendererJekyllDataString} has been deprecated and will be
+% removed in Markdown 4.0.0.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        \str_if_eq:nnF
+          { ##1 }
+          { jekyllDataString }
+          {
+            \@@_define_renderer:n
+              { ##1 }
+          }
+      }
   }
 \cs_new:Nn \@@_define_renderer:n
   {
@@ -21213,9 +21230,26 @@ following text:
 \ExplSyntaxOn
 \cs_new:Nn \@@_define_renderer_prototypes:
   {
-    \seq_map_function:NN
+    \seq_map_inline:Nn
       \g_@@_renderers_seq
-      \@@_define_renderer_prototype:n
+      {
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% The \mdef{markdownRendererJekyllDataString} has been deprecated and will be
+% removed in Markdown 4.0.0.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        \str_if_eq:nnF
+          { ##1 }
+          { jekyllDataString }
+          {
+            \@@_define_renderer_prototype:n
+              { ##1 }
+          }
+      }
   }
 \cs_new:Nn \@@_define_renderer_prototype:n
   {
