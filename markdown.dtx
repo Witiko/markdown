@@ -20230,11 +20230,23 @@ following \acro{yaml} serialization rules.
 %
 % \begin{markdown}
 
-The \mdef{markdownRendererJekyllDataString} macro represents a string scalar
-value in a \acro{yaml} document. This macro will only be produced when the
-\Opt{jekyllData} option is enabled. The macro receives two arguments: the
+The \mdef{markdownRendererJekyllDataString} and
+\mdef{markdownRendererJekyllDataProgrammaticString} macros represent string
+scalar values in a \acro{yaml} document. This macro will only be produced when
+the \Opt{jekyllData} option is enabled. The macro receives two arguments: the
 scalar key in the parent structure, cast to a string following \acro{yaml}
 serialization rules, and the scalar value.
+
+For each string scalar value, both macros are produced. Whereas
+\mdef{markdownRendererJekyllDataString} receives the scalar value after all
+markdown markup and special \TeX{} characters in the string have been replaced
+by \TeX{} macros, \mdef{markdownRendererJekyllDataProgrammaticString} receives
+the raw scalar value. Therefore, whereas the
+\mdef{markdownRendererJekyllDataString} macro is more appropriate for texts
+that are supposed to be typeset with \TeX{}, such as document titles, author
+names, or exam questions, the
+\mdef{markdownRendererJekyllDataProgrammaticString} macro is more appropriate
+for identifiers and other programmatic text that won't be typeset by \TeX{}.
 
 % \end{markdown}
 %
@@ -20246,6 +20258,8 @@ serialization rules, and the scalar value.
 %  \begin{macrocode}
 \def\markdownRendererJekyllDataString{%
   \markdownRendererJekyllDataStringPrototype}%
+\def\markdownRendererJekyllDataProgrammaticString{%
+  \markdownRendererJekyllDataProgrammaticStringPrototype}%
 \ExplSyntaxOn
 \seq_gput_right:Nn
   \g_@@_renderers_seq
@@ -20253,6 +20267,13 @@ serialization rules, and the scalar value.
 \prop_gput:Nnn
   \g_@@_renderer_arities_prop
   { jekyllDataString }
+  { 2 }
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { jekyllDataProgrammaticString }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { jekyllDataProgrammaticString }
   { 2 }
 \ExplSyntaxOff
 %    \end{macrocode}
