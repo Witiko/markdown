@@ -282,7 +282,7 @@ Acknowledgements
 | [<img width="150" src="https://www.fi.muni.cz/images/fi-logo.png">][fimu] | I gratefully acknowledge the funding from the [Faculty of Informatics][fimu] at the [Masaryk University][mu] in Brno, Czech Republic, for the development of the Markdown package in projects [MUNI/33/12/2015][], [MUNI/33/1784/2020][], [MUNI/33/0776/2021][], [MUNI/33/1654/2022][], and [MUNI/33/1658/2022][]. |
 | [<img width="150" src="https://cdn.overleaf.com/img/ol-brand/overleaf_og_logo.png">][overleaf] | Extensive user documentation for the Markdown package was kindly written by [Lian Tze Lim][liantze] and published by [Overleaf][]. |
 | [<img width="150" src="https://pbs.twimg.com/profile_images/1004769879319334912/6Bh1UthD.jpg">][omedym] | Support for content slicing (Lua options [`shiftHeadings`][option-shift-headings] and [`slice`][option-slice]) and pipe tables (Lua options [`pipeTables`][option-pipe-tables] and [`tableCaptions`][option-table-captions]) was graciously sponsored by [David Vins][dvins] and [Omedym][]. |
-| [<img width="150" src="https://www.istqb.org/static/istqb-logo-1b043e800a580724ad223567f9ea57c0.png">][istqb] | Fixes for issues [#359][issue-359], [#368][issue-368], [#401][issue-401], and [#424][issue-424] were graciously sponsored by the [International Software Testing Qualifications Board (ISTQB)][istqb]. |
+| [<img width="150" src="https://www.istqb.org/static/istqb-logo-1b043e800a580724ad223567f9ea57c0.png">][istqb] | Fixes for issues [#359][issue-359], [#368][issue-368], [#401][issue-401], [#424][issue-424], and [#440][issue-440] were graciously sponsored by the [International Software Testing Qualifications Board (ISTQB)][istqb]. |
 
  [dvins]:  https://github.com/dvins             "David Vins"
  [fimu]:   https://www.fi.muni.cz/index.html.en "Faculty of Informatics, Masaryk University"
@@ -294,6 +294,7 @@ Acknowledgements
  [issue-368]: https://github.com/witiko/markdown/issues/368 "Tables nested in list items have empty lines"
  [issue-401]: https://github.com/witiko/markdown/issues/401 "Create an unnumbered section"
  [issue-424]: https://github.com/witiko/markdown/issues/424 "E-mail addresses are incorrectly interpreted as bracketed citations"
+ [issue-440]: https://github.com/witiko/markdown/issues/440 "Support programmatic text in YAML metadata values"
 
  [option-pipe-tables]:    https://mirrors.ctan.org/macros/generic/markdown/markdown.html#pipe-tables          "Markdown Package User Manual"
  [option-shift-headings]: https://mirrors.ctan.org/macros/generic/markdown/markdown.html#option-shiftheadings "Markdown Package User Manual"
