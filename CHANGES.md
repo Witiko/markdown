@@ -5,7 +5,7 @@
 Development:
 
 - Support programmatic text in YAML metadata values.
-  (istqborg/istqb_product_base#46, #440, #451)
+  (istqborg/istqb_product_base#46, #440, #451, sponsored by @istqborg)
 
 Fixes:
 
@@ -15,7 +15,7 @@ Fixes:
 Deprecation:
 
 - Deprecate `jekyllDataString` renderer and renderer prototype.
-  (istqborg/istqb_product_base#46, #440, #451)
+  (istqborg/istqb_product_base#46, #440, #451, sponsored by @istqborg)
 
 ## 3.6.2 (2024-07-14)
 
