@@ -20230,7 +20230,7 @@ following \acro{yaml} serialization rules.
 %
 % \begin{markdown}
 
-The \mdef{markdownRendererJekyllDataString} and
+The \mdef{markdownRendererJekyllDataTypographicString} and
 \mdef{markdownRendererJekyllDataProgrammaticString} macros represent string
 scalar values in a \acro{yaml} document. This macro will only be produced when
 the \Opt{jekyllData} option is enabled. The macro receives two arguments: the
@@ -20238,13 +20238,13 @@ scalar key in the parent structure, cast to a string following \acro{yaml}
 serialization rules, and the scalar value.
 
 For each string scalar value, both macros are produced. Whereas
-\mdef{markdownRendererJekyllDataString} receives the scalar value after all
-markdown markup and special \TeX{} characters in the string have been replaced
-by \TeX{} macros, \mdef{markdownRendererJekyllDataProgrammaticString} receives
-the raw scalar value. Therefore, whereas the
-\mdef{markdownRendererJekyllDataString} macro is more appropriate for texts
-that are supposed to be typeset with \TeX{}, such as document titles, author
-names, or exam questions, the
+\mdef{markdownRendererJekyllDataTypographicString} receives the scalar value
+after all markdown markup and special \TeX{} characters in the string have been
+replaced by \TeX{} macros, \mdef{markdownRendererJekyllDataProgrammaticString}
+receives the raw scalar value. Therefore, whereas the
+\mdef{markdownRendererJekyllDataTypographicString} macro is more appropriate
+for texts that are supposed to be typeset with \TeX{}, such as document titles,
+author names, or exam questions, the
 \mdef{markdownRendererJekyllDataProgrammaticString} macro is more appropriate
 for identifiers and other programmatic text that won't be typeset by \TeX{}.
 
@@ -20256,17 +20256,17 @@ for identifiers and other programmatic text that won't be typeset by \TeX{}.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererJekyllDataString{%
-  \markdownRendererJekyllDataStringPrototype}%
+\def\markdownRendererJekyllDataTypographicString{%
+  \markdownRendererJekyllDataTypographicStringPrototype}%
 \def\markdownRendererJekyllDataProgrammaticString{%
   \markdownRendererJekyllDataProgrammaticStringPrototype}%
 \ExplSyntaxOn
 \seq_gput_right:Nn
   \g_@@_renderers_seq
-  { jekyllDataString }
+  { jekyllDataTypographicString }
 \prop_gput:Nnn
   \g_@@_renderer_arities_prop
-  { jekyllDataString }
+  { jekyllDataTypographicString }
   { 2 }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
@@ -20329,7 +20329,7 @@ following content:
 ``` tex
 \input markdown
 \def\markdownOptionJekyllData{true}
-\def\markdownRendererJekyllDataString#1#2{\gdef\name{#2}}
+\def\markdownRendererJekyllDataTypographicString#1#2{\gdef\name{#2}}
 \def\markdownRendererJekyllDataNumber#1#2{\gdef\age{#2}}
 \def\markdownRendererJekyllDataEnd{%
   \name{} is \age{} years old.}
@@ -20359,7 +20359,7 @@ following content:
 \usepackage[jekyllData]{markdown}
 \markdownSetup{
   renderers = {
-    jekyllDataString = {\gdef\name{#2}},
+    jekyllDataTypographicString = {\gdef\name{#2}},
     jekyllDataNumber = {\gdef\age{#2}},
     jekyllDataEnd = {\name{} is \age{} years old.},
   }
@@ -20391,7 +20391,7 @@ following content:
 ``` tex
 \usemodule[t][markdown]
 \setupmarkdown[jekyllData = yes]
-\def\markdownRendererJekyllDataString#1#2{\gdef\name{#2}}
+\def\markdownRendererJekyllDataTypographicString#1#2{\gdef\name{#2}}
 \def\markdownRendererJekyllDataNumber#1#2{\gdef\age{#2}}
 \def\markdownRendererJekyllDataEnd{%
   \name{} is \age{} years old.}
@@ -25339,9 +25339,9 @@ function M.writer.new(options)
 %
 % Use the \luamref{writer->escaped_chars}, \luamref{writer->escaped_uri_chars},
 % and \luamref{writer->escaped_minimal_strings} tables to create the
-% \luamdef{writer->escape_typographic_text},
-% \luamdef{writer->escape_programmatic_text}, and
-% \luamdef{writer->escape_minimal} escaper functions.
+% \luamdef{escape_typographic_text},
+% \luamdef{escape_programmatic_text}, and
+% \luamdef{escape_minimal} local escaper functions.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -32742,7 +32742,7 @@ M.extensions.jekyll_data = function(expect_jekyll_data)
 % All scalar keys and values encountered in the table will be cast to a string
 % following \acro{yaml} serialization rules. String values will also be
 % transformed using the function `t` for the typographic output format used by
-% the \mref{markdownRendererJekyllDataString} macro.
+% the \mref{markdownRendererJekyllDataTypographicString} macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -32830,7 +32830,7 @@ M.extensions.jekyll_data = function(expect_jekyll_data)
               table.insert(buf, "}{")
               table.insert(buf, self.identifier(v))
               table.insert(buf, "}")
-              table.insert(buf, "\\markdownRendererJekyllDataString{")
+              table.insert(buf, "\\markdownRendererJekyllDataTypographicString{")
               table.insert(buf, k)
               table.insert(buf, "}{")
               table.insert(buf, t(v))
@@ -33948,7 +33948,17 @@ end
     { #1 }
     { #2 }
 }
-\def\markdownRendererJekyllDataStringPrototype#1#2{
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% We will process all string scalar values assuming that they may contain
+% markdown markup and are intended for typesetting.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\def\markdownRendererJekyllDataProgrammaticStringPrototype#1#2{}
+\def\markdownRendererJekyllDataTypographicStringPrototype#1#2{
   \markdown_jekyll_data_set_keyvals:nn
     { #1 }
     { #2 }
