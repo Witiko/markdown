@@ -25290,6 +25290,8 @@ function M.writer.new(options)
     ["{"] = "\\markdownRendererLeftBrace{}",
     ["}"] = "\\markdownRendererRightBrace{}",
     ["\\"] = "\\markdownRendererBackslash{}",
+    ["\r"] = " ",
+    ["\n"] = " ",
   }
   self.escaped_minimal_strings = {
     ["^^"] = "\\markdownRendererCircumflex\\markdownRendererCircumflex ",

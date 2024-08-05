@@ -118,7 +118,7 @@ BEGIN jekyllDataMappingBegin
 END jekyllDataMappingBegin
 BEGIN jekyllDataProgrammaticString
 - key: abstract
-- value: This is *the abstract*. It consists of two paragraphs.
+- value: This is *the abstract*.  It consists of two paragraphs. 
 END jekyllDataProgrammaticString
 BEGIN jekyllDataTypographicString
 - key: abstract
