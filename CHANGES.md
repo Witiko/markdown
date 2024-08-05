@@ -7,6 +7,11 @@ Fixes:
 - Produce more meaningful error message when KPathSea fails to
   locate a file. (#458, #472, 33e6eef2, reported by @Yggdrasil128)
 
+Deprecation:
+
+- Deprecate `jekyllDataString` renderer and renderer prototype.
+  (istqborg/istqb_product_base#46, #440, #451)
+
 ## 3.6.2 (2024-07-14)
 
 Fixes:

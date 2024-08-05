@@ -20286,6 +20286,68 @@ for identifiers and other programmatic text that won't be typeset by \TeX{}.
 %
 % \begin{markdown}
 
+Before Markdown 3.7.0, the \mdef{markdownRendererJekyllDataTypographicString}
+macro was named \mdef{markdownRendererJekyllDataString} and the
+\mdef{markdownRendererJekyllDataProgrammaticString} macro was not produced.
+The \mdef{markdownRendererJekyllDataString} has been deprecated and will be
+removed in Markdown 4.0.0.
+
+% \end{markdown}
+%
+% \iffalse
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\ExplSyntaxOn
+\cs_gset:Npn
+  \markdownRendererJekyllDataTypographicString
+  {
+    \cs_if_exist:NTF
+      \markdownRendererJekyllDataString
+      {
+        \markdownWarning
+          {
+            The~jekyllDataString~renderer~has~been~deprecated,~
+            to~be~removed~in~Markdown~4.0.0
+          }
+        \markdownRendererJekyllDataString
+      }
+      {
+        \cs_if_exist:NTF
+          \markdownRendererJekyllDataStringPrototype
+          {
+            \markdownWarning
+              {
+                The~jekyllDataString~renderer~prototype~has~been~deprecated,~
+                to~be~removed~in~Markdown~4.0.0
+              }
+            \markdownRendererJekyllDataStringPrototype
+          }
+          {
+            \markdownRendererJekyllDataTypographicStringPrototype
+          }
+      }
+  }
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { jekyllDataString }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { jekyllDataString }
+  { 2 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
 The \mdef{markdownRendererJekyllDataEmpty} macro represents an empty scalar
 value in a \acro{yaml} document. This macro will only be produced when the
 \Opt{jekyllData} option is enabled. The macro receives one argument: the
