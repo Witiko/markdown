@@ -147,7 +147,7 @@ renderers = {%
     \TYPE{#0: \NORMALIZEPATH{#1}}},
   (ticked|halfTicked|unticked)Box = {%
     \TYPE{#0}},
-  jekyllData(Boolean|Number|String) = {%
+  jekyllData(Boolean|Number|*String) = {%
     \TYPE{BEGIN #0}%
     \TYPE{- key:   #1}%
     \TYPE{- value: #2}%
