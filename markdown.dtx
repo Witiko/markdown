@@ -5892,6 +5892,52 @@ defaultOptions.definitionLists = false
 %</lua,lua-cli>
 %<*manual-options>
 
+#### Option `ensureJekyllData`
+
+`ensureJekyllData` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{ensureJekyllData}{\opt{true}, \opt{false}}
+%
+:    false
+
+     :  When the \Opt{jekyllData} and \Opt{expectJekyllData} options are
+        enabled, then a markdown document may begin directly with \acro{yaml}
+        metadata and may contain nothing but \acro{yaml} metadata. Otherwise,
+        the markdown document is processed as markdown text.
+
+:    true
+
+     :  When the \Opt{jekyllData} and \Opt{expectJekyllData} options are
+        enabled, then a markdown document must begin directly with \acro{yaml}
+        metadata and must contain nothing but \acro{yaml} metadata. Otherwise,
+        an error is produced.
+
+% \end{markdown}
+% \iffalse
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { ensureJekyllData }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.ensureJekyllData = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
 #### Option `expectJekyllData`
 
 `expectJekyllData` (default value: `false`)
@@ -19956,6 +20002,50 @@ following text:
 %
 % \begin{markdown}
 
+#### Warning and Error Renderers
+
+The \mdef{markdownRendererWarning} and \mdef{markdownRendererError} macros
+represent warnings and errors produced by the markdown parser. Both macros
+receive a single parameter with the text of the warning or error.
+
+% \end{markdown}
+%
+% \iffalse
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererWarning{%
+  \markdownRendererWarningPrototype}%
+\def\markdownRendererError{%
+  \markdownRendererErrorPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { warning }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { warning }
+  { 1 }
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { error }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { error }
+  { 1 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
 #### YAML Metadata Renderers {#yamlmetadatarenderers}
 
 The \mdef{markdownRendererJekyllDataBegin} macro represents the beginning of a
@@ -25491,6 +25581,30 @@ function M.writer.new(options)
 % \par
 % \begin{markdown}
 %
+% Define \luamdef{writer->warning} as a function that will transform an input
+% warning `t` to the output format.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  function self.warning(t)
+    return {"\\markdownRendererWarning{", self.identifier(t), "}"}
+  end
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define \luamdef{writer->error} as a function that will transform an input
+% error `t` to the output format.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  function self.error(t)
+    return {"\\markdownRendererError{", self.identifier(t), "}"}
+  end
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
 % Define \luamdef{writer->code} as a function that will transform an input
 % inline code span `s` with optional attributes `attributes` to the output
 % format.
@@ -28246,7 +28360,7 @@ function M.reader.new(writer, options)
       end
       local res = lpeg.match(grammar(), str)
       if res == nil then
-        error(format("%s failed on:\n%s", name, str:sub(1,20)))
+        return writer.error(format("%s failed on:\n%s", name, str:sub(1,20)))
       else
         return res
       end
@@ -30001,9 +30115,7 @@ end
       { "Blocks",
 
         Blocks                = V("InitializeState")
-                              * ( V("ExpectedJekyllData")
-                                * (V("Blank")^0 / writer.interblocksep)
-                                )^-1
+                              * V("ExpectedJekyllData")
                               * V("Blank")^0
 %    \end{macrocode}
 % \par
@@ -30039,7 +30151,7 @@ end
                                   )
                                 )^0,
 
-        ExpectedJekyllData    = parsers.fail,
+        ExpectedJekyllData    = parsers.succeed,
 
         Blank                 = parsers.Blank,
         Reference             = parsers.Reference,
@@ -30346,7 +30458,7 @@ end
     end
 
     local blocks_nested_t = util.table_copy(syntax)
-    blocks_nested_t.ExpectedJekyllData = parsers.fail
+    blocks_nested_t.ExpectedJekyllData = parsers.succeed
     parsers.blocks_nested = Ct(blocks_nested_t)
 
     parsers.blocks = Ct(syntax)
@@ -30404,7 +30516,7 @@ end
         elseif form == "nfkd" then
           input = uni_algos.normalize.NFKD(input)
         else
-          error(format("Unknown normalization form %s", form))
+          return writer.error(format("Unknown normalization form %s", form))
         end
       end
 %    \end{macrocode}
@@ -32822,11 +32934,14 @@ end
 % \acro{yaml} metadata block syntax extension. When the
 % `expect_jekyll_data` parameter is `true`, then a markdown document
 % may begin directly with \acro{yaml} metadata and may contain nothing
-% but \acro{yaml} metadata.
+% but \acro{yaml} metadata. When both `expect_jekyll_data` and
+% `ensure_jekyll_data` parameters are `true`, then a a markdown document must
+% begin directly with \acro{yaml} metadata and must contain nothing but
+% \acro{yaml} metadata.
 %
 % \end{markdown}
 %  \begin{macrocode}
-M.extensions.jekyll_data = function(expect_jekyll_data)
+M.extensions.jekyll_data = function(expect_jekyll_data, ensure_jekyll_data)
   return {
     name = "built-in jekyll_data syntax extension",
     extend_writer = function(self)
@@ -32938,8 +33053,9 @@ M.extensions.jekyll_data = function(expect_jekyll_data)
               table.insert(buf, k)
               table.insert(buf, "}")
             else
-              error(format("Unexpected type %s for value of " ..
-                           "YAML key %s", typ, k))
+              local error = self.error(format("Unexpected type %s for value of " ..
+                                              "YAML key %s", typ, k))
+              table.insert(buf, error)
             end
           end
         end
@@ -32993,6 +33109,15 @@ M.extensions.jekyll_data = function(expect_jekyll_data)
                       )^-1
                     * JekyllData
                     * (P("---") + P("..."))^-1
+
+      if ensure_jekyll_data then
+        ExpectedJekyllData = ExpectedJekyllData
+                           * parsers.eof
+      else
+        ExpectedJekyllData = ( ExpectedJekyllData
+                             * (V("Blank")^0 / writer.interblocksep)
+                             )^-1
+      end
 
       self.insert_pattern("Block before Blockquote",
                           UnexpectedJekyllData, "UnexpectedJekyllData")
@@ -33103,7 +33228,7 @@ function M.new(options)
 
   if options.jekyllData then
     local jekyll_data_extension = M.extensions.jekyll_data(
-      options.expectJekyllData)
+      options.expectJekyllData, options.ensureJekyllData)
     table.insert(extensions, jekyll_data_extension)
   end
 
@@ -33766,6 +33891,8 @@ end
 \ExplSyntaxOff
 \def\markdownRendererSectionBeginPrototype{}%
 \def\markdownRendererSectionEndPrototype{}%
+\let\markdownRendererWarningPrototype\markdownWarning
+\let\markdownRendererErrorPrototype\markdownError
 %    \end{macrocode}
 % \par
 % \begin{markdown}
