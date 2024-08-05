@@ -5892,6 +5892,52 @@ defaultOptions.definitionLists = false
 %</lua,lua-cli>
 %<*manual-options>
 
+#### Option `ensureJekyllData`
+
+`ensureJekyllData` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{ensureJekyllData}{\opt{true}, \opt{false}}
+%
+:    false
+
+     :  When the \Opt{jekyllData} and \Opt{expectJekyllData} options are
+        enabled, then a markdown document may begin directly with \acro{yaml}
+        metadata and may contain nothing but \acro{yaml} metadata. Otherwise,
+        the markdown document is processed as markdown text.
+
+:    true
+
+     :  When the \Opt{jekyllData} and \Opt{expectJekyllData} options are
+        enabled, then a markdown document must begin directly with \acro{yaml}
+        metadata and must contain nothing but \acro{yaml} metadata. Otherwise,
+        an error is produced.
+
+% \end{markdown}
+% \iffalse
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { ensureJekyllData }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli>
+% \fi
+%  \begin{macrocode}
+defaultOptions.ensureJekyllData = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli>
+%<*manual-options>
+
 #### Option `expectJekyllData`
 
 `expectJekyllData` (default value: `false`)
@@ -29882,9 +29928,7 @@ end
       { "Blocks",
 
         Blocks                = V("InitializeState")
-                              * ( V("ExpectedJekyllData")
-                                * (V("Blank")^0 / writer.interblocksep)
-                                )^-1
+                              * V("ExpectedJekyllData")
                               * V("Blank")^0
 %    \end{macrocode}
 % \par
@@ -29920,7 +29964,7 @@ end
                                   )
                                 )^0,
 
-        ExpectedJekyllData    = parsers.fail,
+        ExpectedJekyllData    = parsers.succeed,
 
         Blank                 = parsers.Blank,
         Reference             = parsers.Reference,
@@ -30227,7 +30271,7 @@ end
     end
 
     local blocks_nested_t = util.table_copy(syntax)
-    blocks_nested_t.ExpectedJekyllData = parsers.fail
+    blocks_nested_t.ExpectedJekyllData = parsers.succeed
     parsers.blocks_nested = Ct(blocks_nested_t)
 
     parsers.blocks = Ct(syntax)
@@ -32703,11 +32747,14 @@ end
 % \acro{yaml} metadata block syntax extension. When the
 % `expect_jekyll_data` parameter is `true`, then a markdown document
 % may begin directly with \acro{yaml} metadata and may contain nothing
-% but \acro{yaml} metadata.
+% but \acro{yaml} metadata. When both `expect_jekyll_data` and
+% `ensure_jekyll_data` parameters are `true`, then a a markdown document must
+% begin directly with \acro{yaml} metadata and must contain nothing but
+% \acro{yaml} metadata.
 %
 % \end{markdown}
 %  \begin{macrocode}
-M.extensions.jekyll_data = function(expect_jekyll_data)
+M.extensions.jekyll_data = function(expect_jekyll_data, ensure_jekyll_data)
   return {
     name = "built-in jekyll_data syntax extension",
     extend_writer = function(self)
@@ -32869,6 +32916,15 @@ M.extensions.jekyll_data = function(expect_jekyll_data)
                     * JekyllData
                     * (P("---") + P("..."))^-1
 
+      if ensure_jekyll_data then
+        ExpectedJekyllData = ExpectedJekyllData
+                           * parsers.eof
+      else
+        ExpectedJekyllData = ( ExpectedJekyllData
+                             * (V("Blank")^0 / writer.interblocksep)
+                             )^-1
+      end
+
       self.insert_pattern("Block before Blockquote",
                           UnexpectedJekyllData, "UnexpectedJekyllData")
       if expect_jekyll_data then
@@ -32978,7 +33034,7 @@ function M.new(options)
 
   if options.jekyllData then
     local jekyll_data_extension = M.extensions.jekyll_data(
-      options.expectJekyllData)
+      options.expectJekyllData, options.ensureJekyllData)
     table.insert(extensions, jekyll_data_extension)
   end
 
