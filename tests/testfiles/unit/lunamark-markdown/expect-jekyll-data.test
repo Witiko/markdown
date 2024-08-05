@@ -47,37 +47,61 @@ BEGIN jekyllDataMappingBegin
 - key: 1
 - length: 2
 END jekyllDataMappingBegin
-BEGIN jekyllDataString
+BEGIN jekyllDataProgrammaticString
 - key: affiliation
 - value: University of Somewhere
-END jekyllDataString
-BEGIN jekyllDataString
+END jekyllDataProgrammaticString
+BEGIN jekyllDataTypographicString
+- key: affiliation
+- value: University of Somewhere
+END jekyllDataTypographicString
+BEGIN jekyllDataProgrammaticString
+- key: name
+- value: Author *One*
+END jekyllDataProgrammaticString
+BEGIN jekyllDataTypographicString
 - key: name
 - value: Author (emphasis: One)
-END jekyllDataString
+END jekyllDataTypographicString
 jekyllDataMappingEnd
 BEGIN jekyllDataMappingBegin
 - key: 2
 - length: 2
 END jekyllDataMappingBegin
-BEGIN jekyllDataString
+BEGIN jekyllDataProgrammaticString
 - key: affiliation
 - value: University of Nowhere
-END jekyllDataString
-BEGIN jekyllDataString
+END jekyllDataProgrammaticString
+BEGIN jekyllDataTypographicString
+- key: affiliation
+- value: University of Nowhere
+END jekyllDataTypographicString
+BEGIN jekyllDataProgrammaticString
+- key: name
+- value: Author **Two**
+END jekyllDataProgrammaticString
+BEGIN jekyllDataTypographicString
 - key: name
 - value: Author (strongEmphasis: Two)
-END jekyllDataString
+END jekyllDataTypographicString
 jekyllDataMappingEnd
 jekyllDataSequenceEnd
-BEGIN jekyllDataString
+BEGIN jekyllDataProgrammaticString
 - key: date
 - value: 2022-01-12
-END jekyllDataString
-BEGIN jekyllDataString
+END jekyllDataProgrammaticString
+BEGIN jekyllDataTypographicString
+- key: date
+- value: 2022-01-12
+END jekyllDataTypographicString
+BEGIN jekyllDataProgrammaticString
 - key: title
 - value: The document title
-END jekyllDataString
+END jekyllDataProgrammaticString
+BEGIN jekyllDataTypographicString
+- key: title
+- value: The document title
+END jekyllDataTypographicString
 jekyllDataMappingEnd
 jekyllDataEnd
 interblockSeparator
@@ -92,31 +116,47 @@ BEGIN jekyllDataMappingBegin
 - key: null
 - length: 4
 END jekyllDataMappingBegin
-BEGIN jekyllDataString
+BEGIN jekyllDataProgrammaticString
+- key: abstract
+- value: This is *the abstract*.  It consists of two paragraphs. 
+END jekyllDataProgrammaticString
+BEGIN jekyllDataTypographicString
 - key: abstract
 - value: This is (emphasis: the abstract).(paragraphSeparator)It consists of two paragraphs.
-END jekyllDataString
+END jekyllDataTypographicString
 BEGIN jekyllDataSequenceBegin
 - key: author
 - length: 2
 END jekyllDataSequenceBegin
-BEGIN jekyllDataString
+BEGIN jekyllDataProgrammaticString
+- key: 1
+- value: Author One with `inline` markup in *their name*
+END jekyllDataProgrammaticString
+BEGIN jekyllDataTypographicString
 - key: 1
 - value: Author One with (codeSpan: inline) markup in (emphasis: their name)
-END jekyllDataString
-BEGIN jekyllDataString
+END jekyllDataTypographicString
+BEGIN jekyllDataProgrammaticString
 - key: 2
 - value: Author Two
-END jekyllDataString
+END jekyllDataProgrammaticString
+BEGIN jekyllDataTypographicString
+- key: 2
+- value: Author Two
+END jekyllDataTypographicString
 jekyllDataSequenceEnd
 BEGIN jekyllDataSequenceBegin
 - key: keywords
 - length: 6
 END jekyllDataSequenceBegin
-BEGIN jekyllDataString
+BEGIN jekyllDataProgrammaticString
 - key: 1
 - value: nothing
-END jekyllDataString
+END jekyllDataProgrammaticString
+BEGIN jekyllDataTypographicString
+- key: 1
+- value: nothing
+END jekyllDataTypographicString
 BEGIN jekyllDataNumber
 - key: 2
 - value: 123
@@ -132,10 +172,14 @@ END jekyllDataBoolean
 jekyllDataEmpty: 5
 jekyllDataEmpty: 6
 jekyllDataSequenceEnd
-BEGIN jekyllDataString
+BEGIN jekyllDataProgrammaticString
 - key: title
 - value: This is the title: it contains a colon
-END jekyllDataString
+END jekyllDataProgrammaticString
+BEGIN jekyllDataTypographicString
+- key: title
+- value: This is the title: it contains a colon
+END jekyllDataTypographicString
 jekyllDataMappingEnd
 jekyllDataEnd
 END document
