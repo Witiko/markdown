@@ -20002,6 +20002,50 @@ following text:
 %
 % \begin{markdown}
 
+#### Warning and Error Renderers
+
+The \mdef{markdownRendererWarning} and \mdef{markdownRendererError} macros
+represent warnings and errors produced by the markdown parser. Both macros
+receive a single parameter with the text of the warning or error.
+
+% \end{markdown}
+%
+% \iffalse
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\def\markdownRendererWarning{%
+  \markdownRendererWarningPrototype}%
+\def\markdownRendererError{%
+  \markdownRendererErrorPrototype}%
+\ExplSyntaxOn
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { warning }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { warning }
+  { 1 }
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { error }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { error }
+  { 1 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \par
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
 #### YAML Metadata Renderers {#yamlmetadatarenderers}
 
 The \mdef{markdownRendererJekyllDataBegin} macro represents the beginning of a
@@ -25418,6 +25462,30 @@ function M.writer.new(options)
 % \par
 % \begin{markdown}
 %
+% Define \luamdef{writer->warning} as a function that will transform an input
+% warning `t` to the output format.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  function self.warning(t)
+    return {"\\markdownRendererWarning{", self.identifier(t), "}"}
+  end
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Define \luamdef{writer->error} as a function that will transform an input
+% error `t` to the output format.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  function self.error(t)
+    return {"\\markdownRendererError{", self.identifier(t), "}"}
+  end
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
 % Define \luamdef{writer->code} as a function that will transform an input
 % inline code span `s` with optional attributes `attributes` to the output
 % format.
@@ -28173,7 +28241,7 @@ function M.reader.new(writer, options)
       end
       local res = lpeg.match(grammar(), str)
       if res == nil then
-        error(format("%s failed on:\n%s", name, str:sub(1,20)))
+        return writer.error(format("%s failed on:\n%s", name, str:sub(1,20)))
       else
         return res
       end
@@ -30329,7 +30397,7 @@ end
         elseif form == "nfkd" then
           input = uni_algos.normalize.NFKD(input)
         else
-          error(format("Unknown normalization form %s", form))
+          return writer.error(format("Unknown normalization form %s", form))
         end
       end
 %    \end{macrocode}
@@ -32860,8 +32928,9 @@ M.extensions.jekyll_data = function(expect_jekyll_data, ensure_jekyll_data)
               table.insert(buf, k)
               table.insert(buf, "}")
             else
-              error(format("Unexpected type %s for value of " ..
-                           "YAML key %s", typ, k))
+              local error = self.error(format("Unexpected type %s for value of " ..
+                                              "YAML key %s", typ, k))
+              table.insert(buf, error)
             end
           end
         end
@@ -33697,6 +33766,8 @@ end
 \ExplSyntaxOff
 \def\markdownRendererSectionBeginPrototype{}%
 \def\markdownRendererSectionEndPrototype{}%
+\let\markdownRendererWarningPrototype\markdownWarning
+\let\markdownRendererErrorPrototype\markdownError
 %    \end{macrocode}
 % \par
 % \begin{markdown}
