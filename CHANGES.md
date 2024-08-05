@@ -2,6 +2,11 @@
 
 ## 3.7.0
 
+Development:
+
+- Support programmatic text in YAML metadata values.
+  (istqborg/istqb_product_base#46, #440, #451)
+
 Fixes:
 
 - Produce more meaningful error message when KPathSea fails to
