@@ -4,8 +4,13 @@
 
 Development:
 
-- Support programmatic text in YAML metadata values.
+- Add renderer `jekyllDataProgrammaticString` for processing YAML
+  string scalars that do not contain markdown markup and are not
+  intended for typesetting.
   (istqborg/istqb_product_base#46, #440, #451, sponsored by @istqborg)
+- Add option `ensureJekyllData` for processing standalone YAML files.
+- Add renderers `warning` and `error` that represent warnings and errors
+  produced by the markdown parser. (#452, #473)
 
 Fixes:
 
@@ -15,6 +20,7 @@ Fixes:
 Deprecation:
 
 - Deprecate `jekyllDataString` renderer and renderer prototype.
+  Users should use `jekyllDataTypographicString` instead.
   (istqborg/istqb_product_base#46, #440, #451, sponsored by @istqborg)
 
 ## 3.6.2 (2024-07-14)
