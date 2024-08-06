@@ -23,6 +23,11 @@ Deprecation:
   Users should use `jekyllDataTypographicString` instead.
   (istqborg/istqb_product_base#46, #440, #451, sponsored by @istqborg)
 
+Experiments:
+
+- Measure the speed of the Markdown package across recent versions.
+  (249552e5, 55ede824, efeaecbe, #474)
+
 ## 3.6.2 (2024-07-14)
 
 Fixes:
