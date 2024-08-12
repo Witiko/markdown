@@ -33,8 +33,7 @@ jobs:
           repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
           ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
       - name: Check for tabs and trailing spaces
-        run: |
-          ! grep -n -P '\t|\s+$' markdown.dtx
+        run: make check-tabs-and-spaces
   linelength:
     name: Style check (Line length)
     runs-on: ubuntu-latest
