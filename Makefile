@@ -1,6 +1,6 @@
 .PHONY: all base clean implode dist test force \
   docker-image docker-push-temporary-tag docker-print-temporary-tag \
-  docker-push-release-tag preview
+  docker-push-release-tag preview check-line-length
 
 SHELL=/bin/bash
 
@@ -276,3 +276,7 @@ implode: clean
 	rm -f $(MAKEABLES) $(ARCHIVES)
 	$(MAKE) -C examples implode
 	$(MAKE) -C libraries implode
+
+# This pseudo-target checks that the length of lines in the source files.
+check-line-length: $(INSTALLABLES)
+	! grep -En '^.{73,}$$' $^
