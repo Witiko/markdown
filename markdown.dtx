@@ -21819,6 +21819,7 @@ pdflatex --shell-escape document.tex
 % \LaTeX{} environments, and redefines the \mref{markinline} and
 % \mref{markdownInput} commands.
 %
+%#### The \envmdef{markdown} and \envmdef{markdown*} \LaTeX{} environments
 % The \envmref{markdown} and \envmref{markdown*} \LaTeX{} environments are used
 % to typeset markdown document fragments. Both \LaTeX{} environments accept
 % \LaTeX{} interface options (see ection <#sec:latex-options>) as the only
@@ -21858,6 +21859,46 @@ pdflatex --shell-escape document.tex
 % \end{document}                     \end{document}
 % ```````
 %
+% You can't directly extend the \envmref{markdown} \LaTeX{} environment by
+% using it in other environments as follows:
+%
+% ``` tex
+% \newenvironment{foo}\%
+%                {code before \begin{markdown}[some, options]}\%
+%                {\end{markdown} code after}
+% ```
+%
+% This is because the implementation looks for the literal string
+% `\end{markdown}` to stop scanning the markdown text. However, you can work
+% around this limitation by using the \mref{markdown} and \mref{markdownEnd}
+% macros directly in the definition as follows:
+%
+% ``` tex
+% \newenvironment{foo}\%
+%                {code before \markdown[some, options]}\%
+%                {\markdownEnd code after}
+% ```
+%
+% Specifically, the \mref{markdown} macro must appear at the end of the
+% replacement text and must be followed by text that has not yet been ingested
+% by \TeX's input processor. Furthermore, using the \mref{markdownEnd} macro is
+% optional and only makes a difference if you redefined it to produce special
+% effects before and after the \envmref{markdown} \LaTeX{} environment. Lastly,
+% you can't nest the other environments. For example, the following definition
+% is incorrect:
+%
+% ``` tex
+% \newenvironment{bar}{\begin{foo}}{\end{foo}}
+% ```
+%
+% In this example, you should use the \mref{markdown} macro directly in the
+% definition of the environment `bar`:
+%
+% ``` tex
+% \newenvironment{bar}{\markdown[some, options]}{\markdownEnd}
+% ```
+%
+%#### The \mref{markinline} and \mref{markdownInput} macros
 % The \mref{markinline} macro accepts a single mandatory parameter containing
 % inline markdown content and expands to the result of the conversion of the
 % input markdown document to plain \TeX{}.  Unlike the \mref{markinline} macro
@@ -35035,13 +35076,26 @@ end
 % we let the \mref{markdownReadAndConvert} macro process the rest of the
 % \LaTeX{} environment.
 %
+% We also make provision for using the \mref{markdown} command as a part of a
+% different \LaTeX{} environment as follows:
+%
+% ``` tex
+% \newenvironment{foo}\%
+%                {code before \markdown[some, options]}\%
+%                {\markdownEnd code after}
+% ```
+%
 % \end{markdown}
 %  \begin{macrocode}
-        \c { markdownReadAndConvert@markdown } { }
+        \c { exp_args:NV }
+          \c { markdownReadAndConvert@ }
+          \c { @currenvir }
       }
       {
         \group_end:
-        \markdownReadAndConvert@markdown { }
+        \exp_args:NV
+          \markdownReadAndConvert@
+          \@currenvir
       }
   }
   { \markdownEnd }
@@ -35055,7 +35109,8 @@ end
       { #1 }
     \@@_setup:n
       { #1 }
-    \markdownReadAndConvert@markdown *
+    \markdownReadAndConvert@
+      { markdown* }
   }
   { \markdownEnd }
 \msg_new:nnn
@@ -35078,9 +35133,9 @@ end
 %  \begin{macrocode}
   \catcode`\|=0\catcode`\<=1\catcode`\>=2%
   \catcode`\\=12|catcode`|{=12|catcode`|}=12%
-  |gdef|markdownReadAndConvert@markdown#1<%
-    |markdownReadAndConvert<\end{markdown#1}>%
-                           <|end<markdown#1>>>%
+  |gdef|markdownReadAndConvert@#1<%
+    |markdownReadAndConvert<\end{#1}>%
+                           <|end<#1>>>%
 |endgroup
 %    \end{macrocode}
 % \par
