@@ -35,6 +35,19 @@ jobs:
       - name: Check for tabs and trailing spaces
         run: |
           ! grep -n -P '\t|\s+$' markdown.dtx
+  linelength:
+    name: Style check (Line length)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
+          ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
+      - name: Extract scripts
+        run: make base
+      - name: Check the line length
+        run: make check-line-length
   shellcheck:
     name: Style check (Bash)
     runs-on: ubuntu-latest
@@ -130,6 +143,7 @@ jobs:
     name: Build Docker image
     needs:
       - spacecheck
+      - linelength
       - shellcheck
       - luacheck
       - markdownlint
