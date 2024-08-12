@@ -21868,6 +21868,9 @@ pdflatex --shell-escape document.tex
 %                {\end{markdown} code after}
 % ```
 %
+% \markdownEnd
+% \begin{markdown}
+%
 % This is because the implementation looks for the literal string
 % `\end{markdown}` to stop scanning the markdown text. However, you can work
 % around this limitation by using the \mref{markdown} and \mref{markdownEnd}
@@ -21897,6 +21900,9 @@ pdflatex --shell-escape document.tex
 % ``` tex
 % \newenvironment{bar}{\markdown[some, options]}{\markdownEnd}
 % ```
+%
+% \end{markdown}
+% \markdownBegin
 %
 %#### The \mref{markinline} and \mref{markdownInput} macros
 % The \mref{markinline} macro accepts a single mandatory parameter containing
