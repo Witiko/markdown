@@ -21868,13 +21868,13 @@ pdflatex --shell-escape document.tex
 %                {\end{markdown} code after}
 % ```
 %
-% \markdownEnd
-% \begin{markdown}
-%
 % This is because the implementation looks for the literal string
 % `\end{markdown}` to stop scanning the markdown text. However, you can work
 % around this limitation by using the \mref{markdown} and \mref{markdownEnd}
 % macros directly in the definition as follows:
+%
+% \markdownEnd
+% \begin{markdown}
 %
 % ``` tex
 % \newenvironment{foo}\%
