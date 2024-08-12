@@ -11,6 +11,8 @@ Development:
 - Add option `ensureJekyllData` for processing standalone YAML files.
 - Add renderers `warning` and `error` that represent warnings and errors
   produced by the markdown parser. (#452, #473)
+- Support user-defined LaTeX environments with LaTeX markup.
+  (#20, #477, suggested by @cdupont)
 
 Fixes:
 
