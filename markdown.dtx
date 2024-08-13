@@ -27448,9 +27448,10 @@ parsers.check_minimal_indent = Cmt(Cb("indent_info") * Cc(false),
 parsers.check_optional_indent = Cmt(Cb("indent_info") * Cc(true),
                                     check_continuation_indentation)
 
-parsers.check_minimal_blank_indent = Cmt( Cb("indent_info") * Cc(false)
-                                        * Cc(true)
-                                        , check_continuation_indentation)
+parsers.check_minimal_blank_indent
+  = Cmt( Cb("indent_info") * Cc(false)
+       * Cc(true)
+       , check_continuation_indentation)
 
 %    \end{macrocode}
 % \begin{markdown}
