@@ -11503,7 +11503,7 @@ for i = 1, #arg do
             warn('Option "' .. key .. '" not recognized.')
           else
             warn('Option "' .. key .. '" type not recognized, ' ..
-                 'file a report to the package maintainer.')
+                 'please file a report to the package maintainer.')
           end
           warn('Parsing the ' .. 'value "' .. value ..'" of option "' ..
                key .. '" as a string.')
@@ -25523,8 +25523,8 @@ function M.writer.new(options)
     ["☒"] = "\\markdownRendererTickedBox{}",
     ["⌛"] = "\\markdownRendererHalfTickedBox{}",
     ["☐"] = "\\markdownRendererUntickedBox{}",
-    [entities.hex_entity('FFFD')] =
-      "\\markdownRendererReplacementCharacter{}",
+    [entities.hex_entity('FFFD')]
+      = "\\markdownRendererReplacementCharacter{}",
   }
 %    \end{macrocode}
 % \par
@@ -25559,8 +25559,8 @@ function M.writer.new(options)
     ["^"] = "\\markdownRendererCircumflex{}",
     ["~"] = "\\markdownRendererTilde{}",
     ["|"] = "\\markdownRendererPipe{}",
-    [entities.hex_entity('0000')] =
-      "\\markdownRendererReplacementCharacter{}",
+    [entities.hex_entity('0000')]
+      = "\\markdownRendererReplacementCharacter{}",
   }
 %    \end{macrocode}
 % \par
@@ -26137,10 +26137,10 @@ function M.writer.new(options)
 %  \begin{macrocode}
   function self.push_attributes(attribute_type, attributes,
                                 start_output, end_output)
-    local attribute_type_level =
-      self.attribute_type_levels[attribute_type]
-    self.attribute_type_levels[attribute_type] =
-      attribute_type_level + 1
+    local attribute_type_level
+      = self.attribute_type_levels[attribute_type]
+    self.attribute_type_levels[attribute_type]
+      = attribute_type_level + 1
 
     -- index attributes in a hash table for easy lookup
     attributes = attributes or {}
@@ -26195,10 +26195,10 @@ function M.writer.new(options)
       local attributes, _, end_output
       current_attribute_type, attributes, _, end_output = table.unpack(
         self.active_attributes[#self.active_attributes])
-      local attribute_type_level =
-        self.attribute_type_levels[current_attribute_type]
-      self.attribute_type_levels[current_attribute_type] =
-        attribute_type_level - 1
+      local attribute_type_level
+        = self.attribute_type_levels[current_attribute_type]
+      self.attribute_type_levels[current_attribute_type]
+        = attribute_type_level - 1
       if self.is_writing and end_output ~= nil then
         table.insert(buf, end_output)
       end
@@ -26233,7 +26233,7 @@ function M.writer.new(options)
     local letter_found = false
     local normalized_s = s
     if not options.unicodeNormalization
-        or options.unicodeNormalizationForm ~= "nfc" then
+       or options.unicodeNormalizationForm ~= "nfc" then
       normalized_s = uni_algos.normalize.NFC(normalized_s)
     end
 
@@ -26296,7 +26296,7 @@ function M.writer.new(options)
     local letter_found = false
     local normalized_s = s
     if not options.unicodeNormalization
-        or options.unicodeNormalizationForm ~= "nfc" then
+       or options.unicodeNormalizationForm ~= "nfc" then
       normalized_s = uni_algos.normalize.NFC(normalized_s)
     end
 
@@ -26720,7 +26720,7 @@ local function update_indent_table(indent_table, new_indent, add)
     indent_table.indents[#indent_table.indents + 1] = new_indent
   else
     if indent_table.indents[#indent_table.indents].name
-        == new_indent.name then
+       == new_indent.name then
       indent_table.indents[#indent_table.indents] = nil
     end
   end
@@ -27009,7 +27009,7 @@ local function traverse_indent(s, i, indent_table, is_optional,
       local blankline_end = lpeg.match(
         Ct(parsers.blankline * Cg(Cp(), "pos")), s, new_index)
       if is_optional or not indent_table.ignore_blockquote_blank
-          or not blankline_end then
+         or not blankline_end then
         return is_optional, new_index, current_trail,
                current_line_indents
       end
@@ -27366,8 +27366,8 @@ parsers.check_code_trail  = Cmt( Cb("indent_info")
                                * Cc(true), check_trail_joined)
 
 parsers.check_trail_length_range  = function(min, max)
-  return Cmt(Cb("indent_info") * C(parsers.spacechar^0) * Cc(min)
-       * Cc(max), check_trail_length)
+  return Cmt( Cb("indent_info") * C(parsers.spacechar^0) * Cc(min)
+            * Cc(max), check_trail_length)
 end
 
 parsers.check_trail_length = function(n)
@@ -27402,8 +27402,8 @@ parsers.check_optional_indent = Cmt(Cb("indent_info") * Cc(true),
                                     check_continuation_indentation)
 
 parsers.check_minimal_blank_indent = Cmt( Cb("indent_info") * Cc(false)
-                                        * Cc(true),
-                                         check_continuation_indentation)
+                                        * Cc(true)
+                                        , check_continuation_indentation)
 
 %    \end{macrocode}
 % \begin{markdown}
@@ -27416,43 +27416,43 @@ parsers.check_minimal_blank_indent = Cmt( Cb("indent_info") * Cc(false)
 
 parsers.check_minimal_indent_and_trail =
   Cmt( Cb("indent_info")
-     * Cc(false) * Cc(false) * Cc("non-code") * Cc(true),
-      check_continuation_indentation_and_trail)
+     * Cc(false) * Cc(false) * Cc("non-code") * Cc(true)
+     , check_continuation_indentation_and_trail)
 
 parsers.check_minimal_indent_and_code_trail =
   Cmt( Cb("indent_info")
-     * Cc(false) * Cc(false) * Cc("code") * Cc(false),
-      check_continuation_indentation_and_trail)
+     * Cc(false) * Cc(false) * Cc("code") * Cc(false)
+     , check_continuation_indentation_and_trail)
 
 parsers.check_minimal_blank_indent_and_full_code_trail =
   Cmt( Cb("indent_info")
-     * Cc(false) * Cc(true) * Cc("full-code") * Cc(true),
-      check_continuation_indentation_and_trail)
+     * Cc(false) * Cc(true) * Cc("full-code") * Cc(true)
+     , check_continuation_indentation_and_trail)
 
 parsers.check_minimal_indent_and_any_trail =
   Cmt( Cb("indent_info")
-     * Cc(false) * Cc(false) * Cc("full-any") * Cc(true) * Cc(false),
-      check_continuation_indentation_and_trail)
+     * Cc(false) * Cc(false) * Cc("full-any") * Cc(true) * Cc(false)
+     , check_continuation_indentation_and_trail)
 
 parsers.check_minimal_blank_indent_and_any_trail =
   Cmt( Cb("indent_info")
-     * Cc(false) * Cc(true) * Cc("full-any") * Cc(true) * Cc(false),
-      check_continuation_indentation_and_trail)
+     * Cc(false) * Cc(true) * Cc("full-any") * Cc(true) * Cc(false)
+     , check_continuation_indentation_and_trail)
 
 parsers.check_minimal_blank_indent_and_any_trail_no_rem =
   Cmt( Cb("indent_info")
-     * Cc(false) * Cc(true) * Cc("full-any") * Cc(true) * Cc(true),
-      check_continuation_indentation_and_trail)
+     * Cc(false) * Cc(true) * Cc("full-any") * Cc(true) * Cc(true)
+     , check_continuation_indentation_and_trail)
 
 parsers.check_optional_indent_and_any_trail =
   Cmt( Cb("indent_info")
-     * Cc(true) * Cc(false) * Cc("full-any") * Cc(true) * Cc(false),
-      check_continuation_indentation_and_trail)
+     * Cc(true) * Cc(false) * Cc("full-any") * Cc(true) * Cc(false)
+     , check_continuation_indentation_and_trail)
 
 parsers.check_optional_blank_indent_and_any_trail =
   Cmt( Cb("indent_info")
-     * Cc(true) * Cc(true) * Cc("full-any") * Cc(true) * Cc(false),
-      check_continuation_indentation_and_trail)
+     * Cc(true) * Cc(true) * Cc("full-any") * Cc(true) * Cc(false)
+     , check_continuation_indentation_and_trail)
 
 %    \end{macrocode}
 % \begin{markdown}
@@ -27924,7 +27924,7 @@ parsers.html_cdatasection_end = P("]]>")
 
 parsers.html_cdatasection
   = Cs( parsers.html_cdatasection_start
-  * parsers.html_until_end(parsers.html_cdatasection_end))
+      * parsers.html_until_end(parsers.html_cdatasection_end))
 
 parsers.html_inline_cdatasection
   = parsers.html_cdatasection_start
@@ -27938,7 +27938,7 @@ parsers.html_declaration_end = P(">")
 
 parsers.html_declaration
   = Cs( parsers.html_declaration_start
-  * parsers.html_until_end(parsers.html_declaration_end))
+      * parsers.html_until_end(parsers.html_declaration_end))
 
 parsers.html_inline_declaration
   = parsers.html_declaration_start
@@ -29030,7 +29030,7 @@ function M.reader.new(writer, options)
       local current_closing_count = t[current_position].current_count
 
       if (current_opening_count >= 2)
-          and (current_closing_count >= 2) then
+        and (current_closing_count >= 2) then
         opening_delimiter.current_count = current_opening_count - 2
         t[current_position].current_count = current_closing_count - 2
         fill_strong(t, opener_position, current_position)
@@ -35347,7 +35347,7 @@ end
       |fi
       |markdownInfo{Including markdown document number
         "|the|markdownOptionFrozenCacheCounter" from frozen cache}%
-      |csname markdownFrozenCache
+      |csname markdownFrozenCache^^J
         |the|markdownOptionFrozenCacheCounter|endcsname
       |global|advance|markdownOptionFrozenCacheCounter by 1|relax
     }{%
