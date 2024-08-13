@@ -27,7 +27,8 @@ Deprecation:
 
 Continuous Integration:
 
-- Ensure that all code lines are shorter than 72 characters. (#478)
+- Ensure that all code lines are shorter than 72 characters.
+  (#478, e7160d60, 3ac95efe)
 
 Experiments:
 
