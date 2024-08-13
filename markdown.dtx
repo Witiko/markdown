@@ -35272,6 +35272,13 @@ end
   \markdownInput
   #1
   {
+    \@@_if_option:nTF
+      { frozenCache }
+      {
+        \markdownInputRaw
+          { #1 }
+      }
+      {
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -35281,19 +35288,23 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-    \file_get_full_name:nNTF
-      { #1 }
-      \l_tmpa_tl
-      {
-        \exp_args:NV
-          \markdownInputRaw
+        \tl_set:Nx
           \l_tmpa_tl
-      }
-      {
-        \msg_error:nnnV
-          { markdown }
-          { markdown-file-does-not-exist }
           { #1 }
+        \file_get_full_name:VNTF
+          \l_tmpa_tl
+          \l_tmpb_tl
+          {
+            \exp_args:NV
+              \markdownInputRaw
+              \l_tmpb_tl
+          }
+          {
+            \msg_error:nnV
+              { markdown }
+              { markdown-file-does-not-exist }
+              \l_tmpa_tl
+          }
       }
   }
 \msg_new:nnn
