@@ -25,6 +25,10 @@ Deprecation:
   Users should use `jekyllDataTypographicString` instead.
   (istqborg/istqb_product_base#46, #440, #451, sponsored by @istqborg)
 
+Continuous Integration:
+
+- Ensure that all code lines are shorter than 72 characters. (#478)
+
 Experiments:
 
 - Measure the speed of the Markdown package across recent versions.
