@@ -261,7 +261,7 @@ jobs:
         include:
           - { texlive: latest }
     runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request_target' && github.ref == 'refs/heads/main' && always() && (needs.test.result == 'success' || needs.test.result == 'skipped')
+    if: github.event_name != 'pull_request_target' && github.ref == 'refs/heads/main'
     env:
       DOCKER_TEXLIVE_TAG: ${{ matrix.texlive }}
     steps:
@@ -300,7 +300,7 @@ jobs:
       contents: write
     container:
       image: ghcr.io/witiko/markdown:${{ needs.build-docker-image.outputs[matrix.texlive] }}
-    if: github.event_name != 'pull_request_target' && github.ref == 'refs/heads/main' && always() && (needs.test.result == 'success' || needs.test.result == 'skipped')
+    if: github.event_name != 'pull_request_target' && github.ref == 'refs/heads/main'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
