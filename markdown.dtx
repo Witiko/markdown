@@ -12911,10 +12911,14 @@ options locally.
           { redefined-snippet }
           \l_tmpa_tl
       }
-    \prop_gput:NVn
+    \keys_precompile:nnN
+      { markdown/options }
+      { #2 }
+      \l_tmpb_tl
+    \prop_gput:NVV
       \g_@@_snippets_prop
       \l_tmpa_tl
-      { #2 }
+      \l_tmpb_tl
   }
 \cs_gset_eq:NN
   \markdownSetupSnippet
@@ -12980,7 +12984,7 @@ options locally.
             \g_@@_snippets_prop
             \l_tmpa_tl
             \l_tmpb_tl
-          \@@_setup:V
+          \tl_use:N
             \l_tmpb_tl
         }
         {
@@ -12995,9 +12999,6 @@ options locally.
   { markdown }
   { undefined-snippet }
   { Can't~invoke~undefined~snippet~#1 }
-\cs_generate_variant:Nn
-  \@@_setup:n
-  { V }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \iffalse
@@ -35675,6 +35676,9 @@ end
     The~markdown*~LaTeX~environment~has~been~deprecated~and~will~
     be~removed~in~the~next~major~version~of~the~Markdown~package.
   }
+\cs_generate_variant:Nn
+  \@@_setup:n
+  { V }
 \ExplSyntaxOff
 \begingroup
 %    \end{macrocode}

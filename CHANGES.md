@@ -19,6 +19,11 @@ Fixes:
 - Produce more meaningful error message when KPathSea fails to
   locate a file. (#458, #472, 33e6eef2, reported by @Yggdrasil128)
 
+Speed improvements:
+
+- Precompile snippets to improve the speed of setting them.
+  (#467, #479, inspired by the TUG 2024 talk by @josephwright)
+
 Deprecation:
 
 - Deprecate `jekyllDataString` renderer and renderer prototype.
