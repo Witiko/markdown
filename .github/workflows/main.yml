@@ -43,6 +43,11 @@ jobs:
         with:
           repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
           ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
+      - name: Install additional packages
+        run: |
+          set -ex
+          sudo apt -qy update
+          sudo apt -qy install --no-install-recommends git latexmk lua-check make texlive-xetex
       - name: Extract scripts
         run: make base
       - name: Check the line length
