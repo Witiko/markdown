@@ -26678,8 +26678,6 @@ parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
     while #to_visit > 0 do
       local node = to_visit[#to_visit]
       local path = paths[#paths]
-      table.remove(to_visit)
-      table.remove(paths)
       if visited[node] == nil then
         visit(node, path)
         visited[node] = true
@@ -26693,11 +26691,11 @@ parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
             table.insert(to_visit, child)
             table.insert(paths, child_path)
           end
-          table.insert(to_visit, node)
-          table.insert(paths, path)
         end
       else
         leave(node, path)
+        table.remove(to_visit)
+        table.remove(paths)
       end
     end
   end
