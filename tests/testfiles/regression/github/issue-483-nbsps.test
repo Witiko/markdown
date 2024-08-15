@@ -1,0 +1,120 @@
+\markdownSetup{
+  citations=true,
+  citationNbsps=true,
+}
+<<<
+[@foo bar
+ baz]
+- [@foo bar
+   baz]
+    - [@foo bar
+       baz]
+        - [@foo bar
+           baz]
+
+[foo
+ bar @baz]
+- [foo
+   bar @baz]
+    - [foo
+       bar @baz]
+        - [foo
+           bar @baz]
+>>>
+BEGIN document
+BEGIN cites
+BEGIN cite
+- suppressAuthor: false
+- prenote: 
+- postnote: bar(nbsp)baz
+- name: foo
+END cite
+END cites
+interblockSeparator
+ulBeginTight
+ulItem
+BEGIN cites
+BEGIN cite
+- suppressAuthor: false
+- prenote: 
+- postnote: bar(nbsp)baz
+- name: foo
+END cite
+END cites
+interblockSeparator
+ulBeginTight
+ulItem
+BEGIN cites
+BEGIN cite
+- suppressAuthor: false
+- prenote: 
+- postnote: bar(nbsp)baz
+- name: foo
+END cite
+END cites
+interblockSeparator
+ulBeginTight
+ulItem
+BEGIN cites
+BEGIN cite
+- suppressAuthor: false
+- prenote: 
+- postnote: bar(nbsp)baz
+- name: foo
+END cite
+END cites
+ulItemEnd
+ulEndTight
+ulItemEnd
+ulEndTight
+ulItemEnd
+ulEndTight
+interblockSeparator
+BEGIN cites
+BEGIN cite
+- suppressAuthor: false
+- prenote: foo(nbsp)bar
+- postnote: 
+- name: baz
+END cite
+END cites
+interblockSeparator
+ulBeginTight
+ulItem
+BEGIN cites
+BEGIN cite
+- suppressAuthor: false
+- prenote: foo(nbsp)bar
+- postnote: 
+- name: baz
+END cite
+END cites
+interblockSeparator
+ulBeginTight
+ulItem
+BEGIN cites
+BEGIN cite
+- suppressAuthor: false
+- prenote: foo(nbsp)bar
+- postnote: 
+- name: baz
+END cite
+END cites
+interblockSeparator
+ulBeginTight
+ulItem
+BEGIN cites
+BEGIN cite
+- suppressAuthor: false
+- prenote: foo(nbsp)bar
+- postnote: 
+- name: baz
+END cite
+END cites
+ulItemEnd
+ulEndTight
+ulItemEnd
+ulEndTight
+ulItemEnd
+ulEndTight
+END document
