@@ -26609,7 +26609,7 @@ parsers.succeed                = P(true)
 parsers.fail                   = P(false)
 
 parsers.internal_punctuation   = S(":;,.?")
-parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~");
+parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -26625,7 +26625,7 @@ parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~");
 %
 % \end{markdown}
 %  \begin{macrocode}
-(function()
+;(function()
   local pathname = assert(kpse.find_file("UnicodeData.txt"),
     [[Could not locate file "UnicodeData.txt"]])
   local file = assert(io.open(pathname, "r"),
@@ -26715,9 +26715,10 @@ parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~");
     end, function(node, path)
       if type(node) == "table" then
         if #path > 0 then
-          byte = path:sub(#path, #path)
-          parent_path = path:sub(1, #path-1)
-          subparsers[parent_path] = subparsers[parent_path] + S(byte) * subparsers[path]
+          local byte = path:sub(#path, #path)
+          local parent_path = path:sub(1, #path-1)
+          subparsers[parent_path] = subparsers[parent_path]
+                                  + S(byte) * subparsers[path]
         else
           parsers.punctuation[length] = subparsers[path]
         end
