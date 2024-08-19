@@ -40,7 +40,7 @@ Continuous Integration:
 Experiments:
 
 - Measure the speed of the Markdown package across recent versions.
-  (249552e5, 55ede824, efeaecbe, #474, 7b2b2431)
+  (249552e5, 55ede824, efeaecbe, #474, 7b2b2431, fcf0064c)
 
 ## 3.6.2 (2024-07-14)
 
