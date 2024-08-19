@@ -26671,55 +26671,36 @@ parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
 %
 % \end{markdown}
 %  \begin{macrocode}
-  local function depth_first_search(root, visit, leave)
-    local to_visit = {root}
-    local paths = {""}
-    local visited = {}
-    while #to_visit > 0 do
-      local node = to_visit[#to_visit]
-      local path = paths[#paths]
-      if visited[node] == nil then
-        visit(node, path)
-        visited[node] = true
-        if type(node) == "table" then
-          for label, child in pairs(node) do
-            local child_path = path
-            if type(label) == "string" then
-              assert(#label == 1)
-              child_path = child_path .. label
-            end
-            table.insert(to_visit, child)
-            table.insert(paths, child_path)
-          end
-        end
+  local function depth_first_search(node, path, visit, leave)
+    visit(node, path)
+    for label, child in pairs(node) do
+      if type(child) == "table" then
+        depth_first_search(child, path .. label, visit, leave)
       else
-        leave(node, path)
-        table.remove(to_visit)
-        table.remove(paths)
+        visit(child, path)
       end
     end
+    leave(node, path)
   end
 
   parsers.punctuation = {}
   for length, prefix_tree in pairs(prefix_trees) do
     local subparsers = {}
-    depth_first_search(prefix_tree, function(node, path)
+    depth_first_search(prefix_tree, "", function(node, path)
       if type(node) == "table" then
         subparsers[path] = parsers.fail
       else
         assert(type(node) == "string")
         subparsers[path] = subparsers[path] + S(node)
       end
-    end, function(node, path)
-      if type(node) == "table" then
-        if #path > 0 then
-          local byte = path:sub(#path, #path)
-          local parent_path = path:sub(1, #path-1)
-          subparsers[parent_path] = subparsers[parent_path]
-                                  + S(byte) * subparsers[path]
-        else
-          parsers.punctuation[length] = subparsers[path]
-        end
+    end, function(_, path)
+      if #path > 0 then
+        local byte = path:sub(#path, #path)
+        local parent_path = path:sub(1, #path-1)
+        subparsers[parent_path] = subparsers[parent_path]
+                                + S(byte) * subparsers[path]
+      else
+        parsers.punctuation[length] = subparsers[path]
       end
     end)
     assert(parsers.punctuation[length] ~= nil)
