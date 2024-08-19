@@ -235,9 +235,10 @@ jobs:
       - name: Test Lua command-line interface
         run: |
           set -ex
-          RESULT="$(printf '%s\n' 'Hello *Markdown*! $a_x + b_x = c_x$' | markdown-cli hybrid=true underscores=false)"
-          test "$RESULT" = '\markdownRendererDocumentBegin
-          Hello \markdownRendererEmphasis{Markdown}! $a_x + b_x = c_x$\markdownRendererDocumentEnd'
+          printf '%s\n' 'Hello *Markdown*! $a_x + b_x = c_x$' | (time markdown-cli hybrid=true underscores=false) 1>stdout 2>stderr
+          test "$(cat stdout)" = '\markdownRendererDocumentBegin
+          Hello \markdownRendererEmphasis{Markdown}! $a_x + b_x = c_x$\markdownRendererDocumentEnd'  # Check that the output is correct.
+          grep 'real\s*0m0' stderr  # Check that the command finishes in less than a second.
       - name: Run tests
         if: matrix.texlive == 'latest' || github.event_name != 'pull_request_target' || github.event.pull_request.draft == false
         run: make FAIL_FAST=${{ github.event_name == 'pull_request_target' }} test

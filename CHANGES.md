@@ -23,6 +23,8 @@ Speed improvements:
 
 - Precompile snippets to improve the speed of setting them.
   (#467, #479, inspired by the TUG 2024 talk by @josephwright)
+- Improve the speed of parsing markdown input 5 times.
+  (#458, #474, #482, co-authored by @Yggdrasil128)
 
 Deprecation:
 

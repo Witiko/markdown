@@ -26625,31 +26625,86 @@ parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
 %
 % \end{markdown}
 %  \begin{macrocode}
-parsers.punctuation            = {}
-(function()
+;(function()
   local pathname = assert(kpse.find_file("UnicodeData.txt"),
     [[Could not locate file "UnicodeData.txt"]])
   local file = assert(io.open(pathname, "r"),
     [[Could not open file "UnicodeData.txt"]])
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% In order to minimize the size and speed of the parser, we will first
+% construct a prefix tree of UTF-8 encodings for all codepoints of a
+% given code length.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local prefix_trees = {}
   for line in file:lines() do
     local codepoint, major_category = line:match("^(%x+);[^;]*;(%a)")
     if major_category == "P" or major_category == "S" then
       local code = unicode.utf8.char(tonumber(codepoint, 16))
-      if parsers.punctuation[#code] == nil then
-        parsers.punctuation[#code] = parsers.fail
+      if prefix_trees[#code] == nil then
+        prefix_trees[#code] = {}
       end
-      local code_parser = parsers.succeed
+      local node = prefix_trees[#code]
       for i = 1, #code do
         local byte = code:sub(i, i)
-        local byte_parser = S(byte)
-        code_parser = code_parser
-                    * byte_parser
+        if i < #code then
+          if node[byte] == nil then
+            node[byte] = {}
+          end
+          node = node[byte]
+        else
+          table.insert(node, byte)
+        end
       end
-      parsers.punctuation[#code] = parsers.punctuation[#code]
-                                 + code_parser
     end
   end
   assert(file:close())
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Next, we will construct a parser out of the prefix tree.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function depth_first_search(node, path, visit, leave)
+    visit(node, path)
+    for label, child in pairs(node) do
+      if type(child) == "table" then
+        depth_first_search(child, path .. label, visit, leave)
+      else
+        visit(child, path)
+      end
+    end
+    leave(node, path)
+  end
+
+  parsers.punctuation = {}
+  for length, prefix_tree in pairs(prefix_trees) do
+    local subparsers = {}
+    depth_first_search(prefix_tree, "", function(node, path)
+      if type(node) == "table" then
+        subparsers[path] = parsers.fail
+      else
+        assert(type(node) == "string")
+        subparsers[path] = subparsers[path] + S(node)
+      end
+    end, function(_, path)
+      if #path > 0 then
+        local byte = path:sub(#path, #path)
+        local parent_path = path:sub(1, #path-1)
+        subparsers[parent_path] = subparsers[parent_path]
+                                + S(byte) * subparsers[path]
+      else
+        parsers.punctuation[length] = subparsers[path]
+      end
+    end)
+    assert(parsers.punctuation[length] ~= nil)
+  end
 end)()
 
 parsers.escapable              = parsers.ascii_punctuation
