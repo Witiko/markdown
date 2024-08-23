@@ -203,6 +203,8 @@ markdown-transcluded.md: markdown.md markdown-interfaces.md markdown-options.md 
 	    -e 's#\\envm{\([^}]*\)}#`\1`#g' \
 	    -e 's#\\envmdef{\([^}]*\)}#`\1`#g' \
 	    -e 's#\\envmref{\([^}]*\)}#`\1`#g' \
+	    -e 's#\\luamdef{\([^}]*\)}#`\1`#g' \
+	    -e 's#\\luamref{\([^}]*\)}#`\1`#g' \
 	    -e 's#\\m{\([^}]*\)}#`\\\1`#g' \
 	    -e 's#\\mdef{\([^}]*\)}#`\\\1`#g' \
 	    -e 's#\\mref{\([^}]*\)}#`\\\1`#g' \
