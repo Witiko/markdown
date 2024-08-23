@@ -194,20 +194,13 @@ markdown-transcluded.md: markdown.md markdown-interfaces.md markdown-options.md 
 	    -e 's#\\TeX{}#<span class="tex">T<sub>e</sub>X</span>#g' \
 	    -e 's#\\LaTeX{}#<span class="latex">L<sup>a</sup>T<sub>e</sub>X</span>#g' \
 	    -e 's#\\Hologo{ConTeXt}#Con<span class="tex">T<sub>e</sub>X</span>t#g' \
-	    -e 's#\\Opt{\([^}]*\)}#**`\1`**#g' \
-	    -e 's#\\pkg{\([^}]*\)}#**`\1`**#g' \
+	    -e 's#\\\(Opt\|pkg\){\([^}]*\)}#<code><strong>\2</strong></code>#g' \
 	    -e 's#\\,# #g' \
 	    -e 's#\\meta{\([^}]*\)}#\&LeftAngleBracket;*\1*\&RightAngleBracket;#g' \
 	    -e 's#\\acro{\([^}]*\)}#<abbr>\1</abbr>#g' \
 	    -e 's#😉#<i class="em em-wink"></i>#g' \
-	    -e 's#\\envm{\([^}]*\)}#`\1`#g' \
-	    -e 's#\\envmdef{\([^}]*\)}#`\1`#g' \
-	    -e 's#\\envmref{\([^}]*\)}#`\1`#g' \
-	    -e 's#\\luamdef{\([^}]*\)}#`\1`#g' \
-	    -e 's#\\luamref{\([^}]*\)}#`\1`#g' \
-	    -e 's#\\m{\([^}]*\)}#`\\\1`#g' \
-	    -e 's#\\mdef{\([^}]*\)}#`\\\1`#g' \
-	    -e 's#\\mref{\([^}]*\)}#`\\\1`#g' \
+	    -e 's#\\\(\(env\|lua\)\?m\(def\|ref\)\?\){\([^}]*\)}#<code>\4</code>#g' \
+	    -e 's#</code><code>##g' \
 	<$< | \
 	pandoc -f $(PANDOC_INPUT_FORMAT) -t html -N -s --toc --toc-depth=3 --fail-if-warnings --css=$(word 2, $^) >$@
 
