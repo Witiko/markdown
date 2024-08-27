@@ -2,7 +2,8 @@
 \input markdown
 
 % Load the support files.
-\markdownSetup{
+\markdownSetup {
+  eagerCache = false,
   outputDir = OUTPUT_DIRECTORY,
   import = {
     witiko/markdown/test = snippet as testSnippet,
