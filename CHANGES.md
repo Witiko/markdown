@@ -26,7 +26,7 @@ Speed improvements:
 - Improve the speed of parsing markdown input five times.
   (#458, #474, #482, 4c1a7de2, co-authored by @Yggdrasil128,
    sponsored by @istqborg)
-- Enable option `eagerCache` by default. (#468, #490)
+- Enable option `eagerCache` by default. (#468, #490, sponsored by @istqborg)
   This can improve the speed by up to 25% for large documents with many
   markdown fragments that require multiple compilation runs.
 
