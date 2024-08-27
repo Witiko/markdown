@@ -2553,20 +2553,23 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
 
 #### Option `eagerCache`
 
-`eagerCache` (default value: `false`)
+`eagerCache` (default value: `true`)
 
 % \fi
 % \begin{markdown}
 %
-% \Optitem[false]{eagerCache}{\opt{true}, \opt{false}}
+% \Optitem[true]{eagerCache}{\opt{true}, \opt{false}}
 %
 :    true
 
      :  Converted markdown documents will be cached in \Opt{cacheDir}. This can be
         useful for post-processing the converted documents and for recovering
-        historical versions of the documents from the cache.  However, it also
-        produces a large number of auxiliary files on the disk and obscures the
-        output of the Lua command-line interface when it is used for plumbing.
+        historical versions of the documents from the cache. Furthermore, it can
+        also significantly improve the processing speed for documents that require
+        multiple compilation runs, since each markdown document is only converted once.
+        However, it also produces a large number of auxiliary files on the disk
+        and obscures the output of the Lua command-line interface when it is
+        used for plumbing.
 
         This behavior will always be used if the \Opt{finalizeCache} option is
         enabled.
@@ -2575,7 +2578,11 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
 
      :  Converted markdown documents will not be cached. This decreases the number
         of auxiliary files that we produce and makes it easier to use the Lua
-        command-line interface for plumbing.
+        command-line interface for plumbing. However, it makes it impossible to
+        post-process the converted documents and recover historical versions of
+        the documents from the cache. Furthermore, it can significantly reduce
+        the processing speed for documents that require multiple compilation
+        runs, since each markdown document is converted multiple times needlessly.
 
         This behavior will only be used when the \Opt{finalizeCache} option is
         disabled.
@@ -2637,14 +2644,14 @@ Hello \markdownRendererEmphasis{world}!\relax
 \@@_add_lua_option:nnn
   { eagerCache }
   { boolean }
-  { false }
+  { true }
 %    \end{macrocode}
 % \iffalse
 %</tex>
 %<*lua,lua-cli>
 % \fi
 %  \begin{macrocode}
-defaultOptions.eagerCache = false
+defaultOptions.eagerCache = true
 %    \end{macrocode}
 % \par
 % \iffalse
