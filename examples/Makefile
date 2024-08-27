@@ -9,6 +9,7 @@ LUACLI_OPTIONS=\
   contentBlocks=true \
   debugExtensions=true \
   definitionLists=true \
+  eagerCache=false \
   fancy_lists=true \
   fencedCode=true \
   hashEnumerators=true \

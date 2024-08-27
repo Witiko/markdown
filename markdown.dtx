@@ -2553,12 +2553,12 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
 
 #### Option `eagerCache`
 
-`eagerCache` (default value: `false`)
+`eagerCache` (default value: `true`)
 
 % \fi
 % \begin{markdown}
 %
-% \Optitem[false]{eagerCache}{\opt{true}, \opt{false}}
+% \Optitem[true]{eagerCache}{\opt{true}, \opt{false}}
 %
 :    true
 
@@ -2578,7 +2578,8 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
         command-line interface for plumbing.
 
         This behavior will only be used when the \Opt{finalizeCache} option is
-        disabled.
+        disabled. Recursive nesting of markdown document fragments is undefined
+        behavior when \Opt{eagerCache} is disabled.
 
 % \end{markdown}
 % \iffalse
@@ -2637,14 +2638,14 @@ Hello \markdownRendererEmphasis{world}!\relax
 \@@_add_lua_option:nnn
   { eagerCache }
   { boolean }
-  { false }
+  { true }
 %    \end{macrocode}
 % \iffalse
 %</tex>
 %<*lua,lua-cli>
 % \fi
 %  \begin{macrocode}
-defaultOptions.eagerCache = false
+defaultOptions.eagerCache = true
 %    \end{macrocode}
 % \par
 % \iffalse

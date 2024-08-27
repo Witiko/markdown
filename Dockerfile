@@ -211,7 +211,7 @@ COPY --from=build ${BUILD_DIR}/dist ${INSTALL_DIR}/
 
 COPY <<EOF ${BINARY_DIR}/markdown-cli
 #!/bin/bash
-texlua ${INSTALL_DIR}/scripts/markdown/markdown-cli.lua \"\$@\"
+texlua ${INSTALL_DIR}/scripts/markdown/markdown-cli.lua eagerCache=false \"\$@\"
 echo
 EOF
 
