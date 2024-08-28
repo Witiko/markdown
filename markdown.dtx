@@ -23148,18 +23148,6 @@ function util.salt(options)
   return salt
 end
 %    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% The \luamdef{util.pack} method takes the pathname `name` of the output file
-% prepared by the reader and transforms it to the output format.
-%
-% \end{markdown}
-%  \begin{macrocode}
-function util.pack(name)
-  return [[\input{]] .. name .. [[}\relax]]
-end
-%    \end{macrocode}
 % \iffalse
 %</lua,lua-loader>
 %<*lua>
@@ -33834,7 +33822,7 @@ function M.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 % If we cache markdown documents, produce the cache file and transform its
-% filename to plain \TeX{} output via the \luamref{util.pack} method.
+% filename to plain \TeX{} output.
 %
 % When determining the name of the cache file, create salt for the hashing
 % function out of the package version and the passed options recognized by the
@@ -33846,7 +33834,7 @@ function M.new(options)
       local salt = util.salt(options)
       local name = util.cache(options.cacheDir, input, salt, convert,
                               ".md.tex")
-      output = util.pack(name)
+      output = [[\input{]] .. name .. [[}\relax]]
 %    \end{macrocode}
 % \begin{markdown}
 % Otherwise, return the result of the conversion directly.
