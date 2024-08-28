@@ -23,9 +23,10 @@ Speed improvements:
 
 - Precompile snippets to improve the speed of setting them.
   (#467, #479, inspired by the TUG 2024 talk by @josephwright)
-- Improve the speed of parsing markdown input five times.
+- Use an optimized parser to determine Unicode punctuation.
   (#458, #474, #482, 4c1a7de2, co-authored by @Yggdrasil128,
    sponsored by @istqborg)
+  This improves the speed of parsing markdown input by up to 500%.
 - Enable option `eagerCache` by default. (#468, #490, sponsored by @istqborg)
   This can improve the speed by up to 25% for large documents with many
   markdown fragments that require multiple compilation runs.
