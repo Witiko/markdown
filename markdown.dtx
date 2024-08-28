@@ -33811,9 +33811,7 @@ function M.new(options)
         local parser = require("markdown-parser")
         if metadata.version ~= parser.metadata.version then
           warn("markdown.lua " .. metadata.version .. " used with " ..
-               "markdown-parser.lua " .. parser.metadata.version ..
-               ". This will prevent option `eagerCache` from " ..
-               "working properly.")
+               "markdown-parser.lua " .. parser.metadata.version .. ".")
         end
         parser_convert = parser.new(options)
       end
