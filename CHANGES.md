@@ -28,12 +28,12 @@ Speed improvements:
    sponsored by @istqborg)
   This improves the speed of parsing markdown input by up to 500%.
 - Enable option `eagerCache` by default. (#468, #490, sponsored by @istqborg)
-  This can improve the speed by up to 25% for large documents with many
+  This improves the speed by up to 25% for large documents with many
   markdown fragments that require multiple compilation runs.
 - Prevent loading the full Markdown package when converting cached markdown
   fragments. (#487, #491, sponsored by @istqborg)
   This significantly improves the speed for large documents with many
-  markdown fragments in pdfTeX.
+  markdown fragments that require multiple compilation runs in pdfTeX.
 
 Deprecation:
 
