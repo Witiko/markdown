@@ -925,7 +925,7 @@ documentation][techdoc].
             (A Markdown Interpreter for TeX)
 
 %</manual>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 local metadata = {
@@ -941,7 +941,7 @@ local metadata = {
 
 %    \end{macrocode}
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*lua>
 % \fi
 %  \begin{macrocode}
@@ -993,7 +993,7 @@ make base
 
 Either of the two abovelisted approaches should produce the following files:
 
-* `markdown.lua`: The Lua module
+* `markdown.lua` and `markdown-parser.lua`: The Lua module
 * `libraries/markdown-tinyyaml.lua`: An external library for reading \acro{yaml}
 * `markdown-cli.lua`: The Lua command-line interface
 * `markdown.tex`: The plain \TeX{} macro package
@@ -1014,6 +1014,7 @@ directory structure. This is generally where the individual files should be
 placed:
 
 * `⟨TEXMF⟩/tex/luatex/markdown/markdown.lua`
+* `⟨TEXMF⟩/tex/luatex/markdown/markdown-parser.lua`
 * `⟨TEXMF⟩/tex/luatex/markdown/markdown-tinyyaml.lua`
 * `⟨TEXMF⟩/scripts/markdown/markdown-cli.lua`
 * `⟨TEXMF⟩/tex/generic/markdown/markdown.tex`
@@ -1040,6 +1041,7 @@ portably typeset on legacy \TeX{} distributions.
 This is where the individual files should be placed:
 
 * `./markdown.lua`
+* `./markdown-parser.lua`
 * `./markdown-tinyyaml.lua`
 * `./markdown-cli.lua`
 * `./markdown/markdown.tex`
@@ -1875,7 +1877,7 @@ module and a command-line interface (CLI).
              (Lua library for conversion between markup formats)
 
 %</manual-interfaces>
-%<*lua>
+%<*lua,lua-loader>
 % \fi
 % \begin{markdown}
 %
@@ -1890,6 +1892,10 @@ module and a command-line interface (CLI).
 %  \begin{macrocode}
 local M = {metadata = metadata}
 %    \end{macrocode}
+% \iffalse
+% \fi
+%</lua,lua-loader>
+%<*lua>
 % \par
 % \begin{markdown}
 %
@@ -11417,7 +11423,8 @@ Copyright (C) ]] .. table.concat(metadata.copyright,
 License: ]] .. metadata.license
 
 local function warn(s)
-  io.stderr:write("Warning: " .. s .. "\n") end
+  io.stderr:write("Warning: " .. s .. "\n")
+end
 
 local function error(s)
   io.stderr:write("Error: " .. s .. "\n")
@@ -33769,9 +33776,38 @@ end
 %
 %### Conversion from Markdown to Plain \TeX{}
 %
-% The \luamref{new} function returns a conversion function that takes a
-% markdown string and turns it into a plain \TeX{} output. See Section
-% <#sec:lua-conversion>.
+% The \luamref{new} function of file `markdown.lua` loads file
+% `markdown-parser.lua` and calls its own function \luamref{new}.
+%
+% \end{markdown}
+% \iffalse
+%</lua>
+%<*lua-loader>
+% \fi
+%  \begin{macrocode}
+local function warn(s)
+  io.stderr:write("Warning: " .. s .. "\n")
+end
+
+function M.new(options)
+  local parser = require("markdown-parser")
+  if metadata.version ~= parser.metadata.version then
+    warn("markdown.lua " .. metadata.version .. " used with " ..
+         "markdown-parser.lua " .. parser.metadata.version .. ".")
+  end
+  return parser.new(options)
+end
+%    \end{macrocode}
+% \iffalse
+%</lua-loader>
+%<*lua>
+% \fi
+% \par
+% \begin{markdown}
+%
+% The \luamref{new} function from file `markdown-parser.lua` returns a
+% conversion function that takes a markdown string and turns it into a plain
+% \TeX{} output. See Section <#sec:lua-conversion>.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -34088,11 +34124,16 @@ function M.new(options)
 %  \begin{macrocode}
   return convert
 end
-
-return M
 %    \end{macrocode}
 % \iffalse
 %</lua>
+%<*lua,lua-loader>
+% \fi
+%  \begin{macrocode}
+return M
+%    \end{macrocode}
+% \iffalse
+%</lua,lua-loader>
 %<*lua-cli>
 % \fi
 % \par
