@@ -31,7 +31,7 @@ Speed improvements:
   This improves the speed by up to 25% for large documents with many
   markdown fragments that require multiple compilation runs.
 - Prevent loading the full Markdown package when converting cached markdown
-  fragments. (#487, #491, sponsored by @istqborg)
+  fragments. (#487, #491, 40f0803f, 6609d43d, sponsored by @istqborg)
   This significantly improves the speed for large documents with many
   markdown fragments that require multiple compilation runs in pdfTeX.
 
