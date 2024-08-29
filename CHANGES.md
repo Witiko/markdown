@@ -23,6 +23,17 @@ Speed improvements:
 
 - Precompile snippets to improve the speed of setting them.
   (#467, #479, inspired by the TUG 2024 talk by @josephwright)
+- Use an optimized parser to determine Unicode punctuation.
+  (#458, #474, #482, 4c1a7de2, co-authored by @Yggdrasil128,
+   sponsored by @istqborg)
+  This improves the speed of parsing markdown input by up to 500%.
+- Enable option `eagerCache` by default. (#468, #490, sponsored by @istqborg)
+  This improves the speed by up to 25% for large documents with many
+  markdown fragments that require multiple compilation runs.
+- Prevent loading the full Markdown package when converting cached markdown
+  fragments. (#487, #491, 40f0803f, 6609d43d, sponsored by @istqborg)
+  This significantly improves the speed for large documents with many
+  markdown fragments that require multiple compilation runs in pdfTeX.
 
 Deprecation:
 
@@ -38,7 +49,7 @@ Continuous Integration:
 Experiments:
 
 - Measure the speed of the Markdown package across recent versions.
-  (249552e5, 55ede824, efeaecbe, #474, 7b2b2431)
+  (249552e5, 55ede824, efeaecbe, #474, 7b2b2431, fcf0064c)
 
 ## 3.6.2 (2024-07-14)
 

@@ -925,7 +925,7 @@ documentation][techdoc].
             (A Markdown Interpreter for TeX)
 
 %</manual>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 local metadata = {
@@ -941,7 +941,7 @@ local metadata = {
 
 %    \end{macrocode}
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*lua>
 % \fi
 %  \begin{macrocode}
@@ -993,7 +993,7 @@ make base
 
 Either of the two abovelisted approaches should produce the following files:
 
-* `markdown.lua`: The Lua module
+* `markdown.lua` and `markdown-parser.lua`: The Lua module
 * `libraries/markdown-tinyyaml.lua`: An external library for reading \acro{yaml}
 * `markdown-cli.lua`: The Lua command-line interface
 * `markdown.tex`: The plain \TeX{} macro package
@@ -1014,6 +1014,7 @@ directory structure. This is generally where the individual files should be
 placed:
 
 * `⟨TEXMF⟩/tex/luatex/markdown/markdown.lua`
+* `⟨TEXMF⟩/tex/luatex/markdown/markdown-parser.lua`
 * `⟨TEXMF⟩/tex/luatex/markdown/markdown-tinyyaml.lua`
 * `⟨TEXMF⟩/scripts/markdown/markdown-cli.lua`
 * `⟨TEXMF⟩/tex/generic/markdown/markdown.tex`
@@ -1040,6 +1041,7 @@ portably typeset on legacy \TeX{} distributions.
 This is where the individual files should be placed:
 
 * `./markdown.lua`
+* `./markdown-parser.lua`
 * `./markdown-tinyyaml.lua`
 * `./markdown-cli.lua`
 * `./markdown/markdown.tex`
@@ -1108,9 +1110,17 @@ local unicode = require("unicode")
 %     Live${}\geq{}2008$).
 %
 % \end{markdown}
+% \iffalse
+%</lua>
+%<*lua,lua-loader>
+% \fi
 %  \begin{macrocode}
 local md5 = require("md5");
 %    \end{macrocode}
+% \iffalse
+%</lua,lua-loader>
+%<*lua>
+% \fi
 % \begin{markdown}
 %
 % \pkg{Kpathsea}
@@ -1875,7 +1885,7 @@ module and a command-line interface (CLI).
              (Lua library for conversion between markup formats)
 
 %</manual-interfaces>
-%<*lua>
+%<*lua,lua-loader>
 % \fi
 % \begin{markdown}
 %
@@ -1890,6 +1900,10 @@ module and a command-line interface (CLI).
 %  \begin{macrocode}
 local M = {metadata = metadata}
 %    \end{macrocode}
+% \iffalse
+% \fi
+%</lua,lua-loader>
+%<*lua>
 % \par
 % \begin{markdown}
 %
@@ -2166,7 +2180,7 @@ In this section, I will describe all the options recognized by the Markdown
 package.
 
 %</manual-options>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 local defaultOptions = {}
@@ -2175,7 +2189,7 @@ local defaultOptions = {}
 % \markdownSetup{snippet=lua-options}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 ### Lua
@@ -2553,20 +2567,23 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
 
 #### Option `eagerCache`
 
-`eagerCache` (default value: `false`)
+`eagerCache` (default value: `true`)
 
 % \fi
 % \begin{markdown}
 %
-% \Optitem[false]{eagerCache}{\opt{true}, \opt{false}}
+% \Optitem[true]{eagerCache}{\opt{true}, \opt{false}}
 %
 :    true
 
      :  Converted markdown documents will be cached in \Opt{cacheDir}. This can be
         useful for post-processing the converted documents and for recovering
-        historical versions of the documents from the cache.  However, it also
-        produces a large number of auxiliary files on the disk and obscures the
-        output of the Lua command-line interface when it is used for plumbing.
+        historical versions of the documents from the cache. Furthermore, it can
+        also significantly improve the processing speed for documents that require
+        multiple compilation runs, since each markdown document is only converted once.
+        However, it also produces a large number of auxiliary files on the disk
+        and obscures the output of the Lua command-line interface when it is
+        used for plumbing.
 
         This behavior will always be used if the \Opt{finalizeCache} option is
         enabled.
@@ -2575,7 +2592,11 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
 
      :  Converted markdown documents will not be cached. This decreases the number
         of auxiliary files that we produce and makes it easier to use the Lua
-        command-line interface for plumbing.
+        command-line interface for plumbing. However, it makes it impossible to
+        post-process the converted documents and recover historical versions of
+        the documents from the cache. Furthermore, it can significantly reduce
+        the processing speed for documents that require multiple compilation
+        runs, since each markdown document is converted multiple times needlessly.
 
         This behavior will only be used when the \Opt{finalizeCache} option is
         disabled.
@@ -2637,18 +2658,18 @@ Hello \markdownRendererEmphasis{world}!\relax
 \@@_add_lua_option:nnn
   { eagerCache }
   { boolean }
-  { false }
+  { true }
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
-defaultOptions.eagerCache = false
+defaultOptions.eagerCache = true
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `singletonCache`
@@ -2676,12 +2697,11 @@ defaultOptions.eagerCache = false
      :  Every call to the function \luamref{new}`(options)` will produce a new
         conversion function that will not be cached. This is slower than
         caching conversion functions and may expose bugs related to memory
-        leaks in the creation of conversion functions, see also issue
-        [#226][issue-226].
+        leaks in the creation of conversion functions, see also [#226 (comment)][226-comment].
 
         This was the default behavior until version 3.0.0 of the Markdown package.
 
- [issue-226]: https://github.com/witiko/markdown/pull/226#issuecomment-1599641634
+ [226-comment]: https://github.com/witiko/markdown/pull/226#issuecomment-1599641634
 
 % \end{markdown}
 % \iffalse
@@ -2730,13 +2750,13 @@ conversion function.
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.singletonCache = true
 %    \end{macrocode}
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*lua>
 % \fi
 %  \begin{macrocode}
@@ -2785,14 +2805,14 @@ local singletonCache = {
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.unicodeNormalization = true
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `unicodeNormalizationForm`
@@ -2841,14 +2861,14 @@ defaultOptions.unicodeNormalization = true
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.unicodeNormalizationForm = "nfc"
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 % \fi
 % \begin{markdown}
@@ -3017,14 +3037,14 @@ option.
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.cacheDir = "."
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `contentBlocksLanguageMap`
@@ -3181,14 +3201,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.contentBlocksLanguageMap = "markdown-languages.json"
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `debugExtensionsFileName`
@@ -3230,14 +3250,14 @@ defaultOptions.contentBlocksLanguageMap = "markdown-languages.json"
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.debugExtensionsFileName = "debug-extensions.json"
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `frozenCacheFileName`
@@ -3472,14 +3492,14 @@ the markdown document from “Hello *world*!” to “Hi *world*!” was not ref
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.frozenCacheFileName = "frozenCache.tex"
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 % \fi
 % \begin{markdown}
@@ -3529,14 +3549,14 @@ See also the option \Opt{gfmAutoIdentifiers}.
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.autoIdentifiers = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `blankBeforeBlockquote`
@@ -3753,14 +3773,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.blankBeforeBlockquote = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `blankBeforeCodeFence`
@@ -4010,14 +4030,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.blankBeforeCodeFence = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `blankBeforeDivFence`
@@ -4093,14 +4113,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.blankBeforeDivFence = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `blankBeforeHeading`
@@ -4333,14 +4353,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.blankBeforeHeading = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `blankBeforeList`
@@ -4559,14 +4579,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.blankBeforeList = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `bracketedSpans`
@@ -4655,14 +4675,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.bracketedSpans = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `breakableBlockquotes`
@@ -4889,14 +4909,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.breakableBlockquotes = true
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `citationNbsps`
@@ -4983,14 +5003,14 @@ following text, where the middot (`·`) denotes a non-breaking space:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.citationNbsps = true
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `citations`
@@ -5086,14 +5106,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.citations = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `codeSpans`
@@ -5312,14 +5332,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.codeSpans = true
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `contentBlocks`
@@ -5486,14 +5506,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.contentBlocks = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `contentLevel`
@@ -5623,14 +5643,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.contentLevel = "block"
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `debugExtensions`
@@ -5778,14 +5798,14 @@ inserted to the grammar of markdown.
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.debugExtensions = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `definitionLists`
@@ -5917,14 +5937,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.definitionLists = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `ensureJekyllData`
@@ -5963,14 +5983,14 @@ defaultOptions.definitionLists = false
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.ensureJekyllData = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `expectJekyllData`
@@ -6087,14 +6107,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.expectJekyllData = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `extensions`
@@ -6238,14 +6258,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.extensions = {}
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `fancyLists`
@@ -6340,14 +6360,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.fancyLists = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `fencedCode`
@@ -6507,14 +6527,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.fencedCode = true
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `fencedCodeAttributes`
@@ -6607,14 +6627,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.fencedCodeAttributes = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `fencedDivs` {#fenced-divs}
@@ -6686,14 +6706,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.fencedDivs = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `finalizeCache`
@@ -6850,14 +6870,14 @@ the markdown document from “Hello *world*!” to “Hi *world*!” was not ref
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.finalizeCache = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `frozenCacheCounter`
@@ -6919,14 +6939,14 @@ requested using the `frozenCacheCounter` option.
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.frozenCacheCounter = 0
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `gfmAutoIdentifiers`
@@ -6968,14 +6988,14 @@ See also the option \Opt{autoIdentifiers}.
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.gfmAutoIdentifiers = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `hashEnumerators`
@@ -7099,14 +7119,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.hashEnumerators = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `headerAttributes` {#header-attributes}
@@ -7148,14 +7168,14 @@ defaultOptions.hashEnumerators = false
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.headerAttributes = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `html`
@@ -7420,14 +7440,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.html = true
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `hybrid`
@@ -7646,14 +7666,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.hybrid = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `inlineCodeAttributes`
@@ -7742,14 +7762,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.inlineCodeAttributes = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `inlineNotes`
@@ -7843,14 +7863,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.inlineNotes = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `jekyllData`
@@ -8010,14 +8030,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.jekyllData = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `linkAttributes`
@@ -8107,14 +8127,14 @@ image (from [Martin Scharrer's mwe package][mwe]) displayed at size 5cm × 4cm.
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.linkAttributes = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `lineBlocks`
@@ -8242,14 +8262,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.lineBlocks = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `mark`
@@ -8313,14 +8333,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.mark = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `notes`
@@ -8476,14 +8496,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.notes = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `pipeTables` {#pipe-tables}
@@ -8585,14 +8605,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.pipeTables = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `preserveTabs`
@@ -8625,14 +8645,14 @@ defaultOptions.pipeTables = false
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.preserveTabs = true
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `rawAttribute`
@@ -8720,14 +8740,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.rawAttribute = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `relativeReferences`
@@ -8809,14 +8829,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.relativeReferences = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `shiftHeadings`
@@ -8949,14 +8969,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.shiftHeadings = 0
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `slice`
@@ -9167,14 +9187,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.slice = "^ $"
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `smartEllipses`
@@ -9382,14 +9402,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.smartEllipses = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `startNumber`
@@ -9518,14 +9538,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.startNumber = true
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `strikeThrough`
@@ -9640,14 +9660,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.strikeThrough = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `stripIndent`
@@ -9753,14 +9773,14 @@ text “Hello *world*!”
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.stripIndent = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `subscripts`
@@ -9845,14 +9865,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.subscripts = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `superscripts`
@@ -9937,14 +9957,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.superscripts = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `tableAttributes`
@@ -10062,14 +10082,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.tableAttributes = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `tableCaptions` {#table-captions}
@@ -10192,14 +10212,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.tableCaptions = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `taskLists`
@@ -10305,14 +10325,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.taskLists = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `texComments`
@@ -10421,14 +10441,14 @@ text “Hello *world*!”
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.texComments = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `texMathDollars`
@@ -10632,14 +10652,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.texMathDollars = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `texMathDoubleBackslash`
@@ -10843,14 +10863,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.texMathDoubleBackslash = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `texMathSingleBackslash`
@@ -11054,14 +11074,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.texMathSingleBackslash = false
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `tightLists`
@@ -11175,14 +11195,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.tightLists = true
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*manual-options>
 
 #### Option `underscores`
@@ -11318,14 +11338,14 @@ following text:
 %    \end{macrocode}
 % \iffalse
 %</tex>
-%<*lua,lua-cli>
+%<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
 defaultOptions.underscores = true
 %    \end{macrocode}
 % \endgroup
 % \iffalse
-%</lua,lua-cli>
+%</lua,lua-cli,lua-loader>
 %<*lua-cli>
 % \fi
 % \par
@@ -11411,7 +11431,8 @@ Copyright (C) ]] .. table.concat(metadata.copyright,
 License: ]] .. metadata.license
 
 local function warn(s)
-  io.stderr:write("Warning: " .. s .. "\n") end
+  io.stderr:write("Warning: " .. s .. "\n")
+end
 
 local function error(s)
   io.stderr:write("Error: " .. s .. "\n")
@@ -22756,9 +22777,17 @@ local P, R, S, V, C, Cg, Cb, Cmt, Cc, Ct, B, Cs, Cp, any =
 % `lunamark/util.lua` file in the Lunamark Lua module.
 %
 % \end{markdown}
+% \iffalse
+%</lua>
+%<*lua,lua-loader>
+% \fi
 %  \begin{macrocode}
 local util = {}
 %    \end{macrocode}
+% \iffalse
+%</lua,lua-loader>
+%<*lua>
+% \fi
 % \par
 % \begin{markdown}
 %
@@ -22773,13 +22802,17 @@ function util.err(msg, exit_code)
   os.exit(exit_code or 1)
 end
 %    \end{macrocode}
+% \iffalse
+%</lua>
+%<*lua,lua-loader>
+% \fi
 % \par
 % \begin{markdown}
 %
-% The \luamdef{util.cache} method computes the digest of `string` and
-% `salt`, adds the `suffix` and looks into the directory `dir`, whether a
-% file with such a name exists. If it does not, it gets created with
-% `transform(string)` as its content. The filename is then returned.
+% The \luamdef{util.cache} method used `dir`, `string`, `salt`, and `suffix`
+% to determine a pathname. If a file with such a pathname does not exists,
+% it gets created with `transform(string)` as its content. Regardless, the
+% pathname is then returned.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -22800,6 +22833,10 @@ function util.cache(dir, string, salt, transform, suffix)
   return name
 end
 %    \end{macrocode}
+% \iffalse
+%</lua,lua-loader>
+%<*lua>
+% \fi
 % \par
 % \begin{markdown}
 %
@@ -23058,6 +23095,10 @@ function util.escaper(char_escapes, string_escapes)
   end
 end
 %    \end{macrocode}
+% \iffalse
+%</lua>
+%<*lua,lua-loader>
+% \fi
 % \par
 % \begin{markdown}
 %
@@ -23074,6 +23115,43 @@ function util.pathname(dir, file)
   end
 end
 %    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% The \luamdef{util.salt} method produces cryptographic salt out of a table of
+% options `options`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+function util.salt(options)
+  local opt_string = {}
+  for k, _ in pairs(defaultOptions) do
+    local v = options[k]
+    if type(v) == "table" then
+      for _, i in ipairs(v) do
+        opt_string[#opt_string+1] = k .. "=" .. tostring(i)
+      end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The \Opt{cacheDir} option is disregarded.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    elseif k ~= "cacheDir" then
+      opt_string[#opt_string+1] = k .. "=" .. tostring(v)
+    end
+  end
+  table.sort(opt_string)
+  local salt = table.concat(opt_string, ",")
+            .. "," .. metadata.version
+  return salt
+end
+%    \end{macrocode}
+% \iffalse
+%</lua,lua-loader>
+%<*lua>
+% \fi
 % \par
 % \begin{markdown}
 %
@@ -25393,15 +25471,6 @@ function M.writer.new(options)
 % \par
 % \begin{markdown}
 %
-% Define \luamdef{writer->suffix} as the suffix of the produced cache files.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  self.suffix = ".tex"
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
 % Define \luamdef{writer->space} as the output format of a space character.
 %
 % \end{markdown}
@@ -25441,19 +25510,6 @@ function M.writer.new(options)
   function self.paragraph(s)
     if not self.is_writing then return "" end
     return s
-  end
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% Define \luamdef{writer->pack} as a function that will take the filename
-% `name` of the output file prepared by the reader and transform it to the
-% output format.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  function self.pack(name)
-    return [[\input{]] .. name .. [[}\relax]]
   end
 %    \end{macrocode}
 % \par
@@ -26625,31 +26681,86 @@ parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
 %
 % \end{markdown}
 %  \begin{macrocode}
-parsers.punctuation            = {}
-(function()
+;(function()
   local pathname = assert(kpse.find_file("UnicodeData.txt"),
     [[Could not locate file "UnicodeData.txt"]])
   local file = assert(io.open(pathname, "r"),
     [[Could not open file "UnicodeData.txt"]])
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% In order to minimize the size and speed of the parser, we will first
+% construct a prefix tree of UTF-8 encodings for all codepoints of a
+% given code length.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local prefix_trees = {}
   for line in file:lines() do
     local codepoint, major_category = line:match("^(%x+);[^;]*;(%a)")
     if major_category == "P" or major_category == "S" then
       local code = unicode.utf8.char(tonumber(codepoint, 16))
-      if parsers.punctuation[#code] == nil then
-        parsers.punctuation[#code] = parsers.fail
+      if prefix_trees[#code] == nil then
+        prefix_trees[#code] = {}
       end
-      local code_parser = parsers.succeed
+      local node = prefix_trees[#code]
       for i = 1, #code do
         local byte = code:sub(i, i)
-        local byte_parser = S(byte)
-        code_parser = code_parser
-                    * byte_parser
+        if i < #code then
+          if node[byte] == nil then
+            node[byte] = {}
+          end
+          node = node[byte]
+        else
+          table.insert(node, byte)
+        end
       end
-      parsers.punctuation[#code] = parsers.punctuation[#code]
-                                 + code_parser
     end
   end
   assert(file:close())
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Next, we will construct a parser out of the prefix tree.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local function depth_first_search(node, path, visit, leave)
+    visit(node, path)
+    for label, child in pairs(node) do
+      if type(child) == "table" then
+        depth_first_search(child, path .. label, visit, leave)
+      else
+        visit(child, path)
+      end
+    end
+    leave(node, path)
+  end
+
+  parsers.punctuation = {}
+  for length, prefix_tree in pairs(prefix_trees) do
+    local subparsers = {}
+    depth_first_search(prefix_tree, "", function(node, path)
+      if type(node) == "table" then
+        subparsers[path] = parsers.fail
+      else
+        assert(type(node) == "string")
+        subparsers[path] = subparsers[path] + S(node)
+      end
+    end, function(_, path)
+      if #path > 0 then
+        local byte = path:sub(#path, #path)
+        local parent_path = path:sub(1, #path-1)
+        subparsers[parent_path] = subparsers[parent_path]
+                                + S(byte) * subparsers[path]
+      else
+        parsers.punctuation[length] = subparsers[path]
+      end
+    end)
+    assert(parsers.punctuation[length] ~= nil)
+  end
 end)()
 
 parsers.escapable              = parsers.ascii_punctuation
@@ -30964,31 +31075,12 @@ end
       end
 %    \end{macrocode}
 % \begin{markdown}
-% When determining the name of the cache file, create salt for the hashing
-% function out of the package version and the passed options recognized by the
-% Lua interface (see Section <#sec:lua-options>). The \Opt{cacheDir} option
-% is disregarded.
+% Clear the table of references.
 % \end{markdown}
 %  \begin{macrocode}
       references = {}
-      local opt_string = {}
-      for k, _ in pairs(defaultOptions) do
-        local v = options[k]
-        if type(v) == "table" then
-          for _, i in ipairs(v) do
-            opt_string[#opt_string+1] = k .. "=" .. tostring(i)
-          end
-        elseif k ~= "cacheDir" then
-          opt_string[#opt_string+1] = k .. "=" .. tostring(v)
-        end
-      end
-      table.sort(opt_string)
-      local salt = table.concat(opt_string, ",")
-                .. "," .. metadata.version
-      local output
-      local function convert(input)
-        local document = self.parser_functions.parse_blocks(input)
-        local output = util.rope_to_string(writer.document(document))
+      local document = self.parser_functions.parse_blocks(input)
+      local output = util.rope_to_string(writer.document(document))
 %    \end{macrocode}
 % \begin{markdown}
 % Remove block element / paragraph separators immediately followed by the
@@ -30996,92 +31088,49 @@ end
 % Then, remove any leftover output of \luamref{writer->undosep}.
 % \end{markdown}
 %  \begin{macrocode}
-        local undosep_start, undosep_end
-        local potential_secend_start, secend_start
-        local potential_sep_start, sep_start
+      local undosep_start, undosep_end
+      local potential_secend_start, secend_start
+      local potential_sep_start, sep_start
+      while true do
+        -- find a `writer->undosep`
+        undosep_start, undosep_end
+          = output:find(writer.undosep_text, 1, true)
+        if undosep_start == nil then break end
+        -- skip any preceding section ends
+        secend_start = undosep_start
         while true do
-          -- find a `writer->undosep`
-          undosep_start, undosep_end
-            = output:find(writer.undosep_text, 1, true)
-          if undosep_start == nil then break end
-          -- skip any preceding section ends
-          secend_start = undosep_start
-          while true do
-            potential_secend_start = secend_start - #writer.secend_text
-            if potential_secend_start < 1
-               or output:sub(potential_secend_start,
-                             secend_start - 1) ~= writer.secend_text
-               then
-              break
-            end
-            secend_start = potential_secend_start
+          potential_secend_start = secend_start - #writer.secend_text
+          if potential_secend_start < 1
+             or output:sub(potential_secend_start,
+                           secend_start - 1) ~= writer.secend_text
+             then
+            break
           end
-          -- find an immediately preceding
-          -- block element / paragraph separator
-          sep_start = secend_start
-          potential_sep_start = sep_start - #writer.interblocksep_text
+          secend_start = potential_secend_start
+        end
+        -- find an immediately preceding
+        -- block element / paragraph separator
+        sep_start = secend_start
+        potential_sep_start = sep_start - #writer.interblocksep_text
+        if potential_sep_start >= 1
+           and output:sub(potential_sep_start,
+                          sep_start - 1) == writer.interblocksep_text
+           then
+          sep_start = potential_sep_start
+        else
+          potential_sep_start = sep_start - #writer.paragraphsep_text
           if potential_sep_start >= 1
              and output:sub(potential_sep_start,
-                            sep_start - 1) == writer.interblocksep_text
+                            sep_start - 1) == writer.paragraphsep_text
              then
             sep_start = potential_sep_start
-          else
-            potential_sep_start = sep_start - #writer.paragraphsep_text
-            if potential_sep_start >= 1
-               and output:sub(potential_sep_start,
-                              sep_start - 1) == writer.paragraphsep_text
-               then
-              sep_start = potential_sep_start
-            end
           end
-          -- remove `writer->undosep` and immediately preceding
-          -- block element / paragraph separator
-          output = output:sub(1, sep_start - 1)
-                .. output:sub(secend_start, undosep_start - 1)
-                .. output:sub(undosep_end + 1)
         end
-        return output
-      end
-%    \end{macrocode}
-% \begin{markdown}
-% If we cache markdown documents, produce the cache file and transform its
-% filename to plain \TeX{} output via the \luamref{writer->pack} method.
-% \end{markdown}
-%  \begin{macrocode}
-      if options.eagerCache or options.finalizeCache then
-        local name = util.cache(options.cacheDir, input, salt, convert,
-                                ".md" .. writer.suffix)
-        output = writer.pack(name)
-%    \end{macrocode}
-% \begin{markdown}
-% Otherwise, return the result of the conversion directly.
-% \end{markdown}
-%  \begin{macrocode}
-      else
-        output = convert(input)
-      end
-%    \end{macrocode}
-% \begin{markdown}
-% If the \Opt{finalizeCache} option is enabled, populate the frozen cache in
-% the file \Opt{frozenCacheFileName} with an entry for markdown document
-% number \Opt{frozenCacheCounter}.
-% \end{markdown}
-%  \begin{macrocode}
-      if options.finalizeCache then
-        local file, mode
-        if options.frozenCacheCounter > 0 then
-          mode = "a"
-        else
-          mode = "w"
-        end
-        file = assert(io.open(options.frozenCacheFileName, mode),
-          [[Could not open file "]] .. options.frozenCacheFileName
-          .. [[" for writing]])
-        assert(file:write(
-          [[\expandafter\global\expandafter\def\csname ]]
-          .. [[markdownFrozenCache]] .. options.frozenCacheCounter
-          .. [[\endcsname{]] .. output .. [[}]] .. "\n"))
-        assert(file:close())
+        -- remove `writer->undosep` and immediately preceding
+        -- block element / paragraph separator
+        output = output:sub(1, sep_start - 1)
+              .. output:sub(secend_start, undosep_start - 1)
+              .. output:sub(undosep_end + 1)
       end
       return output
     end
@@ -33708,9 +33757,127 @@ end
 %
 %### Conversion from Markdown to Plain \TeX{}
 %
-% The \luamref{new} function returns a conversion function that takes a
-% markdown string and turns it into a plain \TeX{} output. See Section
-% <#sec:lua-conversion>.
+% The \luamref{new} function of file `markdown.lua` loads file
+% `markdown-parser.lua` and calls its own function \luamref{new} unless option
+% \Opt{eagerCache} or \Opt{finalizeCache} has been enabled and a cached
+% conversion output exists, in which case it is returned without loading file
+% `markdown-parser.lua`.
+%
+% \end{markdown}
+% \iffalse
+%</lua>
+%<*lua-loader>
+% \fi
+%  \begin{macrocode}
+local function warn(s)
+  io.stderr:write("Warning: " .. s .. "\n")
+end
+
+function M.new(options)
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Make the `options` table inherit from the \luamref{defaultOptions} table.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  options = options or {}
+  setmetatable(options, { __index = function (_, key)
+    return defaultOptions[key] end })
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Return a conversion function that tries to produce a cached conversion output
+% exists. If no cached conversion output exists, we load the file
+% `markdown-parser.lua` and use it to convert the input.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local parser_convert = nil
+  return function(input)
+    local function convert(input)
+      if parser_convert == nil then
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Lazy-load `markdown-parser.lua` and check that it originates from the same
+% version of the Markdown package.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        local parser = require("markdown-parser")
+        if metadata.version ~= parser.metadata.version then
+          warn("markdown.lua " .. metadata.version .. " used with " ..
+               "markdown-parser.lua " .. parser.metadata.version .. ".")
+        end
+        parser_convert = parser.new(options)
+      end
+      return parser_convert(input)
+    end
+%    \end{macrocode}
+% \begin{markdown}
+% If we cache markdown documents, produce the cache file and transform its
+% filename to plain \TeX{} output.
+%
+% When determining the name of the cache file, create salt for the hashing
+% function out of the package version and the passed options recognized by the
+% Lua interface (see Section <#sec:lua-options>).
+% \end{markdown}
+%  \begin{macrocode}
+    local output
+    if options.eagerCache or options.finalizeCache then
+      local salt = util.salt(options)
+      local name = util.cache(options.cacheDir, input, salt, convert,
+                              ".md.tex")
+      output = [[\input{]] .. name .. [[}\relax]]
+%    \end{macrocode}
+% \begin{markdown}
+% Otherwise, return the result of the conversion directly.
+% \end{markdown}
+%  \begin{macrocode}
+    else
+      output = convert(input)
+    end
+%    \end{macrocode}
+% \begin{markdown}
+% If the \Opt{finalizeCache} option is enabled, populate the frozen cache in
+% the file \Opt{frozenCacheFileName} with an entry for markdown document
+% number \Opt{frozenCacheCounter}.
+% \end{markdown}
+%  \begin{macrocode}
+    if options.finalizeCache then
+      local file, mode
+      if options.frozenCacheCounter > 0 then
+        mode = "a"
+      else
+        mode = "w"
+      end
+      file = assert(io.open(options.frozenCacheFileName, mode),
+        [[Could not open file "]] .. options.frozenCacheFileName
+        .. [[" for writing]])
+      assert(file:write(
+        [[\expandafter\global\expandafter\def\csname ]]
+        .. [[markdownFrozenCache]] .. options.frozenCacheCounter
+        .. [[\endcsname{]] .. output .. [[}]] .. "\n"))
+      assert(file:close())
+    end
+    return output
+  end
+end
+%    \end{macrocode}
+% \iffalse
+%</lua-loader>
+%<*lua>
+% \fi
+% \par
+% \begin{markdown}
+%
+% The \luamref{new} function from file `markdown-parser.lua` returns a
+% conversion function that takes a markdown string and turns it into a plain
+% \TeX{} output. See Section <#sec:lua-conversion>.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -33743,7 +33910,15 @@ function M.new(options)
             goto miss
           end
         end
-      elseif singletonCache.options[k] ~= options[k] then
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The \Opt{cacheDir} option is disregarded.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      elseif k ~= "cacheDir"
+         and singletonCache.options[k] ~= options[k] then
         goto miss
       end
     end
@@ -34027,11 +34202,16 @@ function M.new(options)
 %  \begin{macrocode}
   return convert
 end
-
-return M
 %    \end{macrocode}
 % \iffalse
 %</lua>
+%<*lua,lua-loader>
+% \fi
+%  \begin{macrocode}
+return M
+%    \end{macrocode}
+% \iffalse
+%</lua,lua-loader>
 %<*lua-cli>
 % \fi
 % \par

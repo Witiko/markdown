@@ -6,7 +6,8 @@ kpse.set_program_name("luatex")
 \usemodule[t][markdown]
 
 % Load the support files.
-\setupmarkdown[
+\setupmarkdown [
+  eagerCache = false,
   import = {
     witiko/markdown/test = snippet as testsnippet,
   }

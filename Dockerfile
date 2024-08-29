@@ -107,6 +107,7 @@ make -C ${BUILD_DIR} implode
 make -C ${BUILD_DIR} base
 mkdir -p                                                     ${INSTALL_DIR}/tex/luatex/markdown/
 cp ${BUILD_DIR}/markdown.lua                                 ${INSTALL_DIR}/tex/luatex/markdown/
+cp ${BUILD_DIR}/markdown-parser.lua                          ${INSTALL_DIR}/tex/luatex/markdown/
 cp ${BUILD_DIR}/libraries/markdown-tinyyaml.lua              ${INSTALL_DIR}/tex/luatex/markdown/
 mkdir -p                                                     ${INSTALL_DIR}/scripts/markdown/
 cp ${BUILD_DIR}/markdown-cli.lua                             ${INSTALL_DIR}/scripts/markdown/
@@ -211,7 +212,7 @@ COPY --from=build ${BUILD_DIR}/dist ${INSTALL_DIR}/
 
 COPY <<EOF ${BINARY_DIR}/markdown-cli
 #!/bin/bash
-texlua ${INSTALL_DIR}/scripts/markdown/markdown-cli.lua \"\$@\"
+texlua ${INSTALL_DIR}/scripts/markdown/markdown-cli.lua eagerCache=false \"\$@\"
 echo
 EOF
 
