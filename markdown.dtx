@@ -30145,7 +30145,7 @@ function M.reader.new(writer, options)
                     * -V("EndlineExceptions")
                     + parsers.check_optional_indent
                     * -V("EndlineExceptions")
-                    * -parsers.starter)
+                    * -parsers.starter) / function(_) return end
                   * parsers.spacechar^0
 
   parsers.Endline = parsers.endline
@@ -30192,16 +30192,16 @@ function M.reader.new(writer, options)
 
   parsers.NonbreakingEndline
                     = parsers.endline
-                    / writer.soft_line_break
+                    / writer.nbsp
 
   parsers.NonbreakingSpace
-                  = parsers.spacechar^2 * parsers.Endline
-                                        / writer.hard_line_break
+                  = parsers.spacechar^2 * parsers.endline
+                                        / writer.nbsp
                   + parsers.spacechar^1
-                  * parsers.Endline^-1 * parsers.eof / ""
-                  + parsers.spacechar^1 * parsers.Endline
+                  * parsers.endline^-1 * parsers.eof / ""
+                  + parsers.spacechar^1 * parsers.endline
                                         * parsers.optionalspace
-                                        / writer.soft_line_break
+                                        / writer.nbsp
                   + parsers.spacechar^1 * parsers.optionalspace
                                         / writer.nbsp
 
@@ -31303,7 +31303,7 @@ M.extensions.citations = function(citation_nbsps)
                          + parsers.inticks
                          + parsers.autolink
                          + V("InlineHtml")
-                         + V("Space") + V("Endline")
+                         + V("Space") + V("EndlineNoSub")
                          + (parsers.anyescaped
                            - ( parsers.newline
                              + parsers.rbracket
@@ -31318,7 +31318,7 @@ M.extensions.citations = function(citation_nbsps)
                          + parsers.inticks
                          + parsers.autolink
                          + V("InlineHtml")
-                         + V("Space") + V("Endline")
+                         + V("Space") + V("EndlineNoSub")
                          + (parsers.anyescaped
                            - ( parsers.newline
                              + parsers.rbracket

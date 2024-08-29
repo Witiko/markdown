@@ -18,6 +18,8 @@ Fixes:
 
 - Produce more meaningful error message when KPathSea fails to
   locate a file. (#458, #472, 33e6eef2, reported by @Yggdrasil128)
+- Fix soft line breaks in citation prenotes and postnotes.
+  (#483, #484, contributed by @lostenderman)
 
 Speed improvements:
 
