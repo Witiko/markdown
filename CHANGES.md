@@ -43,8 +43,8 @@ Speed improvements:
 Deprecation:
 
 - Deprecate `jekyllDataString` renderer and renderer prototype.
-  Users should use `jekyllDataTypographicString` instead.
   (istqborg/istqb_product_base#46, #440, #451, sponsored by @istqborg)
+  Users should use `jekyllDataTypographicString` instead.
 
 Continuous Integration:
 
