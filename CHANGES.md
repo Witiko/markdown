@@ -11,6 +11,7 @@ Development:
   intended for typesetting.
   (istqborg/istqb_product_base#46, #440, #451, sponsored by @istqborg)
 - Add option `ensureJekyllData` for processing standalone YAML files.
+  (#452, #473, sponsored by @istqborg)
 - Add renderers `warning` and `error` that represent warnings and errors
   produced by the markdown parser. (#452, #473)
 - Support user-defined LaTeX environments with LaTeX markup.
