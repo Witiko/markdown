@@ -1,0 +1,10 @@
+<<<
+> **TITLE** \
+> Lorem ipsum dolor sit amet
+>>>
+BEGIN document
+blockQuoteBegin
+strongEmphasis: TITLE
+hardLineBreak
+blockQuoteEnd
+END document
