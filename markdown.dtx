@@ -35880,17 +35880,6 @@ end
 % \par
 % \begin{markdown}
 %
-%### Options
-% The supplied package options are processed using the \mref{markdownSetup} macro.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\DeclareOption*{%
-  \expandafter\markdownSetup\expandafter{\CurrentOption}}%
-\ProcessOptions\relax
-%    \end{macrocode}
-% \begin{markdown}
-%
 %### Themes {#latex-themes-implementation}
 %
 % This section overrides the plain \TeX{} implementation of the theme-loading
@@ -35978,9 +35967,8 @@ end
         { #1 }
       \AtEndOfPackage
         {
-          \@@_load_theme:nn
+          \@@_set_theme:n
             { #1 }
-            { #2 }
         }
     \fi
   }
@@ -36253,6 +36241,25 @@ end
 % Next, the \LaTeX{} theme overrides some of the plain \TeX{} definitions.
 % See Section <#sec:latex-token-renderer-prototypes> for the actual
 % definitions.
+%
+%### Options
+% The supplied package options are processed using the \mref{markdownSetup} macro.
+%
+% \end{markdown}
+% \iffalse
+%</themes-witiko-markdown-defaults-latex>
+%<*latex>
+% \fi
+%  \begin{macrocode}
+\DeclareOption*{%
+  \expandafter\markdownSetup\expandafter{\CurrentOption}}%
+\ProcessOptions\relax
+%    \end{macrocode}
+% \iffalse
+%</latex>
+%<*themes-witiko-markdown-defaults-latex>
+% \fi
+% \begin{markdown}
 %
 %### Token Renderer Prototypes {#latex-token-renderer-prototypes}
 %

@@ -2,15 +2,15 @@
 \csname UseRawInputEncoding\endcsname
 
 % Load the package.
-\usepackage[plain]{markdown}
+\usepackage[plain, theme=witiko/markdown/test/latex]{markdown}
+\markdownSetupSnippet{testSnippet}{
+  snippet = witiko/markdown/test/latex/snippet,
+}
 
 % Load the support files.
 \markdownSetup {
   eagerCache = false,
   outputDir = OUTPUT_DIRECTORY,
-  import = {
-    witiko/markdown/test = snippet as testSnippet,
-  }
 }
 
 \begin{document}

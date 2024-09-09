@@ -2,6 +2,11 @@
 
 ## 3.7.1
 
+Fixes:
+
+- Properly load LaTeX themes when `theme` or `import` is used in
+  `\usepackage[...]{markdown}`. (#471, #498)
+
 ## 3.7.0 (2024-08-30)
 
 Development:
