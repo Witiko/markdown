@@ -925,7 +925,7 @@ documentation][techdoc].
             (A Markdown Interpreter for TeX)
 
 %</manual>
-%<*lua,lua-cli,lua-loader>
+%<*lua,lua-cli,lua-loader,lua-unicode-data>
 % \fi
 %  \begin{macrocode}
 local metadata = {
@@ -941,7 +941,7 @@ local metadata = {
 
 %    \end{macrocode}
 % \iffalse
-%</lua,lua-cli,lua-loader>
+%</lua,lua-cli,lua-loader,lua-unicode-data>
 %<*lua>
 % \fi
 %  \begin{macrocode}
@@ -993,7 +993,7 @@ make base
 
 Either of the two abovelisted approaches should produce the following files:
 
-* `markdown.lua` and `markdown-parser.lua`: The Lua module
+* `markdown.lua`, `markdown-parser.lua`, and `markdown-unicode-data.lua`: The Lua module
 * `libraries/markdown-tinyyaml.lua`: An external library for reading \acro{yaml}
 * `markdown-cli.lua`: The Lua command-line interface
 * `markdown.tex`: The plain \TeX{} macro package
@@ -1015,6 +1015,7 @@ placed:
 
 * `⟨TEXMF⟩/tex/luatex/markdown/markdown.lua`
 * `⟨TEXMF⟩/tex/luatex/markdown/markdown-parser.lua`
+* `⟨TEXMF⟩/tex/luatex/markdown/markdown-unicode-data.lua`
 * `⟨TEXMF⟩/tex/luatex/markdown/markdown-tinyyaml.lua`
 * `⟨TEXMF⟩/scripts/markdown/markdown-cli.lua`
 * `⟨TEXMF⟩/tex/generic/markdown/markdown.tex`
@@ -1042,6 +1043,7 @@ This is where the individual files should be placed:
 
 * `./markdown.lua`
 * `./markdown-parser.lua`
+* `./markdown-unicode-data.lua`
 * `./markdown-tinyyaml.lua`
 * `./markdown-cli.lua`
 * `./markdown/markdown.tex`
@@ -1082,6 +1084,10 @@ The file `markdown.tex` *must* be placed in a directory named `markdown`.
 %     Live${}\geq{}2013$).
 %
 % \end{markdown}
+% \iffalse
+%</lua>
+%<*lua,lua-unicode-data>
+% \fi
 %  \begin{macrocode}
 local lpeg = require("lpeg")
 %    \end{macrocode}
@@ -1096,6 +1102,10 @@ local lpeg = require("lpeg")
 %     Lua\TeX{} (\TeX Live${}\geq{}2008$).
 %
 % \end{markdown}
+% \iffalse
+%</lua,lua-unicode-data>
+%<*lua,lua-unicode-data-generator>
+% \fi
 %  \begin{macrocode}
 local unicode = require("unicode")
 %    \end{macrocode}
@@ -1111,15 +1121,15 @@ local unicode = require("unicode")
 %
 % \end{markdown}
 % \iffalse
-%</lua>
+%</lua,lua-unicode-data-generator>
 %<*lua,lua-loader>
 % \fi
 %  \begin{macrocode}
-local md5 = require("md5");
+local md5 = require("md5")
 %    \end{macrocode}
 % \iffalse
 %</lua,lua-loader>
-%<*lua>
+%<*lua,lua-unicode-data-generator>
 % \fi
 % \begin{markdown}
 %
@@ -1130,7 +1140,7 @@ local md5 = require("md5");
 %
 % \end{markdown}
 %  \begin{macrocode}
-(function()
+;(function()
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -1164,7 +1174,7 @@ end)()
 %
 % \end{markdown}
 % \iffalse
-%</lua>
+%</lua,lua-unicode-data-generator>
 %<*depends>
 % \fi
 %  \begin{macrocode}
@@ -1885,7 +1895,7 @@ module and a command-line interface (CLI).
              (Lua library for conversion between markup formats)
 
 %</manual-interfaces>
-%<*lua,lua-loader>
+%<*lua,lua-loader,lua-unicode-data>
 % \fi
 % \begin{markdown}
 %
@@ -1902,7 +1912,7 @@ local M = {metadata = metadata}
 %    \end{macrocode}
 % \iffalse
 % \fi
-%</lua,lua-loader>
+%</lua,lua-loader,lua-unicode-data>
 %<*lua>
 % \par
 % \begin{markdown}
@@ -26666,8 +26676,13 @@ parsers.fail                   = P(false)
 
 parsers.internal_punctuation   = S(":;,.?")
 parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
+
 %    \end{macrocode}
 % \par
+% \iffalse
+%</lua>
+%<*lua-unicode-data-generator>
+% \fi
 % \begin{markdown}
 %
 %### Unicode punctuation
@@ -26678,6 +26693,11 @@ parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
 %
 % [unicode-punctuation]: https://spec.commonmark.org/0.31.2/#unicode-punctuation-character
 %                        (CommonMark Spec, Version 0.31.2 (2024-01-28))
+%
+% All code from this section will be executed during the compilation of
+% the Markdown package and the standard output will be stored in a file
+% named `markdown-unicode-data.lua` with the precompiled parser parser
+% of Unicode punctuation.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -26719,6 +26739,7 @@ parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
     end
   end
   assert(file:close())
+
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -26739,29 +26760,72 @@ parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
     leave(node, path)
   end
 
-  parsers.punctuation = {}
+  print("M.punctuation = {}")
+  print("local S = lpeg.S")
+  print("-- luacheck: push no max line length")
   for length, prefix_tree in pairs(prefix_trees) do
     local subparsers = {}
     depth_first_search(prefix_tree, "", function(node, path)
-      if type(node) == "table" then
-        subparsers[path] = parsers.fail
-      else
-        assert(type(node) == "string")
-        subparsers[path] = subparsers[path] + S(node)
+      if type(node) == "string" then
+        local suffix
+        if node == "]" then
+          suffix = "S('" .. node .. "')"
+        else
+          suffix = "S([[" .. node .. "]])"
+        end
+        if subparsers[path] ~= nil then
+          subparsers[path] = subparsers[path] .. " + " .. suffix
+        else
+          subparsers[path] = suffix
+        end
       end
     end, function(_, path)
       if #path > 0 then
         local byte = path:sub(#path, #path)
         local parent_path = path:sub(1, #path-1)
-        subparsers[parent_path] = subparsers[parent_path]
-                                + S(byte) * subparsers[path]
+        if subparsers[path] ~= nil then
+          local suffix
+          if byte == "]" then
+            suffix = "S('" .. byte .. "')"
+          else
+            suffix = "S([[" .. byte .. "]])"
+          end
+          suffix = suffix .. " * (" .. subparsers[path] .. ")"
+          if subparsers[parent_path] ~= nil then
+            subparsers[parent_path] = subparsers[parent_path]
+                                   .. " + " .. suffix
+          else
+            subparsers[parent_path] = suffix
+          end
+        end
       else
-        parsers.punctuation[length] = subparsers[path]
+        print("M.punctuation[" .. length .. "] = " .. subparsers[path])
       end
     end)
-    assert(parsers.punctuation[length] ~= nil)
   end
+  print("-- luacheck: pop")
 end)()
+print("return M")
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua-unicode-data-generator>
+%<*lua>
+% \fi
+% \begin{markdown}
+%
+% Back in the Markdown package, we will load the precompiled parser of
+% Unicode punctuation.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local unicode_data = require("markdown-unicode-data")
+if metadata.version ~= unicode_data.metadata.version then
+  warn("markdown.lua " .. metadata.version .. " used with " ..
+       "markdown-unicode-data.lua " .. unicode_data.metadata.version ..
+       ".")
+end
+parsers.punctuation = unicode_data.punctuation
 
 parsers.escapable              = parsers.ascii_punctuation
 parsers.anyescaped             = parsers.backslash / ""
