@@ -45,10 +45,11 @@ USER_MANUAL=$(MARKDOWN_USER_MANUAL) $(HTML_USER_MANUAL)
 DOCUMENTATION=$(TECHNICAL_DOCUMENTATION) $(HTML_USER_MANUAL) $(ROOT_README) $(VERSION_FILE) \
   $(CHANGES_FILE) $(DEPENDENCIES)
 LIBRARIES=libraries/markdown-tinyyaml.lua
-INSTALLABLES=markdown.lua markdown-parser.lua markdown-cli.lua markdown.tex markdown.sty \
-  t-markdown.tex markdownthemewitiko_dot.sty markdownthemewitiko_graphicx_http.sty \
-  markdownthemewitiko_tilde.tex markdownthemewitiko_markdown_defaults.tex \
-  markdownthemewitiko_markdown_defaults.sty t-markdownthemewitiko_markdown_defaults.tex
+INSTALLABLES=markdown.lua markdown-parser.lua markdown-cli.lua markdown-unicode-data.lua \
+  markdown.tex markdown.sty t-markdown.tex markdownthemewitiko_dot.sty \
+  markdownthemewitiko_graphicx_http.sty markdownthemewitiko_tilde.tex \
+  markdownthemewitiko_markdown_defaults.tex markdownthemewitiko_markdown_defaults.sty \
+  t-markdownthemewitiko_markdown_defaults.tex
 EXTRACTABLES=$(INSTALLABLES) $(MARKDOWN_USER_MANUAL) $(TECHNICAL_DOCUMENTATION_RESOURCES) \
   $(RAW_DEPENDENCIES)
 MAKEABLES=$(TECHNICAL_DOCUMENTATION) $(USER_MANUAL) $(INSTALLABLES) $(EXAMPLES) $(DEPENDENCIES)
@@ -129,6 +130,7 @@ $(GITHUB_PAGES): $(HTML_USER_MANUAL)
 # This target extracts the source files out of the DTX archive.
 $(EXTRACTABLES): $(INSTALLER) $(DTXARCHIVE)
 	luatex $<
+	texlua markdown-unicode-data-generator.lua > markdown-unicode-data.lua
 	sed -i \
 	    -e 's#(((VERSION)))#$(VERSION)#g' \
 	    -e 's#(((SHORTVERSION)))#$(SHORTVERSION)#g' \
@@ -225,7 +227,8 @@ $(TDSARCHIVE): $(DTXARCHIVE) $(INSTALLER) $(INSTALLABLES) $(DOCUMENTATION) $(EXA
 	@# Installing the macro package.
 	mkdir -p tex/generic/markdown tex/luatex/markdown tex/latex/markdown \
 	  tex/context/third/markdown scripts/markdown
-	cp markdown.lua markdown-parser.lua $(LIBRARIES) tex/luatex/markdown/
+	cp markdown.lua markdown-parser.lua markdown-unicode-data.lua $(LIBRARIES) \
+	  tex/luatex/markdown/
 	cp markdown-cli.lua scripts/markdown/
 	cp markdown.tex markdownthemewitiko_tilde.tex \
 	  markdownthemewitiko_markdown_defaults.tex tex/generic/markdown/
