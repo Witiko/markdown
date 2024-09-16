@@ -6,8 +6,12 @@ Development:
 
 - Remove dependency on `UnicodeData.txt`. (#400, #458 #486, #492, #499)
 
-  This change adds a new file `markdown-unicode-data.lua`, which must
-  be properly installed with the rest of the Markdown package for TeX.
+  This change improves the speed of parsing markdown input by up to 25%
+  for a cold conversion run and makes life easier for users of TeX
+  distributions other than TeX Live, such as MikTeX and ConTeXt Standalone,
+  where `UnicodeData.txt` may not be as easily available. This change also
+  adds a new file `markdown-unicode-data.lua`, which must be properly
+  installed with the rest of the Markdown package.
 
 Fixes:
 
