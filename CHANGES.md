@@ -2,6 +2,13 @@
 
 ## 3.7.1
 
+Development:
+
+- Remove dependency on `UnicodeData.txt`. (#400, #458 #486, #492, #499)
+
+  This change adds a new file `markdown-unicode-data.lua`, which must
+  be properly installed with the rest of the Markdown package for TeX.
+
 Fixes:
 
 - Properly load LaTeX themes when `theme` or `import` is used in
