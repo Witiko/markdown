@@ -130,7 +130,7 @@ $(GITHUB_PAGES): $(HTML_USER_MANUAL)
 # This target extracts the source files out of the DTX archive.
 $(EXTRACTABLES): $(INSTALLER) $(DTXARCHIVE)
 	luatex $<
-	texlua markdown-unicode-data-generator.lua > markdown-unicode-data.lua
+	texlua markdown-unicode-data-generator.lua >> markdown-unicode-data.lua
 	sed -i \
 	    -e 's#(((VERSION)))#$(VERSION)#g' \
 	    -e 's#(((SHORTVERSION)))#$(SHORTVERSION)#g' \

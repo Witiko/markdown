@@ -925,7 +925,7 @@ documentation][techdoc].
             (A Markdown Interpreter for TeX)
 
 %</manual>
-%<*lua,lua-cli,lua-loader>
+%<*lua,lua-cli,lua-loader,lua-unicode-data>
 % \fi
 %  \begin{macrocode}
 local metadata = {
@@ -941,7 +941,7 @@ local metadata = {
 
 %    \end{macrocode}
 % \iffalse
-%</lua,lua-cli,lua-loader>
+%</lua,lua-cli,lua-loader,lua-unicode-data>
 %<*lua>
 % \fi
 %  \begin{macrocode}
@@ -1084,6 +1084,10 @@ The file `markdown.tex` *must* be placed in a directory named `markdown`.
 %     Live${}\geq{}2013$).
 %
 % \end{markdown}
+% \iffalse
+%</lua>
+%<*lua,lua-unicode-data>
+% \fi
 %  \begin{macrocode}
 local lpeg = require("lpeg")
 %    \end{macrocode}
@@ -1098,6 +1102,10 @@ local lpeg = require("lpeg")
 %     Lua\TeX{} (\TeX Live${}\geq{}2008$).
 %
 % \end{markdown}
+% \iffalse
+%</lua,lua-unicode-data>
+%<*lua,lua-unicode-data-generator>
+% \fi
 %  \begin{macrocode}
 local unicode = require("unicode")
 %    \end{macrocode}
@@ -1113,7 +1121,7 @@ local unicode = require("unicode")
 %
 % \end{markdown}
 % \iffalse
-%</lua>
+%</lua,lua-unicode-data-generator>
 %<*lua,lua-loader>
 % \fi
 %  \begin{macrocode}
@@ -1121,7 +1129,7 @@ local md5 = require("md5");
 %    \end{macrocode}
 % \iffalse
 %</lua,lua-loader>
-%<*lua,lua-unicode-data>
+%<*lua,lua-unicode-data-generator>
 % \fi
 % \begin{markdown}
 %
@@ -1132,7 +1140,7 @@ local md5 = require("md5");
 %
 % \end{markdown}
 %  \begin{macrocode}
-(function()
+;(function()
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -1166,7 +1174,7 @@ end)()
 %
 % \end{markdown}
 % \iffalse
-%</lua,lua-unicode-data>
+%</lua,lua-unicode-data-generator>
 %<*depends>
 % \fi
 %  \begin{macrocode}
@@ -1887,7 +1895,7 @@ module and a command-line interface (CLI).
              (Lua library for conversion between markup formats)
 
 %</manual-interfaces>
-%<*lua,lua-loader>
+%<*lua,lua-loader,lua-unicode-data>
 % \fi
 % \begin{markdown}
 %
@@ -1904,7 +1912,7 @@ local M = {metadata = metadata}
 %    \end{macrocode}
 % \iffalse
 % \fi
-%</lua,lua-loader>
+%</lua,lua-loader,lua-unicode-data>
 %<*lua>
 % \par
 % \begin{markdown}
@@ -26668,11 +26676,12 @@ parsers.fail                   = P(false)
 
 parsers.internal_punctuation   = S(":;,.?")
 parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
+
 %    \end{macrocode}
 % \par
 % \iffalse
 %</lua>
-%<*lua-unicode-data>
+%<*lua-unicode-data-generator>
 % \fi
 % \begin{markdown}
 %
@@ -26692,9 +26701,6 @@ parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
 %
 % \end{markdown}
 %  \begin{macrocode}
-print('local lpeg = require("lpeg")')
-print("local S = lpeg.S")
-print("local M = { punctuation = { } }")
 ;(function()
   local pathname = assert(kpse.find_file("UnicodeData.txt"),
     [[Could not locate file "UnicodeData.txt"]])
@@ -26754,6 +26760,8 @@ print("local M = { punctuation = { } }")
     leave(node, path)
   end
 
+  print("M.punctuation = {}")
+  print("local S = lpeg.S")
   for length, prefix_tree in pairs(prefix_trees) do
     local subparsers = {}
     depth_first_search(prefix_tree, "", function(node, path)
@@ -26799,7 +26807,7 @@ print("return M")
 %    \end{macrocode}
 % \par
 % \iffalse
-%</lua-unicode-data>
+%</lua-unicode-data-generator>
 %<*lua>
 % \fi
 % \begin{markdown}
@@ -26809,7 +26817,13 @@ print("return M")
 %
 % \end{markdown}
 %  \begin{macrocode}
-parsers.punctuation = require("markdown-unicode-data").punctuation
+local unicode_data = require("markdown-unicode-data")
+if metadata.version ~= unicode_data.metadata.version then
+  warn("markdown.lua " .. metadata.version .. " used with " ..
+       "markdown-unicode-data.lua " .. unicode_data.metadata.version ..
+       ".")
+end
+parsers.punctuation = unicode_data.punctuation
 
 parsers.escapable              = parsers.ascii_punctuation
 parsers.anyescaped             = parsers.backslash / ""
