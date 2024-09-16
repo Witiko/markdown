@@ -277,7 +277,7 @@ implode: clean
 
 # This pseudo-target checks that the length of lines in the source files.
 check-line-length: $(INSTALLABLES)
-	! grep -n -E '^.{73,}$$' $^
+	! grep -n -E '^.{73,}$$' $(filter-out markdown-unicode-data.lua,$^)
 
 # This pseudo-target checks for tabs and trailing spaces in the source files.
 check-tabs-and-spaces: $(DTXARCHIVE)

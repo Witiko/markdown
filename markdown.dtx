@@ -26762,6 +26762,7 @@ parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
 
   print("M.punctuation = {}")
   print("local S = lpeg.S")
+  print("-- luacheck: push no max line length")
   for length, prefix_tree in pairs(prefix_trees) do
     local subparsers = {}
     depth_first_search(prefix_tree, "", function(node, path)
@@ -26802,6 +26803,7 @@ parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
       end
     end)
   end
+  print("-- luacheck: pop")
 end)()
 print("return M")
 %    \end{macrocode}
