@@ -20658,22 +20658,8 @@ following text:
     \seq_map_inline:Nn
       \g_@@_renderers_seq
       {
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% The \mref{markdownRendererJekyllDataString} has been deprecated and will be
-% removed in Markdown 4.0.0.
-%
-% \end{markdown}
-%  \begin{macrocode}
-        \str_if_eq:nnF
+        \@@_define_renderer:n
           { ##1 }
-          { jekyllDataString }
-          {
-            \@@_define_renderer:n
-              { ##1 }
-          }
       }
   }
 \cs_new:Nn \@@_define_renderer:n
@@ -21393,22 +21379,8 @@ following text:
     \seq_map_inline:Nn
       \g_@@_renderers_seq
       {
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% The \mref{markdownRendererJekyllDataString} has been deprecated and will be
-% removed in Markdown 4.0.0.
-%
-% \end{markdown}
-%  \begin{macrocode}
-        \str_if_eq:nnF
+        \@@_define_renderer_prototype:n
           { ##1 }
-          { jekyllDataString }
-          {
-            \@@_define_renderer_prototype:n
-              { ##1 }
-          }
       }
   }
 \cs_new:Nn \@@_define_renderer_prototype:n
