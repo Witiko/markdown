@@ -20724,6 +20724,24 @@ following text:
             \l_@@_renderer_definition_tl
         },
       }
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% If the token renderer macro has been deprecated, we undefine it.
+%
+% The \mref{markdownRendererJekyllDataString} macro has been deprecated and
+% will be removed in Markdown 4.0.0.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \str_if_eq:nnT
+      { #1 }
+      { jekyllDataString }
+      {
+        \cs_undefine:N
+          #2
+      }
   }
 %    \end{macrocode}
 % \par
@@ -21447,21 +21465,30 @@ following text:
         },
       }
 %    \end{macrocode}
+% \par
 % \begin{markdown}
 %
-% Unless the token renderer prototype macro has already been defined,
-% we provide an empty definition.
+% Unless the token renderer prototype macro has already been defined or unless,
+% it has been deprecated, we provide an empty definition.
+%
+% The \mref{markdownRendererJekyllDataStringPrototype} macro has been
+% deprecated and will be removed in Markdown 4.0.0.
 %
 % \end{markdown}
 %  \begin{macrocode}
-    \cs_if_free:NT
-      #2
+    \str_if_eq:nnF
+      { #1 }
+      { jekyllDataString }
       {
-        \cs_generate_from_arg_count:NNnn
+        \cs_if_free:NT
           #2
-          \cs_set:Npn
-          { #3 }
-          { }
+          {
+            \cs_generate_from_arg_count:NNnn
+              #2
+              \cs_set:Npn
+              { #3 }
+              { }
+          }
       }
   }
 \cs_generate_variant:Nn
