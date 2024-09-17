@@ -147,11 +147,16 @@ renderers = {%
     \TYPE{#0: \NORMALIZEPATH{#1}}},
   (ticked|halfTicked|unticked)Box = {%
     \TYPE{#0}},
-  jekyllData(Boolean|Number|(Programmatic|Typographic)String) = {%
+  jekyllData(Boolean|Number|ProgrammaticString) = {%
     \TYPE{BEGIN #0}%
     \TYPE{- key:   #1}%
     \TYPE{- value: #2}%
     \TYPE{END #0}},
+  jekyllDataString = {%
+    \TYPE{BEGIN jekyllDataTypographicString}%
+    \TYPE{- key:   #1}%
+    \TYPE{- value: #2}%
+    \TYPE{END jekyllDataTypographicString}},
   jekyllDataEmpty = {%
     \TYPE{#0: #1}},%
   jekyllData(Begin|End) = {%
