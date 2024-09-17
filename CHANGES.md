@@ -17,6 +17,8 @@ Fixes:
 
 - Properly load LaTeX themes when `theme` or `import` is used in
   `\usepackage[...]{markdown}`. (#471, #498)
+- Prevent endless loop when setting deprecated `jekyllDataString` (renderer)
+  prototype. (#500)
 
 ## 3.7.0 (2024-08-30)
 
