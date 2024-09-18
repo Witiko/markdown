@@ -34375,7 +34375,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 if options.cacheDir then
-  lfs.rmdir(options["cacheDir"])
+  lfs.rmdir(options.cacheDir)
 end
 %    \end{macrocode}
 % \iffalse
@@ -35130,9 +35130,18 @@ end
             \clist_map_inline:Vn
               \l_tmpa_tl
               {
-                \tl_gput_right:Nx
+                \@@_lua_escape:xN
+                  { ##1 }
+                  \l_tmpb_tl
+                \tl_gput_right:Nn
                   \g_@@_formatted_lua_options_tl
-                  { " \lua_escape:e { ##1 } " ,~ }
+                  { " }
+                \tl_gput_right:NV
+                  \g_@@_formatted_lua_options_tl
+                  \l_tmpb_tl
+                \tl_gput_right:Nn
+                  \g_@@_formatted_lua_options_tl
+                  { " ,~ }
               }
             \tl_gput_right:Nx
               \g_@@_formatted_lua_options_tl
@@ -35143,9 +35152,18 @@ end
         \@@_get_option_value:nN
           { #1 }
           \l_tmpa_tl
-        \tl_gput_right:Nx
+        \@@_lua_escape:xN
+          { \l_tmpa_tl }
+          \l_tmpb_tl
+        \tl_gput_right:Nn
           \g_@@_formatted_lua_options_tl
-          { #1~=~ " \lua_escape:e { \l_tmpa_tl } " ,~ }
+          { #1~=~ " }
+        \tl_gput_right:NV
+          \g_@@_formatted_lua_options_tl
+          \l_tmpb_tl
+        \tl_gput_right:Nn
+          \g_@@_formatted_lua_options_tl
+          { " ,~ }
       }
   }
 \cs_generate_variant:Nn
@@ -35153,6 +35171,61 @@ end
   { Vn }
 \let\markdownPrepareLuaOptions=\@@_format_lua_options:
 \def\markdownLuaOptions{{ \g_@@_formatted_lua_options_tl }}
+\sys_if_engine_luatex:TF
+  {
+    \cs_new:Nn
+      \@@_lua_escape:nN
+      {
+        \tl_set:Nx
+          #2
+          {
+            \lua_escape:n
+              { #1 }
+          }
+      }
+  }
+  {
+    \regex_const:Nn
+      \c_@@_lua_escape_regex
+      { [\\"'] }
+    \cs_new:Nn
+      \@@_lua_escape:nN
+      {
+        \tl_set:Nn
+          #2
+          { #1 }
+        \regex_replace_all:NnN
+          \c_@@_lua_escape_regex
+          { \u { c_backslash_str } \0 }
+          #2
+      }
+  }
+\cs_generate_variant:Nn
+  \@@_lua_escape:nN
+  { xN }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% After the \mdef{markdownPrepareInputFilename} macro has been
+% fully expanded, the \mdef{markdownInputFilename} macro will
+% expands to a Lua string that contains the input filename passed
+% as the first argument.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\tl_new:N
+  \markdownInputFilename
+\cs_new:Npn
+  \markdownPrepareInputFilename
+  #1
+  {
+    \@@_lua_escape:xN
+      { #1 }
+      \markdownInputFilename
+    \tl_gset:Nx
+      \markdownInputFilename
+      { " \markdownInputFilename " }
+  }
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -35172,9 +35245,9 @@ end
 % \end{markdown}
 %  \begin{macrocode}
     local~lfs = require("lfs")
-    local~cacheDir = " \lua_escape:e { \markdownOptionCacheDir } "
-    if~not~lfs.isdir(cacheDir) then~
-      assert(lfs.mkdir(cacheDir))
+    local~options = \markdownLuaOptions
+    if~not~lfs.isdir(options.cacheDir) then~
+      assert(lfs.mkdir(options.cacheDir))
     end~
 %    \end{macrocode}
 % \begin{markdown}
@@ -35184,7 +35257,27 @@ end
 % \end{markdown}
 %  \begin{macrocode}
     local~md = require("markdown")
-    local~convert = md.new(\markdownLuaOptions)
+    local~convert = md.new(options)
+  }
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% The \mdef{markdownConvert} macro contains the Lua code that is executed
+% during the conversion from markdown to plain \TeX{}. It opens the
+% input file, converts it, and prints the conversion result.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\cs_new:Npn
+  \markdownConvert
+  {
+    local~filename = \markdownInputFilename
+    local~file = assert(io.open(filename, "r"),
+      [[Could~not~open~file~"]] .. filename .. [["~for~reading]])
+    local~input = assert(file:read("*a"))
+    assert(file:close())
+    print(convert(input))
   }
 \ExplSyntaxOff
 %    \end{macrocode}
@@ -35202,32 +35295,10 @@ end
 % Remove the `options.cacheDir` directory if it is empty.
 % \end{markdown}
 %  \begin{macrocode}
-  lfs.rmdir(cacheDir)
+  if options.cacheDir then
+    lfs.rmdir(options.cacheDir)
+  end
 }%
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-% The \mdef{markdownConvert} macro contains the Lua code that is executed
-% during the conversion from markdown to plain \TeX{}. It opens a file
-% whose filename is passed as the first parameter, converts it, and prints
-% the conversion result.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\ExplSyntaxOn
-\cs_new:Npn
-  \markdownConvert
-  #1
-  {
-    local~filename = " \lua_escape:e { #1 } "
-    local~file = assert(io.open(filename, "r"),
-      [[Could~not~open~file~"]] .. filename .. [["~for~reading]])
-    local~input = assert(file:read("*a"))
-    assert(file:close())
-    print(convert(input))
-  }
-\ExplSyntaxOff
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -35713,9 +35784,10 @@ end
       |openin|markdownInputFileStream&1
       |closein|markdownInputFileStream
       |markdownPrepareLuaOptions
+      |markdownPrepareInputFilename{&1}%
       |markdownLuaExecute{%
         |markdownPrepare
-        |markdownConvert{&1}%
+        |markdownConvert
         |markdownCleanup}%
 %    \end{macrocode}
 % \begin{markdown}
