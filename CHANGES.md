@@ -19,6 +19,8 @@ Fixes:
   `\usepackage[...]{markdown}`. (#471, #498)
 - Prevent endless loop when setting deprecated `jekyllDataString` (renderer)
   prototype. (#500)
+- Correctly handle backslashes in `\markdownOptionOutputDir` on Windows.
+  (#492, #500, reported by @l0th3r)
 
 ## 3.7.0 (2024-08-30)
 
