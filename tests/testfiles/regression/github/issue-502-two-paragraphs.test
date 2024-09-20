@@ -1,0 +1,12 @@
+\markdownSetup{hybrid=true}
+\def\\markdownRendererDocumentEnd{\markdownRendererDocumentEnd}
+<<<
+*foo*
+
+*bar* \
+>>>
+BEGIN document
+emphasis: foo
+paragraphSeparator
+emphasis: bar
+END document
