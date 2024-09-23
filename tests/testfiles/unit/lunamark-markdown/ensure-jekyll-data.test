@@ -34,5 +34,5 @@ abstract: |
 ---
 >>>
 BEGIN document
-error: parse_blocks failed on: title: The document 
+error: parse(underscore)blocks failed on: title: The document 
 END document
