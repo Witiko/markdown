@@ -7484,6 +7484,58 @@ defaultOptions.html = true
         encouraged when typesetting automatically generated content or
         markdown documents that were not prepared with this package in mind.
 
+The \Opt{hybrid} option makes it difficult to untangle \TeX{} input from
+markdown text, which makes documents written with the \Opt{hybrid} option
+less interoperable and more difficult to read for authors. Therefore, the
+option has been soft-deprecated in version 3.7.1 of the Markdown package:
+It will never be removed but using it prints a warning and is discouraged.
+
+Consider one of the following better alternatives for mixing \TeX{} and
+markdown:
+
+- With the \Opt{contentBlocks} option, authors can move large blocks of TeX
+  code to separate files and include them in their markdown documents as
+  external resources:
+
+  ``` md
+  Here is a mathematical formula:
+
+   /math-formula.tex
+  ```
+
+- With the \Opt{rawAttribute} option, authors can denote raw text spans and
+  code blocks that will be interpreted as \TeX{} code:
+
+  `````` md
+  `$H_2 O$`{=tex} is a liquid.
+
+  Here is a mathematical formula:
+  ``` {=tex}
+  \[distance[i] =
+      \begin{dcases}
+          a & b \\
+          c & d
+      \end{dcases}
+  \]
+  ```
+  ``````
+
+- With options \Opt{texMathDollars}, \Opt{texMathSingleBackslash}, and
+  \Opt{texMathDoubleBackslash}, authors can freely type \TeX{} commands between
+  dollar signs or backslash-escaped brackets:
+
+  ``` md
+  $H_2 O$ is a liquid.
+
+  Here is a mathematical formula:
+  \[distance[i] =
+      \begin{dcases}
+          a & b \\
+          c & d
+      \end{dcases}
+  \]
+  ```
+
 % \end{markdown}
 % \iffalse
 
