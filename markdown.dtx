@@ -25765,7 +25765,8 @@ function M.writer.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.warning(t)
-    return {"\\markdownRendererWarning{", self.escape(t), "}{", escape_minimal(t), "}"}
+    return {"\\markdownRendererWarning{", self.escape(t), "}{",
+            escape_minimal(t), "}"}
   end
 %    \end{macrocode}
 % \par
@@ -25777,7 +25778,8 @@ function M.writer.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.error(t)
-    return {"\\markdownRendererError{", self.escape(t), "}{", escape_minimal(t), "}"}
+    return {"\\markdownRendererError{", self.escape(t), "}{",
+            escape_minimal(t), "}"}
   end
 %    \end{macrocode}
 % \par
