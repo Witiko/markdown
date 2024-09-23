@@ -20,12 +20,37 @@ Fixes:
 
 - Properly load LaTeX themes when `theme` or `import` is used in
   `\usepackage[...]{markdown}`. (#471, #498)
+
 - Prevent endless loop when setting deprecated `jekyllDataString` (renderer)
   prototype. (#500)
+
 - Correctly handle backslashes in `\markdownOptionOutputDir` on Windows.
   (#492, #500, reported by @l0th3r)
+
 - Fix hard line breaks in blockquotes.
   (#494, #495, reported by @l0th3r, #496, contributed by @lostenderman)
+
+Deprecation:
+
+- Soft-deprecate the `hybrid` option. (#470, #504)
+
+  Soft-deprecated features will never be removed but using them prints a
+  warning and is discouraged. Instead of the `hybrid` option, consider one of
+  the following better alternatives for mixing TeX and markdown:
+
+  - With the `contentBlocks` option, authors can move large blocks of TeX
+    code to separate files and include them in their markdown documents as
+    external resources.
+
+  - With the `rawAttribute` option, authors can denote raw text spans and
+    code blocks that will be interpreted as TeX code.
+
+  - With options `texMathDollars`, `texMathSingleBackslash`, and
+    `texMathDoubleBackslash`, authors can freely type TeX commands between
+    dollar signs or backslash-escaped brackets.
+
+  For more information, see the user manual at
+  <https://witiko.github.io/markdown/>.
 
 ## 3.7.0 (2024-08-30)
 
