@@ -34655,7 +34655,7 @@ end
 \def\markdownRendererSectionBeginPrototype{}%
 \def\markdownRendererSectionEndPrototype{}%
 \let\markdownRendererWarningPrototype\markdownWarning
-\let\markdownRendererErrorPrototype\markdownError
+\def\markdownRendererErrorPrototype#1{\markdownError{#1}{}}
 %    \end{macrocode}
 % \par
 % \begin{markdown}
