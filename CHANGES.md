@@ -13,6 +13,9 @@ Development:
   adds a new file `markdown-unicode-data.lua`, which must be properly
   installed with the rest of the Markdown package.
 
+- Add renderers `warning` and `error` that represent warnings and errors
+  produced by the markdown parser. (#452, #473, #496)
+
 Fixes:
 
 - Properly load LaTeX themes when `theme` or `import` is used in
@@ -21,6 +24,8 @@ Fixes:
   prototype. (#500)
 - Correctly handle backslashes in `\markdownOptionOutputDir` on Windows.
   (#492, #500, reported by @l0th3r)
+- Fix hard line breaks in blockquotes.
+  (#494, #495, reported by @l0th3r, #496, contributed by @lostenderman)
 
 ## 3.7.0 (2024-08-30)
 
@@ -32,8 +37,6 @@ Development:
   (istqborg/istqb_product_base#46, #440, #451, sponsored by @istqborg)
 - Add option `ensureJekyllData` for processing standalone YAML files.
   (#452, #473, sponsored by @istqborg)
-- Add renderers `warning` and `error` that represent warnings and errors
-  produced by the markdown parser. (#452, #473)
 - Support user-defined LaTeX environments with LaTeX markup.
   (#20, #477, suggested by @cdupont)
 
