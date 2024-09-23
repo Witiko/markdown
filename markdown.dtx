@@ -26938,7 +26938,8 @@ local unicode_data = require("markdown-unicode-data")
 if metadata.version ~= unicode_data.metadata.version then
   util.warning(
     "markdown.lua " .. metadata.version .. " used with " ..
-    "markdown-unicode-data.lua " .. unicode_data.metadata.version .. ".")
+    "markdown-unicode-data.lua " .. unicode_data.metadata.version .. "."
+  )
 end
 parsers.punctuation = unicode_data.punctuation
 
