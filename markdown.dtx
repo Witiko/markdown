@@ -29597,7 +29597,7 @@ function M.reader.new(writer, options)
   parsers.link_and_emph_content
     = Ct( Cg(Cc("content"), "type")
         * Cg(Cs(( parsers.link_emph_precedence
-                + parsers.backslash * parsers.any
+                + parsers.backslash * parsers.linechar
                 + parsers.link_and_emph_endline
                 + (parsers.linechar
                   - parsers.blankline^2
