@@ -23240,6 +23240,19 @@ function util.salt(options)
   return salt
 end
 %    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% The \luamdef{util.warning} method produces a warning `s` that is unrelated to
+% any specific markdown text being processed. For warnings that are specific to
+% a markdown text, use \luamref{writer->warning} function.
+%
+% \end{markdown}
+%  \begin{macrocode}
+function util.warning(s)
+  io.stderr:write("Warning: " .. s .. "\n")
+end
+%    \end{macrocode}
 % \iffalse
 %</lua,lua-loader>
 %<*lua>
@@ -26923,9 +26936,9 @@ print("return M")
 %  \begin{macrocode}
 local unicode_data = require("markdown-unicode-data")
 if metadata.version ~= unicode_data.metadata.version then
-  warn("markdown.lua " .. metadata.version .. " used with " ..
-       "markdown-unicode-data.lua " .. unicode_data.metadata.version ..
-       ".")
+  util.warning(
+    "markdown.lua " .. metadata.version .. " used with " ..
+    "markdown-unicode-data.lua " .. unicode_data.metadata.version .. ".")
 end
 parsers.punctuation = unicode_data.punctuation
 
@@ -33938,10 +33951,6 @@ end
 %<*lua-loader>
 % \fi
 %  \begin{macrocode}
-local function warn(s)
-  io.stderr:write("Warning: " .. s .. "\n")
-end
-
 function M.new(options)
 %    \end{macrocode}
 % \par
