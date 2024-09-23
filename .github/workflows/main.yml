@@ -220,6 +220,7 @@ jobs:
     container:
       image: ghcr.io/witiko/markdown:${{ needs.build-docker-image.outputs[matrix.texlive] }}
     if: ${{ !contains(inputs.runTests, 'false') }}
+    timeout-minutes: 90
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

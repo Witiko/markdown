@@ -2,6 +2,26 @@
 
 ## 3.7.1
 
+Development:
+
+- Remove dependency on `UnicodeData.txt`. (#400, #458 #486, #492, #499)
+
+  This change improves the speed of parsing markdown input by up to 25%
+  for a cold conversion run and makes life easier for users of TeX
+  distributions other than TeX Live, such as MikTeX and ConTeXt Standalone,
+  where `UnicodeData.txt` may not be as easily available. This change also
+  adds a new file `markdown-unicode-data.lua`, which must be properly
+  installed with the rest of the Markdown package.
+
+Fixes:
+
+- Properly load LaTeX themes when `theme` or `import` is used in
+  `\usepackage[...]{markdown}`. (#471, #498)
+- Prevent endless loop when setting deprecated `jekyllDataString` (renderer)
+  prototype. (#500)
+- Correctly handle backslashes in `\markdownOptionOutputDir` on Windows.
+  (#492, #500, reported by @l0th3r)
+
 ## 3.7.0 (2024-08-30)
 
 Development:
