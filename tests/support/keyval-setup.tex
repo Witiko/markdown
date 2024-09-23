@@ -194,5 +194,8 @@ renderers = {%
   (ellipsis|nbsp|*Brace|*Sign|ampersand|underscore|hash|circumflex|backslash|tilde|pipe|replacementCharacter) += {\GOBBLE},
   (ticked|halfTicked|unticked)Box += {\GOBBLE},
   warning|error = {%
-    \TYPE{#0: #1}},
+    \TYPE{BEGIN #0}%
+    \TYPE{- text: #1}%
+    \TYPE{- more: #3}%
+    \TYPE{END #0}},
 }%
