@@ -32,7 +32,7 @@ Fixes:
 
 Deprecation:
 
-- Soft-deprecate the `hybrid` option. (#470, #504)
+- Soft-deprecate the `hybrid` option. (#470, #504, 546faa87)
 
   Soft-deprecated features will never be removed but using them prints a
   warning and is discouraged. Instead of the `hybrid` option, consider one of
