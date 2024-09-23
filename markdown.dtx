@@ -26146,7 +26146,23 @@ function M.writer.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.document(d)
-    local buf = {"\\markdownRendererDocumentBegin\n", d}
+    local buf = {"\\markdownRendererDocumentBegin\n"}
+
+    -- warn against the `hybrid` option
+    if options.hybrid then
+      local text = "The `hybrid` option has been soft-deprecated."
+      local more = "Consider using one of the following better options "
+                .. "for mixing TeX and markdown: `contentBlocks`, "
+                .. "`rawAttribute`, `texComments`, `texMathDollars`, "
+                .. "`texMathSingleBackslash`, and "
+                .. "`texMathDoubleBackslash`. "
+                .. "For more information, see the user manual at "
+                .. "<https://witiko.github.io/markdown/>."
+      table.insert(buf, self.warning(text, more))
+    end
+
+    -- insert the text of the document
+    table.insert(buf, d)
 
     -- pop all attributes
     table.insert(buf, self.pop_attributes())
