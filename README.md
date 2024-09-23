@@ -1,5 +1,5 @@
-Markdown
-========
+The Markdown Package for TeX
+============================
 
 [![license](https://img.shields.io/github/license/witiko/markdown)](LICENSE)
 [![ci](https://github.com/witiko/markdown/actions/workflows/main.yml/badge.svg)][ci]
