@@ -20065,7 +20065,9 @@ following text:
 
 The \mdef{markdownRendererWarning} and \mdef{markdownRendererError} macros
 represent warnings and errors produced by the markdown parser. Both macros
-receive a single parameter with the text of the warning or error.
+receive two parameters: the fully escaped text of the warning or error that can
+be directly typeset and the raw text of the warning or error that can be used
+outside typesetting for e.g. logging the warning or error.
 
 % \end{markdown}
 %
@@ -20086,14 +20088,14 @@ receive a single parameter with the text of the warning or error.
 \prop_gput:Nnn
   \g_@@_renderer_arities_prop
   { warning }
-  { 1 }
+  { 2 }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { error }
 \prop_gput:Nnn
   \g_@@_renderer_arities_prop
   { error }
-  { 1 }
+  { 2 }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par
@@ -25732,7 +25734,7 @@ function M.writer.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.warning(t)
-    return {"\\markdownRendererWarning{", self.identifier(t), "}"}
+    return {"\\markdownRendererWarning{", self.escape(t), "}{", escape_minimal(t), "}"}
   end
 %    \end{macrocode}
 % \par
@@ -25744,7 +25746,7 @@ function M.writer.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.error(t)
-    return {"\\markdownRendererError{", self.identifier(t), "}"}
+    return {"\\markdownRendererError{", self.escape(t), "}{", escape_minimal(t), "}"}
   end
 %    \end{macrocode}
 % \par
@@ -34654,8 +34656,8 @@ end
 \ExplSyntaxOff
 \def\markdownRendererSectionBeginPrototype{}%
 \def\markdownRendererSectionEndPrototype{}%
-\let\markdownRendererWarningPrototype\markdownWarning
-\def\markdownRendererErrorPrototype#1{\markdownError{#1}{}}
+\def\markdownRendererWarningPrototype#1#2{\markdownWarning{#2}}%
+\def\markdownRendererErrorPrototype#1#2{\markdownError{#2}{}}%
 %    \end{macrocode}
 % \par
 % \begin{markdown}
