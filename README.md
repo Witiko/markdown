@@ -115,52 +115,6 @@ In fact, this is how we automatically produce
 
  [github-actions]: https://docs.github.com/actions "GitHub Actions Documentation"
 
-Peek under the hood
--------------------
-
-Remember how we said that the Markdown package converts markdown markup to
-TeX commands? Let's see what that means and what we can do with this knowledge.
-
-Using a text editor, create an empty text document named `document.md` with
-the following markdown content:
-
-``` markdown
-Hello *Markdown*! $a_x + b_x = c_x$
-```
-
-Next, run [the Lua command-line interface (CLI)][lua-cli] from
-[our official Docker image][docker-witiko/markdown] on `document.md`:
-
-    docker run --rm -i witiko/markdown markdown-cli hybrid=true < document.md
-
-We will receive the following output, where the markdown markup has been
-replaced by TeX commands:
-
-``` tex
-\markdownDocumentBegin
-Hello \markdownRendererEmphasis{Markdown}!
-$a\markdownRendererEmphasis{x + b}x = c_x$
-\markdownDocumentEnd
-```
-
-We can see right away that the Markdown package has incorrectly interpreted
-`_x + b_` as an emphasized text. We can fix this by passing in the
-`underscores=false` option:
-
-    docker run --rm -i witiko/markdown markdown-cli hybrid=true underscores=false < document.md
-
-``` tex
-\markdownDocumentBegin
-Hello \markdownRendererEmphasis{Markdown}!
-$a_x + b_x = c_x$
-\markdownDocumentEnd
-```
-
-Much better! If the Markdown package ever surprises you, use the Lua CLI to
-peek under the hood and inspect the results of the conversion.
-
- [lua-cli]: https://mirrors.ctan.org/macros/generic/markdown/markdown.html#lua-command-line-interface "Markdown Package User Manual"
-
 Further information
 -------------------
 
