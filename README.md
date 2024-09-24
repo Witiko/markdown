@@ -94,7 +94,7 @@ jobs:
     container:
       image: witiko/markdown:latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - run: latexmk -lualatex document.tex
       - uses: marvinpinto/action-automatic-releases@latest
         permissions:
