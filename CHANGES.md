@@ -23,8 +23,8 @@ Fixes:
 - Properly load LaTeX themes when `theme` or `import` is used in
   `\usepackage[...]{markdown}`. (#471, #498)
 
-- Prevent endless loop when setting deprecated `jekyllDataString` (renderer)
-  prototype. (#500)
+- Prevent endless loop when setting deprecated `jekyllDataString` renderer
+  (prototype). (#500)
 
 - Correctly handle backslashes in `\markdownOptionOutputDir` on Windows.
   (#492, #500, reported by @l0th3r)
