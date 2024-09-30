@@ -30,7 +30,6 @@ LUACLI_OPTIONS=\
 OUTPUT=\
   context-mkiv.pdf \
   latex-pdftex.pdf latex-xetex.pdf latex-luatex.pdf \
-  latex-tex4ht.html latex-tex4ht.css \
   optex.pdf
 
 # This is the default pseudo-target.
