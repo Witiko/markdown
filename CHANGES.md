@@ -2,6 +2,10 @@
 
 ## 3.8.0
 
+Documentation:
+
+- Document LaTeX hooks. (#464, #507)
+
 ## 3.7.1 (2024-09-30)
 
 Development:
