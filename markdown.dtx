@@ -723,6 +723,12 @@ abbr {
   date      = {2017-04-15},
   url       = {https://mirrors.ctan.org/macros/latex/base/doc.pdf},
   urldate   = {2018-02-19}}
+@book{mittelbach24,
+  author    = {Mittelbach, Frank},
+  title     = {\LaTeX's hook management},
+  date      = {2024-06-26},
+  url       = {https://mirrors.ctan.org/macros/latex/base/lthooks-code.pdf},
+  urldate   = {2024-10-02}}
 @book{poore17,
   author    = {Poore, Geoffrey M.},
   title     = {The \texttt{minted} Package},
@@ -1912,9 +1918,9 @@ module and a command-line interface (CLI).
 local M = {metadata = metadata}
 %    \end{macrocode}
 % \iffalse
-% \fi
 %</lua,lua-loader,lua-unicode-data>
 %<*lua>
+% \fi
 % \par
 % \begin{markdown}
 %
@@ -15735,7 +15741,7 @@ following text:
 %
 % \begin{markdown}
 
-#### Emphasis Renderers
+#### Emphasis Renderers {#emphasis-renderers}
 The \mdef{markdownRendererEmphasis} macro represents an emphasized span of
 text. The macro receives a single argument that corresponds to the emphasized
 span of text.
@@ -19644,7 +19650,7 @@ following text:
 %
 % \begin{markdown}
 
-#### Table Renderer
+#### Table Renderer {#table-renderer}
 The \mdef{markdownRendererTable} macro represents a table. This macro will only
 be produced, when the \Opt{pipeTables} option is enabled. The macro receives the
 parameters `{`\meta{caption}`}{`\meta{number of rows}`}{`\meta{number of columns}`}`
@@ -22084,6 +22090,68 @@ pdflatex --shell-escape document.tex
 % % ...
 % \end{document}
 % ```````
+%
+%### Using \LaTeX{} hooks with the Markdown package
+%
+% \LaTeX{} provides an intricate hook management system that allows users to
+% insert extra material before and after certain \TeX{} macros and \LaTeX{}
+% environments, among other things. [@mittelbach24, Section 3.1.2]
+%
+% The Markdown package is compatible with hooks and allows the use of hooks
+% to insert extra material before \TeX{} commands and before/after \LaTeX{}
+% environments without restriction:
+%
+% ``` tex
+% \documentclass{article}
+% \usepackage{markdown}
+% \begin{document}
+% \AddToHook{cmd/markdownRendererEmphasis/before}{emphasis: }
+% \AddToHook{env/markdown/before}{<markdown>}
+% \AddToHook{env/markdown/after}{</markdown>}
+% \begin{markdown}
+% foo _bar_ baz!
+% \end{markdown}
+% \end{document}
+% ```
+%
+% Processing the above example with \LaTeX{} will produce the text
+% “<markdown>foo emphasis: _bar_ baz!</markdown>”, as expected.
+%
+% However, using hooks to insert extra material after \TeX{} commands only works
+% for commands with a fixed number of parameters that don't use currying.
+%
+% If, in the above example, you explicitly defined the renderer for emphasis
+% using \mref{markdownSetup} or another method that does not use currying, then
+% you would be able to insert extra material even after the renderer:
+%
+% ``` tex
+% \documentclass{article}
+% \usepackage{markdown}
+% \markdownSetup{renderers={emphasis={\emph{#1}}}}
+% \begin{document}
+% \AddToHook{cmd/markdownRendererEmphasis/before}{<emphasis>}
+% \AddToHook{cmd/markdownRendererEmphasis/after}{</emphasis>}
+% \AddToHook{env/markdown/before}{<markdown>}
+% \AddToHook{env/markdown/after}{</markdown>}
+% \begin{markdown}
+% foo _bar_ baz!
+% \end{markdown}
+% \end{document}
+% ```
+%
+% Processing the above example with \LaTeX{} will produce the text
+% “<markdown>foo <emphasis>_bar_</emphasis> baz!</markdown>”, as expected.
+%
+% However, the default renderer for emphasis uses currying and calls the
+% renderer prototype in a way that prevents the use of hooks to insert extra
+% material after the renderer, see Section~<#sec:emphasis-renderers>. In such
+% a case, you would need to redefine the renderer in a way that does not use
+% currying before you would be able to use hooks to insert extra material
+% after it.
+%
+% Hooks also cannot be used to insert extra material after renderers with a
+% variable number of parameters such as the renderer for tables, see
+% Section~<#sec:table-renderer>.
 %
 %### Options {#latex-options}
 %

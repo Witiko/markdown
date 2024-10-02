@@ -2,6 +2,10 @@
 
 ## 3.8.0
 
+Documentation:
+
+- Document LaTeX hooks. (#464, #507)
+
 Continuous Integration:
 
 - Only use self-hosted runners for the quick CI in pull requests.
