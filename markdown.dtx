@@ -21543,7 +21543,7 @@ following text:
             }
           \cs_generate_from_arg_count:NNnV
             #2
-            \cs_set:Npn
+            \cs_set_protected:Npn
             { #3 }
             \l_@@_renderer_prototype_definition_tl
         },
@@ -21569,7 +21569,7 @@ following text:
           {
             \cs_generate_from_arg_count:NNnn
               #2
-              \cs_set:Npn
+              \cs_gset_protected:Npn
               { #3 }
               { }
           }
