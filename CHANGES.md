@@ -2,6 +2,10 @@
 
 ## 3.8.0
 
+Fixes:
+
+- Protect renderers and renderer prototypes. (#465, #506)
+
 ## 3.7.1 (2024-09-30)
 
 Development:
