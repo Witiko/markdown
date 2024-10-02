@@ -6,6 +6,14 @@ Documentation:
 
 - Document LaTeX hooks. (#464, #507)
 
+Continuous Integration:
+
+- Only use self-hosted runners for the quick CI in pull requests.
+  For full CI outside pull requests, use GitHub-hosted runners.
+  (c2697428, [matrix.org][matrix-950e8269])
+
+ [matrix-950e8269]: https://matrix.to/#/!pznomuvubVyxElflTe:matrix.org/$op_onsRdhtXJsZB5d5LZrOFF75T02XvKehmikdoucx4?via=matrix.org&via=im.f3l.de
+
 ## 3.7.1 (2024-09-30)
 
 Development:
@@ -131,7 +139,7 @@ Continuous Integration:
 
 - Only test latest TeX Live in pull requests. (81927ca1)
 
-Unit Tests:
+Tests:
 
 - Test the `outputDir` plain TeX option. (#457, #459)
 
@@ -309,7 +317,7 @@ Default Renderer Prototypes:
 - Do not unnecessarily override math renderer prototypes in LaTeX/ConTeXt.
   (#387, #396, contributed by @zousiyu1995)
 
-Unit Tests:
+Tests:
 
 - In pull requests, process added and modified testfiles first.
   (feafe9b9, 9ff530da, 18deae73)
@@ -413,7 +421,7 @@ Documentation:
 
  [matrix-357]: https://matrix.to/#/!efVbynJpCMjlOTfose:matrix.org/$WR3quuO1fyOl6w_KX6YFA4BACBcL-cWUWBpVfpPWDkI?via=matrix.org&via=im.f3l.de
 
-Unit Tests:
+Tests:
 
 - Restore CommonMark testfiles with trailing tabs and spaces.
   (#348, #353, lostenderman/markdown#2, contributed by @lostenderman)
@@ -456,7 +464,7 @@ Deprecation:
 
  [matrix-351]: https://matrix.to/#/!lWGKeMcpgwGHpfLYkf:matrix.org/$yVeWB0Yzfz6mgORv5VeG9IEl7a4xLogkAUmdNMSCxEg?via=matrix.org&via=im.f3l.de
 
-Unit Tests:
+Tests:
 
 - Add support for YAML metadata in testfiles.
   (#345, #347, [matrix.org][matrix-347])
@@ -503,7 +511,7 @@ Documentation:
   (f3efcb9)
 - Document setting up catcodes in Lua. (#329, #342)
 
-Unit Tests:
+Tests:
 
 - Batch unit tests to improve speed.
   (#245, #316, 8bfd0b3, #317, #319..#325, #327, #328, e3b31696,
@@ -537,7 +545,7 @@ Documentation:
 - Add a link to TUG 2023 slides and video to the README.
   (ce6047b8, adb69e2f)
 
-Unit Tests:
+Tests:
 
 - Rewrite the unit testing framework from Bash to Python
   and implement summarization. (#245, #314)
@@ -715,7 +723,7 @@ Default Renderer Prototypes:
 - In LaTeX and ConTeXt, use just first word of infostring to determine fence
   code block language. (#244)
 
-Unit Tests:
+Tests:
 
 - Do not fold tabs and spaces into a single space token.
   (lostenderman#107, #242)
@@ -1244,7 +1252,7 @@ Licensing:
 - Bump the copyright year. (9462f17)
 - Sublicense the code as LPPL v1.3c. (609aeee)
 
-Unit tests:
+Tests:
 
 - Remove xtrace from `test.sh` for less verbose output. (b307ee6)
 - Treat all files as text with GNU diff in `test.sh`. (ec89e6d)

@@ -216,11 +216,10 @@ jobs:
           - { is_pr: true }
         include:
           - { texlive: latest }
-    runs-on: self-hosted
+    runs-on: ${{ github.event_name == 'pull_request_target' && 'self-hosted' || 'ubuntu-latest' }}
     container:
       image: ghcr.io/witiko/markdown:${{ needs.build-docker-image.outputs[matrix.texlive] }}
     if: ${{ !contains(inputs.runTests, 'false') }}
-    timeout-minutes: 90
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
