@@ -37007,7 +37007,7 @@ end
 %  \begin{macrocode}
 \RequirePackage{ltxcmds}
 \ExplSyntaxOn
-\cs_gset:Npn
+\cs_gset_protected:Npn
   \markdownRendererInputFencedCodePrototype#1#2#3
   {
     \tl_if_empty:nTF
@@ -37457,23 +37457,26 @@ end
 \RequirePackage{url}
 \RequirePackage{expl3}
 \ExplSyntaxOn
-\def\markdownRendererLinkPrototype#1#2#3#4{
-  \tl_set:Nn \l_tmpa_tl { #1 }
-  \tl_set:Nn \l_tmpb_tl { #2 }
-  \bool_set:Nn
-    \l_tmpa_bool
-    {
-      \tl_if_eq_p:NN
-        \l_tmpa_tl
-        \l_tmpb_tl
-    }
-  \tl_set:Nn \l_tmpa_tl { #4 }
-  \bool_set:Nn
-    \l_tmpb_bool
-    {
-      \tl_if_empty_p:N
-        \l_tmpa_tl
-    }
+\cs_gset_protected:Npn
+  \markdownRendererLinkPrototype
+  #1#2#3#4
+  {
+    \tl_set:Nn \l_tmpa_tl { #1 }
+    \tl_set:Nn \l_tmpb_tl { #2 }
+    \bool_set:Nn
+      \l_tmpa_bool
+      {
+        \tl_if_eq_p:NN
+          \l_tmpa_tl
+          \l_tmpb_tl
+      }
+    \tl_set:Nn \l_tmpa_tl { #4 }
+    \bool_set:Nn
+      \l_tmpb_bool
+      {
+        \tl_if_empty_p:N
+          \l_tmpa_tl
+      }
 %    \end{macrocode}
 % \begin{markdown}
 % If the label and the fully-escaped URI are equivalent and the title is
@@ -37481,17 +37484,17 @@ end
 % link is either direct or indirect.
 % \end{markdown}
 %  \begin{macrocode}
-  \bool_if:nTF
-    {
-      \l_tmpa_bool && \l_tmpb_bool
-    }
-    {
-      \markdownLaTeXRendererAutolink { #2 } { #3 }
-    }{
-      \markdownLaTeXRendererDirectOrIndirectLink
-        { #1 } { #2 } { #3 } { #4 }
-    }
-}
+    \bool_if:nTF
+      {
+        \l_tmpa_bool && \l_tmpb_bool
+      }
+      {
+        \markdownLaTeXRendererAutolink { #2 } { #3 }
+      }{
+        \markdownLaTeXRendererDirectOrIndirectLink
+          { #1 } { #2 } { #3 } { #4 }
+      }
+  }
 \def\markdownLaTeXRendererAutolink#1#2{%
 %    \end{macrocode}
 % \begin{markdown}
@@ -37780,7 +37783,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\cs_gset:Npn
+\cs_gset_protected:Npn
   \markdownRendererInputRawInlinePrototype#1#2
   {
     \str_case:nnF
@@ -37799,7 +37802,7 @@ end
           { #2 }
       }
   }
-\cs_gset:Npn
+\cs_gset_protected:Npn
   \markdownRendererInputRawBlockPrototype#1#2
   {
     \str_case:nnF
