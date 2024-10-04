@@ -1,0 +1,23 @@
+if: format == 'context-mkiv' or template == 'input'
+---
+\markdownSetup{fancyLists=true}
+<<<
+a. foo  
+b. bar
+   bar  
+c. baz  
+>>>
+BEGIN document
+BEGIN fancyOlBeginTight
+- numstyle: LowerAlpha
+- numdelim: Period
+END fancyOlBeginTight
+fancyOlItemWithNumber: 1
+fancyOlItemEnd
+fancyOlItemWithNumber: 2
+softLineBreak
+fancyOlItemEnd
+fancyOlItemWithNumber: 3
+fancyOlItemEnd
+fancyOlEndTight
+END document
