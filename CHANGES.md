@@ -6,6 +6,21 @@ Documentation:
 
 - Document LaTeX hooks. (#464, #507)
 
+Defaults:
+
+- Improve the compatibility of the default LaTeX packages with PDF tagging:
+  (#466, #512, reported and consulted by @u-fischer)
+
+  - In TeX engines other than LuaTeX, use the package soul instead of the
+    package soulutf8 in TeX Live ≥ 2023.
+
+  - In LuaLaTeX, use the package lua-ul for strike-through/mark renderer
+    prototypes instead of the package soul.
+
+  - Use the package enumitem for tight and fancy lists instead of the package
+    paralist. If you wish to keep using the package paralist, load it before
+    the Markdown package to force the old behavior.
+
 Continuous Integration:
 
 - Only use self-hosted runners for the quick CI in pull requests.
