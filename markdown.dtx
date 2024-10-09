@@ -1368,16 +1368,14 @@ soft graphics
 %    \end{macrocode}
 % \begin{markdown}
 %
-% \pkg{paralist}
+% \pkg{enumitem}
 %
-%:    A package that provides the `compactitem`, `compactenum`, and
-%     `compactdesc` macros for the typesetting of tight bulleted lists,
-%     ordered lists, and definition lists as well as the rendering of
-%     fancy lists.
+%:    A package that provides macros for the default renderer prototypes for
+%     tight and fancy lists.
 %
 % \end{markdown}
 %  \begin{macrocode}
-soft paralist
+soft enumitem
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -1483,15 +1481,28 @@ soft etoolbox
 %    \end{macrocode}
 % \begin{markdown}
 %
-% \pkg{soulutf8}
+% \pkg{soulutf8} and \pkg{xcolor}
 %
-%:    A package that is used in the default renderer prototype for
-%     strike-throughs and marked text.
+%:    Packages that are used in the default renderer prototypes for
+%     strike-throughs and marked text in pdf\TeX.
 %     <!-- TODO: 1,$s/soulutf8/soul/g in TeX Live 2023. -->
 %
 % \end{markdown}
 %  \begin{macrocode}
 soft soul
+soft xcolor
+%    \end{macrocode}
+% \begin{markdown}
+%
+% \pkg{lua-ul} and \pkg{luacolor}
+%
+%:    Packages that are used in the default renderer prototypes for
+%     strike-throughs and marked text in Lua\TeX.
+%
+% \end{markdown}
+%  \begin{macrocode}
+soft lua-ul
+soft luacolor
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -36632,85 +36643,166 @@ end
 \markdownIfOption{plain}{\iffalse}{\iftrue}
 %    \end{macrocode}
 % \par
-% \begin{markdown}%
-% If either the \Opt{tightLists} or the \Opt{fancyLists} Lua option is enabled
-% and the current document class is not \pkg{beamer}, then load the
-% \pkg{paralist} package.
+% \begin{markdown}
+%
+%#### Lists
+%
+% If either the \Opt{tightLists} or the \Opt{fancyLists} Lua option is enabled,
+% the current document class is not \pkg{beamer} and the package \pkg{paralist}
+% is not loaded, load the \pkg{enumitem} package.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \@ifclassloaded{beamer}{}{%
-  \markdownIfOption{tightLists}{\RequirePackage{paralist}}{}%
-  \markdownIfOption{fancyLists}{\RequirePackage{paralist}}{}%
+  \@ifpackageloaded{paralist}{}{%
+    \markdownIfOption{tightLists}{\RequirePackage{enumitem}}{}%
+    \markdownIfOption{fancyLists}{\RequirePackage{enumitem}}{}%
+  }%
 }
 %    \end{macrocode}
 % \par
 % \begin{markdown}
 %
-% If we loaded the \pkg{paralist} package, define the respective renderer
-% prototypes to make use of the capabilities of the package. Otherwise,
-% define the renderer prototypes to fall back on the corresponding renderers
-% for the non-tight lists.
+% If we loaded the \pkg{enumitem} package, define the tight and
+% fancy list renderer prototypes to make use of the capabilities of
+% the package.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\@ifpackageloaded{paralist}{
-  \tl_new:N
-    \l_@@_latex_fancy_list_item_label_number_style_tl
-  \tl_new:N
-    \l_@@_latex_fancy_list_item_label_delimiter_style_tl
-  \cs_new:Nn
+\cs_new:Nn
+  \@@_latex_fancy_list_item_label_number:nn
+  {
+    \str_case:nn
+      { #1 }
+      {
+        { Decimal } { #2 }
+        { LowerRoman } { \int_to_roman:n { #2 } }
+        { UpperRoman } { \int_to_Roman:n { #2 } }
+        { LowerAlpha } { \int_to_alph:n { #2 } }
+        { UpperAlpha } { \int_to_Alph:n { #2 } }
+      }
+  }
+\cs_new:Nn
+  \@@_latex_fancy_list_item_label_delimiter:n
+  {
+    \str_case:nn
+      { #1 }
+      {
+        { Default } { . }
+        { OneParen } { ) }
+        { Period } { . }
+      }
+  }
+\cs_new:Nn
+  \@@_latex_fancy_list_item_label:nnn
+  {
     \@@_latex_fancy_list_item_label_number:nn
-    {
-      \str_case:nn
-        { #1 }
-        {
-          { Decimal } { #2 }
-          { LowerRoman } { \int_to_roman:n { #2 } }
-          { UpperRoman } { \int_to_Roman:n { #2 } }
-          { LowerAlpha } { \int_to_alph:n { #2 } }
-          { UpperAlpha } { \int_to_Alph:n { #2 } }
-        }
-    }
-  \cs_new:Nn
+      { #1 }
+      { #3 }
     \@@_latex_fancy_list_item_label_delimiter:n
-    {
-      \str_case:nn
-        { #1 }
-        {
-          { Default } { . }
-          { OneParen } { ) }
-          { Period } { . }
-        }
-    }
-  \cs_new:Nn
-    \@@_latex_fancy_list_item_label:nnn
-    {
-      \@@_latex_fancy_list_item_label_number:nn
-        { #1 }
-        { #3 }
-      \@@_latex_fancy_list_item_label_delimiter:n
-        { #2 }
-    }
-  \cs_new:Nn
-    \@@_latex_paralist_style:nn
-    {
-      \str_case:nn
-        { #1 }
-        {
-          { Decimal } { 1 }
-          { LowerRoman } { i }
-          { UpperRoman } { I }
-          { LowerAlpha } { a }
-          { UpperAlpha } { A }
-        }
-      \@@_latex_fancy_list_item_label_delimiter:n
-        { #2 }
-    }
+      { #2 }
+  }
+\cs_generate_variant:Nn
+  \@@_latex_fancy_list_item_label:nnn
+  { VVn }
+\tl_new:N
+  \l_@@_latex_fancy_list_item_label_number_style_tl
+\tl_new:N
+  \l_@@_latex_fancy_list_item_label_delimiter_style_tl
+\@ifpackageloaded{enumitem}{
   \markdownSetup{rendererPrototypes={
 %    \end{macrocode}
+% \begin{markdown}
+%
+% First, let's define the tight list item renderer prototypes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    ulBeginTight = {
+      \begin
+        { itemize }
+        [ noitemsep ]
+    },
+    ulEndTight = {
+      \end
+        { itemize }
+    },
+    olBeginTight = {
+      \begin
+        { enumerate }
+        [ noitemsep ]
+    },
+    olEndTight = {
+      \end
+        { enumerate }
+    },
+    dlBeginTight = {
+      \begin
+        { description }
+        [ noitemsep ]
+    },
+    dlEndTight = {
+      \end
+        { description }
+    },
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Second, let's define the fancy list item renderer prototypes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    fancyOlBegin = {
+      \group_begin:
+      \tl_set:Nn
+        \l_@@_latex_fancy_list_item_label_number_style_tl
+        { #1 }
+      \tl_set:Nn
+        \l_@@_latex_fancy_list_item_label_delimiter_style_tl
+        { #2 }
+      \begin
+        { enumerate }
+    },
+    fancyOlBeginTight = {
+      \group_begin:
+      \tl_set:Nn
+        \l_@@_latex_fancy_list_item_label_number_style_tl
+        { #1 }
+      \tl_set:Nn
+        \l_@@_latex_fancy_list_item_label_delimiter_style_tl
+        { #2 }
+      \begin
+        { enumerate }
+        [ noitemsep ]
+    },
+    fancyOlEnd(|Tight) = {
+      \end { enumerate }
+      \group_end:
+    },
+    fancyOlItemWithNumber = {
+      \item
+        [
+          \@@_latex_fancy_list_item_label:VVn
+            \l_@@_latex_fancy_list_item_label_number_style_tl
+            \l_@@_latex_fancy_list_item_label_delimiter_style_tl
+            { #1 }
+        ]
+    },
+  }}
+%    \end{macrocode}
 % \par
+% \begin{markdown}
+%
+% Otherwise, if we loaded the \pkg{paralist} package, define the
+% tight and fancy list renderer prototypes to make use of the
+% capabilities of the package.
+%
+% \end{markdown}
+%  \begin{macrocode}
+}{\@ifpackageloaded{paralist}{
+  \markdownSetup{rendererPrototypes={
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Make tight bullet lists a little less compact by adding extra vertical space
@@ -36736,33 +36828,13 @@ end
       \tl_set:Nn
         \l_@@_latex_fancy_list_item_label_delimiter_style_tl
         { #2 }
-      \@@_if_option:nTF
-        { startNumber }
-        {
-          \tl_set:Nn
-            \l_tmpa_tl
-            { \begin{enumerate} }
-        }
-        {
-          \tl_set:Nn
-            \l_tmpa_tl
-            { \begin{enumerate}[ }
-          \tl_put_right:Nx
-            \l_tmpa_tl
-            { \@@_latex_paralist_style:nn { #1 } { #2 } }
-          \tl_put_right:Nn
-            \l_tmpa_tl
-            { ] }
-        }
-      \tl_use:N
-        \l_tmpa_tl
+      \begin{enumerate}
     },
     fancyOlEnd = {
       \end{enumerate}
       \group_end:
     },
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Make tight ordered lists a little less compact by adding extra vertical
@@ -36788,32 +36860,9 @@ end
       \tl_set:Nn
         \l_@@_latex_fancy_list_item_label_delimiter_style_tl
         { #2 }
-      \@@_if_option:nTF
-        { startNumber }
-        {
-          \tl_set:Nn
-            \l_tmpa_tl
-            { \begin{compactenum} }
-        }
-        {
-          \tl_set:Nn
-            \l_tmpa_tl
-            { \begin{compactenum}[ }
-          \tl_put_right:Nx
-            \l_tmpa_tl
-            { \@@_latex_paralist_style:nn { #1 } { #2 } }
-          \tl_put_right:Nn
-            \l_tmpa_tl
-            { ] }
-        }
-      \tl_put_left:Nn
-        \l_tmpa_tl
-        {
-          \plpartopsep=\partopsep
-          \pltopsep=\topsep
-        }
-      \tl_use:N
-        \l_tmpa_tl
+      \plpartopsep=\partopsep
+      \pltopsep=\topsep
+      \begin{compactenum}
     },
     fancyOlEndTight = {
       \end{compactenum}
@@ -36829,7 +36878,6 @@ end
         ]
     },
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Make tight definition lists a little less compact by adding extra
@@ -36846,23 +36894,36 @@ end
     dlEndTight = {
       \end{compactdesc}
       \group_end:
-    }}}
-  \cs_generate_variant:Nn
-    \@@_latex_fancy_list_item_label:nnn
-    { VVn }
+    }
+  }}
 }{
-  \markdownSetup{rendererPrototypes={
-    ulBeginTight = {\markdownRendererUlBegin},
-    ulEndTight = {\markdownRendererUlEnd},
-    fancyOlBegin = {\markdownRendererOlBegin},
-    fancyOlEnd = {\markdownRendererOlEnd},
-    olBeginTight = {\markdownRendererOlBegin},
-    olEndTight = {\markdownRendererOlEnd},
-    fancyOlBeginTight = {\markdownRendererOlBegin},
-    fancyOlEndTight = {\markdownRendererOlEnd},
-    dlBeginTight = {\markdownRendererDlBegin},
-    dlEndTight = {\markdownRendererDlEnd}}}
-}
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Otherwise, if we loaded neither the \pkg{enumitem} package nor the
+% \pkg{paralist} package, define the tight and fancy list renderer
+% prototypes to fall back on the corresponding renderers for the
+% non-tight lists.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  \markdownSetup
+    {
+      rendererPrototypes = {
+        ulBeginTight = \markdownRendererUlBegin,
+        ulEndTight = \markdownRendererUlEnd,
+        fancyOlBegin = \markdownRendererOlBegin,
+        fancyOlEnd = \markdownRendererOlEnd,
+        olBeginTight = \markdownRendererOlBegin,
+        olEndTight = \markdownRendererOlEnd,
+        fancyOlBeginTight = \markdownRendererOlBegin,
+        fancyOlEndTight = \markdownRendererOlEnd,
+        dlBeginTight = \markdownRendererDlBegin,
+        dlEndTight = \markdownRendererDlEnd,
+      },
+    }
+}}
 \ExplSyntaxOff
 \RequirePackage{amsmath}
 %    \end{macrocode}
@@ -37754,47 +37815,111 @@ end
     },
   },
 }
-\ExplSyntaxOff
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-%#### Strike-Through
-% If the \Opt{strikeThrough} option is enabled, we will load the
-% \pkg{soulutf8} package and use it to implement strike-throughs.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\markdownIfOption{strikeThrough}{%
-  \RequirePackage{soulutf8}%
-  \markdownSetup{
-    rendererPrototypes = {
-      strikeThrough = {%
-        \st{#1}%
-      },
-    }
-  }
-}{}
 %    \end{macrocode}
 % \par
 % \begin{markdown}
 %
 %#### Marked Text
-% If the \Opt{mark} option is enabled, we will load the \pkg{soulutf8} package
-% and use it to implement marked text.
+% If the \Opt{mark} option is enabled, we will load either the \pkg{soulutf8}
+% package or the \pkg{lua-ul} package and use it to implement marked text.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\markdownIfOption{mark}{%
-  \RequirePackage{soulutf8}%
-  \markdownSetup{
-    rendererPrototypes = {
-      mark = {%
-        \hl{#1}%
-      },
-    }
+\@@_if_option:nT
+  { mark }
+  {
+    \sys_if_engine_luatex:TF
+      {
+        \RequirePackage
+          { luacolor }
+        \RequirePackage
+          { lua-ul }
+        \markdownSetup
+          {
+            rendererPrototypes = {
+              mark = {
+                \highLight
+                  { #1 }
+              },
+            }
+          }
+      }
+      {
+        \RequirePackage
+          { xcolor }
+        % TODO: Use just package soul after TeX Live 2023.
+        \IfFormatAtLeastTF
+          { 2023-02-18 }
+          {
+            \RequirePackage
+              { soul }
+          }
+          {
+            \RequirePackage
+              { soulutf8 }
+          }
+        \markdownSetup
+          {
+            rendererPrototypes = {
+              mark = {
+                \hl
+                  { #1 }
+              },
+            }
+          }
+      }
   }
-}{}
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+%#### Strike-Through
+% If the \Opt{strikeThrough} option is enabled, we will load either the
+% \pkg{soulutf8} package or the \pkg{lua-ul} package and use it to implement
+% strike-throughs.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\@@_if_option:nT
+  { strikeThrough }
+  {
+    \sys_if_engine_luatex:TF
+      {
+        \RequirePackage
+          { lua-ul }
+        \markdownSetup
+          {
+            rendererPrototypes = {
+              strikeThrough = {
+                \strikeThrough
+                  { #1 }
+              },
+            }
+          }
+      }
+      {
+        % TODO: Use just package soul after TeX Live 2023.
+        \IfFormatAtLeastTF
+          { 2023-02-18 }
+          {
+            \RequirePackage
+              { soul }
+          }
+          {
+            \RequirePackage
+              { soulutf8 }
+          }
+        \markdownSetup
+          {
+            rendererPrototypes = {
+              strikeThrough = {
+                \st
+                  { #1 }
+              },
+            }
+          }
+      }
+  }
 %    \end{macrocode}
 % \par
 % \begin{markdown}
