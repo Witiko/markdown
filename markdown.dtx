@@ -1483,15 +1483,28 @@ soft etoolbox
 %    \end{macrocode}
 % \begin{markdown}
 %
-% \pkg{soulutf8}
+% \pkg{soulutf8} and \pkg{xcolor}
 %
-%:    A package that is used in the default renderer prototype for
-%     strike-throughs and marked text.
+%:    Packages that are used in the default renderer prototypes for
+%     strike-throughs and marked text in pdf\TeX.
 %     <!-- TODO: 1,$s/soulutf8/soul/g in TeX Live 2023. -->
 %
 % \end{markdown}
 %  \begin{macrocode}
 soft soul
+soft xcolor
+%    \end{macrocode}
+% \begin{markdown}
+%
+% \pkg{lua-ul} and \pkg{luacolor}
+%
+%:    Packages that are used in the default renderer prototypes for
+%     strike-throughs and marked text in Lua\TeX.
+%
+% \end{markdown}
+%  \begin{macrocode}
+soft lua-ul
+soft luacolor
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -37754,47 +37767,111 @@ end
     },
   },
 }
-\ExplSyntaxOff
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-%#### Strike-Through
-% If the \Opt{strikeThrough} option is enabled, we will load the
-% \pkg{soulutf8} package and use it to implement strike-throughs.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\markdownIfOption{strikeThrough}{%
-  \RequirePackage{soulutf8}%
-  \markdownSetup{
-    rendererPrototypes = {
-      strikeThrough = {%
-        \st{#1}%
-      },
-    }
-  }
-}{}
 %    \end{macrocode}
 % \par
 % \begin{markdown}
 %
 %#### Marked Text
-% If the \Opt{mark} option is enabled, we will load the \pkg{soulutf8} package
-% and use it to implement marked text.
+% If the \Opt{mark} option is enabled, we will load either the \pkg{soulutf8}
+% package or the \pkg{lua-ul} package and use it to implement marked text.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\markdownIfOption{mark}{%
-  \RequirePackage{soulutf8}%
-  \markdownSetup{
-    rendererPrototypes = {
-      mark = {%
-        \hl{#1}%
-      },
-    }
+\@@_if_option:nT
+  { mark }
+  {
+    \sys_if_engine_luatex:TF
+      {
+        \RequirePackage
+          { luacolor }
+        \RequirePackage
+          { lua-ul }
+        \markdownSetup
+          {
+            rendererPrototypes = {
+              mark = {
+                \highLight
+                  { #1 }
+              },
+            }
+          }
+      }
+      {
+        \RequirePackage
+          { xcolor }
+        % TODO: Use just package soul after TeX Live 2023.
+        \IfFormatAtLeastTF
+          { 2023-02-18 }
+          {
+            \RequirePackage
+              { soul }
+          }
+          {
+            \RequirePackage
+              { soulutf8 }
+          }
+        \markdownSetup
+          {
+            rendererPrototypes = {
+              mark = {
+                \hl
+                  { #1 }
+              },
+            }
+          }
+      }
   }
-}{}
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+%#### Strike-Through
+% If the \Opt{strikeThrough} option is enabled, we will load either the
+% \pkg{soulutf8} package or the \pkg{lua-ul} package and use it to implement
+% strike-throughs.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\@@_if_option:nT
+  { strikeThrough }
+  {
+    \sys_if_engine_luatex:TF
+      {
+        \RequirePackage
+          { lua-ul }
+        \markdownSetup
+          {
+            rendererPrototypes = {
+              strikeThrough = {
+                \strikeThrough
+                  { #1 }
+              },
+            }
+          }
+      }
+      {
+        % TODO: Use just package soul after TeX Live 2023.
+        \IfFormatAtLeastTF
+          { 2023-02-18 }
+          {
+            \RequirePackage
+              { soul }
+          }
+          {
+            \RequirePackage
+              { soulutf8 }
+          }
+        \markdownSetup
+          {
+            rendererPrototypes = {
+              strikeThrough = {
+                \st
+                  { #1 }
+              },
+            }
+          }
+      }
+  }
 %    \end{macrocode}
 % \par
 % \begin{markdown}
