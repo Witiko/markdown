@@ -2,8 +2,7 @@
 %<*driver>
 \documentclass{ltxdockit}
 \usepackage[american]{babel}
-\usepackage{amsmath,btxdockit,doc,fancyvrb,graphicx,hologo,microtype}
-\IfFileExists{minted2.sty}{\usepackage{minted2}}{\usepackage{minted}}
+\usepackage{amsmath,btxdockit,doc,fancyvrb,graphicx,hologo,microtype,minted}
 
 % Set up the style.
 \usepackage{xcolor}
@@ -37176,17 +37175,6 @@ end
             \catcode`\#=12\relax
           }
           {
-            \ltx@ifpackageloaded
-              { minted2 }
-              {
-                \catcode`\#=6\relax
-                \exp_args:NV
-                  \inputminted
-                  \l_tmpa_tl
-                  { #1 }
-                \catcode`\#=12\relax
-              }
-              {
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -37195,9 +37183,9 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-                \ltx@ifpackageloaded
-                  { listings }
-                  { \lstinputlisting[language=\l_tmpa_tl]{#1} }
+            \ltx@ifpackageloaded
+              { listings }
+              { \lstinputlisting[language=\l_tmpa_tl]{#1} }
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -37207,8 +37195,7 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-                  { \markdownRendererInputFencedCode{#1}{}{} }
-              }
+              { \markdownRendererInputFencedCode{#1}{}{} }
           }
       }
   }
