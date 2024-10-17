@@ -1,0 +1,11 @@
+\markdownSetup{hybrid=true}
+\def\\markdownRendererDocumentEnd{\markdownRendererDocumentEnd}
+<<<
+*foo* \
+*bar* \
+>>>
+BEGIN document
+emphasis: foo
+hardLineBreak
+emphasis: bar
+END document
