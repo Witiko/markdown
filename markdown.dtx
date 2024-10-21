@@ -34836,10 +34836,11 @@ end
           }
       }
       {
-        \msg_info:nnn
+        \msg_info:nnne
           { markdown }
           { loading-plain-tex-theme }
           { #1 }
+          { \markdownThemeVersion }
         \prop_gput:Nnx
           \g_@@_plain_tex_loaded_themes_linenos_prop
           { #1 }
@@ -34851,7 +34852,7 @@ end
 \msg_new:nnn
   { markdown }
   { loading-plain-tex-theme }
-  { Loading~plain~TeX~Markdown~theme~#1 }
+  { Loading~version~#2~of~plain~TeX~Markdown~theme~#1 }
 \msg_new:nnn
   { markdown }
   { repeatedly-loaded-plain-tex-theme }
@@ -36545,10 +36546,11 @@ end
                   }
               }
               {
-                \msg_info:nnn
+                \msg_info:nnne
                   { markdown }
                   { loading-latex-theme }
                   { #1 }
+                  { \markdownThemeVersion }
                 \RequirePackage
                   { markdown theme #2 }
               }
@@ -36589,7 +36591,7 @@ end
 \msg_new:nnn
   { markdown }
   { loading-latex-theme }
-  { Loading~LaTeX~Markdown~theme~#1 }
+  { Loading~version~#2~of~LaTeX~Markdown~theme~#1 }
 \msg_new:nnn
   { markdown }
   { repeatedly-loaded-latex-theme }
@@ -38518,10 +38520,11 @@ end
               }
           }
           {
-            \msg_info:nnn
+            \msg_info:nnne
               { markdown }
               { loading-context-theme }
               { #1 }
+              { \markdownThemeVersion }
             \usemodule
               [ t ]
               [ markdown theme #2 ]
@@ -38536,7 +38539,7 @@ end
 \msg_new:nnn
   { markdown }
   { loading-context-theme }
-  { Loading~ConTeXt~Markdown~theme~#1 }
+  { Loading~version~#2~of~ConTeXt~Markdown~theme~#1 }
 \msg_new:nnn
   { markdown }
   { repeatedly-loaded-context-theme }
