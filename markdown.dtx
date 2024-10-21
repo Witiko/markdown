@@ -803,8 +803,13 @@ abbr {
   titleaddon = {Markdown Enhancement Proposal},
   date       = {2024-10-13},
   urldate    = {2024-10-21},
-  url        = {https://github.com/Witiko/markdown/discussions/514},
-}
+  url        = {https://github.com/Witiko/markdown/discussions/514}}
+@book{latex24,
+  author     = {Frank Mittelbach and Ulrike Fischer and {\LaTeX{} Project}},
+  title      = {The \texttt{documentmetadata-support} code},
+  date       = {2024-06-01},
+  url        = {https://mirrors.ctan.org/macros/latex/required/latex-lab/documentmetadata-support-code.pdf},
+  urldate    = {2024-10-21}}
 %</techdoc-bibliography>
 %<@@=markdown>
 %<*themes-witiko-markdown-techdoc>
@@ -1375,14 +1380,21 @@ soft graphics
 %    \end{macrocode}
 % \begin{markdown}
 %
-% \pkg{enumitem}
+% \pkg{enumitem} and \pkg{paralist}
 %
-%:    A package that provides macros for the default renderer prototypes for
+%:    Packages that provide macros for the default renderer prototypes for
 %     tight and fancy lists.
+%
+%     The package \pkg{paralist} will be used unless the option
+%     \Opt{experimental} has been enabled, in which case, the package
+%     \pkg{enumitem} will be used. Furthermore, enabling any test phase
+%     [@latex24] will also cause \pkg{enumitem} to be used. In a future
+%     major version, \pkg{enumitem} will replace \pkg{paralist} altogether.
 %
 % \end{markdown}
 %  \begin{macrocode}
 soft enumitem
+soft paralist
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -12079,7 +12091,7 @@ you would include the following code in your plain \TeX{} document:
 %  \begin{macrocode}
 \prg_new_conditional:Nnn
   \@@_if_option:n
-  { TF, T, F }
+  { p, TF, T, F }
   {
     \@@_get_option_type:nN
       { #1 }
@@ -36853,18 +36865,65 @@ end
 %
 %#### Lists
 %
-% If either the \Opt{tightLists} or the \Opt{fancyLists} Lua option is enabled,
-% the current document class is not \pkg{beamer} and the package \pkg{paralist}
-% is not loaded, load the \pkg{enumitem} package.
+% If either the \Opt{tightLists} or the \Opt{fancyLists} Lua option is enabled
+% and the current document class is not \pkg{beamer}, use a package that
+% provides support for tight and fancy lists.
+%
+% If either the package \pkg{paralist} or the package \pkg{enumitem} have already
+% been loaded, use them. Otherwise, if the option \Opt{experimental} or any test
+% phase has been enabled, use the package \pkg{enumitem}. Otherwise, use the
+% package \pkg{paralist}.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\@ifclassloaded{beamer}{}{%
-  \@ifpackageloaded{paralist}{}{%
-    \markdownIfOption{tightLists}{\RequirePackage{enumitem}}{}%
-    \markdownIfOption{fancyLists}{\RequirePackage{enumitem}}{}%
-  }%
-}
+\ExplSyntaxOn
+\bool_if:nT
+  {
+    \@@_if_option_p:n
+      { tightLists } ||
+    \@@_if_option_p:n
+      { fancyLists }
+  }
+  { \@ifclassloaded { beamer } { } {
+    \@ifpackageloaded { paralist } { } {
+    \@ifpackageloaded { enumitem } { } {
+    \bool_if:nT
+      {
+        \@@_if_option_p:n
+          { experimental } ||
+        \prop_if_exist_p:N
+          \g__pdfmanagement_documentproperties_prop &&
+        (
+          \prop_if_in_p:Nn
+            \g__pdfmanagement_documentproperties_prop
+            { document / testphase / phase-I } ||
+          \prop_if_in_p:Nn
+            \g__pdfmanagement_documentproperties_prop
+            { document / testphase / phase-II } ||
+          \prop_if_in_p:Nn
+            \g__pdfmanagement_documentproperties_prop
+            { document / testphase / phase-III } ||
+          \prop_if_in_p:Nn
+            \g__pdfmanagement_documentproperties_prop
+            { document / testphase / phase-IV } ||
+          \prop_if_in_p:Nn
+            \g__pdfmanagement_documentproperties_prop
+            { document / testphase / phase-V } ||
+          \prop_if_in_p:Nn
+            \g__pdfmanagement_documentproperties_prop
+            { document / testphase / phase-VI }
+        )
+      }
+      {
+        \RequirePackage
+          { enumitem }
+      }
+      {
+        \RequirePackage
+          { paralist }
+      }
+  } } } }
+\ExplSyntaxOff
 %    \end{macrocode}
 % \par
 % \begin{markdown}
