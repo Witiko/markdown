@@ -22716,6 +22716,7 @@ following image:
 %  \begin{macrocode}
 \AtEndOfPackage{
   \markdownLaTeXLoadedtrue
+}
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -22726,10 +22727,32 @@ following image:
 %
 % \end{markdown}
 %  \begin{macrocode}
-  \markdownIfOption{noDefaults}{}{
-    \markdownSetup{theme=witiko/markdown/defaults}
+\ExplSyntaxOn
+\bool_if:nT
+  {
+    \str_if_eq_p:VV
+      \c_@@_top_layer_tl
+      \c_@@_option_layer_latex_tl &&
+    ! \@@_if_option_p:n
+      { noDefaults }
   }
-}
+  {
+    \AtEndOfPackage
+      {
+        \@@_if_option:nTF
+          { experimental }
+          {
+            \@@_setup:n
+              { theme = witiko/markdown/defaults@experimental }
+          }
+          {
+            \@@_setup:n
+              { theme = witiko/markdown/defaults }
+          }
+      }
+    \ExplSyntaxOn
+  }
+\ExplSyntaxOff
 %    \end{macrocode}
 % \iffalse
 %</latex>
@@ -35416,16 +35439,25 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\str_if_eq:VVT
-  \c_@@_top_layer_tl
-  \c_@@_option_layer_plain_tex_tl
+\bool_if:nT
+  {
+    \str_if_eq_p:VV
+      \c_@@_top_layer_tl
+      \c_@@_option_layer_plain_tex_tl &&
+    ! \@@_if_option_p:n
+      { noDefaults }
+  }
   {
     \ExplSyntaxOff
-    \@@_if_option:nF
-      { noDefaults }
+    \@@_if_option:nTF
+      { experimental }
       {
         \@@_setup:n
-          {theme = witiko/markdown/defaults}
+          { theme = witiko/markdown/defaults@experimental }
+      }
+      {
+        \@@_setup:n
+          { theme = witiko/markdown/defaults }
       }
     \ExplSyntaxOn
   }
@@ -36889,7 +36921,8 @@ end
     \@ifpackageloaded { enumitem } { } {
     \bool_if:nT
       {
-        \@@_if_option_p:n
+        \str_if_eq_p:en
+          { \markdownThemeVersion }
           { experimental } ||
         \prop_if_exist_p:N
           \g__pdfmanagement_documentproperties_prop &&
@@ -38822,9 +38855,30 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\markdownIfOption{noDefaults}{}{
-  \setupmarkdown[theme=witiko/markdown/defaults]
-}
+\ExplSyntaxOn
+\bool_if:nT
+  {
+    \str_if_eq_p:VV
+      \c_@@_top_layer_tl
+      \c_@@_option_layer_context_tl &&
+    ! \@@_if_option_p:n
+      { noDefaults }
+  }
+  {
+    \ExplSyntaxOff
+    \@@_if_option:nTF
+      { experimental }
+      {
+        \@@_setup:n
+          { theme = witiko/markdown/defaults@experimental }
+      }
+      {
+        \@@_setup:n
+          { theme = witiko/markdown/defaults }
+      }
+    \ExplSyntaxOn
+  }
+\ExplSyntaxOff
 \stopmodule
 \protect
 %    \end{macrocode}
