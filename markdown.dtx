@@ -12986,6 +12986,9 @@ a specific look and other high-level goals without low-level programming.
 %
 % \end{markdown}
 %  \begin{macrocode}
+    \tl_set:NV
+      \l_tmpa_tl
+      \g_@@_current_theme_tl
     \tl_put_right:Nn
       \g_@@_current_theme_tl
       { / }
@@ -12995,8 +12998,8 @@ a specific look and other high-level goals without low-level programming.
     \seq_gput_right:NV
       \g_@@_theme_versions_seq
       \markdownThemeVersion
-    \@@_load_theme:nV
-      { #1 }
+    \@@_load_theme:VV
+      \l_tmpa_tl
       \l_tmpa_str
 %    \end{macrocode}
 % \begin{markdown}
