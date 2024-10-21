@@ -2706,6 +2706,51 @@ defaultOptions.eagerCache = true
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
 
+#### Option `experimental`
+
+`experimental` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{experimental}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Experimental features that are planned to be the new default in the
+        next major release of the Markdown package will be enabled.
+
+        At the moment, this just means that the version `experimental` of the
+        theme `witiko/markdown/defaults` will be loaded but the effects may
+        extend to other areas in the future as well.
+
+:    false
+
+     :  Experimental features will be disabled.
+
+% \end{markdown}
+% \iffalse
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { experimental }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli,lua-loader>
+% \fi
+%  \begin{macrocode}
+defaultOptions.experimental = false
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli,lua-loader>
+%<*manual-options>
+
 #### Option `singletonCache`
 
 `singletonCache` (default value: `true`)
