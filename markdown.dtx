@@ -12091,7 +12091,7 @@ you would include the following code in your plain \TeX{} document:
 %  \begin{macrocode}
 \prg_new_conditional:Nnn
   \@@_if_option:n
-  { p, TF, T, F }
+  { TF, T, F }
   {
     \@@_get_option_type:nN
       { #1 }
@@ -22728,26 +22728,26 @@ following image:
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\bool_if:nT
+\str_if_eq:VVT
+  \c_@@_top_layer_tl
+  \c_@@_option_layer_latex_tl
   {
-    \str_if_eq_p:VV
-      \c_@@_top_layer_tl
-      \c_@@_option_layer_latex_tl &&
-    ! \@@_if_option_p:n
+    \ExplSyntaxOff
+    \@@_if_option:nF
       { noDefaults }
-  }
-  {
-    \AtEndOfPackage
       {
-        \@@_if_option:nTF
-          { experimental }
+        \AtEndOfPackage
           {
-            \@@_setup:n
-              { theme = witiko/markdown/defaults@experimental }
-          }
-          {
-            \@@_setup:n
-              { theme = witiko/markdown/defaults }
+            \@@_if_option:nTF
+              { experimental }
+              {
+                \@@_setup:n
+                  { theme = witiko/markdown/defaults@experimental }
+              }
+              {
+                \@@_setup:n
+                  { theme = witiko/markdown/defaults }
+              }
           }
       }
     \ExplSyntaxOn
@@ -35439,25 +35439,24 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\bool_if:nT
-  {
-    \str_if_eq_p:VV
-      \c_@@_top_layer_tl
-      \c_@@_option_layer_plain_tex_tl &&
-    ! \@@_if_option_p:n
-      { noDefaults }
-  }
+\str_if_eq:VVT
+  \c_@@_top_layer_tl
+  \c_@@_option_layer_plain_tex_tl
   {
     \ExplSyntaxOff
-    \@@_if_option:nTF
-      { experimental }
+    \@@_if_option:nF
+      { noDefaults }
       {
-        \@@_setup:n
-          { theme = witiko/markdown/defaults@experimental }
-      }
-      {
-        \@@_setup:n
-          { theme = witiko/markdown/defaults }
+        \@@_if_option:nTF
+          { experimental }
+          {
+            \@@_setup:n
+              { theme = witiko/markdown/defaults@experimental }
+          }
+          {
+            \@@_setup:n
+              { theme = witiko/markdown/defaults }
+          }
       }
     \ExplSyntaxOn
   }
@@ -36909,16 +36908,51 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
+\bool_new:N
+  \g_@@_tight_or_fancy_lists_bool
+\bool_gset_false:N
+  \g_@@_tight_or_fancy_lists_bool
+\@@_if_option:nTF
+  { tightLists }
+  {
+    \bool_gset_true:N
+      \g_@@_tight_or_fancy_lists_bool
+  }
+  {
+    \@@_if_option:nT
+      { fancyLists }
+      {
+        \bool_gset_true:N
+          \g_@@_tight_or_fancy_lists_bool
+      }
+  }
+\bool_new:N
+  \g_@@_beamer_paralist_or_enumitem_bool
+\bool_gset_true:N
+  \g_@@_beamer_paralist_or_enumitem_bool
+\@ifclassloaded
+  { beamer }
+  { }
+  {
+    \@ifpackageloaded
+      { paralist }
+      { }
+      {
+        \@ifpackageloaded
+        { enumitem }
+        { }
+        {
+          \bool_gset_false:N
+            \g_@@_beamer_paralist_or_enumitem_bool
+        }
+      }
+  }
 \bool_if:nT
   {
-    \@@_if_option_p:n
-      { tightLists } ||
-    \@@_if_option_p:n
-      { fancyLists }
+    \g_@@_tight_or_fancy_lists_bool &&
+    ! \g_@@_beamer_paralist_or_enumitem_bool
   }
-  { \@ifclassloaded { beamer } { } {
-    \@ifpackageloaded { paralist } { } {
-    \@ifpackageloaded { enumitem } { } {
+  {
     \bool_if:nT
       {
         \str_if_eq_p:en
@@ -36955,7 +36989,7 @@ end
         \RequirePackage
           { paralist }
       }
-  } } } }
+  }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par
@@ -38856,25 +38890,24 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\bool_if:nT
-  {
-    \str_if_eq_p:VV
-      \c_@@_top_layer_tl
-      \c_@@_option_layer_context_tl &&
-    ! \@@_if_option_p:n
-      { noDefaults }
-  }
+\str_if_eq:VVT
+  \c_@@_top_layer_tl
+  \c_@@_option_layer_context_tl
   {
     \ExplSyntaxOff
-    \@@_if_option:nTF
-      { experimental }
+    \@@_if_option:nF
+      { noDefaults }
       {
-        \@@_setup:n
-          { theme = witiko/markdown/defaults@experimental }
-      }
-      {
-        \@@_setup:n
-          { theme = witiko/markdown/defaults }
+        \@@_if_option:nTF
+          { experimental }
+          {
+            \@@_setup:n
+              { theme = witiko/markdown/defaults@experimental }
+          }
+          {
+            \@@_setup:n
+              { theme = witiko/markdown/defaults }
+          }
       }
     \ExplSyntaxOn
   }
