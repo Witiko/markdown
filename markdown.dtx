@@ -34767,6 +34767,7 @@ end
 %  \begin{macrocode}
 \ExplSyntaxOn
 \prop_new:N \g_@@_plain_tex_loaded_themes_linenos_prop
+\prop_new:N \g_@@_plain_tex_loaded_themes_versions_prop
 \cs_new:Nn
   \@@_plain_tex_load_theme:nn
   {
@@ -34775,11 +34776,29 @@ end
       { #1 }
       \l_tmpa_tl
       {
-        \msg_warning:nnnV
-          { markdown }
-          { repeatedly-loaded-plain-tex-theme }
+        \prop_get:NnN
+          \g_@@_plain_tex_loaded_themes_versions_prop
           { #1 }
-          \l_tmpa_tl
+          \l_tmpb_tl
+        \str_if_eq:eVTF
+          { \markdownThemeVersion }
+          \l_tmpb_tl
+          {
+            \msg_warning:nnnV
+              { markdown }
+              { repeatedly-loaded-plain-tex-theme }
+              { #1 }
+              \l_tmpa_tl
+          }
+          {
+            \msg_error:nnneVV
+              { markdown }
+              { different-versions-of-plain-tex-theme }
+              { #1 }
+              { \markdownThemeVersion }
+              \l_tmpb_tl
+              \l_tmpa_tl
+          }
       }
       {
         \msg_info:nnn
@@ -34805,6 +34824,13 @@ end
     Plain~TeX~Markdown~theme~#1~was~previously~
     loaded~on~line~#2,~not~loading~it~again
   }
+\msg_new:nnn
+  { markdown }
+  { different-versions-of-plain-tex-theme }
+  {
+    Tried~to~load~version~#2~of~plain~TeX~Markdown~theme~#1~
+    but~version~#3~has~already~been~loaded~on~line~#4
+  }
 \cs_generate_variant:Nn
   \prop_gput:Nnn
   { Nnx }
@@ -34813,7 +34839,14 @@ end
   \@@_plain_tex_load_theme:nn
 \cs_generate_variant:Nn
   \@@_load_theme:nn
-  { nV }
+  { VV }
+\cs_generate_variant:Nn
+  \msg_error:nnnnnn
+  { nnneVV }
+\prg_generate_conditional_variant:Nnn
+  \str_if_eq:nn
+  { eV }
+  { TF }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -36387,6 +36420,8 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
+\prop_new:N \g_@@_latex_loaded_themes_linenos_prop
+\prop_new:N \g_@@_latex_loaded_themes_versions_prop
 \cs_gset:Nn
   \@@_load_theme:nn
   {
@@ -36437,12 +36472,43 @@ end
         \file_if_exist:nTF
           { markdown theme #2.sty }
           {
-            \msg_info:nnn
-              { markdown }
-              { loading-latex-theme }
+            \prop_get:NnNTF
+              \g_@@_latex_loaded_themes_linenos_prop
               { #1 }
-            \RequirePackage
-              { markdown theme #2 }
+              \l_tmpa_tl
+              {
+                \prop_get:NnN
+                  \g_@@_latex_loaded_themes_versions_prop
+                  { #1 }
+                  \l_tmpb_tl
+                \str_if_eq:eVTF
+                  { \markdownThemeVersion }
+                  \l_tmpb_tl
+                  {
+                    \msg_warning:nnnV
+                      { markdown }
+                      { repeatedly-loaded-latex-theme }
+                      { #1 }
+                      \l_tmpa_tl
+                  }
+                  {
+                    \msg_error:nnneVV
+                      { markdown }
+                      { different-versions-of-latex-theme }
+                      { #1 }
+                      { \markdownThemeVersion }
+                      \l_tmpb_tl
+                      \l_tmpa_tl
+                  }
+              }
+              {
+                \msg_info:nnn
+                  { markdown }
+                  { loading-latex-theme }
+                  { #1 }
+                \RequirePackage
+                  { markdown theme #2 }
+              }
           }
           {
             \@@_plain_tex_load_theme:nn
@@ -36481,6 +36547,20 @@ end
   { markdown }
   { loading-latex-theme }
   { Loading~LaTeX~Markdown~theme~#1 }
+\msg_new:nnn
+  { markdown }
+  { repeatedly-loaded-latex-theme }
+  {
+    LaTeX~Markdown~theme~#1~was~previously~
+    loaded~on~line~#2,~not~loading~it~again
+  }
+\msg_new:nnn
+  { markdown }
+  { different-versions-of-latex-theme }
+  {
+    Tried~to~load~version~#2~of~LaTeX~Markdown~theme~#1~
+    but~version~#3~has~already~been~loaded~on~line~#4
+  }
 \cs_generate_variant:Nn
   \msg_new:nnnn
   { nnVV }
@@ -38264,6 +38344,8 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
+\prop_new:N \g_@@_context_loaded_themes_linenos_prop
+\prop_new:N \g_@@_context_loaded_themes_versions_prop
 \cs_gset:Nn
   \@@_load_theme:nn
   {
@@ -38280,13 +38362,44 @@ end
     \file_if_exist:nTF
       { t - markdown theme #2.tex }
       {
-        \msg_info:nnn
-          { markdown }
-          { loading-context-theme }
+        \prop_get:NnNTF
+          \g_@@_context_loaded_themes_linenos_prop
           { #1 }
-        \usemodule
-          [ t ]
-          [ markdown theme #2 ]
+          \l_tmpa_tl
+          {
+            \prop_get:NnN
+              \g_@@_context_loaded_themes_versions_prop
+              { #1 }
+              \l_tmpb_tl
+            \str_if_eq:eVTF
+              { \markdownThemeVersion }
+              \l_tmpb_tl
+              {
+                \msg_warning:nnnV
+                  { markdown }
+                  { repeatedly-loaded-context-theme }
+                  { #1 }
+                  \l_tmpa_tl
+              }
+              {
+                \msg_error:nnneVV
+                  { markdown }
+                  { different-versions-of-context-theme }
+                  { #1 }
+                  { \markdownThemeVersion }
+                  \l_tmpb_tl
+                  \l_tmpa_tl
+              }
+          }
+          {
+            \msg_info:nnn
+              { markdown }
+              { loading-context-theme }
+              { #1 }
+            \usemodule
+              [ t ]
+              [ markdown theme #2 ]
+          }
       }
       {
         \@@_plain_tex_load_theme:nn
@@ -38298,6 +38411,20 @@ end
   { markdown }
   { loading-context-theme }
   { Loading~ConTeXt~Markdown~theme~#1 }
+\msg_new:nnn
+  { markdown }
+  { repeatedly-loaded-context-theme }
+  {
+    ConTeXt~Markdown~theme~#1~was~previously~
+    loaded~on~line~#2,~not~loading~it~again
+  }
+\msg_new:nnn
+  { markdown }
+  { different-versions-of-context-theme }
+  {
+    Tried~to~load~version~#2~of~ConTeXt~Markdown~theme~#1~
+    but~version~#3~has~already~been~loaded~on~line~#4
+  }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \iffalse
