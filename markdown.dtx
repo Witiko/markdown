@@ -12957,15 +12957,27 @@ a specific look and other high-level goals without low-level programming.
       { #1 }
       { @ }
       {
-        \regex_replace_once:nnF
+        \regex_extract_once:nnN
           { (.*) @ (.*) }
+          { #1 }
+          \l_tmpa_seq
+        \seq_gpop_right:NN
+          \l_tmpa_seq
+          \l_tmpa_tl
+        \seq_get_right:NN
+          \l_tmpa_seq
+          \l_tmpa_tl
+        \tl_gset:NV
+          \g_@@_current_theme_tl
+          \l_tmpa_tl
+        \seq_get_right:NN
+          \l_tmpa_seq
+          \l_tmpa_tl
+        \cs_gset:Npe
+          \markdownThemeVersion
           {
-            \c { tl_gset:Nn }
-              \c { g_@@_current_theme_tl }
-              \cB { \1 \cE }
-            \c { cs_gset:Npn }
-              \c { markdownThemeVersion }
-              \cB { \2 \cE }
+            \tl_use:N
+              \l_tmpa_tl
           }
       }
       {
