@@ -2,6 +2,11 @@
 
 ## 3.8.0
 
+Development:
+
+- Add support for versioned themes. (#514, reviewed by @TeXhackse, #521)
+- Add new Lua option `experimental`. (#512, #514, #521)
+
 Documentation:
 
 - Document LaTeX hooks. (#464, #507)
@@ -9,7 +14,7 @@ Documentation:
 Defaults:
 
 - Improve the compatibility of the default LaTeX packages with PDF tagging:
-  (#466, #512, reported and consulted by @u-fischer)
+  (#466, #512, #514, #521, reported and consulted by @u-fischer)
 
   - In TeX engines other than LuaTeX, use the package soul instead of the
     package soulutf8 in TeX Live ≥ 2023.
@@ -18,8 +23,14 @@ Defaults:
     prototypes instead of the package soul.
 
   - Use the package enumitem for tight and fancy lists instead of the package
-    paralist. If you wish to keep using the package paralist, load it before
-    the Markdown package to force the old behavior.
+    paralist.
+
+    This is a breaking change that is marked as experimental. To enable it,
+    either use the package option `experimental` or specify any test phase in
+    the document metadata:
+
+    1. `\usepackage[experimental]{markdown}`
+    2. `\DocumentMetadata{testphase=phase-III}`
 
 Continuous Integration:
 
