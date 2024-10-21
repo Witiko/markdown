@@ -4,8 +4,10 @@
 
 Development:
 
-- Add support for versioned themes. (#514, reviewed by @TeXhackse, #521)
-- Add new Lua option `experimental`. (#512, #514, #521)
+- Add support for versioned themes and add new Lua option `experimental`.
+  (#466, #512, #514, [matrix.org][matrix-514] reviewed by @TeXhackse, #521)
+
+ [matrix-514]: https://matrix.to/#/!UeAwznpYwwsinVTetR:matrix.org/$TTc-m7B5NSdsLBNNyIuFWQ-u2nOZ03lJ5js88hnyFiU?via=matrix.org&via=im.f3l.de
 
 Documentation:
 
