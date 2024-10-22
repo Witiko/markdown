@@ -2733,7 +2733,8 @@ defaultOptions.eagerCache = true
         next major release of the Markdown package will be enabled.
 
         At the moment, this just means that the version `experimental` of the
-        theme `witiko/markdown/defaults` will be loaded but the effects may
+        theme `witiko/markdown/defaults` will be loaded and warnings for
+        hard-deprecated features will become errors. However, the effects may
         extend to other areas in the future as well.
 
 :    false
@@ -20716,24 +20717,47 @@ removed in Markdown 4.0.0.
     \cs_if_exist:NTF
       \markdownRendererJekyllDataString
       {
-        \markdownWarning
+        \@@_if_option:nTF
+          { experimental }
           {
-            The~jekyllDataString~renderer~has~been~deprecated,~
-            to~be~removed~in~Markdown~4.0.0
+            \markdownError
+              {
+                The~jekyllDataString~renderer~has~been~deprecated,~
+                to~be~removed~in~Markdown~4.0.0
+              }
           }
-        \markdownRendererJekyllDataString
+          {
+            \markdownWarning
+              {
+                The~jekyllDataString~renderer~has~been~deprecated,~
+                to~be~removed~in~Markdown~4.0.0
+              }
+            \markdownRendererJekyllDataString
+          }
       }
       {
         \cs_if_exist:NTF
           \markdownRendererJekyllDataStringPrototype
           {
-            \markdownWarning
+            \@@_if_option:nTF
+              { experimental }
               {
-                The~jekyllDataString~renderer~prototype~
-                has~been~deprecated,~
-                to~be~removed~in~Markdown~4.0.0
+                \markdownError
+                  {
+                    The~jekyllDataString~renderer~prototype~
+                    has~been~deprecated,~
+                    to~be~removed~in~Markdown~4.0.0
+                  }
               }
-            \markdownRendererJekyllDataStringPrototype
+              {
+                \markdownWarning
+                  {
+                    The~jekyllDataString~renderer~prototype~
+                    has~been~deprecated,~
+                    to~be~removed~in~Markdown~4.0.0
+                  }
+                \markdownRendererJekyllDataStringPrototype
+              }
           }
           {
             \markdownRendererJekyllDataTypographicStringPrototype
@@ -36426,10 +36450,20 @@ end
   { markdown* }
   [ 1 ]
   {
-    \msg_warning:nnn
-      { markdown }
-      { latex-markdown-star-deprecated }
-      { #1 }
+    \@@_if_option:nTF
+      { experimental }
+      {
+        \msg_error:nnn
+          { markdown }
+          { latex-markdown-star-deprecated }
+          { #1 }
+      }
+      {
+        \msg_warning:nnn
+          { markdown }
+          { latex-markdown-star-deprecated }
+          { #1 }
+      }
     \@@_setup:n
       { #1 }
     \markdownReadAndConvert@
