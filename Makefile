@@ -20,8 +20,8 @@ EXAMPLES_SOURCES=examples/context-mkiv.tex \
   examples/optex.tex
 EXAMPLES=examples/context-mkiv.pdf \
   examples/latex-pdftex.pdf examples/latex-xetex.pdf examples/latex-luatex.pdf \
+  examples/latex-tex4ht.html examples/latex-tex4ht.css \
   examples/optex.pdf
-# examples/latex-tex4ht.html examples/latex-tex4ht.css
 TESTS=tests/test.sh tests/test.py tests/requirements.txt tests/support/*.tex \
   tests/templates/*/*/head.tex.m4 tests/templates/*/*/body.tex.m4 \
   tests/templates/*/*/foot.tex.m4 tests/templates/*/COMMANDS.m4 tests/testfiles/*/*/*.test
