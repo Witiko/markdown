@@ -12785,7 +12785,7 @@ A PDF document named `document.pdf` should be produced and contain the text
 \prg_generate_conditional_variant:Nnn
   \str_if_eq:nn
   { en }
-  { F }
+  { p, F }
 \msg_new:nnn
   { markdown }
   { malformed-name-for-clist-option }
@@ -12961,16 +12961,16 @@ a specific look and other high-level goals without low-level programming.
           { (.*) @ (.*) }
           { #1 }
           \l_tmpa_seq
-        \seq_gpop_right:NN
+        \seq_gpop_left:NN
           \l_tmpa_seq
           \l_tmpa_tl
-        \seq_get_right:NN
+        \seq_gpop_left:NN
           \l_tmpa_seq
           \l_tmpa_tl
         \tl_gset:NV
           \g_@@_current_theme_tl
           \l_tmpa_tl
-        \seq_get_right:NN
+        \seq_gpop_left:NN
           \l_tmpa_seq
           \l_tmpa_tl
         \cs_gset:Npe
@@ -13022,8 +13022,9 @@ a specific look and other high-level goals without low-level programming.
     \seq_gput_right:NV
       \g_@@_theme_versions_seq
       \markdownThemeVersion
-    \@@_load_theme:VV
+    \@@_load_theme:VeV
       \l_tmpa_tl
+      { \markdownThemeVersion }
       \l_tmpa_str
 %    \end{macrocode}
 % \begin{markdown}
@@ -22768,10 +22769,10 @@ following image:
   \c_@@_option_layer_latex_tl
   {
     \ExplSyntaxOff
-    \@@_if_option:nF
-      { noDefaults }
+    \AtEndOfPackage
       {
-        \AtEndOfPackage
+        \@@_if_option:nF
+          { noDefaults }
           {
             \@@_if_option:nTF
               { experimental }
@@ -34839,7 +34840,7 @@ end
 \prop_new:N \g_@@_plain_tex_loaded_themes_linenos_prop
 \prop_new:N \g_@@_plain_tex_loaded_themes_versions_prop
 \cs_new:Nn
-  \@@_plain_tex_load_theme:nn
+  \@@_plain_tex_load_theme:nnn
   {
     \prop_get:NnNTF
       \g_@@_plain_tex_loaded_themes_linenos_prop
@@ -34850,38 +34851,43 @@ end
           \g_@@_plain_tex_loaded_themes_versions_prop
           { #1 }
           \l_tmpb_tl
-        \str_if_eq:eVTF
-          { \markdownThemeVersion }
+        \str_if_eq:nVTF
+          { #2 }
           \l_tmpb_tl
           {
-            \msg_warning:nnnV
+            \msg_warning:nnnVn
               { markdown }
               { repeatedly-loaded-plain-tex-theme }
               { #1 }
               \l_tmpa_tl
+              { #2 }
           }
           {
-            \msg_error:nnneVV
+            \msg_error:nnnnVV
               { markdown }
               { different-versions-of-plain-tex-theme }
               { #1 }
-              { \markdownThemeVersion }
+              { #2 }
               \l_tmpb_tl
               \l_tmpa_tl
           }
       }
       {
-        \msg_info:nnne
+        \msg_info:nnnn
           { markdown }
           { loading-plain-tex-theme }
           { #1 }
-          { \markdownThemeVersion }
+          { #2 }
         \prop_gput:Nnx
           \g_@@_plain_tex_loaded_themes_linenos_prop
           { #1 }
           { \tex_the:D \tex_inputlineno:D }
+        \prop_gput:Nnn
+          \g_@@_plain_tex_loaded_themes_versions_prop
+          { #1 }
+          { #2 }
         \file_input:n
-          { markdown theme #2 }
+          { markdown theme #3 }
       }
   }
 \msg_new:nnn
@@ -34892,7 +34898,7 @@ end
   { markdown }
   { repeatedly-loaded-plain-tex-theme }
   {
-    Plain~TeX~Markdown~theme~#1~was~previously~
+    Version~#3~of~plain~TeX~Markdown~theme~#1~was~previously~
     loaded~on~line~#2,~not~loading~it~again
   }
 \msg_new:nnn
@@ -34906,18 +34912,17 @@ end
   \prop_gput:Nnn
   { Nnx }
 \cs_gset_eq:NN
-  \@@_load_theme:nn
-  \@@_plain_tex_load_theme:nn
+  \@@_load_theme:nnn
+  \@@_plain_tex_load_theme:nnn
 \cs_generate_variant:Nn
-  \@@_load_theme:nn
-  { VV }
+  \@@_load_theme:nnn
+  { VeV }
 \cs_generate_variant:Nn
   \msg_error:nnnnnn
-  { nnneVV }
-\prg_generate_conditional_variant:Nnn
-  \str_if_eq:nn
-  { eV }
-  { TF }
+  { nnnnVV }
+\cs_generate_variant:Nn
+  \msg_warning:nnnnn
+  { nnnVn }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -34972,16 +34977,17 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-    \@@_plain_tex_load_theme:VV
+    \@@_plain_tex_load_theme:VeV
       \l_tmpb_tl
+      { \markdownThemeVersion }
       \l_tmpa_str
   }
 \cs_generate_variant:Nn
   \tl_set:Nn
   { Ne }
 \cs_generate_variant:Nn
-  \@@_plain_tex_load_theme:nn
-  { VV }
+  \@@_plain_tex_load_theme:nnn
+  { VeV }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \iffalse
@@ -36512,7 +36518,7 @@ end
 \prop_new:N \g_@@_latex_loaded_themes_linenos_prop
 \prop_new:N \g_@@_latex_loaded_themes_versions_prop
 \cs_gset:Nn
-  \@@_load_theme:nn
+  \@@_load_theme:nnn
   {
 %    \end{macrocode}
 % \par
@@ -36536,7 +36542,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
         \file_if_exist:nTF
-          { markdown theme #2.sty }
+          { markdown theme #3.sty }
           {
             \msg_error:nnn
               { markdown }
@@ -36544,9 +36550,10 @@ end
               { #1 }
           }
           {
-            \@@_plain_tex_load_theme:nn
+            \@@_plain_tex_load_theme:nnn
               { #1 }
               { #2 }
+              { #3 }
           }
       \else
 %    \end{macrocode}
@@ -36559,7 +36566,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
         \file_if_exist:nTF
-          { markdown theme #2.sty }
+          { markdown theme #3.sty }
           {
             \prop_get:NnNTF
               \g_@@_latex_loaded_themes_linenos_prop
@@ -36570,40 +36577,50 @@ end
                   \g_@@_latex_loaded_themes_versions_prop
                   { #1 }
                   \l_tmpb_tl
-                \str_if_eq:eVTF
-                  { \markdownThemeVersion }
+                \str_if_eq:nVTF
+                  { #2 }
                   \l_tmpb_tl
                   {
-                    \msg_warning:nnnV
+                    \msg_warning:nnnVn
                       { markdown }
                       { repeatedly-loaded-latex-theme }
                       { #1 }
                       \l_tmpa_tl
+                      { #2 }
                   }
                   {
-                    \msg_error:nnneVV
+                    \msg_error:nnnnVV
                       { markdown }
                       { different-versions-of-latex-theme }
                       { #1 }
-                      { \markdownThemeVersion }
+                      { #2 }
                       \l_tmpb_tl
                       \l_tmpa_tl
                   }
               }
               {
-                \msg_info:nnne
+                \msg_info:nnnn
                   { markdown }
                   { loading-latex-theme }
                   { #1 }
-                  { \markdownThemeVersion }
+                  { #2 }
+                \prop_gput:Nnx
+                  \g_@@_latex_loaded_themes_linenos_prop
+                  { #1 }
+                  { \tex_the:D \tex_inputlineno:D }
+                \prop_gput:Nnn
+                  \g_@@_latex_loaded_themes_versions_prop
+                  { #1 }
+                  { #2 }
                 \RequirePackage
-                  { markdown theme #2 }
+                  { markdown theme #3 }
               }
           }
           {
-            \@@_plain_tex_load_theme:nn
+            \@@_plain_tex_load_theme:nnn
               { #1 }
               { #2 }
+              { #3 }
           }
       \fi
     \else
@@ -36615,14 +36632,15 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-      \msg_info:nnn
+      \msg_info:nnnn
         { markdown }
         { theme-loading-postponed }
         { #1 }
+        { #2 }
       \AtEndOfPackage
         {
           \@@_set_theme:n
-            { #1 }
+            { #1 @ #2 }
         }
     \fi
   }
@@ -36630,7 +36648,7 @@ end
   { markdown }
   { theme-loading-postponed }
   {
-    Postponing~loading~Markdown~theme~#1~until~
+    Postponing~loading~version~#2~of~Markdown~theme~#1~until~
     Markdown~package~has~finished~loading
   }
 \msg_new:nnn
@@ -36641,7 +36659,7 @@ end
   { markdown }
   { repeatedly-loaded-latex-theme }
   {
-    LaTeX~Markdown~theme~#1~was~previously~
+    Version~#3~of~LaTeX~Markdown~theme~#1~was~previously~
     loaded~on~line~#2,~not~loading~it~again
   }
 \msg_new:nnn
@@ -37000,33 +37018,56 @@ end
     ! \g_@@_beamer_paralist_or_enumitem_bool
   }
   {
-    \bool_if:nT
+    \bool_if:nTF
       {
-        \str_if_eq_p:en
-          { \markdownThemeVersion }
-          { experimental } ||
-        \prop_if_exist_p:N
-          \g__pdfmanagement_documentproperties_prop &&
-        (
-          \prop_if_in_p:Nn
-            \g__pdfmanagement_documentproperties_prop
-            { document / testphase / phase-I } ||
-          \prop_if_in_p:Nn
-            \g__pdfmanagement_documentproperties_prop
-            { document / testphase / phase-II } ||
-          \prop_if_in_p:Nn
-            \g__pdfmanagement_documentproperties_prop
-            { document / testphase / phase-III } ||
-          \prop_if_in_p:Nn
-            \g__pdfmanagement_documentproperties_prop
-            { document / testphase / phase-IV } ||
-          \prop_if_in_p:Nn
-            \g__pdfmanagement_documentproperties_prop
-            { document / testphase / phase-V } ||
-          \prop_if_in_p:Nn
-            \g__pdfmanagement_documentproperties_prop
-            { document / testphase / phase-VI }
-        )
+        \bool_lazy_or_p:nn
+          {
+            \str_if_eq_p:en
+              { \markdownThemeVersion }
+              { experimental }
+          }
+          {
+            \bool_lazy_and_p:nn
+              {
+                \prop_if_exist_p:N
+                  \g__pdfmanagement_documentproperties_prop
+              }
+              {
+                \bool_lazy_any_p:n
+                  {
+                    {
+                      \prop_if_in_p:Nn
+                        \g__pdfmanagement_documentproperties_prop
+                        { document / testphase / phase-I }
+                    }
+                    {
+                      \prop_if_in_p:Nn
+                        \g__pdfmanagement_documentproperties_prop
+                        { document / testphase / phase-II }
+                    }
+                    {
+                      \prop_if_in_p:Nn
+                        \g__pdfmanagement_documentproperties_prop
+                        { document / testphase / phase-III }
+                    }
+                    {
+                      \prop_if_in_p:Nn
+                        \g__pdfmanagement_documentproperties_prop
+                        { document / testphase / phase-IV }
+                    }
+                    {
+                      \prop_if_in_p:Nn
+                        \g__pdfmanagement_documentproperties_prop
+                        { document / testphase / phase-V }
+                    }
+                    {
+                      \prop_if_in_p:Nn
+                        \g__pdfmanagement_documentproperties_prop
+                        { document / testphase / phase-VI }
+                    }
+                  }
+              }
+          }
       }
       {
         \RequirePackage
@@ -38520,7 +38561,7 @@ end
 \prop_new:N \g_@@_context_loaded_themes_linenos_prop
 \prop_new:N \g_@@_context_loaded_themes_versions_prop
 \cs_gset:Nn
-  \@@_load_theme:nn
+  \@@_load_theme:nnn
   {
 %    \end{macrocode}
 % \par
@@ -38533,7 +38574,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
     \file_if_exist:nTF
-      { t - markdown theme #2.tex }
+      { t - markdown theme #3.tex }
       {
         \prop_get:NnNTF
           \g_@@_context_loaded_themes_linenos_prop
@@ -38544,41 +38585,51 @@ end
               \g_@@_context_loaded_themes_versions_prop
               { #1 }
               \l_tmpb_tl
-            \str_if_eq:eVTF
-              { \markdownThemeVersion }
+            \str_if_eq:nVTF
+              { #2 }
               \l_tmpb_tl
               {
-                \msg_warning:nnnV
+                \msg_warning:nnnVn
                   { markdown }
                   { repeatedly-loaded-context-theme }
                   { #1 }
                   \l_tmpa_tl
+                  { #2 }
               }
               {
-                \msg_error:nnneVV
+                \msg_error:nnnnVV
                   { markdown }
                   { different-versions-of-context-theme }
                   { #1 }
-                  { \markdownThemeVersion }
+                  { #2 }
                   \l_tmpb_tl
                   \l_tmpa_tl
               }
           }
           {
-            \msg_info:nnne
+            \msg_info:nnn
               { markdown }
               { loading-context-theme }
               { #1 }
-              { \markdownThemeVersion }
+              { #2 }
+            \prop_gput:Nnx
+              \g_@@_context_loaded_themes_linenos_prop
+              { #1 }
+              { \tex_the:D \tex_inputlineno:D }
+            \prop_gput:Nnn
+              \g_@@_context_loaded_themes_versions_prop
+              { #1 }
+              { #2 }
             \usemodule
               [ t ]
-              [ markdown theme #2 ]
+              [ markdown theme #3 ]
           }
       }
       {
-        \@@_plain_tex_load_theme:nn
+        \@@_plain_tex_load_theme:nnn
           { #1 }
           { #2 }
+          { #3 }
       }
   }
 \msg_new:nnn
@@ -38589,7 +38640,7 @@ end
   { markdown }
   { repeatedly-loaded-context-theme }
   {
-    ConTeXt~Markdown~theme~#1~was~previously~
+    Version~#3~of~ConTeXt~Markdown~theme~#1~was~previously~
     loaded~on~line~#2,~not~loading~it~again
   }
 \msg_new:nnn
