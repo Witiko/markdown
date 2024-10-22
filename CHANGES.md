@@ -7,6 +7,14 @@ Development:
 - Add support for versioned themes and add new Lua option `experimental`.
   (#466, #512, #514, [matrix.org][matrix-514] reviewed by @TeXhackse, #521)
 
+  The option `experimental` enables experimental features that are planned to
+  be the new default in the next major release of the Markdown package.
+
+  At the moment, this just means that the version `experimental` of the theme
+  `witiko/markdown/defaults` will be loaded and warnings for hard-deprecated
+  features will become errors. However, the effects may extend to other areas
+  in the future as well.
+
  [matrix-514]: https://matrix.to/#/!UeAwznpYwwsinVTetR:matrix.org/$TTc-m7B5NSdsLBNNyIuFWQ-u2nOZ03lJ5js88hnyFiU?via=matrix.org&via=im.f3l.de
 
 Documentation:
