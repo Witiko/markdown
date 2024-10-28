@@ -11827,11 +11827,13 @@ pdftex --shell-escape document.tex
 % \noindent It is expected that the special plain \TeX{} characters have the
 % expected category codes, when `\input`ting the file.
 %
-%### Typesetting Markdown {#tex-typesetting}
+%### Typesetting Markdown and YAML {#tex-typesetting}
 %
 % The interface exposes the \mdef{markdownBegin}, \mdef{markdownEnd},
-% \mdef{markinline}, \mdef{markdownInput}, \mdef{yamlInput}, and
-% \mdef{markdownEscape} macros.
+% \mdef{yamlBegin}, \mref{yamlEnd}, \mdef{markinline}, \mdef{markdownInput},
+% \mdef{yamlInput}, and \mdef{markdownEscape} macros.
+%
+%#### Typesetting Markdown and YAML directly
 %
 % The \mref{markdownBegin} macro marks the beginning of a markdown document
 % fragment and the \mref{markdownEnd} macro marks its end.
@@ -11889,6 +11891,44 @@ pdftex --shell-escape document.tex
 % \bye
 % ```````
 %
+% The \mref{yamlBegin} macro marks the beginning of an \acro{YAML} document
+% fragment and the \mref{yamlEnd} macro marks its end.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\let\yamlBegin\relax
+\let\yamlEnd\relax
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% The \mref{yamlBegin} and \mref{yamlEnd} macros are subject to the same
+% limitations as the \mref{markdownBegin} and \mref{markdownEnd} macros.
+%
+% The following example plain \TeX{} code showcases the usage of the
+% \mref{markdownBegin} and \mref{markdownEnd} macros:
+%
+% ``` tex
+% \input markdown
+% \yamlBegin
+% title: _Hello **world**
+% author: John Doe
+% \yamlEnd
+% \bye
+% ```````
+%
+% The above code has the same effect as the below code:
+%
+% ``` tex
+% \input markdown
+% \markdownSetup{jekyllData, expectJekyllData, ensureJekyllData}
+% \markdownBegin
+% title: _Hello **world**
+% author: John Doe
+% \markdownEnd
+% \bye
+% ```````
+%
 % You can use the \mref{markinline} macro to input inline markdown content.
 %
 % \end{markdown}
@@ -11921,6 +11961,8 @@ pdftex --shell-escape document.tex
 % The \mref{markinline} macro is subject to the same limitations as the
 % \mref{markdownBegin} and \mref{markdownEnd} macros.
 %
+%#### Typesetting Markdown and YAML from external documents
+%
 % You can use the \mref{markdownInput} macro to include markdown documents,
 % similarly to how you might use the \mref{input} \TeX{} primitive to include
 % \TeX{} documents. The \mref{markdownInput} macro accepts a single parameter
@@ -11934,7 +11976,7 @@ pdftex --shell-escape document.tex
 % \par
 % \begin{markdown}
 %
-% This macro is not subject to the limitations of the
+% The macro \mref{markdownInput} is not subject to the limitations of the
 % \mref{markdownBegin} and \mref{markdownEnd} macros.
 %
 % The following example plain \TeX{} code showcases the usage of the
@@ -11946,7 +11988,7 @@ pdftex --shell-escape document.tex
 % \bye
 % ```````
 %
-% You can use the \mref{yamlInput} macro to include \acro{YAML} documents,
+% You can use the \mref{yamlInput} macro to include \acro{YAML} documents.
 % similarly to how you might use the \mref{input} \TeX{} primitive to include
 % \TeX{} documents. The \mref{yamlInput} macro accepts a single parameter with
 % the filename of a \acro{YAML} document and expands to the result of the
@@ -11964,7 +12006,7 @@ pdftex --shell-escape document.tex
 % \par
 % \begin{markdown}
 %
-% This macro is also not subject to the limitations of the
+% The macro \mref{yamlInput} is also not subject to the limitations of the
 % \mref{markdownBegin} and \mref{markdownEnd} macros.
 %
 % The following example plain \TeX{} code showcases the usage of the
@@ -11984,6 +12026,8 @@ pdftex --shell-escape document.tex
 % \markdownInput{hello.yml}
 % \bye
 % ```````
+%
+%#### Typesetting TeX from inside Markdown and YAML documents
 %
 % The \mref{markdownEscape} macro accepts a single parameter with the filename
 % of a \TeX{} document and executes the \TeX{} document in the middle of a
@@ -22049,12 +22093,12 @@ following text:
 % \begin{markdown}
 %
 % The \mdef{markdownReadAndConvert} macro implements the \mref{markdownBegin}
-% macro. The first argument specifies the token sequence that will terminate
-% the markdown input (\mref{markdownEnd} in the instance of the \mref{markdownBegin}
-% macro) when the plain \TeX{} special characters have had their category
-% changed to *other*. The second argument specifies the token sequence
-% that will actually be inserted into the document, when the ending token
-% sequence has been found.
+% and \mref{yamlBegin} macros. The first argument specifies the token sequence
+% that will terminate the markdown input when the plain \TeX{} special
+% characters have had their category changed to *other*: \mref{markdownEnd} for
+% the \mref{markdownBegin} macro and \mref{yamlEnd} for the \mref{yamlBegin}
+% macro. The second argument specifies the token sequence that will actually be
+% inserted into the document, when the ending token sequence has been found.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -22073,6 +22117,11 @@ following text:
   |gdef|markdownBegin{%
     |markdownReadAndConvert{\markdownEnd}%
                            {|markdownEnd}}%
+  |gdef|yamlBegin{%
+    |begingroup
+    |yamlSetup{jekyllData, expectJekyllData, ensureJekyllData}%
+    |markdownReadAndConvert{\yamlEnd}%
+                           {|yamlEnd|endgroup}}%
 |endgroup
 %    \end{macrocode}
 % \begin{markdown}
