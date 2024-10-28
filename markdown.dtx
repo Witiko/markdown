@@ -11911,7 +11911,7 @@ pdftex --shell-escape document.tex
 % ``` tex
 % \input markdown
 % \yamlBegin
-% title: _Hello **world**
+% title: _Hello_ **world** ...
 % author: John Doe
 % \yamlEnd
 % \bye
@@ -11923,7 +11923,7 @@ pdftex --shell-escape document.tex
 % \input markdown
 % \yamlSetup{jekyllData, expectJekyllData, ensureJekyllData}
 % \markdownBegin
-% title: _Hello **world**
+% title: _Hello_ **world** ...
 % author: John Doe
 % \markdownEnd
 % \bye
@@ -22264,16 +22264,16 @@ pdflatex --shell-escape document.tex
 % \begin{markdown}
 %
 %### Typesetting Markdown
-% The interface exposes the \envmdef{markdown} and \envmdef{markdown*}
-% \LaTeX{} environments, and redefines the \mref{markinline} and
-% \mref{markdownInput} commands.
 %
-%#### The `markdown` and `markdown*` \LaTeX{} environments
-% The \envmref{markdown} and \envmref{markdown*} \LaTeX{} environments are used
-% to typeset markdown document fragments. Both \LaTeX{} environments accept
-% \LaTeX{} interface options (see Section <#sec:latex-options>) as the only
-% argument. This argument is optional for the \envmref{markdown} environment
-% and mandatory for the \envmref{markdown*} environment.
+% The interface exposes the \envmdef{markdown}, \envmdef{markdown*}, and
+% \envmdef{yaml} \LaTeX{} environments, and redefines the \mref{markinline},
+% \mref{markdownInput}, and \mref{yamlInput} commands.
+%
+%#### Typesetting Markdown and YAML directly
+%
+% The \envmref{markdown} and \envmref{markdown*} \LaTeX{} environments are
+% aliases for the macros \mref{markdownBegin} and \mref{markdownEnd} exposed
+% by the plain \TeX{} interface.
 %
 % The \envmref{markdown*} environment has been deprecated and will be removed
 % in the next major version of the Markdown package.
@@ -22285,26 +22285,25 @@ pdflatex --shell-escape document.tex
 %    \end{macrocode}
 % \markdownBegin
 %
-% You may prepend your own code to the \mdef{markdown} macro and append your own
-% code to the \mref{markdownEnd} macro to produce special effects before and after
-% the \envmref{markdown} \LaTeX{} environment (and likewise for the starred
-% version).
+% Furthermore, both environments accept \LaTeX{} interface options (see Section
+% <#sec:latex-options>) as the only argument. This argument is optional for the
+% \envmref{markdown} environment and mandatory for the \envmref{markdown*}
+% environment.
 %
-% Note that the \envmref{markdown} and \envmref{markdown*} \LaTeX{} environments are
-% subject to the same limitations as the \mref{markdownBegin} and \mref{markdownEnd}
-% macros exposed by the plain \TeX{} interface.
+% The \envmref{markdown} and \envmref{markdown*} environments are
+% subject to the same limitations as the \mref{markdownBegin} and
+% \mref{markdownEnd} macros.
 %
 % The following example \LaTeX{} code showcases the usage of the
 % \envmref{markdown} and \envmref{markdown*} environments:
+%
 % ``` tex
 % \documentclass{article}            \documentclass{article}
 % \usepackage{markdown}              \usepackage{markdown}
 % \begin{document}                   \begin{document}
-% \% ...                              \% ...
 % \begin{markdown}[smartEllipses]    \begin{markdown*}{smartEllipses}
 % _Hello_ **world** ...              _Hello_ **world** ...
 % \end{markdown}                     \end{markdown*}
-% \% ...                              \% ...
 % \end{document}                     \end{document}
 % ```````
 %
@@ -22333,11 +22332,14 @@ pdflatex --shell-escape document.tex
 %
 % Specifically, the \mref{markdown} macro must appear at the end of the
 % replacement text and must be followed by text that has not yet been ingested
-% by \TeX's input processor. Furthermore, using the \mref{markdownEnd} macro is
+% by \TeX's input processor.
+%
+% Furthermore, using the \mref{markdownEnd} macro is
 % optional and only makes a difference if you redefined it to produce special
-% effects before and after the \envmref{markdown} \LaTeX{} environment. Lastly,
-% you can't nest the other environments. For example, the following definition
-% is incorrect:
+% effects before and after the \envmref{markdown} \LaTeX{} environment.
+%
+% Lastly, you can't nest the other environments. For example, the following
+% definition would be incorrect:
 %
 % ``` tex
 % \newenvironment{bar}{\begin{foo}}{\end{foo}}
@@ -22350,34 +22352,121 @@ pdflatex --shell-escape document.tex
 % \newenvironment{bar}{\markdown[some, options]}{\markdownEnd}
 % ```
 %
+% The \envmref{yaml} \LaTeX{} environment is an alias for the macros
+% \mref{yamlBegin} and \mref{yamlEnd} exposed by the plain \TeX{} interface.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\newenvironment{yaml}\relax\relax
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Furthermore, the environment accepts \LaTeX{} interface options (see Section
+% <#sec:latex-options>) as the only optional argument.
+%
+% The \envmref{yaml} environment is subject to the same limitations as
+% the \mref{markdownBegin} and \mref{markdownEnd} macros.
+%
+% The following example \LaTeX{} code showcases the usage of the
+% \envmref{yaml} environment:
+%
+% ``` tex
+% \documentclass{article}
+% \usepackage{markdown}
+% \begin{document}
+% \begin{yaml}[smartEllipses]
+% title: _Hello_ **world** ...
+% author: John Doe
+% \end{yaml}
+% \end{document}
+% ```````
+%
 % \end{markdown}
 % \markdownBegin
 %
-%#### The `\markinline` and `\markdownInput` macros
+% The above code has the same effect as the below code:
+%
+% ``` tex
+% \documentclass{article}
+% \usepackage{markdown}
+% \begin{document}
+% \begin{markdown}[
+%   jekyllData,
+%   expectJekyllData,
+%   ensureJekyllData,
+%   smartEllipses,
+% ]
+% title: _Hello_ **world** ...
+% author: John Doe
+% \end{markdown}
+% \end{document}
+% ```````
+%
+% You can't directly extend the \envmref{yaml} \LaTeX{} environment by using it
+% in other environments. However, you can work around this limitation by using
+% the \mref{yaml} and \mref{yamlEnd} macros directly in the definition,
+% similarly to the \mref{markdown} and \mref{markdownEnd} macros described
+% previously.
+%
 % The \mref{markinline} macro accepts a single mandatory parameter containing
 % inline markdown content and expands to the result of the conversion of the
 % input markdown document to plain \TeX{}.  Unlike the \mref{markinline} macro
 % provided by the plain \TeX{} interface, this macro also accepts \LaTeX{}
 % interface options (see Section <#sec:latex-options>) as its optional
-% argument. These options will only influnce this markdown content.
+% argument. These options will only influence this markdown content.
+%
+%#### Typesetting Markdown and YAML from external documents
 %
 % The \mref{markdownInput} macro accepts a single mandatory parameter containing
 % the filename of a markdown document and expands to the result of the
 % conversion of the input markdown document to plain \TeX{}.  Unlike the
 % \mref{markdownInput} macro provided by the plain \TeX{} interface, this macro
 % also accepts \LaTeX{} interface options (see Section <#sec:latex-options>)
-% as its optional argument. These options will only influnce this markdown
+% as its optional argument. These options will only influence this markdown
 % document.
 %
 % The following example \LaTeX{} code showcases the usage of the
 % \mref{markdownInput} macro:
+%
 % ``` tex
 % \documentclass{article}
 % \usepackage{markdown}
 % \begin{document}
-% % ...
 % \markdownInput[smartEllipses]{hello.md}
-% % ...
+% \end{document}
+% ```````
+%
+% The \mref{yamlInput} macro accepts a single mandatory parameter containing
+% the filename of a \acro{YAML} document and expands to the result of the
+% conversion of the input \acro{YAML} document to plain \TeX{}.  Unlike the
+% \mref{yamlInput} macro provided by the plain \TeX{} interface, this macro
+% also accepts \LaTeX{} interface options (see Section <#sec:latex-options>)
+% as its optional argument. These options will only influence this \acro{YAML}
+% document.
+%
+% The following example \LaTeX{} code showcases the usage of the
+% \mref{yamlInput} macro:
+%
+% ``` tex
+% \documentclass{article}
+% \usepackage{markdown}
+% \begin{document}
+% \yamlInput[smartEllipses]{hello.yml}
+% \end{document}
+% ```````
+%
+% The above code has the same effect as the below code:
+%
+% ``` tex
+% \documentclass{article}
+% \usepackage{markdown}
+% \begin{document}
+% \markdownInput[
+%   jekyllData,
+%   expectJekyllData,
+%   ensureJekyllData,
+%   smartEllipses,
+% ]{hello.yml}
 % \end{document}
 % ```````
 %
@@ -23078,7 +23167,7 @@ following text:
 % \usemodule[t][markdown]
 % \starttext
 % \startyaml
-% title: _Hello **world**
+% title: _Hello_ **world** ...
 % author: John Doe
 % \stopyaml
 % \stoptext
@@ -23091,7 +23180,7 @@ following text:
 % \starttext
 % \setupyaml[jekyllData, expectJekyllData, ensureJekyllData]
 % \startyaml
-% title: _Hello **world**
+% title: _Hello_ **world** ...
 % author: John Doe
 % \stopyaml
 % \stoptext
@@ -23111,7 +23200,7 @@ following text:
 %
 % Furthermore, the \mref{inputmarkdown} macro also accepts \Hologo{ConTeXt}
 % interface options (see Section <#sec:context-options>) as its optional
-% argument. These options will only influnce this markdown document.
+% argument. These options will only influence this markdown document.
 %
 % The following example \Hologo{ConTeXt} code showcases the usage of the
 % \mref{inputmarkdown} macro:
@@ -23145,7 +23234,7 @@ following text:
 %
 % Furthermore, the \mref{inputyaml} macro also accepts \Hologo{ConTeXt}
 % interface options (see Section <#sec:context-options>) as its optional
-% argument. These options will only influnce this \acro{YAML} document.
+% argument. These options will only influence this \acro{YAML} document.
 %
 % The following example \Hologo{ConTeXt} code showcases the usage of the
 % \mref{inputyaml} macro:
@@ -36537,9 +36626,10 @@ end
 % \begin{markdown}
 %
 % The \mdef{markdownInputPlainTeX} macro is used to store the original plain
-% \TeX{} implementation of the \mref{markdownInput} macro. The \mref{markdownInput}
-% macro is then redefined to accept an optional argument with options recognized by
-% the \LaTeX{} interface (see Section <#sec:latex-options>).
+% \TeX{} implementation of the \mref{yamlInput} macro. The \mref{markdownInput}
+% and \mref{yamlInput} macros are then redefined to accept an optional argument
+% with options recognized by the \LaTeX{} interface (see Section
+% <#sec:latex-options>).
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -36549,12 +36639,17 @@ end
     \markdownSetup{#1}%
     \markdownInputPlainTeX{#2}%
   \endgroup}%
+\renewcommand\yamlInput[2][]{%
+  \begingroup
+    \markdownSetup{jekyllData, expectJekyllData, ensureJekyllData, #1}%
+    \markdownInputPlainTeX{#2}%
+  \endgroup}%
 %    \end{macrocode}
 % \par
 % \begin{markdown}
 %
-% The \envmref{markdown}, and \envmref{markdown*} \LaTeX{} environments are
-% implemented using the \mref{markdownReadAndConvert} macro.
+% The \envmref{markdown}, \envmref{markdown*}, and \envmref{yaml} \LaTeX{}
+% environments are implemented using the \mref{markdownReadAndConvert} macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -36693,6 +36788,14 @@ end
       { markdown* }
   }
   { \markdownEnd }
+\renewenvironment
+  { yaml }
+  {
+    \group_begin:
+    \yamlSetup{jekyllData, expectJekyllData, ensureJekyllData}%
+    \markdown
+  }
+  { \yamlEnd }
 \msg_new:nnn
   { markdown }
   { latex-markdown-star-deprecated }
