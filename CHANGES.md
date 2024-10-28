@@ -17,6 +17,11 @@ Development:
 
  [matrix-514]: https://matrix.to/#/!UeAwznpYwwsinVTetR:matrix.org/$TTc-m7B5NSdsLBNNyIuFWQ-u2nOZ03lJ5js88hnyFiU?via=matrix.org&via=im.f3l.de
 
+- Add first-class support for YAML documents. (#452, #473, #524)
+  - Add plain TeX macros `\yamlSetup`, `\yamlInput`, `\yamlBegin`, and `\yamlEnd`.
+  - Add LaTeX environment `yaml` and redefine command `\yamlInput` for LaTeX.
+  - Add ConTeXt commands `\setupyaml`, `\inputyaml`, `\startyaml`, and `\stopyaml`.
+
 Documentation:
 
 - Document LaTeX hooks. (#464, #507)
