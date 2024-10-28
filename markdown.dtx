@@ -12065,6 +12065,18 @@ following code in your plain \TeX{} document:
   \markdownSetup
   \@@_setup:n
 %    \end{macrocode}
+% \begin{markdown}
+%
+% The command \mdef{yamlSetup} is also available as an alias for the command
+% \mref{markdownSetup}.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\cs_gset_eq:NN
+  \yamlSetup
+  \markdownSetup
+%    \end{macrocode}
+%
 % \iffalse
 %</tex>
 %<*manual-options>
@@ -22992,6 +23004,17 @@ following text:
       { #1 }
   }
 \ExplSyntaxOff
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The command \mdef{setupyaml} is also available as an alias for
+% the command \mref{setupmarkdown}.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\cs_gset_eq:NN
+  \setupyaml
+  \setupmarkdown
 %    \end{macrocode}
 % \begin{markdown}
 %
