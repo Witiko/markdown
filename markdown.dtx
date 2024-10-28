@@ -11897,7 +11897,7 @@ pdftex --shell-escape document.tex
 % \end{markdown}
 %  \begin{macrocode}
 \let\yamlBegin\relax
-\let\yamlEnd\relax
+\let\yamlEnd{\markdownEnd\endgroup}
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -22121,7 +22121,7 @@ following text:
     |begingroup
     |yamlSetup{jekyllData, expectJekyllData, ensureJekyllData}%
     |markdownReadAndConvert{\yamlEnd}%
-                           {|yamlEnd|endgroup}}%
+                           {|yamlEnd}}%
 |endgroup
 %    \end{macrocode}
 % \begin{markdown}
@@ -22331,12 +22331,9 @@ pdflatex --shell-escape document.tex
 % ```
 %
 % Specifically, the \mref{markdown} macro must appear at the end of the
-% replacement text and must be followed by text that has not yet been ingested
-% by \TeX's input processor.
-%
-% Furthermore, using the \mref{markdownEnd} macro is
-% optional and only makes a difference if you redefined it to produce special
-% effects before and after the \envmref{markdown} \LaTeX{} environment.
+% replacement before-text and must be followed by text that has not yet been
+% ingested by \TeX's input processor. The \mref{markdownEnd} macro must be used
+% in or after the replacement after-text.
 %
 % Lastly, you can't nest the other environments. For example, the following
 % definition would be incorrect:
@@ -23153,9 +23150,9 @@ following text:
 % \par
 % \begin{markdown}
 %
-% You may prepend your own code to the \mref{startyaml} macro and redefine the
-% \mref{stopyaml} macro to produce special effects before and after the yaml
-% block.
+% You may prepend your own code to the \mref{startyaml} macro and append your
+% own code to the \mref{stopyaml} macro to produce special effects before and
+% after the \acro{YAML} document.
 %
 % The macros \mref{startyaml} and \mref{stopyaml} are subject to the same
 % limitations as the \mref{markdownBegin} and \mref{markdownEnd} macros.
@@ -38874,7 +38871,7 @@ end
     |ctxlua{document.markdown_buffering = true}%
     |setupyaml[jekyllData, expectJekyllData, ensureJekyllData]%
     |markdownReadAndConvert{\stopyaml}%
-                           {|stopyaml|endgroup}}%
+                           {|stopyaml}}%
   |gdef|stopyaml{%
     |ctxlua{document.markdown_buffering = false}%
     |yamlEnd}%
