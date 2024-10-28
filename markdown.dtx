@@ -11830,7 +11830,8 @@ pdftex --shell-escape document.tex
 %### Typesetting Markdown {#tex-typesetting}
 %
 % The interface exposes the \mdef{markdownBegin}, \mdef{markdownEnd},
-% \mdef{markinline}, \mdef{markdownInput}, and \mdef{markdownEscape} macros.
+% \mdef{markinline}, \mdef{markdownInput}, \mdef{yamlInput}, and
+% \mdef{markdownEscape} macros.
 %
 % The \mref{markdownBegin} macro marks the beginning of a markdown document
 % fragment and the \mref{markdownEnd} macro marks its end.
@@ -11942,6 +11943,45 @@ pdftex --shell-escape document.tex
 % ``` tex
 % \input markdown
 % \markdownInput{hello.md}
+% \bye
+% ```````
+%
+% You can use the \mref{yamlInput} macro to include \acro{YAML} documents,
+% similarly to how you might use the \mref{input} \TeX{} primitive to include
+% \TeX{} documents. The \mref{yamlInput} macro accepts a single parameter with
+% the filename of a \acro{YAML} document and expands to the result of the
+% conversion of the input \acro{YAML} document to plain \TeX{}.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\def\yamlInput#1{%
+  \begingroup
+  \yamlSetup{jekyllData, expectJekyllData, ensureJekyllData}%
+  \markdownInput{#1}%
+  \endgroup
+}%
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% This macro is also not subject to the limitations of the
+% \mref{markdownBegin} and \mref{markdownEnd} macros.
+%
+% The following example plain \TeX{} code showcases the usage of the
+% \mref{markdownInput} macro:
+%
+% ``` tex
+% \input markdown
+% \yamlInput{hello.yml}
+% \bye
+% ```````
+%
+% The above code has the same effect as the below code:
+%
+% ``` tex
+% \input markdown
+% \markdownSetup{jekyllData, expectJekyllData, ensureJekyllData}
+% \markdownInput{hello.yml}
 % \bye
 % ```````
 %
