@@ -22332,8 +22332,12 @@ pdflatex --shell-escape document.tex
 %
 % Specifically, the \mref{markdown} macro must appear at the end of the
 % replacement before-text and must be followed by text that has not yet been
-% ingested by \TeX's input processor. The \mref{markdownEnd} macro must be used
-% in or after the replacement after-text.
+% ingested by \TeX's input processor.
+%
+% Furthermore, using the \mref{markdownEnd} macro in of after the replacement
+% after-text is optional and only makes a difference if you redefined it to
+% produce special effects before and after the \envmref{markdown} \LaTeX{}
+% environment.
 %
 % Lastly, you can't nest the other environments. For example, the following
 % definition would be incorrect:
@@ -22403,7 +22407,8 @@ pdflatex --shell-escape document.tex
 % in other environments. However, you can work around this limitation by using
 % the \mref{yaml} and \mref{yamlEnd} macros directly in the definition,
 % similarly to the \mref{markdown} and \mref{markdownEnd} macros described
-% previously.
+% previously. Unlike with the \mref{markdown} and \mref{markdownEnd} macros,
+% The \mref{yamlEnd} macro _must_ be used in or after the replacement after-text.
 %
 % The \mref{markinline} macro accepts a single mandatory parameter containing
 % inline markdown content and expands to the result of the conversion of the
