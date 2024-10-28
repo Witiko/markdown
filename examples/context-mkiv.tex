@@ -58,30 +58,26 @@ kpse.set_program_name("luatex")
 \starttext
 
 % Set and typeset the document metadata using a YAML metadata block.
-\def\doctitle#1{\gdef\@title{#1}}
-\def\author#1{\gdef\@author{#1}}
-\def\date#1{\gdef\@date{#1}}
-
 \setupyaml
   [
     jekyllDataRenderers = {
-      title = {\doctitle{#1}},
-      author = {\author{#1}},
-      date = {\date{#1}},
+      title = {\gdef\doctitle{#1}},
+      author = {\gdef\author{#1}},
+      date = {\gdef\date{#1}},
     },
     renderers = {
       jekyllDataEnd = {%
         \startalignment[center]
           \blank[force,2*big]
-            {\tfd \@title}
+            {\tfd \doctitle}
           \blank[3*medium]
-            {\tfa \@author}
+            {\tfa \author}
           \blank[2*medium]
-            {\tfa \@date}
+            {\tfa \date}
           \blank[3*medium]
         \stopalignment
       },
-    }
+    },
   ]
 
 \startyaml
