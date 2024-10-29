@@ -47,7 +47,8 @@ Defaults:
     1. `\usepackage[experimental]{markdown}`
     2. `\DocumentMetadata{testphase=phase-III}`
 
-- Define LaTeX renderers for image identifiers. (#520, 6f3dcd0c, suggested by @jurf)
+- Define LaTeX renderers for image identifiers.
+  (#520, suggested by @jurf, 6f3dcd0c, 478530f)
 
   This establishes a reliable method for authors to reference figures within Markdown:
 
