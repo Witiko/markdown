@@ -47,6 +47,24 @@ Defaults:
     1. `\usepackage[experimental]{markdown}`
     2. `\DocumentMetadata{testphase=phase-III}`
 
+- Define LaTeX renderers for image identifiers. (#520, 6f3dcd0c, suggested by @jurf)
+
+  This establishes a reliable method for authors to reference figures within Markdown:
+
+  ``` tex
+  \documentclass{article}
+  \usepackage[link_attributes, relative_references]{markdown}
+  \begin{document}
+  \begin{markdown}
+
+  ![example image](example-image "An example image"){#example-image-id}
+
+  See Figure <#example-image-id>.
+
+  \end{markdown}
+  \end{document}
+  ```
+
 Continuous Integration:
 
 - Only use self-hosted runners for the quick CI in pull requests.
