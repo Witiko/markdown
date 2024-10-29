@@ -37750,15 +37750,6 @@ end
 }
 \ExplSyntaxOff
 \markdownSetup{rendererPrototypes={
-  image = {%
-    \begin{figure}%
-      \begin{center}%
-        \includegraphics[alt={#1}]{#3}%
-      \end{center}%
-      \ifx\empty#4\empty\else
-        \caption{#4}%
-      \fi
-    \end{figure}},
   ulBegin = {\begin{itemize}},
   ulEnd = {\end{itemize}},
   olBegin = {\begin{enumerate}},
@@ -38653,27 +38644,57 @@ end
 % \par
 % \begin{markdown}
 %
-%#### Image Attributes
+%#### Images and their attributes
 %
-% If the \Opt{linkAttributes} option is enabled, we will load
-% the \pkg{graphicx} package. Furthermore, in image attribute contexts,
-% we will make attributes in the form \meta{key}`=`\meta{value} set the
-% corresponding keys of the \pkg{graphicx} package to the corresponding
-% values.
+% We define images to be rendered as floating figures using the command
+% `\includegraphics`, where the image label is the alt text and the image
+% title is the caption of the figure.
+%
+% If the \Opt{linkAttributes} option is enabled, we will make attributes in the
+% form \meta{key}`=`\meta{value} set the corresponding keys of the
+% \pkg{graphicx} package to the corresponding values and we will register any
+% identifiers, so that they can be used as \LaTeX{} labels for referencing
+% figures.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
+\seq_new:N
+  \l_@@_image_identifiers_seq
+\markdownSetup {
+  renderers = {
+    image = {
+      \begin { figure }
+        \begin { center }
+          \includegraphics
+            [ alt = { #1 } ]
+            { #3 }
+          \tl_if_empty:nF
+            { #4 }
+            { \caption { #4 } }
+          \seq_map_inline:Nn
+            \l_@@_image_identifiers_seq
+            { \label { ##1 } }
+        \end { center }
+      \end { figure }
+    },
+  }
+}
 \@@_if_option:nT
   { linkAttributes }
   {
-    \RequirePackage{graphicx}
-    \markdownSetup{
+    \RequirePackage { graphicx }
+    \markdownSetup {
       rendererPrototypes = {
         imageAttributeContextBegin = {
           \group_begin:
-          \markdownSetup{
+          \markdownSetup {
             rendererPrototypes = {
+              attributeIdentifier = {
+                \seq_put_right:Nn
+                  \l_@@_image_identifiers_seq
+                  { ##1 }
+              },
               attributeKeyValue = {
                 \setkeys
                   { Gin }
