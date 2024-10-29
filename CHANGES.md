@@ -48,7 +48,7 @@ Defaults:
     2. `\DocumentMetadata{testphase=phase-III}`
 
 - Define LaTeX renderers for image identifiers.
-  (#520, suggested by @jurf, 6f3dcd0c, 478530f)
+  (#520, suggested by @jurf, 6f3dcd0c, 478530f, [matrix.org][matrix-520])
 
   This establishes a reliable method for authors to reference figures within Markdown:
 
@@ -73,6 +73,7 @@ Continuous Integration:
   (c2697428, [matrix.org][matrix-950e8269])
 
  [matrix-950e8269]: https://matrix.to/#/!pznomuvubVyxElflTe:matrix.org/$op_onsRdhtXJsZB5d5LZrOFF75T02XvKehmikdoucx4?via=matrix.org&via=im.f3l.de
+ [matrix-520]: https://matrix.to/#/!lWGKeMcpgwGHpfLYkf:matrix.org/$mZB-_YfreLFSKU5eDzp0AIvMnsV_Bn-rpUoj9HtUVwk?via=matrix.org&via=im.f3l.de
 
 ## 3.7.1 (2024-09-30)
 
