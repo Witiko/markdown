@@ -37900,11 +37900,13 @@ end
         \ltx@ifpackageloaded
           { minted }
           {
+            \catcode`\%=14\relax
             \catcode`\#=6\relax
             \exp_args:NV
               \inputminted
               \l_tmpa_tl
               { #1 }
+            \catcode`\%=12\relax
             \catcode`\#=12\relax
           }
           {
