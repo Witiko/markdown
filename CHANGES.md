@@ -66,6 +66,8 @@ Defaults:
   \end{document}
   ```
 
+- Set correct category codes for version 3 of the package minted. (39980934)
+
 Continuous Integration:
 
 - Only use self-hosted runners for the quick CI in pull requests.
