@@ -1,5 +1,5 @@
-Markdown
-========
+The Markdown Package for TeX
+============================
 
 [![license](https://img.shields.io/github/license/witiko/markdown)](LICENSE)
 [![ci](https://github.com/witiko/markdown/actions/workflows/main.yml/badge.svg)][ci]
@@ -94,7 +94,7 @@ jobs:
     container:
       image: witiko/markdown:latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - run: latexmk -lualatex document.tex
       - uses: marvinpinto/action-automatic-releases@latest
         permissions:
@@ -114,52 +114,6 @@ In fact, this is how we automatically produce
  [docker-texlive/texlive]: https://hub.docker.com/r/texlive/texlive/tags "texlive/texlive - Docker Image"
 
  [github-actions]: https://docs.github.com/actions "GitHub Actions Documentation"
-
-Peek under the hood
--------------------
-
-Remember how we said that the Markdown package converts markdown markup to
-TeX commands? Let's see what that means and what we can do with this knowledge.
-
-Using a text editor, create an empty text document named `document.md` with
-the following markdown content:
-
-``` markdown
-Hello *Markdown*! $a_x + b_x = c_x$
-```
-
-Next, run [the Lua command-line interface (CLI)][lua-cli] from
-[our official Docker image][docker-witiko/markdown] on `document.md`:
-
-    docker run --rm -i witiko/markdown markdown-cli hybrid=true < document.md
-
-We will receive the following output, where the markdown markup has been
-replaced by TeX commands:
-
-``` tex
-\markdownDocumentBegin
-Hello \markdownRendererEmphasis{Markdown}!
-$a\markdownRendererEmphasis{x + b}x = c_x$
-\markdownDocumentEnd
-```
-
-We can see right away that the Markdown package has incorrectly interpreted
-`_x + b_` as an emphasized text. We can fix this by passing in the
-`underscores=false` option:
-
-    docker run --rm -i witiko/markdown markdown-cli hybrid=true underscores=false < document.md
-
-``` tex
-\markdownDocumentBegin
-Hello \markdownRendererEmphasis{Markdown}!
-$a_x + b_x = c_x$
-\markdownDocumentEnd
-```
-
-Much better! If the Markdown package ever surprises you, use the Lua CLI to
-peek under the hood and inspect the results of the conversion.
-
- [lua-cli]: https://mirrors.ctan.org/macros/generic/markdown/markdown.html#lua-command-line-interface "Markdown Package User Manual"
 
 Further information
 -------------------
@@ -193,8 +147,8 @@ For further information, consult one of the following:
     - [Markdown 2.17.1: What's New, What's Next?][tb135],
     - [Attributes in Markdown][tb136],
     - [Markdown 3 at TUG 2023: Reflections from the Q&A session][tb138],
-    - Fast Regression Testing of TeX Packages: The Unreasonable Effectiveness of Batching ([preprint][tb139]), and
-    - Markdown Themes in Practice ([preprint][tb140-preprint], [work in progress][tb140]).
+    - [Fast Regression Testing of TeX Packages: The Unreasonable Effectiveness of Batching][tb139], and
+    - [Markdown Themes in Practice][tb140].
 5. Journal articles published by [CSTUG Bulletin][csbul] (in Czech and Slovak):
     - [Rendering Markdown inside TeX Documents][10.5300/2016-1-4/78],
     - [Markdown 2.8.1: Boldly Unto the Throne of Lightweight Markup in TeX][10.5300/2020-1-2/48],
@@ -229,7 +183,7 @@ For further information, consult one of the following:
  [tb135]: https://www.tug.org/TUGboat/tb43-3/tb135novotny-markdown.pdf                                                         "Markdown 2.17.1: What's New, What's Next?"
  [tb136]: https://www.tug.org/TUGboat/tb44-1/tb136novotny-markdown-attr.pdf                                                    "Attributes in Markdown"
  [tb138]: https://www.tug.org/TUGboat/tb44-3/tb138starynovotny-markdown-qa.pdf                                                 "Markdown 3 at TUG 2023: Reflections from the Q&A session"
- [tb139]: https://github.com/Witiko/fast-regression-testing/releases/download/latest/tb139starynovotny-testing.pdf             "Fast Regression Testing of TeX Packages: The Unreasonable Effectiveness of Batching"
+ [tb139]: https://www.tug.org/TUGboat/tb45-1/tb139starynovotny-testing.pdf                                                     "Fast Regression Testing of TeX Packages: The Unreasonable Effectiveness of Batching"
  [tb140]: https://github.com/Witiko/markdown-themes-in-practice/releases/download/latest/tb140starynovotny-markdown-themes.pdf "Markdown Themes in Practice"
 
  [tb131-slides]:       https://tug.org/tug2021/assets/pdf/tug2021-novotny-slides.pdf                            "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"

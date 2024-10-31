@@ -1,6 +1,85 @@
 # Changes
 
-## 3.7.1
+## 3.9.0
+
+## 3.8.0 (2024-10-31)
+
+Development:
+
+- Add support for versioned themes and add new Lua option `experimental`.
+  (#466, #512, #514, [matrix.org][matrix-514] reviewed by @TeXhackse, #521)
+
+  The option `experimental` enables experimental features that are planned to
+  be the new default in the next major release of the Markdown package.
+
+  At the moment, this just means that the version `experimental` of the theme
+  `witiko/markdown/defaults` will be loaded and warnings for hard-deprecated
+  features will become errors. However, the effects may extend to other areas
+  in the future as well.
+
+ [matrix-514]: https://matrix.to/#/!UeAwznpYwwsinVTetR:matrix.org/$TTc-m7B5NSdsLBNNyIuFWQ-u2nOZ03lJ5js88hnyFiU?via=matrix.org&via=im.f3l.de
+
+- Add first-class support for YAML documents. (#452, #473, #524)
+  - Add plain TeX macros `\yamlSetup`, `\yamlInput`, `\yamlBegin`, and `\yamlEnd`.
+  - Add LaTeX environment `yaml` and redefine command `\yamlInput` for LaTeX.
+  - Add ConTeXt commands `\setupyaml`, `\inputyaml`, `\startyaml`, and `\stopyaml`.
+
+Documentation:
+
+- Document LaTeX hooks. (#464, #507)
+
+Defaults:
+
+- Improve the compatibility of the default LaTeX packages with PDF tagging:
+  (#466, #512, #514, #521, reported and consulted by @u-fischer)
+
+  - In TeX engines other than LuaTeX, use the package soul instead of the
+    package soulutf8 in TeX Live ≥ 2023.
+
+  - In LuaLaTeX, use the package lua-ul for strike-through/mark renderer
+    prototypes instead of the package soul.
+
+  - Use the package enumitem for tight and fancy lists instead of the package
+    paralist.
+
+    This is a breaking change that is marked as experimental. To enable it,
+    either use the package option `experimental` or specify any test phase in
+    the document metadata:
+
+    1. `\usepackage[experimental]{markdown}`
+    2. `\DocumentMetadata{testphase=phase-III}`
+
+- Define LaTeX renderers for image identifiers.
+  (#520, suggested by @jurf, 6f3dcd0c, 478530f, [matrix.org][matrix-520])
+
+  This establishes a reliable method for authors to reference figures within Markdown:
+
+  ``` tex
+  \documentclass{article}
+  \usepackage[link_attributes, relative_references]{markdown}
+  \begin{document}
+  \begin{markdown}
+
+  ![example image](example-image "An example image"){#example-image-id}
+
+  See Figure <#example-image-id>.
+
+  \end{markdown}
+  \end{document}
+  ```
+
+- Set correct category codes for version 3 of the package minted. (39980934)
+
+Continuous Integration:
+
+- Only use self-hosted runners for the quick CI in pull requests.
+  For full CI outside pull requests, use GitHub-hosted runners.
+  (c2697428, [matrix.org][matrix-950e8269])
+
+ [matrix-950e8269]: https://matrix.to/#/!pznomuvubVyxElflTe:matrix.org/$op_onsRdhtXJsZB5d5LZrOFF75T02XvKehmikdoucx4?via=matrix.org&via=im.f3l.de
+ [matrix-520]: https://matrix.to/#/!lWGKeMcpgwGHpfLYkf:matrix.org/$mZB-_YfreLFSKU5eDzp0AIvMnsV_Bn-rpUoj9HtUVwk?via=matrix.org&via=im.f3l.de
+
+## 3.7.1 (2024-09-30)
 
 Development:
 
@@ -13,14 +92,44 @@ Development:
   adds a new file `markdown-unicode-data.lua`, which must be properly
   installed with the rest of the Markdown package.
 
+- Add renderers `warning` and `error` that represent warnings and errors
+  produced by the markdown parser. (#452, #473, #496)
+
 Fixes:
 
 - Properly load LaTeX themes when `theme` or `import` is used in
   `\usepackage[...]{markdown}`. (#471, #498)
-- Prevent endless loop when setting deprecated `jekyllDataString` (renderer)
-  prototype. (#500)
+
+- Prevent endless loop when setting deprecated `jekyllDataString` renderer
+  (prototype). (#500)
+
 - Correctly handle backslashes in `\markdownOptionOutputDir` on Windows.
   (#492, #500, reported by @l0th3r)
+
+- Fix hard line breaks in blockquotes.
+  (#494, #495, reported by @l0th3r, #496, contributed by @lostenderman)
+
+Deprecation:
+
+- Soft-deprecate the `hybrid` option. (#470, #504, 546faa87)
+
+  Soft-deprecated features will never be removed but using them prints a
+  warning and is discouraged. Instead of the `hybrid` option, consider one of
+  the following better alternatives for mixing TeX and markdown:
+
+  - With the `contentBlocks` option, authors can move large blocks of TeX
+    code to separate files and include them in their markdown documents as
+    external resources.
+
+  - With the `rawAttribute` option, authors can denote raw text spans and
+    code blocks that will be interpreted as TeX code.
+
+  - With options `texMathDollars`, `texMathSingleBackslash`, and
+    `texMathDoubleBackslash`, authors can freely type TeX commands between
+    dollar signs or backslash-escaped brackets.
+
+  For more information, see the user manual at
+  <https://witiko.github.io/markdown/>.
 
 ## 3.7.0 (2024-08-30)
 
@@ -32,8 +141,6 @@ Development:
   (istqborg/istqb_product_base#46, #440, #451, sponsored by @istqborg)
 - Add option `ensureJekyllData` for processing standalone YAML files.
   (#452, #473, sponsored by @istqborg)
-- Add renderers `warning` and `error` that represent warnings and errors
-  produced by the markdown parser. (#452, #473)
 - Support user-defined LaTeX environments with LaTeX markup.
   (#20, #477, suggested by @cdupont)
 
@@ -97,7 +204,7 @@ Continuous Integration:
 
 - Only test latest TeX Live in pull requests. (81927ca1)
 
-Unit Tests:
+Tests:
 
 - Test the `outputDir` plain TeX option. (#457, #459)
 
@@ -275,7 +382,7 @@ Default Renderer Prototypes:
 - Do not unnecessarily override math renderer prototypes in LaTeX/ConTeXt.
   (#387, #396, contributed by @zousiyu1995)
 
-Unit Tests:
+Tests:
 
 - In pull requests, process added and modified testfiles first.
   (feafe9b9, 9ff530da, 18deae73)
@@ -379,7 +486,7 @@ Documentation:
 
  [matrix-357]: https://matrix.to/#/!efVbynJpCMjlOTfose:matrix.org/$WR3quuO1fyOl6w_KX6YFA4BACBcL-cWUWBpVfpPWDkI?via=matrix.org&via=im.f3l.de
 
-Unit Tests:
+Tests:
 
 - Restore CommonMark testfiles with trailing tabs and spaces.
   (#348, #353, lostenderman/markdown#2, contributed by @lostenderman)
@@ -422,7 +529,7 @@ Deprecation:
 
  [matrix-351]: https://matrix.to/#/!lWGKeMcpgwGHpfLYkf:matrix.org/$yVeWB0Yzfz6mgORv5VeG9IEl7a4xLogkAUmdNMSCxEg?via=matrix.org&via=im.f3l.de
 
-Unit Tests:
+Tests:
 
 - Add support for YAML metadata in testfiles.
   (#345, #347, [matrix.org][matrix-347])
@@ -469,7 +576,7 @@ Documentation:
   (f3efcb9)
 - Document setting up catcodes in Lua. (#329, #342)
 
-Unit Tests:
+Tests:
 
 - Batch unit tests to improve speed.
   (#245, #316, 8bfd0b3, #317, #319..#325, #327, #328, e3b31696,
@@ -503,7 +610,7 @@ Documentation:
 - Add a link to TUG 2023 slides and video to the README.
   (ce6047b8, adb69e2f)
 
-Unit Tests:
+Tests:
 
 - Rewrite the unit testing framework from Bash to Python
   and implement summarization. (#245, #314)
@@ -681,7 +788,7 @@ Default Renderer Prototypes:
 - In LaTeX and ConTeXt, use just first word of infostring to determine fence
   code block language. (#244)
 
-Unit Tests:
+Tests:
 
 - Do not fold tabs and spaces into a single space token.
   (lostenderman#107, #242)
@@ -1210,7 +1317,7 @@ Licensing:
 - Bump the copyright year. (9462f17)
 - Sublicense the code as LPPL v1.3c. (609aeee)
 
-Unit tests:
+Tests:
 
 - Remove xtrace from `test.sh` for less verbose output. (b307ee6)
 - Treat all files as text with GNU diff in `test.sh`. (ec89e6d)

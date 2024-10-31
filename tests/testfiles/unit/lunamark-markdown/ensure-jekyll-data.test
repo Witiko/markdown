@@ -34,5 +34,8 @@ abstract: |
 ---
 >>>
 BEGIN document
-error: parse_blocks failed on: title: The document 
+BEGIN error
+- text: Parser `parse(underscore)blocks` failed to process the input text.
+- more: Here are the first 20 characters of the remaining unprocessed text: `title: The document `.
+END error
 END document

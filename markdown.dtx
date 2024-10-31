@@ -78,10 +78,9 @@
 \usepackage[
   citations,
   definitionLists,
-  fencedCode,
+  experimental,
   notes,
   headerAttributes,
-  html,
   hybrid,
   inlineNotes,
   jekyllData,
@@ -684,113 +683,132 @@ abbr {
 %</techdoc-block-diagram>
 %<*techdoc-bibliography>
 @online{starynovotny24,
-  author    = {Starý Novotný, Vít and Enrico Gregorio and Max Chernoff and P. Spratte, Jonathan},
-  title     = {Convert control sequence with a variable number of undelimited parameters into a token list},
-  url       = {https://tex.stackexchange.com/q/716362/70941},
-  urldate   = {2024-04-28},
+  author     = {Starý Novotný, Vít and Enrico Gregorio and Max Chernoff and P. Spratte, Jonathan},
+  title      = {Convert control sequence with a variable number of undelimited parameters into a token list},
+  url        = {https://tex.stackexchange.com/q/716362/70941},
+  urldate    = {2024-04-28},
 }
 @book{tantau21,
-  author    = {Till Tantau and Joseph Wright and Vedran Miletić},
-  title     = {The Beamer class},
-  date      = {2021-02-10},
-  url       = {https://mirrors.ctan.org/macros/latex/contrib/beamer/doc/beameruserguide.pdf},
-  urldate   = {2021-02-11}}
+  author     = {Till Tantau and Joseph Wright and Vedran Miletić},
+  title      = {The Beamer class},
+  date       = {2021-02-10},
+  url        = {https://mirrors.ctan.org/macros/latex/contrib/beamer/doc/beameruserguide.pdf},
+  urldate    = {2021-02-11}}
 @online{sotkov17,
-  author    = {Sotkov, Anton},
-  title     = {File transclusion syntax for Markdown},
-  date      = {2017-01-19},
-  url       = {https://github.com/iainc/Markdown-Content-Blocks},
-  urldate   = {2018-01-08}}
+  author     = {Sotkov, Anton},
+  title      = {File transclusion syntax for Markdown},
+  date       = {2017-01-19},
+  url        = {https://github.com/iainc/Markdown-Content-Blocks},
+  urldate    = {2018-01-08}}
 @book{luatex21,
-  author    = {{Lua\TeX{} development team}},
-  title     = {Lua\TeX{} reference manual},
-  date      = {2021-07-23},
-  note      = {Version 1.10 (stable)},
-  url       = {https://www.pragma-ade.com/general/manuals/luatex.pdf},
-  urldate   = {2022-09-30}}
+  author     = {{Lua\TeX{} development team}},
+  title      = {Lua\TeX{} reference manual},
+  date       = {2021-07-23},
+  note       = {Version 1.10 (stable)},
+  url        = {https://www.pragma-ade.com/general/manuals/luatex.pdf},
+  urldate    = {2022-09-30}}
 @book{latex17,
-  author    = {Braams, Johannes and Carlisle, David and Jeffrey, Alan and
+  author     = {Braams, Johannes and Carlisle, David and Jeffrey, Alan and
                Lamport, Leslie and Mittelbach, Frank and Rowley, Chris and
                Schöpf, Rainer},
-  title     = {The \Hologo{LaTeX2e} Sources},
-  date      = {2017-04-15},
-  url       = {https://mirrors.ctan.org/macros/latex/base/source2e.pdf},
-  urldate   = {2018-01-08}}
+  title      = {The \Hologo{LaTeX2e} Sources},
+  date       = {2017-04-15},
+  url        = {https://mirrors.ctan.org/macros/latex/base/source2e.pdf},
+  urldate    = {2018-01-08}}
 @book{mittelbach17,
-  author    = {Mittelbach, Frank},
-  title     = {The \texttt{doc} and \texttt{shortvrb} Packages},
-  date      = {2017-04-15},
-  url       = {https://mirrors.ctan.org/macros/latex/base/doc.pdf},
-  urldate   = {2018-02-19}}
+  author     = {Mittelbach, Frank},
+  title      = {The \texttt{doc} and \texttt{shortvrb} Packages},
+  date       = {2017-04-15},
+  url        = {https://mirrors.ctan.org/macros/latex/base/doc.pdf},
+  urldate    = {2018-02-19}}
+@book{mittelbach24,
+  author     = {Mittelbach, Frank},
+  title      = {\LaTeX's hook management},
+  date       = {2024-06-26},
+  url        = {https://mirrors.ctan.org/macros/latex/base/lthooks-code.pdf},
+  urldate    = {2024-10-02}}
 @book{poore17,
-  author    = {Poore, Geoffrey M.},
-  title     = {The \texttt{minted} Package},
-  subtitle  = {Highlighted source code in \LaTeX},
-  date      = {2017-07-19},
-  version   = {v2.5},
-  url       = {https://mirrors.ctan.org/macros/latex/contrib/minted/minted.pdf},
-  urldate   = {2020-09-01}}
+  author     = {Poore, Geoffrey M.},
+  title      = {The \texttt{minted} Package},
+  subtitle   = {Highlighted source code in \LaTeX},
+  date       = {2017-07-19},
+  version    = {v2.5},
+  url        = {https://mirrors.ctan.org/macros/latex/contrib/minted/minted.pdf},
+  urldate    = {2020-09-01}}
 @online{macfarlane22,
-  title     = {Pandoc},
-  subtitle  = {a universal document converter},
-  author    = {John MacFarlane},
-  year      = {2022},
-  url       = {https://pandoc.org/},
-  urldate   = {2022-10-05}}
+  title      = {Pandoc},
+  subtitle   = {a universal document converter},
+  author     = {John MacFarlane},
+  year       = {2022},
+  url        = {https://pandoc.org/},
+  urldate    = {2022-10-05}}
 @online{novotny15,
-  author    = {Novotný, Vít},
-  year      = {2015},
-  title     = {TeXový interpret jazyka Markdown (markdown.sty)},
-  location  = {Brno, Czech Republic},
-  publisher = {Masaryk University},
-  url       = {https://www.muni.cz/en/research/projects/32984},
-  urldate   = {2018-02-19}}
+  author     = {Novotný, Vít},
+  year       = {2015},
+  title      = {TeXový interpret jazyka Markdown (markdown.sty)},
+  location   = {Brno, Czech Republic},
+  publisher  = {Masaryk University},
+  url        = {https://www.muni.cz/en/research/projects/32984},
+  urldate    = {2018-02-19}}
 @book{ierusalimschy13,
-  author    = {Ierusalimschy, Roberto},
-  year      = {2013},
-  title     = {Programming in Lua},
-  edition   = {3},
-  isbn      = {978-85-903798-5-0},
-  pagetotal = {xviii, 347},
-  location  = {Rio de Janeiro},
-  publisher = {PUC-Rio}}
+  author     = {Ierusalimschy, Roberto},
+  year       = {2013},
+  title      = {Programming in Lua},
+  edition    = {3},
+  isbn       = {978-85-903798-5-0},
+  pagetotal  = {xviii, 347},
+  location   = {Rio de Janeiro},
+  publisher  = {PUC-Rio}}
 @book{knuth86a,
-  author    = {Knuth, Donald Ervin},
-  year      = {1986},
-  title     = {The \TeX{}book},
-  edition   = {3},
-  isbn      = {0-201-13447-0},
-  pagetotal = {ix, 479},
-  series    = {Computers \& Typesetting},
-  volume    = {A},
-  location  = {Reading, MA},
-  publisher = {Addison-Wesley}}
+  author     = {Knuth, Donald Ervin},
+  year       = {1986},
+  title      = {The \TeX{}book},
+  edition    = {3},
+  isbn       = {0-201-13447-0},
+  pagetotal  = {ix, 479},
+  series     = {Computers \& Typesetting},
+  volume     = {A},
+  location   = {Reading, MA},
+  publisher  = {Addison-Wesley}}
 @book{knuth86b,
-  author    = {Knuth, Donald Ervin},
-  year      = {1986},
-  title     = {\TeX: The Program},
-  isbn      = {978-0-201-13437-7},
-  pagetotal = {xvi, 594},
-  series    = {Computers \& Typesetting},
-  volume    = {B},
-  location  = {Reading, MA},
-  publisher = {Addison-Wesley}}
+  author     = {Knuth, Donald Ervin},
+  year       = {1986},
+  title      = {\TeX: The Program},
+  isbn       = {978-0-201-13437-7},
+  pagetotal  = {xvi, 594},
+  series     = {Computers \& Typesetting},
+  volume     = {B},
+  location   = {Reading, MA},
+  publisher  = {Addison-Wesley}}
 @book{eijkhout92,
-  author    = {Victor Eijkhout},
-  title     = {\TeX{} by Topic},
-  subtitle  = {A \TeX nician's Reference},
-  isbn      = {978-0-201-56882-0},
-  pagetotal = {307},
-  date      = {1992-02-01},
-  location  = {Wokingham, England},
-  publisher = {Addison-Wesley}}
+  author     = {Victor Eijkhout},
+  title      = {\TeX{} by Topic},
+  subtitle   = {A \TeX nician's Reference},
+  isbn       = {978-0-201-56882-0},
+  pagetotal  = {307},
+  date       = {1992-02-01},
+  location   = {Wokingham, England},
+  publisher  = {Addison-Wesley}}
 @inproceedings{sharif10,
-  author    = {Sharif, Bonita and Maletic, Jonathan I.},
-  booktitle = {2010 IEEE 18th International Conference on Program Comprehension},
-  title     = {An Eye Tracking Study on camelCase and under\_score Identifier Styles},
-  year      = {2010},
-  pages     = {196-205},
-  doi       = {10.1109/ICPC.2010.41}}
+  author     = {Sharif, Bonita and Maletic, Jonathan I.},
+  booktitle  = {2010 IEEE 18th International Conference on Program Comprehension},
+  title      = {An Eye Tracking Study on camelCase and under\_score Identifier Styles},
+  year       = {2010},
+  pages      = {196-205},
+  doi        = {10.1109/ICPC.2010.41}}
+@online{novotny24,
+  author     = {Starý Novotný, Vít},
+  title      = {Versioned Themes},
+  titleaddon = {Markdown Enhancement Proposal},
+  date       = {2024-10-13},
+  urldate    = {2024-10-21},
+  url        = {https://github.com/Witiko/markdown/discussions/514}}
+@book{latex24,
+  author     = {Frank Mittelbach and Ulrike Fischer and {\LaTeX{} Project}},
+  title      = {The \texttt{documentmetadata-support} code},
+  date       = {2024-06-01},
+  url        = {https://mirrors.ctan.org/macros/latex/required/latex-lab/documentmetadata-support-code.pdf},
+  urldate    = {2024-10-21}}
 %</techdoc-bibliography>
 %<@@=markdown>
 %<*themes-witiko-markdown-techdoc>
@@ -812,6 +830,8 @@ abbr {
       }%
     },
   },
+}
+\yamlSetup{
   jekyllDataRenderers = {
     /authors/* = {%
       \expandafter\gdef
@@ -1315,7 +1335,8 @@ hard lt3luabridge
 %### \LaTeX{} Requirements {#latex-prerequisites}
 %
 % The \LaTeX{} part of the package requires that the \Hologo{LaTeX2e} format is
-% loaded,
+% loaded, a \TeX{} engine that extends \Hologo{eTeX}, and all the plain \TeX{}
+% prerequisites (see Section <#sec:tex-prerequisites>).
 % \end{markdown}
 % \iffalse
 %<*themes-witiko-dot,latex-themes-witiko-graphicx-http>
@@ -1330,8 +1351,6 @@ hard lt3luabridge
 %<*depends>
 % \fi
 % \begin{markdown}
-% a \TeX{} engine that extends \Hologo{eTeX}, and all the plain \TeX{}
-% prerequisites (see Section <#sec:tex-prerequisites>):
 %
 % The following packages are soft prerequisites. They are only used to provide
 % default token renderer prototypes (see sections
@@ -1353,7 +1372,7 @@ soft url
 % \pkg{graphicx}
 %
 %:    A package that provides the `\includegraphics` macro for the typesetting
-%     of images.Furthermore, it also provides a key-value interface that is
+%     of images. Furthermore, it also provides a key-value interface that is
 %     used in the default renderer prototypes for image attribute contexts.
 %
 % \end{markdown}
@@ -1362,15 +1381,20 @@ soft graphics
 %    \end{macrocode}
 % \begin{markdown}
 %
-% \pkg{paralist}
+% \pkg{enumitem} and \pkg{paralist}
 %
-%:    A package that provides the `compactitem`, `compactenum`, and
-%     `compactdesc` macros for the typesetting of tight bulleted lists,
-%     ordered lists, and definition lists as well as the rendering of
-%     fancy lists.
+%:    Packages that provide macros for the default renderer prototypes for
+%     tight and fancy lists.
+%
+%     The package \pkg{paralist} will be used unless the option
+%     \Opt{experimental} has been enabled, in which case, the package
+%     \pkg{enumitem} will be used. Furthermore, enabling any test phase
+%     [@latex24] will also cause \pkg{enumitem} to be used. In a future
+%     major version, \pkg{enumitem} will replace \pkg{paralist} altogether.
 %
 % \end{markdown}
 %  \begin{macrocode}
+soft enumitem
 soft paralist
 %    \end{macrocode}
 % \begin{markdown}
@@ -1477,15 +1501,28 @@ soft etoolbox
 %    \end{macrocode}
 % \begin{markdown}
 %
-% \pkg{soulutf8}
+% \pkg{soulutf8} and \pkg{xcolor}
 %
-%:    A package that is used in the default renderer prototype for
-%     strike-throughs and marked text.
+%:    Packages that are used in the default renderer prototypes for
+%     strike-throughs and marked text in pdf\TeX.
 %     <!-- TODO: 1,$s/soulutf8/soul/g in TeX Live 2023. -->
 %
 % \end{markdown}
 %  \begin{macrocode}
 soft soul
+soft xcolor
+%    \end{macrocode}
+% \begin{markdown}
+%
+% \pkg{lua-ul} and \pkg{luacolor}
+%
+%:    Packages that are used in the default renderer prototypes for
+%     strike-throughs and marked text in Lua\TeX.
+%
+% \end{markdown}
+%  \begin{macrocode}
+soft lua-ul
+soft luacolor
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -1911,9 +1948,9 @@ module and a command-line interface (CLI).
 local M = {metadata = metadata}
 %    \end{macrocode}
 % \iffalse
-% \fi
 %</lua,lua-loader,lua-unicode-data>
 %<*lua>
+% \fi
 % \par
 % \begin{markdown}
 %
@@ -2676,6 +2713,52 @@ Hello \markdownRendererEmphasis{world}!\relax
 % \fi
 %  \begin{macrocode}
 defaultOptions.eagerCache = true
+%    \end{macrocode}
+% \par
+% \iffalse
+%</lua,lua-cli,lua-loader>
+%<*manual-options>
+
+#### Option `experimental`
+
+`experimental` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{experimental}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Experimental features that are planned to be the new default in the
+        next major release of the Markdown package will be enabled.
+
+        At the moment, this just means that the version `experimental` of the
+        theme `witiko/markdown/defaults` will be loaded and warnings for
+        hard-deprecated features will become errors. However, the effects may
+        extend to other areas in the future as well.
+
+:    false
+
+     :  Experimental features will be disabled.
+
+% \end{markdown}
+% \iffalse
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { experimental }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli,lua-loader>
+% \fi
+%  \begin{macrocode}
+defaultOptions.experimental = false
 %    \end{macrocode}
 % \par
 % \iffalse
@@ -7484,6 +7567,58 @@ defaultOptions.html = true
         encouraged when typesetting automatically generated content or
         markdown documents that were not prepared with this package in mind.
 
+The \Opt{hybrid} option makes it difficult to untangle \TeX{} input from
+markdown text, which makes documents written with the \Opt{hybrid} option
+less interoperable and more difficult to read for authors. Therefore, the
+option has been soft-deprecated in version 3.7.1 of the Markdown package:
+It will never be removed but using it prints a warning and is discouraged.
+
+Consider one of the following better alternatives for mixing \TeX{} and
+markdown:
+
+- With the \Opt{contentBlocks} option, authors can move large blocks of TeX
+  code to separate files and include them in their markdown documents as
+  external resources:
+
+  ``` md
+  Here is a mathematical formula:
+
+   /math-formula.tex
+  ```
+
+- With the \Opt{rawAttribute} option, authors can denote raw text spans and
+  code blocks that will be interpreted as \TeX{} code:
+
+  `````` md
+  `$H_2 O$`{=tex} is a liquid.
+
+  Here is a mathematical formula:
+  ``` {=tex}
+  \[distance[i] =
+      \begin{dcases}
+          a & b \\
+          c & d
+      \end{dcases}
+  \]
+  ```
+  ``````
+
+- With options \Opt{texMathDollars}, \Opt{texMathSingleBackslash}, and
+  \Opt{texMathDoubleBackslash}, authors can freely type \TeX{} commands between
+  dollar signs or backslash-escaped brackets:
+
+  ``` md
+  $H_2 O$ is a liquid.
+
+  Here is a mathematical formula:
+  \[distance[i] =
+      \begin{dcases}
+          a & b \\
+          c & d
+      \end{dcases}
+  \]
+  ```
+
 % \end{markdown}
 % \iffalse
 
@@ -11692,10 +11827,13 @@ pdftex --shell-escape document.tex
 % \noindent It is expected that the special plain \TeX{} characters have the
 % expected category codes, when `\input`ting the file.
 %
-%### Typesetting Markdown {#tex-typesetting}
+%### Typesetting Markdown and YAML {#tex-typesetting}
 %
 % The interface exposes the \mdef{markdownBegin}, \mdef{markdownEnd},
-% \mdef{markinline}, \mdef{markdownInput}, and \mdef{markdownEscape} macros.
+% \mdef{yamlBegin}, \mref{yamlEnd}, \mdef{markinline}, \mdef{markdownInput},
+% \mdef{yamlInput}, and \mdef{markdownEscape} macros.
+%
+%#### Typesetting Markdown and YAML directly
 %
 % The \mref{markdownBegin} macro marks the beginning of a markdown document
 % fragment and the \mref{markdownEnd} macro marks its end.
@@ -11753,6 +11891,44 @@ pdftex --shell-escape document.tex
 % \bye
 % ```````
 %
+% The \mref{yamlBegin} macro marks the beginning of an \acro{YAML} document
+% fragment and the \mref{yamlEnd} macro marks its end.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\let\yamlBegin\relax
+\def\yamlEnd{\markdownEnd\endgroup}
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% The \mref{yamlBegin} and \mref{yamlEnd} macros are subject to the same
+% limitations as the \mref{markdownBegin} and \mref{markdownEnd} macros.
+%
+% The following example plain \TeX{} code showcases the usage of the
+% \mref{markdownBegin} and \mref{markdownEnd} macros:
+%
+% ``` tex
+% \input markdown
+% \yamlBegin
+% title: _Hello_ **world** ...
+% author: John Doe
+% \yamlEnd
+% \bye
+% ```````
+%
+% The above code has the same effect as the below code:
+%
+% ``` tex
+% \input markdown
+% \yamlSetup{jekyllData, expectJekyllData, ensureJekyllData}
+% \markdownBegin
+% title: _Hello_ **world** ...
+% author: John Doe
+% \markdownEnd
+% \bye
+% ```````
+%
 % You can use the \mref{markinline} macro to input inline markdown content.
 %
 % \end{markdown}
@@ -11785,6 +11961,8 @@ pdftex --shell-escape document.tex
 % The \mref{markinline} macro is subject to the same limitations as the
 % \mref{markdownBegin} and \mref{markdownEnd} macros.
 %
+%#### Typesetting Markdown and YAML from external documents
+%
 % You can use the \mref{markdownInput} macro to include markdown documents,
 % similarly to how you might use the \mref{input} \TeX{} primitive to include
 % \TeX{} documents. The \mref{markdownInput} macro accepts a single parameter
@@ -11798,7 +11976,7 @@ pdftex --shell-escape document.tex
 % \par
 % \begin{markdown}
 %
-% This macro is not subject to the limitations of the
+% The macro \mref{markdownInput} is not subject to the limitations of the
 % \mref{markdownBegin} and \mref{markdownEnd} macros.
 %
 % The following example plain \TeX{} code showcases the usage of the
@@ -11809,6 +11987,47 @@ pdftex --shell-escape document.tex
 % \markdownInput{hello.md}
 % \bye
 % ```````
+%
+% You can use the \mref{yamlInput} macro to include \acro{YAML} documents.
+% similarly to how you might use the \mref{input} \TeX{} primitive to include
+% \TeX{} documents. The \mref{yamlInput} macro accepts a single parameter with
+% the filename of a \acro{YAML} document and expands to the result of the
+% conversion of the input \acro{YAML} document to plain \TeX{}.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\def\yamlInput#1{%
+  \begingroup
+  \yamlSetup{jekyllData, expectJekyllData, ensureJekyllData}%
+  \markdownInput{#1}%
+  \endgroup
+}%
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% The macro \mref{yamlInput} is also not subject to the limitations of the
+% \mref{markdownBegin} and \mref{markdownEnd} macros.
+%
+% The following example plain \TeX{} code showcases the usage of the
+% \mref{markdownInput} macro:
+%
+% ``` tex
+% \input markdown
+% \yamlInput{hello.yml}
+% \bye
+% ```````
+%
+% The above code has the same effect as the below code:
+%
+% ``` tex
+% \input markdown
+% \yamlSetup{jekyllData, expectJekyllData, ensureJekyllData}
+% \markdownInput{hello.yml}
+% \bye
+% ```````
+%
+%#### Typesetting TeX from inside Markdown and YAML documents
 %
 % The \mref{markdownEscape} macro accepts a single parameter with the filename
 % of a \TeX{} document and executes the \TeX{} document in the middle of a
@@ -11930,6 +12149,18 @@ following code in your plain \TeX{} document:
   \markdownSetup
   \@@_setup:n
 %    \end{macrocode}
+% \begin{markdown}
+%
+% The command \mdef{yamlSetup} is also available as an alias for the command
+% \mref{markdownSetup}.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\cs_gset_eq:NN
+  \yamlSetup
+  \markdownSetup
+%    \end{macrocode}
+%
 % \iffalse
 %</tex>
 %<*manual-options>
@@ -12652,7 +12883,7 @@ A PDF document named `document.pdf` should be produced and contain the text
 \prg_generate_conditional_variant:Nnn
   \str_if_eq:nn
   { en }
-  { F }
+  { p, F }
 \msg_new:nnn
   { markdown }
   { malformed-name-for-clist-option }
@@ -12689,27 +12920,33 @@ User-defined themes for the Markdown package provide a domain-specific
 interpretation of Markdown tokens. Themes allow the authors to achieve
 a specific look and other high-level goals without low-level programming.
 
-% The key-values `theme`=\meta{theme name} and `import`=\meta{theme name} load
-% a \TeX{} document (further referred to as *a theme*) named
-% `markdowntheme`\meta{munged theme name}`.tex`, where the *munged theme name*
-% is the *theme name* after the substitution of all forward slashes (`/`) for
-% an underscore (`_`). The theme name is *qualified* and contains no
-% underscores. A theme name is qualified if and only if it contains at least
-% one forward slash. Themes are inspired by the Beamer \LaTeX{} package, which
-% provides similar functionality with its `\usetheme` macro [@tantau21, Section
-% 15.1].
+% The key-values `theme`=\meta{theme name} and `import`=\meta{theme name},
+% optionally followed by `@`\meta{theme version}, load a \TeX{} document
+% (further referred to as *a theme*) named `markdowntheme`\meta{munged theme
+% name}`.tex`, where the *munged theme name* is the *theme name* after the
+% substitution of all forward slashes (`/`) for an underscore (`_`).
+% The theme name must be *qualified* and contain no underscores or at signs
+% (`@`). Themes are inspired by the Beamer \LaTeX{} package, which provides
+% similar functionality with its `\usetheme` macro [@tantau21, Section 15.1].
 %
-% Theme names must be qualified to minimize naming conflicts between different
-% themes with a similar purpose. The preferred format of a theme name is
-% \meta{theme author}`/`\meta{theme purpose}`/`\meta{private naming
-% scheme}, where the *private naming scheme* may contain additional forward
-% slashes. For example, a theme by a user `witiko` for the MU theme of the
-% Beamer document class may have the name `witiko/beamer/MU`.
+% A theme name is qualified if and only if it contains at least one forward
+% slash. Theme names must be qualified to minimize naming conflicts between
+% different themes with a similar purpose. The preferred format of a theme name
+% is \meta{theme author}`/`\meta{theme purpose}`/`\meta{private naming scheme},
+% where the *private naming scheme* may contain additional forward slashes. For
+% example, a theme by a user `witiko` for the MU theme of the Beamer document
+% class may have the name `witiko/beamer/MU`.
 %
 % Theme names are munged to allow structure inside theme names without
 % dictating where the themes should be located inside the \TeX{} directory
 % structure. For example, loading a theme named `witiko/beamer/MU` would
 % load a \TeX{} document package named `markdownthemewitiko_beamer_MU.tex`.
+%
+% If `@`\meta{theme version} is specified after \meta{theme name}, then the
+% text *theme version* will be available in the macro
+% \mdef{markdownThemeVersion} when the theme is loaded. If `@`\meta{theme
+% version} is not specified, the macro \mref{markdownThemeVersion} will
+% contain the text `latest` [@novotny24].
 %
 % \end{markdown}
 % \iffalse
@@ -12753,21 +12990,31 @@ a specific look and other high-level goals without low-level programming.
 % \begin{markdown}
 %
 % To keep track of the current theme when themes are nested, we will
-% maintain the \mdef{g_\@\@_themes_seq} stack of theme names.
-% For convenience, the name of the current theme is also available in the
-% \mdef{g_@@_current_theme_tl} macro.
+% maintain the stacks \mdef{g_\@\@_theme_names_seq} and
+% \mdef{g_\@\@_theme_versions_seq} stack of theme names and versions,
+% respectively. For convenience, the name of the current theme and version is
+% also available in the macros \mdef{g_@@_current_theme_tl} and
+% \mref{markdownThemeVersion}, respectively.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \seq_new:N
-  \g_@@_themes_seq
+  \g_@@_theme_names_seq
+\seq_new:N
+  \g_@@_theme_versions_seq
 \tl_new:N
   \g_@@_current_theme_tl
 \tl_gset:Nn
   \g_@@_current_theme_tl
   { }
 \seq_gput_right:NV
-  \g_@@_themes_seq
+  \g_@@_theme_names_seq
+  \g_@@_current_theme_tl
+\cs_new:Npn
+  \markdownThemeVersion
+  { }
+\seq_gput_right:NV
+  \g_@@_theme_versions_seq
   \g_@@_current_theme_tl
 \cs_new:Nn
   \@@_set_theme:n
@@ -12800,13 +13047,55 @@ a specific look and other high-level goals without low-level programming.
 %    \end{macrocode}
 % \begin{markdown}
 %
+% Next, we extract the theme version.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \str_if_in:nnTF
+      { #1 }
+      { @ }
+      {
+        \regex_extract_once:nnN
+          { (.*) @ (.*) }
+          { #1 }
+          \l_tmpa_seq
+        \seq_gpop_left:NN
+          \l_tmpa_seq
+          \l_tmpa_tl
+        \seq_gpop_left:NN
+          \l_tmpa_seq
+          \l_tmpa_tl
+        \tl_gset:NV
+          \g_@@_current_theme_tl
+          \l_tmpa_tl
+        \seq_gpop_left:NN
+          \l_tmpa_seq
+          \l_tmpa_tl
+        \cs_gset:Npe
+          \markdownThemeVersion
+          {
+            \tl_use:N
+              \l_tmpa_tl
+          }
+      }
+      {
+        \tl_gset:Nn
+          \g_@@_current_theme_tl
+          { #1 }
+        \cs_gset:Npn
+          \markdownThemeVersion
+          { latest }
+      }
+%    \end{macrocode}
+% \begin{markdown}
+%
 % Next, we munge the theme name.
 %
 % \end{markdown}
 %  \begin{macrocode}
-    \str_set:Nn
+    \str_set:NV
       \l_tmpa_str
-      { #1 }
+      \g_@@_current_theme_tl
     \str_replace_all:Nnn
       \l_tmpa_str
       { / }
@@ -12814,28 +13103,56 @@ a specific look and other high-level goals without low-level programming.
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Finally, we load the theme.
+% Finally, we load the theme. Before loading the theme, we push down the
+% current name and version of the theme on the stack.
 %
 % \end{markdown}
 %  \begin{macrocode}
-    \tl_gset:Nn
+    \tl_set:NV
+      \l_tmpa_tl
       \g_@@_current_theme_tl
-      { #1 / }
+    \tl_put_right:Nn
+      \g_@@_current_theme_tl
+      { / }
     \seq_gput_right:NV
-      \g_@@_themes_seq
+      \g_@@_theme_names_seq
       \g_@@_current_theme_tl
-    \@@_load_theme:nV
-      { #1 }
+    \seq_gput_right:NV
+      \g_@@_theme_versions_seq
+      \markdownThemeVersion
+    \@@_load_theme:VeV
+      \l_tmpa_tl
+      { \markdownThemeVersion }
       \l_tmpa_str
+%    \end{macrocode}
+% \begin{markdown}
+%
+% After the theme has been loaded, we recover the name and version of the
+% previous theme from the stack.
+%
+% \end{markdown}
+%  \begin{macrocode}
     \seq_gpop_right:NN
-      \g_@@_themes_seq
+      \g_@@_theme_names_seq
       \l_tmpa_tl
     \seq_get_right:NN
-      \g_@@_themes_seq
+      \g_@@_theme_names_seq
       \l_tmpa_tl
     \tl_gset:NV
       \g_@@_current_theme_tl
       \l_tmpa_tl
+    \seq_gpop_right:NN
+      \g_@@_theme_versions_seq
+      \l_tmpa_tl
+    \seq_get_right:NN
+      \g_@@_theme_versions_seq
+      \l_tmpa_tl
+    \cs_gset:Npe
+      \markdownThemeVersion
+      {
+        \tl_use:N
+          \l_tmpa_tl
+      }
   }
 \msg_new:nnnn
   { markdown }
@@ -12850,6 +13167,9 @@ a specific look and other high-level goals without low-level programming.
 \cs_generate_variant:Nn
   \tl_replace_all:Nnn
   { NnV }
+\cs_generate_variant:Nn
+  \cs_gset:Npn
+  { Npe }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \iffalse
@@ -12993,20 +13313,21 @@ options locally.
 %
 % \end{markdown}
 %  \begin{macrocode}
+\tl_new:N
+  \l_@@_current_snippet_tl
 \prg_new_conditional:Nnn
   \@@_if_snippet_exists:n
   { TF, T, F }
   {
     \tl_set:NV
-      \l_tmpa_tl
+      \l_@@_current_snippet_tl
       \g_@@_current_theme_tl
     \tl_put_right:Nn
-      \l_tmpa_tl
+      \l_@@_current_snippet_tl
       { #1 }
-    \prop_get:NVNTF
+    \prop_if_in:NVTF
       \g_@@_snippets_prop
-      \l_tmpa_tl
-      \l_tmpb_tl
+      \l_@@_current_snippet_tl
       { \prg_return_true: }
       { \prg_return_false: }
   }
@@ -15682,7 +16003,7 @@ following text:
 %
 % \begin{markdown}
 
-#### Emphasis Renderers
+#### Emphasis Renderers {#emphasis-renderers}
 The \mdef{markdownRendererEmphasis} macro represents an emphasized span of
 text. The macro receives a single argument that corresponds to the emphasized
 span of text.
@@ -19591,7 +19912,7 @@ following text:
 %
 % \begin{markdown}
 
-#### Table Renderer
+#### Table Renderer {#table-renderer}
 The \mdef{markdownRendererTable} macro represents a table. This macro will only
 be produced, when the \Opt{pipeTables} option is enabled. The macro receives the
 parameters `{`\meta{caption}`}{`\meta{number of rows}`}{`\meta{number of columns}`}`
@@ -20097,7 +20418,16 @@ following text:
 
 The \mdef{markdownRendererWarning} and \mdef{markdownRendererError} macros
 represent warnings and errors produced by the markdown parser. Both macros
-receive a single parameter with the text of the warning or error.
+receive four parameters:
+
+1. The fully escaped text of the warning or error that can be directly typeset
+2. The raw text of the warning or error that can be used outside typesetting
+   for e.g. logging the warning or error.
+3. The fully escaped text with more details about the warning or error that
+   can be directly typeset. Can be empty, unlike the first two parameters.
+4. The raw text with more details about the warning or error that can be used
+   outside typesetting for e.g. logging the warning or error. Can be empty,
+   unlike the first two parameters.
 
 % \end{markdown}
 %
@@ -20118,14 +20448,14 @@ receive a single parameter with the text of the warning or error.
 \prop_gput:Nnn
   \g_@@_renderer_arities_prop
   { warning }
-  { 1 }
+  { 4 }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { error }
 \prop_gput:Nnn
   \g_@@_renderer_arities_prop
   { error }
-  { 1 }
+  { 4 }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \par
@@ -20488,24 +20818,47 @@ removed in Markdown 4.0.0.
     \cs_if_exist:NTF
       \markdownRendererJekyllDataString
       {
-        \markdownWarning
+        \@@_if_option:nTF
+          { experimental }
           {
-            The~jekyllDataString~renderer~has~been~deprecated,~
-            to~be~removed~in~Markdown~4.0.0
+            \markdownError
+              {
+                The~jekyllDataString~renderer~has~been~deprecated,~
+                to~be~removed~in~Markdown~4.0.0
+              }
           }
-        \markdownRendererJekyllDataString
+          {
+            \markdownWarning
+              {
+                The~jekyllDataString~renderer~has~been~deprecated,~
+                to~be~removed~in~Markdown~4.0.0
+              }
+            \markdownRendererJekyllDataString
+          }
       }
       {
         \cs_if_exist:NTF
           \markdownRendererJekyllDataStringPrototype
           {
-            \markdownWarning
+            \@@_if_option:nTF
+              { experimental }
               {
-                The~jekyllDataString~renderer~prototype~
-                has~been~deprecated,~
-                to~be~removed~in~Markdown~4.0.0
+                \markdownError
+                  {
+                    The~jekyllDataString~renderer~prototype~
+                    has~been~deprecated,~
+                    to~be~removed~in~Markdown~4.0.0
+                  }
               }
-            \markdownRendererJekyllDataStringPrototype
+              {
+                \markdownWarning
+                  {
+                    The~jekyllDataString~renderer~prototype~
+                    has~been~deprecated,~
+                    to~be~removed~in~Markdown~4.0.0
+                  }
+                \markdownRendererJekyllDataStringPrototype
+              }
           }
           {
             \markdownRendererJekyllDataTypographicStringPrototype
@@ -21740,12 +22093,12 @@ following text:
 % \begin{markdown}
 %
 % The \mdef{markdownReadAndConvert} macro implements the \mref{markdownBegin}
-% macro. The first argument specifies the token sequence that will terminate
-% the markdown input (\mref{markdownEnd} in the instance of the \mref{markdownBegin}
-% macro) when the plain \TeX{} special characters have had their category
-% changed to *other*. The second argument specifies the token sequence
-% that will actually be inserted into the document, when the ending token
-% sequence has been found.
+% and \mref{yamlBegin} macros. The first argument specifies the token sequence
+% that will terminate the markdown input when the plain \TeX{} special
+% characters have had their category changed to *other*: \mref{markdownEnd} for
+% the \mref{markdownBegin} macro and \mref{yamlEnd} for the \mref{yamlBegin}
+% macro. The second argument specifies the token sequence that will actually be
+% inserted into the document, when the ending token sequence has been found.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -21764,6 +22117,11 @@ following text:
   |gdef|markdownBegin{%
     |markdownReadAndConvert{\markdownEnd}%
                            {|markdownEnd}}%
+  |gdef|yamlBegin{%
+    |begingroup
+    |yamlSetup{jekyllData, expectJekyllData, ensureJekyllData}%
+    |markdownReadAndConvert{\yamlEnd}%
+                           {|yamlEnd}}%
 |endgroup
 %    \end{macrocode}
 % \begin{markdown}
@@ -21906,16 +22264,16 @@ pdflatex --shell-escape document.tex
 % \begin{markdown}
 %
 %### Typesetting Markdown
-% The interface exposes the \envmdef{markdown} and \envmdef{markdown*}
-% \LaTeX{} environments, and redefines the \mref{markinline} and
-% \mref{markdownInput} commands.
 %
-%#### The `markdown` and `markdown*` \LaTeX{} environments
-% The \envmref{markdown} and \envmref{markdown*} \LaTeX{} environments are used
-% to typeset markdown document fragments. Both \LaTeX{} environments accept
-% \LaTeX{} interface options (see Section <#sec:latex-options>) as the only
-% argument. This argument is optional for the \envmref{markdown} environment
-% and mandatory for the \envmref{markdown*} environment.
+% The interface exposes the \envmdef{markdown}, \envmdef{markdown*}, and
+% \envmdef{yaml} \LaTeX{} environments, and redefines the \mref{markinline},
+% \mref{markdownInput}, and \mref{yamlInput} commands.
+%
+%#### Typesetting Markdown and YAML directly
+%
+% The \envmref{markdown} and \envmref{markdown*} \LaTeX{} environments are
+% aliases for the macros \mref{markdownBegin} and \mref{markdownEnd} exposed
+% by the plain \TeX{} interface.
 %
 % The \envmref{markdown*} environment has been deprecated and will be removed
 % in the next major version of the Markdown package.
@@ -21927,26 +22285,25 @@ pdflatex --shell-escape document.tex
 %    \end{macrocode}
 % \markdownBegin
 %
-% You may prepend your own code to the \mdef{markdown} macro and append your own
-% code to the \mref{markdownEnd} macro to produce special effects before and after
-% the \envmref{markdown} \LaTeX{} environment (and likewise for the starred
-% version).
+% Furthermore, both environments accept \LaTeX{} interface options (see Section
+% <#sec:latex-options>) as the only argument. This argument is optional for the
+% \envmref{markdown} environment and mandatory for the \envmref{markdown*}
+% environment.
 %
-% Note that the \envmref{markdown} and \envmref{markdown*} \LaTeX{} environments are
-% subject to the same limitations as the \mref{markdownBegin} and \mref{markdownEnd}
-% macros exposed by the plain \TeX{} interface.
+% The \envmref{markdown} and \envmref{markdown*} environments are
+% subject to the same limitations as the \mref{markdownBegin} and
+% \mref{markdownEnd} macros.
 %
 % The following example \LaTeX{} code showcases the usage of the
 % \envmref{markdown} and \envmref{markdown*} environments:
+%
 % ``` tex
 % \documentclass{article}            \documentclass{article}
 % \usepackage{markdown}              \usepackage{markdown}
 % \begin{document}                   \begin{document}
-% \% ...                              \% ...
 % \begin{markdown}[smartEllipses]    \begin{markdown*}{smartEllipses}
 % _Hello_ **world** ...              _Hello_ **world** ...
 % \end{markdown}                     \end{markdown*}
-% \% ...                              \% ...
 % \end{document}                     \end{document}
 % ```````
 %
@@ -21974,12 +22331,16 @@ pdflatex --shell-escape document.tex
 % ```
 %
 % Specifically, the \mref{markdown} macro must appear at the end of the
-% replacement text and must be followed by text that has not yet been ingested
-% by \TeX's input processor. Furthermore, using the \mref{markdownEnd} macro is
-% optional and only makes a difference if you redefined it to produce special
-% effects before and after the \envmref{markdown} \LaTeX{} environment. Lastly,
-% you can't nest the other environments. For example, the following definition
-% is incorrect:
+% replacement before-text and must be followed by text that has not yet been
+% ingested by \TeX's input processor.
+%
+% Furthermore, using the \mref{markdownEnd} macro in of after the replacement
+% after-text is optional and only makes a difference if you redefined it to
+% produce special effects before and after the \envmref{markdown} \LaTeX{}
+% environment.
+%
+% Lastly, you can't nest the other environments. For example, the following
+% definition would be incorrect:
 %
 % ``` tex
 % \newenvironment{bar}{\begin{foo}}{\end{foo}}
@@ -21992,36 +22353,186 @@ pdflatex --shell-escape document.tex
 % \newenvironment{bar}{\markdown[some, options]}{\markdownEnd}
 % ```
 %
+% The \envmref{yaml} \LaTeX{} environment is an alias for the macros
+% \mref{yamlBegin} and \mref{yamlEnd} exposed by the plain \TeX{} interface.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\newenvironment{yaml}\relax\relax
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Furthermore, the environment accepts \LaTeX{} interface options (see Section
+% <#sec:latex-options>) as the only optional argument.
+%
+% The \envmref{yaml} environment is subject to the same limitations as
+% the \mref{markdownBegin} and \mref{markdownEnd} macros.
+%
+% The following example \LaTeX{} code showcases the usage of the
+% \envmref{yaml} environment:
+%
+% ``` tex
+% \documentclass{article}
+% \usepackage{markdown}
+% \begin{document}
+% \begin{yaml}[smartEllipses]
+% title: _Hello_ **world** ...
+% author: John Doe
+% \end{yaml}
+% \end{document}
+% ```````
+%
 % \end{markdown}
 % \markdownBegin
 %
-%#### The `\markinline` and `\markdownInput` macros
+% The above code has the same effect as the below code:
+%
+% ``` tex
+% \documentclass{article}
+% \usepackage{markdown}
+% \begin{document}
+% \begin{markdown}[
+%   jekyllData,
+%   expectJekyllData,
+%   ensureJekyllData,
+%   smartEllipses,
+% ]
+% title: _Hello_ **world** ...
+% author: John Doe
+% \end{markdown}
+% \end{document}
+% ```````
+%
+% You can't directly extend the \envmref{yaml} \LaTeX{} environment by using it
+% in other environments. However, you can work around this limitation by using
+% the \mref{yaml} and \mref{yamlEnd} macros directly in the definition,
+% similarly to the \mref{markdown} and \mref{markdownEnd} macros described
+% previously. Unlike with the \mref{markdown} and \mref{markdownEnd} macros,
+% The \mref{yamlEnd} macro _must_ be used in or after the replacement after-text.
+%
 % The \mref{markinline} macro accepts a single mandatory parameter containing
 % inline markdown content and expands to the result of the conversion of the
 % input markdown document to plain \TeX{}.  Unlike the \mref{markinline} macro
 % provided by the plain \TeX{} interface, this macro also accepts \LaTeX{}
 % interface options (see Section <#sec:latex-options>) as its optional
-% argument. These options will only influnce this markdown content.
+% argument. These options will only influence this markdown content.
+%
+%#### Typesetting Markdown and YAML from external documents
 %
 % The \mref{markdownInput} macro accepts a single mandatory parameter containing
 % the filename of a markdown document and expands to the result of the
 % conversion of the input markdown document to plain \TeX{}.  Unlike the
 % \mref{markdownInput} macro provided by the plain \TeX{} interface, this macro
 % also accepts \LaTeX{} interface options (see Section <#sec:latex-options>)
-% as its optional argument. These options will only influnce this markdown
+% as its optional argument. These options will only influence this markdown
 % document.
 %
 % The following example \LaTeX{} code showcases the usage of the
 % \mref{markdownInput} macro:
+%
 % ``` tex
 % \documentclass{article}
 % \usepackage{markdown}
 % \begin{document}
-% % ...
 % \markdownInput[smartEllipses]{hello.md}
-% % ...
 % \end{document}
 % ```````
+%
+% The \mref{yamlInput} macro accepts a single mandatory parameter containing
+% the filename of a \acro{YAML} document and expands to the result of the
+% conversion of the input \acro{YAML} document to plain \TeX{}.  Unlike the
+% \mref{yamlInput} macro provided by the plain \TeX{} interface, this macro
+% also accepts \LaTeX{} interface options (see Section <#sec:latex-options>)
+% as its optional argument. These options will only influence this \acro{YAML}
+% document.
+%
+% The following example \LaTeX{} code showcases the usage of the
+% \mref{yamlInput} macro:
+%
+% ``` tex
+% \documentclass{article}
+% \usepackage{markdown}
+% \begin{document}
+% \yamlInput[smartEllipses]{hello.yml}
+% \end{document}
+% ```````
+%
+% The above code has the same effect as the below code:
+%
+% ``` tex
+% \documentclass{article}
+% \usepackage{markdown}
+% \begin{document}
+% \markdownInput[
+%   jekyllData,
+%   expectJekyllData,
+%   ensureJekyllData,
+%   smartEllipses,
+% ]{hello.yml}
+% \end{document}
+% ```````
+%
+%### Using \LaTeX{} hooks with the Markdown package
+%
+% \LaTeX{} provides an intricate hook management system that allows users to
+% insert extra material before and after certain \TeX{} macros and \LaTeX{}
+% environments, among other things. [@mittelbach24, Section 3.1.2]
+%
+% The Markdown package is compatible with hooks and allows the use of hooks
+% to insert extra material before \TeX{} commands and before/after \LaTeX{}
+% environments without restriction:
+%
+% ``` tex
+% \documentclass{article}
+% \usepackage{markdown}
+% \begin{document}
+% \AddToHook{cmd/markdownRendererEmphasis/before}{emphasis: }
+% \AddToHook{env/markdown/before}{<markdown>}
+% \AddToHook{env/markdown/after}{</markdown>}
+% \begin{markdown}
+% foo _bar_ baz!
+% \end{markdown}
+% \end{document}
+% ```
+%
+% Processing the above example with \LaTeX{} will produce the text
+% “<markdown>foo emphasis: _bar_ baz!</markdown>”, as expected.
+%
+% However, using hooks to insert extra material after \TeX{} commands only works
+% for commands with a fixed number of parameters that don't use currying.
+%
+% If, in the above example, you explicitly defined the renderer for emphasis
+% using \mref{markdownSetup} or another method that does not use currying, then
+% you would be able to insert extra material even after the renderer:
+%
+% ``` tex
+% \documentclass{article}
+% \usepackage{markdown}
+% \markdownSetup{renderers={emphasis={\emph{#1}}}}
+% \begin{document}
+% \AddToHook{cmd/markdownRendererEmphasis/before}{<emphasis>}
+% \AddToHook{cmd/markdownRendererEmphasis/after}{</emphasis>}
+% \AddToHook{env/markdown/before}{<markdown>}
+% \AddToHook{env/markdown/after}{</markdown>}
+% \begin{markdown}
+% foo _bar_ baz!
+% \end{markdown}
+% \end{document}
+% ```
+%
+% Processing the above example with \LaTeX{} will produce the text
+% “<markdown>foo <emphasis>_bar_</emphasis> baz!</markdown>”, as expected.
+%
+% However, the default renderer for emphasis uses currying and calls the
+% renderer prototype in a way that prevents the use of hooks to insert extra
+% material after the renderer, see Section~<#sec:emphasis-renderers>. In such
+% a case, you would need to redefine the renderer in a way that does not use
+% currying before you would be able to use hooks to insert extra material
+% after it.
+%
+% Hooks also cannot be used to insert extra material after renderers with a
+% variable number of parameters such as the renderer for tables, see
+% Section~<#sec:table-renderer>.
 %
 %### Options {#latex-options}
 %
@@ -22438,6 +22949,7 @@ following image:
 %  \begin{macrocode}
 \AtEndOfPackage{
   \markdownLaTeXLoadedtrue
+}
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -22448,17 +22960,39 @@ following image:
 %
 % \end{markdown}
 %  \begin{macrocode}
-  \markdownIfOption{noDefaults}{}{
-    \markdownSetup{theme=witiko/markdown/defaults}
+\ExplSyntaxOn
+\str_if_eq:VVT
+  \c_@@_top_layer_tl
+  \c_@@_option_layer_latex_tl
+  {
+    \ExplSyntaxOff
+    \AtEndOfPackage
+      {
+        \@@_if_option:nF
+          { noDefaults }
+          {
+            \@@_if_option:nTF
+              { experimental }
+              {
+                \@@_setup:n
+                  { theme = witiko/markdown/defaults@experimental }
+              }
+              {
+                \@@_setup:n
+                  { theme = witiko/markdown/defaults }
+              }
+          }
+      }
+    \ExplSyntaxOn
   }
-}
+\ExplSyntaxOff
 %    \end{macrocode}
 % \iffalse
 %</latex>
 %<*themes-witiko-markdown-defaults-latex>
 % \fi
 %  \begin{macrocode}
-\ProvidesPackage{markdownthemewitiko_markdown_defaults}[2024/01/03]%
+\ProvidesPackage{markdownthemewitiko_markdown_defaults}[2024/10/29]%
 %    \end{macrocode}
 % \iffalse
 %</themes-witiko-markdown-defaults-latex>
@@ -22571,16 +23105,22 @@ following text:
 % \noindent It is expected that the special plain \TeX{} characters have the
 % expected category codes, when `\input`ting the file.
 %
-%### Typesetting Markdown
-% The interface exposes the \mdef{startmarkdown} and \mdef{stopmarkdown} macro
-% pair for the typesetting of a markdown document fragment, and defines the
-% \mdef{inputmarkdown} macro.
+%### Typesetting Markdown and YAML
+%
+% The interface exposes the \mdef{startmarkdown}, \mdef{stopmarkdown},
+% \mdef{startyaml}, \mdef{stopyaml}, \mdef{inputmarkdown}, and \mdef{inputyaml}
+% macros.
+%
+%#### Typesetting Markdown and YAML directly
+%
+% The \mref{startmarkdown} and \mref{stopmarkdown} macros are aliases for the
+% macros \mref{markdownBegin} and \mref{markdownEnd} exposed by the plain
+% \TeX{} interface.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \let\startmarkdown\relax
 \let\stopmarkdown\relax
-\let\inputmarkdown\relax
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -22589,12 +23129,12 @@ following text:
 % \mref{stopmarkdown} macro to produce special effects before and after the
 % markdown block.
 %
-% Note that the \mref{startmarkdown} and \mref{stopmarkdown} macros
-% are subject to the same limitations as the \mref{markdownBegin} and
-% \mref{markdownEnd} macros exposed by the plain \TeX{} interface.
+% The macros \mref{startmarkdown} and \mref{stopmarkdown} are subject to the
+% same limitations as the \mref{markdownBegin} and \mref{markdownEnd} macros.
 %
 % The following example \Hologo{ConTeXt} code showcases the usage of the
 % \mref{startmarkdown} and \mref{stopmarkdown} macros:
+%
 % ``` tex
 % \usemodule[t][markdown]
 % \starttext
@@ -22604,22 +23144,117 @@ following text:
 % \stoptext
 % ```````
 %
-% The \mref{inputmarkdown} macro accepts a single mandatory parameter
-% containing the filename of a markdown document and expands to the result of
-% the conversion of the input markdown document to plain \TeX{}. Unlike the
-% \mref{markdownInput} macro provided by the plain \TeX{} interface, this macro
-% also accepts \Hologo{ConTeXt} interface options (see Section
-% <#sec:context-options>) as its optional argument. These options will only
-% influnce this markdown document.
+% The \mref{startyaml} and \mref{stopyaml} macros are aliases for the macros
+% \mref{yamlBegin} and \mref{yamlEnd} exposed by the plain \TeX{} interface.
 %
-% The following example \LaTeX{} code showcases the usage of the
-% \mref{markdownInput} macro:
+% \end{markdown}
+%  \begin{macrocode}
+\let\startyaml\relax
+\let\stopyaml\relax
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% You may prepend your own code to the \mref{startyaml} macro and append your
+% own code to the \mref{stopyaml} macro to produce special effects before and
+% after the \acro{YAML} document.
+%
+% The macros \mref{startyaml} and \mref{stopyaml} are subject to the same
+% limitations as the \mref{markdownBegin} and \mref{markdownEnd} macros.
+%
+% The following example \Hologo{ConTeXt} code showcases the usage of the
+% \mref{startyaml} and \mref{stopyaml} macros:
+%
 % ``` tex
 % \usemodule[t][markdown]
 % \starttext
-% % ...
+% \startyaml
+% title: _Hello_ **world** ...
+% author: John Doe
+% \stopyaml
+% \stoptext
+% ```````
+%
+% The above code has the same effect as the below code:
+%
+% ``` tex
+% \usemodule[t][markdown]
+% \starttext
+% \setupyaml[jekyllData, expectJekyllData, ensureJekyllData]
+% \startyaml
+% title: _Hello_ **world** ...
+% author: John Doe
+% \stopyaml
+% \stoptext
+% ```````
+%
+%#### Typesetting Markdown and YAML from external documents
+%
+% The \mref{inputmarkdown} macro aliases the macro \mref{markdownInput} exposed
+% by the plain \TeX{} interface.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\let\inputmarkdown\relax
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Furthermore, the \mref{inputmarkdown} macro also accepts \Hologo{ConTeXt}
+% interface options (see Section <#sec:context-options>) as its optional
+% argument. These options will only influence this markdown document.
+%
+% The following example \Hologo{ConTeXt} code showcases the usage of the
+% \mref{inputmarkdown} macro:
+%
+% ``` tex
+% \usemodule[t][markdown]
+% \starttext
 % \inputmarkdown[smartEllipses]{hello.md}
-% % ...
+% \stoptext
+% ```````
+%
+% The above code has the same effect as the below code:
+%
+% ``` tex
+% \usemodule[t][markdown]
+% \starttext
+% \setupmarkdown[smartEllipses]
+% \inputmarkdown{hello.md}
+% \stoptext
+% ```````
+%
+% The \mref{inputyaml} macro aliases the macro \mref{yamlInput} exposed by the
+% plain \TeX{} interface.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\let\inputyaml\relax
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Furthermore, the \mref{inputyaml} macro also accepts \Hologo{ConTeXt}
+% interface options (see Section <#sec:context-options>) as its optional
+% argument. These options will only influence this \acro{YAML} document.
+%
+% The following example \Hologo{ConTeXt} code showcases the usage of the
+% \mref{inputyaml} macro:
+%
+% ``` tex
+% \usemodule[t][markdown]
+% \starttext
+% \inputyaml[smartEllipses]{hello.yml}
+% \stoptext
+% ```````
+%
+% The above code has the same effect as the below code:
+%
+% ``` tex
+% \usemodule[t][markdown]
+% \starttext
+% \setupyaml[smartEllipses]
+% \inputyaml{hello.yml}
 % \stoptext
 % ```````
 %
@@ -22649,7 +23284,17 @@ following text:
     \@@_setup:n
       { #1 }
   }
-\ExplSyntaxOff
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The command \mdef{setupyaml} is also available as an alias for
+% the command \mref{setupmarkdown}.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\cs_gset_eq:NN
+  \setupyaml
+  \setupmarkdown
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -22660,7 +23305,6 @@ following text:
 %
 % \end{markdown}
 %  \begin{macrocode}
-\ExplSyntaxOn
 \cs_new:Nn \@@_caseless:N
   {
     \regex_replace_all:nnN
@@ -23177,6 +23821,19 @@ function util.salt(options)
   local salt = table.concat(opt_string, ",")
             .. "," .. metadata.version
   return salt
+end
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% The \luamdef{util.warning} method produces a warning `s` that is unrelated to
+% any specific markdown text being processed. For warnings that are specific to
+% a markdown text, use \luamref{writer->warning} function.
+%
+% \end{markdown}
+%  \begin{macrocode}
+function util.warning(s)
+  io.stderr:write("Warning: " .. s .. "\n")
 end
 %    \end{macrocode}
 % \iffalse
@@ -25758,24 +26415,28 @@ function M.writer.new(options)
 % \begin{markdown}
 %
 % Define \luamdef{writer->warning} as a function that will transform an input
-% warning `t` to the output format.
+% warning `t` with optional more warning text `m` to the output format.
 %
 % \end{markdown}
 %  \begin{macrocode}
-  function self.warning(t)
-    return {"\\markdownRendererWarning{", self.identifier(t), "}"}
+  function self.warning(t, m)
+    return {"\\markdownRendererWarning{", self.escape(t), "}{",
+            escape_minimal(t), "}{", self.escape(m or ""), "}{",
+            escape_minimal(m or ""), "}"}
   end
 %    \end{macrocode}
 % \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->error} as a function that will transform an input
-% error `t` to the output format.
+% error text `t` with optional more error text `m` to the output format.
 %
 % \end{markdown}
 %  \begin{macrocode}
-  function self.error(t)
-    return {"\\markdownRendererError{", self.identifier(t), "}"}
+  function self.error(t, m)
+    return {"\\markdownRendererError{", self.escape(t), "}{",
+            escape_minimal(t), "}{", self.escape(m or ""), "}{",
+            escape_minimal(m or ""), "}"}
   end
 %    \end{macrocode}
 % \par
@@ -26081,7 +26742,23 @@ function M.writer.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   function self.document(d)
-    local buf = {"\\markdownRendererDocumentBegin\n", d}
+    local buf = {"\\markdownRendererDocumentBegin\n"}
+
+    -- warn against the `hybrid` option
+    if options.hybrid then
+      local text = "The `hybrid` option has been soft-deprecated."
+      local more = "Consider using one of the following better options "
+                .. "for mixing TeX and markdown: `contentBlocks`, "
+                .. "`rawAttribute`, `texComments`, `texMathDollars`, "
+                .. "`texMathSingleBackslash`, and "
+                .. "`texMathDoubleBackslash`. "
+                .. "For more information, see the user manual at "
+                .. "<https://witiko.github.io/markdown/>."
+      table.insert(buf, self.warning(text, more))
+    end
+
+    -- insert the text of the document
+    table.insert(buf, d)
 
     -- pop all attributes
     table.insert(buf, self.pop_attributes())
@@ -26842,9 +27519,10 @@ print("return M")
 %  \begin{macrocode}
 local unicode_data = require("markdown-unicode-data")
 if metadata.version ~= unicode_data.metadata.version then
-  warn("markdown.lua " .. metadata.version .. " used with " ..
-       "markdown-unicode-data.lua " .. unicode_data.metadata.version ..
-       ".")
+  util.warning(
+    "markdown.lua " .. metadata.version .. " used with " ..
+    "markdown-unicode-data.lua " .. unicode_data.metadata.version .. "."
+  )
 end
 parsers.punctuation = unicode_data.punctuation
 
@@ -28826,8 +29504,11 @@ function M.reader.new(writer, options)
       end
       local res = lpeg.match(grammar(), str)
       if res == nil then
-        return writer.error(format("%s failed on:\n%s",
-                                   name, str:sub(1,20)))
+        return writer.error(
+          format("Parser `%s` failed to process the input text.", name),
+          format("Here are the first 20 characters of the remaining "
+              .. "unprocessed text: `%s`.", str:sub(1,20))
+        )
       else
         return res
       end
@@ -29682,7 +30363,7 @@ function M.reader.new(writer, options)
   parsers.link_and_emph_content
     = Ct( Cg(Cc("content"), "type")
         * Cg(Cs(( parsers.link_emph_precedence
-                + parsers.backslash * parsers.any
+                + parsers.backslash * parsers.linechar
                 + parsers.link_and_emph_endline
                 + (parsers.linechar
                   - parsers.blankline^2
@@ -31146,7 +31827,7 @@ end
           input = uni_algos.normalize.NFKD(input)
         else
           return writer.error(
-            format("Unknown normalization form %s", form))
+            format("Unknown normalization form %s.", form))
         end
       end
 %    \end{macrocode}
@@ -33764,7 +34445,7 @@ M.extensions.jekyll_data = function(expect_jekyll_data,
             else
               local error = self.error(format(
                 "Unexpected type %s for value of "
-                .. "YAML key %s", typ, k))
+                .. "YAML key %s.", typ, k))
               table.insert(buf, error)
             end
           end
@@ -33856,10 +34537,6 @@ end
 %<*lua-loader>
 % \fi
 %  \begin{macrocode}
-local function warn(s)
-  io.stderr:write("Warning: " .. s .. "\n")
-end
-
 function M.new(options)
 %    \end{macrocode}
 % \par
@@ -34470,53 +35147,91 @@ end
 %  \begin{macrocode}
 \ExplSyntaxOn
 \prop_new:N \g_@@_plain_tex_loaded_themes_linenos_prop
+\prop_new:N \g_@@_plain_tex_loaded_themes_versions_prop
 \cs_new:Nn
-  \@@_plain_tex_load_theme:nn
+  \@@_plain_tex_load_theme:nnn
   {
     \prop_get:NnNTF
       \g_@@_plain_tex_loaded_themes_linenos_prop
       { #1 }
       \l_tmpa_tl
       {
-        \msg_warning:nnnV
-          { markdown }
-          { repeatedly-loaded-plain-tex-theme }
+        \prop_get:NnN
+          \g_@@_plain_tex_loaded_themes_versions_prop
           { #1 }
-          \l_tmpa_tl
+          \l_tmpb_tl
+        \str_if_eq:nVTF
+          { #2 }
+          \l_tmpb_tl
+          {
+            \msg_warning:nnnVn
+              { markdown }
+              { repeatedly-loaded-plain-tex-theme }
+              { #1 }
+              \l_tmpa_tl
+              { #2 }
+          }
+          {
+            \msg_error:nnnnVV
+              { markdown }
+              { different-versions-of-plain-tex-theme }
+              { #1 }
+              { #2 }
+              \l_tmpb_tl
+              \l_tmpa_tl
+          }
       }
       {
-        \msg_info:nnn
+        \msg_info:nnnn
           { markdown }
           { loading-plain-tex-theme }
           { #1 }
+          { #2 }
         \prop_gput:Nnx
           \g_@@_plain_tex_loaded_themes_linenos_prop
           { #1 }
           { \tex_the:D \tex_inputlineno:D }
+        \prop_gput:Nnn
+          \g_@@_plain_tex_loaded_themes_versions_prop
+          { #1 }
+          { #2 }
         \file_input:n
-          { markdown theme #2 }
+          { markdown theme #3 }
       }
   }
 \msg_new:nnn
   { markdown }
   { loading-plain-tex-theme }
-  { Loading~plain~TeX~Markdown~theme~#1 }
+  { Loading~version~#2~of~plain~TeX~Markdown~theme~#1 }
 \msg_new:nnn
   { markdown }
   { repeatedly-loaded-plain-tex-theme }
   {
-    Plain~TeX~Markdown~theme~#1~was~previously~
+    Version~#3~of~plain~TeX~Markdown~theme~#1~was~previously~
     loaded~on~line~#2,~not~loading~it~again
+  }
+\msg_new:nnn
+  { markdown }
+  { different-versions-of-plain-tex-theme }
+  {
+    Tried~to~load~version~#2~of~plain~TeX~Markdown~theme~#1~
+    but~version~#3~has~already~been~loaded~on~line~#4
   }
 \cs_generate_variant:Nn
   \prop_gput:Nnn
   { Nnx }
 \cs_gset_eq:NN
-  \@@_load_theme:nn
-  \@@_plain_tex_load_theme:nn
+  \@@_load_theme:nnn
+  \@@_plain_tex_load_theme:nnn
 \cs_generate_variant:Nn
-  \@@_load_theme:nn
-  { nV }
+  \@@_load_theme:nnn
+  { VeV }
+\cs_generate_variant:Nn
+  \msg_error:nnnnnn
+  { nnnnVV }
+\cs_generate_variant:Nn
+  \msg_warning:nnnnn
+  { nnnVn }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -34571,16 +35286,17 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-    \@@_plain_tex_load_theme:VV
+    \@@_plain_tex_load_theme:VeV
       \l_tmpb_tl
+      { \markdownThemeVersion }
       \l_tmpa_str
   }
 \cs_generate_variant:Nn
   \tl_set:Nn
   { Ne }
 \cs_generate_variant:Nn
-  \@@_plain_tex_load_theme:nn
-  { VV }
+  \@@_plain_tex_load_theme:nnn
+  { VeV }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \iffalse
@@ -34741,8 +35457,28 @@ end
 \ExplSyntaxOff
 \def\markdownRendererSectionBeginPrototype{}%
 \def\markdownRendererSectionEndPrototype{}%
-\let\markdownRendererWarningPrototype\markdownWarning
-\let\markdownRendererErrorPrototype\markdownError
+\ExplSyntaxOn
+\cs_gset:Npn
+  \markdownRendererWarningPrototype
+  #1#2#3#4
+  {
+    \tl_set:Nn
+      \l_tmpa_tl
+      { #2 }
+    \tl_if_empty:nF
+      { #4 }
+      {
+        \tl_put_right:Nn
+          \l_tmpa_tl
+          { \iow_newline: #4 }
+      }
+    \exp_args:NV
+      \markdownWarning
+      \l_tmpa_tl
+  }
+\ExplSyntaxOff
+\def\markdownRendererErrorPrototype#1#2#3#4{%
+  \markdownError{#2}{#4}}%
 %    \end{macrocode}
 % \par
 % \begin{markdown}
@@ -35062,8 +35798,16 @@ end
     \@@_if_option:nF
       { noDefaults }
       {
-        \@@_setup:n
-          {theme = witiko/markdown/defaults}
+        \@@_if_option:nTF
+          { experimental }
+          {
+            \@@_setup:n
+              { theme = witiko/markdown/defaults@experimental }
+          }
+          {
+            \@@_setup:n
+              { theme = witiko/markdown/defaults }
+          }
       }
     \ExplSyntaxOn
   }
@@ -35884,9 +36628,10 @@ end
 % \begin{markdown}
 %
 % The \mdef{markdownInputPlainTeX} macro is used to store the original plain
-% \TeX{} implementation of the \mref{markdownInput} macro. The \mref{markdownInput}
-% macro is then redefined to accept an optional argument with options recognized by
-% the \LaTeX{} interface (see Section <#sec:latex-options>).
+% \TeX{} implementation of the \mref{yamlInput} macro. The \mref{markdownInput}
+% and \mref{yamlInput} macros are then redefined to accept an optional argument
+% with options recognized by the \LaTeX{} interface (see Section
+% <#sec:latex-options>).
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -35896,12 +36641,17 @@ end
     \markdownSetup{#1}%
     \markdownInputPlainTeX{#2}%
   \endgroup}%
+\renewcommand\yamlInput[2][]{%
+  \begingroup
+    \yamlSetup{jekyllData, expectJekyllData, ensureJekyllData, #1}%
+    \markdownInputPlainTeX{#2}%
+  \endgroup}%
 %    \end{macrocode}
 % \par
 % \begin{markdown}
 %
-% The \envmref{markdown}, and \envmref{markdown*} \LaTeX{} environments are
-% implemented using the \mref{markdownReadAndConvert} macro.
+% The \envmref{markdown}, \envmref{markdown*}, and \envmref{yaml} \LaTeX{}
+% environments are implemented using the \mref{markdownReadAndConvert} macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -36020,16 +36770,34 @@ end
   { markdown* }
   [ 1 ]
   {
-    \msg_warning:nnn
-      { markdown }
-      { latex-markdown-star-deprecated }
-      { #1 }
+    \@@_if_option:nTF
+      { experimental }
+      {
+        \msg_error:nnn
+          { markdown }
+          { latex-markdown-star-deprecated }
+          { #1 }
+      }
+      {
+        \msg_warning:nnn
+          { markdown }
+          { latex-markdown-star-deprecated }
+          { #1 }
+      }
     \@@_setup:n
       { #1 }
     \markdownReadAndConvert@
       { markdown* }
   }
   { \markdownEnd }
+\renewenvironment
+  { yaml }
+  {
+    \group_begin:
+    \yamlSetup{jekyllData, expectJekyllData, ensureJekyllData}%
+    \markdown
+  }
+  { \yamlEnd }
 \msg_new:nnn
   { markdown }
   { latex-markdown-star-deprecated }
@@ -36070,8 +36838,10 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
+\prop_new:N \g_@@_latex_loaded_themes_linenos_prop
+\prop_new:N \g_@@_latex_loaded_themes_versions_prop
 \cs_gset:Nn
-  \@@_load_theme:nn
+  \@@_load_theme:nnn
   {
 %    \end{macrocode}
 % \par
@@ -36095,7 +36865,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
         \file_if_exist:nTF
-          { markdown theme #2.sty }
+          { markdown theme #3.sty }
           {
             \msg_error:nnn
               { markdown }
@@ -36103,9 +36873,10 @@ end
               { #1 }
           }
           {
-            \@@_plain_tex_load_theme:nn
+            \@@_plain_tex_load_theme:nnn
               { #1 }
               { #2 }
+              { #3 }
           }
       \else
 %    \end{macrocode}
@@ -36118,19 +36889,61 @@ end
 % \end{markdown}
 %  \begin{macrocode}
         \file_if_exist:nTF
-          { markdown theme #2.sty }
+          { markdown theme #3.sty }
           {
-            \msg_info:nnn
-              { markdown }
-              { loading-latex-theme }
+            \prop_get:NnNTF
+              \g_@@_latex_loaded_themes_linenos_prop
               { #1 }
-            \RequirePackage
-              { markdown theme #2 }
+              \l_tmpa_tl
+              {
+                \prop_get:NnN
+                  \g_@@_latex_loaded_themes_versions_prop
+                  { #1 }
+                  \l_tmpb_tl
+                \str_if_eq:nVTF
+                  { #2 }
+                  \l_tmpb_tl
+                  {
+                    \msg_warning:nnnVn
+                      { markdown }
+                      { repeatedly-loaded-latex-theme }
+                      { #1 }
+                      \l_tmpa_tl
+                      { #2 }
+                  }
+                  {
+                    \msg_error:nnnnVV
+                      { markdown }
+                      { different-versions-of-latex-theme }
+                      { #1 }
+                      { #2 }
+                      \l_tmpb_tl
+                      \l_tmpa_tl
+                  }
+              }
+              {
+                \msg_info:nnnn
+                  { markdown }
+                  { loading-latex-theme }
+                  { #1 }
+                  { #2 }
+                \prop_gput:Nnx
+                  \g_@@_latex_loaded_themes_linenos_prop
+                  { #1 }
+                  { \tex_the:D \tex_inputlineno:D }
+                \prop_gput:Nnn
+                  \g_@@_latex_loaded_themes_versions_prop
+                  { #1 }
+                  { #2 }
+                \RequirePackage
+                  { markdown theme #3 }
+              }
           }
           {
-            \@@_plain_tex_load_theme:nn
+            \@@_plain_tex_load_theme:nnn
               { #1 }
               { #2 }
+              { #3 }
           }
       \fi
     \else
@@ -36142,14 +36955,15 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-      \msg_info:nnn
+      \msg_info:nnnn
         { markdown }
         { theme-loading-postponed }
         { #1 }
+        { #2 }
       \AtEndOfPackage
         {
           \@@_set_theme:n
-            { #1 }
+            { #1 @ #2 }
         }
     \fi
   }
@@ -36157,13 +36971,27 @@ end
   { markdown }
   { theme-loading-postponed }
   {
-    Postponing~loading~Markdown~theme~#1~until~
+    Postponing~loading~version~#2~of~Markdown~theme~#1~until~
     Markdown~package~has~finished~loading
   }
 \msg_new:nnn
   { markdown }
   { loading-latex-theme }
-  { Loading~LaTeX~Markdown~theme~#1 }
+  { Loading~version~#2~of~LaTeX~Markdown~theme~#1 }
+\msg_new:nnn
+  { markdown }
+  { repeatedly-loaded-latex-theme }
+  {
+    Version~#3~of~LaTeX~Markdown~theme~#1~was~previously~
+    loaded~on~line~#2,~not~loading~it~again
+  }
+\msg_new:nnn
+  { markdown }
+  { different-versions-of-latex-theme }
+  {
+    Tried~to~load~version~#2~of~LaTeX~Markdown~theme~#1~
+    but~version~#3~has~already~been~loaded~on~line~#4
+  }
 \cs_generate_variant:Nn
   \msg_new:nnnn
   { nnVV }
@@ -36452,85 +37280,272 @@ end
 \markdownIfOption{plain}{\iffalse}{\iftrue}
 %    \end{macrocode}
 % \par
-% \begin{markdown}%
-% If either the \Opt{tightLists} or the \Opt{fancyLists} Lua option is enabled
-% and the current document class is not \pkg{beamer}, then load the
-% \pkg{paralist} package.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\@ifclassloaded{beamer}{}{%
-  \markdownIfOption{tightLists}{\RequirePackage{paralist}}{}%
-  \markdownIfOption{fancyLists}{\RequirePackage{paralist}}{}%
-}
-%    \end{macrocode}
-% \par
 % \begin{markdown}
 %
-% If we loaded the \pkg{paralist} package, define the respective renderer
-% prototypes to make use of the capabilities of the package. Otherwise,
-% define the renderer prototypes to fall back on the corresponding renderers
-% for the non-tight lists.
+%#### Lists
+%
+% If either the \Opt{tightLists} or the \Opt{fancyLists} Lua option is enabled
+% and the current document class is not \pkg{beamer}, use a package that
+% provides support for tight and fancy lists.
+%
+% If either the package \pkg{paralist} or the package \pkg{enumitem} have already
+% been loaded, use them. Otherwise, if the option \Opt{experimental} or any test
+% phase has been enabled, use the package \pkg{enumitem}. Otherwise, use the
+% package \pkg{paralist}.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\@ifpackageloaded{paralist}{
-  \tl_new:N
-    \l_@@_latex_fancy_list_item_label_number_style_tl
-  \tl_new:N
-    \l_@@_latex_fancy_list_item_label_delimiter_style_tl
-  \cs_new:Nn
-    \@@_latex_fancy_list_item_label_number:nn
-    {
-      \str_case:nn
-        { #1 }
+\bool_new:N
+  \g_@@_tight_or_fancy_lists_bool
+\bool_gset_false:N
+  \g_@@_tight_or_fancy_lists_bool
+\@@_if_option:nTF
+  { tightLists }
+  {
+    \bool_gset_true:N
+      \g_@@_tight_or_fancy_lists_bool
+  }
+  {
+    \@@_if_option:nT
+      { fancyLists }
+      {
+        \bool_gset_true:N
+          \g_@@_tight_or_fancy_lists_bool
+      }
+  }
+\bool_new:N
+  \g_@@_beamer_paralist_or_enumitem_bool
+\bool_gset_true:N
+  \g_@@_beamer_paralist_or_enumitem_bool
+\@ifclassloaded
+  { beamer }
+  { }
+  {
+    \@ifpackageloaded
+      { paralist }
+      { }
+      {
+        \@ifpackageloaded
+        { enumitem }
+        { }
         {
-          { Decimal } { #2 }
-          { LowerRoman } { \int_to_roman:n { #2 } }
-          { UpperRoman } { \int_to_Roman:n { #2 } }
-          { LowerAlpha } { \int_to_alph:n { #2 } }
-          { UpperAlpha } { \int_to_Alph:n { #2 } }
+          \bool_gset_false:N
+            \g_@@_beamer_paralist_or_enumitem_bool
         }
-    }
-  \cs_new:Nn
-    \@@_latex_fancy_list_item_label_delimiter:n
-    {
-      \str_case:nn
-        { #1 }
-        {
-          { Default } { . }
-          { OneParen } { ) }
-          { Period } { . }
-        }
-    }
-  \cs_new:Nn
-    \@@_latex_fancy_list_item_label:nnn
-    {
-      \@@_latex_fancy_list_item_label_number:nn
-        { #1 }
-        { #3 }
-      \@@_latex_fancy_list_item_label_delimiter:n
-        { #2 }
-    }
-  \cs_new:Nn
-    \@@_latex_paralist_style:nn
-    {
-      \str_case:nn
-        { #1 }
-        {
-          { Decimal } { 1 }
-          { LowerRoman } { i }
-          { UpperRoman } { I }
-          { LowerAlpha } { a }
-          { UpperAlpha } { A }
-        }
-      \@@_latex_fancy_list_item_label_delimiter:n
-        { #2 }
-    }
-  \markdownSetup{rendererPrototypes={
+      }
+  }
+\bool_if:nT
+  {
+    \g_@@_tight_or_fancy_lists_bool &&
+    ! \g_@@_beamer_paralist_or_enumitem_bool
+  }
+  {
+    \bool_if:nTF
+      {
+        \bool_lazy_or_p:nn
+          {
+            \str_if_eq_p:en
+              { \markdownThemeVersion }
+              { experimental }
+          }
+          {
+            \bool_lazy_and_p:nn
+              {
+                \prop_if_exist_p:N
+                  \g__pdfmanagement_documentproperties_prop
+              }
+              {
+                \bool_lazy_any_p:n
+                  {
+                    {
+                      \prop_if_in_p:Nn
+                        \g__pdfmanagement_documentproperties_prop
+                        { document / testphase / phase-I }
+                    }
+                    {
+                      \prop_if_in_p:Nn
+                        \g__pdfmanagement_documentproperties_prop
+                        { document / testphase / phase-II }
+                    }
+                    {
+                      \prop_if_in_p:Nn
+                        \g__pdfmanagement_documentproperties_prop
+                        { document / testphase / phase-III }
+                    }
+                    {
+                      \prop_if_in_p:Nn
+                        \g__pdfmanagement_documentproperties_prop
+                        { document / testphase / phase-IV }
+                    }
+                    {
+                      \prop_if_in_p:Nn
+                        \g__pdfmanagement_documentproperties_prop
+                        { document / testphase / phase-V }
+                    }
+                    {
+                      \prop_if_in_p:Nn
+                        \g__pdfmanagement_documentproperties_prop
+                        { document / testphase / phase-VI }
+                    }
+                  }
+              }
+          }
+      }
+      {
+        \RequirePackage
+          { enumitem }
+      }
+      {
+        \RequirePackage
+          { paralist }
+      }
+  }
+\ExplSyntaxOff
 %    \end{macrocode}
 % \par
+% \begin{markdown}
+%
+% If we loaded the \pkg{enumitem} package, define the tight and
+% fancy list renderer prototypes to make use of the capabilities of
+% the package.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\cs_new:Nn
+  \@@_latex_fancy_list_item_label_number:nn
+  {
+    \str_case:nn
+      { #1 }
+      {
+        { Decimal } { #2 }
+        { LowerRoman } { \int_to_roman:n { #2 } }
+        { UpperRoman } { \int_to_Roman:n { #2 } }
+        { LowerAlpha } { \int_to_alph:n { #2 } }
+        { UpperAlpha } { \int_to_Alph:n { #2 } }
+      }
+  }
+\cs_new:Nn
+  \@@_latex_fancy_list_item_label_delimiter:n
+  {
+    \str_case:nn
+      { #1 }
+      {
+        { Default } { . }
+        { OneParen } { ) }
+        { Period } { . }
+      }
+  }
+\cs_new:Nn
+  \@@_latex_fancy_list_item_label:nnn
+  {
+    \@@_latex_fancy_list_item_label_number:nn
+      { #1 }
+      { #3 }
+    \@@_latex_fancy_list_item_label_delimiter:n
+      { #2 }
+  }
+\cs_generate_variant:Nn
+  \@@_latex_fancy_list_item_label:nnn
+  { VVn }
+\tl_new:N
+  \l_@@_latex_fancy_list_item_label_number_style_tl
+\tl_new:N
+  \l_@@_latex_fancy_list_item_label_delimiter_style_tl
+\@ifpackageloaded{enumitem}{
+  \markdownSetup{rendererPrototypes={
+%    \end{macrocode}
+% \begin{markdown}
+%
+% First, let's define the tight list item renderer prototypes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    ulBeginTight = {
+      \begin
+        { itemize }
+        [ noitemsep ]
+    },
+    ulEndTight = {
+      \end
+        { itemize }
+    },
+    olBeginTight = {
+      \begin
+        { enumerate }
+        [ noitemsep ]
+    },
+    olEndTight = {
+      \end
+        { enumerate }
+    },
+    dlBeginTight = {
+      \begin
+        { description }
+        [ noitemsep ]
+    },
+    dlEndTight = {
+      \end
+        { description }
+    },
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Second, let's define the fancy list item renderer prototypes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    fancyOlBegin = {
+      \group_begin:
+      \tl_set:Nn
+        \l_@@_latex_fancy_list_item_label_number_style_tl
+        { #1 }
+      \tl_set:Nn
+        \l_@@_latex_fancy_list_item_label_delimiter_style_tl
+        { #2 }
+      \begin
+        { enumerate }
+    },
+    fancyOlBeginTight = {
+      \group_begin:
+      \tl_set:Nn
+        \l_@@_latex_fancy_list_item_label_number_style_tl
+        { #1 }
+      \tl_set:Nn
+        \l_@@_latex_fancy_list_item_label_delimiter_style_tl
+        { #2 }
+      \begin
+        { enumerate }
+        [ noitemsep ]
+    },
+    fancyOlEnd(|Tight) = {
+      \end { enumerate }
+      \group_end:
+    },
+    fancyOlItemWithNumber = {
+      \item
+        [
+          \@@_latex_fancy_list_item_label:VVn
+            \l_@@_latex_fancy_list_item_label_number_style_tl
+            \l_@@_latex_fancy_list_item_label_delimiter_style_tl
+            { #1 }
+        ]
+    },
+  }}
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Otherwise, if we loaded the \pkg{paralist} package, define the
+% tight and fancy list renderer prototypes to make use of the
+% capabilities of the package.
+%
+% \end{markdown}
+%  \begin{macrocode}
+}{\@ifpackageloaded{paralist}{
+  \markdownSetup{rendererPrototypes={
+%    \end{macrocode}
 % \begin{markdown}
 %
 % Make tight bullet lists a little less compact by adding extra vertical space
@@ -36556,33 +37571,13 @@ end
       \tl_set:Nn
         \l_@@_latex_fancy_list_item_label_delimiter_style_tl
         { #2 }
-      \@@_if_option:nTF
-        { startNumber }
-        {
-          \tl_set:Nn
-            \l_tmpa_tl
-            { \begin{enumerate} }
-        }
-        {
-          \tl_set:Nn
-            \l_tmpa_tl
-            { \begin{enumerate}[ }
-          \tl_put_right:Nx
-            \l_tmpa_tl
-            { \@@_latex_paralist_style:nn { #1 } { #2 } }
-          \tl_put_right:Nn
-            \l_tmpa_tl
-            { ] }
-        }
-      \tl_use:N
-        \l_tmpa_tl
+      \begin{enumerate}
     },
     fancyOlEnd = {
       \end{enumerate}
       \group_end:
     },
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Make tight ordered lists a little less compact by adding extra vertical
@@ -36608,32 +37603,9 @@ end
       \tl_set:Nn
         \l_@@_latex_fancy_list_item_label_delimiter_style_tl
         { #2 }
-      \@@_if_option:nTF
-        { startNumber }
-        {
-          \tl_set:Nn
-            \l_tmpa_tl
-            { \begin{compactenum} }
-        }
-        {
-          \tl_set:Nn
-            \l_tmpa_tl
-            { \begin{compactenum}[ }
-          \tl_put_right:Nx
-            \l_tmpa_tl
-            { \@@_latex_paralist_style:nn { #1 } { #2 } }
-          \tl_put_right:Nn
-            \l_tmpa_tl
-            { ] }
-        }
-      \tl_put_left:Nn
-        \l_tmpa_tl
-        {
-          \plpartopsep=\partopsep
-          \pltopsep=\topsep
-        }
-      \tl_use:N
-        \l_tmpa_tl
+      \plpartopsep=\partopsep
+      \pltopsep=\topsep
+      \begin{compactenum}
     },
     fancyOlEndTight = {
       \end{compactenum}
@@ -36649,7 +37621,6 @@ end
         ]
     },
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Make tight definition lists a little less compact by adding extra
@@ -36666,23 +37637,36 @@ end
     dlEndTight = {
       \end{compactdesc}
       \group_end:
-    }}}
-  \cs_generate_variant:Nn
-    \@@_latex_fancy_list_item_label:nnn
-    { VVn }
+    }
+  }}
 }{
-  \markdownSetup{rendererPrototypes={
-    ulBeginTight = {\markdownRendererUlBegin},
-    ulEndTight = {\markdownRendererUlEnd},
-    fancyOlBegin = {\markdownRendererOlBegin},
-    fancyOlEnd = {\markdownRendererOlEnd},
-    olBeginTight = {\markdownRendererOlBegin},
-    olEndTight = {\markdownRendererOlEnd},
-    fancyOlBeginTight = {\markdownRendererOlBegin},
-    fancyOlEndTight = {\markdownRendererOlEnd},
-    dlBeginTight = {\markdownRendererDlBegin},
-    dlEndTight = {\markdownRendererDlEnd}}}
-}
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% Otherwise, if we loaded neither the \pkg{enumitem} package nor the
+% \pkg{paralist} package, define the tight and fancy list renderer
+% prototypes to fall back on the corresponding renderers for the
+% non-tight lists.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  \markdownSetup
+    {
+      rendererPrototypes = {
+        ulBeginTight = \markdownRendererUlBegin,
+        ulEndTight = \markdownRendererUlEnd,
+        fancyOlBegin = \markdownRendererOlBegin,
+        fancyOlEnd = \markdownRendererOlEnd,
+        olBeginTight = \markdownRendererOlBegin,
+        olEndTight = \markdownRendererOlEnd,
+        fancyOlBeginTight = \markdownRendererOlBegin,
+        fancyOlEndTight = \markdownRendererOlEnd,
+        dlBeginTight = \markdownRendererDlBegin,
+        dlEndTight = \markdownRendererDlEnd,
+      },
+    }
+}}
 \ExplSyntaxOff
 \RequirePackage{amsmath}
 %    \end{macrocode}
@@ -36768,15 +37752,6 @@ end
 }
 \ExplSyntaxOff
 \markdownSetup{rendererPrototypes={
-  image = {%
-    \begin{figure}%
-      \begin{center}%
-        \includegraphics[alt={#1}]{#3}%
-      \end{center}%
-      \ifx\empty#4\empty\else
-        \caption{#4}%
-      \fi
-    \end{figure}},
   ulBegin = {\begin{itemize}},
   ulEnd = {\end{itemize}},
   olBegin = {\begin{enumerate}},
@@ -36927,11 +37902,13 @@ end
         \ltx@ifpackageloaded
           { minted }
           {
+            \catcode`\%=14\relax
             \catcode`\#=6\relax
             \exp_args:NV
               \inputminted
               \l_tmpa_tl
               { #1 }
+            \catcode`\%=12\relax
             \catcode`\#=12\relax
           }
           {
@@ -37562,72 +38539,166 @@ end
     },
   },
 }
-\ExplSyntaxOff
-%    \end{macrocode}
-% \par
-% \begin{markdown}
-%
-%#### Strike-Through
-% If the \Opt{strikeThrough} option is enabled, we will load the
-% \pkg{soulutf8} package and use it to implement strike-throughs.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\markdownIfOption{strikeThrough}{%
-  \RequirePackage{soulutf8}%
-  \markdownSetup{
-    rendererPrototypes = {
-      strikeThrough = {%
-        \st{#1}%
-      },
-    }
-  }
-}{}
 %    \end{macrocode}
 % \par
 % \begin{markdown}
 %
 %#### Marked Text
-% If the \Opt{mark} option is enabled, we will load the \pkg{soulutf8} package
-% and use it to implement marked text.
+% If the \Opt{mark} option is enabled, we will load either the \pkg{soulutf8}
+% package or the \pkg{lua-ul} package and use it to implement marked text.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\markdownIfOption{mark}{%
-  \RequirePackage{soulutf8}%
-  \markdownSetup{
-    rendererPrototypes = {
-      mark = {%
-        \hl{#1}%
-      },
-    }
+\@@_if_option:nT
+  { mark }
+  {
+    \sys_if_engine_luatex:TF
+      {
+        \RequirePackage
+          { luacolor }
+        \RequirePackage
+          { lua-ul }
+        \markdownSetup
+          {
+            rendererPrototypes = {
+              mark = {
+                \highLight
+                  { #1 }
+              },
+            }
+          }
+      }
+      {
+        \RequirePackage
+          { xcolor }
+        % TODO: Use just package soul after TeX Live 2023.
+        \IfFormatAtLeastTF
+          { 2023-02-18 }
+          {
+            \RequirePackage
+              { soul }
+          }
+          {
+            \RequirePackage
+              { soulutf8 }
+          }
+        \markdownSetup
+          {
+            rendererPrototypes = {
+              mark = {
+                \hl
+                  { #1 }
+              },
+            }
+          }
+      }
   }
-}{}
 %    \end{macrocode}
 % \par
 % \begin{markdown}
 %
-%#### Image Attributes
+%#### Strike-Through
+% If the \Opt{strikeThrough} option is enabled, we will load either the
+% \pkg{soulutf8} package or the \pkg{lua-ul} package and use it to implement
+% strike-throughs.
 %
-% If the \Opt{linkAttributes} option is enabled, we will load
-% the \pkg{graphicx} package. Furthermore, in image attribute contexts,
-% we will make attributes in the form \meta{key}`=`\meta{value} set the
-% corresponding keys of the \pkg{graphicx} package to the corresponding
-% values.
+% \end{markdown}
+%  \begin{macrocode}
+\@@_if_option:nT
+  { strikeThrough }
+  {
+    \sys_if_engine_luatex:TF
+      {
+        \RequirePackage
+          { lua-ul }
+        \markdownSetup
+          {
+            rendererPrototypes = {
+              strikeThrough = {
+                \strikeThrough
+                  { #1 }
+              },
+            }
+          }
+      }
+      {
+        % TODO: Use just package soul after TeX Live 2023.
+        \IfFormatAtLeastTF
+          { 2023-02-18 }
+          {
+            \RequirePackage
+              { soul }
+          }
+          {
+            \RequirePackage
+              { soulutf8 }
+          }
+        \markdownSetup
+          {
+            rendererPrototypes = {
+              strikeThrough = {
+                \st
+                  { #1 }
+              },
+            }
+          }
+      }
+  }
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+%#### Images and their attributes
+%
+% We define images to be rendered as floating figures using the command
+% `\includegraphics`, where the image label is the alt text and the image
+% title is the caption of the figure.
+%
+% If the \Opt{linkAttributes} option is enabled, we will make attributes in the
+% form \meta{key}`=`\meta{value} set the corresponding keys of the
+% \pkg{graphicx} package to the corresponding values and we will register any
+% identifiers, so that they can be used as \LaTeX{} labels for referencing
+% figures.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
+\seq_new:N
+  \l_@@_image_identifiers_seq
+\markdownSetup {
+  rendererPrototypes = {
+    image = {
+      \begin { figure }
+        \begin { center }
+          \includegraphics
+            [ alt = { #1 } ]
+            { #3 }
+          \tl_if_empty:nF
+            { #4 }
+            { \caption { #4 } }
+          \seq_map_inline:Nn
+            \l_@@_image_identifiers_seq
+            { \label { ##1 } }
+        \end { center }
+      \end { figure }
+    },
+  }
+}
 \@@_if_option:nT
   { linkAttributes }
   {
-    \RequirePackage{graphicx}
-    \markdownSetup{
+    \RequirePackage { graphicx }
+    \markdownSetup {
       rendererPrototypes = {
         imageAttributeContextBegin = {
           \group_begin:
-          \markdownSetup{
+          \markdownSetup {
             rendererPrototypes = {
+              attributeIdentifier = {
+                \seq_put_right:Nn
+                  \l_@@_image_identifiers_seq
+                  { ##1 }
+              },
               attributeKeyValue = {
                 \setkeys
                   { Gin }
@@ -37764,9 +38835,9 @@ end
 % \begin{markdown}
 %
 %### Typesetting Markdown
-% The \mref{inputmarkdown} macro is defined to accept an optional argument with
-% options recognized by the \Hologo{ConTeXt} interface (see Section
-% <#sec:context-options>).
+% The \mref{inputmarkdown} and \mref{inputyaml} macros are defined to accept an
+% optional argument with options recognized by the \Hologo{ConTeXt} interface
+% (see Section <#sec:context-options>).
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -37780,11 +38851,18 @@ end
     \fi
     \markdownInput{#2}%
   \endgroup}%
+\long\def\inputyaml{%
+  \dosingleempty
+  \doinputyaml}%
+\long\def\doinputyaml[#1]#2{%
+  \doinputmarkdown
+    [jekyllData, expectJekyllData, ensureJekyllData, #1]{#2}}%
 %    \end{macrocode}
 % \par
 % \begin{markdown}
 %
-% The \mref{startmarkdown} and \mref{stopmarkdown} macros are implemented using the
+% The \mref{startmarkdown}, \mref{stopmarkdown}, \mref{startyaml}, and
+% \mref{stopyaml} macros are implemented using the
 % \mref{markdownReadAndConvert} macro.
 %
 % In Knuth's \TeX, trailing spaces are removed very early on when a line is
@@ -37818,6 +38896,15 @@ end
   |gdef|stopmarkdown{%
     |ctxlua{document.markdown_buffering = false}%
     |markdownEnd}%
+  |gdef|startyaml{%
+    |begingroup
+    |ctxlua{document.markdown_buffering = true}%
+    |setupyaml[jekyllData, expectJekyllData, ensureJekyllData]%
+    |markdownReadAndConvert{\stopyaml}%
+                           {|stopyaml}}%
+  |gdef|stopyaml{%
+    |ctxlua{document.markdown_buffering = false}%
+    |yamlEnd}%
 |endgroup
 %    \end{macrocode}
 % \par
@@ -37833,8 +38920,10 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
+\prop_new:N \g_@@_context_loaded_themes_linenos_prop
+\prop_new:N \g_@@_context_loaded_themes_versions_prop
 \cs_gset:Nn
-  \@@_load_theme:nn
+  \@@_load_theme:nnn
   {
 %    \end{macrocode}
 % \par
@@ -37847,26 +38936,82 @@ end
 % \end{markdown}
 %  \begin{macrocode}
     \file_if_exist:nTF
-      { t - markdown theme #2.tex }
+      { t - markdown theme #3.tex }
       {
-        \msg_info:nnn
-          { markdown }
-          { loading-context-theme }
+        \prop_get:NnNTF
+          \g_@@_context_loaded_themes_linenos_prop
           { #1 }
-        \usemodule
-          [ t ]
-          [ markdown theme #2 ]
+          \l_tmpa_tl
+          {
+            \prop_get:NnN
+              \g_@@_context_loaded_themes_versions_prop
+              { #1 }
+              \l_tmpb_tl
+            \str_if_eq:nVTF
+              { #2 }
+              \l_tmpb_tl
+              {
+                \msg_warning:nnnVn
+                  { markdown }
+                  { repeatedly-loaded-context-theme }
+                  { #1 }
+                  \l_tmpa_tl
+                  { #2 }
+              }
+              {
+                \msg_error:nnnnVV
+                  { markdown }
+                  { different-versions-of-context-theme }
+                  { #1 }
+                  { #2 }
+                  \l_tmpb_tl
+                  \l_tmpa_tl
+              }
+          }
+          {
+            \msg_info:nnn
+              { markdown }
+              { loading-context-theme }
+              { #1 }
+              { #2 }
+            \prop_gput:Nnx
+              \g_@@_context_loaded_themes_linenos_prop
+              { #1 }
+              { \tex_the:D \tex_inputlineno:D }
+            \prop_gput:Nnn
+              \g_@@_context_loaded_themes_versions_prop
+              { #1 }
+              { #2 }
+            \usemodule
+              [ t ]
+              [ markdown theme #3 ]
+          }
       }
       {
-        \@@_plain_tex_load_theme:nn
+        \@@_plain_tex_load_theme:nnn
           { #1 }
           { #2 }
+          { #3 }
       }
   }
 \msg_new:nnn
   { markdown }
   { loading-context-theme }
-  { Loading~ConTeXt~Markdown~theme~#1 }
+  { Loading~version~#2~of~ConTeXt~Markdown~theme~#1 }
+\msg_new:nnn
+  { markdown }
+  { repeatedly-loaded-context-theme }
+  {
+    Version~#3~of~ConTeXt~Markdown~theme~#1~was~previously~
+    loaded~on~line~#2,~not~loading~it~again
+  }
+\msg_new:nnn
+  { markdown }
+  { different-versions-of-context-theme }
+  {
+    Tried~to~load~version~#2~of~ConTeXt~Markdown~theme~#1~
+    but~version~#3~has~already~been~loaded~on~line~#4
+  }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \iffalse
@@ -38205,9 +39350,29 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\markdownIfOption{noDefaults}{}{
-  \setupmarkdown[theme=witiko/markdown/defaults]
-}
+\ExplSyntaxOn
+\str_if_eq:VVT
+  \c_@@_top_layer_tl
+  \c_@@_option_layer_context_tl
+  {
+    \ExplSyntaxOff
+    \@@_if_option:nF
+      { noDefaults }
+      {
+        \@@_if_option:nTF
+          { experimental }
+          {
+            \@@_setup:n
+              { theme = witiko/markdown/defaults@experimental }
+          }
+          {
+            \@@_setup:n
+              { theme = witiko/markdown/defaults }
+          }
+      }
+    \ExplSyntaxOn
+  }
+\ExplSyntaxOff
 \stopmodule
 \protect
 %    \end{macrocode}
