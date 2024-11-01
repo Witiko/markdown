@@ -1,0 +1,15 @@
+\markdownSetup{hybrid=true}
+\def\\markdownRendererDocumentEnd{\markdownRendererDocumentEnd}
+<<<
+*foo* \
+*bar* \
+>>>
+BEGIN document
+BEGIN warning
+- text: The `hybrid` option has been soft-deprecated.
+- more: Consider using one of the following better options for mixing TeX and markdown: `contentBlocks`, `rawAttribute`, `texComments`, `texMathDollars`, `texMathSingleBackslash`, and `texMathDoubleBackslash`. For more information, see the user manual at <https://witiko.github.io/markdown/>.
+END warning
+emphasis: foo
+hardLineBreak
+emphasis: bar
+END document

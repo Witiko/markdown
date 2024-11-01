@@ -1,6 +1,11 @@
 # Changes
 
-## 3.9.0
+## 3.8.1
+
+Fixes:
+
+- Fix backslashes at the ends of hybrid documents.
+  (#502, #503, contributed by @lostenderman)
 
 ## 3.8.0 (2024-10-31)
 

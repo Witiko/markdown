@@ -28450,9 +28450,11 @@ parsers.commented_line = Cg(Cc(""), "backslashes")
                           * Cs(parsers.commented_line_letter
                             - parsers.newline)^1  -- initial
                           * Cg(Cc(""), "backslashes"))
-                         + #(parsers.backslash * parsers.backslash)
+                         + #( parsers.backslash
+                            * (parsers.backslash + parsers.newline))
                          * Cg((parsers.backslash  -- even backslash
-                              * parsers.backslash)^1, "backslashes")
+                              * ( parsers.backslash
+                                + #parsers.newline))^1, "backslashes")
                          + (parsers.backslash
                            * (#parsers.percent
                              * Cb("backslashes")
