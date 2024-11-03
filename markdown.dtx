@@ -30430,7 +30430,9 @@ function M.reader.new(writer, options)
                      * parsers.eof / self.expandtabs
                      + parsers.spacechar^1 * parsers.endline
                                            / writer.soft_line_break
-                     + parsers.spacechar^1 / self.expandtabs
+                     + parsers.spacechar^1
+                     * -parsers.newline / self.expandtabs
+                     + parsers.spacechar^1
 
   parsers.NoSoftLineBreakSpace
                      = parsers.spacechar^2 * parsers.endline
@@ -30440,7 +30442,9 @@ function M.reader.new(writer, options)
                      * parsers.eof / self.expandtabs
                      + parsers.spacechar^1 * parsers.endline
                                            / writer.soft_line_break
-                     + parsers.spacechar^1 / self.expandtabs
+                     + parsers.spacechar^1
+                     * -parsers.newline / self.expandtabs
+                     + parsers.spacechar^1
 
   parsers.NonbreakingEndline
                     = parsers.endline
