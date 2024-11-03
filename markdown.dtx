@@ -30415,29 +30415,29 @@ function M.reader.new(writer, options)
                         * parsers.spacechar^0
                         / writer.space
 
-  parsers.EndlineBreak = parsers.backslash * parsers.Endline
+  parsers.EndlineBreak = parsers.backslash * parsers.endline
                                            / writer.hard_line_break
 
   parsers.OptionalIndent
                      = parsers.spacechar^1 / writer.space
 
-  parsers.Space      = parsers.spacechar^2 * parsers.Endline
+  parsers.Space      = parsers.spacechar^2 * parsers.endline
                                            / writer.hard_line_break
                      + parsers.spacechar^1
-                     * parsers.Endline^-1
+                     * parsers.endline^-1
                      * parsers.eof / self.expandtabs
-                     + parsers.spacechar^1 * parsers.Endline
+                     + parsers.spacechar^1 * parsers.endline
                                            / writer.soft_line_break
                      + parsers.spacechar^1
                      * -parsers.newline / self.expandtabs
 
   parsers.NoSoftLineBreakSpace
-                     = parsers.spacechar^2 * parsers.Endline
+                     = parsers.spacechar^2 * parsers.endline
                                            / writer.hard_line_break
                      + parsers.spacechar^1
-                     * parsers.Endline^-1
+                     * parsers.endline^-1
                      * parsers.eof / self.expandtabs
-                     + parsers.spacechar^1 * parsers.Endline
+                     + parsers.spacechar^1 * parsers.endline
                                            / writer.soft_line_break
                      + parsers.spacechar^1
                      * -parsers.newline / self.expandtabs
