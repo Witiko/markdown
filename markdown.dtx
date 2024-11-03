@@ -29841,7 +29841,7 @@ function M.reader.new(writer, options)
                                   * -V("EndlineExceptions")
                                   + parsers.check_optional_indent
                                   * -V("EndlineExceptions")
-                                  * -parsers.starter) / "")
+                                  * -V("ListStarter")) / "")
                                 * parsers.spacechar^0 / "\n"
 
   parsers.link_and_emph_content
@@ -30380,6 +30380,8 @@ function M.reader.new(writer, options)
     parsers.html_interrupting = parsers.fail
   end
 
+  parsers.ListStarter = parsers.starter
+
   parsers.EndlineExceptions
                      = parsers.blankline -- paragraph break
                      + parsers.eof       -- end of document
@@ -30397,7 +30399,7 @@ function M.reader.new(writer, options)
                     * -V("EndlineExceptions")
                     + parsers.check_optional_indent
                     * -V("EndlineExceptions")
-                    * -parsers.starter) / function(_) return end
+                    * -V("ListStarter")) / function(_) return end
                   * parsers.spacechar^0
 
   parsers.Endline = parsers.endline
@@ -30411,7 +30413,7 @@ function M.reader.new(writer, options)
                           * -V("NoSoftLineBreakEndlineExceptions")
                           + parsers.check_optional_indent
                           * -V("NoSoftLineBreakEndlineExceptions")
-                          * -parsers.starter)
+                          * -V("ListStarter"))
                         * parsers.spacechar^0
                         / writer.space
 
@@ -30948,6 +30950,7 @@ end
         Paragraph          = parsers.Paragraph,
         Plain              = parsers.Plain,
 
+        ListStarter        = parsers.ListStarter,
         EndlineExceptions  = parsers.EndlineExceptions,
         NoSoftLineBreakEndlineExceptions
                            = parsers.NoSoftLineBreakEndlineExceptions,
@@ -32244,17 +32247,10 @@ M.extensions.fancy_lists = function()
       local FancyList
         = join_table_with_func(FancyListOfType, markers_table)
 
-      local Endline   = parsers.newline
-                      * (parsers.check_minimal_indent
-                        * -parsers.EndlineExceptions
-                        + parsers.check_optional_indent
-                        * -parsers.EndlineExceptions
-                        * -starter)
-                      * parsers.spacechar^0
-                      / writer.soft_line_break
+      local ListStarter = starter
 
       self.update_rule("OrderedList", FancyList)
-      self.update_rule("Endline", Endline)
+      self.update_rule("ListStarter", ListStarter)
     end
   }
 end
