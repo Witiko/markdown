@@ -20,6 +20,7 @@ EXAMPLES_SOURCES=examples/context-mkiv.tex \
   examples/optex.tex
 EXAMPLES=examples/context-mkiv.pdf \
   examples/latex-pdftex.pdf examples/latex-xetex.pdf examples/latex-luatex.pdf \
+  examples/latex-tex4ht.html examples/latex-tex4ht.css \
   examples/optex.pdf
 TESTS=tests/test.sh tests/test.py tests/requirements.txt tests/support/*.tex \
   tests/templates/*/*/head.tex.m4 tests/templates/*/*/body.tex.m4 \
@@ -156,7 +157,7 @@ $(LIBRARIES): force
 # This target typesets the manual.
 $(TECHNICAL_DOCUMENTATION): $(DTXARCHIVE) $(TECHNICAL_DOCUMENTATION_RESOURCES)
 	latexmk -silent $< || (cat $(basename $@).log 1>&2; exit 1)
-	test `tail $(basename $<).log | sed -rn 's/.*\(([0-9]*) pages.*/\1/p'` -ge 380
+	test `tail $(basename $<).log | sed -rn 's/.*\(([0-9]*) pages.*/\1/p'` -ge 450
 
 # This pseudotarget continuously typesets the manual.
 preview: $(DTXARCHIVE) $(TECHNICAL_DOCUMENTATION_RESOURCES)

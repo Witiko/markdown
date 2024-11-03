@@ -12,7 +12,6 @@
   fencedCode,
   hashEnumerators,
   inlineNotes,
-  jekyllData,
   lineBlocks,
   notes,
   pipeTables,
@@ -28,13 +27,11 @@
   texMathSingleBackslash,
 ]{markdown}
 % Set the document metadata using a YAML metadata block.
-\begin{markdown}[hybrid]
----
+\begin{yaml}
 title:  An Example *Markdown* Document
 author: Vít Starý Novotný
-date:   \today
----
-\end{markdown}
+date:   `\today`{=tex}
+\end{yaml}
 \begin{document}
 % Typeset the document `example.md` by letting the Markdown package handle
 % the conversion internally.

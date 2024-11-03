@@ -1,10 +1,79 @@
 # Changes
 
-## 3.8.0
+## 3.8.1
+
+Fixes:
+
+- Fix backslashes at the ends of hybrid documents.
+  (#502, #503, contributed by @lostenderman)
+
+## 3.8.0 (2024-10-31)
+
+Development:
+
+- Add support for versioned themes and add new Lua option `experimental`.
+  (#466, #512, #514, [matrix.org][matrix-514] reviewed by @TeXhackse, #521)
+
+  The option `experimental` enables experimental features that are planned to
+  be the new default in the next major release of the Markdown package.
+
+  At the moment, this just means that the version `experimental` of the theme
+  `witiko/markdown/defaults` will be loaded and warnings for hard-deprecated
+  features will become errors. However, the effects may extend to other areas
+  in the future as well.
+
+ [matrix-514]: https://matrix.to/#/!UeAwznpYwwsinVTetR:matrix.org/$TTc-m7B5NSdsLBNNyIuFWQ-u2nOZ03lJ5js88hnyFiU?via=matrix.org&via=im.f3l.de
+
+- Add first-class support for YAML documents. (#452, #473, #524)
+  - Add plain TeX macros `\yamlSetup`, `\yamlInput`, `\yamlBegin`, and `\yamlEnd`.
+  - Add LaTeX environment `yaml` and redefine command `\yamlInput` for LaTeX.
+  - Add ConTeXt commands `\setupyaml`, `\inputyaml`, `\startyaml`, and `\stopyaml`.
 
 Documentation:
 
 - Document LaTeX hooks. (#464, #507)
+
+Defaults:
+
+- Improve the compatibility of the default LaTeX packages with PDF tagging:
+  (#466, #512, #514, #521, reported and consulted by @u-fischer)
+
+  - In TeX engines other than LuaTeX, use the package soul instead of the
+    package soulutf8 in TeX Live ≥ 2023.
+
+  - In LuaLaTeX, use the package lua-ul for strike-through/mark renderer
+    prototypes instead of the package soul.
+
+  - Use the package enumitem for tight and fancy lists instead of the package
+    paralist.
+
+    This is a breaking change that is marked as experimental. To enable it,
+    either use the package option `experimental` or specify any test phase in
+    the document metadata:
+
+    1. `\usepackage[experimental]{markdown}`
+    2. `\DocumentMetadata{testphase=phase-III}`
+
+- Define LaTeX renderers for image identifiers.
+  (#520, suggested by @jurf, 6f3dcd0c, 478530f, [matrix.org][matrix-520])
+
+  This establishes a reliable method for authors to reference figures within Markdown:
+
+  ``` tex
+  \documentclass{article}
+  \usepackage[link_attributes, relative_references]{markdown}
+  \begin{document}
+  \begin{markdown}
+
+  ![example image](example-image "An example image"){#example-image-id}
+
+  See Figure <#example-image-id>.
+
+  \end{markdown}
+  \end{document}
+  ```
+
+- Set correct category codes for version 3 of the package minted. (39980934)
 
 Continuous Integration:
 
@@ -13,6 +82,7 @@ Continuous Integration:
   (c2697428, [matrix.org][matrix-950e8269])
 
  [matrix-950e8269]: https://matrix.to/#/!pznomuvubVyxElflTe:matrix.org/$op_onsRdhtXJsZB5d5LZrOFF75T02XvKehmikdoucx4?via=matrix.org&via=im.f3l.de
+ [matrix-520]: https://matrix.to/#/!lWGKeMcpgwGHpfLYkf:matrix.org/$mZB-_YfreLFSKU5eDzp0AIvMnsV_Bn-rpUoj9HtUVwk?via=matrix.org&via=im.f3l.de
 
 ## 3.7.1 (2024-09-30)
 
