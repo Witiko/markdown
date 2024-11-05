@@ -1,5 +1,21 @@
 # Changes
 
+## 3.9.0
+
+Fixes:
+
+- Protect renderers and renderer prototypes. (#465, #506)
+
+  After this change, default renderers and renderer prototypes as well
+  as renderers and renderers and prototypes defined using the keys
+  `renderers` and `rendererPrototypes` of the command `\markdownSetup`
+  are protected, which is usually preferable for typesetting.
+
+  New keys `unprotectedRenderers` and `unprotectedRendererPrototypes`
+  were also added to the command `\markdownSetup`. These keys define
+  unprotected renderers and renderer prototypes, respectively, which are easier
+  to expand and may be preferable for programming.
+
 ## 3.8.1 (2024-11-03)
 
 Fixes:
@@ -86,10 +102,6 @@ Continuous Integration:
 
  [matrix-950e8269]: https://matrix.to/#/!pznomuvubVyxElflTe:matrix.org/$op_onsRdhtXJsZB5d5LZrOFF75T02XvKehmikdoucx4?via=matrix.org&via=im.f3l.de
  [matrix-520]: https://matrix.to/#/!lWGKeMcpgwGHpfLYkf:matrix.org/$mZB-_YfreLFSKU5eDzp0AIvMnsV_Bn-rpUoj9HtUVwk?via=matrix.org&via=im.f3l.de
-
-Fixes:
-
-- Protect renderers and renderer prototypes. (#465, #506)
 
 ## 3.7.1 (2024-09-30)
 
