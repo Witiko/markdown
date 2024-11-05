@@ -21021,9 +21021,13 @@ following text:
 %
 % We define the command \mdef{@@_define_renderers:} that defines plain \TeX{}
 % macros for token renderers. Furthermore, the `\markdownSetup` macro also accepts
-% the `renderers` key, whose value must be a list of key-values, where the keys
-% correspond to the markdown token renderer macros and the values are new
-% definitions of these token renderers.
+% the `renderers` and `unprotectedRenderers` keys. The value for these keys
+% must be a list of key-values, where the keys correspond to the markdown token
+% renderer macros and the values are new definitions of these token renderers.
+%
+% Whereas the key `renderers` defines protected functions, which are usually
+% preferable for typesetting, the key `unprotectedRenderers` defines unprotected
+% functions, which are easier to expand and may be preferable for programming.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -21068,6 +21072,8 @@ following text:
   \l_@@_renderer_definition_tl
 \bool_new:N
   \g_@@_appending_renderer_bool
+\bool_new:N
+  \g_@@_unprotected_renderer_bool
 \cs_new:Nn \@@_define_renderer:nNn
   {
     \keys_define:nn
@@ -21092,9 +21098,22 @@ following text:
                 \l_@@_renderer_definition_tl
                 \l_tmpa_tl
             }
-          \cs_generate_from_arg_count:NNnV
+          \bool_if:NTF
+            \g_@@_unprotected_renderer_bool
+            {
+              \tl_set:Nn
+                \l_tmpa_tl
+                { \cs_set:Npn }
+            }
+            {
+              \tl_set:Nn
+                \l_tmpa_tl
+                { \cs_set_protected:Npn }
+            }
+          \exp_last_unbraced:NNV
+            \cs_generate_from_arg_count:NNnV
             #2
-            \cs_set_protected:Npn
+            \l_tmpa_tl
             { #3 }
             \l_@@_renderer_definition_tl
         },
@@ -21177,6 +21196,15 @@ following text:
   { markdown/options }
   {
     renderers .code:n = {
+      \bool_gset_false:N
+        \g_@@_unprotected_renderer_bool
+      \keys_set:nn
+        { markdown/options/renderers }
+        { #1 }
+    },
+    unprotectedRenderers .code:n = {
+      \bool_gset_true:N
+        \g_@@_unprotected_renderer_bool
       \keys_set:nn
         { markdown/options/renderers }
         { #1 }
@@ -21760,9 +21788,15 @@ following text:
 %
 % We define the command \mdef{@@_define_renderer_prototypes:} that defines plain \TeX{}
 % macros for token renderer prototypes. Furthermore, the `\markdownSetup` macro also accepts
-% the `rendererPrototype` key, whose value must be a list of key-values, where the keys
-% correspond to the markdown token renderer prototype macros and the values are new
-% definitions of these token renderer prototypes.
+% the `rendererPrototypes` and `unprotectedRendererPrototypes` keys. The value
+% for these keys must be a list of key-values, where the keys correspond to the
+% markdown token renderer prototype macros and the values are new definitions
+% of these token renderer prototypes. 
+%
+% Whereas the key `rendererPrototypes` defines protected functions, which are
+% usually preferable for typesetting, the key `unprotectedRendererPrototypes`
+% defines unprotected functions, which are easier to expand and may be
+% preferable for programming.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -21808,6 +21842,8 @@ following text:
   \l_@@_renderer_prototype_definition_tl
 \bool_new:N
   \g_@@_appending_renderer_prototype_bool
+\bool_new:N
+  \g_@@_unprotected_renderer_prototype_bool
 \cs_new:Nn \@@_define_renderer_prototype:nNn
   {
     \keys_define:nn
@@ -21832,9 +21868,22 @@ following text:
                 \l_@@_renderer_prototype_definition_tl
                 \l_tmpa_tl
             }
-          \cs_generate_from_arg_count:NNnV
+          \bool_if:NTF
+            \g_@@_unprotected_renderer_prototype_bool
+            {
+              \tl_set:Nn
+                \l_tmpa_tl
+                { \cs_set:Npn }
+            }
+            {
+              \tl_set:Nn
+                \l_tmpa_tl
+                { \cs_set_protected:Npn }
+            }
+          \exp_last_unbraced:NNV
+            \cs_generate_from_arg_count:NNnV
             #2
-            \cs_set_protected:Npn
+            \l_tmpa_tl
             { #3 }
             \l_@@_renderer_prototype_definition_tl
         },
@@ -22039,6 +22088,23 @@ following text:
       { markdown/options }
       {
         #1 .code:n = {
+          \bool_gset_false:N
+            \g_@@_unprotected_renderer_prototype_bool
+          \keys_set:nn
+            { markdown/options/renderer-prototypes }
+            { ##1 }
+        },
+      }
+  }
+\@@_with_various_cases:nn
+  { unprotectedRendererPrototypes }
+  {
+    \keys_define:nn
+      { markdown/options }
+      {
+        #1 .code:n = {
+          \bool_gset_true:N
+            \g_@@_unprotected_renderer_prototype_bool
           \keys_set:nn
             { markdown/options/renderer-prototypes }
             { ##1 }
