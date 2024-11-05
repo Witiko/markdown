@@ -57,6 +57,37 @@ kpse.set_program_name("luatex")
 
 \starttext
 
+% Set and typeset the document metadata using a YAML metadata block.
+\setupyaml
+  [
+    jekyllDataRenderers = {
+      title = {\gdef\doctitle{#1}},
+      author = {\gdef\author{#1}},
+      date = {\gdef\date{#1}},
+    },
+    renderers = {
+      jekyllDataEnd = {%
+        \startalignment[center]
+          \blank[force,2*big]
+            {\tfd \doctitle}
+          \blank[3*medium]
+            {\tfa \author}
+          \blank[2*medium]
+            {\tfa \date}
+          \blank[3*medium]
+        \stopalignment
+      },
+    },
+  ]
+
+\startyaml
+
+title:  An Example *Markdown* Document
+author: Vít Starý Novotný
+date:   `\currentdate`{=tex}
+
+\stopyaml
+
 % Typeset the document `example.md` by letting the Markdown package handle
 % the conversion internally. Optionally, we can specify additional options
 % between the square brackets similarly to the command `\setupmarkdown`.
