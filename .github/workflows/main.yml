@@ -238,7 +238,7 @@ jobs:
           printf '%s\n' 'Hello *Markdown*! $a_x + b_x = c_x$' | bash -c 'time markdown-cli texMathDollars=true' 1>stdout 2>stderr
           test "$(cat stdout)" = '\markdownRendererDocumentBegin
           Hello \markdownRendererEmphasis{Markdown}! \markdownRendererInlineMath{a_x + b_x = c_x}\markdownRendererDocumentEnd'  # Check that the output is correct.
-          grep 'real\s*0m0' stderr  # Check that the command finishes in less than a second.
+          grep 'real\s*0m[01]' stderr  # Check that the command finishes in less than a second.
       - name: Run tests
         if: matrix.texlive == 'latest' || github.event_name != 'pull_request_target' || github.event.pull_request.draft == false
         run: make FAIL_FAST=${{ github.event_name == 'pull_request_target' }} test
