@@ -13750,9 +13750,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererAttributeIdentifier{%
-  \markdownRendererAttributeIdentifierPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererAttributeIdentifier
+  {
+    \markdownRendererAttributeIdentifierPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { attributeIdentifier }
@@ -13760,10 +13763,11 @@ following text:
   \g_@@_renderer_arities_prop
   { attributeIdentifier }
   { 1 }
-\ExplSyntaxOff
-\def\markdownRendererAttributeClassName{%
-  \markdownRendererAttributeClassNamePrototype}%
-\ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererAttributeClassName
+  {
+    \markdownRendererAttributeClassNamePrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { attributeClassName }
@@ -13771,10 +13775,11 @@ following text:
   \g_@@_renderer_arities_prop
   { attributeClassName }
   { 1 }
-\ExplSyntaxOff
-\def\markdownRendererAttributeKeyValue{%
-  \markdownRendererAttributeKeyValuePrototype}%
-\ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererAttributeKeyValue
+  {
+    \markdownRendererAttributeKeyValuePrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { attributeKeyValue }
@@ -13805,9 +13810,12 @@ a block quote. The macro receives no arguments.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererBlockQuoteBegin{%
-  \markdownRendererBlockQuoteBeginPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererBlockQuoteBegin
+  {
+    \markdownRendererBlockQuoteBeginPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { blockQuoteBegin }
@@ -13950,9 +13958,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererBlockQuoteEnd{%
-  \markdownRendererBlockQuoteEndPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererBlockQuoteEnd
+  {
+    \markdownRendererBlockQuoteEndPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { blockQuoteEnd }
@@ -14019,9 +14030,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererBracketedSpanAttributeContextBegin{%
-  \markdownRendererBracketedSpanAttributeContextBeginPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererBracketedSpanAttributeContextBegin
+  {
+    \markdownRendererBracketedSpanAttributeContextBeginPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { bracketedSpanAttributeContextBegin }
@@ -14029,10 +14043,11 @@ following text:
   \g_@@_renderer_arities_prop
   { bracketedSpanAttributeContextBegin }
   { 0 }
-\ExplSyntaxOff
-\def\markdownRendererBracketedSpanAttributeContextEnd{%
-  \markdownRendererBracketedSpanAttributeContextEndPrototype}%
-\ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererBracketedSpanAttributeContextEnd
+  {
+    \markdownRendererBracketedSpanAttributeContextEndPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { bracketedSpanAttributeContextEnd }
@@ -14064,9 +14079,12 @@ list is not tight). The macro receives no arguments.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererUlBegin{%
-  \markdownRendererUlBeginPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererUlBegin
+  {
+    \markdownRendererUlBeginPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { ulBegin }
@@ -14098,9 +14116,12 @@ is disabled. The macro receives no arguments.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererUlBeginTight{%
-  \markdownRendererUlBeginTightPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererUlBeginTight
+  {
+    \markdownRendererUlBeginTightPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { ulBeginTight }
@@ -14130,9 +14151,12 @@ list. The macro receives no arguments.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererUlItem{%
-  \markdownRendererUlItemPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererUlItem
+  {
+    \markdownRendererUlItemPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { ulItem }
@@ -14162,9 +14186,12 @@ bulleted list. The macro receives no arguments.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererUlItemEnd{%
-  \markdownRendererUlItemEndPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererUlItemEnd
+  {
+    \markdownRendererUlItemEndPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { ulItemEnd }
@@ -14195,9 +14222,12 @@ tight). The macro receives no arguments.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererUlEnd{%
-  \markdownRendererUlEndPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererUlEnd
+  {
+    \markdownRendererUlEndPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { ulEnd }
@@ -14431,9 +14461,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererUlEndTight{%
-  \markdownRendererUlEndTightPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererUlEndTight
+  {
+    \markdownRendererUlEndTightPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { ulEndTight }
@@ -14528,9 +14561,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererCite{%
-  \markdownRendererCitePrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererCite
+  {
+    \markdownRendererCitePrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { cite }
@@ -14619,9 +14655,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererTextCite{%
-  \markdownRendererTextCitePrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererTextCite
+  {
+    \markdownRendererTextCitePrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { textCite }
@@ -14653,9 +14692,12 @@ filename of a file containing the code block contents.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererInputVerbatim{%
-  \markdownRendererInputVerbatimPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererInputVerbatim
+  {
+    \markdownRendererInputVerbatimPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { inputVerbatim }
@@ -14771,9 +14813,12 @@ following text except for the filename, which may differ:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererInputFencedCode{%
-  \markdownRendererInputFencedCodePrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererInputFencedCode
+  {
+    \markdownRendererInputFencedCodePrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { inputFencedCode }
@@ -14921,9 +14966,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererCodeSpan{%
-  \markdownRendererCodeSpanPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererCodeSpan
+  {
+    \markdownRendererCodeSpanPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { codeSpan }
@@ -14991,9 +15039,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererCodeSpanAttributeContextBegin{%
-  \markdownRendererCodeSpanAttributeContextBeginPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererCodeSpanAttributeContextBegin
+  {
+    \markdownRendererCodeSpanAttributeContextBeginPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { codeSpanAttributeContextBegin }
@@ -15001,10 +15052,11 @@ following text:
   \g_@@_renderer_arities_prop
   { codeSpanAttributeContextBegin }
   { 0 }
-\ExplSyntaxOff
-\def\markdownRendererCodeSpanAttributeContextEnd{%
-  \markdownRendererCodeSpanAttributeContextEndPrototype}%
-\ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererCodeSpanAttributeContextEnd
+  {
+    \markdownRendererCodeSpanAttributeContextEndPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { codeSpanAttributeContextEnd }
@@ -15039,9 +15091,12 @@ and the title of the content block.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererContentBlock{%
-  \markdownRendererContentBlockPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererContentBlock
+  {
+    \markdownRendererContentBlockPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { contentBlock }
@@ -15072,9 +15127,12 @@ as \mref{markdownRendererContentBlock}.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererContentBlockOnlineImage{%
-  \markdownRendererContentBlockOnlineImagePrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererContentBlockOnlineImage
+  {
+    \markdownRendererContentBlockOnlineImagePrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { contentBlockOnlineImage }
@@ -15267,9 +15325,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererContentBlockCode{%
-  \markdownRendererContentBlockCodePrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererContentBlockCode
+  {
+    \markdownRendererContentBlockCodePrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { contentBlockCode }
@@ -15304,9 +15365,12 @@ list is not tight). The macro receives no arguments.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererDlBegin{%
-  \markdownRendererDlBeginPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererDlBegin
+  {
+    \markdownRendererDlBeginPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { dlBegin }
@@ -15338,9 +15402,12 @@ list is tight). This macro will only be produced, when the
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererDlBeginTight{%
-  \markdownRendererDlBeginTightPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererDlBeginTight
+  {
+    \markdownRendererDlBeginTightPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { dlBeginTight }
@@ -15371,9 +15438,12 @@ being defined.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererDlItem{%
-  \markdownRendererDlItemPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererDlItem
+  {
+    \markdownRendererDlItemPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { dlItem }
@@ -15403,9 +15473,12 @@ definitions for a single term.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererDlItemEnd{%
-  \markdownRendererDlItemEndPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererDlItemEnd
+  {
+    \markdownRendererDlItemEndPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { dlItemEnd }
@@ -15436,9 +15509,12 @@ a single term.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererDlDefinitionBegin{%
-  \markdownRendererDlDefinitionBeginPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererDlDefinitionBegin
+  {
+    \markdownRendererDlDefinitionBeginPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { dlDefinitionBegin }
@@ -15469,9 +15545,12 @@ single term.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererDlDefinitionEnd{%
-  \markdownRendererDlDefinitionEndPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererDlDefinitionEnd
+  {
+    \markdownRendererDlDefinitionEndPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { dlDefinitionEnd }
@@ -15502,9 +15581,12 @@ tight). The macro receives no arguments.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererDlEnd{%
-  \markdownRendererDlEndPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererDlEnd
+  {
+    \markdownRendererDlEndPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { dlEnd }
@@ -15871,9 +15953,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererDlEndTight{%
-  \markdownRendererDlEndTightPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererDlEndTight
+  {
+    \markdownRendererDlEndTightPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { dlEndTight }
@@ -15982,9 +16067,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererEllipsis{%
-  \markdownRendererEllipsisPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererEllipsis
+  {
+    \markdownRendererEllipsisPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { ellipsis }
@@ -16016,9 +16104,12 @@ span of text.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererEmphasis{%
-  \markdownRendererEmphasisPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererEmphasis
+  {
+    \markdownRendererEmphasisPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { emphasis }
@@ -16135,9 +16226,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererStrongEmphasis{%
-  \markdownRendererStrongEmphasisPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererStrongEmphasis
+  {
+    \markdownRendererStrongEmphasisPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { strongEmphasis }
@@ -16223,9 +16317,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererFencedCodeAttributeContextBegin{%
-  \markdownRendererFencedCodeAttributeContextBeginPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererFencedCodeAttributeContextBegin
+  {
+    \markdownRendererFencedCodeAttributeContextBeginPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { fencedCodeAttributeContextBegin }
@@ -16233,10 +16330,11 @@ following text:
   \g_@@_renderer_arities_prop
   { fencedCodeAttributeContextBegin }
   { 0 }
-\ExplSyntaxOff
-\def\markdownRendererFencedCodeAttributeContextEnd{%
-  \markdownRendererFencedCodeAttributeContextEndPrototype}%
-\ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererFencedCodeAttributeContextEnd
+  {
+    \markdownRendererFencedCodeAttributeContextEndPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { fencedCodeAttributeContextEnd }
@@ -16343,9 +16441,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererFencedDivAttributeContextBegin{%
-  \markdownRendererFencedDivAttributeContextBeginPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererFencedDivAttributeContextBegin
+  {
+    \markdownRendererFencedDivAttributeContextBeginPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { fencedDivAttributeContextBegin }
@@ -16353,10 +16454,11 @@ following text:
   \g_@@_renderer_arities_prop
   { fencedDivAttributeContextBegin }
   { 0 }
-\ExplSyntaxOff
-\def\markdownRendererFencedDivAttributeContextEnd{%
-  \markdownRendererFencedDivAttributeContextEndPrototype}%
-\ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererFencedDivAttributeContextEnd
+  {
+    \markdownRendererFencedDivAttributeContextEndPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { fencedDivAttributeContextEnd }
@@ -16446,9 +16548,12 @@ following text:
 %<*tex>
 % \fi
 %  \begin{macrocode}
-\def\markdownRendererHeaderAttributeContextBegin{%
-  \markdownRendererHeaderAttributeContextBeginPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererHeaderAttributeContextBegin
+  {
+    \markdownRendererHeaderAttributeContextBeginPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { headerAttributeContextBegin }
@@ -16456,10 +16561,11 @@ following text:
   \g_@@_renderer_arities_prop
   { headerAttributeContextBegin }
   { 0 }
-\ExplSyntaxOff
-\def\markdownRendererHeaderAttributeContextEnd{%
-  \markdownRendererHeaderAttributeContextEndPrototype}%
-\ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererHeaderAttributeContextEnd
+  {
+    \markdownRendererHeaderAttributeContextEndPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { headerAttributeContextEnd }
@@ -16490,9 +16596,12 @@ The macro receives a single argument that corresponds to the heading text.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererHeadingOne{%
-  \markdownRendererHeadingOnePrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererHeadingOne
+  {
+    \markdownRendererHeadingOnePrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { headingOne }
@@ -16523,9 +16632,12 @@ text.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererHeadingTwo{%
-  \markdownRendererHeadingTwoPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererHeadingTwo
+  {
+    \markdownRendererHeadingTwoPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { headingTwo }
@@ -16556,9 +16668,12 @@ text.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererHeadingThree{%
-  \markdownRendererHeadingThreePrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererHeadingThree
+  {
+    \markdownRendererHeadingThreePrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { headingThree }
@@ -16589,9 +16704,12 @@ text.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererHeadingFour{%
-  \markdownRendererHeadingFourPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererHeadingFour
+  {
+    \markdownRendererHeadingFourPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { headingFour }
@@ -16622,9 +16740,12 @@ text.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererHeadingFive{%
-  \markdownRendererHeadingFivePrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererHeadingFive
+  {
+    \markdownRendererHeadingFivePrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { headingFive }
@@ -16756,9 +16877,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererHeadingSix{%
-  \markdownRendererHeadingSixPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererHeadingSix
+  {
+    \markdownRendererHeadingSixPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { headingSix }
@@ -16829,9 +16953,12 @@ The horizontal margins should contain the following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererInlineHtmlComment{%
-  \markdownRendererInlineHtmlCommentPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererInlineHtmlComment
+  {
+    \markdownRendererInlineHtmlCommentPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { inlineHtmlComment }
@@ -16906,9 +17033,12 @@ following body text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererInlineHtmlTag{%
-  \markdownRendererInlineHtmlTagPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererInlineHtmlTag
+  {
+    \markdownRendererInlineHtmlTagPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { inlineHtmlTag }
@@ -16916,10 +17046,11 @@ following body text:
   \g_@@_renderer_arities_prop
   { inlineHtmlTag }
   { 1 }
-\ExplSyntaxOff
-\def\markdownRendererInputBlockHtmlElement{%
-  \markdownRendererInputBlockHtmlElementPrototype}%
-\ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererInputBlockHtmlElement
+  {
+    \markdownRendererInputBlockHtmlElementPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { inputBlockHtmlElement }
@@ -17007,9 +17138,12 @@ that the \TeX{} engine has shell access.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererImage{%
-  \markdownRendererImagePrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererImage
+  {
+    \markdownRendererImagePrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { image }
@@ -17077,9 +17211,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererImageAttributeContextBegin{%
-  \markdownRendererImageAttributeContextBeginPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererImageAttributeContextBegin
+  {
+    \markdownRendererImageAttributeContextBeginPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { imageAttributeContextBegin }
@@ -17087,10 +17224,11 @@ following text:
   \g_@@_renderer_arities_prop
   { imageAttributeContextBegin }
   { 0 }
-\ExplSyntaxOff
-\def\markdownRendererImageAttributeContextEnd{%
-  \markdownRendererImageAttributeContextEndPrototype}%
-\ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererImageAttributeContextEnd
+  {
+    \markdownRendererImageAttributeContextEndPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { imageAttributeContextEnd }
@@ -17223,9 +17361,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererInterblockSeparator{%
-  \markdownRendererInterblockSeparatorPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererInterblockSeparator
+  {
+    \markdownRendererInterblockSeparatorPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { interblockSeparator }
@@ -17298,9 +17439,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererParagraphSeparator{%
-  \markdownRendererParagraphSeparatorPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererParagraphSeparator
+  {
+    \markdownRendererParagraphSeparatorPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { paragraphSeparator }
@@ -17418,9 +17562,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererLineBlockBegin{%
-  \markdownRendererLineBlockBeginPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererLineBlockBegin
+  {
+    \markdownRendererLineBlockBeginPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { lineBlockBegin }
@@ -17428,10 +17575,11 @@ following text:
   \g_@@_renderer_arities_prop
   { lineBlockBegin }
   { 0 }
-\ExplSyntaxOff
-\def\markdownRendererLineBlockEnd{%
-  \markdownRendererLineBlockEndPrototype}%
-\ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererLineBlockEnd
+  {
+    \markdownRendererLineBlockEndPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { lineBlockEnd }
@@ -17537,9 +17685,12 @@ following text:
 %<*tex>
 % \fi
 %  \begin{macrocode}
-\def\markdownRendererSoftLineBreak{%
-  \markdownRendererSoftLineBreakPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererSoftLineBreak
+  {
+    \markdownRendererSoftLineBreakPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { softLineBreak }
@@ -17645,9 +17796,12 @@ following text:
 %<*tex>
 % \fi
 %  \begin{macrocode}
-\def\markdownRendererHardLineBreak{%
-  \markdownRendererHardLineBreakPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererHardLineBreak
+  {
+    \markdownRendererHardLineBreakPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { hardLineBreak }
@@ -17769,9 +17923,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererLink{%
-  \markdownRendererLinkPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererLink
+  {
+    \markdownRendererLinkPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { link }
@@ -17839,9 +17996,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererLinkAttributeContextBegin{%
-  \markdownRendererLinkAttributeContextBeginPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererLinkAttributeContextBegin
+  {
+    \markdownRendererLinkAttributeContextBeginPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { linkAttributeContextBegin }
@@ -17849,10 +18009,11 @@ following text:
   \g_@@_renderer_arities_prop
   { linkAttributeContextBegin }
   { 0 }
-\ExplSyntaxOff
-\def\markdownRendererLinkAttributeContextEnd{%
-  \markdownRendererLinkAttributeContextEndPrototype}%
-\ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererLinkAttributeContextEnd
+  {
+    \markdownRendererLinkAttributeContextEndPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { linkAttributeContextEnd }
@@ -17917,9 +18078,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererMark{%
-  \markdownRendererMarkPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererMark
+  {
+    \markdownRendererMarkPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { mark }
@@ -18059,9 +18223,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererDocumentBegin{%
-  \markdownRendererDocumentBeginPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererDocumentBegin
+  {
+    \markdownRendererDocumentBeginPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { documentBegin }
@@ -18069,10 +18236,11 @@ following text:
   \g_@@_renderer_arities_prop
   { documentBegin }
   { 0 }
-\ExplSyntaxOff
-\def\markdownRendererDocumentEnd{%
-  \markdownRendererDocumentEndPrototype}%
-\ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererDocumentEnd
+  {
+    \markdownRendererDocumentEndPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { documentEnd }
@@ -18155,9 +18323,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererNbsp{%
-  \markdownRendererNbspPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererNbsp
+  {
+    \markdownRendererNbspPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { nbsp }
@@ -18311,9 +18482,12 @@ option is disabled. The macro receives no arguments.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererOlBegin{%
-  \markdownRendererOlBeginPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererOlBegin
+  {
+    \markdownRendererOlBeginPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { olBegin }
@@ -18346,9 +18520,12 @@ receives no arguments.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererOlBeginTight{%
-  \markdownRendererOlBeginTightPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererOlBeginTight
+  {
+    \markdownRendererOlBeginTightPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { olBeginTight }
@@ -18383,9 +18560,12 @@ and the style of delimiters between list item labels and texts (`Default`,
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererFancyOlBegin{%
-  \markdownRendererFancyOlBeginPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererFancyOlBegin
+  {
+    \markdownRendererFancyOlBeginPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { fancyOlBegin }
@@ -18420,9 +18600,12 @@ the valid style values.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererFancyOlBeginTight{%
-  \markdownRendererFancyOlBeginTightPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererFancyOlBeginTight
+  {
+    \markdownRendererFancyOlBeginTightPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { fancyOlBeginTight }
@@ -18454,9 +18637,12 @@ arguments.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererOlItem{%
-  \markdownRendererOlItemPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererOlItem
+  {
+    \markdownRendererOlItemPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { olItem }
@@ -18487,9 +18673,12 @@ option is disabled. The macro receives no arguments.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererOlItemEnd{%
-  \markdownRendererOlItemEndPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererOlItemEnd
+  {
+    \markdownRendererOlItemEndPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { olItemEnd }
@@ -18521,9 +18710,12 @@ receives a single numeric argument that corresponds to the item number.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererOlItemWithNumber{%
-  \markdownRendererOlItemWithNumberPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererOlItemWithNumber
+  {
+    \markdownRendererOlItemWithNumberPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { olItemWithNumber }
@@ -18555,9 +18747,12 @@ no arguments.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererFancyOlItem{%
-  \markdownRendererFancyOlItemPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererFancyOlItem
+  {
+    \markdownRendererFancyOlItemPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { fancyOlItem }
@@ -18588,9 +18783,12 @@ option is enabled. The macro receives no arguments.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererFancyOlItemEnd{%
-  \markdownRendererFancyOlItemEndPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererFancyOlItemEnd
+  {
+    \markdownRendererFancyOlItemEndPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { fancyOlItemEnd }
@@ -18622,9 +18820,12 @@ argument that corresponds to the item number.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererFancyOlItemWithNumber{%
-  \markdownRendererFancyOlItemWithNumberPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererFancyOlItemWithNumber
+  {
+    \markdownRendererFancyOlItemWithNumberPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { fancyOlItemWithNumber }
@@ -18656,9 +18857,12 @@ disabled. The macro receives no arguments.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererOlEnd{%
-  \markdownRendererOlEndPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererOlEnd
+  {
+    \markdownRendererOlEndPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { olEnd }
@@ -18691,9 +18895,12 @@ arguments.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererOlEndTight{%
-  \markdownRendererOlEndTightPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererOlEndTight
+  {
+    \markdownRendererOlEndTightPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { olEndTight }
@@ -18725,9 +18932,12 @@ option is enabled. The macro receives no arguments.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererFancyOlEnd{%
-  \markdownRendererFancyOlEndPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererFancyOlEnd
+  {
+    \markdownRendererFancyOlEndPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { fancyOlEnd }
@@ -19016,9 +19226,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererFancyOlEndTight{%
-  \markdownRendererFancyOlEndTightPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererFancyOlEndTight
+  {
+    \markdownRendererFancyOlEndTightPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { fancyOlEndTight }
@@ -19052,9 +19265,12 @@ option is enabled.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererInputRawInline{%
-  \markdownRendererInputRawInlinePrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererInputRawInline
+  {
+    \markdownRendererInputRawInlinePrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { inputRawInline }
@@ -19134,9 +19350,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererInputRawBlock{%
-  \markdownRendererInputRawBlockPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererInputRawBlock
+  {
+    \markdownRendererInputRawBlockPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { inputRawBlock }
@@ -19167,9 +19386,12 @@ macros represent the beginning and the end of a section based on headings.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererSectionBegin{%
-  \markdownRendererSectionBeginPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererSectionBegin
+  {
+    \markdownRendererSectionBeginPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { sectionBegin }
@@ -19177,10 +19399,11 @@ macros represent the beginning and the end of a section based on headings.
   \g_@@_renderer_arities_prop
   { sectionBegin }
   { 0 }
-\ExplSyntaxOff
-\def\markdownRendererSectionEnd{%
-  \markdownRendererSectionEndPrototype}%
-\ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererSectionEnd
+  {
+    \markdownRendererSectionEndPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { sectionEnd }
@@ -19211,9 +19434,12 @@ and U+FFFD Unicode characters. The macro receives no arguments.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererReplacementCharacter{%
-  \markdownRendererReplacementCharacterPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererReplacementCharacter
+  {
+    \markdownRendererReplacementCharacterPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { replacementCharacter }
@@ -19336,9 +19562,12 @@ following text, where the middot (`·`) denotes a non-breaking space:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererLeftBrace{%
-  \markdownRendererLeftBracePrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererLeftBrace
+  {
+    \markdownRendererLeftBracePrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { leftBrace }
@@ -19346,10 +19575,11 @@ following text, where the middot (`·`) denotes a non-breaking space:
   \g_@@_renderer_arities_prop
   { leftBrace }
   { 0 }
-\ExplSyntaxOff
-\def\markdownRendererRightBrace{%
-  \markdownRendererRightBracePrototype}%
-\ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererRightBrace
+  {
+    \markdownRendererRightBracePrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { rightBrace }
@@ -19357,10 +19587,11 @@ following text, where the middot (`·`) denotes a non-breaking space:
   \g_@@_renderer_arities_prop
   { rightBrace }
   { 0 }
-\ExplSyntaxOff
-\def\markdownRendererDollarSign{%
-  \markdownRendererDollarSignPrototype}%
-\ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererDollarSign
+  {
+    \markdownRendererDollarSignPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { dollarSign }
@@ -19368,10 +19599,11 @@ following text, where the middot (`·`) denotes a non-breaking space:
   \g_@@_renderer_arities_prop
   { dollarSign }
   { 0 }
-\ExplSyntaxOff
-\def\markdownRendererPercentSign{%
-  \markdownRendererPercentSignPrototype}%
-\ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererPercentSign
+  {
+    \markdownRendererPercentSignPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { percentSign }
@@ -19379,10 +19611,11 @@ following text, where the middot (`·`) denotes a non-breaking space:
   \g_@@_renderer_arities_prop
   { percentSign }
   { 0 }
-\ExplSyntaxOff
-\def\markdownRendererAmpersand{%
-  \markdownRendererAmpersandPrototype}%
-\ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererAmpersand
+  {
+    \markdownRendererAmpersandPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { ampersand }
@@ -19390,10 +19623,11 @@ following text, where the middot (`·`) denotes a non-breaking space:
   \g_@@_renderer_arities_prop
   { ampersand }
   { 0 }
-\ExplSyntaxOff
-\def\markdownRendererUnderscore{%
-  \markdownRendererUnderscorePrototype}%
-\ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererUnderscore
+  {
+    \markdownRendererUnderscorePrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { underscore }
@@ -19401,10 +19635,11 @@ following text, where the middot (`·`) denotes a non-breaking space:
   \g_@@_renderer_arities_prop
   { underscore }
   { 0 }
-\ExplSyntaxOff
-\def\markdownRendererHash{%
-  \markdownRendererHashPrototype}%
-\ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererHash
+  {
+    \markdownRendererHashPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { hash }
@@ -19412,10 +19647,11 @@ following text, where the middot (`·`) denotes a non-breaking space:
   \g_@@_renderer_arities_prop
   { hash }
   { 0 }
-\ExplSyntaxOff
-\def\markdownRendererCircumflex{%
-  \markdownRendererCircumflexPrototype}%
-\ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererCircumflex
+  {
+    \markdownRendererCircumflexPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { circumflex }
@@ -19423,10 +19659,11 @@ following text, where the middot (`·`) denotes a non-breaking space:
   \g_@@_renderer_arities_prop
   { circumflex }
   { 0 }
-\ExplSyntaxOff
-\def\markdownRendererBackslash{%
-  \markdownRendererBackslashPrototype}%
-\ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererBackslash
+  {
+    \markdownRendererBackslashPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { backslash }
@@ -19434,10 +19671,11 @@ following text, where the middot (`·`) denotes a non-breaking space:
   \g_@@_renderer_arities_prop
   { backslash }
   { 0 }
-\ExplSyntaxOff
-\def\markdownRendererTilde{%
-  \markdownRendererTildePrototype}%
-\ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererTilde
+  {
+    \markdownRendererTildePrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { tilde }
@@ -19445,10 +19683,11 @@ following text, where the middot (`·`) denotes a non-breaking space:
   \g_@@_renderer_arities_prop
   { tilde }
   { 0 }
-\ExplSyntaxOff
-\def\markdownRendererPipe{%
-  \markdownRendererPipePrototype}%
-\ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererPipe
+  {
+    \markdownRendererPipePrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { pipe }
@@ -19556,9 +19795,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererStrikeThrough{%
-  \markdownRendererStrikeThroughPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererStrikeThrough
+  {
+    \markdownRendererStrikeThroughPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { strikeThrough }
@@ -19664,9 +19906,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererSubscript{%
-  \markdownRendererSubscriptPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererSubscript
+  {
+    \markdownRendererSubscriptPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { subscript }
@@ -19771,9 +20016,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererSuperscript{%
-  \markdownRendererSuperscriptPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererSuperscript
+  {
+    \markdownRendererSuperscriptPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { superscript }
@@ -19880,9 +20128,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererTableAttributeContextBegin{%
-  \markdownRendererTableAttributeContextBeginPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererTableAttributeContextBegin
+  {
+    \markdownRendererTableAttributeContextBeginPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { tableAttributeContextBegin }
@@ -19890,10 +20141,11 @@ following text:
   \g_@@_renderer_arities_prop
   { tableAttributeContextBegin }
   { 0 }
-\ExplSyntaxOff
-\def\markdownRendererTableAttributeContextEnd{%
-  \markdownRendererTableAttributeContextEndPrototype}%
-\ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererTableAttributeContextEnd
+  {
+    \markdownRendererTableAttributeContextEndPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { tableAttributeContextEnd }
@@ -20018,9 +20270,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererTable{%
-  \markdownRendererTablePrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererTable
+  {
+    \markdownRendererTablePrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { table }
@@ -20139,9 +20394,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererInlineMath{%
-  \markdownRendererInlineMathPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererInlineMath
+  {
+    \markdownRendererInlineMathPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { inlineMath }
@@ -20149,10 +20407,11 @@ following text:
   \g_@@_renderer_arities_prop
   { inlineMath }
   { 1 }
-\ExplSyntaxOff
-\def\markdownRendererDisplayMath{%
-  \markdownRendererDisplayMathPrototype}%
-\ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererDisplayMath
+  {
+    \markdownRendererDisplayMathPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { displayMath }
@@ -20277,9 +20536,12 @@ following text:
 %<*tex>
 % \fi
 %  \begin{macrocode}
-\def\markdownRendererThematicBreak{%
-  \markdownRendererThematicBreakPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererThematicBreak
+  {
+    \markdownRendererThematicBreakPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { thematicBreak }
@@ -20371,9 +20633,12 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererTickedBox{%
-  \markdownRendererTickedBoxPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererTickedBox
+  {
+    \markdownRendererTickedBoxPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { tickedBox }
@@ -20381,10 +20646,11 @@ following text:
   \g_@@_renderer_arities_prop
   { tickedBox }
   { 0 }
-\ExplSyntaxOff
-\def\markdownRendererHalfTickedBox{%
-  \markdownRendererHalfTickedBoxPrototype}%
-\ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererHalfTickedBox
+  {
+    \markdownRendererHalfTickedBoxPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { halfTickedBox }
@@ -20392,10 +20658,11 @@ following text:
   \g_@@_renderer_arities_prop
   { halfTickedBox }
   { 0 }
-\ExplSyntaxOff
-\def\markdownRendererUntickedBox{%
-  \markdownRendererUntickedBoxPrototype}%
-\ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererUntickedBox
+  {
+    \markdownRendererUntickedBoxPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { untickedBox }
@@ -20437,11 +20704,17 @@ receive four parameters:
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererWarning{%
-  \markdownRendererWarningPrototype}%
-\def\markdownRendererError{%
-  \markdownRendererErrorPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererWarning
+  {
+    \markdownRendererWarningPrototype
+  }
+\cs_gset_protected:Npn
+  \markdownRendererError
+  {
+    \markdownRendererErrorPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { warning }
@@ -20481,9 +20754,12 @@ option is enabled. The macro receives no arguments.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererJekyllDataBegin{%
-  \markdownRendererJekyllDataBeginPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererJekyllDataBegin
+  {
+    \markdownRendererJekyllDataBeginPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { jekyllDataBegin }
@@ -20514,9 +20790,12 @@ The \mdef{markdownRendererJekyllDataEnd} macro represents the end of a
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererJekyllDataEnd{%
-  \markdownRendererJekyllDataEndPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererJekyllDataEnd
+  {
+    \markdownRendererJekyllDataEndPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { jekyllDataEnd }
@@ -20549,9 +20828,12 @@ arguments: the scalar key in the parent structure, cast to a string following
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererJekyllDataMappingBegin{%
-  \markdownRendererJekyllDataMappingBeginPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererJekyllDataMappingBegin
+  {
+    \markdownRendererJekyllDataMappingBeginPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { jekyllDataMappingBegin }
@@ -20582,9 +20864,12 @@ when the \Opt{jekyllData} option is enabled. The macro receives no arguments.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererJekyllDataMappingEnd{%
-  \markdownRendererJekyllDataMappingEndPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererJekyllDataMappingEnd
+  {
+    \markdownRendererJekyllDataMappingEndPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { jekyllDataMappingEnd }
@@ -20617,9 +20902,12 @@ arguments: the scalar key in the parent structure, cast to a string following
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererJekyllDataSequenceBegin{%
-  \markdownRendererJekyllDataSequenceBeginPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererJekyllDataSequenceBegin
+  {
+    \markdownRendererJekyllDataSequenceBeginPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { jekyllDataSequenceBegin }
@@ -20650,9 +20938,12 @@ when the \Opt{jekyllData} option is enabled. The macro receives no arguments.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererJekyllDataSequenceEnd{%
-  \markdownRendererJekyllDataSequenceEndPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererJekyllDataSequenceEnd
+  {
+    \markdownRendererJekyllDataSequenceEndPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { jekyllDataSequenceEnd }
@@ -20685,9 +20976,12 @@ following \acro{yaml} serialization rules.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererJekyllDataBoolean{%
-  \markdownRendererJekyllDataBooleanPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererJekyllDataBoolean
+  {
+    \markdownRendererJekyllDataBooleanPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { jekyllDataBoolean }
@@ -20720,9 +21014,12 @@ following \acro{yaml} serialization rules.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererJekyllDataNumber{%
-  \markdownRendererJekyllDataNumberPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererJekyllDataNumber
+  {
+    \markdownRendererJekyllDataNumberPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { jekyllDataNumber }
@@ -20767,11 +21064,17 @@ for identifiers and other programmatic text that won't be typeset by \TeX{}.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererJekyllDataTypographicString{%
-  \markdownRendererJekyllDataTypographicStringPrototype}%
-\def\markdownRendererJekyllDataProgrammaticString{%
-  \markdownRendererJekyllDataProgrammaticStringPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererJekyllDataTypographicString
+  {
+    \markdownRendererJekyllDataTypographicStringPrototype
+  }
+\cs_gset_protected:Npn
+  \markdownRendererJekyllDataProgrammaticString
+  {
+    \markdownRendererJekyllDataProgrammaticStringPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { jekyllDataTypographicString }
@@ -20901,9 +21204,12 @@ serialization rules.
 % \fi
 %
 %  \begin{macrocode}
-\def\markdownRendererJekyllDataEmpty{%
-  \markdownRendererJekyllDataEmptyPrototype}%
 \ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererJekyllDataEmpty
+  {
+    \markdownRendererJekyllDataEmptyPrototype
+  }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
   { jekyllDataEmpty }
@@ -21021,9 +21327,13 @@ following text:
 %
 % We define the command \mdef{@@_define_renderers:} that defines plain \TeX{}
 % macros for token renderers. Furthermore, the `\markdownSetup` macro also accepts
-% the `renderers` key, whose value must be a list of key-values, where the keys
-% correspond to the markdown token renderer macros and the values are new
-% definitions of these token renderers.
+% the `renderers` and `unprotectedRenderers` keys. The value for these keys
+% must be a list of key-values, where the keys correspond to the markdown token
+% renderer macros and the values are new definitions of these token renderers.
+%
+% Whereas the key `renderers` defines protected functions, which are usually
+% preferable for typesetting, the key `unprotectedRenderers` defines unprotected
+% functions, which are easier to expand and may be preferable for programming.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -21068,6 +21378,8 @@ following text:
   \l_@@_renderer_definition_tl
 \bool_new:N
   \g_@@_appending_renderer_bool
+\bool_new:N
+  \g_@@_unprotected_renderer_bool
 \cs_new:Nn \@@_define_renderer:nNn
   {
     \keys_define:nn
@@ -21092,9 +21404,22 @@ following text:
                 \l_@@_renderer_definition_tl
                 \l_tmpa_tl
             }
-          \cs_generate_from_arg_count:NNnV
+          \bool_if:NTF
+            \g_@@_unprotected_renderer_bool
+            {
+              \tl_set:Nn
+                \l_tmpa_tl
+                { \cs_set:Npn }
+            }
+            {
+              \tl_set:Nn
+                \l_tmpa_tl
+                { \cs_set_protected:Npn }
+            }
+          \exp_last_unbraced:NNV
+            \cs_generate_from_arg_count:NNnV
             #2
-            \cs_set:Npn
+            \l_tmpa_tl
             { #3 }
             \l_@@_renderer_definition_tl
         },
@@ -21177,6 +21502,15 @@ following text:
   { markdown/options }
   {
     renderers .code:n = {
+      \bool_gset_false:N
+        \g_@@_unprotected_renderer_bool
+      \keys_set:nn
+        { markdown/options/renderers }
+        { #1 }
+    },
+    unprotectedRenderers .code:n = {
+      \bool_gset_true:N
+        \g_@@_unprotected_renderer_bool
       \keys_set:nn
         { markdown/options/renderers }
         { #1 }
@@ -21760,9 +22094,15 @@ following text:
 %
 % We define the command \mdef{@@_define_renderer_prototypes:} that defines plain \TeX{}
 % macros for token renderer prototypes. Furthermore, the `\markdownSetup` macro also accepts
-% the `rendererPrototype` key, whose value must be a list of key-values, where the keys
-% correspond to the markdown token renderer prototype macros and the values are new
-% definitions of these token renderer prototypes.
+% the `rendererPrototypes` and `unprotectedRendererPrototypes` keys. The value
+% for these keys must be a list of key-values, where the keys correspond to the
+% markdown token renderer prototype macros and the values are new definitions
+% of these token renderer prototypes.
+%
+% Whereas the key `rendererPrototypes` defines protected functions, which are
+% usually preferable for typesetting, the key `unprotectedRendererPrototypes`
+% defines unprotected functions, which are easier to expand and may be
+% preferable for programming.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -21808,6 +22148,8 @@ following text:
   \l_@@_renderer_prototype_definition_tl
 \bool_new:N
   \g_@@_appending_renderer_prototype_bool
+\bool_new:N
+  \g_@@_unprotected_renderer_prototype_bool
 \cs_new:Nn \@@_define_renderer_prototype:nNn
   {
     \keys_define:nn
@@ -21832,9 +22174,22 @@ following text:
                 \l_@@_renderer_prototype_definition_tl
                 \l_tmpa_tl
             }
-          \cs_generate_from_arg_count:NNnV
+          \bool_if:NTF
+            \g_@@_unprotected_renderer_prototype_bool
+            {
+              \tl_set:Nn
+                \l_tmpa_tl
+                { \cs_set:Npn }
+            }
+            {
+              \tl_set:Nn
+                \l_tmpa_tl
+                { \cs_set_protected:Npn }
+            }
+          \exp_last_unbraced:NNV
+            \cs_generate_from_arg_count:NNnV
             #2
-            \cs_set:Npn
+            \l_tmpa_tl
             { #3 }
             \l_@@_renderer_prototype_definition_tl
         },
@@ -21860,7 +22215,7 @@ following text:
           {
             \cs_generate_from_arg_count:NNnn
               #2
-              \cs_set:Npn
+              \cs_gset_protected:Npn
               { #3 }
               { }
           }
@@ -22039,6 +22394,23 @@ following text:
       { markdown/options }
       {
         #1 .code:n = {
+          \bool_gset_false:N
+            \g_@@_unprotected_renderer_prototype_bool
+          \keys_set:nn
+            { markdown/options/renderer-prototypes }
+            { ##1 }
+        },
+      }
+  }
+\@@_with_various_cases:nn
+  { unprotectedRendererPrototypes }
+  {
+    \keys_define:nn
+      { markdown/options }
+      {
+        #1 .code:n = {
+          \bool_gset_true:N
+            \g_@@_unprotected_renderer_prototype_bool
           \keys_set:nn
             { markdown/options/renderer-prototypes }
             { ##1 }
@@ -37867,7 +38239,7 @@ end
 %  \begin{macrocode}
 \RequirePackage{ltxcmds}
 \ExplSyntaxOn
-\cs_gset:Npn
+\cs_gset_protected:Npn
   \markdownRendererInputFencedCodePrototype#1#2#3
   {
     \tl_if_empty:nTF
@@ -38307,23 +38679,26 @@ end
 \RequirePackage{url}
 \RequirePackage{expl3}
 \ExplSyntaxOn
-\def\markdownRendererLinkPrototype#1#2#3#4{
-  \tl_set:Nn \l_tmpa_tl { #1 }
-  \tl_set:Nn \l_tmpb_tl { #2 }
-  \bool_set:Nn
-    \l_tmpa_bool
-    {
-      \tl_if_eq_p:NN
-        \l_tmpa_tl
-        \l_tmpb_tl
-    }
-  \tl_set:Nn \l_tmpa_tl { #4 }
-  \bool_set:Nn
-    \l_tmpb_bool
-    {
-      \tl_if_empty_p:N
-        \l_tmpa_tl
-    }
+\cs_gset_protected:Npn
+  \markdownRendererLinkPrototype
+  #1#2#3#4
+  {
+    \tl_set:Nn \l_tmpa_tl { #1 }
+    \tl_set:Nn \l_tmpb_tl { #2 }
+    \bool_set:Nn
+      \l_tmpa_bool
+      {
+        \tl_if_eq_p:NN
+          \l_tmpa_tl
+          \l_tmpb_tl
+      }
+    \tl_set:Nn \l_tmpa_tl { #4 }
+    \bool_set:Nn
+      \l_tmpb_bool
+      {
+        \tl_if_empty_p:N
+          \l_tmpa_tl
+      }
 %    \end{macrocode}
 % \begin{markdown}
 % If the label and the fully-escaped URI are equivalent and the title is
@@ -38331,17 +38706,17 @@ end
 % link is either direct or indirect.
 % \end{markdown}
 %  \begin{macrocode}
-  \bool_if:nTF
-    {
-      \l_tmpa_bool && \l_tmpb_bool
-    }
-    {
-      \markdownLaTeXRendererAutolink { #2 } { #3 }
-    }{
-      \markdownLaTeXRendererDirectOrIndirectLink
-        { #1 } { #2 } { #3 } { #4 }
-    }
-}
+    \bool_if:nTF
+      {
+        \l_tmpa_bool && \l_tmpb_bool
+      }
+      {
+        \markdownLaTeXRendererAutolink { #2 } { #3 }
+      }{
+        \markdownLaTeXRendererDirectOrIndirectLink
+          { #1 } { #2 } { #3 } { #4 }
+      }
+  }
 \def\markdownLaTeXRendererAutolink#1#2{%
 %    \end{macrocode}
 % \begin{markdown}
@@ -38724,7 +39099,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\cs_gset:Npn
+\cs_gset_protected:Npn
   \markdownRendererInputRawInlinePrototype#1#2
   {
     \str_case:nnF
@@ -38743,7 +39118,7 @@ end
           { #2 }
       }
   }
-\cs_gset:Npn
+\cs_gset_protected:Npn
   \markdownRendererInputRawBlockPrototype#1#2
   {
     \str_case:nnF
