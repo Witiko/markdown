@@ -16,6 +16,68 @@ Fixes:
   unprotected renderers and renderer prototypes, respectively, which are easier
   to expand and may be preferable for programming.
 
+Defaults:
+
+- Define LaTeX renderers for table identifiers.
+  (#525, suggested by @machitgarha, #528)
+
+  This establishes a reliable method for authors to reference tables within
+  Markdown:
+
+  ``` tex
+  \documentclass{article}
+  \usepackage[
+    pipe_tables,
+    table_attributes,
+    table_captions,
+    relative_references,
+  ]{markdown}
+  \begin{document}
+  \begin{markdown}
+
+  | Right | *Left* |   Default   | Center |
+  |------:|:-------|-------------|:------:|
+  |   12  |   12   |      12     |    12  |
+  |  123  |   123  |   **123**   |   123  |
+  |    1  |     1  |       1     |     1  |
+
+    : Demonstration of *pipe table* syntax with the caption spreading over
+      multiple lines. {#identifier .class-name key=value}
+
+  Demonstration of a *relative reference*: See Table <#identifier>.
+
+  \end{markdown}
+  \end{document}
+  ```
+
+- Define LaTeX renderers for bracketed spans.
+  (discussed with @MacLotsen at TUG 2024 and with @TeXhackse at matrix.org, #528)
+
+  This establishes a reliable method for authors to reference the last LaTeX
+  counter that has been incremented in e.g. ordered lists.
+
+  ``` tex
+  \documentclass{article}
+  \usepackage[
+    bracketed_spans,
+    relative_references,
+    start_number = false,
+  ]{markdown}
+  \begin{document}
+  \begin{markdown}
+
+  Demonstration of *bracketed spans* syntax:
+
+   1. First item
+   2. [Second item]{#second-item}
+   3. Third item
+
+  Demonstration of a *relative reference*: See item <#second-item>.
+
+  \end{markdown}
+  \end{document}
+  ```
+
 ## 3.8.1 (2024-11-03)
 
 Fixes:
@@ -76,7 +138,8 @@ Defaults:
 - Define LaTeX renderers for image identifiers.
   (#520, suggested by @jurf, 6f3dcd0c, 478530f, [matrix.org][matrix-520])
 
-  This establishes a reliable method for authors to reference figures within Markdown:
+  This establishes a reliable method for authors to reference figures within
+  Markdown:
 
   ``` tex
   \documentclass{article}
