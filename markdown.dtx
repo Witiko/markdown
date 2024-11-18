@@ -38829,29 +38829,25 @@ end
     },
   }
 }
-\@@_if_option:nT
-  { tableAttributes }
-  {
-    \markdownSetup {
-      rendererPrototypes = {
-        tableAttributeContextBegin = {
-          \group_begin:
-          \markdownSetup {
-            rendererPrototypes = {
-              attributeIdentifier = {
-                \seq_put_right:Nn
-                  \l_@@_table_identifiers_seq
-                  { ##1 }
-              },
-            },
-          }
+\markdownSetup {
+  rendererPrototypes = {
+    tableAttributeContextBegin = {
+      \group_begin:
+      \markdownSetup {
+        rendererPrototypes = {
+          attributeIdentifier = {
+            \seq_put_right:Nn
+              \l_@@_table_identifiers_seq
+              { ##1 }
+          },
         },
-        tableAttributeContextEnd = {
-          \group_end:
-        },
-      },
-    }
-  }
+      }
+    },
+    tableAttributeContextEnd = {
+      \group_end:
+    },
+  },
+}
 \ExplSyntaxOff
 \markdownSetup{rendererPrototypes={
   table += {%
