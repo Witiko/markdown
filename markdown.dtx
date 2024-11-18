@@ -39190,6 +39190,42 @@ end
           { #2 }
       }
   }
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+%#### Bracketed spans
+%
+% If the \Opt{bracketedSpans} option is enabled, we will register any
+% identifiers, so that they can be used as \LaTeX{} labels for referencing
+% the last \LaTeX{} counter that has been incremented in e.g. ordered lists.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\seq_new:N
+  \l_@@_bracketed_span_identifiers_seq
+\markdownSetup {
+  rendererPrototypes = {
+    bracketedSpanAttributeContextBegin = {
+      \group_begin:
+      \markdownSetup {
+        rendererPrototypes = {
+          attributeIdentifier = {
+            \seq_put_right:Nn
+              \l_@@_bracketed_span_identifiers_seq
+              { ##1 }
+          },
+        },
+      }
+    },
+    bracketedSpanAttributeContextEnd = {
+      \seq_map_inline:Nn
+        \l_@@_bracketed_span_identifiers_seq
+        { \label { ##1 } }
+      \group_end:
+    },
+  },
+}
 \ExplSyntaxOff
 \fi % Closes `\markdownIfOption{plain}{\iffalse}{\iftrue}`
 %    \end{macrocode}
