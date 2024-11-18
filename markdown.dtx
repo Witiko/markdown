@@ -38799,7 +38799,64 @@ end
         \begin{table}
         \centering}%
       \addto@hook\markdownLaTeXTableEnd{%
-        \caption{#1}
+        \caption{#1}}%
+    \fi
+  }
+}}
+%    \end{macrocode}
+% \par
+% \begin{markdown}
+%
+% If the \Opt{tableAttributes} option is enabled, we will register any
+% identifiers, so that they can be used as \LaTeX{} labels for referencing
+% tables.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\seq_new:N
+  \l_@@_table_identifiers_seq
+\markdownSetup {
+  rendererPrototypes = {
+    table += {
+      \seq_map_inline:Nn
+        \l_@@_table_identifiers_seq
+        {
+          \addto@hook
+            \markdownLaTeXTableEnd
+            { \label { ##1 } }
+        }
+    },
+  }
+}
+\@@_if_option:nT
+  { tableAttributes }
+  {
+    \markdownSetup {
+      rendererPrototypes = {
+        tableAttributeContextBegin = {
+          \group_begin:
+          \markdownSetup {
+            rendererPrototypes = {
+              attributeIdentifier = {
+                \seq_put_right:Nn
+                  \l_@@_table_identifiers_seq
+                  { ##1 }
+              },
+            },
+          }
+        },
+        tableAttributeContextEnd = {
+          \group_end:
+        },
+      },
+    }
+  }
+\ExplSyntaxOff
+\markdownSetup{rendererPrototypes={
+  table += {%
+    \ifx\empty#1\empty\else
+      \addto@hook\markdownLaTeXTableEnd{%
         \end{table}}%
     \fi
     \addto@hook\markdownLaTeXTable{\begin{tabular}}%
