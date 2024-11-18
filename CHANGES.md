@@ -50,6 +50,34 @@ Defaults:
   \end{document}
   ```
 
+- Define LaTeX renderers for bracketed spans.
+  (discussed with @MacLotsen at TUG 2024 and with @TeXhackse at matrix.org, #528)
+
+  This establishes a reliable method for authors to reference the last LaTeX
+  counter that has been incremented in e.g. ordered lists.
+
+  ``` tex
+  \documentclass{article}
+  \usepackage[
+    bracketed_spans,
+    relative_references,
+    start_number = false,
+  ]{markdown}
+  \begin{document}
+  \begin{markdown}
+
+  Demonstration of *bracketed spans* syntax:
+
+   1. First item
+   2. [Second item]{#second-item}
+   3. Third item
+
+  Demonstration of a *relative reference*: See item <#second-item>.
+
+  \end{markdown}
+  \end{document}
+  ```
+
 ## 3.8.1 (2024-11-03)
 
 Fixes:
