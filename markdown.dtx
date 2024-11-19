@@ -1436,18 +1436,6 @@ soft amsfonts
 %    \end{macrocode}
 % \begin{markdown}
 %
-% \pkg{catchfile}
-%
-%:    A package that catches the contents of a file and puts it in a macro. It
-%     is used in the `witiko/graphicx/http` \LaTeX{} theme, see Section
-%     <#sec:latexthemes>.
-%
-% \end{markdown}
-%  \begin{macrocode}
-soft catchfile
-%    \end{macrocode}
-% \begin{markdown}
-%
 % \pkg{grffile}
 %
 %:    A package that extends the name processing of the \pkg{graphics} package
@@ -37424,11 +37412,11 @@ end
             {
               \sys_shell_now:n
                 {
-                  if ! test -e #1.pdf.source
-                  || ! diff #1 #1.pdf.source;
+                  if~!~test~-e~#1.pdf.source~
+                  ||~!~diff~#1~#1.pdf.source;
                   then
-                    dot -Tpdf -o #1.pdf #1;
-                    cp #1 #1.pdf.source;
+                    dot~-Tpdf~-o~#1.pdf~#1;
+                    cp~#1~#1.pdf.source;
                   fi
                 }
             }
@@ -37443,7 +37431,7 @@ end
             \exp_last_unbraced:No
             \markdownRendererImage
               {
-                { Graphviz image }
+                { Graphviz~image }
                 { #1.pdf }
                 { #1.pdf }
               }
@@ -37466,7 +37454,6 @@ end
             { #1 }
             { #2 }
             { #3 }
-
         }
     },
   },
@@ -37485,56 +37472,69 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\let\markdown@witiko@graphicx@http@oldRendererImagePrototype
+\ExplSyntaxOn
+\cs_seq_eq:NN
+  \@@_graphicx_http_previous_definition:nnnn
+  \markdownRendererInputFencedCodePrototype
   \markdownRendererImagePrototype
 %    \end{macrocode}
 % \begin{markdown}
 %
-% We load the \pkg{catchfile} and \pkg{grffile} packages, see also
-% Section <#sec:latex-prerequisites>:
+% We load the \pkg{grffile} package, see also Section
+% <#sec:latex-prerequisites>:
 %
 % \end{markdown}
 %  \begin{macrocode}
-\RequirePackage{catchfile,grffile}
+\RequirePackage{grffile}
 %    \end{macrocode}
 % \begin{markdown}
 %
-% We define the \mdef{markdown@witiko@graphicx@http@counter} counter to enumerate
-% the images for caching and the \mdef{markdown@witiko@graphicx@http@filename}
-% command, which will store the pathname of the file containing the pathname
-% of the downloaded image file.
+% We define variables and functions to enumerate the images for caching and to
+% store the pathname of the file containing the pathname of the downloaded
+% image file.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\newcount\markdown@witiko@graphicx@http@counter
-\markdown@witiko@graphicx@http@counter=0
-\newcommand\markdown@witiko@graphicx@http@filename{%
-  \markdownOptionCacheDir/witiko_graphicx_http%
-  .\the\markdown@witiko@graphicx@http@counter}%
+\int_new:N
+  \g_@@_graphicx_http_image_number_int
+\int_gset:Nn
+  \g_@@_graphicx_http_image_number_int
+  { 0 }
+\cs_new:Nn
+  \@@_graphicx_http_filename:
+  {
+    \markdownOptionCacheDir
+    / witiko_graphicx_http .
+    \int_use:N
+      \g_@@_graphicx_http_image_number_int
+  }
 %    \end{macrocode}
 % \begin{markdown}
 %
-% We define the \mdef{markdown@witiko@graphicx@http@download} command, which will
-% receive two arguments that correspond to the URL of the online image and to
-% the pathname, where the online image should be downloaded. The command will
-% produce a shell command that tries to downloads the online image to the
-% pathname.
+% We define a function that will receive two arguments that correspond to the
+% URL of the online image and to the pathname, where the online image should
+% be downloaded. The function produces a shell command that tries to
+% downloads the online image to the pathname.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\newcommand\markdown@witiko@graphicx@http@download[2]{%
-  wget -O #2 #1 || curl --location -o #2 #1 || rm -f #2}
+\cs_new:Nn
+  \@@_graphicx_http_download:nn
+  {
+    wget~-O~#2~#1~
+    ||~curl~--location~-o~#2~#1~
+    ||~rm~-f~#2
+  }
 %    \end{macrocode}
 % \begin{markdown}
 %
-% We locally swap the category code of the percentage sign with the line feed
-% control character, so that we can use percentage signs in the shell code:
+% We locally change the category code of percent signs, so that we
+% can use them in the shell code:
 %
 % \end{markdown}
 %  \begin{macrocode}
-\begingroup
-\catcode`\%=12
-\catcode`\^^A=14
+\group_begin:
+\char_set_catcode_other:N \%
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -37543,9 +37543,16 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\global\def\markdownRendererImagePrototype#1#2#3#4{^^A
-  \begingroup
-    \edef\filename{\markdown@witiko@graphicx@http@filename}^^A
+\str_new:N
+  \l_@@_graphicx_http_filename_str
+\ior_new:N
+  \g_@@_graphicx_http_filename_ior
+\markdownSetup {
+  rendererPrototypes = {
+    image = {
+      \@@_if_option:nF
+        { frozenCache }
+        {
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -37554,11 +37561,11 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-    \markdownIfOption{frozenCache}{}{^^A
-      \immediate\write18{^^A
-        mkdir -p "\markdownOptionCacheDir";
-        if printf '%s' "#3" | grep -q -E '^https?:';
-        then
+          \sys_shell_now:e
+            {
+              mkdir~-p~" \markdownOptionCacheDir ";
+              if~printf~'%s'~"#3"~|~grep~-q~-E~'^https?:';
+              then
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -37568,10 +37575,12 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-          OUTPUT_PREFIX="\markdownOptionCacheDir";
-          OUTPUT_BODY="$(printf '%s' '#3' | md5sum | cut -d' ' -f1)";
-          OUTPUT_SUFFIX="$(printf '%s' '#3' | sed 's/.*[.]//')";
-          OUTPUT="$OUTPUT_PREFIX/$OUTPUT_BODY.$OUTPUT_SUFFIX";
+                OUTPUT_PREFIX=" \markdownOptionCacheDir ";
+                OUTPUT_BODY="$(printf~'%s'~'#3'
+                              |~md5sum~|~cut~-d'~'~-f1)";
+                OUTPUT_SUFFIX="$(printf~'%s'~'#3'
+                              |~sed~'s/.*[.]//')";
+                OUTPUT="$OUTPUT_PREFIX/$OUTPUT_BODY.$OUTPUT_SUFFIX";
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -37579,11 +37588,14 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-          if ! [ -e "$OUTPUT" ];
-          then
-            \markdown@witiko@graphicx@http@download{'#3'}{"$OUTPUT"};
-            printf '%s' "$OUTPUT" > "\filename";
-          fi;
+                if~!~[~-e~"$OUTPUT"~];
+                then
+                  \@@_graphicx_http_download:nn
+                    { '#3' }
+                    { "$OUTPUT" } ;
+                  printf~'%s'~"$OUTPUT"~
+                    >~" \@@_graphicx_http_filename: ";
+                fi;
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -37592,9 +37604,46 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-        else
-          printf '%s' '#3' > "\filename";
-        fi}}^^A
+              else
+                printf~'%s'~'#3'~
+                  >~" \@@_graphicx_http_filename: ";
+              fi
+            }
+          }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% We load the pathname of the downloaded image and we typeset the image using
+% the previous definition of the image renderer prototype:
+%
+% \end{markdown}
+%  \begin{macrocode}
+      \ior_open:Ne
+        \g_@@_graphicx_http_filename_ior
+        { \@@_graphicx_http_filename: }
+      \ior_str_get:NN
+        \g_@@_graphicx_http_filename_ior
+        \l_@@_graphicx_http_filename_str
+      \ior_close:N
+        \g_@@_graphicx_http_filename_ior
+      \@@_graphicx_http_previous_definition:nnVn
+        { #1 }
+        { #2 }
+        \l_@@_graphicx_http_filename_str
+        { #4 }
+      \int_gincr:N
+        \g_@@_graphicx_http_image_number_int
+    }
+  }
+}
+\group_end:
+\cs_generate_variant:Nn
+  \ior_open:Nn
+  { Ne }
+\cs_generate_variant:Nn
+  \@@_graphicx_http_previous_definition:nnnn
+  { nnVn }
+\ExplSyntaxOff
 %    \end{macrocode}
 % \begin{markdown}
 %
