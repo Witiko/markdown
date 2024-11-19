@@ -8,7 +8,8 @@ AUXFILES=markdown.bbl markdown.cb markdown.cb2 markdown.glo markdown.bbl \
   markdown.run.xml markdown.markdown.in markdown.markdown.lua \
   markdown.markdown.out markdown-interfaces.md markdown-miscellanea.md \
   markdown-options.md markdown-tokens.md $(TECHNICAL_DOCUMENTATION_RESOURCES) \
-  $(VERSION_FILE) $(RAW_DEPENDENCIES) markdown-unicode-data-generator.lua
+  $(VERSION_FILE) $(RAW_DEPENDENCIES) markdown-unicode-data-generator.lua \
+  markdown-transcluded.md
 AUXDIRS=_minted-markdown _markdown_markdown markdown pkgcheck
 TDSARCHIVE=markdown.tds.zip
 CTANARCHIVE=markdown.ctan.zip
