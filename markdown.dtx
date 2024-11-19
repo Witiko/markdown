@@ -1424,18 +1424,6 @@ soft tools  # required by `csvsimple`, which loads `shellesc.sty`
 %    \end{macrocode}
 % \begin{markdown}
 %
-% \pkg{gobble}
-%
-%:    A package that provides the `\@gobblethree` \TeX{} command that
-%     is used in the default renderer prototype for citations. The package
-%     is included in \TeX Live${}\geq{}2016$.
-%
-% \end{markdown}
-%  \begin{macrocode}
-soft gobble
-%    \end{macrocode}
-% \begin{markdown}
-%
 % \pkg{amsmath} and \pkg{amssymb}
 %
 %:    Packages that provide symbols used for drawing ticked and unticked
@@ -38459,7 +38447,7 @@ end
 \newcount\markdownLaTeXCitationsCounter
 
 % Basic implementation
-\RequirePackage{gobble}
+\long\def\@gobblethree#1#2#3{}%
 \def\markdownLaTeXBasicCitations#1#2#3#4#5#6{%
   \advance\markdownLaTeXCitationsCounter by 1\relax
   \ifx\relax#4\relax
