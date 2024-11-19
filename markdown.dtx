@@ -1399,19 +1399,6 @@ soft paralist
 %    \end{macrocode}
 % \begin{markdown}
 %
-% \pkg{ifthen}
-%
-%:    A package that provides a concise syntax for the inspection of macro
-%     values. It is used in the `witiko/dot` \LaTeX{} theme (see Section
-%     <#sec:latexthemes>).
-%
-% \end{markdown}
-%  \begin{macrocode}
-soft latex
-soft epstopdf-pkg  # required by `latex`
-%    \end{macrocode}
-% \begin{markdown}
-%
 % \pkg{fancyvrb}
 %
 %:    A package that provides the `\VerbatimInput` macros for the verbatim
@@ -23236,7 +23223,7 @@ conference article:
 %<*themes-witiko-dot>
 % \fi
 %  \begin{macrocode}
-\ProvidesPackage{markdownthemewitiko_dot}[2021/03/09]%
+\ProvidesPackage{markdownthemewitiko_dot}[2024/11/19]%
 %    \end{macrocode}
 % \iffalse
 %</themes-witiko-dot>
@@ -37404,12 +37391,12 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% We load the \pkg{ifthen} and \pkg{grffile} packages, see also
-% Section <#sec:latex-prerequisites>:
+% We load \pkg{grffile} package, see also Section
+% <#sec:latex-prerequisites>:
 %
 % \end{markdown}
 %  \begin{macrocode}
-\RequirePackage{ifthen,grffile}
+\RequirePackage{grffile}
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -37417,7 +37404,9 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\let\markdown@witiko@dot@oldRendererInputFencedCodePrototype
+\ExplSyntaxOn
+\cs_seq_eq:NN
+  \@@_dot_previous_definition:nnn
   \markdownRendererInputFencedCodePrototype
 %    \end{macrocode}
 % \begin{markdown}
@@ -37429,16 +37418,32 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\renewcommand\markdownRendererInputFencedCodePrototype[3]{%
-  \def\next##1 ##2\relax{%
-    \ifthenelse{\equal{##1}{dot}}{%
-      \markdownIfOption{frozenCache}{}{%
-        \immediate\write18{%
-          if ! test -e #1.pdf.source || ! diff #1 #1.pdf.source;
-          then
-            dot -Tpdf -o #1.pdf #1;
-            cp #1 #1.pdf.source;
-          fi}}%
+\regex_const:Nn
+  \c_@@_dot_infostring_regex
+  { ^dot(\s+(.+))? }
+\seq_new:N
+  \l_@@_dot_matches_seq
+\markdownSetup {
+  rendererPrototypes = {
+    inputFencedCodePrototype = {
+      \regex_extract_once:NnNTF
+        \c_@@_dot_infostring_regex
+        { #2 }
+        \l_@@_dot_matches_seq
+        {
+          \@@_if_option:nF
+            { frozenCache }
+            {
+              \sys_shell_now:n
+                {
+                  if ! test -e #1.pdf.source
+                  || ! diff #1 #1.pdf.source;
+                  then
+                    dot -Tpdf -o #1.pdf #1;
+                    cp #1 #1.pdf.source;
+                  fi
+                }
+            }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -37446,7 +37451,20 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-      \markdownRendererImage{Graphviz image}{#1.pdf}{#1.pdf}{##2}%
+          \exp_args:NNne
+            \exp_last_unbraced:No
+            \markdownRendererImage
+              {
+                { Graphviz image }
+                { #1.pdf }
+                { #1.pdf }
+              }
+              {
+                \seq_item:Nn
+                  \l_@@_dot_matches_seq
+                  { 3 }
+              }
+        }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -37455,12 +37473,17 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-    }{%
-      \markdown@witiko@dot@oldRendererInputFencedCodePrototype
-        {#1}{#2}{#3}%
-    }%
-  }%
-  \next#2 \relax}%
+        {
+          \@@_dot_previous_definition:nnn
+            { #1 }
+            { #2 }
+            { #3 }
+
+        }
+    },
+  },
+}
+\ExplSyntaxOff
 %    \end{macrocode}
 % \iffalse
 %</themes-witiko-dot>
