@@ -1421,6 +1421,7 @@ soft fancyvrb
 soft csvsimple
 soft pgf  # required by `csvsimple`, which loads `pgfkeys.sty`
 soft tools  # required by `csvsimple`, which loads `shellesc.sty`
+soft etoolbox  # required by `csvsimple`, which loads `etoolbox.sty`
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -1448,6 +1449,8 @@ soft amsfonts
 % \end{markdown}
 %  \begin{macrocode}
 soft grffile
+soft epstopdf  # required by `graphics` and `graphicx`, which load `epsopdf-base.sty`
+soft epstopdf-pkg  # required by `graphics` and `graphicx`, which load `epsopdf-base.sty`
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -23170,7 +23173,7 @@ digraph tree {
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-lualatex document.tex
+lualatex --shell-escape document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain
 a drawing of a directed graph similar to Figure 1 from the following
@@ -23227,22 +23230,23 @@ Using a text editor, create a text document named `document.tex` with the
 following content:
 ``` tex
 \documentclass{article}
-\usepackage[import=witiko/graphicx/http]{markdown}
+\usepackage[import=witiko/graphicx/http, link_attributes]{markdown}
 \begin{document}
 \begin{markdown}
 ![img](https://github.com/witiko/markdown/raw/main/markdown.png
-       "The banner of the Markdown package")
+       "The banner of the Markdown package"){width=5in}
 \end{markdown}
 \end{document}
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-lualatex document.tex
+lualatex --shell-escape document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain the
 following image:
 
-> ![img](https://github.com/witiko/markdown/raw/main/markdown.png "The banner of the Markdown package")
+> ![Figure 1: The banner of the Markdown package](https://github.com/witiko/markdown/raw/main/markdown.png
+                                                  "Figure 1: The banner of the Markdown package")
 
 %</manual-options>
 %<*themes-witiko-graphicx-http>
@@ -37368,7 +37372,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\cs_seq_eq:NN
+\cs_set_eq:NN
   \@@_dot_previous_definition:nnn
   \markdownRendererInputFencedCodePrototype
 %    \end{macrocode}
@@ -37388,7 +37392,7 @@ end
   \l_@@_dot_matches_seq
 \markdownSetup {
   rendererPrototypes = {
-    inputFencedCodePrototype = {
+    inputFencedCode = {
       \regex_extract_once:NnNTF
         \c_@@_dot_infostring_regex
         { #2 }
@@ -37401,7 +37405,7 @@ end
                 {
                   if~!~test~-e~#1.pdf.source~
                   ||~!~diff~#1~#1.pdf.source;
-                  then
+                  then~
                     dot~-Tpdf~-o~#1.pdf~#1;
                     cp~#1~#1.pdf.source;
                   fi
@@ -37460,9 +37464,8 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\cs_seq_eq:NN
+\cs_set_eq:NN
   \@@_graphicx_http_previous_definition:nnnn
-  \markdownRendererInputFencedCodePrototype
   \markdownRendererImagePrototype
 %    \end{macrocode}
 % \begin{markdown}
@@ -37520,7 +37523,6 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\group_begin:
 \char_set_catcode_other:N \%
 %    \end{macrocode}
 % \begin{markdown}
@@ -37552,7 +37554,7 @@ end
             {
               mkdir~-p~" \markdownOptionCacheDir ";
               if~printf~'%s'~"#3"~|~grep~-q~-E~'^https?:';
-              then
+              then~
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -37576,7 +37578,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
                 if~!~[~-e~"$OUTPUT"~];
-                then
+                then~
                   \@@_graphicx_http_download:nn
                     { '#3' }
                     { "$OUTPUT" } ;
@@ -37591,7 +37593,7 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-              else
+              else~
                 printf~'%s'~'#3'~
                   >~" \@@_graphicx_http_filename: ";
               fi
@@ -37623,7 +37625,7 @@ end
     }
   }
 }
-\group_end:
+\char_set_catcode_comment:N \%
 \cs_generate_variant:Nn
   \ior_open:Nn
   { Ne }
@@ -37631,20 +37633,6 @@ end
   \@@_graphicx_http_previous_definition:nnnn
   { nnVn }
 \ExplSyntaxOff
-%    \end{macrocode}
-% \begin{markdown}
-%
-% We load the pathname of the downloaded image and we typeset the image using
-% the previous definition of the image renderer prototype:
-%
-% \end{markdown}
-%  \begin{macrocode}
-    \CatchFileDef{\filename}{\filename}{\endlinechar=-1}^^A
-    \markdown@witiko@graphicx@http@oldRendererImagePrototype^^A
-      {#1}{#2}{\filename}{#4}^^A
-  \endgroup
-  \global\advance\markdown@witiko@graphicx@http@counter by 1\relax}^^A
-\endgroup
 %    \end{macrocode}
 % \iffalse
 %</themes-witiko-graphicx-http>
