@@ -23241,8 +23241,10 @@ beginning of a \LaTeX{} document.
 %</manual-options>
 %<*latex>
 %  \begin{macrocode}
+\ExplSyntaxOn
 \prop_new:N
   \g_@@_latex_built_in_themes_prop
+\ExplSyntaxOff
 %    \end{macrocode}
 % \iffalse
 %</latex>
@@ -23265,9 +23267,7 @@ Built-in \LaTeX{} themes provided with the Markdown package include:
 %<*latex>
 % \fi
 %  \begin{macrocode}
-\AtEndOfPackage{
-  \markdownLaTeXLoadedtrue
-}
+\AtEndOfPackage{\markdownLaTeXLoadedtrue}
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -23647,7 +23647,6 @@ following text:
     \@@_define_renderers:
     \@@_define_renderer_prototypes:
   }
-\ExplSyntaxOff
 %    \end{macrocode}
 % \iffalse
 %</context>
@@ -23696,6 +23695,7 @@ For example, to load a theme named `witiko/tilde` in your document:
 %  \begin{macrocode}
 \prop_new:N
   \g_@@_context_built_in_themes_prop
+\ExplSyntaxOff
 %    \end{macrocode}
 % \iffalse
 %</context>
@@ -37694,14 +37694,21 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\prop_gput:Nnn
-  \g_@@_latex_built_in_themes_prop
-  { witiko / dot }
+\tl_set:Nn
+  \l_tmpa_tl
   {
     \RequirePackage
       { graphicx }
     \markdownLoadPlainTeXTheme
   }
+\prop_gput:NnV
+  \g_@@_latex_built_in_themes_prop
+  { witiko / dot }
+  \l_tmpa_tl
+\prop_gput:NnV
+  \g_@@_latex_built_in_themes_prop
+  { witiko / graphicx / http }
+  \l_tmpa_tl
 \ExplSyntaxOff
 %    \end{macrocode}
 % \iffalse
