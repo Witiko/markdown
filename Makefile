@@ -5,7 +5,7 @@
 SHELL=/bin/bash
 
 AUXFILES=markdown.bbl markdown.cb markdown.cb2 markdown.glo markdown.bbl \
-  markdown.run.xml markdown.markdown.in markdown.markdown.lua \
+  markdown.hd markdown.run.xml markdown.markdown.in markdown.markdown.lua \
   markdown.markdown.out markdown-interfaces.md markdown-miscellanea.md \
   markdown-options.md markdown-tokens.md $(TECHNICAL_DOCUMENTATION_RESOURCES) \
   $(VERSION_FILE) $(RAW_DEPENDENCIES) markdown-unicode-data-generator.lua \
@@ -47,9 +47,9 @@ DOCUMENTATION=$(TECHNICAL_DOCUMENTATION) $(HTML_USER_MANUAL) $(ROOT_README) $(VE
   $(CHANGES_FILE) $(DEPENDENCIES)
 LIBRARIES=libraries/markdown-tinyyaml.lua
 INSTALLABLES=markdown.lua markdown-parser.lua markdown-cli.lua markdown-unicode-data.lua \
-  markdown.tex markdown.sty t-markdown.tex markdownthemewitiko_dot.sty \
-  markdownthemewitiko_graphicx_http.sty markdownthemewitiko_tilde.tex \
-  markdownthemewitiko_markdown_defaults.tex markdownthemewitiko_markdown_defaults.sty \
+  markdown.tex markdown.sty t-markdown.tex \
+  markdownthemewitiko_markdown_defaults.tex \
+  markdownthemewitiko_markdown_defaults.sty \
   t-markdownthemewitiko_markdown_defaults.tex
 EXTRACTABLES=$(INSTALLABLES) $(MARKDOWN_USER_MANUAL) $(TECHNICAL_DOCUMENTATION_RESOURCES) \
   $(RAW_DEPENDENCIES)
@@ -231,12 +231,9 @@ $(TDSARCHIVE): $(DTXARCHIVE) $(INSTALLER) $(INSTALLABLES) $(DOCUMENTATION) $(EXA
 	cp markdown.lua markdown-parser.lua markdown-unicode-data.lua $(LIBRARIES) \
 	  tex/luatex/markdown/
 	cp markdown-cli.lua scripts/markdown/
-	cp markdown.tex markdownthemewitiko_tilde.tex \
-	  markdownthemewitiko_markdown_defaults.tex tex/generic/markdown/
-	cp markdown.sty markdownthemewitiko_graphicx_http.sty markdownthemewitiko_dot.sty \
-	  markdownthemewitiko_markdown_defaults.sty tex/latex/markdown/
-	cp t-markdown.tex t-markdownthemewitiko_markdown_defaults.tex \
-	  tex/context/third/markdown/
+	cp markdown.tex markdownthemewitiko_markdown_defaults.tex tex/generic/markdown/
+	cp markdown.sty markdownthemewitiko_markdown_defaults.sty tex/latex/markdown/
+	cp t-markdown.tex t-markdownthemewitiko_markdown_defaults.tex tex/context/third/markdown/
 	@# Installing the documentation.
 	mkdir -p doc/generic/markdown doc/latex/markdown/examples \
 	  doc/context/third/markdown/examples doc/optex/markdown/examples

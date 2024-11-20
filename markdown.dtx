@@ -1018,9 +1018,6 @@ Either of the two abovelisted approaches should produce the following files:
 * `markdown-cli.lua`: The Lua command-line interface
 * `markdown.tex`: The plain \TeX{} macro package
 * `markdown.sty`: The \LaTeX{} package
-* `markdownthemewitiko_dot.tex` and `markdownthemewitiko_dot.sty`: The `witiko/dot` \LaTeX{} theme
-* `markdownthemewitiko_graphicx_http.tex` and `markdownthemewitiko_graphicx_http.sty`: The `witiko/graphicx/http` \LaTeX{} theme
-* `markdownthemewitiko_tilde.tex`: The `witiko/tilde` theme
 * `markdownthemewitiko_markdown_defaults.tex`,
   `markdownthemewitiko_markdown_defaults.sty`, and
   `t-markdownthemewitiko_markdown_defaults.tex`: The `witiko/markdown/defaults`
@@ -1039,13 +1036,8 @@ placed:
 * `⟨TEXMF⟩/tex/luatex/markdown/markdown-tinyyaml.lua`
 * `⟨TEXMF⟩/scripts/markdown/markdown-cli.lua`
 * `⟨TEXMF⟩/tex/generic/markdown/markdown.tex`
-* `⟨TEXMF⟩/tex/generic/markdown/markdownthemewitiko_tilde.tex`
 * `⟨TEXMF⟩/tex/generic/markdown/markdownthemewitiko_markdown_defaults.tex`
-* `⟨TEXMF⟩/tex/generic/markdown/markdownthemewitiko_dot.tex`
-* `⟨TEXMF⟩/tex/generic/markdown/markdownthemewitiko_graphicx_http.tex`
 * `⟨TEXMF⟩/tex/latex/markdown/markdown.sty`
-* `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_dot.sty`
-* `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_graphicx_http.sty`
 * `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_markdown_defaults.sty`
 * `⟨TEXMF⟩/tex/context/third/markdown/t-markdown.tex`
 * `⟨TEXMF⟩/tex/context/third/markdown/t-markdownthemewitiko_markdown_defaults.tex`
@@ -1071,11 +1063,6 @@ This is where the individual files should be placed:
 * `./markdown/markdown.tex`
 * `./markdown.sty`
 * `./t-markdown.tex`
-* `./markdownthemewitiko_dot.tex`
-* `./markdownthemewitiko_dot.sty`
-* `./markdownthemewitiko_graphicx_http.tex`
-* `./markdownthemewitiko_graphicx_http.sty`
-* `./markdownthemewitiko_tilde.tex`
 * `./markdownthemewitiko_markdown_defaults.tex`
 * `./markdownthemewitiko_markdown_defaults.sty`
 * `./t-markdownthemewitiko_markdown_defaults.tex`
@@ -13122,7 +13109,17 @@ a specific look and other high-level goals without low-level programming.
 \cs_generate_variant:Nn
   \cs_gset:Npn
   { Npe }
-\ExplSyntaxOff
+%    \end{macrocode}
+% \begin{markdown}
+%
+% We also define the prop \mdef{g_@@_plain_tex_built_in_themes_prop} that
+% contains the code of built-in themes. This is a packaging optimization,
+% so that built-in themes does not need to be distributed in many small files.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\prop_new:N
+  \g_@@_plain_tex_built_in_themes_prop
 %    \end{macrocode}
 % \iffalse
 %</tex>
@@ -13261,15 +13258,6 @@ conference article:
 > Informatik V, RWTH Aachen., 2020, vol. 2020, No 2696, p. 1-30. ISSN 1613-0073.
 > <http://ceur-ws.org/Vol-2696/paper_235.pdf>
 
-%</manual-options>
-%<*themes-witiko-dot-latex>
-% \fi
-%  \begin{macrocode}
-\ProvidesPackage{markdownthemewitiko_dot}[2024/11/20]%
-%    \end{macrocode}
-% \iffalse
-%</themes-witiko-dot-latex>
-%<*manual-options>
 % \fi
 % \par
 % \markdownBegin
@@ -13324,15 +13312,6 @@ following image:
 > ![Figure 1: The banner of the Markdown package](https://github.com/witiko/markdown/raw/main/markdown.png
                                                   "Figure 1: The banner of the Markdown package")
 
-%</manual-options>
-%<*themes-witiko-graphicx-http-latex>
-% \fi
-%  \begin{macrocode}
-\ProvidesPackage{markdownthemewitiko_graphicx_http}[2024/11/20]%
-%    \end{macrocode}
-% \iffalse
-%</themes-witiko-graphicx-http-latex>
-%<*manual-options>
 % \fi
 % \par
 % \begin{markdown}
@@ -13412,7 +13391,6 @@ options locally.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\ExplSyntaxOn
 \prop_new:N
   \g_@@_snippets_prop
 \cs_new:Nn
@@ -23254,9 +23232,24 @@ would use the following code in the preamble of your document:
 Due to limitations of \LaTeX{}, themes may not be loaded after the
 beginning of a \LaTeX{} document.
 
+% We also define the prop \mdef{g_@@_latex_built_in_themes_prop} that
+% contains the code of built-in themes. This is a packaging optimization,
+% so that built-in themes does not need to be distributed in many small files.
+%
 % \end{markdown}
+% \iffalse
+%</manual-options>
+%<*latex>
+%  \begin{macrocode}
+\prop_new:N
+  \g_@@_latex_built_in_themes_prop
+%    \end{macrocode}
+% \iffalse
+%</latex>
+%<*manual-options>
+% \fi
 % \par
-% \markdownBegin
+% \begin{markdown}
 
 Built-in \LaTeX{} themes provided with the Markdown package include:
 
@@ -23314,13 +23307,6 @@ Built-in \LaTeX{} themes provided with the Markdown package include:
 %    \end{macrocode}
 % \iffalse
 %</latex>
-%<*themes-witiko-markdown-defaults-latex>
-% \fi
-%  \begin{macrocode}
-\ProvidesPackage{markdownthemewitiko_markdown_defaults}[2024/10/29]%
-%    \end{macrocode}
-% \iffalse
-%</themes-witiko-markdown-defaults-latex>
 %<*context>
 % \fi
 % \par
@@ -23698,6 +23684,25 @@ For example, to load a theme named `witiko/tilde` in your document:
 \setupmarkdown[import=witiko/tilde]
 ```````
 
+% We also define the prop \mdef{g_@@_context_built_in_themes_prop} that
+% contains the code of built-in themes. This is a packaging optimization,
+% so that built-in themes does not need to be distributed in many small files.
+%
+% \end{markdown}
+% \iffalse
+%</manual-options>
+%<*context>
+% \fi
+%  \begin{macrocode}
+\prop_new:N
+  \g_@@_context_built_in_themes_prop
+%    \end{macrocode}
+% \iffalse
+%</context>
+%<*manual-options>
+% \fi
+% \begin{markdown}
+
 Built-in \Hologo{ConTeXt} themes provided with the Markdown package include:
 
 \pkg{witiko/markdown/defaults}
@@ -23706,21 +23711,6 @@ Built-in \Hologo{ConTeXt} themes provided with the Markdown package include:
      prototypes for plain \TeX{}. This theme is loaded automatically together
      with the package and explicitly loading it has no effect.
 
-% \end{markdown}
-% \iffalse
-%</manual-options>
-%<*themes-witiko-markdown-defaults-ctx>
-% \fi
-%  \begin{macrocode}
-\startmodule[markdownthemewitiko_markdown_defaults]
-\unprotect
-%    \end{macrocode}
-% \iffalse
-%</themes-witiko-markdown-defaults-ctx>
-%<*manual-options>
-% \fi
-% \begin{markdown}
-%
 % Please, see Section <#sec:context-themes-implementation> for implementation
 % details of the built-in \Hologo{ConTeXt} themes.
 %
@@ -35505,11 +35495,6 @@ end
           }
       }
       {
-        \msg_info:nnnn
-          { markdown }
-          { loading-plain-tex-theme }
-          { #1 }
-          { #2 }
         \prop_gput:Nnx
           \g_@@_plain_tex_loaded_themes_linenos_prop
           { #1 }
@@ -35518,14 +35503,46 @@ end
           \g_@@_plain_tex_loaded_themes_versions_prop
           { #1 }
           { #2 }
-        \file_input:n
-          { markdown theme #3 }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Load built-in plain \TeX{} themes from the prop
+% \mref{g_@@_plain_tex_built_in_themes_prop} and from the filesystem otherwise.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        \prop_if_in:NnTF
+          \g_@@_plain_tex_built_in_themes_prop
+          { #1 }
+          {
+            \msg_info:nnnn
+              { markdown }
+              { loading-built-in-plain-tex-theme }
+              { #1 }
+              { #2 }
+            \prop_item:Nn
+              \g_@@_plain_tex_built_in_themes_prop
+              { #1 }
+          }
+          {
+            \msg_info:nnnn
+              { markdown }
+              { loading-plain-tex-theme }
+              { #1 }
+              { #2 }
+            \file_input:n
+              { markdown theme #3 }
+          }
       }
   }
 \msg_new:nnn
   { markdown }
   { loading-plain-tex-theme }
   { Loading~version~#2~of~plain~TeX~Markdown~theme~#1 }
+\msg_new:nnn
+  { markdown }
+  { loading-built-in-plain-tex-theme }
+  { Loading~version~#2~of~built-in~plain~TeX~Markdown~theme~#1 }
 \msg_new:nnn
   { markdown }
   { repeatedly-loaded-plain-tex-theme }
@@ -35620,21 +35637,18 @@ end
 \cs_generate_variant:Nn
   \@@_plain_tex_load_theme:nnn
   { VeV }
-\ExplSyntaxOff
 %    \end{macrocode}
-% \iffalse
-%</tex>
-%<*themes-witiko-dot>
-% \fi
-% \par
 % \begin{markdown}
 %
 % The `witiko/dot` theme enables the \Opt{fencedCode} Lua option:
 %
 % \end{markdown}
 %  \begin{macrocode}
-\ExplSyntaxOn
-\markdownSetup{fencedCode}
+\prop_gput:Nnn
+  \g_@@_plain_tex_built_in_themes_prop
+  { witiko / dot }
+  {
+    \markdownSetup{fencedCode}
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -35642,9 +35656,9 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\cs_set_eq:NN
-  \@@_dot_previous_definition:nnn
-  \markdownRendererInputFencedCodePrototype
+    \cs_set_eq:NN
+      \@@_dot_previous_definition:nnn
+      \markdownRendererInputFencedCodePrototype
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -35655,32 +35669,32 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\regex_const:Nn
-  \c_@@_dot_infostring_regex
-  { ^dot(\s+(.+))? }
-\seq_new:N
-  \l_@@_dot_matches_seq
-\markdownSetup {
-  rendererPrototypes = {
-    inputFencedCode = {
-      \regex_extract_once:NnNTF
-        \c_@@_dot_infostring_regex
-        { #2 }
-        \l_@@_dot_matches_seq
-        {
-          \@@_if_option:nF
-            { frozenCache }
+    \regex_const:Nn
+      \c_@@_dot_infostring_regex
+      { ^dot(\s+(.+))? }
+    \seq_new:N
+      \l_@@_dot_matches_seq
+    \markdownSetup {
+      rendererPrototypes = {
+        inputFencedCode = {
+          \regex_extract_once:NnNTF
+            \c_@@_dot_infostring_regex
+            { #2 }
+            \l_@@_dot_matches_seq
             {
-              \sys_shell_now:n
+              \@@_if_option:nF
+                { frozenCache }
                 {
-                  if~!~test~-e~#1.pdf.source~
-                  ||~!~diff~#1~#1.pdf.source;
-                  then~
-                    dot~-Tpdf~-o~#1.pdf~#1;
-                    cp~#1~#1.pdf.source;
-                  fi
+                  \sys_shell_now:n
+                    {
+                      if~!~test~-e~#1.pdf.source~
+                      ||~!~diff~#1~#1.pdf.source;
+                      then~
+                        dot~-Tpdf~-o~#1.pdf~#1;
+                        cp~#1~#1.pdf.source;
+                      fi
+                    }
                 }
-            }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -35688,20 +35702,20 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-          \exp_args:NNne
-            \exp_last_unbraced:No
-            \markdownRendererImage
-              {
-                { Graphviz~image }
-                { #1.pdf }
-                { #1.pdf }
-              }
-              {
-                \seq_item:Nn
-                  \l_@@_dot_matches_seq
-                  { 3 }
-              }
-        }
+              \exp_args:NNne
+                \exp_last_unbraced:No
+                \markdownRendererImage
+                  {
+                    { Graphviz~image }
+                    { #1.pdf }
+                    { #1.pdf }
+                  }
+                  {
+                    \seq_item:Nn
+                      \l_@@_dot_matches_seq
+                      { 3 }
+                  }
+            }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -35710,22 +35724,27 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-        {
-          \@@_dot_previous_definition:nnn
-            { #1 }
-            { #2 }
-            { #3 }
-        }
-    },
-  },
-}
-\ExplSyntaxOff
+            {
+              \@@_dot_previous_definition:nnn
+                { #1 }
+                { #2 }
+                { #3 }
+            }
+        },
+      },
+    }
+  }
 %    \end{macrocode}
-% \iffalse
-%</themes-witiko-dot>
-%<*themes-witiko-graphicx-http>
-% \fi
-% \par
+% \begin{markdown}
+%
+% We locally change the category code of percent signs, so that we
+% can use them in the shell code:
+%
+% \end{markdown}
+%  \begin{macrocode}
+\group_begin:
+\char_set_catcode_other:N \%
+%    \end{macrocode}
 % \begin{markdown}
 %
 % The `witiko/graphicx/http` theme stores the previous definition of the image
@@ -35733,10 +35752,13 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\ExplSyntaxOn
-\cs_set_eq:NN
-  \@@_graphicx_http_previous_definition:nnnn
-  \markdownRendererImagePrototype
+\prop_gput:Nnn
+  \g_@@_plain_tex_built_in_themes_prop
+  { witiko / graphicx / http }
+  {
+    \cs_set_eq:NN
+      \@@_graphicx_http_previous_definition:nnnn
+      \markdownRendererImagePrototype
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -35746,19 +35768,19 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\int_new:N
-  \g_@@_graphicx_http_image_number_int
-\int_gset:Nn
-  \g_@@_graphicx_http_image_number_int
-  { 0 }
-\cs_new:Nn
-  \@@_graphicx_http_filename:
-  {
-    \markdownOptionCacheDir
-    / witiko_graphicx_http .
-    \int_use:N
+    \int_new:N
       \g_@@_graphicx_http_image_number_int
-  }
+    \int_gset:Nn
+      \g_@@_graphicx_http_image_number_int
+      { 0 }
+    \cs_new:Nn
+      \@@_graphicx_http_filename:
+      {
+        \markdownOptionCacheDir
+        / witiko_graphicx_http .
+        \int_use:N
+          \g_@@_graphicx_http_image_number_int
+      }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -35769,22 +35791,13 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\cs_new:Nn
-  \@@_graphicx_http_download:nn
-  {
-    wget~-O~#2~#1~
-    ||~curl~--location~-o~#2~#1~
-    ||~rm~-f~#2
-  }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% We locally change the category code of percent signs, so that we
-% can use them in the shell code:
-%
-% \end{markdown}
-%  \begin{macrocode}
-\char_set_catcode_other:N \%
+    \cs_new:Nn
+      \@@_graphicx_http_download:nn
+      {
+        wget~-O~#2~#1~
+        ||~curl~--location~-o~#2~#1~
+        ||~rm~-f~#2
+      }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -35793,16 +35806,16 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\str_new:N
-  \l_@@_graphicx_http_filename_str
-\ior_new:N
-  \g_@@_graphicx_http_filename_ior
-\markdownSetup {
-  rendererPrototypes = {
-    image = {
-      \@@_if_option:nF
-        { frozenCache }
-        {
+    \str_new:N
+      \l_@@_graphicx_http_filename_str
+    \ior_new:N
+      \g_@@_graphicx_http_filename_ior
+    \markdownSetup {
+      rendererPrototypes = {
+        image = {
+          \@@_if_option:nF
+            { frozenCache }
+            {
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -35811,11 +35824,11 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-          \sys_shell_now:e
-            {
-              mkdir~-p~" \markdownOptionCacheDir ";
-              if~printf~'%s'~"#3"~|~grep~-q~-E~'^https?:';
-              then~
+              \sys_shell_now:e
+                {
+                  mkdir~-p~" \markdownOptionCacheDir ";
+                  if~printf~'%s'~"#3"~|~grep~-q~-E~'^https?:';
+                  then~
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -35825,12 +35838,12 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-                OUTPUT_PREFIX=" \markdownOptionCacheDir ";
-                OUTPUT_BODY="$(printf~'%s'~'#3'
-                              |~md5sum~|~cut~-d'~'~-f1)";
-                OUTPUT_SUFFIX="$(printf~'%s'~'#3'
-                              |~sed~'s/.*[.]//')";
-                OUTPUT="$OUTPUT_PREFIX/$OUTPUT_BODY.$OUTPUT_SUFFIX";
+                    OUTPUT_PREFIX=" \markdownOptionCacheDir ";
+                    OUTPUT_BODY="$(printf~'%s'~'#3'
+                                  |~md5sum~|~cut~-d'~'~-f1)";
+                    OUTPUT_SUFFIX="$(printf~'%s'~'#3'
+                                  |~sed~'s/.*[.]//')";
+                    OUTPUT="$OUTPUT_PREFIX/$OUTPUT_BODY.$OUTPUT_SUFFIX";
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -35838,14 +35851,14 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-                if~!~[~-e~"$OUTPUT"~];
-                then~
-                  \@@_graphicx_http_download:nn
-                    { '#3' }
-                    { "$OUTPUT" } ;
-                  printf~'%s'~"$OUTPUT"~
-                    >~" \@@_graphicx_http_filename: ";
-                fi;
+                    if~!~[~-e~"$OUTPUT"~];
+                    then~
+                      \@@_graphicx_http_download:nn
+                        { '#3' }
+                        { "$OUTPUT" } ;
+                      printf~'%s'~"$OUTPUT"~
+                        >~" \@@_graphicx_http_filename: ";
+                    fi;
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -35854,12 +35867,12 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-              else~
-                printf~'%s'~'#3'~
-                  >~" \@@_graphicx_http_filename: ";
-              fi
-            }
-          }
+                  else~
+                    printf~'%s'~'#3'~
+                      >~" \@@_graphicx_http_filename: ";
+                  fi
+                }
+              }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -35868,38 +35881,33 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-      \ior_open:Ne
-        \g_@@_graphicx_http_filename_ior
-        { \@@_graphicx_http_filename: }
-      \ior_str_get:NN
-        \g_@@_graphicx_http_filename_ior
-        \l_@@_graphicx_http_filename_str
-      \ior_close:N
-        \g_@@_graphicx_http_filename_ior
-      \@@_graphicx_http_previous_definition:nnVn
-        { #1 }
-        { #2 }
-        \l_@@_graphicx_http_filename_str
-        { #4 }
-      \int_gincr:N
-        \g_@@_graphicx_http_image_number_int
+          \ior_open:Ne
+            \g_@@_graphicx_http_filename_ior
+            { \@@_graphicx_http_filename: }
+          \ior_str_get:NN
+            \g_@@_graphicx_http_filename_ior
+            \l_@@_graphicx_http_filename_str
+          \ior_close:N
+            \g_@@_graphicx_http_filename_ior
+          \@@_graphicx_http_previous_definition:nnVn
+            { #1 }
+            { #2 }
+            \l_@@_graphicx_http_filename_str
+            { #4 }
+          \int_gincr:N
+            \g_@@_graphicx_http_image_number_int
+        }
+      }
     }
+    \cs_generate_variant:Nn
+      \ior_open:Nn
+      { Ne }
+    \cs_generate_variant:Nn
+      \@@_graphicx_http_previous_definition:nnnn
+      { nnVn }
   }
-}
-\char_set_catcode_comment:N \%
-\cs_generate_variant:Nn
-  \ior_open:Nn
-  { Ne }
-\cs_generate_variant:Nn
-  \@@_graphicx_http_previous_definition:nnnn
-  { nnVn }
-\ExplSyntaxOff
+\group_end:
 %    \end{macrocode}
-% \iffalse
-%</themes-witiko-graphicx-http>
-%<*themes-witiko-tilde>
-% \fi
-% \par
 % \begin{markdown}
 %
 % The `witiko/tilde` theme redefines the tilde token renderer prototype,
@@ -35907,14 +35915,20 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\markdownSetup {
-  rendererPrototypes = {
-    tilde = {~},
-  },
-}
+\prop_gput:Nnn
+  \g_@@_plain_tex_built_in_themes_prop
+  { witiko / tilde }
+  {
+    \markdownSetup {
+      rendererPrototypes = {
+        tilde = {~},
+      },
+    }
+  }
+\ExplSyntaxOff
 %    \end{macrocode}
 % \iffalse
-%</themes-witiko-tilde>
+%</tex>
 %<*themes-witiko-markdown-defaults-tex>
 % \fi
 % \begin{markdown}
@@ -37443,9 +37457,11 @@ end
 % \par
 % \begin{markdown}
 %
-% If the Markdown package has already been loaded, determine whether
-% a file named `markdowntheme`\meta{munged theme name}`.sty` exists
-% and whether we are still in the preamble.
+% If the Markdown package has not yet been loaded, determine whether
+% either this is a built-in theme according to the prop
+% \mref{g_@@_latex_built_in_themes_prop} or a file named
+% `markdowntheme`\meta{munged theme name}`.sty` exists and whether we are still
+% in the preamble.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -37454,20 +37470,37 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% If both conditions are true does, end with an error, since we cannot load
-% \LaTeX{} themes after the preamble. Otherwise, try loading a plain \TeX{}
-% theme instead.
+% If both conditions are true, end with an error, since we cannot load
+% \LaTeX{} themes after the preamble.
 %
 % \end{markdown}
 %  \begin{macrocode}
-        \file_if_exist:nTF
-          { markdown theme #3.sty }
+        \bool_if:nTF
+          {
+            \bool_lazy_or_p:nn
+              {
+                \prop_if_in_p:Nn
+                  \g_@@_latex_built_in_themes_prop
+                  { #1 }
+              }
+              {
+                \file_if_exist_p:n
+                  { markdown theme #3.sty }
+              }
+          }
           {
             \msg_error:nnn
               { markdown }
               { latex-theme-after-preamble }
               { #1 }
           }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Otherwise, try loading a plain \TeX{} theme instead.
+%
+% \end{markdown}
+%  \begin{macrocode}
           {
             \@@_plain_tex_load_theme:nnn
               { #1 }
@@ -37484,8 +37517,19 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-        \file_if_exist:nTF
-          { markdown theme #3.sty }
+        \bool_if:nTF
+          {
+            \bool_lazy_or_p:nn
+              {
+                \prop_if_in_p:Nn
+                  \g_@@_latex_built_in_themes_prop
+                  { #1 }
+              }
+              {
+                \file_if_exist_p:n
+                  { markdown theme #3.sty }
+              }
+          }
           {
             \prop_get:NnNTF
               \g_@@_latex_loaded_themes_linenos_prop
@@ -37518,11 +37562,6 @@ end
                   }
               }
               {
-                \msg_info:nnnn
-                  { markdown }
-                  { loading-latex-theme }
-                  { #1 }
-                  { #2 }
                 \prop_gput:Nnx
                   \g_@@_latex_loaded_themes_linenos_prop
                   { #1 }
@@ -37531,8 +37570,36 @@ end
                   \g_@@_latex_loaded_themes_versions_prop
                   { #1 }
                   { #2 }
-                \RequirePackage
-                  { markdown theme #3 }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Load built-in plain \TeX{} themes from the prop
+% \mref{g_@@_latex_built_in_themes_prop} and from the filesystem otherwise.
+%
+% \end{markdown}
+%  \begin{macrocode}
+                \prop_if_in:NnTF
+                  \g_@@_latex_built_in_themes_prop
+                  { #1 }
+                  {
+                    \msg_info:nnnn
+                      { markdown }
+                      { loading-built-in-latex-theme }
+                      { #1 }
+                      { #2 }
+                    \prop_item:Nn
+                      \g_@@_latex_built_in_themes_prop
+                      { #1 }
+                  }
+                  {
+                    \msg_info:nnnn
+                      { markdown }
+                      { loading-latex-theme }
+                      { #1 }
+                      { #2 }
+                    \RequirePackage
+                      { markdown theme #3 }
+                  }
               }
           }
           {
@@ -37570,6 +37637,10 @@ end
     Postponing~loading~version~#2~of~Markdown~theme~#1~until~
     Markdown~package~has~finished~loading
   }
+\msg_new:nnn
+  { markdown }
+  { loading-built-in-latex-theme }
+  { Loading~version~#2~of~built-in~LaTeX~Markdown~theme~#1 }
 \msg_new:nnn
   { markdown }
   { loading-latex-theme }
@@ -37614,30 +37685,34 @@ end
   { latex-theme-after-preamble }
   \l_tmpa_tl
   \l_tmpb_tl
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The `witiko/dot` and `witiko/graphicx/http` \LaTeX{} themes load the package
+% \pkg{graphicx}, see also Section <#sec:latex-prerequisites>. Then, they
+% load the corresponding plain \TeX{} themes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\prop_gput:Nnn
+  \g_@@_latex_built_in_themes_prop
+  { witiko / dot }
+  {
+    \RequirePackage
+      { graphicx }
+    \markdownLoadPlainTeXTheme
+  }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \iffalse
 %</latex>
-%<*themes-witiko-dot-latex,themes-witiko-graphicx-http-latex>
-% \fi
-% \begin{markdown}
-%
-% The `witiko/dot` and `witiko/graphicx/http` \LaTeX{} themes load the package
-% \pkg{graphicx}, see also Section <#sec:latex-prerequisites>.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\RequirePackage{graphicx}
-\markdownLoadPlainTeXTheme
-%    \end{macrocode}
-% \iffalse
 %<*themes-witiko-markdown-defaults-latex>
 % \fi
 % \par
 % \begin{markdown}
 %
-% The `witiko/dot`, `witiko/graphicx/http`, and `witiko/markdown/defaults`
-% \LaTeX{} themes load the corresponding plain \TeX{} themes.
+% The `witiko/markdown/defaults` \LaTeX{} theme also loads the corresponding
+% plain \TeX{} theme.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -37656,7 +37731,6 @@ end
 % \end{markdown}
 % \iffalse
 %</themes-witiko-markdown-defaults-latex>
-%</themes-witiko-dot-latex,themes-witiko-graphicx-http-latex>
 %<*latex>
 % \fi
 %  \begin{macrocode}
@@ -39421,14 +39495,26 @@ end
 % \par
 % \begin{markdown}
 %
-% Determine whether a file named `t-markdowntheme`\meta{munged theme
-% name}`.tex` exists. If it does, load it. Otherwise, try loading a plain
-% \TeX{} theme instead.
+% Determine whether either this is a built-in theme according to the prop
+% \mref{g_@@_context_built_in_themes_prop} or a file named
+% `t-markdowntheme`\meta{munged theme name}`.tex` exists. If it does, load it.
+% Otherwise, try loading a plain \TeX{} theme instead.
 %
 % \end{markdown}
 %  \begin{macrocode}
-    \file_if_exist:nTF
-      { t - markdown theme #3.tex }
+    \bool_if:nTF
+      {
+        \bool_lazy_or_p:nn
+          {
+            \prop_if_in_p:Nn
+              \g_@@_context_built_in_themes_prop
+              { #1 }
+          }
+          {
+            \file_if_exist_p:n
+              { t - markdown theme #3.tex }
+          }
+      }
       {
         \prop_get:NnNTF
           \g_@@_context_loaded_themes_linenos_prop
@@ -39461,11 +39547,6 @@ end
               }
           }
           {
-            \msg_info:nnn
-              { markdown }
-              { loading-context-theme }
-              { #1 }
-              { #2 }
             \prop_gput:Nnx
               \g_@@_context_loaded_themes_linenos_prop
               { #1 }
@@ -39474,9 +39555,37 @@ end
               \g_@@_context_loaded_themes_versions_prop
               { #1 }
               { #2 }
-            \usemodule
-              [ t ]
-              [ markdown theme #3 ]
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Load built-in plain \TeX{} themes from the prop
+% \mref{g_@@_context_built_in_themes_prop} and from the filesystem otherwise.
+%
+% \end{markdown}
+%  \begin{macrocode}
+            \prop_if_in:NnTF
+              \g_@@_context_built_in_themes_prop
+              { #1 }
+              {
+                \msg_info:nnnn
+                  { markdown }
+                  { loading-built-in-context-theme }
+                  { #1 }
+                  { #2 }
+                \prop_item:Nn
+                  \g_@@_context_built_in_themes_prop
+                  { #1 }
+              }
+              {
+                \msg_info:nnnn
+                  { markdown }
+                  { loading-context-theme }
+                  { #1 }
+                  { #2 }
+                \usemodule
+                  [ t ]
+                  [ markdown theme #3 ]
+              }
           }
       }
       {
@@ -39486,6 +39595,10 @@ end
           { #3 }
       }
   }
+\msg_new:nnn
+  { markdown }
+  { loading-built-in-context-theme }
+  { Loading~version~#2~of~built-in~ConTeXt~Markdown~theme~#1 }
 \msg_new:nnn
   { markdown }
   { loading-context-theme }
