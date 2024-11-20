@@ -1018,8 +1018,8 @@ Either of the two abovelisted approaches should produce the following files:
 * `markdown-cli.lua`: The Lua command-line interface
 * `markdown.tex`: The plain \TeX{} macro package
 * `markdown.sty`: The \LaTeX{} package
-* `markdownthemewitiko_dot.sty`: The `witiko/dot` \LaTeX{} theme
-* `markdownthemewitiko_graphicx_http.sty`: The `witiko/graphicx/http` \LaTeX{} theme
+* `markdownthemewitiko_dot.tex` and `markdownthemewitiko_dot.sty`: The `witiko/dot` \LaTeX{} theme
+* `markdownthemewitiko_graphicx_http.tex` and `markdownthemewitiko_graphicx_http.sty`: The `witiko/graphicx/http` \LaTeX{} theme
 * `markdownthemewitiko_tilde.tex`: The `witiko/tilde` theme
 * `markdownthemewitiko_markdown_defaults.tex`,
   `markdownthemewitiko_markdown_defaults.sty`, and
@@ -1041,6 +1041,8 @@ placed:
 * `⟨TEXMF⟩/tex/generic/markdown/markdown.tex`
 * `⟨TEXMF⟩/tex/generic/markdown/markdownthemewitiko_tilde.tex`
 * `⟨TEXMF⟩/tex/generic/markdown/markdownthemewitiko_markdown_defaults.tex`
+* `⟨TEXMF⟩/tex/generic/markdown/markdownthemewitiko_dot.tex`
+* `⟨TEXMF⟩/tex/generic/markdown/markdownthemewitiko_graphicx_http.tex`
 * `⟨TEXMF⟩/tex/latex/markdown/markdown.sty`
 * `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_dot.sty`
 * `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_graphicx_http.sty`
@@ -1069,7 +1071,9 @@ This is where the individual files should be placed:
 * `./markdown/markdown.tex`
 * `./markdown.sty`
 * `./t-markdown.tex`
+* `./markdownthemewitiko_dot.tex`
 * `./markdownthemewitiko_dot.sty`
+* `./markdownthemewitiko_graphicx_http.tex`
 * `./markdownthemewitiko_graphicx_http.sty`
 * `./markdownthemewitiko_tilde.tex`
 * `./markdownthemewitiko_markdown_defaults.tex`
@@ -1339,14 +1343,12 @@ hard lt3luabridge
 % prerequisites (see Section <#sec:tex-prerequisites>).
 % \end{markdown}
 % \iffalse
-%<*themes-witiko-dot,themes-witiko-graphicx-http>
 % \fi
 %  \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}
 \RequirePackage{expl3}
 %    \end{macrocode}
 % \iffalse
-%</themes-witiko-dot,themes-witiko-graphicx-http>
 %</latex>
 %<*depends>
 % \fi
@@ -13130,9 +13132,213 @@ a specific look and other high-level goals without low-level programming.
 %<*manual-options>
 % \fi
 % \par
-% \begin{markdown}
+% \markdownBegin
 
 Built-in plain \TeX{} themes provided with the Markdown package include:
+
+\pkg{witiko/dot}
+
+:    A theme that typesets fenced code blocks with the `dot …` infostring
+     as images of directed graphs rendered by the Graphviz tools. The
+     right tail of the infostring is used as the image title.
+%    ```` tex
+%    \documentclass{article}
+%    \usepackage[import=witiko/dot]{markdown}
+%    \setkeys{Gin}{
+%      width = \columnwidth,
+%      height = 0.65\paperheight,
+%      keepaspectratio}
+%    \begin{document}
+%    \begin{markdown}
+%    ``` dot Various formats of mathemathical formulae
+%    digraph tree {
+%      margin = 0;
+%      rankdir = "LR";
+%
+%      latex -> pmml;
+%      latex -> cmml;
+%      pmml -> slt;
+%      cmml -> opt;
+%      cmml -> prefix;
+%      cmml -> infix;
+%      pmml -> mterms [style=dashed];
+%      cmml -> mterms;
+%
+%      latex [label = "LaTeX"];
+%      pmml [label = "Presentation MathML"];
+%      cmml [label = "Content MathML"];
+%      slt [label = "Symbol Layout Tree"];
+%      opt [label = "Operator Tree"];
+%      prefix [label = "Prefix"];
+%      infix [label = "Infix"];
+%      mterms [label = "M-Terms"];
+%    }
+%    ```
+%    \end{markdown}
+%    \end{document}
+%    ````````
+%    Typesetting the above document produces the output shown in
+%    Figure <#fig:witiko/dot>.
+%    ``` dot Various formats of mathemathical formulae \label{fig:witiko/dot}
+%    digraph tree {
+%      margin = 0;
+%      rankdir = "LR";
+%
+%      latex -> pmml;
+%      latex -> cmml;
+%      pmml -> slt;
+%      cmml -> opt;
+%      cmml -> prefix;
+%      cmml -> infix;
+%      pmml -> mterms [style=dashed];
+%      cmml -> mterms;
+%
+%      latex [label = "LaTeX"];
+%      pmml [label = "Presentation MathML"];
+%      cmml [label = "Content MathML"];
+%      slt [label = "Symbol Layout Tree"];
+%      opt [label = "Operator Tree"];
+%      prefix [label = "Prefix"];
+%      infix [label = "Infix"];
+%      mterms [label = "M-Terms"];
+%    }
+%    ```
+     The theme requires a Unix-like operating system with GNU Diffutils and
+     Graphviz installed. The theme also requires shell access unless the
+     \Opt{frozenCache} plain \TeX{} option is enabled.
+
+% \markdownEnd
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+```` tex
+\documentclass{article}
+\usepackage[import=witiko/dot]{markdown}
+\setkeys{Gin}{
+  width=\columnwidth,
+  height=0.65\paperheight,
+  keepaspectratio}
+\begin{document}
+\begin{markdown}
+``` dot Various formats of mathemathical formulae
+digraph tree {
+  margin = 0;
+  rankdir = "LR";
+
+  latex -> pmml;
+  latex -> cmml;
+  pmml -> slt;
+  cmml -> opt;
+  cmml -> prefix;
+  cmml -> infix;
+  pmml -> mterms [style=dashed];
+  cmml -> mterms;
+
+  latex [label = "LaTeX"];
+  pmml [label = "Presentation MathML"];
+  cmml [label = "Content MathML"];
+  slt [label = "Symbol Layout Tree"];
+  opt [label = "Operator Tree"];
+  prefix [label = "Prefix"];
+  infix [label = "Infix"];
+  mterms [label = "M-Terms"];
+}
+```
+\end{markdown}
+\end{document}
+````````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex --shell-escape document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain
+a drawing of a directed graph similar to Figure 1 from the following
+conference article:
+
+> NOVOTNÝ, Vít, Petr SOJKA, Michal ŠTEFÁNIK and Dávid LUPTÁK. Three is Better
+> than One: Ensembling Math Information Retrieval Systems. *CEUR Workshop
+> Proceedings*. Thessaloniki, Greece: M. Jeusfeld c/o Redaktion Sun SITE,
+> Informatik V, RWTH Aachen., 2020, vol. 2020, No 2696, p. 1-30. ISSN 1613-0073.
+> <http://ceur-ws.org/Vol-2696/paper_235.pdf>
+
+%</manual-options>
+%<*themes-witiko-dot-latex>
+% \fi
+%  \begin{macrocode}
+\ProvidesPackage{markdownthemewitiko_dot}[2024/11/20]%
+%    \end{macrocode}
+% \iffalse
+%</themes-witiko-dot-latex>
+%<*manual-options>
+% \fi
+% \par
+% \markdownBegin
+
+\pkg{witiko/graphicx/http}
+
+:    A theme that adds support for downloading images whose URL has the
+     http or https protocol.
+%    ``` tex
+%    \documentclass{article}
+%    \usepackage[import=witiko/graphicx/http]{markdown}
+%    \begin{document}
+%    \begin{markdown}
+%    ![img](https://github.com/witiko/markdown/raw/main/markdown.png
+%           "The banner of the Markdown package")
+%    \end{markdown}
+%    \end{document}
+%    ```````
+%    Typesetting the above document produces the output shown in
+%    Figure <#fig:witiko/graphicx/http>.
+%    ![img](https://github.com/witiko/markdown/raw/main/markdown.png
+%           "The banner of the Markdown package \label{fig:witiko/graphicx/http}")
+     The theme requires the \pkg{catchfile} \LaTeX{} package and a Unix-like
+     operating system with GNU Coreutils `md5sum` and either GNU Wget or cURL
+     installed. The theme also requires shell access unless the
+     \Opt{frozenCache} plain \TeX{} option is enabled.
+
+% \markdownEnd
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[import=witiko/graphicx/http, link_attributes]{markdown}
+\begin{document}
+\begin{markdown}
+![img](https://github.com/witiko/markdown/raw/main/markdown.png
+       "The banner of the Markdown package"){width=5in}
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex --shell-escape document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following image:
+
+> ![Figure 1: The banner of the Markdown package](https://github.com/witiko/markdown/raw/main/markdown.png
+                                                  "Figure 1: The banner of the Markdown package")
+
+%</manual-options>
+%<*themes-witiko-graphicx-http-latex>
+% \fi
+%  \begin{macrocode}
+\ProvidesPackage{markdownthemewitiko_graphicx_http}[2024/11/20]%
+%    \end{macrocode}
+% \iffalse
+%</themes-witiko-graphicx-http-latex>
+%<*manual-options>
+% \fi
+% \par
+% \begin{markdown}
 
 \pkg{witiko/tilde}
 
@@ -23056,210 +23262,6 @@ beginning of a \LaTeX{} document.
 % \markdownBegin
 
 Built-in \LaTeX{} themes provided with the Markdown package include:
-
-\pkg{witiko/dot}
-
-:    A theme that typesets fenced code blocks with the `dot …` infostring
-     as images of directed graphs rendered by the Graphviz tools. The
-     right tail of the infostring is used as the image title.
-%    ```` tex
-%    \documentclass{article}
-%    \usepackage[import=witiko/dot]{markdown}
-%    \setkeys{Gin}{
-%      width = \columnwidth,
-%      height = 0.65\paperheight,
-%      keepaspectratio}
-%    \begin{document}
-%    \begin{markdown}
-%    ``` dot Various formats of mathemathical formulae
-%    digraph tree {
-%      margin = 0;
-%      rankdir = "LR";
-%
-%      latex -> pmml;
-%      latex -> cmml;
-%      pmml -> slt;
-%      cmml -> opt;
-%      cmml -> prefix;
-%      cmml -> infix;
-%      pmml -> mterms [style=dashed];
-%      cmml -> mterms;
-%
-%      latex [label = "LaTeX"];
-%      pmml [label = "Presentation MathML"];
-%      cmml [label = "Content MathML"];
-%      slt [label = "Symbol Layout Tree"];
-%      opt [label = "Operator Tree"];
-%      prefix [label = "Prefix"];
-%      infix [label = "Infix"];
-%      mterms [label = "M-Terms"];
-%    }
-%    ```
-%    \end{markdown}
-%    \end{document}
-%    ````````
-%    Typesetting the above document produces the output shown in
-%    Figure <#fig:witiko/dot>.
-%    ``` dot Various formats of mathemathical formulae \label{fig:witiko/dot}
-%    digraph tree {
-%      margin = 0;
-%      rankdir = "LR";
-%
-%      latex -> pmml;
-%      latex -> cmml;
-%      pmml -> slt;
-%      cmml -> opt;
-%      cmml -> prefix;
-%      cmml -> infix;
-%      pmml -> mterms [style=dashed];
-%      cmml -> mterms;
-%
-%      latex [label = "LaTeX"];
-%      pmml [label = "Presentation MathML"];
-%      cmml [label = "Content MathML"];
-%      slt [label = "Symbol Layout Tree"];
-%      opt [label = "Operator Tree"];
-%      prefix [label = "Prefix"];
-%      infix [label = "Infix"];
-%      mterms [label = "M-Terms"];
-%    }
-%    ```
-     The theme requires a Unix-like operating system with GNU Diffutils and
-     Graphviz installed. The theme also requires shell access unless the
-     \Opt{frozenCache} plain \TeX{} option is enabled.
-
-% \markdownEnd
-% \iffalse
-
-##### \LaTeX{} Example {.unnumbered}
-
-Using a text editor, create a text document named `document.tex` with the
-following content:
-```` tex
-\documentclass{article}
-\usepackage[import=witiko/dot]{markdown}
-\setkeys{Gin}{
-  width=\columnwidth,
-  height=0.65\paperheight,
-  keepaspectratio}
-\begin{document}
-\begin{markdown}
-``` dot Various formats of mathemathical formulae
-digraph tree {
-  margin = 0;
-  rankdir = "LR";
-
-  latex -> pmml;
-  latex -> cmml;
-  pmml -> slt;
-  cmml -> opt;
-  cmml -> prefix;
-  cmml -> infix;
-  pmml -> mterms [style=dashed];
-  cmml -> mterms;
-
-  latex [label = "LaTeX"];
-  pmml [label = "Presentation MathML"];
-  cmml [label = "Content MathML"];
-  slt [label = "Symbol Layout Tree"];
-  opt [label = "Operator Tree"];
-  prefix [label = "Prefix"];
-  infix [label = "Infix"];
-  mterms [label = "M-Terms"];
-}
-```
-\end{markdown}
-\end{document}
-````````
-Next, invoke LuaTeX from the terminal:
-``` sh
-lualatex --shell-escape document.tex
-``````
-A PDF document named `document.pdf` should be produced and contain
-a drawing of a directed graph similar to Figure 1 from the following
-conference article:
-
-> NOVOTNÝ, Vít, Petr SOJKA, Michal ŠTEFÁNIK and Dávid LUPTÁK. Three is Better
-> than One: Ensembling Math Information Retrieval Systems. *CEUR Workshop
-> Proceedings*. Thessaloniki, Greece: M. Jeusfeld c/o Redaktion Sun SITE,
-> Informatik V, RWTH Aachen., 2020, vol. 2020, No 2696, p. 1-30. ISSN 1613-0073.
-> <http://ceur-ws.org/Vol-2696/paper_235.pdf>
-
-%</manual-options>
-%<*themes-witiko-dot>
-% \fi
-%  \begin{macrocode}
-\ProvidesPackage{markdownthemewitiko_dot}[2024/11/19]%
-%    \end{macrocode}
-% \iffalse
-%</themes-witiko-dot>
-%<*manual-options>
-% \fi
-% \par
-% \markdownBegin
-
-\pkg{witiko/graphicx/http}
-
-:    A theme that adds support for downloading images whose URL has the
-     http or https protocol.
-%    ``` tex
-%    \documentclass{article}
-%    \usepackage[import=witiko/graphicx/http]{markdown}
-%    \begin{document}
-%    \begin{markdown}
-%    ![img](https://github.com/witiko/markdown/raw/main/markdown.png
-%           "The banner of the Markdown package")
-%    \end{markdown}
-%    \end{document}
-%    ```````
-%    Typesetting the above document produces the output shown in
-%    Figure <#fig:witiko/graphicx/http>.
-%    ![img](https://github.com/witiko/markdown/raw/main/markdown.png
-%           "The banner of the Markdown package \label{fig:witiko/graphicx/http}")
-     The theme requires the \pkg{catchfile} \LaTeX{} package and a Unix-like
-     operating system with GNU Coreutils `md5sum` and either GNU Wget or cURL
-     installed. The theme also requires shell access unless the
-     \Opt{frozenCache} plain \TeX{} option is enabled.
-
-% \markdownEnd
-% \iffalse
-
-##### \LaTeX{} Example {.unnumbered}
-
-Using a text editor, create a text document named `document.tex` with the
-following content:
-``` tex
-\documentclass{article}
-\usepackage[import=witiko/graphicx/http, link_attributes]{markdown}
-\begin{document}
-\begin{markdown}
-![img](https://github.com/witiko/markdown/raw/main/markdown.png
-       "The banner of the Markdown package"){width=5in}
-\end{markdown}
-\end{document}
-```````
-Next, invoke LuaTeX from the terminal:
-``` sh
-lualatex --shell-escape document.tex
-``````
-A PDF document named `document.pdf` should be produced and contain the
-following image:
-
-> ![Figure 1: The banner of the Markdown package](https://github.com/witiko/markdown/raw/main/markdown.png
-                                                  "Figure 1: The banner of the Markdown package")
-
-%</manual-options>
-%<*themes-witiko-graphicx-http>
-% \fi
-%  \begin{macrocode}
-\ProvidesPackage{markdownthemewitiko_graphicx_http}[2021/03/22]%
-%    \end{macrocode}
-% \iffalse
-%</themes-witiko-graphicx-http>
-%<*manual-options>
-% \fi
-% \par
-% \begin{markdown}
 
 \pkg{witiko/markdown/defaults}
 
@@ -35625,6 +35627,288 @@ end
 %    \end{macrocode}
 % \iffalse
 %</tex>
+%<*themes-witiko-dot>
+% \fi
+% \par
+% \begin{markdown}
+%
+% The `witiko/dot` theme enables the \Opt{fencedCode} Lua option:
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\markdownSetup{fencedCode}
+%    \end{macrocode}
+% \begin{markdown}
+%
+% We store the previous definition of the fenced code token renderer prototype:
+%
+% \end{markdown}
+%  \begin{macrocode}
+\cs_set_eq:NN
+  \@@_dot_previous_definition:nnn
+  \markdownRendererInputFencedCodePrototype
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If the infostring starts with `dot …`, we redefine the fenced code block
+% token renderer prototype, so that it typesets the code block via Graphviz
+% tools if and only if the \Opt{frozenCache} plain \TeX{} option is
+% disabled and the code block has not been previously typeset:
+%
+% \end{markdown}
+%  \begin{macrocode}
+\regex_const:Nn
+  \c_@@_dot_infostring_regex
+  { ^dot(\s+(.+))? }
+\seq_new:N
+  \l_@@_dot_matches_seq
+\markdownSetup {
+  rendererPrototypes = {
+    inputFencedCode = {
+      \regex_extract_once:NnNTF
+        \c_@@_dot_infostring_regex
+        { #2 }
+        \l_@@_dot_matches_seq
+        {
+          \@@_if_option:nF
+            { frozenCache }
+            {
+              \sys_shell_now:n
+                {
+                  if~!~test~-e~#1.pdf.source~
+                  ||~!~diff~#1~#1.pdf.source;
+                  then~
+                    dot~-Tpdf~-o~#1.pdf~#1;
+                    cp~#1~#1.pdf.source;
+                  fi
+                }
+            }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% We include the typeset image using the image token renderer:
+%
+% \end{markdown}
+%  \begin{macrocode}
+          \exp_args:NNne
+            \exp_last_unbraced:No
+            \markdownRendererImage
+              {
+                { Graphviz~image }
+                { #1.pdf }
+                { #1.pdf }
+              }
+              {
+                \seq_item:Nn
+                  \l_@@_dot_matches_seq
+                  { 3 }
+              }
+        }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If the infostring does not start with `dot …`, we use the previous definition
+% of the fenced code token renderer prototype:
+%
+% \end{markdown}
+%  \begin{macrocode}
+        {
+          \@@_dot_previous_definition:nnn
+            { #1 }
+            { #2 }
+            { #3 }
+        }
+    },
+  },
+}
+\ExplSyntaxOff
+%    \end{macrocode}
+% \iffalse
+%</themes-witiko-dot>
+%<*themes-witiko-graphicx-http>
+% \fi
+% \par
+% \begin{markdown}
+%
+% The `witiko/graphicx/http` theme stores the previous definition of the image
+% token renderer prototype:
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\cs_set_eq:NN
+  \@@_graphicx_http_previous_definition:nnnn
+  \markdownRendererImagePrototype
+%    \end{macrocode}
+% \begin{markdown}
+%
+% We load the \pkg{grffile} package, see also Section
+% <#sec:latex-prerequisites>:
+%
+% \end{markdown}
+%  \begin{macrocode}
+\RequirePackage{grffile}
+%    \end{macrocode}
+% \begin{markdown}
+%
+% We define variables and functions to enumerate the images for caching and to
+% store the pathname of the file containing the pathname of the downloaded
+% image file.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\int_new:N
+  \g_@@_graphicx_http_image_number_int
+\int_gset:Nn
+  \g_@@_graphicx_http_image_number_int
+  { 0 }
+\cs_new:Nn
+  \@@_graphicx_http_filename:
+  {
+    \markdownOptionCacheDir
+    / witiko_graphicx_http .
+    \int_use:N
+      \g_@@_graphicx_http_image_number_int
+  }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% We define a function that will receive two arguments that correspond to the
+% URL of the online image and to the pathname, where the online image should
+% be downloaded. The function produces a shell command that tries to
+% downloads the online image to the pathname.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\cs_new:Nn
+  \@@_graphicx_http_download:nn
+  {
+    wget~-O~#2~#1~
+    ||~curl~--location~-o~#2~#1~
+    ||~rm~-f~#2
+  }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% We locally change the category code of percent signs, so that we
+% can use them in the shell code:
+%
+% \end{markdown}
+%  \begin{macrocode}
+\char_set_catcode_other:N \%
+%    \end{macrocode}
+% \begin{markdown}
+%
+% We redefine the image token renderer prototype, so that it tries to download
+% an online image.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\str_new:N
+  \l_@@_graphicx_http_filename_str
+\ior_new:N
+  \g_@@_graphicx_http_filename_ior
+\markdownSetup {
+  rendererPrototypes = {
+    image = {
+      \@@_if_option:nF
+        { frozenCache }
+        {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The image will be downloaded only if the image URL has the http or https
+% protocols and the \Opt{frozenCache} plain \TeX{} option is disabled:
+%
+% \end{markdown}
+%  \begin{macrocode}
+          \sys_shell_now:e
+            {
+              mkdir~-p~" \markdownOptionCacheDir ";
+              if~printf~'%s'~"#3"~|~grep~-q~-E~'^https?:';
+              then~
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The image will be downloaded to the pathname \Opt{cacheDir}<!--
+% -->`/`\meta{the MD5 digest of the image URL}`.`\meta{the suffix of the
+% image URL}:
+%
+% \end{markdown}
+%  \begin{macrocode}
+                OUTPUT_PREFIX=" \markdownOptionCacheDir ";
+                OUTPUT_BODY="$(printf~'%s'~'#3'
+                              |~md5sum~|~cut~-d'~'~-f1)";
+                OUTPUT_SUFFIX="$(printf~'%s'~'#3'
+                              |~sed~'s/.*[.]//')";
+                OUTPUT="$OUTPUT_PREFIX/$OUTPUT_BODY.$OUTPUT_SUFFIX";
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The image will be downloaded only if it has not already been downloaded:
+%
+% \end{markdown}
+%  \begin{macrocode}
+                if~!~[~-e~"$OUTPUT"~];
+                then~
+                  \@@_graphicx_http_download:nn
+                    { '#3' }
+                    { "$OUTPUT" } ;
+                  printf~'%s'~"$OUTPUT"~
+                    >~" \@@_graphicx_http_filename: ";
+                fi;
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If the image does not have the http or https protocols or the image has
+% already been downloaded, the URL will be stored as-is:
+%
+% \end{markdown}
+%  \begin{macrocode}
+              else~
+                printf~'%s'~'#3'~
+                  >~" \@@_graphicx_http_filename: ";
+              fi
+            }
+          }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% We load the pathname of the downloaded image and we typeset the image using
+% the previous definition of the image renderer prototype:
+%
+% \end{markdown}
+%  \begin{macrocode}
+      \ior_open:Ne
+        \g_@@_graphicx_http_filename_ior
+        { \@@_graphicx_http_filename: }
+      \ior_str_get:NN
+        \g_@@_graphicx_http_filename_ior
+        \l_@@_graphicx_http_filename_str
+      \ior_close:N
+        \g_@@_graphicx_http_filename_ior
+      \@@_graphicx_http_previous_definition:nnVn
+        { #1 }
+        { #2 }
+        \l_@@_graphicx_http_filename_str
+        { #4 }
+      \int_gincr:N
+        \g_@@_graphicx_http_image_number_int
+    }
+  }
+}
+\char_set_catcode_comment:N \%
+\cs_generate_variant:Nn
+  \ior_open:Nn
+  { Ne }
+\cs_generate_variant:Nn
+  \@@_graphicx_http_previous_definition:nnnn
+  { nnVn }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \iffalse
+%</themes-witiko-graphicx-http>
 %<*themes-witiko-tilde>
 % \fi
 % \par
@@ -37344,306 +37628,28 @@ end
   \l_tmpb_tl
 \ExplSyntaxOff
 %    \end{macrocode}
-% \begin{markdown}
-%
-% The `witiko/dot` theme enables the \Opt{fencedCode} Lua option:
-%
-% \end{markdown}
 % \iffalse
 %</latex>
-%<*themes-witiko-dot>
+%<*themes-witiko-dot-latex,themes-witiko-graphicx-http-latex>
 % \fi
-%  \begin{macrocode}
-\markdownSetup{fencedCode}%
-%    \end{macrocode}
 % \begin{markdown}
 %
-% We load \pkg{grffile} package, see also Section
-% <#sec:latex-prerequisites>:
+% The `witiko/dot` and `witiko/graphicx/http` \LaTeX{} themes load the package
+% \pkg{grffile}.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \RequirePackage{grffile}
-%    \end{macrocode}
-% \begin{markdown}
-%
-% We store the previous definition of the fenced code token renderer prototype:
-%
-% \end{markdown}
-%  \begin{macrocode}
-\ExplSyntaxOn
-\cs_set_eq:NN
-  \@@_dot_previous_definition:nnn
-  \markdownRendererInputFencedCodePrototype
-%    \end{macrocode}
-% \begin{markdown}
-%
-% If the infostring starts with `dot …`, we redefine the fenced code block
-% token renderer prototype, so that it typesets the code block via Graphviz
-% tools if and only if the \Opt{frozenCache} plain \TeX{} option is
-% disabled and the code block has not been previously typeset:
-%
-% \end{markdown}
-%  \begin{macrocode}
-\regex_const:Nn
-  \c_@@_dot_infostring_regex
-  { ^dot(\s+(.+))? }
-\seq_new:N
-  \l_@@_dot_matches_seq
-\markdownSetup {
-  rendererPrototypes = {
-    inputFencedCode = {
-      \regex_extract_once:NnNTF
-        \c_@@_dot_infostring_regex
-        { #2 }
-        \l_@@_dot_matches_seq
-        {
-          \@@_if_option:nF
-            { frozenCache }
-            {
-              \sys_shell_now:n
-                {
-                  if~!~test~-e~#1.pdf.source~
-                  ||~!~diff~#1~#1.pdf.source;
-                  then~
-                    dot~-Tpdf~-o~#1.pdf~#1;
-                    cp~#1~#1.pdf.source;
-                  fi
-                }
-            }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% We include the typeset image using the image token renderer:
-%
-% \end{markdown}
-%  \begin{macrocode}
-          \exp_args:NNne
-            \exp_last_unbraced:No
-            \markdownRendererImage
-              {
-                { Graphviz~image }
-                { #1.pdf }
-                { #1.pdf }
-              }
-              {
-                \seq_item:Nn
-                  \l_@@_dot_matches_seq
-                  { 3 }
-              }
-        }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% If the infostring does not start with `dot …`, we use the previous definition
-% of the fenced code token renderer prototype:
-%
-% \end{markdown}
-%  \begin{macrocode}
-        {
-          \@@_dot_previous_definition:nnn
-            { #1 }
-            { #2 }
-            { #3 }
-        }
-    },
-  },
-}
-\ExplSyntaxOff
+\markdownLoadPlainTeXTheme
 %    \end{macrocode}
 % \iffalse
-%</themes-witiko-dot>
-%<*themes-witiko-graphicx-http>
-% \fi
-% \par
-% \begin{markdown}
-%
-% The `witiko/graphicx/http` theme stores the previous definition of the image
-% token renderer prototype:
-%
-% \end{markdown}
-%  \begin{macrocode}
-\ExplSyntaxOn
-\cs_set_eq:NN
-  \@@_graphicx_http_previous_definition:nnnn
-  \markdownRendererImagePrototype
-%    \end{macrocode}
-% \begin{markdown}
-%
-% We load the \pkg{grffile} package, see also Section
-% <#sec:latex-prerequisites>:
-%
-% \end{markdown}
-%  \begin{macrocode}
-\RequirePackage{grffile}
-%    \end{macrocode}
-% \begin{markdown}
-%
-% We define variables and functions to enumerate the images for caching and to
-% store the pathname of the file containing the pathname of the downloaded
-% image file.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\int_new:N
-  \g_@@_graphicx_http_image_number_int
-\int_gset:Nn
-  \g_@@_graphicx_http_image_number_int
-  { 0 }
-\cs_new:Nn
-  \@@_graphicx_http_filename:
-  {
-    \markdownOptionCacheDir
-    / witiko_graphicx_http .
-    \int_use:N
-      \g_@@_graphicx_http_image_number_int
-  }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% We define a function that will receive two arguments that correspond to the
-% URL of the online image and to the pathname, where the online image should
-% be downloaded. The function produces a shell command that tries to
-% downloads the online image to the pathname.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\cs_new:Nn
-  \@@_graphicx_http_download:nn
-  {
-    wget~-O~#2~#1~
-    ||~curl~--location~-o~#2~#1~
-    ||~rm~-f~#2
-  }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% We locally change the category code of percent signs, so that we
-% can use them in the shell code:
-%
-% \end{markdown}
-%  \begin{macrocode}
-\char_set_catcode_other:N \%
-%    \end{macrocode}
-% \begin{markdown}
-%
-% We redefine the image token renderer prototype, so that it tries to download
-% an online image.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\str_new:N
-  \l_@@_graphicx_http_filename_str
-\ior_new:N
-  \g_@@_graphicx_http_filename_ior
-\markdownSetup {
-  rendererPrototypes = {
-    image = {
-      \@@_if_option:nF
-        { frozenCache }
-        {
-%    \end{macrocode}
-% \begin{markdown}
-%
-% The image will be downloaded only if the image URL has the http or https
-% protocols and the \Opt{frozenCache} plain \TeX{} option is disabled:
-%
-% \end{markdown}
-%  \begin{macrocode}
-          \sys_shell_now:e
-            {
-              mkdir~-p~" \markdownOptionCacheDir ";
-              if~printf~'%s'~"#3"~|~grep~-q~-E~'^https?:';
-              then~
-%    \end{macrocode}
-% \begin{markdown}
-%
-% The image will be downloaded to the pathname \Opt{cacheDir}<!--
-% -->`/`\meta{the MD5 digest of the image URL}`.`\meta{the suffix of the
-% image URL}:
-%
-% \end{markdown}
-%  \begin{macrocode}
-                OUTPUT_PREFIX=" \markdownOptionCacheDir ";
-                OUTPUT_BODY="$(printf~'%s'~'#3'
-                              |~md5sum~|~cut~-d'~'~-f1)";
-                OUTPUT_SUFFIX="$(printf~'%s'~'#3'
-                              |~sed~'s/.*[.]//')";
-                OUTPUT="$OUTPUT_PREFIX/$OUTPUT_BODY.$OUTPUT_SUFFIX";
-%    \end{macrocode}
-% \begin{markdown}
-%
-% The image will be downloaded only if it has not already been downloaded:
-%
-% \end{markdown}
-%  \begin{macrocode}
-                if~!~[~-e~"$OUTPUT"~];
-                then~
-                  \@@_graphicx_http_download:nn
-                    { '#3' }
-                    { "$OUTPUT" } ;
-                  printf~'%s'~"$OUTPUT"~
-                    >~" \@@_graphicx_http_filename: ";
-                fi;
-%    \end{macrocode}
-% \begin{markdown}
-%
-% If the image does not have the http or https protocols or the image has
-% already been downloaded, the URL will be stored as-is:
-%
-% \end{markdown}
-%  \begin{macrocode}
-              else~
-                printf~'%s'~'#3'~
-                  >~" \@@_graphicx_http_filename: ";
-              fi
-            }
-          }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% We load the pathname of the downloaded image and we typeset the image using
-% the previous definition of the image renderer prototype:
-%
-% \end{markdown}
-%  \begin{macrocode}
-      \ior_open:Ne
-        \g_@@_graphicx_http_filename_ior
-        { \@@_graphicx_http_filename: }
-      \ior_str_get:NN
-        \g_@@_graphicx_http_filename_ior
-        \l_@@_graphicx_http_filename_str
-      \ior_close:N
-        \g_@@_graphicx_http_filename_ior
-      \@@_graphicx_http_previous_definition:nnVn
-        { #1 }
-        { #2 }
-        \l_@@_graphicx_http_filename_str
-        { #4 }
-      \int_gincr:N
-        \g_@@_graphicx_http_image_number_int
-    }
-  }
-}
-\char_set_catcode_comment:N \%
-\cs_generate_variant:Nn
-  \ior_open:Nn
-  { Ne }
-\cs_generate_variant:Nn
-  \@@_graphicx_http_previous_definition:nnnn
-  { nnVn }
-\ExplSyntaxOff
-%    \end{macrocode}
-% \iffalse
-%</themes-witiko-graphicx-http>
 %<*themes-witiko-markdown-defaults-latex>
 % \fi
 % \par
 % \begin{markdown}
 %
-% The `witiko/markdown/defaults` \LaTeX{} theme provides default definitions
-% for token renderer prototypes. First, the \LaTeX{} theme loads the plain
-% \TeX{} theme with the default definitions for plain \TeX{}:
+% The `witiko/dot`, `witiko/graphicx/http`, and `witiko/markdown/defaults`
+% \LaTeX{} themes load the corresponding plain \TeX{} themes.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -37662,6 +37668,7 @@ end
 % \end{markdown}
 % \iffalse
 %</themes-witiko-markdown-defaults-latex>
+%</themes-witiko-dot-latex,themes-witiko-graphicx-http-latex>
 %<*latex>
 % \fi
 %  \begin{macrocode}

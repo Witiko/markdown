@@ -116,6 +116,8 @@ mkdir -p                                                     ${INSTALL_DIR}/tex/
 cp ${BUILD_DIR}/markdown.tex                                 ${INSTALL_DIR}/tex/generic/markdown/
 cp ${BUILD_DIR}/markdownthemewitiko_tilde.tex                ${INSTALL_DIR}/tex/generic/markdown/
 cp ${BUILD_DIR}/markdownthemewitiko_markdown_defaults.tex    ${INSTALL_DIR}/tex/generic/markdown/
+cp ${BUILD_DIR}/markdownthemewitiko_dot.tex                  ${INSTALL_DIR}/tex/generic/markdown/
+cp ${BUILD_DIR}/markdownthemewitiko_graphicx_http.tex        ${INSTALL_DIR}/tex/generic/markdown/
 mkdir -p                                                     ${INSTALL_DIR}/tex/latex/markdown/
 cp ${BUILD_DIR}/markdown.sty                                 ${INSTALL_DIR}/tex/latex/markdown/
 cp ${BUILD_DIR}/markdownthemewitiko_dot.sty                  ${INSTALL_DIR}/tex/latex/markdown/
