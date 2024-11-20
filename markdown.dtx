@@ -1439,18 +1439,15 @@ soft amsfonts
 %    \end{macrocode}
 % \begin{markdown}
 %
-% \pkg{grffile}
+% \pkg{graphicx}
 %
-%:    A package that extends the name processing of the \pkg{graphics} package
-%     to support a larger range of file names in $2006\leq{}$\TeX{}
-%     Live${}\leq{}2019$.  Since \TeX{} Live${}\geq{}2020$, the functionality
-%     of the package has been integrated in the \LaTeXe{} kernel. It is used in
-%     the `witiko/dot` and `witiko/graphicx/http` \LaTeX{} themes, see Section
-%     <#sec:latexthemes>.
+%:    A package that provides extended support for graphics. It is used in
+%     the `witiko/dot` and `witiko/graphicx/http` plain \TeX{} themes, see
+%     Section <#sec:themes>.
 %
 % \end{markdown}
 %  \begin{macrocode}
-soft grffile
+soft graphics
 soft epstopdf  # required by `graphics` and `graphicx`, which load `epsopdf-base.sty`
 soft epstopdf-pkg  # required by `graphics` and `graphicx`, which load `epsopdf-base.sty`
 %    \end{macrocode}
@@ -35743,15 +35740,6 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% We load the \pkg{grffile} package, see also Section
-% <#sec:latex-prerequisites>:
-%
-% \end{markdown}
-%  \begin{macrocode}
-\RequirePackage{grffile}
-%    \end{macrocode}
-% \begin{markdown}
-%
 % We define variables and functions to enumerate the images for caching and to
 % store the pathname of the file containing the pathname of the downloaded
 % image file.
@@ -37635,11 +37623,11 @@ end
 % \begin{markdown}
 %
 % The `witiko/dot` and `witiko/graphicx/http` \LaTeX{} themes load the package
-% \pkg{grffile}.
+% \pkg{graphicx}, see also Section <#sec:latex-prerequisites>.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\RequirePackage{grffile}
+\RequirePackage{graphicx}
 \markdownLoadPlainTeXTheme
 %    \end{macrocode}
 % \iffalse
