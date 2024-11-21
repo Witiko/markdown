@@ -147,7 +147,7 @@ For further information, consult one of the following:
     - [Markdown 2.17.1: What's New, What's Next?][tb135],
     - [Attributes in Markdown][tb136],
     - [Markdown 3 at TUG 2023: Reflections from the Q&A session][tb138],
-    - [Fast Regression Testing of TeX Packages: The Unreasonable Effectiveness of Batching][tb139], and
+    - [Fast Regression Testing of TeX Packages: Multiprocessing and Batching][tb139], and
     - [Markdown Themes in Practice][tb140].
 5. Journal articles published by [CSTUG Bulletin][csbul] (in Czech and Slovak):
     - [Rendering Markdown inside TeX Documents][10.5300/2016-1-4/78],
