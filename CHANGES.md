@@ -112,7 +112,7 @@ Defaults:
 
   This allows authors to render HTML fragments in their LaTeX documents:
 
-  ``` tex
+  `````` tex
   \documentclass{article}
   \usepackage[content_blocks, raw_attribute]{markdown}
   \begin{filecontents}[overwrite, nosearch, noheader]{example_input.html}
@@ -135,7 +135,7 @@ Defaults:
 
   \end{markdown}
   \end{document}
-  ```
+  ``````
 
 Deprecation:
 
