@@ -139,14 +139,14 @@ For further information, consult one of the following:
     - [Writing Posters with Markdown][overleaf-5], and
     - [Using Markdown in LaTeX documents][overleaf-6].
 4. Journal articles published by [TUGboat][]:
-    - [Using Markdown inside TeX documents][tb119],
-    - [Markdown 2.7.0: Towards lightweight markup in TeX][tb124],
+    - [Using Markdown Inside TeX Documents][tb119],
+    - [Markdown 2.7.0: Towards Lightweight mMrkup in TeX][tb124],
     - [Making Markdown into a Microwave Meal][tb129],
     - [Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX][tb131],
     - [Markdown 2.15.0: What's New?][tb133],
     - [Markdown 2.17.1: What's New, What's Next?][tb135],
     - [Attributes in Markdown][tb136],
-    - [Markdown 3 at TUG 2023: Reflections from the Q&A session][tb138],
+    - [Markdown 3 at TUG 2023: Reflections from the Q&A Session][tb138],
     - [Fast Regression Testing of TeX Packages: Multiprocessing and Batching][tb139], and
     - [Markdown Themes in Practice][tb140].
 5. Journal articles published by [CSTUG Bulletin][csbul] (in Czech and Slovak):
