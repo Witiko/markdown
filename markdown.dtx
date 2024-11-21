@@ -38908,8 +38908,9 @@ end
     \luabridge_now:n
       {
         local~input_file = assert(io.open(" #1 ", "r"))
-        local~input = "<body>" .. assert(input_file:read("*a")) .. "</body>"
+        local~input = assert(input_file:read("*a"))
         assert(input_file:close())
+        input = "<body>" .. input .. "</body>"
         local~dom = require("luaxml-domobject").html_parse(input)
         local~output = require("luaxml-htmltemplates"):process_dom(dom)
         print(output)
