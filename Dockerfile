@@ -114,12 +114,9 @@ mkdir -p                                                     ${INSTALL_DIR}/scri
 cp ${BUILD_DIR}/markdown-cli.lua                             ${INSTALL_DIR}/scripts/markdown/
 mkdir -p                                                     ${INSTALL_DIR}/tex/generic/markdown/
 cp ${BUILD_DIR}/markdown.tex                                 ${INSTALL_DIR}/tex/generic/markdown/
-cp ${BUILD_DIR}/markdownthemewitiko_tilde.tex                ${INSTALL_DIR}/tex/generic/markdown/
 cp ${BUILD_DIR}/markdownthemewitiko_markdown_defaults.tex    ${INSTALL_DIR}/tex/generic/markdown/
 mkdir -p                                                     ${INSTALL_DIR}/tex/latex/markdown/
 cp ${BUILD_DIR}/markdown.sty                                 ${INSTALL_DIR}/tex/latex/markdown/
-cp ${BUILD_DIR}/markdownthemewitiko_dot.sty                  ${INSTALL_DIR}/tex/latex/markdown/
-cp ${BUILD_DIR}/markdownthemewitiko_graphicx_http.sty        ${INSTALL_DIR}/tex/latex/markdown/
 cp ${BUILD_DIR}/markdownthemewitiko_markdown_defaults.sty    ${INSTALL_DIR}/tex/latex/markdown/
 mkdir -p                                                     ${INSTALL_DIR}/tex/context/third/markdown/
 cp ${BUILD_DIR}/t-markdown.tex                               ${INSTALL_DIR}/tex/context/third/markdown/
