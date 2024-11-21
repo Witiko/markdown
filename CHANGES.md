@@ -108,7 +108,7 @@ Defaults:
   ```
 
 - Use package LuaXML in default LaTeX renderer prototypes for content blocks,
-  raw blocks, and inline raw spans. (#469, #532, co-authored by @michal.h21)
+  raw blocks, and inline raw spans. (#469, #532, co-authored by @michal-h21)
 
   This allows authors to render HTML fragments in their LaTeX documents:
 
