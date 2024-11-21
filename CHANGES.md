@@ -139,6 +139,10 @@ Deprecation:
 
 - Remove support for TeX Live 2022. (da85e015, 8f2d25c7)
 
+  This change also removes the Lua module `markdown-tinyyaml`, which has been
+  scheduled for removal ever since the Lua module `tinyyaml` was uploaded to
+  CTAN in TeX Live 2023.
+
 ## 3.8.1 (2024-11-03)
 
 Fixes:
