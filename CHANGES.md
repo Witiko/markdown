@@ -107,7 +107,7 @@ Defaults:
 
 Deprecation:
 
-- Remove support for TeX Live 2022. (da85e015)
+- Remove support for TeX Live 2022. (da85e015, 8f2d25c7)
 
 ## 3.8.1 (2024-11-03)
 
