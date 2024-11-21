@@ -1469,6 +1469,17 @@ soft ltxcmds
 %    \end{macrocode}
 % \begin{markdown}
 %
+% \pkg{luaxml}
+%
+%:    A package that is used to convert \acro{HTML} to \LaTeX{} in the default
+%     renderer prototypes for content blocks, raw blocks, and inline raw spans.
+%
+% \end{markdown}
+%  \begin{macrocode}
+soft luaxml
+%    \end{macrocode}
+% \begin{markdown}
+%
 % \pkg{verse}
 %
 %:    A package that is used in the default renderer prototypes for
@@ -37827,6 +37838,19 @@ end
       \texttt{#1}%
     \fi
   }}}
+%    \end{macrocode}
+% \begin{markdown}
+%
+%#### Content Blocks
+%
+% In content block renderer prototypes, display the content as a table using
+% the package \pkg{csvsimple} when the raw attribute is `csv`, display the
+% content using the default templates of the package \pkg{luaxml} when the
+% raw attribute is `html`, execute the content with TeX when the raw attribute
+% is `tex`, and display the content as markdown otherwise.
+%
+% \end{markdown}
+%  \begin{macrocode}
 \ExplSyntaxOn
 \markdownSetup{
   rendererPrototypes = {
@@ -37845,9 +37869,21 @@ end
                   { \caption{#4} }
               \end{table}
             }
-          { tex } { \markdownEscape{#3} }
+          { html }
+            {
+              \@@_luaxml_print_html:n
+                { #3 }
+            }
+          { tex }
+            {
+              \markdownEscape
+                { #3 }
+            }
         }
-        { \markdownInput{#3} }
+        {
+          \markdownInput
+            { #3 }
+        }
     },
   },
 }
@@ -38858,12 +38894,27 @@ end
 %
 %#### Raw Attributes
 %
-% In the raw block and inline raw span renderer prototypes, default to the
-% plain TeX renderer prototypes, translating raw attribute `latex` to `tex`.
+% In the raw block and inline raw span renderer prototypes, display the content
+% using the default templates of the package \pkg{luaxml} when the raw
+% attribute is `html` and default to the plain TeX renderer prototypes
+% otherwise, translating raw attribute `latex` to `tex`.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
+\cs_new:Nn
+  \@@_luaxml_print_html:n
+  {
+    \luabridge_now:n
+      {
+        local~input_file = assert(io.open(" #1 ", "r"))
+        local~input = "<body>" .. assert(input_file:read("*a")) .. "</body>"
+        assert(input_file:close())
+        local~dom = require("luaxml-domobject").html_parse(input)
+        local~output = require("luaxml-htmltemplates"):process_dom(dom)
+        print(output)
+      }
+  }
 \cs_gset_protected:Npn
   \markdownRendererInputRawInlinePrototype#1#2
   {
@@ -38875,6 +38926,11 @@ end
             \@@_plain_tex_default_input_raw_inline:nn
               { #1 }
               { tex }
+          }
+        { html }
+          {
+            \@@_luaxml_print_html:n
+              { #1 }
           }
       }
       {
@@ -38894,6 +38950,11 @@ end
             \@@_plain_tex_default_input_raw_block:nn
               { #1 }
               { tex }
+          }
+        { html }
+          {
+            \@@_luaxml_print_html:n
+              { #1 }
           }
       }
       {
