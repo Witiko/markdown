@@ -105,6 +105,10 @@ Defaults:
   \end{document}
   ```
 
+Deprecation:
+
+- Remove support for TeX Live 2022. (da85e015)
+
 ## 3.8.1 (2024-11-03)
 
 Fixes:
