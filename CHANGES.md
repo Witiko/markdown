@@ -45,7 +45,7 @@ Fixes:
 
 Defaults:
 
-- Define LaTeX renderers for table identifiers.
+- Define default LaTeX renderer prototypes for table identifiers.
   (#525, suggested by @machitgarha, #528)
 
   This establishes a reliable method for authors to reference tables within
@@ -77,7 +77,7 @@ Defaults:
   \end{document}
   ```
 
-- Define LaTeX renderers for bracketed spans.
+- Define default LaTeX renderer prototypes for bracketed spans.
   (discussed with @MacLotsen at TUG 2024 and with @TeXhackse at matrix.org, #528)
 
   This establishes a reliable method for authors to reference the last LaTeX
@@ -100,6 +100,36 @@ Defaults:
    3. Third item
 
   Demonstration of a *relative reference*: See item <#second-item>.
+
+  \end{markdown}
+  \end{document}
+  ```
+
+- Use package LuaXML in default LaTeX renderer prototypes for content blocks,
+  raw blocks, and inline raw spans. (#469, #532, co-authored by @michal.h21)
+
+  This allows authors to render HTML fragments in their LaTeX documents:
+
+  ``` tex
+  \documentclass{article}
+  \usepackage[content_blocks, raw_attribute]{markdown}
+  \begin{filecontents}[overwrite, nosearch, noheader]{example_input.html}
+  <b>foo</b> <i>bar</i>
+  \end{filecontents}
+  \begin{document}
+  \begin{markdown}
+
+  Raw text span: `<b>foo</b> <i>bar</i>`{=html}
+
+  Raw code block:
+
+  ``` {=html}
+  <b>foo</b> <i>bar</i>
+  ```
+
+  Content block:
+
+   /example_input.html
 
   \end{markdown}
   \end{document}
