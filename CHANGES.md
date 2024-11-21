@@ -2,6 +2,33 @@
 
 ## 3.9.0
 
+Development:
+
+- Convert built-in LaTeX themes `witiko/dot` and `witiko/graphicx/http` into
+  plain TeX themes. (#514, #522, #529)
+
+  This allows these themes to be used in formats such as plain TeX and ConTeXt
+  as well.
+
+Refactoring:
+
+- Remove dependencies on `ifthen`, `gobble`, and `catchfile`. (#514, #522, #529)
+
+- Store small built-in LaTeX themes `witiko/dot`, `witiko/graphicx/http`, and
+  `witiko/tilde` in expl3 props in files `markdown.tex` and `markdown.sty`.
+  (#514, #522, #529)
+
+  This simplifies the distribution and installation of these themes, which were
+  previously located in individual `.tex` and `.sty` files.
+
+  The built-in plain TeX, LaTeX, and ConTeXt themes `witiko/markdown/defaults`
+  are still distributed in individual files. This is because inlining these
+  themes in files `markdown.tex`, `markdown.sty`, and `t-markdown.tex` would
+  make it more difficult for users to copy and modify these themes without
+  delaying updates to the Markdown package itself. Furthermore, these themes
+  are large and storing/executing them from an expl3 prop would make it more
+  difficult to determine the line numbers when errors occur.
+
 Fixes:
 
 - Protect renderers and renderer prototypes. (#465, #506)
@@ -77,6 +104,10 @@ Defaults:
   \end{markdown}
   \end{document}
   ```
+
+Deprecation:
+
+- Remove support for TeX Live 2022. (da85e015, 8f2d25c7)
 
 ## 3.8.1 (2024-11-03)
 

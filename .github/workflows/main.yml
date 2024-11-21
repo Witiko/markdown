@@ -156,7 +156,6 @@ jobs:
       fail-fast: true
       matrix:
         texlive:
-          - TL2022-historic
           - TL2023-historic
           - latest
         # Only test latest TeX Live in pull requests.
@@ -167,7 +166,6 @@ jobs:
         include:
           - { texlive: latest }
     outputs:
-      TL2022-historic: ${{ steps.temporary-tags.outputs.TL2022-historic }}
       TL2023-historic: ${{ steps.temporary-tags.outputs.TL2023-historic }}
       latest: ${{ steps.temporary-tags.outputs.latest }}
     runs-on: ubuntu-latest
@@ -206,7 +204,6 @@ jobs:
       fail-fast: true
       matrix:
         texlive:
-          - TL2022-historic
           - TL2023-historic
           - latest
         # Only test latest TeX Live in pull requests.
@@ -251,7 +248,6 @@ jobs:
       fail-fast: true
       matrix:
         texlive:
-          - TL2022-historic
           - TL2023-historic
           - latest
         # Only test latest TeX Live in pull requests.
@@ -286,7 +282,6 @@ jobs:
       fail-fast: true
       matrix:
         texlive:
-          - TL2022-historic
           - TL2023-historic
           - latest
         # Only test latest TeX Live in pull requests.
