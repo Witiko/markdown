@@ -34925,7 +34925,7 @@ function M.new(options)
       local salt = util.salt(options)
       local name = util.cache(options.cacheDir, input, salt, convert,
                               ".md.tex")
-      output = [[\noexpand\input{]] .. name .. [[}\relax]]
+      output = [[\input{]] .. name .. [[}\relax]]
 %    \end{macrocode}
 % \begin{markdown}
 % Otherwise, return the result of the conversion directly.
