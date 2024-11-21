@@ -1,6 +1,3 @@
-[submodule "libraries/lua-tinyyaml"]
-	path = libraries/lua-tinyyaml
-	url = https://github.com/api7/lua-tinyyaml
 [submodule "contributions/pandoc-to-markdown"]
 	path = contributions/pandoc-to-markdown
 	url = https://github.com/drehak/pandoc-to-markdown.git

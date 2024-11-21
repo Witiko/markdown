@@ -976,7 +976,7 @@ Requirements
 
 The package requires either [our official Docker image][docker], which contains
 the latest development version of the Markdown package, or a \TeX{}
-distribution: [\TeX{} Live][tl] ≥ 2022 is known to work with the current
+distribution: [\TeX{} Live][tl] ≥ 2023 is known to work with the current
 version of the Markdown package and so are recent versions of [Mik\TeX{}][mik].
 If you are using an older, incomplete, or atypical \TeX{} distribution, please
 consult the [technical documentation][techdoc] for a detailed list of
@@ -1013,7 +1013,6 @@ make base
 Either of the two abovelisted approaches should produce the following files:
 
 * `markdown.lua`, `markdown-parser.lua`, and `markdown-unicode-data.lua`: The Lua module
-* `libraries/markdown-tinyyaml.lua`: An external library for reading \acro{yaml}
 * `markdown-cli.lua`: The Lua command-line interface
 * `markdown.tex`: The plain \TeX{} macro package
 * `markdown.sty`: The \LaTeX{} package
@@ -1032,7 +1031,6 @@ placed:
 * `⟨TEXMF⟩/tex/luatex/markdown/markdown.lua`
 * `⟨TEXMF⟩/tex/luatex/markdown/markdown-parser.lua`
 * `⟨TEXMF⟩/tex/luatex/markdown/markdown-unicode-data.lua`
-* `⟨TEXMF⟩/tex/luatex/markdown/markdown-tinyyaml.lua`
 * `⟨TEXMF⟩/scripts/markdown/markdown-cli.lua`
 * `⟨TEXMF⟩/tex/generic/markdown/markdown.tex`
 * `⟨TEXMF⟩/tex/generic/markdown/markdownthemewitiko_markdown_defaults.tex`
@@ -1057,7 +1055,6 @@ This is where the individual files should be placed:
 * `./markdown.lua`
 * `./markdown-parser.lua`
 * `./markdown-unicode-data.lua`
-* `./markdown-tinyyaml.lua`
 * `./markdown-cli.lua`
 * `./markdown/markdown.tex`
 * `./markdown.sty`
@@ -1199,10 +1196,7 @@ local uni_algos = require("lua-uni-algos")
 %
 %:    A library that provides a regex-based recursive descent \acro{yaml}
 %     (subset) parser that is used to read \acro{yaml} metadata when the
-%     \Opt{jekyllData} option is enabled. We carry a copy of the library
-%     in file `markdown-tinyyaml.lua` distributed together with the Markdown
-%     package. <!-- TODO: Stop carrying the copy of the library in TeX Live
-%     2023. -->
+%     \Opt{jekyllData} option is enabled.
 %
 % \end{markdown}
 % \iffalse
@@ -1210,7 +1204,7 @@ local uni_algos = require("lua-uni-algos")
 %<*depends>
 % \fi
 %  \begin{macrocode}
-# hard lua-tinyyaml  # TODO: Uncomment after TeX Live 2022 deprecation.
+hard lua-tinyyaml
 %    \end{macrocode}
 % \iffalse
 %</depends>
@@ -1432,11 +1426,10 @@ soft epstopdf-pkg  # required by `graphics` and `graphicx`, which load `epsopdf-
 %    \end{macrocode}
 % \begin{markdown}
 %
-% \pkg{soulutf8} and \pkg{xcolor}
+% \pkg{soul} and \pkg{xcolor}
 %
 %:    Packages that are used in the default renderer prototypes for
 %     strike-throughs and marked text in pdf\TeX.
-%     <!-- TODO: 1,$s/soulutf8/soul/g in TeX Live 2023. -->
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -9595,7 +9588,7 @@ following content:
 ``` tex
 \input markdown
 \def\markdownOptionStrikeThrough{true}
-\input soulutf8.sty
+\input soul.sty
 \def\markdownRendererStrikeThrough#1{\st{#1}}
 \markdownBegin
 This is ~~a lunar roving vehicle~~ strike-through text.
@@ -9618,7 +9611,7 @@ following content:
 ``` tex
 \documentclass{article}
 \usepackage[strikeThrough]{markdown}
-\usepackage{soulutf8}
+\usepackage{soul}
 \markdownSetup{
   renderers = {
     strikeThrough = {\st{#1}},
@@ -12170,9 +12163,7 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 % \Opt{inputTempFileName} macro.
 %
 % The \mref{markdownOptionOutputDir} macro has been deprecated and will be
-% removed in the next major version of the Markdown package. <!-- After the
-% macro has been removed, we should remove support for TeX Live 2023 and
-% earlier, where the automatic detection does not work. -->
+% removed in the next major version of the Markdown package.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -19686,7 +19677,7 @@ following content:
 ``` tex
 \input markdown
 \def\markdownOptionStrikeThrough{true}
-\input soulutf8.sty
+\input soul.sty
 \def\markdownRendererStrikeThrough#1{\st{#1}}
 \markdownBegin
 This is ~~a lunar roving vehicle~~ strike-through text.
@@ -19709,7 +19700,7 @@ following content:
 ``` tex
 \documentclass{article}
 \usepackage[strikeThrough]{markdown}
-\usepackage{soulutf8}
+\usepackage{soul}
 \markdownSetup{
   renderers = {
     strikeThrough = {\st{#1}},
@@ -21686,11 +21677,6 @@ following text:
           \l_tmpa_clist
       }
   }
-% TODO: Remove in TeX Live 2023.
-\prg_generate_conditional_variant:Nnn
-  \prop_get:NnN
-  { NeN }
-  { TF }
 \cs_generate_variant:Nn
   \regex_set:Nn
   { NV }
@@ -34451,8 +34437,7 @@ M.extensions.jekyll_data = function(expect_jekyll_data,
              , function(s, i, text) -- luacheck: ignore s i
                  local data
                  local ran_ok, _ = pcall(function()
-                   -- TODO: Use `require("tinyyaml")` in TeX Live 2023
-                   local tinyyaml = require("markdown-tinyyaml")
+                   local tinyyaml = require("tinyyaml")
                    data = tinyyaml.parse(text, {timestamps=false})
                  end)
                  if ran_ok and data ~= nil then
@@ -38685,7 +38670,7 @@ end
 % \begin{markdown}
 %
 %#### Marked Text
-% If the \Opt{mark} option is enabled, we will load either the \pkg{soulutf8}
+% If the \Opt{mark} option is enabled, we will load either the \pkg{soul}
 % package or the \pkg{lua-ul} package and use it to implement marked text.
 %
 % \end{markdown}
@@ -38712,17 +38697,8 @@ end
       {
         \RequirePackage
           { xcolor }
-        % TODO: Use just package soul after TeX Live 2023.
-        \IfFormatAtLeastTF
-          { 2023-02-18 }
-          {
-            \RequirePackage
-              { soul }
-          }
-          {
-            \RequirePackage
-              { soulutf8 }
-          }
+        \RequirePackage
+          { soul }
         \markdownSetup
           {
             rendererPrototypes = {
@@ -38739,7 +38715,7 @@ end
 %
 %#### Strike-Through
 % If the \Opt{strikeThrough} option is enabled, we will load either the
-% \pkg{soulutf8} package or the \pkg{lua-ul} package and use it to implement
+% \pkg{soul} package or the \pkg{lua-ul} package and use it to implement
 % strike-throughs.
 %
 % \end{markdown}
@@ -38762,17 +38738,8 @@ end
           }
       }
       {
-        % TODO: Use just package soul after TeX Live 2023.
-        \IfFormatAtLeastTF
-          { 2023-02-18 }
-          {
-            \RequirePackage
-              { soul }
-          }
-          {
-            \RequirePackage
-              { soulutf8 }
-          }
+        \RequirePackage
+          { soul }
         \markdownSetup
           {
             rendererPrototypes = {
