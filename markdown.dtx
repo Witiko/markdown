@@ -37871,8 +37871,32 @@ end
             }
           { html }
             {
-              \@@_luaxml_print_html:n
-                { #3 }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If we are using [\TeX{}4ht][1], we will pass HTML elements to the
+% output HTML document unchanged.
+%
+%  [1]: https://tug.org/tex4ht/
+%
+% \end{markdown}
+%  \begin{macrocode}
+            \cs_if_exist:NTF
+              \HCode
+              {
+                \if_mode_vertical:
+                  \IgnorePar
+                \fi:
+                \EndP
+                \special
+                  { t4ht* < #3 }
+                \par
+                \ShowPar
+              }
+              {
+                \@@_luaxml_print_html:n
+                  { #3 }
+              }
             }
           { tex }
             {
@@ -38930,8 +38954,30 @@ end
           }
         { html }
           {
-            \@@_luaxml_print_html:n
-              { #1 }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If we are using [\TeX{}4ht][1], we will pass HTML elements to the
+% output HTML document unchanged.
+%
+%  [1]: https://tug.org/tex4ht/
+%
+% \end{markdown}
+%  \begin{macrocode}
+            \cs_if_exist:NTF
+              \HCode
+              {
+                \if_mode_vertical:
+                  \IgnorePar
+                  \EndP
+                \fi:
+                \special
+                  { t4ht* < #1 }
+              }
+              {
+                \@@_luaxml_print_html:n
+                  { #1 }
+              }
           }
       }
       {
@@ -38954,8 +39000,32 @@ end
           }
         { html }
           {
-            \@@_luaxml_print_html:n
-              { #1 }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If we are using [\TeX{}4ht][1], we will pass HTML elements to the
+% output HTML document unchanged.
+%
+%  [1]: https://tug.org/tex4ht/
+%
+% \end{markdown}
+%  \begin{macrocode}
+            \cs_if_exist:NTF
+              \HCode
+              {
+                \if_mode_vertical:
+                  \IgnorePar
+                \fi:
+                \EndP
+                \special
+                  { t4ht* < #1 }
+                \par
+                \ShowPar
+              }
+              {
+                \@@_luaxml_print_html:n
+                  { #1 }
+              }
           }
       }
       {
