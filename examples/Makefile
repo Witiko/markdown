@@ -67,7 +67,7 @@ optex.pdf: optex.tex
 # This target converts the markdown example to a plain TeX representation
 # using the Lua command-line interface for the Markdown package.
 example.tex: example.md
-	texlua "`kpsewhich -a markdown-cli.lua | head -n 1`" $(LUACLI_OPTIONS) -- $< $@
+	markdown-cli $(LUACLI_OPTIONS) -- $< $@
 
 # This pseudo-target removes any existing auxiliary files and directories.
 clean:
