@@ -56,6 +56,7 @@ FROM $FROM_IMAGE:$TEXLIVE_TAG as build
 ARG DEPENDENCIES
 ARG TEXLIVE_DEPENDENCIES
 
+ARG BINARY_DIR
 ARG BUILD_DIR
 ARG INSTALL_DIR
 ARG PREINSTALLED_DIR
@@ -101,6 +102,7 @@ rm -rfv ${PREINSTALLED_DIR}/scripts/markdown/
 rm -rfv ${PREINSTALLED_DIR}/tex/generic/markdown/
 rm -rfv ${PREINSTALLED_DIR}/tex/latex/markdown/
 rm -rfv ${PREINSTALLED_DIR}/tex/context/third/markdown/
+rm -fv ${BINARY_DIR}/markdown-cli
 
 # Install the current Markdown package
 make -C ${BUILD_DIR} implode
@@ -120,6 +122,9 @@ cp ${BUILD_DIR}/markdownthemewitiko_markdown_defaults.sty    ${INSTALL_DIR}/tex/
 mkdir -p                                                     ${INSTALL_DIR}/tex/context/third/markdown/
 cp ${BUILD_DIR}/t-markdown.tex                               ${INSTALL_DIR}/tex/context/third/markdown/
 cp ${BUILD_DIR}/t-markdownthemewitiko_markdown_defaults.tex  ${INSTALL_DIR}/tex/context/third/markdown/
+
+# Make the markdown-cli script executable
+ln -s ${INSTALL_DIR}/scripts/markdown/markdown-cli.lua       ${BINARY_DIR}/markdown-cli
 
 # Generate the ConTeXt file database
 if test ${DEV_IMAGE} != true
@@ -201,17 +206,12 @@ rm -rfv ${PREINSTALLED_DIR}/scripts/markdown/
 rm -rfv ${PREINSTALLED_DIR}/tex/generic/markdown/
 rm -rfv ${PREINSTALLED_DIR}/tex/latex/markdown/
 rm -rfv ${PREINSTALLED_DIR}/tex/context/third/markdown/
+rm -fv ${BINARY_DIR}/markdown-cli
 
 EOF
 
 # Install the Markdown package
 COPY --from=build ${BUILD_DIR}/dist ${INSTALL_DIR}/
-
-COPY <<EOF ${BINARY_DIR}/markdown-cli
-#!/bin/bash
-texlua ${INSTALL_DIR}/scripts/markdown/markdown-cli.lua eagerCache=false \"\$@\"
-echo
-EOF
 
 RUN <<EOF
 
@@ -220,7 +220,7 @@ set -o nounset
 set -o xtrace
 
 # Make the markdown-cli script executable
-chmod +x ${BINARY_DIR}/markdown-cli
+ln -s ${INSTALL_DIR}/scripts/markdown/markdown-cli.lua       ${BINARY_DIR}/markdown-cli
 
 # Generate the ConTeXt file database
 if echo ${TEXLIVE_TAG} | grep -q latest-minimal

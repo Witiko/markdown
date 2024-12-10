@@ -1628,21 +1628,14 @@ Hello *world*!
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ -- hello.md hello.tex
+markdown-cli -- hello.md hello.tex
 luatex document.tex
 ``````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
-
- [Kpathsea]: https://tug.org/kpathsea/ (Kpathsea - TeX Users Group)
 
 A PDF document named `document.pdf` should be produced and contain the text “Hello
 *world*!” Invoking pdfTeX should have the same effect:
 ``` sh
-texlua ⟨CLI pathname⟩ -- hello.md hello.tex
+markdown-cli -- hello.md hello.tex
 pdftex document.tex
 ``````
 
@@ -2111,15 +2104,10 @@ $\sqrt{-1}$ *equals* $i$.
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ -- example.md nomath.tex
-texlua ⟨CLI pathname⟩ tex_math_dollars=true -- example.md math.tex
+markdown-cli -- example.md nomath.tex
+markdown-cli tex_math_dollars=true -- example.md math.tex
 luatex document.tex
 ``````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -2132,8 +2120,8 @@ following text:
 
 Invoking pdfTeX should have the same effect:
 ``` sh
-texlua ⟨CLI pathname⟩ -- example.md nomath.tex
-texlua ⟨CLI pathname⟩ tex_math_dollars=true -- example.md math.tex
+markdown-cli -- example.md nomath.tex
+markdown-cli tex_math_dollars=true -- example.md math.tex
 pdftex document.tex
 ``````
 
@@ -2588,13 +2576,8 @@ Hello *world*!
 Next, invoke LuaTeX from the terminal with the \Opt{eagerCache} option
 disabled:
 ``` sh
-texlua ⟨CLI pathname⟩ eagerCache=false -- hello.md hello.tex
+markdown-cli eagerCache=false -- hello.md hello.tex
 ```````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A \TeX{} document named `hello.tex` should be produced and contain the
 following code:
@@ -2608,7 +2591,7 @@ Invoke LuaTeX from the terminal again, this time with the \Opt{eagerCache}
 option enabled:
 
 ``` tex
-texlua ⟨CLI pathname⟩ eagerCache=true -- hello.md hello.tex
+markdown-cli eagerCache=true -- hello.md hello.tex
 ```
 
 A \TeX{} document named `hello.tex` should be produced and contain the
@@ -2961,14 +2944,9 @@ Hello *world*!
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ cacheDir=cache -- hello.md hello.tex
+markdown-cli cacheDir=cache -- hello.md hello.tex
 luatex document.tex
 ```````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A PDF document named `document.pdf` should be produced and contain the text
 “Hello *world*!” A directory named `cache` containing several cache files of
@@ -3340,14 +3318,9 @@ Hello *world*!
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ finalizeCache=true frozenCacheFileName=cache.tex -- hello.md hello.tex
+markdown-cli finalizeCache=true frozenCacheFileName=cache.tex -- hello.md hello.tex
 luatex document.tex
 ```````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A PDF document named `document.pdf` should be produced and contain the text
 “Hello *world*!” A frozen cache will also be produced in the `cache.tex`
@@ -3650,15 +3623,10 @@ A paragraph.
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ -- content.md optionfalse.tex
-texlua ⟨CLI pathname⟩ blankBeforeBlockquote=true -- content.md optiontrue.tex
+markdown-cli -- content.md optionfalse.tex
+markdown-cli blankBeforeBlockquote=true -- content.md optiontrue.tex
 luatex document.tex
 ```````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -3884,15 +3852,10 @@ A code fence?
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ fencedCode=true -- content.md optionfalse.tex
-texlua ⟨CLI pathname⟩ fencedCode=true blankBeforeCodeFence=true  -- content.md optiontrue.tex
+markdown-cli fencedCode=true -- content.md optionfalse.tex
+markdown-cli fencedCode=true blankBeforeCodeFence=true  -- content.md optiontrue.tex
 luatex document.tex
 ```````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -4217,15 +4180,10 @@ A heading?
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ -- content.md optionfalse.tex
-texlua ⟨CLI pathname⟩ blankBeforeHeading=true  -- content.md optiontrue.tex
+markdown-cli -- content.md optionfalse.tex
+markdown-cli blankBeforeHeading=true  -- content.md optiontrue.tex
 luatex document.tex
 ```````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -4452,15 +4410,10 @@ A paragraph.
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ -- content.md optionfalse.tex
-texlua ⟨CLI pathname⟩ blankBeforeList=true  -- content.md optiontrue.tex
+markdown-cli -- content.md optionfalse.tex
+markdown-cli blankBeforeList=true  -- content.md optiontrue.tex
 luatex document.tex
 ```````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -4772,15 +4725,10 @@ following content:
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ breakableBlockquotes=false -- content.md optionfalse.tex
-texlua ⟨CLI pathname⟩  -- content.md optiontrue.tex
+markdown-cli breakableBlockquotes=false -- content.md optionfalse.tex
+markdown-cli  -- content.md optiontrue.tex
 luatex document.tex
 ```````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -5208,15 +5156,10 @@ following content:
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ codeSpans=false -- content.md optionfalse.tex
-texlua ⟨CLI pathname⟩ -- content.md optiontrue.tex
+markdown-cli codeSpans=false -- content.md optionfalse.tex
+markdown-cli -- content.md optiontrue.tex
 luatex document.tex
 ```````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -7260,15 +7203,10 @@ _Is there <? HTML instruction ?> support?_
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ html=false -- content.md optionfalse.tex
-texlua ⟨CLI pathname⟩ -- content.md optiontrue.tex
+markdown-cli html=false -- content.md optionfalse.tex
+markdown-cli -- content.md optiontrue.tex
 luatex document.tex
 ```````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -7573,15 +7511,10 @@ $\sqrt{-1}$ *equals* $i$.
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ -- content.md optionfalse.tex
-texlua ⟨CLI pathname⟩ hybrid=true -- content.md optiontrue.tex
+markdown-cli -- content.md optionfalse.tex
+markdown-cli hybrid=true -- content.md optiontrue.tex
 luatex document.tex
 ```````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -9297,15 +9230,10 @@ Are these just three regular dots, a victorian ellipsis, or ... ?
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ -- content.md optionfalse.tex
-texlua ⟨CLI pathname⟩ smartEllipses=true -- content.md optiontrue.tex
+markdown-cli -- content.md optionfalse.tex
+markdown-cli smartEllipses=true -- content.md optiontrue.tex
 luatex document.tex
 ```````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -10546,15 +10474,10 @@ $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ -- content.md optionfalse.tex
-texlua ⟨CLI pathname⟩ texMathDollars=true -- content.md optiontrue.tex
+markdown-cli -- content.md optionfalse.tex
+markdown-cli texMathDollars=true -- content.md optiontrue.tex
 luatex document.tex
 ```````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -10756,15 +10679,10 @@ following content:
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ -- content.md optionfalse.tex
-texlua ⟨CLI pathname⟩ texMathDoubleBackslash=true -- content.md optiontrue.tex
+markdown-cli -- content.md optionfalse.tex
+markdown-cli texMathDoubleBackslash=true -- content.md optiontrue.tex
 luatex document.tex
 ```````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -10966,15 +10884,10 @@ following content:
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ -- content.md optionfalse.tex
-texlua ⟨CLI pathname⟩ texMathSingleBackslash=true -- content.md optiontrue.tex
+markdown-cli -- content.md optionfalse.tex
+markdown-cli texMathSingleBackslash=true -- content.md optiontrue.tex
 luatex document.tex
 ```````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A PDF document named `document.pdf` should be produced and contain the
 following text:

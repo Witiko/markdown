@@ -339,3 +339,11 @@ BibTeX file that is included in your TeX distribution like this:
 ```
 
  [tugboat.bib]: http://mirrors.ctan.org/info/digests/tugboat/biblio/tugboat.bib
+
+Notes to Distributors
+---------------------
+
+The file `markdown-cli.lua` should be installed in the TDS directory
+`scripts/markdown`. Furthermore, it should be made executable and either
+symlinked to system directories as `markdown-cli` on Unix or have a wrapper
+`markdown-cli.exe` installed on Windows.
