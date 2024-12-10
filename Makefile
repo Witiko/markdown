@@ -130,6 +130,7 @@ $(GITHUB_PAGES): $(HTML_USER_MANUAL)
 $(EXTRACTABLES): $(INSTALLER) $(DTXARCHIVE)
 	luatex $<
 	sed -i '1i#!/usr/bin/env luatex' markdown-cli.lua
+	chmod +x markdown-cli.lua
 	texlua markdown-unicode-data-generator.lua >> markdown-unicode-data.lua
 	sed -i \
 	    -e 's#(((VERSION)))#$(VERSION)#g' \
