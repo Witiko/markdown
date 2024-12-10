@@ -2,6 +2,13 @@
 
 ## 3.9.1
 
+Distribution:
+
+- Make `markdown-cli` executable and symlinked to system directories.
+  (#534, #537, [tex-live@tug.org][tex-live-2024-12-050952])
+
+ [tex-live-2024-12-050952]: https://tug.org/pipermail/tex-live/2024-December/050952.html
+
 ## 3.9.0 (2024-11-21)
 
 Development:
