@@ -101,6 +101,7 @@ rm -rfv ${PREINSTALLED_DIR}/scripts/markdown/
 rm -rfv ${PREINSTALLED_DIR}/tex/generic/markdown/
 rm -rfv ${PREINSTALLED_DIR}/tex/latex/markdown/
 rm -rfv ${PREINSTALLED_DIR}/tex/context/third/markdown/
+rm -fv ${BINARY_DIR}/markdown-cli
 
 # Install the current Markdown package
 make -C ${BUILD_DIR} implode
@@ -201,17 +202,12 @@ rm -rfv ${PREINSTALLED_DIR}/scripts/markdown/
 rm -rfv ${PREINSTALLED_DIR}/tex/generic/markdown/
 rm -rfv ${PREINSTALLED_DIR}/tex/latex/markdown/
 rm -rfv ${PREINSTALLED_DIR}/tex/context/third/markdown/
+rm -fv ${BINARY_DIR}/markdown-cli
 
 EOF
 
 # Install the Markdown package
 COPY --from=build ${BUILD_DIR}/dist ${INSTALL_DIR}/
-
-COPY <<EOF ${BINARY_DIR}/markdown-cli
-#!/bin/bash
-texlua ${INSTALL_DIR}/scripts/markdown/markdown-cli.lua eagerCache=false \"\$@\"
-echo
-EOF
 
 RUN <<EOF
 
@@ -220,7 +216,7 @@ set -o nounset
 set -o xtrace
 
 # Make the markdown-cli script executable
-chmod +x ${BINARY_DIR}/markdown-cli
+ln -s ${INSTALL_DIR}/scripts/markdown/markdown-cli.lua ${BINARY_DIR}/markdown-cli
 
 # Generate the ConTeXt file database
 if echo ${TEXLIVE_TAG} | grep -q latest-minimal
