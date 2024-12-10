@@ -56,6 +56,7 @@ FROM $FROM_IMAGE:$TEXLIVE_TAG as build
 ARG DEPENDENCIES
 ARG TEXLIVE_DEPENDENCIES
 
+ARG BINARY_DIR
 ARG BUILD_DIR
 ARG INSTALL_DIR
 ARG PREINSTALLED_DIR
@@ -121,6 +122,9 @@ cp ${BUILD_DIR}/markdownthemewitiko_markdown_defaults.sty    ${INSTALL_DIR}/tex/
 mkdir -p                                                     ${INSTALL_DIR}/tex/context/third/markdown/
 cp ${BUILD_DIR}/t-markdown.tex                               ${INSTALL_DIR}/tex/context/third/markdown/
 cp ${BUILD_DIR}/t-markdownthemewitiko_markdown_defaults.tex  ${INSTALL_DIR}/tex/context/third/markdown/
+
+# Make the markdown-cli script executable
+ln -s ${INSTALL_DIR}/scripts/markdown/markdown-cli.lua       ${BINARY_DIR}/markdown-cli
 
 # Generate the ConTeXt file database
 if test ${DEV_IMAGE} != true
@@ -216,7 +220,7 @@ set -o nounset
 set -o xtrace
 
 # Make the markdown-cli script executable
-ln -s ${INSTALL_DIR}/scripts/markdown/markdown-cli.lua ${BINARY_DIR}/markdown-cli
+ln -s ${INSTALL_DIR}/scripts/markdown/markdown-cli.lua       ${BINARY_DIR}/markdown-cli
 
 # Generate the ConTeXt file database
 if echo ${TEXLIVE_TAG} | grep -q latest-minimal
