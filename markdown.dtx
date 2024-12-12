@@ -1245,7 +1245,7 @@ hard l3kernel
 %<*context,tex>
 % \fi
 %  \begin{macrocode}
-\ifx\csname ExplSyntaxOn\endcsname\undefined
+\expandafter\ifx\csname ExplSyntaxOn\endcsname\relax
   \input expl3-generic
 \fi
 %    \end{macrocode}
