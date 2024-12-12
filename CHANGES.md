@@ -2,6 +2,10 @@
 
 ## 3.9.1
 
+Continuous Integration:
+
+- Use explcheck to check expl3 code in the continuous integration. (#535, #536)
+
 Distribution:
 
 - Make `markdown-cli` executable and symlink it to system directories.

@@ -1245,7 +1245,7 @@ hard l3kernel
 %<*context,tex>
 % \fi
 %  \begin{macrocode}
-\ifx\ExplSyntaxOn\undefined
+\expandafter\ifx\csname ExplSyntaxOn\endcsname\relax
   \input expl3-generic
 \fi
 %    \end{macrocode}
@@ -13588,7 +13588,6 @@ In this section, I will describe the individual token renderers.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\ExplSyntaxOn
 \seq_new:N \g_@@_renderers_seq
 %    \end{macrocode}
 % \begin{markdown}
@@ -19892,7 +19891,6 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\ExplSyntaxOn
 \cs_gset_protected:Npn
   \markdownRendererSuperscript
   {
@@ -38741,7 +38739,6 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\ExplSyntaxOn
 \seq_new:N
   \l_@@_image_identifiers_seq
 \markdownSetup {
