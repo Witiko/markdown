@@ -4,7 +4,8 @@
 
 Continuous Integration:
 
-- Use explcheck to check expl3 code in the continuous integration. (#535, #536)
+- Use explcheck to check expl3 code in the continuous integration.
+  (#535, #536, b4e3bfcd)
 
 Distribution:
 
