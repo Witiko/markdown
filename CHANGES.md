@@ -2,6 +2,11 @@
 
 ## 3.9.1
 
+Fixes:
+
+- Make option `eagerCache` safe to use with plain LuaTeX.
+  (#530, witiko/lt3luabridge#29)
+
 Continuous Integration:
 
 - Use explcheck to check expl3 code in the continuous integration.
@@ -13,6 +18,14 @@ Distribution:
   (#534, #537, [tex-live@tug.org][tex-live-2024-12-050952])
 
  [tex-live-2024-12-050952]: https://tug.org/pipermail/tex-live/2024-December/050952.html
+
+Tests:
+
+- Reenable `eagerCache` in tests for plain LuaTeX. (#530, witiko/lt3luabridge#29)
+
+Docker:
+
+- Install the current package lt3luabridge in `Dockerfile`. (#530)
 
 ## 3.9.0 (2024-11-21)
 

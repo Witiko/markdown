@@ -15,6 +15,7 @@ ARG DEPENDENCIES="\
     ca-certificates \
     curl \
     gawk \
+    git \
     graphviz \
     m4 \
     moreutils \
@@ -104,6 +105,9 @@ rm -rfv ${PREINSTALLED_DIR}/tex/latex/markdown/
 rm -rfv ${PREINSTALLED_DIR}/tex/context/third/markdown/
 rm -fv ${BINARY_DIR}/markdown-cli
 
+# Uninstall the distribution lt3luabridge package
+rm -rfv ${PREINSTALLED_DIR}/tex/generic/lt3luabridge/
+
 # Install the current Markdown package
 make -C ${BUILD_DIR} implode
 make -C ${BUILD_DIR} base
@@ -126,6 +130,16 @@ cp ${BUILD_DIR}/t-markdownthemewitiko_markdown_defaults.tex  ${INSTALL_DIR}/tex/
 # Make the markdown-cli script executable
 ln -s ${INSTALL_DIR}/scripts/markdown/markdown-cli.lua       ${BINARY_DIR}/markdown-cli
 
+# Install the current lt3luabridge package
+git clone https://github.com/witiko/lt3luabridge.git
+cd lt3luabridge
+luatex lt3luabridge.ins
+
+mkdir -p               ${INSTALL_DIR}/tex/generic/lt3luabridge/
+cp lt3luabridge.tex    ${INSTALL_DIR}/tex/generic/lt3luabridge/
+cp lt3luabridge.sty    ${INSTALL_DIR}/tex/generic/lt3luabridge/
+cp t-lt3luabridge.tex  ${INSTALL_DIR}/tex/generic/lt3luabridge/
+
 # Generate the ConTeXt file database
 if test ${DEV_IMAGE} != true
 then
@@ -139,6 +153,12 @@ texhash
 make -C ${BUILD_DIR} dist NO_DOCUMENTATION=${DEV_IMAGE}
 mkdir ${BUILD_DIR}/dist
 unzip ${BUILD_DIR}/markdown.tds.zip -d ${BUILD_DIR}/dist
+
+# Include the current lt3luabridge package in the distribution directory
+mkdir -p               ${BUILD_DIR}/dist/tex/generic/lt3luabridge/
+cp lt3luabridge.tex    ${BUILD_DIR}/dist/tex/generic/lt3luabridge/
+cp lt3luabridge.sty    ${BUILD_DIR}/dist/tex/generic/lt3luabridge/
+cp t-lt3luabridge.tex  ${BUILD_DIR}/dist/tex/generic/lt3luabridge/
 
 EOF
 
@@ -208,9 +228,12 @@ rm -rfv ${PREINSTALLED_DIR}/tex/latex/markdown/
 rm -rfv ${PREINSTALLED_DIR}/tex/context/third/markdown/
 rm -fv ${BINARY_DIR}/markdown-cli
 
+# Uninstall the distribution lt3luabridge package
+rm -rfv ${PREINSTALLED_DIR}/tex/generic/lt3luabridge/
+
 EOF
 
-# Install the Markdown package
+# Install the Markdown package and the current lt3luabridge package
 COPY --from=build ${BUILD_DIR}/dist ${INSTALL_DIR}/
 
 RUN <<EOF
