@@ -139,15 +139,15 @@ For further information, consult one of the following:
     - [Writing Posters with Markdown][overleaf-5], and
     - [Using Markdown in LaTeX documents][overleaf-6].
 4. Journal articles published by [TUGboat][]:
-    - [Using Markdown inside TeX documents][tb119],
-    - [Markdown 2.7.0: Towards lightweight markup in TeX][tb124],
+    - [Using Markdown Inside TeX Documents][tb119],
+    - [Markdown 2.7.0: Towards Lightweight mMrkup in TeX][tb124],
     - [Making Markdown into a Microwave Meal][tb129],
     - [Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX][tb131],
     - [Markdown 2.15.0: What's New?][tb133],
     - [Markdown 2.17.1: What's New, What's Next?][tb135],
     - [Attributes in Markdown][tb136],
-    - [Markdown 3 at TUG 2023: Reflections from the Q&A session][tb138],
-    - [Fast Regression Testing of TeX Packages: The Unreasonable Effectiveness of Batching][tb139], and
+    - [Markdown 3 at TUG 2023: Reflections from the Q&A Session][tb138],
+    - [Fast Regression Testing of TeX Packages: Multiprocessing and Batching][tb139], and
     - [Markdown Themes in Practice][tb140].
 5. Journal articles published by [CSTUG Bulletin][csbul] (in Czech and Slovak):
     - [Rendering Markdown inside TeX Documents][10.5300/2016-1-4/78],
@@ -339,3 +339,11 @@ BibTeX file that is included in your TeX distribution like this:
 ```
 
  [tugboat.bib]: http://mirrors.ctan.org/info/digests/tugboat/biblio/tugboat.bib
+
+Notes to Distributors
+---------------------
+
+The file `markdown-cli.lua` should be installed in the TDS directory
+`scripts/markdown`. Furthermore, it should be made executable and either
+symlinked to system directories as `markdown-cli` on Unix or have a wrapper
+`markdown-cli.exe` installed on Windows.

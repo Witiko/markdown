@@ -43,11 +43,18 @@ jobs:
         with:
           repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
           ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
+      - name: Install TeX Live
+        uses: teatimeguest/setup-texlive-action@v3
+        with:
+          packages: |
+            latexmk
+            scheme-minimal
+            xetex
       - name: Install additional packages
         run: |
           set -ex
           sudo apt -qy update
-          sudo apt -qy install --no-install-recommends git latexmk lua-check make texlive-xetex
+          sudo apt -qy install --no-install-recommends git lua-check make
       - name: Extract scripts
         run: make base
       - name: Check the line length
@@ -74,15 +81,48 @@ jobs:
         with:
           repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
           ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
+      - name: Install TeX Live
+        uses: teatimeguest/setup-texlive-action@v3
+        with:
+          packages: |
+            latexmk
+            scheme-minimal
+            xetex
       - name: Install additional packages
         run: |
           set -ex
           sudo apt -qy update
-          sudo apt -qy install --no-install-recommends git latexmk lua-check make texlive-xetex
+          sudo apt -qy install --no-install-recommends git lua-check make
       - name: Extract Lua scripts
         run: make base
       - name: Run luacheck
         run: luacheck *.lua
+  explcheck:
+    name: Style check (expl3)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
+          ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
+      - name: Install TeX Live
+        uses: teatimeguest/setup-texlive-action@v3
+        with:
+          packages: |
+            expltools
+            latexmk
+            scheme-minimal
+            xetex
+      - name: Install additional packages
+        run: |
+          set -ex
+          sudo apt -qy update
+          sudo apt -qy install --no-install-recommends git make
+      - name: Extract TeX files
+        run: make base
+      - name: Run explcheck
+        run: explcheck --warnings-are-errors -- *.tex *.sty
   markdownlint:
     name: Style check (Markdown)
     runs-on: ubuntu-latest
@@ -92,11 +132,18 @@ jobs:
         with:
           repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
           ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
+      - name: Install TeX Live
+        uses: teatimeguest/setup-texlive-action@v3
+        with:
+          packages: |
+            latexmk
+            scheme-minimal
+            xetex
       - name: Install additional packages
         run: |
           set -ex
           sudo apt -qy update
-          sudo apt -qy install --no-install-recommends git latexmk lua-check make texlive-xetex
+          sudo apt -qy install --no-install-recommends git make
       - name: Extract user manual
         run: make markdown-transcluded.md
       - name: Run MarkdownLint
@@ -150,13 +197,13 @@ jobs:
       - linelength
       - shellcheck
       - luacheck
+      - explcheck
       - markdownlint
       - pytype
     strategy:
       fail-fast: true
       matrix:
         texlive:
-          - TL2022-historic
           - TL2023-historic
           - latest
         # Only test latest TeX Live in pull requests.
@@ -167,7 +214,6 @@ jobs:
         include:
           - { texlive: latest }
     outputs:
-      TL2022-historic: ${{ steps.temporary-tags.outputs.TL2022-historic }}
       TL2023-historic: ${{ steps.temporary-tags.outputs.TL2023-historic }}
       latest: ${{ steps.temporary-tags.outputs.latest }}
     runs-on: ubuntu-latest
@@ -206,7 +252,6 @@ jobs:
       fail-fast: true
       matrix:
         texlive:
-          - TL2022-historic
           - TL2023-historic
           - latest
         # Only test latest TeX Live in pull requests.
@@ -235,7 +280,7 @@ jobs:
       - name: Test Lua command-line interface
         run: |
           set -ex
-          printf '%s\n' 'Hello *Markdown*! $a_x + b_x = c_x$' | bash -c 'time markdown-cli texMathDollars=true' 1>stdout 2>stderr
+          printf '%s\n' 'Hello *Markdown*! $a_x + b_x = c_x$' | bash -c 'time markdown-cli eagerCache=false texMathDollars=true' 1>stdout 2>stderr
           test "$(cat stdout)" = '\markdownRendererDocumentBegin
           Hello \markdownRendererEmphasis{Markdown}! \markdownRendererInlineMath{a_x + b_x = c_x}\markdownRendererDocumentEnd'  # Check that the output is correct.
           grep 'real\s*0m[01]' stderr  # Check that the command finishes in less than a second.
@@ -251,7 +296,6 @@ jobs:
       fail-fast: true
       matrix:
         texlive:
-          - TL2022-historic
           - TL2023-historic
           - latest
         # Only test latest TeX Live in pull requests.
@@ -286,7 +330,6 @@ jobs:
       fail-fast: true
       matrix:
         texlive:
-          - TL2022-historic
           - TL2023-historic
           - latest
         # Only test latest TeX Live in pull requests.

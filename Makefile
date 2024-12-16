@@ -5,7 +5,7 @@
 SHELL=/bin/bash
 
 AUXFILES=markdown.bbl markdown.cb markdown.cb2 markdown.glo markdown.bbl \
-  markdown.run.xml markdown.markdown.in markdown.markdown.lua \
+  markdown.hd markdown.run.xml markdown.markdown.in markdown.markdown.lua \
   markdown.markdown.out markdown-interfaces.md markdown-miscellanea.md \
   markdown-options.md markdown-tokens.md $(TECHNICAL_DOCUMENTATION_RESOURCES) \
   $(VERSION_FILE) $(RAW_DEPENDENCIES) markdown-unicode-data-generator.lua \
@@ -45,18 +45,17 @@ HTML_USER_MANUAL=markdown.html markdown.css
 USER_MANUAL=$(MARKDOWN_USER_MANUAL) $(HTML_USER_MANUAL)
 DOCUMENTATION=$(TECHNICAL_DOCUMENTATION) $(HTML_USER_MANUAL) $(ROOT_README) $(VERSION_FILE) \
   $(CHANGES_FILE) $(DEPENDENCIES)
-LIBRARIES=libraries/markdown-tinyyaml.lua
 INSTALLABLES=markdown.lua markdown-parser.lua markdown-cli.lua markdown-unicode-data.lua \
-  markdown.tex markdown.sty t-markdown.tex markdownthemewitiko_dot.sty \
-  markdownthemewitiko_graphicx_http.sty markdownthemewitiko_tilde.tex \
-  markdownthemewitiko_markdown_defaults.tex markdownthemewitiko_markdown_defaults.sty \
+  markdown.tex markdown.sty t-markdown.tex \
+  markdownthemewitiko_markdown_defaults.tex \
+  markdownthemewitiko_markdown_defaults.sty \
   t-markdownthemewitiko_markdown_defaults.tex
 EXTRACTABLES=$(INSTALLABLES) $(MARKDOWN_USER_MANUAL) $(TECHNICAL_DOCUMENTATION_RESOURCES) \
   $(RAW_DEPENDENCIES)
 MAKEABLES=$(TECHNICAL_DOCUMENTATION) $(USER_MANUAL) $(INSTALLABLES) $(EXAMPLES) $(DEPENDENCIES)
 RESOURCES=$(DOCUMENTATION) $(EXAMPLES_RESOURCES) $(EXAMPLES_SOURCES) $(EXAMPLES) \
   $(MAKES) $(READMES) $(INSTALLER) $(DTXARCHIVE) $(TESTS)
-EVERYTHING=$(RESOURCES) $(INSTALLABLES) $(LIBRARIES)
+EVERYTHING=$(RESOURCES) $(INSTALLABLES)
 GITHUB_PAGES=gh-pages
 
 ifeq ($(NO_DOCUMENTATION), true)
@@ -89,9 +88,8 @@ PANDOC_INPUT_FORMAT=markdown+tex_math_single_backslash-raw_tex
 all: $(MAKEABLES)
 	$(MAKE) clean
 
-# This pseudo-target extracts the source files out of the DTX archive and
-# produces external Lua libraries.
-base: $(INSTALLABLES) $(LIBRARIES)
+# This pseudo-target extracts the source files out of the DTX archive.
+base: $(INSTALLABLES)
 	$(MAKE) clean
 
 # This pseudo-target builds a witiko/markdown Docker image.
@@ -131,6 +129,8 @@ $(GITHUB_PAGES): $(HTML_USER_MANUAL)
 # This target extracts the source files out of the DTX archive.
 $(EXTRACTABLES): $(INSTALLER) $(DTXARCHIVE)
 	luatex $<
+	sed -i '1i#!/usr/bin/env texlua' markdown-cli.lua
+	chmod +x markdown-cli.lua
 	texlua markdown-unicode-data-generator.lua >> markdown-unicode-data.lua
 	sed -i \
 	    -e 's#(((VERSION)))#$(VERSION)#g' \
@@ -150,10 +150,6 @@ $(DEPENDENCIES): $(RAW_DEPENDENCIES)
 # This target produces the version file.
 $(VERSION_FILE): force
 	printf '%s (%s)\n' $(VERSION) $(LASTMODIFIED) > $@
-
-# This target produces external Lua libraries.
-$(LIBRARIES): force
-	$(MAKE) -C libraries $(notdir $@)
 
 # This target typesets the manual.
 $(TECHNICAL_DOCUMENTATION): $(DTXARCHIVE) $(TECHNICAL_DOCUMENTATION_RESOURCES)
@@ -224,19 +220,16 @@ dist: implode
 	$(MAKE) clean
 
 # This target produces the TeX directory structure archive.
-$(TDSARCHIVE): $(DTXARCHIVE) $(INSTALLER) $(INSTALLABLES) $(DOCUMENTATION) $(EXAMPLES_RESOURCES) $(EXAMPLES_SOURCES) $(LIBRARIES)
+$(TDSARCHIVE): $(DTXARCHIVE) $(INSTALLER) $(INSTALLABLES) $(DOCUMENTATION) $(EXAMPLES_RESOURCES) $(EXAMPLES_SOURCES)
 	@# Installing the macro package.
 	mkdir -p tex/generic/markdown tex/luatex/markdown tex/latex/markdown \
 	  tex/context/third/markdown scripts/markdown
-	cp markdown.lua markdown-parser.lua markdown-unicode-data.lua $(LIBRARIES) \
+	cp markdown.lua markdown-parser.lua markdown-unicode-data.lua \
 	  tex/luatex/markdown/
 	cp markdown-cli.lua scripts/markdown/
-	cp markdown.tex markdownthemewitiko_tilde.tex \
-	  markdownthemewitiko_markdown_defaults.tex tex/generic/markdown/
-	cp markdown.sty markdownthemewitiko_graphicx_http.sty markdownthemewitiko_dot.sty \
-	  markdownthemewitiko_markdown_defaults.sty tex/latex/markdown/
-	cp t-markdown.tex t-markdownthemewitiko_markdown_defaults.tex \
-	  tex/context/third/markdown/
+	cp markdown.tex markdownthemewitiko_markdown_defaults.tex tex/generic/markdown/
+	cp markdown.sty markdownthemewitiko_markdown_defaults.sty tex/latex/markdown/
+	cp t-markdown.tex t-markdownthemewitiko_markdown_defaults.tex tex/context/third/markdown/
 	@# Installing the documentation.
 	mkdir -p doc/generic/markdown doc/latex/markdown/examples \
 	  doc/context/third/markdown/examples doc/optex/markdown/examples
@@ -258,9 +251,9 @@ $(DISTARCHIVE): $(EVERYTHING) $(TDSARCHIVE)
 	rm -f markdown
 
 # This target produces the CTAN archive.
-$(CTANARCHIVE): $(DTXARCHIVE) $(INSTALLER) $(DOCUMENTATION) $(EXAMPLES_RESOURCES) $(EXAMPLES_SOURCES) $(LIBRARIES) $(TDSARCHIVE)
+$(CTANARCHIVE): $(DTXARCHIVE) $(INSTALLER) $(DOCUMENTATION) $(EXAMPLES_RESOURCES) $(EXAMPLES_SOURCES) $(TDSARCHIVE)
 	-ln -s . markdown
-	zip -MM -r -v -nw --symlinks $@ $(addprefix markdown/,$(DTXARCHIVE) $(INSTALLER) $(DOCUMENTATION) $(EXAMPLES_RESOURCES) $(EXAMPLES_SOURCES) $(LIBRARIES)) $(TDSARCHIVE)
+	zip -MM -r -v -nw --symlinks $@ $(addprefix markdown/,$(DTXARCHIVE) $(INSTALLER) $(DOCUMENTATION) $(EXAMPLES_RESOURCES) $(EXAMPLES_SOURCES)) $(TDSARCHIVE)
 	rm -f markdown
 
 # This pseudo-target removes any existing auxiliary files and directories.
@@ -274,7 +267,6 @@ clean:
 implode: clean
 	rm -f $(MAKEABLES) $(ARCHIVES)
 	$(MAKE) -C examples implode
-	$(MAKE) -C libraries implode
 
 # This pseudo-target checks that the length of lines in the source files.
 check-line-length: $(INSTALLABLES)

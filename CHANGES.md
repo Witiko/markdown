@@ -1,6 +1,47 @@
 # Changes
 
-## 3.9.0
+## 3.9.1
+
+Continuous Integration:
+
+- Use explcheck to check expl3 code in the continuous integration.
+  (#535, #536, b4e3bfcd)
+
+Distribution:
+
+- Make `markdown-cli` executable and symlink it to system directories.
+  (#534, #537, [tex-live@tug.org][tex-live-2024-12-050952])
+
+ [tex-live-2024-12-050952]: https://tug.org/pipermail/tex-live/2024-December/050952.html
+
+## 3.9.0 (2024-11-21)
+
+Development:
+
+- Convert built-in LaTeX themes `witiko/dot` and `witiko/graphicx/http` into
+  plain TeX themes. (#514, #522, #529)
+
+  This allows these themes to be used in formats such as plain TeX and ConTeXt
+  as well.
+
+Refactoring:
+
+- Remove dependencies on `ifthen`, `gobble`, and `catchfile`. (#514, #522, #529)
+
+- Store small built-in LaTeX themes `witiko/dot`, `witiko/graphicx/http`, and
+  `witiko/tilde` in expl3 props in files `markdown.tex` and `markdown.sty`.
+  (#514, #522, #529)
+
+  This simplifies the distribution and installation of these themes, which were
+  previously located in individual `.tex` and `.sty` files.
+
+  The built-in plain TeX, LaTeX, and ConTeXt themes `witiko/markdown/defaults`
+  are still distributed in individual files. This is because inlining these
+  themes in files `markdown.tex`, `markdown.sty`, and `t-markdown.tex` would
+  make it more difficult for users to copy and modify these themes without
+  delaying updates to the Markdown package itself. Furthermore, these themes
+  are large and storing/executing them from an expl3 prop would make it more
+  difficult to determine the line numbers when errors occur.
 
 Fixes:
 
@@ -18,7 +59,7 @@ Fixes:
 
 Defaults:
 
-- Define LaTeX renderers for table identifiers.
+- Define default LaTeX renderer prototypes for table identifiers.
   (#525, suggested by @machitgarha, #528)
 
   This establishes a reliable method for authors to reference tables within
@@ -50,7 +91,7 @@ Defaults:
   \end{document}
   ```
 
-- Define LaTeX renderers for bracketed spans.
+- Define default LaTeX renderer prototypes for bracketed spans.
   (discussed with @MacLotsen at TUG 2024 and with @TeXhackse at matrix.org, #528)
 
   This establishes a reliable method for authors to reference the last LaTeX
@@ -77,6 +118,44 @@ Defaults:
   \end{markdown}
   \end{document}
   ```
+
+- Use package LuaXML in default LaTeX renderer prototypes for content blocks,
+  raw blocks, and inline raw spans. (#469, #532, co-authored by @michal-h21)
+
+  This allows authors to render HTML fragments in their LaTeX documents:
+
+  `````` tex
+  \documentclass{article}
+  \usepackage[content_blocks, raw_attribute]{markdown}
+  \begin{filecontents}[overwrite, nosearch, noheader]{example_input.html}
+  <b>foo</b> <i>bar</i>
+  \end{filecontents}
+  \begin{document}
+  \begin{markdown}
+
+  Raw text span: `<b>foo</b> <i>bar</i>`{=html}
+
+  Raw code block:
+
+  ``` {=html}
+  <b>foo</b> <i>bar</i>
+  ```
+
+  Content block:
+
+   /example_input.html
+
+  \end{markdown}
+  \end{document}
+  ``````
+
+Deprecation:
+
+- Remove support for TeX Live 2022. (da85e015, 8f2d25c7)
+
+  This change also removes the Lua module `markdown-tinyyaml`, which has been
+  scheduled for removal ever since the Lua module `tinyyaml` was uploaded to
+  CTAN in TeX Live 2023.
 
 ## 3.8.1 (2024-11-03)
 

@@ -905,7 +905,6 @@ date:   \markdownVersion{} \markdownLastModified{}
 <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet" />
 
 % \fi
-% \par
 % \begin{markdown}
 
 Introduction
@@ -977,7 +976,7 @@ Requirements
 
 The package requires either [our official Docker image][docker], which contains
 the latest development version of the Markdown package, or a \TeX{}
-distribution: [\TeX{} Live][tl] ≥ 2022 is known to work with the current
+distribution: [\TeX{} Live][tl] ≥ 2023 is known to work with the current
 version of the Markdown package and so are recent versions of [Mik\TeX{}][mik].
 If you are using an older, incomplete, or atypical \TeX{} distribution, please
 consult the [technical documentation][techdoc] for a detailed list of
@@ -1014,13 +1013,9 @@ make base
 Either of the two abovelisted approaches should produce the following files:
 
 * `markdown.lua`, `markdown-parser.lua`, and `markdown-unicode-data.lua`: The Lua module
-* `libraries/markdown-tinyyaml.lua`: An external library for reading \acro{yaml}
 * `markdown-cli.lua`: The Lua command-line interface
 * `markdown.tex`: The plain \TeX{} macro package
 * `markdown.sty`: The \LaTeX{} package
-* `markdownthemewitiko_dot.sty`: The `witiko/dot` \LaTeX{} theme
-* `markdownthemewitiko_graphicx_http.sty`: The `witiko/graphicx/http` \LaTeX{} theme
-* `markdownthemewitiko_tilde.tex`: The `witiko/tilde` theme
 * `markdownthemewitiko_markdown_defaults.tex`,
   `markdownthemewitiko_markdown_defaults.sty`, and
   `t-markdownthemewitiko_markdown_defaults.tex`: The `witiko/markdown/defaults`
@@ -1036,14 +1031,10 @@ placed:
 * `⟨TEXMF⟩/tex/luatex/markdown/markdown.lua`
 * `⟨TEXMF⟩/tex/luatex/markdown/markdown-parser.lua`
 * `⟨TEXMF⟩/tex/luatex/markdown/markdown-unicode-data.lua`
-* `⟨TEXMF⟩/tex/luatex/markdown/markdown-tinyyaml.lua`
 * `⟨TEXMF⟩/scripts/markdown/markdown-cli.lua`
 * `⟨TEXMF⟩/tex/generic/markdown/markdown.tex`
-* `⟨TEXMF⟩/tex/generic/markdown/markdownthemewitiko_tilde.tex`
 * `⟨TEXMF⟩/tex/generic/markdown/markdownthemewitiko_markdown_defaults.tex`
 * `⟨TEXMF⟩/tex/latex/markdown/markdown.sty`
-* `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_dot.sty`
-* `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_graphicx_http.sty`
 * `⟨TEXMF⟩/tex/latex/markdown/markdownthemewitiko_markdown_defaults.sty`
 * `⟨TEXMF⟩/tex/context/third/markdown/t-markdown.tex`
 * `⟨TEXMF⟩/tex/context/third/markdown/t-markdownthemewitiko_markdown_defaults.tex`
@@ -1064,14 +1055,10 @@ This is where the individual files should be placed:
 * `./markdown.lua`
 * `./markdown-parser.lua`
 * `./markdown-unicode-data.lua`
-* `./markdown-tinyyaml.lua`
 * `./markdown-cli.lua`
 * `./markdown/markdown.tex`
 * `./markdown.sty`
 * `./t-markdown.tex`
-* `./markdownthemewitiko_dot.sty`
-* `./markdownthemewitiko_graphicx_http.sty`
-* `./markdownthemewitiko_tilde.tex`
 * `./markdownthemewitiko_markdown_defaults.tex`
 * `./markdownthemewitiko_markdown_defaults.sty`
 * `./t-markdownthemewitiko_markdown_defaults.tex`
@@ -1081,7 +1068,6 @@ The file `markdown.tex` *must* be placed in a directory named `markdown`.
 %</manual>
 %<*lua>
 % \fi
-% \par
 % \begin{markdown}
 %
 % Requirements
@@ -1111,7 +1097,6 @@ The file `markdown.tex` *must* be placed in a directory named `markdown`.
 %  \begin{macrocode}
 local lpeg = require("lpeg")
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % \pkg{Selene Unicode}
@@ -1129,7 +1114,6 @@ local lpeg = require("lpeg")
 %  \begin{macrocode}
 local unicode = require("unicode")
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % \pkg{MD5}
@@ -1181,7 +1165,6 @@ local md5 = require("md5")
   end
 end)()
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % All the abovelisted modules are statically linked into the current version of
@@ -1207,17 +1190,13 @@ hard lua-uni-algos
 %  \begin{macrocode}
 local uni_algos = require("lua-uni-algos")
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % \pkg{api7/lua-tinyyaml}
 %
 %:    A library that provides a regex-based recursive descent \acro{yaml}
 %     (subset) parser that is used to read \acro{yaml} metadata when the
-%     \Opt{jekyllData} option is enabled. We carry a copy of the library
-%     in file `markdown-tinyyaml.lua` distributed together with the Markdown
-%     package. <!-- TODO: Stop carrying the copy of the library in TeX Live
-%     2023. -->
+%     \Opt{jekyllData} option is enabled.
 %
 % \end{markdown}
 % \iffalse
@@ -1225,13 +1204,12 @@ local uni_algos = require("lua-uni-algos")
 %<*depends>
 % \fi
 %  \begin{macrocode}
-# hard lua-tinyyaml  # TODO: Uncomment after TeX Live 2022 deprecation.
+hard lua-tinyyaml
 %    \end{macrocode}
 % \iffalse
 %</depends>
 %<*tex>
 % \fi
-% \par
 % \begin{markdown}
 %
 %### Plain \TeX{} Requirements {#tex-prerequisites}
@@ -1267,7 +1245,7 @@ hard l3kernel
 %<*context,tex>
 % \fi
 %  \begin{macrocode}
-\ifx\ExplSyntaxOn\undefined
+\expandafter\ifx\csname ExplSyntaxOn\endcsname\relax
   \input expl3-generic
 \fi
 %    \end{macrocode}
@@ -1329,7 +1307,6 @@ hard lt3luabridge
 %</tex>
 %<*latex>
 % \fi
-% \par
 % \begin{markdown}
 %
 %### \LaTeX{} Requirements {#latex-prerequisites}
@@ -1339,14 +1316,12 @@ hard lt3luabridge
 % prerequisites (see Section <#sec:tex-prerequisites>).
 % \end{markdown}
 % \iffalse
-%<*themes-witiko-dot,latex-themes-witiko-graphicx-http>
 % \fi
 %  \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}
 \RequirePackage{expl3}
 %    \end{macrocode}
 % \iffalse
-%</themes-witiko-dot,latex-themes-witiko-graphicx-http>
 %</latex>
 %<*depends>
 % \fi
@@ -1399,19 +1374,6 @@ soft paralist
 %    \end{macrocode}
 % \begin{markdown}
 %
-% \pkg{ifthen}
-%
-%:    A package that provides a concise syntax for the inspection of macro
-%     values. It is used in the `witiko/dot` \LaTeX{} theme (see Section
-%     <#sec:latexthemes>).
-%
-% \end{markdown}
-%  \begin{macrocode}
-soft latex
-soft epstopdf-pkg  # required by `latex`
-%    \end{macrocode}
-% \begin{markdown}
-%
 % \pkg{fancyvrb}
 %
 %:    A package that provides the `\VerbatimInput` macros for the verbatim
@@ -1434,18 +1396,7 @@ soft fancyvrb
 soft csvsimple
 soft pgf  # required by `csvsimple`, which loads `pgfkeys.sty`
 soft tools  # required by `csvsimple`, which loads `shellesc.sty`
-%    \end{macrocode}
-% \begin{markdown}
-%
-% \pkg{gobble}
-%
-%:    A package that provides the `\@gobblethree` \TeX{} command that
-%     is used in the default renderer prototype for citations. The package
-%     is included in \TeX Live${}\geq{}2016$.
-%
-% \end{markdown}
-%  \begin{macrocode}
-soft gobble
+soft etoolbox  # required by `csvsimple`, which loads `etoolbox.sty`
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -1461,51 +1412,24 @@ soft amsfonts
 %    \end{macrocode}
 % \begin{markdown}
 %
-% \pkg{catchfile}
+% \pkg{graphicx}
 %
-%:    A package that catches the contents of a file and puts it in a macro. It
-%     is used in the `witiko/graphicx/http` \LaTeX{} theme, see Section
-%     <#sec:latexthemes>.
-%
-% \end{markdown}
-%  \begin{macrocode}
-soft catchfile
-%    \end{macrocode}
-% \begin{markdown}
-%
-% \pkg{grffile}
-%
-%:    A package that extends the name processing of the \pkg{graphics} package
-%     to support a larger range of file names in $2006\leq{}$\TeX{}
-%     Live${}\leq{}2019$.  Since \TeX{} Live${}\geq{}2020$, the functionality
-%     of the package has been integrated in the \LaTeXe{} kernel. It is used in
-%     the `witiko/dot` and `witiko/graphicx/http` \LaTeX{} themes, see Section
-%     <#sec:latexthemes>.
+%:    A package that provides extended support for graphics. It is used in
+%     the `witiko/dot` and `witiko/graphicx/http` plain \TeX{} themes, see
+%     Section <#sec:themes>.
 %
 % \end{markdown}
 %  \begin{macrocode}
-soft grffile
+soft graphics
+soft epstopdf  # required by `graphics` and `graphicx`, which load `epsopdf-base.sty`
+soft epstopdf-pkg  # required by `graphics` and `graphicx`, which load `epsopdf-base.sty`
 %    \end{macrocode}
 % \begin{markdown}
 %
-% \pkg{etoolbox}
-%
-%:    A package that is used to polyfill the general hook management system in
-%     the default renderer prototypes for \acro{yaml} metadata, see Section
-%     <#sec:latex-yaml-metadata>, and also in the default renderer prototype
-%     for identifier attributes.
-%
-% \end{markdown}
-%  \begin{macrocode}
-soft etoolbox
-%    \end{macrocode}
-% \begin{markdown}
-%
-% \pkg{soulutf8} and \pkg{xcolor}
+% \pkg{soul} and \pkg{xcolor}
 %
 %:    Packages that are used in the default renderer prototypes for
 %     strike-throughs and marked text in pdf\TeX.
-%     <!-- TODO: 1,$s/soulutf8/soul/g in TeX Live 2023. -->
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -1538,6 +1462,17 @@ soft ltxcmds
 %    \end{macrocode}
 % \begin{markdown}
 %
+% \pkg{luaxml}
+%
+%:    A package that is used to convert \acro{HTML} to \LaTeX{} in the default
+%     renderer prototypes for content blocks, raw blocks, and inline raw spans.
+%
+% \end{markdown}
+%  \begin{macrocode}
+soft luaxml
+%    \end{macrocode}
+% \begin{markdown}
+%
 % \pkg{verse}
 %
 %:    A package that is used in the default renderer prototypes for
@@ -1554,7 +1489,6 @@ soft verse
 %</depends>
 %<*context>
 % \fi
-% \par
 % \begin{markdown}
 %
 %### \Hologo{ConTeXt} Prerequisites
@@ -1694,21 +1628,14 @@ Hello *world*!
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ -- hello.md hello.tex
+markdown-cli -- hello.md hello.tex
 luatex document.tex
 ``````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
-
- [Kpathsea]: https://tug.org/kpathsea/ (Kpathsea - TeX Users Group)
 
 A PDF document named `document.pdf` should be produced and contain the text “Hello
 *world*!” Invoking pdfTeX should have the same effect:
 ``` sh
-texlua ⟨CLI pathname⟩ -- hello.md hello.tex
+markdown-cli -- hello.md hello.tex
 pdftex document.tex
 ``````
 
@@ -1901,7 +1828,6 @@ Each part will be shown by example, leaving the implementation details to the
 %</manual>
 %<*lua>
 % \fi
-% \par
 % \begin{markdown}
 %
 % Lua Interface {#luainterface}
@@ -1951,7 +1877,6 @@ local M = {metadata = metadata}
 %</lua,lua-loader,lua-unicode-data>
 %<*lua>
 % \fi
-% \par
 % \begin{markdown}
 %
 %### Conversion from Markdown to Plain \TeX{} {#lua-conversion}
@@ -2020,7 +1945,6 @@ local walkable_syntax = {
   },
 }
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The \luamref{reader->insert_pattern} method inserts a \acro{peg} pattern into
@@ -2180,15 +2104,10 @@ $\sqrt{-1}$ *equals* $i$.
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ -- example.md nomath.tex
-texlua ⟨CLI pathname⟩ tex_math_dollars=true -- example.md math.tex
+markdown-cli -- example.md nomath.tex
+markdown-cli tex_math_dollars=true -- example.md math.tex
 luatex document.tex
 ``````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -2201,8 +2120,8 @@ following text:
 
 Invoking pdfTeX should have the same effect:
 ``` sh
-texlua ⟨CLI pathname⟩ -- example.md nomath.tex
-texlua ⟨CLI pathname⟩ tex_math_dollars=true -- example.md math.tex
+markdown-cli -- example.md nomath.tex
+markdown-cli tex_math_dollars=true -- example.md math.tex
 pdftex document.tex
 ``````
 
@@ -2234,7 +2153,6 @@ local defaultOptions = {}
 %    \end{macrocode}
 % \begingroup
 % \markdownSetup{snippet=lua-options}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -2524,7 +2442,6 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
       }
   }
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % To make it easier to support different coding styles in the interface,
@@ -2555,7 +2472,6 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
       { #2 }
   }
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % To interrupt the \mref{\@\@_with_various_cases:nn} function
@@ -2609,7 +2525,6 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
 %### General Behavior
 %
 % \end{markdown}
-% \par
 % \iffalse
 
 #### Option `eagerCache`
@@ -2661,13 +2576,8 @@ Hello *world*!
 Next, invoke LuaTeX from the terminal with the \Opt{eagerCache} option
 disabled:
 ``` sh
-texlua ⟨CLI pathname⟩ eagerCache=false -- hello.md hello.tex
+markdown-cli eagerCache=false -- hello.md hello.tex
 ```````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A \TeX{} document named `hello.tex` should be produced and contain the
 following code:
@@ -2681,7 +2591,7 @@ Invoke LuaTeX from the terminal again, this time with the \Opt{eagerCache}
 option enabled:
 
 ``` tex
-texlua ⟨CLI pathname⟩ eagerCache=true -- hello.md hello.tex
+markdown-cli eagerCache=true -- hello.md hello.tex
 ```
 
 A \TeX{} document named `hello.tex` should be produced and contain the
@@ -2714,7 +2624,6 @@ Hello \markdownRendererEmphasis{world}!\relax
 %  \begin{macrocode}
 defaultOptions.eagerCache = true
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -2760,7 +2669,6 @@ defaultOptions.eagerCache = true
 %  \begin{macrocode}
 defaultOptions.experimental = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -2858,7 +2766,6 @@ local singletonCache = {
   options = nil,
 }
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua>
 %<*manual-options>
@@ -2903,7 +2810,6 @@ local singletonCache = {
 %  \begin{macrocode}
 defaultOptions.unicodeNormalization = true
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -2959,7 +2865,6 @@ defaultOptions.unicodeNormalization = true
 %  \begin{macrocode}
 defaultOptions.unicodeNormalizationForm = "nfc"
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -2969,7 +2874,6 @@ defaultOptions.unicodeNormalizationForm = "nfc"
 %### File and Directory Names
 %
 % \end{markdown}
-% \par
 % \iffalse
 
 #### Option `cacheDir`
@@ -3040,14 +2944,9 @@ Hello *world*!
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ cacheDir=cache -- hello.md hello.tex
+markdown-cli cacheDir=cache -- hello.md hello.tex
 luatex document.tex
 ```````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A PDF document named `document.pdf` should be produced and contain the text
 “Hello *world*!” A directory named `cache` containing several cache files of
@@ -3135,7 +3034,6 @@ option.
 %  \begin{macrocode}
 defaultOptions.cacheDir = "."
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -3299,7 +3197,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.contentBlocksLanguageMap = "markdown-languages.json"
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -3348,7 +3245,6 @@ defaultOptions.contentBlocksLanguageMap = "markdown-languages.json"
 %  \begin{macrocode}
 defaultOptions.debugExtensionsFileName = "debug-extensions.json"
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -3422,14 +3318,9 @@ Hello *world*!
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ finalizeCache=true frozenCacheFileName=cache.tex -- hello.md hello.tex
+markdown-cli finalizeCache=true frozenCacheFileName=cache.tex -- hello.md hello.tex
 luatex document.tex
 ```````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A PDF document named `document.pdf` should be produced and contain the text
 “Hello *world*!” A frozen cache will also be produced in the `cache.tex`
@@ -3590,7 +3481,6 @@ the markdown document from “Hello *world*!” to “Hi *world*!” was not ref
 %  \begin{macrocode}
 defaultOptions.frozenCacheFileName = "frozenCache.tex"
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -3600,7 +3490,6 @@ defaultOptions.frozenCacheFileName = "frozenCache.tex"
 %### Parser Options
 %
 % \end{markdown}
-% \par
 % \iffalse
 
 #### Option `autoIdentifiers`
@@ -3647,7 +3536,6 @@ See also the option \Opt{gfmAutoIdentifiers}.
 %  \begin{macrocode}
 defaultOptions.autoIdentifiers = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -3735,15 +3623,10 @@ A paragraph.
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ -- content.md optionfalse.tex
-texlua ⟨CLI pathname⟩ blankBeforeBlockquote=true -- content.md optiontrue.tex
+markdown-cli -- content.md optionfalse.tex
+markdown-cli blankBeforeBlockquote=true -- content.md optiontrue.tex
 luatex document.tex
 ```````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -3871,7 +3754,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.blankBeforeBlockquote = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -3970,15 +3852,10 @@ A code fence?
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ fencedCode=true -- content.md optionfalse.tex
-texlua ⟨CLI pathname⟩ fencedCode=true blankBeforeCodeFence=true  -- content.md optiontrue.tex
+markdown-cli fencedCode=true -- content.md optionfalse.tex
+markdown-cli fencedCode=true blankBeforeCodeFence=true  -- content.md optiontrue.tex
 luatex document.tex
 ```````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -4128,7 +4005,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.blankBeforeCodeFence = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -4211,7 +4087,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.blankBeforeDivFence = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -4305,15 +4180,10 @@ A heading?
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ -- content.md optionfalse.tex
-texlua ⟨CLI pathname⟩ blankBeforeHeading=true  -- content.md optiontrue.tex
+markdown-cli -- content.md optionfalse.tex
+markdown-cli blankBeforeHeading=true  -- content.md optiontrue.tex
 luatex document.tex
 ```````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -4451,7 +4321,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.blankBeforeHeading = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -4541,15 +4410,10 @@ A paragraph.
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ -- content.md optionfalse.tex
-texlua ⟨CLI pathname⟩ blankBeforeList=true  -- content.md optiontrue.tex
+markdown-cli -- content.md optionfalse.tex
+markdown-cli blankBeforeList=true  -- content.md optiontrue.tex
 luatex document.tex
 ```````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -4677,7 +4541,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.blankBeforeList = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -4773,7 +4636,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.bracketedSpans = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -4863,15 +4725,10 @@ following content:
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ breakableBlockquotes=false -- content.md optionfalse.tex
-texlua ⟨CLI pathname⟩  -- content.md optiontrue.tex
+markdown-cli breakableBlockquotes=false -- content.md optionfalse.tex
+markdown-cli  -- content.md optiontrue.tex
 luatex document.tex
 ```````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -5007,7 +4864,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.breakableBlockquotes = true
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -5101,7 +4957,6 @@ following text, where the middot (`·`) denotes a non-breaking space:
 %  \begin{macrocode}
 defaultOptions.citationNbsps = true
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -5204,7 +5059,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.citations = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -5302,15 +5156,10 @@ following content:
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ codeSpans=false -- content.md optionfalse.tex
-texlua ⟨CLI pathname⟩ -- content.md optiontrue.tex
+markdown-cli codeSpans=false -- content.md optionfalse.tex
+markdown-cli -- content.md optiontrue.tex
 luatex document.tex
 ```````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -5430,7 +5279,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.codeSpans = true
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -5604,7 +5452,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.contentBlocks = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -5741,7 +5588,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.contentLevel = "block"
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -5896,7 +5742,6 @@ inserted to the grammar of markdown.
 %  \begin{macrocode}
 defaultOptions.debugExtensions = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -6035,7 +5880,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.definitionLists = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -6081,7 +5925,6 @@ defaultOptions.definitionLists = false
 %  \begin{macrocode}
 defaultOptions.ensureJekyllData = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -6205,7 +6048,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.expectJekyllData = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -6356,7 +6198,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.extensions = {}
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -6458,7 +6299,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.fancyLists = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -6625,7 +6465,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.fencedCode = true
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -6725,7 +6564,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.fencedCodeAttributes = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -6804,7 +6642,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.fencedDivs = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -6968,7 +6805,6 @@ the markdown document from “Hello *world*!” to “Hi *world*!” was not ref
 %  \begin{macrocode}
 defaultOptions.finalizeCache = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -7037,7 +6873,6 @@ requested using the `frozenCacheCounter` option.
 %  \begin{macrocode}
 defaultOptions.frozenCacheCounter = 0
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -7086,7 +6921,6 @@ See also the option \Opt{autoIdentifiers}.
 %  \begin{macrocode}
 defaultOptions.gfmAutoIdentifiers = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -7217,7 +7051,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.hashEnumerators = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -7266,7 +7099,6 @@ defaultOptions.hashEnumerators = false
 %  \begin{macrocode}
 defaultOptions.headerAttributes = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -7371,15 +7203,10 @@ _Is there <? HTML instruction ?> support?_
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ html=false -- content.md optionfalse.tex
-texlua ⟨CLI pathname⟩ -- content.md optiontrue.tex
+markdown-cli html=false -- content.md optionfalse.tex
+markdown-cli -- content.md optiontrue.tex
 luatex document.tex
 ```````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -7538,7 +7365,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.html = true
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -7685,15 +7511,10 @@ $\sqrt{-1}$ *equals* $i$.
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ -- content.md optionfalse.tex
-texlua ⟨CLI pathname⟩ hybrid=true -- content.md optiontrue.tex
+markdown-cli -- content.md optionfalse.tex
+markdown-cli hybrid=true -- content.md optiontrue.tex
 luatex document.tex
 ```````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -7816,7 +7637,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.hybrid = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -7912,7 +7732,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.inlineCodeAttributes = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -8013,7 +7832,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.inlineNotes = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -8180,7 +7998,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.jekyllData = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -8277,7 +8094,6 @@ image (from [Martin Scharrer's mwe package][mwe]) displayed at size 5cm × 4cm.
 %  \begin{macrocode}
 defaultOptions.linkAttributes = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -8412,7 +8228,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.lineBlocks = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -8483,7 +8298,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.mark = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -8646,7 +8460,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.notes = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -8755,7 +8568,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.pipeTables = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -8795,7 +8607,6 @@ defaultOptions.pipeTables = false
 %  \begin{macrocode}
 defaultOptions.preserveTabs = true
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -8890,7 +8701,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.rawAttribute = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -8979,7 +8789,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.relativeReferences = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -9119,7 +8928,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.shiftHeadings = 0
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -9337,7 +9145,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.slice = "^ $"
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -9423,15 +9230,10 @@ Are these just three regular dots, a victorian ellipsis, or ... ?
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ -- content.md optionfalse.tex
-texlua ⟨CLI pathname⟩ smartEllipses=true -- content.md optiontrue.tex
+markdown-cli -- content.md optionfalse.tex
+markdown-cli smartEllipses=true -- content.md optiontrue.tex
 luatex document.tex
 ```````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -9552,7 +9354,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.smartEllipses = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -9688,7 +9489,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.startNumber = true
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -9727,7 +9527,7 @@ following content:
 ``` tex
 \input markdown
 \def\markdownOptionStrikeThrough{true}
-\input soulutf8.sty
+\input soul.sty
 \def\markdownRendererStrikeThrough#1{\st{#1}}
 \markdownBegin
 This is ~~a lunar roving vehicle~~ strike-through text.
@@ -9750,7 +9550,7 @@ following content:
 ``` tex
 \documentclass{article}
 \usepackage[strikeThrough]{markdown}
-\usepackage{soulutf8}
+\usepackage{soul}
 \markdownSetup{
   renderers = {
     strikeThrough = {\st{#1}},
@@ -9810,7 +9610,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.strikeThrough = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -9923,7 +9722,6 @@ text “Hello *world*!”
 %  \begin{macrocode}
 defaultOptions.stripIndent = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -10015,7 +9813,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.subscripts = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -10107,7 +9904,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.superscripts = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -10232,7 +10028,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.tableAttributes = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -10362,7 +10157,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.tableCaptions = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -10475,7 +10269,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.taskLists = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -10591,7 +10384,6 @@ text “Hello *world*!”
 %  \begin{macrocode}
 defaultOptions.texComments = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -10682,15 +10474,10 @@ $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ -- content.md optionfalse.tex
-texlua ⟨CLI pathname⟩ texMathDollars=true -- content.md optiontrue.tex
+markdown-cli -- content.md optionfalse.tex
+markdown-cli texMathDollars=true -- content.md optiontrue.tex
 luatex document.tex
 ```````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -10802,7 +10589,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.texMathDollars = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -10893,15 +10679,10 @@ following content:
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ -- content.md optionfalse.tex
-texlua ⟨CLI pathname⟩ texMathDoubleBackslash=true -- content.md optiontrue.tex
+markdown-cli -- content.md optionfalse.tex
+markdown-cli texMathDoubleBackslash=true -- content.md optiontrue.tex
 luatex document.tex
 ```````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -11013,7 +10794,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.texMathDoubleBackslash = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -11104,15 +10884,10 @@ following content:
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-texlua ⟨CLI pathname⟩ -- content.md optionfalse.tex
-texlua ⟨CLI pathname⟩ texMathSingleBackslash=true -- content.md optiontrue.tex
+markdown-cli -- content.md optionfalse.tex
+markdown-cli texMathSingleBackslash=true -- content.md optiontrue.tex
 luatex document.tex
 ```````
-where \meta{CLI pathname} corresponds to the location of the Lua CLI script file,
-such as `~/texmf/scripts/markdown/markdown-cli.lua` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf\scripts\markdown\markdown-cli.lua` on Windows
-systems. Use the command `kpsewhich -a markdown-cli.lua` to locate the Lua CLI
-script file using [Kpathsea][].
 
 A PDF document named `document.pdf` should be produced and contain the
 following text:
@@ -11224,7 +10999,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.texMathSingleBackslash = false
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -11345,7 +11119,6 @@ following text:
 %  \begin{macrocode}
 defaultOptions.tightLists = true
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
@@ -11493,7 +11266,6 @@ defaultOptions.underscores = true
 %</lua,lua-cli,lua-loader>
 %<*lua-cli>
 % \fi
-% \par
 % \begin{markdown}
 %
 %### Command-Line Interface {#lua-cli-interface}
@@ -11723,7 +11495,6 @@ for i = 1, #arg do
   ::continue::
 end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The command-line Lua interface is implemented by the `markdown-cli.lua`
@@ -11743,7 +11514,6 @@ end
 %</lua-cli>
 %<*tex>
 % \fi
-% \par
 % \begin{markdown}
 %
 % Plain \TeX{} Interface {#texinterface}
@@ -11816,7 +11586,6 @@ pdftex --shell-escape document.tex
 \def\markdownLastModified{(((LASTMODIFIED)))}%
 \def\markdownVersion{(((VERSION)))}%
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The plain \TeX{} interface is implemented by the `markdown.tex` file that can
@@ -11843,7 +11612,6 @@ pdftex --shell-escape document.tex
 \let\markdownBegin\relax
 \let\markdownEnd\relax
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % You may prepend your own code to the \mref{markdownBegin} macro and redefine the
@@ -11899,7 +11667,6 @@ pdftex --shell-escape document.tex
 \let\yamlBegin\relax
 \def\yamlEnd{\markdownEnd\endgroup}
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The \mref{yamlBegin} and \mref{yamlEnd} macros are subject to the same
@@ -11935,7 +11702,6 @@ pdftex --shell-escape document.tex
 %  \begin{macrocode}
 \let\markinline\relax
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The following example plain \TeX{} code showcases the usage of the
@@ -11973,7 +11739,6 @@ pdftex --shell-escape document.tex
 %  \begin{macrocode}
 \let\markdownInput\relax
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The macro \mref{markdownInput} is not subject to the limitations of the
@@ -12003,7 +11768,6 @@ pdftex --shell-escape document.tex
   \endgroup
 }%
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The macro \mref{yamlInput} is also not subject to the limitations of the
@@ -12039,7 +11803,6 @@ pdftex --shell-escape document.tex
 %  \begin{macrocode}
 \let\markdownEscape\relax
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %### Options {#tex-options}
@@ -12125,7 +11888,6 @@ following code in your plain \TeX{} document:
 %</manual-options>
 %<*tex>
 % \fi
-% \par
 % \begin{markdown}
 %
 % The plain \TeX{} options may be also be specified via the \mdef{markdownSetup}
@@ -12176,7 +11938,6 @@ you would include the following code in your plain \TeX{} document:
 %</manual-options>
 %<*tex>
 % \fi
-% \par
 % \begin{markdown}
 %
 % The
@@ -12311,7 +12072,6 @@ For more information, see the examples for the \Opt{finalizeCache} option.
   { path }
   { \jobname.markdown.in }
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The \mdef{markdownOptionOutputDir} macro sets the path to the directory that
@@ -12327,9 +12087,7 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 % \Opt{inputTempFileName} macro.
 %
 % The \mref{markdownOptionOutputDir} macro has been deprecated and will be
-% removed in the next major version of the Markdown package. <!-- After the
-% macro has been removed, we should remove support for TeX Live 2023 and
-% earlier, where the automatic detection does not work. -->
+% removed in the next major version of the Markdown package.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -12914,7 +12672,10 @@ A PDF document named `document.pdf` should be produced and contain the text
 % \fi
 % \begin{markdown}
 
-### Themes {#themes}
+%### Themes {#themes}
+% \iffalse
+#### Themes {#themes}
+% \fi
 
 User-defined themes for the Markdown package provide a domain-specific
 interpretation of Markdown tokens. Themes allow the authors to achieve
@@ -13170,16 +12931,208 @@ a specific look and other high-level goals without low-level programming.
 \cs_generate_variant:Nn
   \cs_gset:Npn
   { Npe }
-\ExplSyntaxOff
+%    \end{macrocode}
+% \begin{markdown}
+%
+% We also define the prop \mdef{g_@@_plain_tex_built_in_themes_prop} that
+% contains the code of built-in themes. This is a packaging optimization,
+% so that built-in themes does not need to be distributed in many small files.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\prop_new:N
+  \g_@@_plain_tex_built_in_themes_prop
 %    \end{macrocode}
 % \iffalse
 %</tex>
 %<*manual-options>
 % \fi
-% \par
-% \begin{markdown}
+% \markdownBegin
 
 Built-in plain \TeX{} themes provided with the Markdown package include:
+
+\pkg{witiko/dot}
+
+:    A theme that typesets fenced code blocks with the `dot …` infostring
+     as images of directed graphs rendered by the Graphviz tools. The
+     right tail of the infostring is used as the image title.
+%    ```` tex
+%    \documentclass{article}
+%    \usepackage[import=witiko/dot]{markdown}
+%    \setkeys{Gin}{
+%      width = \columnwidth,
+%      height = 0.65\paperheight,
+%      keepaspectratio}
+%    \begin{document}
+%    \begin{markdown}
+%    ``` dot Various formats of mathemathical formulae
+%    digraph tree {
+%      margin = 0;
+%      rankdir = "LR";
+%
+%      latex -> pmml;
+%      latex -> cmml;
+%      pmml -> slt;
+%      cmml -> opt;
+%      cmml -> prefix;
+%      cmml -> infix;
+%      pmml -> mterms [style=dashed];
+%      cmml -> mterms;
+%
+%      latex [label = "LaTeX"];
+%      pmml [label = "Presentation MathML"];
+%      cmml [label = "Content MathML"];
+%      slt [label = "Symbol Layout Tree"];
+%      opt [label = "Operator Tree"];
+%      prefix [label = "Prefix"];
+%      infix [label = "Infix"];
+%      mterms [label = "M-Terms"];
+%    }
+%    ```
+%    \end{markdown}
+%    \end{document}
+%    ````````
+%    Typesetting the above document produces the output shown in
+%    Figure <#fig:witiko/dot>.
+%    ``` dot Various formats of mathemathical formulae \label{fig:witiko/dot}
+%    digraph tree {
+%      margin = 0;
+%      rankdir = "LR";
+%
+%      latex -> pmml;
+%      latex -> cmml;
+%      pmml -> slt;
+%      cmml -> opt;
+%      cmml -> prefix;
+%      cmml -> infix;
+%      pmml -> mterms [style=dashed];
+%      cmml -> mterms;
+%
+%      latex [label = "LaTeX"];
+%      pmml [label = "Presentation MathML"];
+%      cmml [label = "Content MathML"];
+%      slt [label = "Symbol Layout Tree"];
+%      opt [label = "Operator Tree"];
+%      prefix [label = "Prefix"];
+%      infix [label = "Infix"];
+%      mterms [label = "M-Terms"];
+%    }
+%    ```
+     The theme requires a Unix-like operating system with GNU Diffutils and
+     Graphviz installed. The theme also requires shell access unless the
+     \Opt{frozenCache} plain \TeX{} option is enabled.
+
+% \markdownEnd
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+```` tex
+\documentclass{article}
+\usepackage[import=witiko/dot]{markdown}
+\setkeys{Gin}{
+  width=\columnwidth,
+  height=0.65\paperheight,
+  keepaspectratio}
+\begin{document}
+\begin{markdown}
+``` dot Various formats of mathemathical formulae
+digraph tree {
+  margin = 0;
+  rankdir = "LR";
+
+  latex -> pmml;
+  latex -> cmml;
+  pmml -> slt;
+  cmml -> opt;
+  cmml -> prefix;
+  cmml -> infix;
+  pmml -> mterms [style=dashed];
+  cmml -> mterms;
+
+  latex [label = "LaTeX"];
+  pmml [label = "Presentation MathML"];
+  cmml [label = "Content MathML"];
+  slt [label = "Symbol Layout Tree"];
+  opt [label = "Operator Tree"];
+  prefix [label = "Prefix"];
+  infix [label = "Infix"];
+  mterms [label = "M-Terms"];
+}
+```
+\end{markdown}
+\end{document}
+````````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex --shell-escape document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain
+a drawing of a directed graph similar to Figure 1 from the following
+conference article:
+
+> NOVOTNÝ, Vít, Petr SOJKA, Michal ŠTEFÁNIK and Dávid LUPTÁK. Three is Better
+> than One: Ensembling Math Information Retrieval Systems. *CEUR Workshop
+> Proceedings*. Thessaloniki, Greece: M. Jeusfeld c/o Redaktion Sun SITE,
+> Informatik V, RWTH Aachen., 2020, vol. 2020, No 2696, p. 1-30. ISSN 1613-0073.
+> <http://ceur-ws.org/Vol-2696/paper_235.pdf>
+
+% \fi
+% \markdownBegin
+
+\pkg{witiko/graphicx/http}
+
+:    A theme that adds support for downloading images whose URL has the
+     http or https protocol.
+%    ``` tex
+%    \documentclass{article}
+%    \usepackage[import=witiko/graphicx/http]{markdown}
+%    \begin{document}
+%    \begin{markdown}
+%    ![img](https://github.com/witiko/markdown/raw/main/markdown.png
+%           "The banner of the Markdown package")
+%    \end{markdown}
+%    \end{document}
+%    ```````
+%    Typesetting the above document produces the output shown in
+%    Figure <#fig:witiko/graphicx/http>.
+%    ![img](https://github.com/witiko/markdown/raw/main/markdown.png
+%           "The banner of the Markdown package \label{fig:witiko/graphicx/http}")
+     The theme requires the \pkg{catchfile} \LaTeX{} package and a Unix-like
+     operating system with GNU Coreutils `md5sum` and either GNU Wget or cURL
+     installed. The theme also requires shell access unless the
+     \Opt{frozenCache} plain \TeX{} option is enabled.
+
+% \markdownEnd
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[import=witiko/graphicx/http, link_attributes]{markdown}
+\begin{document}
+\begin{markdown}
+![img](https://github.com/witiko/markdown/raw/main/markdown.png
+       "The banner of the Markdown package"){width=5in}
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex --shell-escape document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following image:
+
+> ![Figure 1: The banner of the Markdown package](https://github.com/witiko/markdown/raw/main/markdown.png)
+
+% \fi
+% \begin{markdown}
 
 \pkg{witiko/tilde}
 
@@ -13221,7 +13174,6 @@ following text, where the middot (`·`) denotes a non-breaking space:
 > Bartel·Leendert van·der·Waerden
 
 % \fi
-% \par
 % \begin{markdown}
 
 \pkg{witiko/markdown/defaults}
@@ -13232,8 +13184,11 @@ following text, where the middot (`·`) denotes a non-breaking space:
 
 % Please, see Section <#sec:themes-implementation> for implementation
 % details of the built-in plain \TeX{} themes.
-
-### Snippets {#snippets}
+%
+%### Snippets {#snippets}
+% \iffalse
+#### Snippets {#snippets}
+% \fi
 
 % \end{markdown}
 % \iffalse
@@ -13246,7 +13201,6 @@ options locally.
 %</manual-options>
 %<*tex>
 % \fi
-% \par
 % \begin{markdown}
 %
 % We may set up options as *snippets* using the
@@ -13256,7 +13210,6 @@ options locally.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\ExplSyntaxOn
 \prop_new:N
   \g_@@_snippets_prop
 \cs_new:Nn
@@ -13379,7 +13332,6 @@ options locally.
 %</tex>
 %<*manual-options>
 % \fi
-% \par
 % \markdownBegin
 
 Here is how we can use snippets to store options and invoke them later
@@ -13636,7 +13588,6 @@ In this section, I will describe the individual token renderers.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\ExplSyntaxOn
 \seq_new:N \g_@@_renderers_seq
 %    \end{macrocode}
 % \begin{markdown}
@@ -13649,7 +13600,6 @@ In this section, I will describe the individual token renderers.
 \prop_new:N \g_@@_renderer_arities_prop
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -13789,7 +13739,6 @@ following text:
   { 2 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -13825,7 +13774,6 @@ a block quote. The macro receives no arguments.
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -13973,7 +13921,6 @@ following text:
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -14057,7 +14004,6 @@ following text:
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -14094,7 +14040,6 @@ list is not tight). The macro receives no arguments.
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -14131,7 +14076,6 @@ is disabled. The macro receives no arguments.
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -14166,7 +14110,6 @@ list. The macro receives no arguments.
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -14201,7 +14144,6 @@ bulleted list. The macro receives no arguments.
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -14237,7 +14179,6 @@ tight). The macro receives no arguments.
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -14476,7 +14417,6 @@ following text:
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -14576,7 +14516,6 @@ following text:
   { 1 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -14670,7 +14609,6 @@ following text:
   { 1 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -14707,7 +14645,6 @@ filename of a file containing the code block contents.
   { 1 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -14828,7 +14765,6 @@ following text except for the filename, which may differ:
   { 3 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -14981,7 +14917,6 @@ following text:
   { 1 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -15066,7 +15001,6 @@ following text:
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -15106,7 +15040,6 @@ and the title of the content block.
   { 4 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -15142,7 +15075,6 @@ as \mref{markdownRendererContentBlock}.
   { 4 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -15340,7 +15272,6 @@ following text:
   { 5 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -15380,7 +15311,6 @@ list is not tight). The macro receives no arguments.
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -15417,7 +15347,6 @@ list is tight). This macro will only be produced, when the
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -15453,7 +15382,6 @@ being defined.
   { 1 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -15488,7 +15416,6 @@ definitions for a single term.
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -15524,7 +15451,6 @@ a single term.
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -15560,7 +15486,6 @@ single term.
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -15596,7 +15521,6 @@ tight). The macro receives no arguments.
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -15968,7 +15892,6 @@ following text:
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -16082,7 +16005,6 @@ following text:
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -16119,7 +16041,6 @@ span of text.
   { 1 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -16241,7 +16162,6 @@ following text:
   { 1 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -16344,7 +16264,6 @@ following text:
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -16468,7 +16387,6 @@ following text:
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -16575,7 +16493,6 @@ following text:
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -16611,7 +16528,6 @@ The macro receives a single argument that corresponds to the heading text.
   { 1 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -16647,7 +16563,6 @@ text.
   { 1 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -16683,7 +16598,6 @@ text.
   { 1 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -16719,7 +16633,6 @@ text.
   { 1 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -16755,7 +16668,6 @@ text.
   { 1 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -16892,7 +16804,6 @@ following text:
   { 1 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -16968,7 +16879,6 @@ The horizontal margins should contain the following text:
   { 1 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -17060,7 +16970,6 @@ following body text:
   { 1 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -17153,7 +17062,6 @@ that the \TeX{} engine has shell access.
   { 4 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -17238,7 +17146,6 @@ following text:
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -17376,7 +17283,6 @@ following text:
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -17454,7 +17360,6 @@ following text:
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -17589,7 +17494,6 @@ following text:
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -17700,7 +17604,6 @@ following text:
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -17811,7 +17714,6 @@ following text:
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -17938,7 +17840,6 @@ following text:
   { 4 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -18023,7 +17924,6 @@ following text:
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -18093,7 +17993,6 @@ following text:
   { 1 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -18250,7 +18149,6 @@ following text:
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -18338,7 +18236,6 @@ following text:
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -18459,7 +18356,6 @@ following text:
   { 1 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -18497,7 +18393,6 @@ option is disabled. The macro receives no arguments.
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -18535,7 +18430,6 @@ receives no arguments.
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -18575,7 +18469,6 @@ and the style of delimiters between list item labels and texts (`Default`,
   { 2 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -18615,7 +18508,6 @@ the valid style values.
   { 2 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -18652,7 +18544,6 @@ arguments.
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -18688,7 +18579,6 @@ option is disabled. The macro receives no arguments.
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -18725,7 +18615,6 @@ receives a single numeric argument that corresponds to the item number.
   { 1 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -18762,7 +18651,6 @@ no arguments.
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -18798,7 +18686,6 @@ option is enabled. The macro receives no arguments.
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -18835,7 +18722,6 @@ argument that corresponds to the item number.
   { 1 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -18872,7 +18758,6 @@ disabled. The macro receives no arguments.
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -18910,7 +18795,6 @@ arguments.
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -18947,7 +18831,6 @@ option is enabled. The macro receives no arguments.
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -19241,7 +19124,6 @@ following text:
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -19280,7 +19162,6 @@ option is enabled.
   { 2 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -19365,7 +19246,6 @@ following text:
   { 2 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -19413,7 +19293,6 @@ macros represent the beginning and the end of a section based on headings.
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -19449,7 +19328,6 @@ and U+FFFD Unicode characters. The macro receives no arguments.
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -19697,7 +19575,6 @@ following text, where the middot (`·`) denotes a non-breaking space:
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -19723,7 +19600,7 @@ following content:
 ``` tex
 \input markdown
 \def\markdownOptionStrikeThrough{true}
-\input soulutf8.sty
+\input soul.sty
 \def\markdownRendererStrikeThrough#1{\st{#1}}
 \markdownBegin
 This is ~~a lunar roving vehicle~~ strike-through text.
@@ -19746,7 +19623,7 @@ following content:
 ``` tex
 \documentclass{article}
 \usepackage[strikeThrough]{markdown}
-\usepackage{soulutf8}
+\usepackage{soul}
 \markdownSetup{
   renderers = {
     strikeThrough = {\st{#1}},
@@ -19810,7 +19687,6 @@ following text:
   { 1 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -19920,7 +19796,6 @@ following text:
   { subscript }
   { 1 }
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -20016,7 +19891,6 @@ following text:
 % \fi
 %
 %  \begin{macrocode}
-\ExplSyntaxOn
 \cs_gset_protected:Npn
   \markdownRendererSuperscript
   {
@@ -20031,7 +19905,6 @@ following text:
   { 1 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -20155,7 +20028,6 @@ following text:
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -20285,7 +20157,6 @@ following text:
   { 3 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -20421,7 +20292,6 @@ following text:
   { 1 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -20551,7 +20421,6 @@ following text:
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -20672,7 +20541,6 @@ following text:
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -20731,7 +20599,6 @@ receive four parameters:
   { 4 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -20769,7 +20636,6 @@ option is enabled. The macro receives no arguments.
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -20805,7 +20671,6 @@ The \mdef{markdownRendererJekyllDataEnd} macro represents the end of a
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -20843,7 +20708,6 @@ arguments: the scalar key in the parent structure, cast to a string following
   { 2 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -20879,7 +20743,6 @@ when the \Opt{jekyllData} option is enabled. The macro receives no arguments.
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -20917,7 +20780,6 @@ arguments: the scalar key in the parent structure, cast to a string following
   { 2 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -20953,7 +20815,6 @@ when the \Opt{jekyllData} option is enabled. The macro receives no arguments.
   { 0 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -20991,7 +20852,6 @@ following \acro{yaml} serialization rules.
   { 2 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -21029,7 +20889,6 @@ following \acro{yaml} serialization rules.
   { 2 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -21091,7 +20950,6 @@ for identifiers and other programmatic text that won't be typeset by \TeX{}.
   { 2 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -21177,7 +21035,6 @@ removed in Markdown 4.0.0.
   { 2 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -21219,7 +21076,6 @@ serialization rules.
   { 1 }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 %
 % \iffalse
 %</tex>
@@ -21425,7 +21281,6 @@ following text:
         },
       }
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % If the token renderer macro has been deprecated, we undefine it.
@@ -21444,7 +21299,6 @@ following text:
       }
   }
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % We define the function \mdef{@@_tl_set_from_cs:NNn}
@@ -21517,7 +21371,6 @@ following text:
     },
   }
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The following example code showcases a possible configuration of the
@@ -21546,7 +21399,6 @@ following text:
   {
     unknown .code:n = {
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Besides defining renderers at once, we can also define them incrementally
@@ -21608,7 +21460,6 @@ following text:
             \g_@@_appending_renderer_bool
         }
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % In addition to exact token renderer names, we also support wildcards (`*`)
@@ -21748,11 +21599,6 @@ following text:
           \l_tmpa_clist
       }
   }
-% TODO: Remove in TeX Live 2023.
-\prg_generate_conditional_variant:Nnn
-  \prop_get:NnN
-  { NeN }
-  { TF }
 \cs_generate_variant:Nn
   \regex_set:Nn
   { NV }
@@ -22195,7 +22041,6 @@ following text:
         },
       }
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Unless the token renderer prototype macro has already been defined or unless,
@@ -22225,7 +22070,6 @@ following text:
   \@@_define_renderer_prototype:nNn
   { ncV }
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The following example code showcases a possible configuration of the
@@ -22247,7 +22091,6 @@ following text:
   {
     unknown .code:n = {
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Besides defining renderer prototypes at once, we can also define them
@@ -22309,7 +22152,6 @@ following text:
             \g_@@_appending_renderer_prototype_bool
         }
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % In addition to exact token renderer prototype names, we also support
@@ -22461,7 +22303,6 @@ following text:
 %  \begin{macrocode}
 \let\markdownMakeOther\relax
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The \mdef{markdownReadAndConvert} macro implements the \mref{markdownBegin}
@@ -22520,7 +22361,6 @@ following text:
 % \iffalse
 %</tex>
 % \fi
-% \par
 % \begin{markdown}
 %
 % \LaTeX{} Interface {#latexinterface}
@@ -22632,7 +22472,6 @@ pdflatex --shell-escape document.tex
 % \Hologo{LaTeX2e} parses package options.
 %
 % \end{markdown}
-% \par
 % \begin{markdown}
 %
 %### Typesetting Markdown
@@ -23010,7 +22849,6 @@ document:
   }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The following example \LaTeX{} code showcases a possible configuration of
@@ -23031,7 +22869,10 @@ document:
 % \fi
 % \begin{markdown}
 
-### Themes {#latexthemes}
+%### Themes {#latexthemes}
+% \iffalse
+#### Themes {#latexthemes}
+% \fi
 
 % In Section~\ref{sec:themes}, we described the concept of themes.
 In \LaTeX{}, we expand on the concept of
@@ -23069,7 +22910,6 @@ For example, to load themes named `witiko/beamer/MU` and `witiko/dot`, you
 would use the following code in the preamble of your document:
 
 % \fi
-% \par
 % \begin{markdown}
 
 ``` tex
@@ -23092,220 +22932,33 @@ would use the following code in the preamble of your document:
 %</latex>
 %<*manual-options>
 % \fi
-% \par
 % \begin{markdown}
 
 Due to limitations of \LaTeX{}, themes may not be loaded after the
 beginning of a \LaTeX{} document.
 
+% We also define the prop \mdef{g_@@_latex_built_in_themes_prop} that
+% contains the code of built-in themes. This is a packaging optimization,
+% so that built-in themes does not need to be distributed in many small files.
+%
 % \end{markdown}
-% \par
-% \markdownBegin
+% \iffalse
+%</manual-options>
+%<*latex>
+% \fi
+%  \begin{macrocode}
+\ExplSyntaxOn
+\prop_new:N
+  \g_@@_latex_built_in_themes_prop
+\ExplSyntaxOff
+%    \end{macrocode}
+% \iffalse
+%</latex>
+%<*manual-options>
+% \fi
+% \begin{markdown}
 
 Built-in \LaTeX{} themes provided with the Markdown package include:
-
-\pkg{witiko/dot}
-
-:    A theme that typesets fenced code blocks with the `dot …` infostring
-     as images of directed graphs rendered by the Graphviz tools. The
-     right tail of the infostring is used as the image title.
-%    ```` tex
-%    \documentclass{article}
-%    \usepackage[import=witiko/dot]{markdown}
-%    \setkeys{Gin}{
-%      width = \columnwidth,
-%      height = 0.65\paperheight,
-%      keepaspectratio}
-%    \begin{document}
-%    \begin{markdown}
-%    ``` dot Various formats of mathemathical formulae
-%    digraph tree {
-%      margin = 0;
-%      rankdir = "LR";
-%
-%      latex -> pmml;
-%      latex -> cmml;
-%      pmml -> slt;
-%      cmml -> opt;
-%      cmml -> prefix;
-%      cmml -> infix;
-%      pmml -> mterms [style=dashed];
-%      cmml -> mterms;
-%
-%      latex [label = "LaTeX"];
-%      pmml [label = "Presentation MathML"];
-%      cmml [label = "Content MathML"];
-%      slt [label = "Symbol Layout Tree"];
-%      opt [label = "Operator Tree"];
-%      prefix [label = "Prefix"];
-%      infix [label = "Infix"];
-%      mterms [label = "M-Terms"];
-%    }
-%    ```
-%    \end{markdown}
-%    \end{document}
-%    ````````
-%    Typesetting the above document produces the output shown in
-%    Figure <#fig:witiko/dot>.
-%    ``` dot Various formats of mathemathical formulae \label{fig:witiko/dot}
-%    digraph tree {
-%      margin = 0;
-%      rankdir = "LR";
-%
-%      latex -> pmml;
-%      latex -> cmml;
-%      pmml -> slt;
-%      cmml -> opt;
-%      cmml -> prefix;
-%      cmml -> infix;
-%      pmml -> mterms [style=dashed];
-%      cmml -> mterms;
-%
-%      latex [label = "LaTeX"];
-%      pmml [label = "Presentation MathML"];
-%      cmml [label = "Content MathML"];
-%      slt [label = "Symbol Layout Tree"];
-%      opt [label = "Operator Tree"];
-%      prefix [label = "Prefix"];
-%      infix [label = "Infix"];
-%      mterms [label = "M-Terms"];
-%    }
-%    ```
-     The theme requires a Unix-like operating system with GNU Diffutils and
-     Graphviz installed. The theme also requires shell access unless the
-     \Opt{frozenCache} plain \TeX{} option is enabled.
-
-% \markdownEnd
-% \iffalse
-
-##### \LaTeX{} Example {.unnumbered}
-
-Using a text editor, create a text document named `document.tex` with the
-following content:
-```` tex
-\documentclass{article}
-\usepackage[import=witiko/dot]{markdown}
-\setkeys{Gin}{
-  width=\columnwidth,
-  height=0.65\paperheight,
-  keepaspectratio}
-\begin{document}
-\begin{markdown}
-``` dot Various formats of mathemathical formulae
-digraph tree {
-  margin = 0;
-  rankdir = "LR";
-
-  latex -> pmml;
-  latex -> cmml;
-  pmml -> slt;
-  cmml -> opt;
-  cmml -> prefix;
-  cmml -> infix;
-  pmml -> mterms [style=dashed];
-  cmml -> mterms;
-
-  latex [label = "LaTeX"];
-  pmml [label = "Presentation MathML"];
-  cmml [label = "Content MathML"];
-  slt [label = "Symbol Layout Tree"];
-  opt [label = "Operator Tree"];
-  prefix [label = "Prefix"];
-  infix [label = "Infix"];
-  mterms [label = "M-Terms"];
-}
-```
-\end{markdown}
-\end{document}
-````````
-Next, invoke LuaTeX from the terminal:
-``` sh
-lualatex document.tex
-``````
-A PDF document named `document.pdf` should be produced and contain
-a drawing of a directed graph similar to Figure 1 from the following
-conference article:
-
-> NOVOTNÝ, Vít, Petr SOJKA, Michal ŠTEFÁNIK and Dávid LUPTÁK. Three is Better
-> than One: Ensembling Math Information Retrieval Systems. *CEUR Workshop
-> Proceedings*. Thessaloniki, Greece: M. Jeusfeld c/o Redaktion Sun SITE,
-> Informatik V, RWTH Aachen., 2020, vol. 2020, No 2696, p. 1-30. ISSN 1613-0073.
-> <http://ceur-ws.org/Vol-2696/paper_235.pdf>
-
-%</manual-options>
-%<*themes-witiko-dot>
-% \fi
-%  \begin{macrocode}
-\ProvidesPackage{markdownthemewitiko_dot}[2021/03/09]%
-%    \end{macrocode}
-% \iffalse
-%</themes-witiko-dot>
-%<*manual-options>
-% \fi
-% \par
-% \markdownBegin
-
-\pkg{witiko/graphicx/http}
-
-:    A theme that adds support for downloading images whose URL has the
-     http or https protocol.
-%    ``` tex
-%    \documentclass{article}
-%    \usepackage[import=witiko/graphicx/http]{markdown}
-%    \begin{document}
-%    \begin{markdown}
-%    ![img](https://github.com/witiko/markdown/raw/main/markdown.png
-%           "The banner of the Markdown package")
-%    \end{markdown}
-%    \end{document}
-%    ```````
-%    Typesetting the above document produces the output shown in
-%    Figure <#fig:witiko/graphicx/http>.
-%    ![img](https://github.com/witiko/markdown/raw/main/markdown.png
-%           "The banner of the Markdown package \label{fig:witiko/graphicx/http}")
-     The theme requires the \pkg{catchfile} \LaTeX{} package and a Unix-like
-     operating system with GNU Coreutils `md5sum` and either GNU Wget or cURL
-     installed. The theme also requires shell access unless the
-     \Opt{frozenCache} plain \TeX{} option is enabled.
-
-% \markdownEnd
-% \iffalse
-
-##### \LaTeX{} Example {.unnumbered}
-
-Using a text editor, create a text document named `document.tex` with the
-following content:
-``` tex
-\documentclass{article}
-\usepackage[import=witiko/graphicx/http]{markdown}
-\begin{document}
-\begin{markdown}
-![img](https://github.com/witiko/markdown/raw/main/markdown.png
-       "The banner of the Markdown package")
-\end{markdown}
-\end{document}
-```````
-Next, invoke LuaTeX from the terminal:
-``` sh
-lualatex document.tex
-``````
-A PDF document named `document.pdf` should be produced and contain the
-following image:
-
-> ![img](https://github.com/witiko/markdown/raw/main/markdown.png "The banner of the Markdown package")
-
-%</manual-options>
-%<*themes-witiko-graphicx-http>
-% \fi
-%  \begin{macrocode}
-\ProvidesPackage{markdownthemewitiko_graphicx_http}[2021/03/22]%
-%    \end{macrocode}
-% \iffalse
-%</themes-witiko-graphicx-http>
-%<*manual-options>
-% \fi
-% \par
-% \begin{markdown}
 
 \pkg{witiko/markdown/defaults}
 
@@ -23319,9 +22972,7 @@ following image:
 %<*latex>
 % \fi
 %  \begin{macrocode}
-\AtEndOfPackage{
-  \markdownLaTeXLoadedtrue
-}
+\AtEndOfPackage{\markdownLaTeXLoadedtrue}
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -23361,16 +23012,8 @@ following image:
 %    \end{macrocode}
 % \iffalse
 %</latex>
-%<*themes-witiko-markdown-defaults-latex>
-% \fi
-%  \begin{macrocode}
-\ProvidesPackage{markdownthemewitiko_markdown_defaults}[2024/10/29]%
-%    \end{macrocode}
-% \iffalse
-%</themes-witiko-markdown-defaults-latex>
 %<*context>
 % \fi
-% \par
 % \begin{markdown}
 %
 % Please, see Section <#sec:latex-themes-implementation> for implementation
@@ -23466,7 +23109,6 @@ following text:
   \do\#\do\^\do\_\do\%\do\~}%
 \input markdown/markdown
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The \Hologo{ConTeXt} interface is implemented by the
@@ -23494,7 +23136,6 @@ following text:
 \let\startmarkdown\relax
 \let\stopmarkdown\relax
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % You may prepend your own code to the \mref{startmarkdown} macro and redefine the
@@ -23524,7 +23165,6 @@ following text:
 \let\startyaml\relax
 \let\stopyaml\relax
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % You may prepend your own code to the \mref{startyaml} macro and append your
@@ -23569,7 +23209,6 @@ following text:
 %  \begin{macrocode}
 \let\inputmarkdown\relax
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Furthermore, the \mref{inputmarkdown} macro also accepts \Hologo{ConTeXt}
@@ -23603,7 +23242,6 @@ following text:
 %  \begin{macrocode}
 \let\inputyaml\relax
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Furthermore, the \mref{inputyaml} macro also accepts \Hologo{ConTeXt}
@@ -23708,16 +23346,19 @@ following text:
     \@@_define_renderers:
     \@@_define_renderer_prototypes:
   }
-\ExplSyntaxOff
 %    \end{macrocode}
 % \iffalse
 %</context>
 %<*manual-options>
 % \fi
 % \begin{markdown}
-
-### Themes
-
+%
+%### Themes {#contextthemes}
+% \iffalse
+### \Hologo{ConTeXt}
+#### Themes {#contextthemes}
+% \fi
+%
 % In Section~\ref{sec:themes}, we described the concept of themes.
 In \Hologo{ConTeXt}, we expand on the concept of
 % themes\iffalse
@@ -23744,6 +23385,26 @@ For example, to load a theme named `witiko/tilde` in your document:
 \usemodule[t][markdown]
 \setupmarkdown[import=witiko/tilde]
 ```````
+
+% We also define the prop \mdef{g_@@_context_built_in_themes_prop} that
+% contains the code of built-in themes. This is a packaging optimization,
+% so that built-in themes does not need to be distributed in many small files.
+%
+% \end{markdown}
+% \iffalse
+%</manual-options>
+%<*context>
+% \fi
+%  \begin{macrocode}
+\prop_new:N
+  \g_@@_context_built_in_themes_prop
+\ExplSyntaxOff
+%    \end{macrocode}
+% \iffalse
+%</context>
+%<*manual-options>
+% \fi
+% \begin{markdown}
 
 Built-in \Hologo{ConTeXt} themes provided with the Markdown package include:
 
@@ -23814,7 +23475,6 @@ local P, R, S, V, C, Cg, Cb, Cmt, Cc, Ct, B, Cs, Cp, any =
   lpeg.P, lpeg.R, lpeg.S, lpeg.V, lpeg.C, lpeg.Cg, lpeg.Cb,
   lpeg.Cmt, lpeg.Cc, lpeg.Ct, lpeg.B, lpeg.Cs, lpeg.Cp, lpeg.P(1)
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %### Utility Functions
@@ -23835,7 +23495,6 @@ local util = {}
 %</lua,lua-loader>
 %<*lua>
 % \fi
-% \par
 % \begin{markdown}
 %
 % The \luamdef{util.err} method prints an error message `msg` and exits.
@@ -23853,7 +23512,6 @@ end
 %</lua>
 %<*lua,lua-loader>
 % \fi
-% \par
 % \begin{markdown}
 %
 % The \luamdef{util.cache} method used `dir`, `string`, `salt`, and `suffix`
@@ -23884,7 +23542,6 @@ end
 %</lua,lua-loader>
 %<*lua>
 % \fi
-% \par
 % \begin{markdown}
 %
 % The \luamdef{util.cache_verbatim} method strips whitespaces from the
@@ -23898,7 +23555,6 @@ function util.cache_verbatim(dir, string)
   return name
 end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The \luamdef{util.table_copy} method creates a shallow copy of a table `t`
@@ -23912,7 +23568,6 @@ function util.table_copy(t)
   return setmetatable(u, getmetatable(t))
 end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The \luamdef{util.encode_json_string} method encodes a string `s` in
@@ -23926,7 +23581,6 @@ function util.encode_json_string(s)
   return [["]] .. s .. [["]]
 end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The \luamdef{util.expand_tabs_in_line} expands tabs in string `s`. If
@@ -23946,7 +23600,6 @@ function util.expand_tabs_in_line(s, tabstop)
           end))
 end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The \luamdef{util.walk} method walks a rope `t`, applying a function `f`
@@ -23979,7 +23632,6 @@ function util.walk(t, f)
   end
 end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The \luamdef{util.flatten} method flattens an array `ary` that does not
@@ -24001,7 +23653,6 @@ function util.flatten(ary)
   return new
 end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The \luamdef{util.rope_to_string} method converts a rope `rope` to a
@@ -24016,7 +23667,6 @@ function util.rope_to_string(rope)
   return table.concat(buffer)
 end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The \luamdef{util.rope_last} method retrieves the last item in a rope. For
@@ -24037,7 +23687,6 @@ function util.rope_last(rope)
   end
 end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Given an array `ary` and a string `x`, the \luamdef{util.intersperse}
@@ -24059,7 +23708,6 @@ function util.intersperse(ary, x)
   return new
 end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Given an array `ary` and a function `f`, the \luamdef{util.map} method
@@ -24076,7 +23724,6 @@ function util.map(ary, f)
   return new
 end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Given a table `char_escapes` mapping escapable characters to escaped
@@ -24146,7 +23793,6 @@ end
 %</lua>
 %<*lua,lua-loader>
 % \fi
-% \par
 % \begin{markdown}
 %
 % The \luamdef{util.pathname} method produces a pathname out of a directory
@@ -24162,7 +23808,6 @@ function util.pathname(dir, file)
   end
 end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The \luamdef{util.salt} method produces cryptographic salt out of a table of
@@ -24195,7 +23840,6 @@ function util.salt(options)
   return salt
 end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The \luamdef{util.warning} method produces a warning `s` that is unrelated to
@@ -24212,7 +23856,6 @@ end
 %</lua,lua-loader>
 %<*lua>
 % \fi
-% \par
 % \begin{markdown}
 %
 %### HTML Entities
@@ -26353,7 +25996,6 @@ local character_entities = {
   ["zopf"] = 120171,
 }
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Given a string `s` of decimal digits, the \luamdef{entities.dec_entity}
@@ -26369,7 +26011,6 @@ function entities.dec_entity(s)
   return unicode.utf8.char(n)
 end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Given a string `s` of hexadecimal digits, the
@@ -26386,7 +26027,6 @@ function entities.hex_entity(s)
   return unicode.utf8.char(n)
 end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Given a captured character `x` and a string `s` of hexadecimal digits, the
@@ -26403,7 +26043,6 @@ function entities.hex_entity_with_x_char(x, s)
   return unicode.utf8.char(n)
 end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Given a character entity name `s` (like `ouml`), the
@@ -26427,7 +26066,6 @@ function entities.char_entity(s)
   return table.concat(char_table)
 end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %### Plain \TeX{} Writer {#tex-writer}
@@ -26448,7 +26086,6 @@ end
 %  \begin{macrocode}
 M.writer = {}
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The \luamdef{writer.new} method creates and returns a new \TeX{} writer
@@ -26466,7 +26103,6 @@ M.writer = {}
 function M.writer.new(options)
   local self = {}
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Make `options` available as \luamdef{writer->options}, so that it is
@@ -26476,7 +26112,6 @@ function M.writer.new(options)
 %  \begin{macrocode}
   self.options = options
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->flatten\_inlines}, which indicates whether or not the
@@ -26488,7 +26123,6 @@ function M.writer.new(options)
 %  \begin{macrocode}
   self.flatten_inlines = false
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Parse the \Opt{slice} option and define \luamdef{writer->slice\_begin},
@@ -26528,7 +26162,6 @@ function M.writer.new(options)
     self.is_writing = false
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->space} as the output format of a space character.
@@ -26537,7 +26170,6 @@ function M.writer.new(options)
 %  \begin{macrocode}
   self.space = " "
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->nbsp} as the output format of a non-breaking space
@@ -26547,7 +26179,6 @@ function M.writer.new(options)
 %  \begin{macrocode}
   self.nbsp = "\\markdownRendererNbsp{}"
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->plain} as a function that will transform an input
@@ -26559,7 +26190,6 @@ function M.writer.new(options)
     return s
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->paragraph} as a function that will transform an
@@ -26572,7 +26202,6 @@ function M.writer.new(options)
     return s
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->interblocksep} as the output format of a block
@@ -26586,7 +26215,6 @@ function M.writer.new(options)
     return self.interblocksep_text
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->paragraphsep} as the output format of a paragraph
@@ -26602,7 +26230,6 @@ function M.writer.new(options)
     return self.paragraphsep_text
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->undosep} as a function that will remove the output
@@ -26616,7 +26243,6 @@ function M.writer.new(options)
     return self.undosep_text
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->soft_line_break} as the output format of a soft
@@ -26629,7 +26255,6 @@ function M.writer.new(options)
     return "\\markdownRendererSoftLineBreak\n{}"
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->hard_line_break} as the output format of a hard
@@ -26642,7 +26267,6 @@ function M.writer.new(options)
     return "\\markdownRendererHardLineBreak\n{}"
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->ellipsis} as the output format of an ellipsis.
@@ -26651,7 +26275,6 @@ function M.writer.new(options)
 %  \begin{macrocode}
   self.ellipsis = "\\markdownRendererEllipsis{}"
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->thematic_break} as the output format of a thematic
@@ -26664,7 +26287,6 @@ function M.writer.new(options)
     return "\\markdownRendererThematicBreak{}"
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define tables \luamdef{writer->escaped_uri_chars} and
@@ -26691,7 +26313,6 @@ function M.writer.new(options)
       = "\\markdownRendererReplacementCharacter{}",
   }
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define table \luamdef{writer->escaped_strings} containing the mapping from
@@ -26702,7 +26323,6 @@ function M.writer.new(options)
   self.escaped_strings = util.table_copy(self.escaped_minimal_strings)
   self.escaped_strings[entities.hex_entity('00A0')] = self.nbsp
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define a table \luamdef{writer->escaped_chars} containing the mapping from
@@ -26727,7 +26347,6 @@ function M.writer.new(options)
       = "\\markdownRendererReplacementCharacter{}",
   }
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Use the \luamref{writer->escaped_chars}, \luamref{writer->escaped_uri_chars},
@@ -26752,7 +26371,6 @@ function M.writer.new(options)
   local escape_minimal = create_escaper(
     {}, self.escaped_minimal_strings)
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define the following semantic aliases for the escaper functions:
@@ -26783,7 +26401,6 @@ function M.writer.new(options)
     self.infostring = escape_programmatic_text
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->warning} as a function that will transform an input
@@ -26797,7 +26414,6 @@ function M.writer.new(options)
             escape_minimal(m or ""), "}"}
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->error} as a function that will transform an input
@@ -26811,7 +26427,6 @@ function M.writer.new(options)
             escape_minimal(m or ""), "}"}
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->code} as a function that will transform an input
@@ -26837,7 +26452,6 @@ function M.writer.new(options)
     return buf
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->link} as a function that will transform an input
@@ -26866,7 +26480,6 @@ function M.writer.new(options)
     return buf
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->image} as a function that will transform an input
@@ -26895,7 +26508,6 @@ function M.writer.new(options)
     return buf
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->bulletlist} as a function that will transform an input
@@ -26935,7 +26547,6 @@ function M.writer.new(options)
             "\\markdownRendererUlItemEnd "}
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->orderedlist} as a function that will transform an
@@ -26987,7 +26598,6 @@ function M.writer.new(options)
     end
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->inline_html_comment} as a function that will
@@ -27001,7 +26611,6 @@ function M.writer.new(options)
     return {"\\markdownRendererInlineHtmlComment{",contents,"}"}
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->inline_html_tag} as a function that will
@@ -27017,7 +26626,6 @@ function M.writer.new(options)
             self.string(contents),"}"}
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->block_html_element} as a function that will
@@ -27032,7 +26640,6 @@ function M.writer.new(options)
     return {"\\markdownRendererInputBlockHtmlElement{",name,"}"}
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->emphasis} as a function that will transform an
@@ -27045,7 +26652,6 @@ function M.writer.new(options)
     return {"\\markdownRendererEmphasis{",s,"}"}
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->tickbox} as a function that will transform a
@@ -27063,7 +26669,6 @@ function M.writer.new(options)
     end
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->strong} as a function that will transform a strongly
@@ -27076,7 +26681,6 @@ function M.writer.new(options)
     return {"\\markdownRendererStrongEmphasis{",s,"}"}
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->blockquote} as a function that will transform an
@@ -27090,7 +26694,6 @@ function M.writer.new(options)
       "\\markdownRendererBlockQuoteEnd "}
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->verbatim} as a function that will transform an
@@ -27105,7 +26708,6 @@ function M.writer.new(options)
     return {"\\markdownRendererInputVerbatim{",name,"}"}
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->document} as a function that will transform a
@@ -27140,7 +26742,6 @@ function M.writer.new(options)
     return buf
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->attributes} as a function that will transform
@@ -27250,7 +26851,6 @@ function M.writer.new(options)
     return buf
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->active\_attributes} as a stack of block-level
@@ -27261,7 +26861,6 @@ function M.writer.new(options)
 %  \begin{macrocode}
   self.active_attributes = {}
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->attribute\_type\_levels} as a hash table that
@@ -27274,7 +26873,6 @@ function M.writer.new(options)
   setmetatable(self.attribute_type_levels,
                { __index = function() return 0 end })
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->push\_attributes} and
@@ -27532,7 +27130,6 @@ function M.writer.new(options)
     return identifier
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->heading} as a function that will transform an
@@ -27620,7 +27217,6 @@ function M.writer.new(options)
     return buf
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->get_state} as a function that returns the current
@@ -27637,7 +27233,6 @@ function M.writer.new(options)
     }
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->set_state} as a function that restores the input
@@ -27653,7 +27248,6 @@ function M.writer.new(options)
     return previous_state
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->defer_call} as a function that will encapsulate the
@@ -27675,7 +27269,6 @@ function M.writer.new(options)
   return self
 end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %### Parsers
@@ -27686,7 +27279,6 @@ end
 %  \begin{macrocode}
 local parsers                  = {}
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Basic Parsers
@@ -27748,7 +27340,6 @@ parsers.internal_punctuation   = S(":;,.?")
 parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
 
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua>
 %<*lua-unicode-data-generator>
@@ -27777,7 +27368,6 @@ parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
   local file = assert(io.open(pathname, "r"),
     [[Could not open file "UnicodeData.txt"]])
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % In order to minimize the size and speed of the parser, we will first
@@ -27811,7 +27401,6 @@ parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
   assert(file:close())
 
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Next, we will construct a parser out of the prefix tree.
@@ -27877,7 +27466,6 @@ parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
 end)()
 print("return M")
 %    \end{macrocode}
-% \par
 % \iffalse
 %</lua-unicode-data-generator>
 %<*lua>
@@ -27934,7 +27522,6 @@ parsers.spnl                   = parsers.optionalspace
 parsers.line                   = parsers.linechar^0 * parsers.newline
 parsers.nonemptyline           = parsers.line - parsers.blankline
 %    \end{macrocode}
-%   \par
 % \begin{markdown}
 %
 %#### Parsers Used for Indentation
@@ -28770,7 +28357,7 @@ parsers.spnlc_sep  = parsers.optionalspace * V("EndlineNoSub")
 parsers.only_blank = parsers.spacechar^0
                    * (parsers.newline + parsers.eof)
 
-%   \end{macrocode}
+%    \end{macrocode}
 % \begin{figure}
 % \hspace*{-0.1\textwidth}
 % \begin{minipage}{1.2\textwidth}
@@ -28914,7 +28501,6 @@ parsers.indented_blocks = function(bl)
          * (parsers.blankline^1 + parsers.eof) )
 end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Parsers Used for HTML Entities
@@ -28939,7 +28525,6 @@ parsers.html_entities
   + parsers.decentity / entities.dec_entity
   + parsers.tagentity / entities.char_entity
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Parsers Used for Markdown Lists
@@ -28969,7 +28554,6 @@ parsers.halfticked_box = tickbox(S("./")) * Cc(0.5)
 parsers.unticked_box = tickbox(parsers.spacechar^1) * Cc(0.0)
 
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Parsers Used for Markdown Code Spans
@@ -29003,7 +28587,6 @@ parsers.inticks = parsers.openticks
                 * parsers.closeticks
 
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Parsers Used for HTML
@@ -29422,7 +29005,6 @@ parsers.html_inline_tags  = parsers.html_inline_comment_full
                           + parsers.html_any_close_tag
 
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Parsers Used for Markdown Tags and Links
@@ -29611,7 +29193,6 @@ parsers.optionaltitle
   = parsers.spnlc * parsers.title * parsers.spacechar^0 + Cc("")
 
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Helpers for Links and Link Reference Definitions
@@ -29626,7 +29207,6 @@ parsers.define_reference_parser = (parsers.check_trail / "")
                                   * parsers.only_blank
                                   + Cc("") * parsers.only_blank)
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Inline Elements
@@ -29645,7 +29225,6 @@ parsers.between = function(p, starter, ender)
 end
 
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Block Elements
@@ -29662,7 +29241,6 @@ parsers.thematic_break_lines = parsers.lineof(parsers.asterisk)
                              + parsers.lineof(parsers.dash)
                              + parsers.lineof(parsers.underscore)
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Headings
@@ -29693,7 +29271,6 @@ parsers.atx_heading = parsers.check_trail_no_rem
                       + parsers.spacechar^1
                       * C(parsers.line))
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %### Markdown Reader {#markdown-reader}
@@ -29719,7 +29296,6 @@ M.reader = {}
 function M.reader.new(writer, options)
   local self = {}
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Make the `writer` and `options` parameters available as
@@ -29731,7 +29307,6 @@ function M.reader.new(writer, options)
   self.writer = writer
   self.options = options
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Create a \luamdef{reader->parsers} hash table that stores \acro{peg} patterns
@@ -29759,7 +29334,6 @@ function M.reader.new(writer, options)
 %  \begin{macrocode}
   local parsers = self.parsers
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Top-Level Helper Functions
@@ -29777,7 +29351,6 @@ function M.reader.new(writer, options)
     return tag
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{iterlines} as a function that iterates over the lines of
@@ -29791,7 +29364,6 @@ function M.reader.new(writer, options)
     return util.rope_to_string(rope)
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{expandtabs} either as an identity function, when the
@@ -29812,7 +29384,6 @@ function M.reader.new(writer, options)
                       end
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### High-Level Parser Functions
@@ -29830,7 +29401,6 @@ function M.reader.new(writer, options)
   self.create_parser = function(name, grammar, toplevel)
     self.parser_functions[name] = function(str)
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % If the parser function is top-level and the \Opt{stripIndent} Lua option is
@@ -29861,7 +29431,6 @@ function M.reader.new(writer, options)
           str = str:gsub('^' .. min_prefix, '')
       end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % If the parser is top-level and the \Opt{texComments} or \Opt{hybrid} Lua
@@ -29921,7 +29490,6 @@ function M.reader.new(writer, options)
                       return parsers.inlines_no_link_or_emphasis
                     end, false)
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Parsers Used for Indentation (local)
@@ -30065,7 +29633,6 @@ function M.reader.new(writer, options)
   end
 
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Parsers Used for Markdown Lists (local)
@@ -30102,7 +29669,6 @@ function M.reader.new(writer, options)
                   + parsers.enumerator(parsers.rparent)
 
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Parsers Used for Blockquotes (local)
@@ -30126,7 +29692,6 @@ function M.reader.new(writer, options)
       * remove_indent("bq")
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Helpers for Emphasis and Strong Emphasis (local)
@@ -30512,7 +30077,6 @@ function M.reader.new(writer, options)
                       + parsers.emph_capturing_close
 
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Helpers for Links and Link Reference Definitions (local)
@@ -30526,7 +30090,6 @@ function M.reader.new(writer, options)
   parsers.rawnotes = {}
 
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The \luamdef{reader->register_link} method registers
@@ -30550,7 +30113,6 @@ function M.reader.new(writer, options)
   end
 
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The \luamdef{reader->lookup_reference} method looks up a
@@ -30563,7 +30125,6 @@ function M.reader.new(writer, options)
   end
 
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The \luamdef{reader->lookup_note_reference} method looks up a
@@ -31206,7 +30767,6 @@ function M.reader.new(writer, options)
   end
 
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Inline Elements (local)
@@ -31350,7 +30910,6 @@ function M.reader.new(writer, options)
                                         / writer.nbsp
 
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The \luamdef{reader->auto_link_url} method produces an
@@ -31365,7 +30924,6 @@ function self.auto_link_url(url, attributes)
                      url, nil, attributes)
 end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The \luamdef{reader->auto_link_email} method produces an
@@ -31409,7 +30967,6 @@ end
 
   parsers.HtmlEntity = parsers.html_entities / writer.string
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Block Elements (local)
@@ -31457,7 +31014,6 @@ end
   parsers.Plain        = parsers.nonindentspace * Ct(parsers.Inline^1)
                        / writer.plain
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Lists (local)
@@ -31622,7 +31178,6 @@ end
   parsers.OrderedList = parsers.OrderedListOfType(parsers.period)
                       + parsers.OrderedListOfType(parsers.rparent)
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Blank (local)
@@ -31632,7 +31187,6 @@ end
   parsers.Blank        = parsers.blankline / ""
                        + V("Reference")
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Headings (local)
@@ -31688,7 +31242,6 @@ end
 
   parsers.Heading = parsers.AtxHeading + parsers.SetextHeading
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Syntax Specification
@@ -31721,7 +31274,6 @@ end
       return local_walkable_syntax
     end)(walkable_syntax)
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The \luamref{reader->insert_pattern} method adds a pattern to
@@ -31778,7 +31330,6 @@ end
       end
     end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Create a local \luamdef{syntax} hash table that stores those rules of the
@@ -31794,7 +31345,6 @@ end
                * V("ExpectedJekyllData")
                * V("Blank")^0
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Only create interblock separators between pairs of blocks that are not
@@ -31872,7 +31422,6 @@ end
         InitializeState    = parsers.succeed,
       }
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamref{reader->update_rule} as a function that receives two
@@ -31904,7 +31453,6 @@ end
       end
       local pattern
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Instead of a function, a \acro{peg} pattern `pattern` may also be
@@ -31933,7 +31481,6 @@ end
       walkable_syntax[rule_name] = { accountable_pattern }
     end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define a hash table of all characters with special meaning and add method
@@ -31955,7 +31502,6 @@ end
     self.add_special_character("!")
     self.add_special_character("\\")
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Add method \luamdef{reader->initialize_named_group} that defines named groups
@@ -31972,7 +31518,6 @@ end
                              * Cg(pattern, name)
     end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Add a named group for indentation.
@@ -31981,7 +31526,6 @@ end
 %  \begin{macrocode}
     self.initialize_named_group("indent_info")
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Apply syntax extensions.
@@ -31995,7 +31539,6 @@ end
     end
     current_extension_name = nil
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % If the \Opt{debugExtensions} option is enabled, serialize
@@ -32055,7 +31598,6 @@ end
       assert(output_file:close())
     end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Materialize \luamref{walkable_syntax} and merge it into \luamref{syntax} to
@@ -32092,7 +31634,6 @@ end
       end
     end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Finalize the parser by reacting to options and by producing special parsers
@@ -32178,7 +31719,6 @@ end
     parsers.inlines_no_link_or_emphasis
       = Ct(inlines_no_link_or_emphasis_t)
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Return a function that converts markdown string `input` into a plain \TeX{}
@@ -32312,7 +31852,6 @@ M.extensions.bracketed_spans = function()
     name = "built-in bracketed_spans syntax extension",
     extend_writer = function(self)
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->span} as a function that will transform an input
@@ -32374,7 +31913,6 @@ M.extensions.citations = function(citation_nbsps)
     name = "built-in citations syntax extension",
     extend_writer = function(self)
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->citations} as a function that will transform an
@@ -32584,7 +32122,6 @@ end
 %  \begin{macrocode}
 M.extensions.content_blocks = function(language_map)
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The \luamdef{languages_json} table maps programming language filename
@@ -32622,7 +32159,6 @@ M.extensions.content_blocks = function(language_map)
     name = "built-in content_blocks syntax extension",
     extend_writer = function(self)
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->contentblock} as a function that will transform an
@@ -32752,7 +32288,6 @@ M.extensions.definition_lists = function(tight_lists)
     name = "built-in definition_lists syntax extension",
     extend_writer = function(self)
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->definitionlist} as a function that will transform an
@@ -32871,7 +32406,6 @@ M.extensions.fancy_lists = function()
       local options = self.options
 
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->fancylist} as a function that will transform an
@@ -33172,7 +32706,6 @@ M.extensions.fenced_code = function(blank_before_code_fence,
       local options = self.options
 
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->fencedCode} as a function that will transform an
@@ -33202,7 +32735,6 @@ M.extensions.fenced_code = function(blank_before_code_fence,
       end
 
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->rawBlock} as a function that will transform an
@@ -33423,7 +32955,6 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
     name = "built-in fenced_divs syntax extension",
     extend_writer = function(self)
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->div_begin} as a function that will transform the
@@ -33442,7 +32973,6 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
           "div", attributes, start_output, end_output)
       end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->div_end} as a function that will produce the end of a
@@ -33457,7 +32987,6 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
       local parsers = self.parsers
       local writer = self.writer
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define basic patterns for matching the opening and the closing tag of a div.
@@ -33483,7 +33012,6 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
                            * parsers.optionalspace
                            * (parsers.newline + parsers.eof)
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Initialize a named group named `fenced_div_level` for tracking how deep
@@ -33596,7 +33124,6 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
       self.add_special_character(":")
 
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % If the `blank_before_div_fence` parameter is `false`, we will have the
@@ -33772,7 +33299,6 @@ M.extensions.line_blocks = function()
     name = "built-in line_blocks syntax extension",
     extend_writer = function(self)
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->lineblock} as a function that will transform
@@ -33830,7 +33356,6 @@ M.extensions.mark = function()
     name = "built-in mark syntax extension",
     extend_writer = function(self)
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->mark} as a function that will transform an input
@@ -33977,7 +33502,6 @@ M.extensions.notes = function(notes, inline_notes)
     name = "built-in notes syntax extension",
     extend_writer = function(self)
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->note} as a function that will transform an
@@ -34146,7 +33670,6 @@ M.extensions.pipe_tables = function(table_captions, table_attributes)
     name = "built-in pipe_tables syntax extension",
     extend_writer = function(self)
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->table} as a function that will transform an input
@@ -34308,7 +33831,6 @@ M.extensions.raw_inline = function()
       local options = self.options
 
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->rawInline} as a function that will transform an
@@ -34350,7 +33872,6 @@ M.extensions.strike_through = function()
     name = "built-in strike_through syntax extension",
     extend_writer = function(self)
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->strike_through} as a function that will transform
@@ -34393,7 +33914,6 @@ M.extensions.subscripts = function()
     name = "built-in subscripts syntax extension",
     extend_writer = function(self)
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->subscript} as a function that will transform
@@ -34435,7 +33955,6 @@ M.extensions.superscripts = function()
     name = "built-in superscripts syntax extension",
     extend_writer = function(self)
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->superscript} as a function that will transform
@@ -34480,7 +33999,6 @@ M.extensions.tex_math = function(tex_math_dollars,
     name = "built-in tex_math syntax extension",
     extend_writer = function(self)
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->display_math} as a function that will transform
@@ -34703,7 +34221,6 @@ M.extensions.jekyll_data = function(expect_jekyll_data,
     name = "built-in jekyll_data syntax extension",
     extend_writer = function(self)
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Define \luamdef{writer->jekyllData} as a function that will transform an
@@ -34842,8 +34359,7 @@ M.extensions.jekyll_data = function(expect_jekyll_data,
              , function(s, i, text) -- luacheck: ignore s i
                  local data
                  local ran_ok, _ = pcall(function()
-                   -- TODO: Use `require("tinyyaml")` in TeX Live 2023
-                   local tinyyaml = require("markdown-tinyyaml")
+                   local tinyyaml = require("tinyyaml")
                    data = tinyyaml.parse(text, {timestamps=false})
                  end)
                  if ran_ok and data ~= nil then
@@ -34909,7 +34425,6 @@ end
 %  \begin{macrocode}
 function M.new(options)
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Make the `options` table inherit from the \luamref{defaultOptions} table.
@@ -34920,7 +34435,6 @@ function M.new(options)
   setmetatable(options, { __index = function (_, key)
     return defaultOptions[key] end })
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Return a conversion function that tries to produce a cached conversion output
@@ -34934,7 +34448,6 @@ function M.new(options)
     local function convert(input)
       if parser_convert == nil then
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Lazy-load `markdown-parser.lua` and check that it originates from the same
@@ -35006,7 +34519,6 @@ end
 %</lua-loader>
 %<*lua>
 % \fi
-% \par
 % \begin{markdown}
 %
 % The \luamref{new} function from file `markdown-parser.lua` returns a
@@ -35017,7 +34529,6 @@ end
 %  \begin{macrocode}
 function M.new(options)
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Make the `options` table inherit from the \luamref{defaultOptions} table.
@@ -35028,7 +34539,6 @@ function M.new(options)
   setmetatable(options, { __index = function (_, key)
     return defaultOptions[key] end })
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % If the singleton cache contains a conversion function for the same `options`,
@@ -35060,7 +34570,6 @@ function M.new(options)
   end
   ::miss::
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Apply built-in syntax extensions based on `options`.
@@ -35186,7 +34695,6 @@ function M.new(options)
     table.insert(extensions, fancy_lists_extension)
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Apply user-defined syntax extensions based on `options.extensions`.
@@ -35286,7 +34794,6 @@ function M.new(options)
     table.insert(extensions, user_extension)
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Produce a conversion function from markdown to plain \TeX.
@@ -35297,7 +34804,6 @@ function M.new(options)
   local reader = M.reader.new(writer, options)
   local convert = reader.finalize_grammar(extensions)
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Force garbage collection to reclaim memory for temporary
@@ -35308,7 +34814,6 @@ function M.new(options)
 %  \begin{macrocode}
   collectgarbage("collect")
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Update the singleton cache.
@@ -35327,7 +34832,6 @@ function M.new(options)
     singletonCache.convert = convert
   end
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Return the conversion function from markdown to plain \TeX.
@@ -35348,7 +34852,6 @@ return M
 %</lua,lua-loader>
 %<*lua-cli>
 % \fi
-% \par
 % \begin{markdown}
 %
 %### Command-Line Implementation {#lua-cli-implementation}
@@ -35431,7 +34934,6 @@ end
 %</lua-cli>
 %<*tex>
 % \fi
-% \par
 % \begin{markdown}
 %
 % Plain \TeX{} Implementation {#teximplementation}
@@ -35504,7 +35006,6 @@ end
   { nnee }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %### Themes {#themes-implementation}
@@ -35552,11 +35053,6 @@ end
           }
       }
       {
-        \msg_info:nnnn
-          { markdown }
-          { loading-plain-tex-theme }
-          { #1 }
-          { #2 }
         \prop_gput:Nnx
           \g_@@_plain_tex_loaded_themes_linenos_prop
           { #1 }
@@ -35565,14 +35061,46 @@ end
           \g_@@_plain_tex_loaded_themes_versions_prop
           { #1 }
           { #2 }
-        \file_input:n
-          { markdown theme #3 }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Load built-in plain \TeX{} themes from the prop
+% \mref{g_@@_plain_tex_built_in_themes_prop} and from the filesystem otherwise.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        \prop_if_in:NnTF
+          \g_@@_plain_tex_built_in_themes_prop
+          { #1 }
+          {
+            \msg_info:nnnn
+              { markdown }
+              { loading-built-in-plain-tex-theme }
+              { #1 }
+              { #2 }
+            \prop_item:Nn
+              \g_@@_plain_tex_built_in_themes_prop
+              { #1 }
+          }
+          {
+            \msg_info:nnnn
+              { markdown }
+              { loading-plain-tex-theme }
+              { #1 }
+              { #2 }
+            \file_input:n
+              { markdown theme #3 }
+          }
       }
   }
 \msg_new:nnn
   { markdown }
   { loading-plain-tex-theme }
   { Loading~version~#2~of~plain~TeX~Markdown~theme~#1 }
+\msg_new:nnn
+  { markdown }
+  { loading-built-in-plain-tex-theme }
+  { Loading~version~#2~of~built-in~plain~TeX~Markdown~theme~#1 }
 \msg_new:nnn
   { markdown }
   { repeatedly-loaded-plain-tex-theme }
@@ -35667,13 +35195,277 @@ end
 \cs_generate_variant:Nn
   \@@_plain_tex_load_theme:nnn
   { VeV }
-\ExplSyntaxOff
 %    \end{macrocode}
-% \iffalse
-%</tex>
-%<*themes-witiko-tilde>
-% \fi
-% \par
+% \begin{markdown}
+%
+% The `witiko/dot` theme enables the \Opt{fencedCode} Lua option:
+%
+% \end{markdown}
+%  \begin{macrocode}
+\prop_gput:Nnn
+  \g_@@_plain_tex_built_in_themes_prop
+  { witiko / dot }
+  {
+    \markdownSetup{fencedCode}
+%    \end{macrocode}
+% \begin{markdown}
+%
+% We store the previous definition of the fenced code token renderer prototype:
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \cs_set_eq:NN
+      \@@_dot_previous_definition:nnn
+      \markdownRendererInputFencedCodePrototype
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If the infostring starts with `dot …`, we redefine the fenced code block
+% token renderer prototype, so that it typesets the code block via Graphviz
+% tools if and only if the \Opt{frozenCache} plain \TeX{} option is
+% disabled and the code block has not been previously typeset:
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \regex_const:Nn
+      \c_@@_dot_infostring_regex
+      { ^dot(\s+(.+))? }
+    \seq_new:N
+      \l_@@_dot_matches_seq
+    \markdownSetup {
+      rendererPrototypes = {
+        inputFencedCode = {
+          \regex_extract_once:NnNTF
+            \c_@@_dot_infostring_regex
+            { #2 }
+            \l_@@_dot_matches_seq
+            {
+              \@@_if_option:nF
+                { frozenCache }
+                {
+                  \sys_shell_now:n
+                    {
+                      if~!~test~-e~#1.pdf.source~
+                      ||~!~diff~#1~#1.pdf.source;
+                      then~
+                        dot~-Tpdf~-o~#1.pdf~#1;
+                        cp~#1~#1.pdf.source;
+                      fi
+                    }
+                }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% We include the typeset image using the image token renderer:
+%
+% \end{markdown}
+%  \begin{macrocode}
+              \exp_args:NNne
+                \exp_last_unbraced:No
+                \markdownRendererImage
+                  {
+                    { Graphviz~image }
+                    { #1.pdf }
+                    { #1.pdf }
+                  }
+                  {
+                    \seq_item:Nn
+                      \l_@@_dot_matches_seq
+                      { 3 }
+                  }
+            }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If the infostring does not start with `dot …`, we use the previous definition
+% of the fenced code token renderer prototype:
+%
+% \end{markdown}
+%  \begin{macrocode}
+            {
+              \@@_dot_previous_definition:nnn
+                { #1 }
+                { #2 }
+                { #3 }
+            }
+        },
+      },
+    }
+  }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% We locally change the category code of percent signs, so that we
+% can use them in the shell code:
+%
+% \end{markdown}
+%  \begin{macrocode}
+\group_begin:
+\char_set_catcode_other:N \%
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The `witiko/graphicx/http` theme stores the previous definition of the image
+% token renderer prototype:
+%
+% \end{markdown}
+%  \begin{macrocode}
+\prop_gput:Nnn
+  \g_@@_plain_tex_built_in_themes_prop
+  { witiko / graphicx / http }
+  {
+    \cs_set_eq:NN
+      \@@_graphicx_http_previous_definition:nnnn
+      \markdownRendererImagePrototype
+%    \end{macrocode}
+% \begin{markdown}
+%
+% We define variables and functions to enumerate the images for caching and to
+% store the pathname of the file containing the pathname of the downloaded
+% image file.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \int_new:N
+      \g_@@_graphicx_http_image_number_int
+    \int_gset:Nn
+      \g_@@_graphicx_http_image_number_int
+      { 0 }
+    \cs_new:Nn
+      \@@_graphicx_http_filename:
+      {
+        \markdownOptionCacheDir
+        / witiko_graphicx_http .
+        \int_use:N
+          \g_@@_graphicx_http_image_number_int
+      }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% We define a function that will receive two arguments that correspond to the
+% URL of the online image and to the pathname, where the online image should
+% be downloaded. The function produces a shell command that tries to
+% downloads the online image to the pathname.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \cs_new:Nn
+      \@@_graphicx_http_download:nn
+      {
+        wget~-O~#2~#1~
+        ||~curl~--location~-o~#2~#1~
+        ||~rm~-f~#2
+      }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% We redefine the image token renderer prototype, so that it tries to download
+% an online image.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \str_new:N
+      \l_@@_graphicx_http_filename_str
+    \ior_new:N
+      \g_@@_graphicx_http_filename_ior
+    \markdownSetup {
+      rendererPrototypes = {
+        image = {
+          \@@_if_option:nF
+            { frozenCache }
+            {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The image will be downloaded only if the image URL has the http or https
+% protocols and the \Opt{frozenCache} plain \TeX{} option is disabled:
+%
+% \end{markdown}
+%  \begin{macrocode}
+              \sys_shell_now:e
+                {
+                  mkdir~-p~" \markdownOptionCacheDir ";
+                  if~printf~'%s'~"#3"~|~grep~-q~-E~'^https?:';
+                  then~
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The image will be downloaded to the pathname \Opt{cacheDir}<!--
+% -->`/`\meta{the MD5 digest of the image URL}`.`\meta{the suffix of the
+% image URL}:
+%
+% \end{markdown}
+%  \begin{macrocode}
+                    OUTPUT_PREFIX=" \markdownOptionCacheDir ";
+                    OUTPUT_BODY="$(printf~'%s'~'#3'
+                                  |~md5sum~|~cut~-d'~'~-f1)";
+                    OUTPUT_SUFFIX="$(printf~'%s'~'#3'
+                                  |~sed~'s/.*[.]//')";
+                    OUTPUT="$OUTPUT_PREFIX/$OUTPUT_BODY.$OUTPUT_SUFFIX";
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The image will be downloaded only if it has not already been downloaded:
+%
+% \end{markdown}
+%  \begin{macrocode}
+                    if~!~[~-e~"$OUTPUT"~];
+                    then~
+                      \@@_graphicx_http_download:nn
+                        { '#3' }
+                        { "$OUTPUT" } ;
+                      printf~'%s'~"$OUTPUT"~
+                        >~" \@@_graphicx_http_filename: ";
+                    fi;
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If the image does not have the http or https protocols or the image has
+% already been downloaded, the URL will be stored as-is:
+%
+% \end{markdown}
+%  \begin{macrocode}
+                  else~
+                    printf~'%s'~'#3'~
+                      >~" \@@_graphicx_http_filename: ";
+                  fi
+                }
+              }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% We load the pathname of the downloaded image and we typeset the image using
+% the previous definition of the image renderer prototype:
+%
+% \end{markdown}
+%  \begin{macrocode}
+          \ior_open:Ne
+            \g_@@_graphicx_http_filename_ior
+            { \@@_graphicx_http_filename: }
+          \ior_str_get:NN
+            \g_@@_graphicx_http_filename_ior
+            \l_@@_graphicx_http_filename_str
+          \ior_close:N
+            \g_@@_graphicx_http_filename_ior
+          \@@_graphicx_http_previous_definition:nnVn
+            { #1 }
+            { #2 }
+            \l_@@_graphicx_http_filename_str
+            { #4 }
+          \int_gincr:N
+            \g_@@_graphicx_http_image_number_int
+        }
+      }
+    }
+    \cs_generate_variant:Nn
+      \ior_open:Nn
+      { Ne }
+    \cs_generate_variant:Nn
+      \@@_graphicx_http_previous_definition:nnnn
+      { nnVn }
+  }
+\group_end:
+%    \end{macrocode}
 % \begin{markdown}
 %
 % The `witiko/tilde` theme redefines the tilde token renderer prototype,
@@ -35681,14 +35473,20 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\markdownSetup {
-  rendererPrototypes = {
-    tilde = {~},
-  },
-}
+\prop_gput:Nnn
+  \g_@@_plain_tex_built_in_themes_prop
+  { witiko / tilde }
+  {
+    \markdownSetup {
+      rendererPrototypes = {
+        tilde = {~},
+      },
+    }
+  }
+\ExplSyntaxOff
 %    \end{macrocode}
 % \iffalse
-%</themes-witiko-tilde>
+%</tex>
 %<*themes-witiko-markdown-defaults-tex>
 % \fi
 % \begin{markdown}
@@ -35850,7 +35648,6 @@ end
 \def\markdownRendererErrorPrototype#1#2#3#4{%
   \markdownError{#2}{#4}}%
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Raw Attributes
@@ -35898,7 +35695,6 @@ end
   }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### YAML Metadata Renderer Prototypes
@@ -35931,7 +35727,6 @@ end
 \tl_const:Nn \c_@@_jekyll_data_mapping_tl    { mapping  }
 \tl_const:Nn \c_@@_jekyll_data_scalar_tl     { scalar   }
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % To keep track of our current place when we are traversing a \acro{yaml}
@@ -35977,7 +35772,6 @@ end
       }
   }
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Out of \mref{g_\@\@_jekyll_data_wildcard_absolute_address_seq}, we will
@@ -36032,7 +35826,6 @@ end
       \g_@@_jekyll_data_wildcard_relative_address_tl
   }
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % To make sure that the stacks and token lists stay in sync, we will use the
@@ -36061,7 +35854,6 @@ end
     \markdown_jekyll_data_update_address_tls:
   }
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % To set a single key--value, we will use the
@@ -36094,7 +35886,6 @@ end
     \markdown_jekyll_data_pop:
   }
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Finally, we will register our macros as token renderer prototypes
@@ -36130,7 +35921,6 @@ end
     { #2 }
 }
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % We will process all string scalar values assuming that they may contain
@@ -36343,7 +36133,6 @@ end
       { " \markdownInputFilename " }
   }
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The \mdef{markdownPrepare} macro contains the Lua code that is executed prior
@@ -36376,7 +36165,6 @@ end
     local~convert = md.new(options)
   }
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The \mdef{markdownConvert} macro contains the Lua code that is executed
@@ -36397,7 +36185,6 @@ end
   }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The \mdef{markdownCleanup} macro contains the Lua code that is executed
@@ -36416,7 +36203,6 @@ end
   end
 }%
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %### Buffering Block-Level Markdown Input {#buffering-block}
@@ -36430,7 +36216,6 @@ end
 \csname newread\endcsname\markdownInputFileStream
 \csname newwrite\endcsname\markdownOutputFileStream
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The \mdef{markdownReadAndConvertTab} macro contains the tab character literal.
@@ -36442,7 +36227,6 @@ end
   \gdef\markdownReadAndConvertTab{^^I}%
 \endgroup
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The \mref{markdownReadAndConvert} macro is largely a rewrite of the
@@ -36600,7 +36384,6 @@ end
 %  \begin{macrocode}
 |endgroup
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Use the \pkg{lt3luabridge} library to define the \mdef{markdownLuaExecute}
@@ -36917,7 +36700,6 @@ end
   }%
 |endgroup
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 % The \mref{markdownEscape} macro resets the category codes of the percent sign
 % and the hash sign back to comment and parameter, respectively, before using
@@ -36937,7 +36719,6 @@ end
 %</tex>
 %<*latex>
 % \fi
-% \par
 % \begin{markdown}
 %
 % \LaTeX{} Implementation {#lateximplementation}
@@ -36954,7 +36735,6 @@ end
 \ProvidesPackage{markdown}[\markdownLastModified\markdownVersionSpace v%
   \markdownVersion\markdownVersionSpace markdown renderer]%
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %### Typesetting Markdown
@@ -36976,7 +36756,6 @@ end
       { ( \[ (.*?) \] ) ? }
       {
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Apply the options locally.
@@ -36994,7 +36773,6 @@ end
   }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The \mdef{markdownInputPlainTeX} macro is used to store the original plain
@@ -37017,7 +36795,6 @@ end
     \markdownInputPlainTeX{#2}%
   \endgroup}%
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The \envmref{markdown}, \envmref{markdown*}, and \envmref{yaml} \LaTeX{}
@@ -37196,7 +36973,6 @@ end
                            <|end<#1>>>%
 |endgroup
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %### Themes {#latex-themes-implementation}
@@ -37214,12 +36990,13 @@ end
   \@@_load_theme:nnn
   {
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
-% If the Markdown package has already been loaded, determine whether
-% a file named `markdowntheme`\meta{munged theme name}`.sty` exists
-% and whether we are still in the preamble.
+% If the Markdown package has not yet been loaded, determine whether
+% either this is a built-in theme according to the prop
+% \mref{g_@@_latex_built_in_themes_prop} or a file named
+% `markdowntheme`\meta{munged theme name}`.sty` exists and whether we are still
+% in the preamble.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -37228,20 +37005,37 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% If both conditions are true does, end with an error, since we cannot load
-% \LaTeX{} themes after the preamble. Otherwise, try loading a plain \TeX{}
-% theme instead.
+% If both conditions are true, end with an error, since we cannot load
+% \LaTeX{} themes after the preamble.
 %
 % \end{markdown}
 %  \begin{macrocode}
-        \file_if_exist:nTF
-          { markdown theme #3.sty }
+        \bool_if:nTF
+          {
+            \bool_lazy_or_p:nn
+              {
+                \prop_if_in_p:Nn
+                  \g_@@_latex_built_in_themes_prop
+                  { #1 }
+              }
+              {
+                \file_if_exist_p:n
+                  { markdown theme #3.sty }
+              }
+          }
           {
             \msg_error:nnn
               { markdown }
               { latex-theme-after-preamble }
               { #1 }
           }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Otherwise, try loading a plain \TeX{} theme instead.
+%
+% \end{markdown}
+%  \begin{macrocode}
           {
             \@@_plain_tex_load_theme:nnn
               { #1 }
@@ -37258,8 +37052,19 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-        \file_if_exist:nTF
-          { markdown theme #3.sty }
+        \bool_if:nTF
+          {
+            \bool_lazy_or_p:nn
+              {
+                \prop_if_in_p:Nn
+                  \g_@@_latex_built_in_themes_prop
+                  { #1 }
+              }
+              {
+                \file_if_exist_p:n
+                  { markdown theme #3.sty }
+              }
+          }
           {
             \prop_get:NnNTF
               \g_@@_latex_loaded_themes_linenos_prop
@@ -37292,11 +37097,6 @@ end
                   }
               }
               {
-                \msg_info:nnnn
-                  { markdown }
-                  { loading-latex-theme }
-                  { #1 }
-                  { #2 }
                 \prop_gput:Nnx
                   \g_@@_latex_loaded_themes_linenos_prop
                   { #1 }
@@ -37305,8 +37105,36 @@ end
                   \g_@@_latex_loaded_themes_versions_prop
                   { #1 }
                   { #2 }
-                \RequirePackage
-                  { markdown theme #3 }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Load built-in plain \TeX{} themes from the prop
+% \mref{g_@@_latex_built_in_themes_prop} and from the filesystem otherwise.
+%
+% \end{markdown}
+%  \begin{macrocode}
+                \prop_if_in:NnTF
+                  \g_@@_latex_built_in_themes_prop
+                  { #1 }
+                  {
+                    \msg_info:nnnn
+                      { markdown }
+                      { loading-built-in-latex-theme }
+                      { #1 }
+                      { #2 }
+                    \prop_item:Nn
+                      \g_@@_latex_built_in_themes_prop
+                      { #1 }
+                  }
+                  {
+                    \msg_info:nnnn
+                      { markdown }
+                      { loading-latex-theme }
+                      { #1 }
+                      { #2 }
+                    \RequirePackage
+                      { markdown theme #3 }
+                  }
               }
           }
           {
@@ -37344,6 +37172,10 @@ end
     Postponing~loading~version~#2~of~Markdown~theme~#1~until~
     Markdown~package~has~finished~loading
   }
+\msg_new:nnn
+  { markdown }
+  { loading-built-in-latex-theme }
+  { Loading~version~#2~of~built-in~LaTeX~Markdown~theme~#1 }
 \msg_new:nnn
   { markdown }
   { loading-latex-theme }
@@ -37388,233 +37220,45 @@ end
   { latex-theme-after-preamble }
   \l_tmpa_tl
   \l_tmpb_tl
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The `witiko/dot` and `witiko/graphicx/http` \LaTeX{} themes load the package
+% \pkg{graphicx}, see also Section <#sec:latex-prerequisites>. Then, they
+% load the corresponding plain \TeX{} themes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\tl_set:Nn
+  \l_tmpa_tl
+  {
+    \RequirePackage
+      { graphicx }
+    \markdownLoadPlainTeXTheme
+  }
+\prop_gput:NnV
+  \g_@@_latex_built_in_themes_prop
+  { witiko / dot }
+  \l_tmpa_tl
+\prop_gput:NnV
+  \g_@@_latex_built_in_themes_prop
+  { witiko / graphicx / http }
+  \l_tmpa_tl
 \ExplSyntaxOff
 %    \end{macrocode}
-% \begin{markdown}
-%
-% The `witiko/dot` theme enables the \Opt{fencedCode} Lua option:
-%
-% \end{markdown}
 % \iffalse
 %</latex>
-%<*themes-witiko-dot>
-% \fi
-%  \begin{macrocode}
-\markdownSetup{fencedCode}%
-%    \end{macrocode}
-% \begin{markdown}
-%
-% We load the \pkg{ifthen} and \pkg{grffile} packages, see also
-% Section <#sec:latex-prerequisites>:
-%
-% \end{markdown}
-%  \begin{macrocode}
-\RequirePackage{ifthen,grffile}
-%    \end{macrocode}
-% \begin{markdown}
-%
-% We store the previous definition of the fenced code token renderer prototype:
-%
-% \end{markdown}
-%  \begin{macrocode}
-\let\markdown@witiko@dot@oldRendererInputFencedCodePrototype
-  \markdownRendererInputFencedCodePrototype
-%    \end{macrocode}
-% \begin{markdown}
-%
-% If the infostring starts with `dot …`, we redefine the fenced code block
-% token renderer prototype, so that it typesets the code block via Graphviz
-% tools if and only if the \Opt{frozenCache} plain \TeX{} option is
-% disabled and the code block has not been previously typeset:
-%
-% \end{markdown}
-%  \begin{macrocode}
-\renewcommand\markdownRendererInputFencedCodePrototype[3]{%
-  \def\next##1 ##2\relax{%
-    \ifthenelse{\equal{##1}{dot}}{%
-      \markdownIfOption{frozenCache}{}{%
-        \immediate\write18{%
-          if ! test -e #1.pdf.source || ! diff #1 #1.pdf.source;
-          then
-            dot -Tpdf -o #1.pdf #1;
-            cp #1 #1.pdf.source;
-          fi}}%
-%    \end{macrocode}
-% \begin{markdown}
-%
-% We include the typeset image using the image token renderer:
-%
-% \end{markdown}
-%  \begin{macrocode}
-      \markdownRendererImage{Graphviz image}{#1.pdf}{#1.pdf}{##2}%
-%    \end{macrocode}
-% \begin{markdown}
-%
-% If the infostring does not start with `dot …`, we use the previous definition
-% of the fenced code token renderer prototype:
-%
-% \end{markdown}
-%  \begin{macrocode}
-    }{%
-      \markdown@witiko@dot@oldRendererInputFencedCodePrototype
-        {#1}{#2}{#3}%
-    }%
-  }%
-  \next#2 \relax}%
-%    \end{macrocode}
-% \iffalse
-%</themes-witiko-dot>
-%<*themes-witiko-graphicx-http>
-% \fi
-% \par
-% \begin{markdown}
-%
-% The `witiko/graphicx/http` theme stores the previous definition of the image
-% token renderer prototype:
-%
-% \end{markdown}
-%  \begin{macrocode}
-\let\markdown@witiko@graphicx@http@oldRendererImagePrototype
-  \markdownRendererImagePrototype
-%    \end{macrocode}
-% \begin{markdown}
-%
-% We load the \pkg{catchfile} and \pkg{grffile} packages, see also
-% Section <#sec:latex-prerequisites>:
-%
-% \end{markdown}
-%  \begin{macrocode}
-\RequirePackage{catchfile,grffile}
-%    \end{macrocode}
-% \begin{markdown}
-%
-% We define the \mdef{markdown@witiko@graphicx@http@counter} counter to enumerate
-% the images for caching and the \mdef{markdown@witiko@graphicx@http@filename}
-% command, which will store the pathname of the file containing the pathname
-% of the downloaded image file.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\newcount\markdown@witiko@graphicx@http@counter
-\markdown@witiko@graphicx@http@counter=0
-\newcommand\markdown@witiko@graphicx@http@filename{%
-  \markdownOptionCacheDir/witiko_graphicx_http%
-  .\the\markdown@witiko@graphicx@http@counter}%
-%    \end{macrocode}
-% \begin{markdown}
-%
-% We define the \mdef{markdown@witiko@graphicx@http@download} command, which will
-% receive two arguments that correspond to the URL of the online image and to
-% the pathname, where the online image should be downloaded. The command will
-% produce a shell command that tries to downloads the online image to the
-% pathname.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\newcommand\markdown@witiko@graphicx@http@download[2]{%
-  wget -O #2 #1 || curl --location -o #2 #1 || rm -f #2}
-%    \end{macrocode}
-% \begin{markdown}
-%
-% We locally swap the category code of the percentage sign with the line feed
-% control character, so that we can use percentage signs in the shell code:
-%
-% \end{markdown}
-%  \begin{macrocode}
-\begingroup
-\catcode`\%=12
-\catcode`\^^A=14
-%    \end{macrocode}
-% \begin{markdown}
-%
-% We redefine the image token renderer prototype, so that it tries to download
-% an online image.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\global\def\markdownRendererImagePrototype#1#2#3#4{^^A
-  \begingroup
-    \edef\filename{\markdown@witiko@graphicx@http@filename}^^A
-%    \end{macrocode}
-% \begin{markdown}
-%
-% The image will be downloaded only if the image URL has the http or https
-% protocols and the \Opt{frozenCache} plain \TeX{} option is disabled:
-%
-% \end{markdown}
-%  \begin{macrocode}
-    \markdownIfOption{frozenCache}{}{^^A
-      \immediate\write18{^^A
-        mkdir -p "\markdownOptionCacheDir";
-        if printf '%s' "#3" | grep -q -E '^https?:';
-        then
-%    \end{macrocode}
-% \begin{markdown}
-%
-% The image will be downloaded to the pathname \Opt{cacheDir}<!--
-% -->`/`\meta{the MD5 digest of the image URL}`.`\meta{the suffix of the
-% image URL}:
-%
-% \end{markdown}
-%  \begin{macrocode}
-          OUTPUT_PREFIX="\markdownOptionCacheDir";
-          OUTPUT_BODY="$(printf '%s' '#3' | md5sum | cut -d' ' -f1)";
-          OUTPUT_SUFFIX="$(printf '%s' '#3' | sed 's/.*[.]//')";
-          OUTPUT="$OUTPUT_PREFIX/$OUTPUT_BODY.$OUTPUT_SUFFIX";
-%    \end{macrocode}
-% \begin{markdown}
-%
-% The image will be downloaded only if it has not already been downloaded:
-%
-% \end{markdown}
-%  \begin{macrocode}
-          if ! [ -e "$OUTPUT" ];
-          then
-            \markdown@witiko@graphicx@http@download{'#3'}{"$OUTPUT"};
-            printf '%s' "$OUTPUT" > "\filename";
-          fi;
-%    \end{macrocode}
-% \begin{markdown}
-%
-% If the image does not have the http or https protocols or the image has
-% already been downloaded, the URL will be stored as-is:
-%
-% \end{markdown}
-%  \begin{macrocode}
-        else
-          printf '%s' '#3' > "\filename";
-        fi}}^^A
-%    \end{macrocode}
-% \begin{markdown}
-%
-% We load the pathname of the downloaded image and we typeset the image using
-% the previous definition of the image renderer prototype:
-%
-% \end{markdown}
-%  \begin{macrocode}
-    \CatchFileDef{\filename}{\filename}{\endlinechar=-1}^^A
-    \markdown@witiko@graphicx@http@oldRendererImagePrototype^^A
-      {#1}{#2}{\filename}{#4}^^A
-  \endgroup
-  \global\advance\markdown@witiko@graphicx@http@counter by 1\relax}^^A
-\endgroup
-%    \end{macrocode}
-% \iffalse
-%</themes-witiko-graphicx-http>
 %<*themes-witiko-markdown-defaults-latex>
 % \fi
-% \par
 % \begin{markdown}
 %
-% The `witiko/markdown/defaults` \LaTeX{} theme provides default definitions
-% for token renderer prototypes. First, the \LaTeX{} theme loads the plain
-% \TeX{} theme with the default definitions for plain \TeX{}:
+% The `witiko/markdown/defaults` \LaTeX{} theme also loads the corresponding
+% plain \TeX{} theme.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \markdownLoadPlainTeXTheme
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Next, the \LaTeX{} theme overrides some of the plain \TeX{} definitions.
@@ -37649,7 +37293,6 @@ end
 %  \begin{macrocode}
 \markdownIfOption{plain}{\iffalse}{\iftrue}
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Lists
@@ -37773,7 +37416,6 @@ end
   }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % If we loaded the \pkg{enumitem} package, define the tight and
@@ -37904,7 +37546,6 @@ end
     },
   }}
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Otherwise, if we loaded the \pkg{paralist} package, define the
@@ -38011,7 +37652,6 @@ end
   }}
 }{
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Otherwise, if we loaded neither the \pkg{enumitem} package nor the
@@ -38040,7 +37680,6 @@ end
 \ExplSyntaxOff
 \RequirePackage{amsmath}
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Unless the \pkg{unicode-math} package has been loaded, load the \pkg{amssymb}
@@ -38072,7 +37711,6 @@ end
   tilde = {\textasciitilde},
   pipe = {\textbar},
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % We can capitalize on the fact that the expansion of renderers is performed by
@@ -38096,6 +37734,19 @@ end
       \texttt{#1}%
     \fi
   }}}
+%    \end{macrocode}
+% \begin{markdown}
+%
+%#### Content Blocks
+%
+% In content block renderer prototypes, display the content as a table using
+% the package \pkg{csvsimple} when the raw attribute is `csv`, display the
+% content using the default templates of the package \pkg{luaxml} when the
+% raw attribute is `html`, execute the content with TeX when the raw attribute
+% is `tex`, and display the content as markdown otherwise.
+%
+% \end{markdown}
+%  \begin{macrocode}
 \ExplSyntaxOn
 \markdownSetup{
   rendererPrototypes = {
@@ -38114,9 +37765,45 @@ end
                   { \caption{#4} }
               \end{table}
             }
-          { tex } { \markdownEscape{#3} }
+          { html }
+            {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If we are using [\TeX{}4ht][1], we will pass HTML elements to the
+% output HTML document unchanged.
+%
+%  [1]: https://tug.org/tex4ht/
+%
+% \end{markdown}
+%  \begin{macrocode}
+            \cs_if_exist:NTF
+              \HCode
+              {
+                \if_mode_vertical:
+                  \IgnorePar
+                \fi:
+                \EndP
+                \special
+                  { t4ht* < #3 }
+                \par
+                \ShowPar
+              }
+              {
+                \@@_luaxml_print_html:n
+                  { #3 }
+              }
+            }
+          { tex }
+            {
+              \markdownEscape
+                { #3 }
+            }
         }
-        { \markdownInput{#3} }
+        {
+          \markdownInput
+            { #3 }
+        }
     },
   },
 }
@@ -38135,7 +37822,6 @@ end
   tickedBox = {$\boxtimes$},
   halfTickedBox = {$\boxdot$}}}
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % If \acro{HTML} identifiers appear after a heading, we make them
@@ -38228,7 +37914,6 @@ end
   thematicBreak = {\noindent\rule[0.5ex]{\linewidth}{1pt}},
   note = {\footnote{#1}}}}
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Fenced Code
@@ -38262,7 +37947,6 @@ end
           \l_tmpa_seq
           \l_tmpa_tl
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % When the \pkg{minted} package is loaded, use it for syntax highlighting.
@@ -38283,7 +37967,6 @@ end
           }
           {
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % When the \pkg{listings} package is loaded, use it for syntax highlighting.
@@ -38294,7 +37977,6 @@ end
               { listings }
               { \lstinputlisting[language=\l_tmpa_tl]{#1} }
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % When neither the \pkg{listings} package nor the \pkg{minted} package is
@@ -38308,7 +37990,6 @@ end
   }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Support the nesting of strong emphasis.
@@ -38327,7 +38008,6 @@ end
 \markdownSetup{rendererPrototypes={strongEmphasis={%
   \protect\markdownLATEXStrongEmphasis{#1}}}}
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Support \LaTeX{} document classes that do not provide chapters.
@@ -38351,7 +38031,6 @@ end
     headingSix = {\subparagraph{#1}}}}
 }%
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Tickboxes
@@ -38387,7 +38066,6 @@ end
   \fi
 }
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### HTML elements
@@ -38421,7 +38099,6 @@ end
   }
 }
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Citations
@@ -38436,7 +38113,7 @@ end
 \newcount\markdownLaTeXCitationsCounter
 
 % Basic implementation
-\RequirePackage{gobble}
+\long\def\@gobblethree#1#2#3{}%
 \def\markdownLaTeXBasicCitations#1#2#3#4#5#6{%
   \advance\markdownLaTeXCitationsCounter by 1\relax
   \ifx\relax#4\relax
@@ -38668,7 +38345,6 @@ end
       \expandafter{\expandafter}%
     }}}}
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Links
@@ -38760,7 +38436,6 @@ end
 \def\markdownLaTeXRendererDirectOrIndirectLink#1#2#3#4{%
   #1\footnote{\ifx\empty#4\empty\else#4: \fi\url{#3}}}
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Tables
@@ -38804,7 +38479,6 @@ end
   }
 }}
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % If the \Opt{tableAttributes} option is enabled, we will register any
@@ -38901,7 +38575,6 @@ end
     \expandafter\@gobble
   \fi\markdownLaTeXRenderTableCell}
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Line Blocks
@@ -38927,7 +38600,6 @@ end
 }{}
 
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### YAML Metadata {#latex-yaml-metadata}
@@ -38966,11 +38638,10 @@ end
   },
 }
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Marked Text
-% If the \Opt{mark} option is enabled, we will load either the \pkg{soulutf8}
+% If the \Opt{mark} option is enabled, we will load either the \pkg{soul}
 % package or the \pkg{lua-ul} package and use it to implement marked text.
 %
 % \end{markdown}
@@ -38997,17 +38668,8 @@ end
       {
         \RequirePackage
           { xcolor }
-        % TODO: Use just package soul after TeX Live 2023.
-        \IfFormatAtLeastTF
-          { 2023-02-18 }
-          {
-            \RequirePackage
-              { soul }
-          }
-          {
-            \RequirePackage
-              { soulutf8 }
-          }
+        \RequirePackage
+          { soul }
         \markdownSetup
           {
             rendererPrototypes = {
@@ -39020,12 +38682,11 @@ end
       }
   }
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Strike-Through
 % If the \Opt{strikeThrough} option is enabled, we will load either the
-% \pkg{soulutf8} package or the \pkg{lua-ul} package and use it to implement
+% \pkg{soul} package or the \pkg{lua-ul} package and use it to implement
 % strike-throughs.
 %
 % \end{markdown}
@@ -39048,17 +38709,8 @@ end
           }
       }
       {
-        % TODO: Use just package soul after TeX Live 2023.
-        \IfFormatAtLeastTF
-          { 2023-02-18 }
-          {
-            \RequirePackage
-              { soul }
-          }
-          {
-            \RequirePackage
-              { soulutf8 }
-          }
+        \RequirePackage
+          { soul }
         \markdownSetup
           {
             rendererPrototypes = {
@@ -39071,7 +38723,6 @@ end
       }
   }
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Images and their attributes
@@ -39088,7 +38739,6 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\ExplSyntaxOn
 \seq_new:N
   \l_@@_image_identifiers_seq
 \markdownSetup {
@@ -39141,17 +38791,32 @@ end
   }
 \ExplSyntaxOff
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Raw Attributes
 %
-% In the raw block and inline raw span renderer prototypes, default to the
-% plain TeX renderer prototypes, translating raw attribute `latex` to `tex`.
+% In the raw block and inline raw span renderer prototypes, display the content
+% using the default templates of the package \pkg{luaxml} when the raw
+% attribute is `html` and default to the plain TeX renderer prototypes
+% otherwise, translating raw attribute `latex` to `tex`.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
+\cs_new:Nn
+  \@@_luaxml_print_html:n
+  {
+    \luabridge_now:n
+      {
+        local~input_file = assert(io.open(" #1 ", "r"))
+        local~input = assert(input_file:read("*a"))
+        assert(input_file:close())
+        input = "<body>" .. input .. "</body>"
+        local~dom = require("luaxml-domobject").html_parse(input)
+        local~output = require("luaxml-htmltemplates"):process_dom(dom)
+        print(output)
+      }
+  }
 \cs_gset_protected:Npn
   \markdownRendererInputRawInlinePrototype#1#2
   {
@@ -39163,6 +38828,33 @@ end
             \@@_plain_tex_default_input_raw_inline:nn
               { #1 }
               { tex }
+          }
+        { html }
+          {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If we are using [\TeX{}4ht][1], we will pass HTML elements to the
+% output HTML document unchanged.
+%
+%  [1]: https://tug.org/tex4ht/
+%
+% \end{markdown}
+%  \begin{macrocode}
+            \cs_if_exist:NTF
+              \HCode
+              {
+                \if_mode_vertical:
+                  \IgnorePar
+                  \EndP
+                \fi:
+                \special
+                  { t4ht* < #1 }
+              }
+              {
+                \@@_luaxml_print_html:n
+                  { #1 }
+              }
           }
       }
       {
@@ -39183,6 +38875,35 @@ end
               { #1 }
               { tex }
           }
+        { html }
+          {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If we are using [\TeX{}4ht][1], we will pass HTML elements to the
+% output HTML document unchanged.
+%
+%  [1]: https://tug.org/tex4ht/
+%
+% \end{markdown}
+%  \begin{macrocode}
+            \cs_if_exist:NTF
+              \HCode
+              {
+                \if_mode_vertical:
+                  \IgnorePar
+                \fi:
+                \EndP
+                \special
+                  { t4ht* < #1 }
+                \par
+                \ShowPar
+              }
+              {
+                \@@_luaxml_print_html:n
+                  { #1 }
+              }
+          }
       }
       {
         \@@_plain_tex_default_input_raw_block:nn
@@ -39191,7 +38912,6 @@ end
       }
   }
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Bracketed spans
@@ -39233,7 +38953,6 @@ end
 %</themes-witiko-markdown-defaults-latex>
 %<*latex>
 % \fi
-% \par
 % \begin{markdown}
 %
 %### Miscellanea
@@ -39255,7 +38974,6 @@ end
 %</latex>
 %<*context>
 % \fi
-% \par
 % \begin{markdown}
 %
 % \Hologo{ConTeXt} Implementation {#contextimplementation}
@@ -39283,7 +39001,6 @@ end
     \advance\count0 by 1\relax
   \ifnum\count0<256\repeat
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % On top of that, make the pipe character (`|`) inactive during the scanning.
@@ -39293,7 +39010,6 @@ end
 %  \begin{macrocode}
   \catcode`|=12}%
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %### Typesetting Markdown
@@ -39320,7 +39036,6 @@ end
   \doinputmarkdown
     [jekyllData, expectJekyllData, ensureJekyllData, #1]{#2}}%
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % The \mref{startmarkdown}, \mref{stopmarkdown}, \mref{startyaml}, and
@@ -39369,7 +39084,6 @@ end
     |yamlEnd}%
 |endgroup
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %### Themes {#context-themes-implementation}
@@ -39388,17 +39102,28 @@ end
   \@@_load_theme:nnn
   {
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
-% Determine whether a file named `t-markdowntheme`\meta{munged theme
-% name}`.tex` exists. If it does, load it. Otherwise, try loading a plain
-% \TeX{} theme instead.
+% Determine whether either this is a built-in theme according to the prop
+% \mref{g_@@_context_built_in_themes_prop} or a file named
+% `t-markdowntheme`\meta{munged theme name}`.tex` exists. If it does, load it.
+% Otherwise, try loading a plain \TeX{} theme instead.
 %
 % \end{markdown}
 %  \begin{macrocode}
-    \file_if_exist:nTF
-      { t - markdown theme #3.tex }
+    \bool_if:nTF
+      {
+        \bool_lazy_or_p:nn
+          {
+            \prop_if_in_p:Nn
+              \g_@@_context_built_in_themes_prop
+              { #1 }
+          }
+          {
+            \file_if_exist_p:n
+              { t - markdown theme #3.tex }
+          }
+      }
       {
         \prop_get:NnNTF
           \g_@@_context_loaded_themes_linenos_prop
@@ -39431,11 +39156,6 @@ end
               }
           }
           {
-            \msg_info:nnn
-              { markdown }
-              { loading-context-theme }
-              { #1 }
-              { #2 }
             \prop_gput:Nnx
               \g_@@_context_loaded_themes_linenos_prop
               { #1 }
@@ -39444,9 +39164,37 @@ end
               \g_@@_context_loaded_themes_versions_prop
               { #1 }
               { #2 }
-            \usemodule
-              [ t ]
-              [ markdown theme #3 ]
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Load built-in plain \TeX{} themes from the prop
+% \mref{g_@@_context_built_in_themes_prop} and from the filesystem otherwise.
+%
+% \end{markdown}
+%  \begin{macrocode}
+            \prop_if_in:NnTF
+              \g_@@_context_built_in_themes_prop
+              { #1 }
+              {
+                \msg_info:nnnn
+                  { markdown }
+                  { loading-built-in-context-theme }
+                  { #1 }
+                  { #2 }
+                \prop_item:Nn
+                  \g_@@_context_built_in_themes_prop
+                  { #1 }
+              }
+              {
+                \msg_info:nnnn
+                  { markdown }
+                  { loading-context-theme }
+                  { #1 }
+                  { #2 }
+                \usemodule
+                  [ t ]
+                  [ markdown theme #3 ]
+              }
           }
       }
       {
@@ -39456,6 +39204,10 @@ end
           { #3 }
       }
   }
+\msg_new:nnn
+  { markdown }
+  { loading-built-in-context-theme }
+  { Loading~version~#2~of~built-in~ConTeXt~Markdown~theme~#1 }
 \msg_new:nnn
   { markdown }
   { loading-context-theme }
@@ -39480,7 +39232,6 @@ end
 %</context>
 %<*themes-witiko-markdown-defaults-ctx>
 % \fi
-% \par
 % \begin{markdown}
 %
 % The `witiko/markdown/defaults` \Hologo{ConTeXt} theme provides default
@@ -39491,7 +39242,6 @@ end
 %  \begin{macrocode}
 \markdownLoadPlainTeXTheme
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Next, the \Hologo{ConTeXt} theme overrides some of the plain \TeX{} definitions.
@@ -39590,7 +39340,6 @@ end
 }%
 \def\markdownRendererInputVerbatimPrototype#1{\typefile{#1}}%
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Fenced Code
@@ -39607,7 +39356,6 @@ end
       { #2 }
       { \markdownRendererInputVerbatim{#1} }
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 % Otherwise, extract the first word of the infostring and treat it as the name
@@ -39663,7 +39411,6 @@ end
 \def\markdownRendererDisplayMathPrototype#1{%
   \startformula#1\stopformula}%
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Tables
@@ -39741,7 +39488,6 @@ end
     \expandafter\gobbleoneargument
   \fi\markdownConTeXtRenderTableCell}
 %    \end{macrocode}
-% \par
 % \begin{markdown}
 %
 %#### Raw Attributes
@@ -39802,7 +39548,6 @@ end
 %</themes-witiko-markdown-defaults-ctx>
 %<*context>
 % \fi
-% \par
 % \begin{markdown}
 %
 % At the end of the \Hologo{ConTeXt} module, we load the

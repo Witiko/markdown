@@ -57,6 +57,7 @@ FROM $FROM_IMAGE:$TEXLIVE_TAG as build
 ARG DEPENDENCIES
 ARG TEXLIVE_DEPENDENCIES
 
+ARG BINARY_DIR
 ARG BUILD_DIR
 ARG INSTALL_DIR
 ARG PREINSTALLED_DIR
@@ -102,6 +103,7 @@ rm -rfv ${PREINSTALLED_DIR}/scripts/markdown/
 rm -rfv ${PREINSTALLED_DIR}/tex/generic/markdown/
 rm -rfv ${PREINSTALLED_DIR}/tex/latex/markdown/
 rm -rfv ${PREINSTALLED_DIR}/tex/context/third/markdown/
+rm -fv ${BINARY_DIR}/markdown-cli
 
 # Uninstall the distribution lt3luabridge package
 rm -rfv ${PREINSTALLED_DIR}/tex/generic/lt3luabridge/
@@ -113,21 +115,20 @@ mkdir -p                                                     ${INSTALL_DIR}/tex/
 cp ${BUILD_DIR}/markdown.lua                                 ${INSTALL_DIR}/tex/luatex/markdown/
 cp ${BUILD_DIR}/markdown-parser.lua                          ${INSTALL_DIR}/tex/luatex/markdown/
 cp ${BUILD_DIR}/markdown-unicode-data.lua                    ${INSTALL_DIR}/tex/luatex/markdown/
-cp ${BUILD_DIR}/libraries/markdown-tinyyaml.lua              ${INSTALL_DIR}/tex/luatex/markdown/
 mkdir -p                                                     ${INSTALL_DIR}/scripts/markdown/
 cp ${BUILD_DIR}/markdown-cli.lua                             ${INSTALL_DIR}/scripts/markdown/
 mkdir -p                                                     ${INSTALL_DIR}/tex/generic/markdown/
 cp ${BUILD_DIR}/markdown.tex                                 ${INSTALL_DIR}/tex/generic/markdown/
-cp ${BUILD_DIR}/markdownthemewitiko_tilde.tex                ${INSTALL_DIR}/tex/generic/markdown/
 cp ${BUILD_DIR}/markdownthemewitiko_markdown_defaults.tex    ${INSTALL_DIR}/tex/generic/markdown/
 mkdir -p                                                     ${INSTALL_DIR}/tex/latex/markdown/
 cp ${BUILD_DIR}/markdown.sty                                 ${INSTALL_DIR}/tex/latex/markdown/
-cp ${BUILD_DIR}/markdownthemewitiko_dot.sty                  ${INSTALL_DIR}/tex/latex/markdown/
-cp ${BUILD_DIR}/markdownthemewitiko_graphicx_http.sty        ${INSTALL_DIR}/tex/latex/markdown/
 cp ${BUILD_DIR}/markdownthemewitiko_markdown_defaults.sty    ${INSTALL_DIR}/tex/latex/markdown/
 mkdir -p                                                     ${INSTALL_DIR}/tex/context/third/markdown/
 cp ${BUILD_DIR}/t-markdown.tex                               ${INSTALL_DIR}/tex/context/third/markdown/
 cp ${BUILD_DIR}/t-markdownthemewitiko_markdown_defaults.tex  ${INSTALL_DIR}/tex/context/third/markdown/
+
+# Make the markdown-cli script executable
+ln -s ${INSTALL_DIR}/scripts/markdown/markdown-cli.lua       ${BINARY_DIR}/markdown-cli
 
 # Install the current lt3luabridge package
 git clone https://github.com/witiko/lt3luabridge.git
@@ -225,6 +226,7 @@ rm -rfv ${PREINSTALLED_DIR}/scripts/markdown/
 rm -rfv ${PREINSTALLED_DIR}/tex/generic/markdown/
 rm -rfv ${PREINSTALLED_DIR}/tex/latex/markdown/
 rm -rfv ${PREINSTALLED_DIR}/tex/context/third/markdown/
+rm -fv ${BINARY_DIR}/markdown-cli
 
 # Uninstall the distribution lt3luabridge package
 rm -rfv ${PREINSTALLED_DIR}/tex/generic/lt3luabridge/
@@ -234,12 +236,6 @@ EOF
 # Install the Markdown package and the current lt3luabridge package
 COPY --from=build ${BUILD_DIR}/dist ${INSTALL_DIR}/
 
-COPY <<EOF ${BINARY_DIR}/markdown-cli
-#!/bin/bash
-texlua ${INSTALL_DIR}/scripts/markdown/markdown-cli.lua eagerCache=false \"\$@\"
-echo
-EOF
-
 RUN <<EOF
 
 set -o errexit
@@ -247,7 +243,7 @@ set -o nounset
 set -o xtrace
 
 # Make the markdown-cli script executable
-chmod +x ${BINARY_DIR}/markdown-cli
+ln -s ${INSTALL_DIR}/scripts/markdown/markdown-cli.lua       ${BINARY_DIR}/markdown-cli
 
 # Generate the ConTeXt file database
 if echo ${TEXLIVE_TAG} | grep -q latest-minimal
