@@ -175,16 +175,16 @@ For further information, consult one of the following:
  [overleaf-5]: https://www.overleaf.com/latex/examples/writing-posters-with-markdown/jtbgmmgqrqmh       "Writing Posters with Markdown"
  [overleaf-6]: https://www.overleaf.com/latex/examples/using-markdown-in-latex-documents/whdrnpcpnwrm   "Using Markdown in LaTeX documents"
 
- [tb119]: https://www.tug.org/TUGboat/tb38-2/tb119novotny.pdf                                                                  "Using Markdown inside TeX documents"
- [tb124]: https://www.tug.org/TUGboat/tb40-1/tb124novotny-markdown.pdf                                                         "Markdown 2.7.0: Towards lightweight markup in TeX"
- [tb129]: https://www.tug.org/TUGboat/tb41-3/tb129novotny-frozen.pdf                                                           "Making Markdown into a Microwave Meal"
- [tb131]: https://www.tug.org/TUGboat/tb42-2/tb131novotny-markdown.pdf                                                         "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"
- [tb133]: https://www.tug.org/TUGboat/tb43-1/tb133novotny-markdown.pdf                                                         "Markdown 2.15.0: What's New?"
- [tb135]: https://www.tug.org/TUGboat/tb43-3/tb135novotny-markdown.pdf                                                         "Markdown 2.17.1: What's New, What's Next?"
- [tb136]: https://www.tug.org/TUGboat/tb44-1/tb136novotny-markdown-attr.pdf                                                    "Attributes in Markdown"
- [tb138]: https://www.tug.org/TUGboat/tb44-3/tb138starynovotny-markdown-qa.pdf                                                 "Markdown 3 at TUG 2023: Reflections from the Q&A session"
- [tb139]: https://www.tug.org/TUGboat/tb45-1/tb139starynovotny-testing.pdf                                                     "Fast Regression Testing of TeX Packages: The Unreasonable Effectiveness of Batching"
- [tb140]: https://github.com/Witiko/markdown-themes-in-practice/releases/download/latest/tb140starynovotny-markdown-themes.pdf "Markdown Themes in Practice"
+ [tb119]: https://www.tug.org/TUGboat/tb38-2/tb119novotny.pdf                      "Using Markdown inside TeX documents"
+ [tb124]: https://www.tug.org/TUGboat/tb40-1/tb124novotny-markdown.pdf             "Markdown 2.7.0: Towards lightweight markup in TeX"
+ [tb129]: https://www.tug.org/TUGboat/tb41-3/tb129novotny-frozen.pdf               "Making Markdown into a Microwave Meal"
+ [tb131]: https://www.tug.org/TUGboat/tb42-2/tb131novotny-markdown.pdf             "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"
+ [tb133]: https://www.tug.org/TUGboat/tb43-1/tb133novotny-markdown.pdf             "Markdown 2.15.0: What's New?"
+ [tb135]: https://www.tug.org/TUGboat/tb43-3/tb135novotny-markdown.pdf             "Markdown 2.17.1: What's New, What's Next?"
+ [tb136]: https://www.tug.org/TUGboat/tb44-1/tb136novotny-markdown-attr.pdf        "Attributes in Markdown"
+ [tb138]: https://www.tug.org/TUGboat/tb44-3/tb138starynovotny-markdown-qa.pdf     "Markdown 3 at TUG 2023: Reflections from the Q&A session"
+ [tb139]: https://www.tug.org/TUGboat/tb45-1/tb139starynovotny-testing.pdf         "Fast Regression Testing of TeX Packages: The Unreasonable Effectiveness of Batching"
+ [tb140]: https://www.tug.org/TUGboat/tb45-2/tb140starynovotny-markdown-themes.pdf "Markdown Themes in Practice"
 
  [tb131-slides]:       https://tug.org/tug2021/assets/pdf/tug2021-novotny-slides.pdf                            "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"
  [tb131-video]:        https://youtu.be/i2GJMnLCZls                                                             "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"
@@ -301,13 +301,18 @@ reproduced by running the `docker build` command on `Dockerfile` (`docker build
  [literate programming]: https://en.wikipedia.org/wiki/Literate_programming "Literate programming"
  [ltxdockit]:            https://ctan.org/pkg/ltxdockit                     "ltxdockit – Documentation support"
 
-Contributed Software
---------------------
+Related Work
+------------
 
-Links to contributed third-party software for the Markdown package are
-available in the `contributions/` directory. The intention is to show
-interesting tools for the Markdown package and to give them wider exposure
-without taking responsibility for their development or maintenance.
+Links to third-party software for the Markdown package are available in the
+`contributions/` directory. The intention is to show interesting tools for the
+Markdown package and to give them wider exposure without taking responsibility
+for their development or maintenance.
+
+Artwork for the Markdown package is available in the `artwork/` directory.
+You are welcome to use these artworks in your promotional materials, provided
+you comply with the license terms specified for each piece. Typically, proper
+attribution to the artist is required.
 
 Citing Markdown
 ---------------
