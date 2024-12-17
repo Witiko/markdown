@@ -4,7 +4,7 @@
 
 This artwork was created by <https://fiverr.com/quickcartoon> in December 2023.
 
-It first appeared in the TUGboat article [_Fast regression testing of TeX packages: Multiprocessing and batching_][tb139], published in April 2024.
+It first appeared in the TUGboat article [_Fast Regression Testing of TeX Packages: Multiprocessing and Batching_][tb139], published in April 2024.
 
 ## License terms
 

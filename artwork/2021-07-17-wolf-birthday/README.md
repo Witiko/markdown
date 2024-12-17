@@ -4,7 +4,7 @@
 
 This artwork was created by <https://fiverr.com/quickcartoon> in July 2021.
 
-It first appeared in the TUGboat article [_Markdown 2.10.0: LaTeX themes & snippets, two flavors of comments, and LuaMetaTeX_][tb131], published in September 2021.
+It first appeared in the TUGboat article [_Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX_][tb131], published in September 2021.
 
 ## License terms
 
