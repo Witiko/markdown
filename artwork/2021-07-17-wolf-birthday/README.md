@@ -1,6 +1,6 @@
 # Wolf's Fifth Birthday
 
- ![artwork](wolf-birthday.png "Wolf's Fifth Birthday by https://fiverr.com/quickcartoon")
+ ![artwork](wolf-birthday.png "Wolf's Fifth Birthday by <https://fiverr.com/quickcartoon>")
 
 This artwork was created by <https://fiverr.com/quickcartoon> in July 2021.
 
