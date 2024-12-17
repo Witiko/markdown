@@ -22904,24 +22904,21 @@ developers can load the `.tex` theme file from the `.sty` theme file using the
 % specified in the `\usepackage` macro, the loading of the theme(s) will be
 % postponed in first-in-first-out order until after the Markdown \LaTeX{}
 % package has been loaded. Otherwise, the theme(s) will be loaded immediately.
-% For example, there is a theme named `witiko/dot`, which typesets fenced code
-% blocks with the `dot` infostring as images of directed graphs rendered by the
-% Graphviz tools. The following code would first load the Markdown package,
-% then the `markdownthemewitiko_beamer_MU.sty` \LaTeX{} package, and finally
-% the `markdownthemewitiko_dot.sty` \LaTeX{} package:
+% For example, the following code would first load the Markdown package, then
+% the theme `witiko/example/foo`, and finally the theme `witiko/example/bar`:
 % \end{markdown}
 % \iffalse
 
-For example, to load themes named `witiko/beamer/MU` and `witiko/dot`, you
-would use the following code in the preamble of your document:
+For example, to load themes named `witiko/example/foo` and `witiko/example/bar`,
+you would use the following code in the preamble of your document:
 
 % \fi
 % \begin{markdown}
 
 ``` tex
 \usepackage[
-  import=witiko/beamer/MU,
-  import=witiko/dot,
+  import=witiko/example/foo,
+  import=witiko/example/bar,
 ]{markdown}
 ```````
 
@@ -35559,6 +35556,29 @@ end
         tilde = {~},
       },
     }
+  }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The themes `witiko/example/foo` and `witiko/example/bar` are supposed to be
+% used in code examples. They don't do anything.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\clist_map_inline:nn
+  { foo, bar }
+  {
+    \prop_gput:Nnn
+      \g_@@_plain_tex_built_in_themes_prop
+      { witiko / example / #1 }
+      {
+        \markdownWarning
+          {
+            The~theme~witiko/example/#1~is~supposed~to~be~used~in~code~examples.~
+            Using~it~in~actual~code~has~no~effect,~except~this~warning~message,~
+            and~is~usually~a~mistake.
+          }
+      }
   }
 \ExplSyntaxOff
 %    \end{macrocode}
