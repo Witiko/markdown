@@ -26,6 +26,11 @@ Documentation:
   you comply with the license terms specified for each piece. Typically, proper
   attribution to the artist is required.
 
+Defaults:
+
+- In LaTeX, fix bad interaction between heading identifiers and the class name
+  `{.unnumbered}` (also written as `{-}`). (#511, 3d2e81d4, reported by @jurf)
+
 Continuous Integration:
 
 - Use explcheck to check expl3 code in the continuous integration.
