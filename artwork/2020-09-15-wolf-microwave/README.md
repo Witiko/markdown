@@ -1,5 +1,7 @@
 # Wolf and Microwave
 
+ ![artwork](wolf-microwave.png "Wolf and Microwave by https://fiverr.com/quickcartoon")
+
 This artwork was created by <https://fiverr.com/quickcartoon> in September 2020.
 It first appeared in the TUGboat article [_Making Markdown into a Microwave Meal_][tb129], published in November 2020.
 
