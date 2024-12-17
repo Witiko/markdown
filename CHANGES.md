@@ -18,6 +18,14 @@ Fixes:
 - Make option `eagerCache` safe to use with plain LuaTeX.
   (#530, witiko/lt3luabridge#29)
 
+Documentation:
+
+- Add artwork by <https://fiverr.com/quickcartoon> to directory `artwork/`. (#533)
+
+  You are welcome to use these artworks in your promotional materials, provided
+  you comply with the license terms specified for each piece. Typically, proper
+  attribution to the artist is required.
+
 Continuous Integration:
 
 - Use explcheck to check expl3 code in the continuous integration.
