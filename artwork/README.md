@@ -5,6 +5,7 @@ you comply with the license terms specified for each piece. Typically, proper
 attribution to the artist is required.
 
 Each artwork is organized into its own subdirectory, which includes:
+
 - The artwork files in various formats.
 - A `README.md` file with details about the artwork, including the licensing
   terms and the required attribution.
