@@ -1,0 +1,20 @@
+# Wolf in F1 Racing Action
+
+ ![artwork](wolf-f1.png "Wolf in F1 Racing Action by <https://fiverr.com/quickcartoon>")
+
+This artwork was created by <https://fiverr.com/quickcartoon> in December 2023.
+
+It first appeared in the TUGboat article [_Fast regression testing of TeX packages: Multiprocessing and batching_][tb139], published in April 2024.
+
+## License terms
+
+The artwork is licensed under [Creative Commons Attribution 4.0 International (CC-BY-4.0)][cc-by] license.
+
+If you wish to use this artwork in your materials, you must provide attribution to the creator.
+
+A suggested attribution is:
+
+> Illustration by <https://fiverr.com/quickcartoon>.
+
+ [tb139]: https://www.tug.org/TUGboat/tb45-1/tb139starynovotny-testing.pdf
+ [cc-by]: https://creativecommons.org/licenses/by/4.0/legalcode
