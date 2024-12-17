@@ -301,13 +301,18 @@ reproduced by running the `docker build` command on `Dockerfile` (`docker build
  [literate programming]: https://en.wikipedia.org/wiki/Literate_programming "Literate programming"
  [ltxdockit]:            https://ctan.org/pkg/ltxdockit                     "ltxdockit – Documentation support"
 
-Contributed Software
---------------------
+Related Work
+------------
 
-Links to contributed third-party software for the Markdown package are
-available in the `contributions/` directory. The intention is to show
-interesting tools for the Markdown package and to give them wider exposure
-without taking responsibility for their development or maintenance.
+Links to third-party software for the Markdown package are available in the
+`contributions/` directory. The intention is to show interesting tools for the
+Markdown package and to give them wider exposure without taking responsibility
+for their development or maintenance.
+
+Artwork for the Markdown package is available in the `artwork/` directory.
+You are welcome to use these artworks in your promotional materials, provided
+you comply with the license terms specified for each piece. Typically, proper
+attribution to the artist is required.
 
 Citing Markdown
 ---------------
