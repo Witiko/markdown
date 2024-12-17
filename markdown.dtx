@@ -854,10 +854,10 @@ abbr {
   rendererPrototypes = {
     headerAttributeContextEnd = {
       \seq_map_inline:Nn
-        \l_@@_header_identifiers_seq
+        \g_@@_header_identifiers_seq
         { \label { sec:##1 } }
-      \seq_clear:N
-        \l_@@_header_identifiers_seq
+      \seq_gclear:N
+        \g_@@_header_identifiers_seq
     },
   },
 }
@@ -37930,7 +37930,7 @@ end
 %  \begin{macrocode}
 \ExplSyntaxOn
 \seq_new:N
-  \l_@@_header_identifiers_seq
+  \g_@@_header_identifiers_seq
 \markdownSetup
   {
     rendererPrototypes = {
@@ -37939,8 +37939,8 @@ end
           {
             rendererPrototypes = {
               attributeIdentifier = {
-                \seq_put_right:Nn
-                  \l_@@_header_identifiers_seq
+                \seq_gput_right:Nn
+                  \g_@@_header_identifiers_seq
                   { ##1 }
               },
             },
@@ -37948,10 +37948,10 @@ end
       },
       headerAttributeContextEnd = {
         \seq_map_inline:Nn
-          \l_@@_header_identifiers_seq
+          \g_@@_header_identifiers_seq
           { \label { ##1 } }
-        \seq_clear:N
-          \l_@@_header_identifiers_seq
+        \seq_gclear:N
+          \g_@@_header_identifiers_seq
       },
     },
   }
