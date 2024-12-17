@@ -1,6 +1,6 @@
-# Wolf and Microwave
+# Wolf's Microwave Meal
 
- ![artwork](wolf-microwave.png "Wolf and Microwave by <https://fiverr.com/quickcartoon>")
+ ![artwork](wolf-microwave.png "Wolf's Microwave Meal by <https://fiverr.com/quickcartoon>")
 
 This artwork was created by <https://fiverr.com/quickcartoon> in September 2020.
 

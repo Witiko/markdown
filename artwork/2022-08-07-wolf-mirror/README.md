@@ -1,6 +1,6 @@
-# Wolf and Mirror
+# Wolf in Front of a Mirror
 
- ![artwork](wolf-mirror.png "Wolf and Mirror by <https://fiverr.com/quickcartoon>")
+ ![artwork](wolf-mirror.png "Wolf in Front of a Mirror by <https://fiverr.com/quickcartoon>")
 
 This artwork was created by <https://fiverr.com/quickcartoon> in August 2022.
 
