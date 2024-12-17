@@ -2,6 +2,17 @@
 
 ## 3.9.1
 
+Development:
+
+- Add version `v1` of the new built-in theme `witiko/diagrams`.
+  (#514, #531, #538)
+
+  This version is an alias for an earlier theme named `witiko/dot`. Future
+  versions of the theme may have backwards-incompatible syntax and behavior,
+  see the discussion in #514 and #531. Therefore, you are encouraged to always
+  specify the version `v1` to keep your documents from suddenly breaking. The
+  Markdown package will warn you if you don't.
+
 Fixes:
 
 - Make option `eagerCache` safe to use with plain LuaTeX.
@@ -11,6 +22,11 @@ Continuous Integration:
 
 - Use explcheck to check expl3 code in the continuous integration.
   (#535, #536, b4e3bfcd)
+
+Deprecation:
+
+- Soft-deprecate the name of the built-in theme `witiko/dot` in favor of
+  the new built-in theme `witiko/diagrams@v1`. (#514, #531, #538)
 
 Distribution:
 
