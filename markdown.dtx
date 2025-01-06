@@ -35890,7 +35890,10 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-%#### YAML Metadata Renderer Prototypes
+%#### Simple YAML Metadata Renderer Prototypes
+% In this section, we implement the simple high-level interface for processing
+% simple \acro{YAML} metadata using the key--value `markdown/jekyllData`. See
+% also Section <#sec:expl3yamlmetadata>.
 %
 % To keep track of the current type of structure we inhabit when we are
 % traversing a \acro{yaml} document, we will maintain the
@@ -36127,6 +36130,19 @@ end
     { #1 }
     { #2 }
 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \begin{markdown}
+%
+%#### Complex YAML Metadata Renderer Prototypes
+% In this section, we implement the high-level interface for routing complex
+% \acro{YAML} metadata to expl3 key--values using the option
+% `jekyllDataKeyValue`=\meta{module}. See also Section <#sec:expl3yamlmetadata>.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\iffalse TODO \fi
 \ExplSyntaxOff
 %    \end{macrocode}
 % \iffalse
