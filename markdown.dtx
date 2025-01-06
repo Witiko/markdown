@@ -1362,7 +1362,7 @@ soft url
 % \pkg{graphicx}
 %
 %:    A package that provides the `\includegraphics` macro for the typesetting
-%     of images. Furthermore, it also provides a key-value interface that is
+%     of images. Furthermore, it also provides a key--value interface that is
 %     used in the default renderer prototypes for image attribute contexts.
 %
 % \end{markdown}
@@ -12327,16 +12327,16 @@ A PDF document named `document.pdf` should be produced and contain the text
 %#### Generating Plain \TeX{} Option Macros and Key-Values
 %
 % We define the command \mdef{@@_define_option_commands_and_keyvals:} that
-% defines plain \TeX{} macros and the key-value interface
+% defines plain \TeX{} macros and the key--value interface
 % of the \mref{markdownSetup} macro for the above plain \TeX{} options.
 %
-% The command also defines macros and key-values that map
+% The command also defines macros and key--values that map
 % directly to the options recognized by the Lua interface, such as
 % \mdef{markdownOptionHybrid} for the \Opt{hybrid} Lua option (see Section
 % <#sec:lua-options>), which are not processed by the plain \TeX{}
 % implementation, only passed along to Lua.
 %
-% Furthermore, the command also defines options and key-values
+% Furthermore, the command also defines options and key--values
 % for subsequently loaded layers that correspond to higher-level \TeX{} formats
 % such as \LaTeX{} and \Hologo{ConTeXt}.
 %
@@ -12668,7 +12668,7 @@ A PDF document named `document.pdf` should be produced and contain the text
 %
 % If plain \TeX{} is the top layer, we use the
 % \mref{@@_define_option_commands_and_keyvals:} macro to define plain \TeX{}
-% option macros and key-values immediately. Otherwise, we
+% option macros and key--values immediately. Otherwise, we
 % postpone the definition until the upper layers have been loaded.
 %
 % \end{markdown}
@@ -12696,7 +12696,7 @@ User-defined themes for the Markdown package provide a domain-specific
 interpretation of Markdown tokens. Themes allow the authors to achieve
 a specific look and other high-level goals without low-level programming.
 
-% The key-values `theme`=\meta{theme name} and `import`=\meta{theme name},
+% The key--values `theme`=\meta{theme name} and `import`=\meta{theme name},
 % optionally followed by `@`\meta{theme version}, load a \TeX{} document
 % (further referred to as *a theme*) named `markdowntheme`\meta{munged theme
 % name}`.tex`, where the *munged theme name* is the *theme name* after the
@@ -21205,7 +21205,7 @@ following text:
 % We define the command \mdef{@@_define_renderers:} that defines plain \TeX{}
 % macros for token renderers. Furthermore, the `\markdownSetup` macro also accepts
 % the `renderers` and `unprotectedRenderers` keys. The value for these keys
-% must be a list of key-values, where the keys correspond to the markdown token
+% must be a list of key--values, where the keys correspond to the markdown token
 % renderer macros and the values are new definitions of these token renderers.
 %
 % Whereas the key `renderers` defines protected functions, which are usually
@@ -21630,7 +21630,7 @@ following text:
 % \begin{markdown}
 %
 % If plain \TeX{} is the top layer, we use the \mref{@@_define_renderers:}
-% macro to define plain \TeX{} token renderer macros and key-values
+% macro to define plain \TeX{} token renderer macros and key--values
 % immediately. Otherwise, we postpone the definition until the upper layers
 % have been loaded.
 %
@@ -21767,7 +21767,7 @@ following text:
 #### YAML Metadata Renderer Prototypes {#expl3yamlmetadata}
 
 For simple \acro{YAML} metadata, a simple high-level interface is provided
-that can be programmed by setting the expl3 key-values [@latex25] for the
+that can be programmed by setting the expl3 key--values [@latex25] for the
 module `markdown/jekyllData`.
 
 % \end{markdown}
@@ -21892,8 +21892,8 @@ following text:
 %    \end{macrocode}
 % \begin{markdown}
 %
-% The option `jekyllDataRenderers`=\meta{key-values} can be used to set the
-% \meta{key-values} for the module `markdown/jekyllData` without using the
+% The option `jekyllDataRenderers`=\meta{key--values} can be used to set the
+% \meta{key--values} for the module `markdown/jekyllData` without using the
 % expl3 syntax.
 %
 % \end{markdown}
@@ -21960,7 +21960,7 @@ following text:
 %
 % For complex \acro{YAML} metadata, the option `jekyllDataKeyValue`=\meta{module}
 % [@starynovotny25] can be used to route the processing of all \acro{YAML}
-% metadata in the current \TeX{} group to the key-values from \meta{module}.
+% metadata in the current \TeX{} group to the key--values from \meta{module}.
 %
 % \end{markdown}
 % \iffalse
@@ -21979,7 +21979,7 @@ following content:
 \seq_new:N \g_markdown_example_author_seq
 \keys_define:nn
   { markdown / some / example / module }
-  {  % Define a key-value that processes YAML metadata.
+  {  % Define a key--value that processes YAML metadata.
     title / programmaticString .str_gset:N = \g_markdown_example_title_str,  % Store the raw title in a variable.
     title .code:n = { \title { #1 } },  % Set the title. This is the same as writing `title / typographicString`.
     author / unknown .code = {  % Store a variable-length list of authors in an array variable.
@@ -22041,7 +22041,7 @@ following text:
 % We define the command \mdef{@@_define_renderer_prototypes:} that defines plain \TeX{}
 % macros for token renderer prototypes. Furthermore, the `\markdownSetup` macro also accepts
 % the `rendererPrototypes` and `unprotectedRendererPrototypes` keys. The value
-% for these keys must be a list of key-values, where the keys correspond to the
+% for these keys must be a list of key--values, where the keys correspond to the
 % markdown token renderer prototype macros and the values are new definitions
 % of these token renderer prototypes.
 %
@@ -22363,7 +22363,7 @@ following text:
 % \begin{markdown}
 %
 % If plain \TeX{} is the top layer, we use the \mref{@@_define_renderer_prototypes:}
-% macro to define plain \TeX{} token renderer prototype macros and key-values
+% macro to define plain \TeX{} token renderer prototype macros and key--values
 % immediately. Otherwise, we postpone the definition until the upper layers
 % have been loaded.
 %
@@ -22932,7 +22932,7 @@ document:
 % If \LaTeX{} is the top layer, we use the
 % \mref{@@_define_option_commands_and_keyvals:}, \mref{@@_define_renderers:},
 % and \mref{@@_define_renderer_prototypes:} macro to define plain \TeX{}
-% option, token renderer, and token renderer prototype macros and key-values
+% option, token renderer, and token renderer prototype macros and key--values
 % immediately. Otherwise, we postpone the definition until the upper layers
 % have been loaded.
 %
@@ -22980,7 +22980,7 @@ In \LaTeX{}, we expand on the concept of
 [themes](#themes)
 % \fi
 by allowing a theme to be a full-blown \LaTeX{} package. Specifically, the
-key-values `theme`=\meta{theme name} and `import`=\meta{theme name} load a
+key--values `theme`=\meta{theme name} and `import`=\meta{theme name} load a
 \LaTeX{} package named `markdowntheme`\meta{munged theme name}`.sty` if it
 exists and a \TeX{} document named `markdowntheme`\meta{munged theme
 name}`.tex` otherwise.
@@ -23429,7 +23429,7 @@ following text:
 % If \Hologo{ConTeXt} is the top layer, we use the
 % \mref{@@_define_option_commands_and_keyvals:}, \mref{@@_define_renderers:},
 % and \mref{@@_define_renderer_prototypes:} macro to define plain \TeX{}
-% option, token renderer, and token renderer prototype macros and key-values
+% option, token renderer, and token renderer prototype macros and key--values
 % immediately. Otherwise, we postpone the definition until the upper layers
 % have been loaded.
 %
@@ -23462,7 +23462,7 @@ In \Hologo{ConTeXt}, we expand on the concept of
 [themes](#themes)
 % \fi
 by allowing a theme to be a full-blown \Hologo{ConTeXt} module. Specifically,
-the key-values `theme`=\meta{theme name} and `import`=\meta{theme name} load a
+the key--values `theme`=\meta{theme name} and `import`=\meta{theme name} load a
 \Hologo{ConTeXt} module named `t-markdowntheme`\meta{munged theme name}`.tex`
 if it exists and a \TeX{} document named `markdowntheme`\meta{munged theme
 name}`.tex` otherwise.
