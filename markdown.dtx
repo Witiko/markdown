@@ -36053,30 +36053,30 @@ end
 % \begin{markdown}
 %
 % To set a single key--value, we will use the
-% \mdef{\@\@_jekyll_data_set_keyval:Nn} macro, ignoring unknown keys.
+% \mdef{\@\@_jekyll_data_set_keyval_known:nn} macro, ignoring unknown keys.
 % To set key--values for both absolute and relative wildcards, we will use the
-% \mdef{\@\@_jekyll_data_set_keyvals:nn} macro.
+% \mdef{\@\@_jekyll_data_set_keyvals_known:nn} macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\cs_new:Nn \@@_jekyll_data_set_keyval:nn
+\cs_new:Nn \@@_jekyll_data_set_keyval_known:nn
   {
     \keys_set_known:nn
       { markdown/jekyllData }
       { { #1 } = { #2 } }
   }
 \cs_generate_variant:Nn
-  \@@_jekyll_data_set_keyval:nn
+  \@@_jekyll_data_set_keyval_known:nn
   { Vn }
-\cs_new:Nn \@@_jekyll_data_set_keyvals:nn
+\cs_new:Nn \@@_jekyll_data_set_keyvals_known:nn
   {
     \@@_jekyll_data_push:nN
       { #1 }
       \c_@@_jekyll_data_scalar_tl
-    \@@_jekyll_data_set_keyval:Vn
+    \@@_jekyll_data_set_keyval_known:Vn
       \g_@@_jekyll_data_wildcard_absolute_address_tl
       { #2 }
-    \@@_jekyll_data_set_keyval:Vn
+    \@@_jekyll_data_set_keyval_known:Vn
       \g_@@_jekyll_data_wildcard_relative_address_tl
       { #2 }
     \@@_jekyll_data_pop:
@@ -36106,13 +36106,13 @@ end
   \@@_jekyll_data_pop:
 }
 \def\markdownRendererJekyllDataBooleanPrototype#1#2{
-  \@@_jekyll_data_set_keyvals:nn
+  \@@_jekyll_data_set_keyvals_known:nn
     { #1 }
     { #2 }
 }
 \def\markdownRendererJekyllDataEmptyPrototype#1{}
 \def\markdownRendererJekyllDataNumberPrototype#1#2{
-  \@@_jekyll_data_set_keyvals:nn
+  \@@_jekyll_data_set_keyvals_known:nn
     { #1 }
     { #2 }
 }
@@ -36126,7 +36126,7 @@ end
 %  \begin{macrocode}
 \def\markdownRendererJekyllDataProgrammaticStringPrototype#1#2{}
 \def\markdownRendererJekyllDataTypographicStringPrototype#1#2{
-  \@@_jekyll_data_set_keyvals:nn
+  \@@_jekyll_data_set_keyvals_known:nn
     { #1 }
     { #2 }
 }
@@ -36142,7 +36142,266 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\iffalse TODO \fi
+\@@_with_various_cases:nn
+  { jekyllDataKeyValue }
+  {
+    \keys_define:nn
+      { markdown/options }
+      {
+        #1 .code:n = {
+          \@@_set_jekyll_data_key_value:n
+            { ##1 }
+        },
+      }
+  }
+\tl_new:Nn
+  \l_@@_jekyll_data_current_position_seq
+\tl_new:Nn
+  \l_@@_jekyll_data_current_position_tl
+\cs_new:Nn
+  \@@_route_jekyll_data_to_key_values:n
+  {
+    \seq_clear:N
+      \l_@@_jekyll_data_current_position_seq
+    \markdownSetup
+      {
+        rendererPrototypes = {
+          jekyllData(Sequence|Mapping)Begin = {
+            \str_if_eq:nnTF
+              { #1 }
+              { null }
+              {
+                \seq_put_right:Nn
+                  \l_@@_jekyll_data_current_position_seq
+                  { #1 }
+              }
+              {
+                \seq_put_right:Nn
+                  \l_@@_jekyll_data_current_position_seq
+                  { ##1 }
+              }
+          },
+          jekyllData(Sequence|Mapping)End = {
+            \seq_pop_right:NN
+              \l_@@_jekyll_data_current_position_seq
+              \l_@@_jekyll_data_current_position_tl
+          },
+%    \end{macrocode}
+% \begin{markdown}
+%
+% For every \acro{YAML} key `path.to.`\meta{key} with a value of type
+% \meta{non-string type}, set the key \meta{non-string type} of the key–value
+% \meta{module}`/path/to/`\meta{key} if it is known and the key \meta{key} of
+% the key–value \meta{module}`/path/to` otherwise. \meta{Non-string type} is
+% one of `boolean`, `number`, and `empty`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+          jekyllDataBoolean = {
+            \tl_set:Nx
+              \l_@@_jekyll_data_current_position_tl
+              {
+                \seq_use:Nn
+                  \l_@@_jekyll_data_current_position_seq
+                  { / }
+              }
+            \keys_if_exist:VnTF
+              \l_@@_jekyll_data_current_position_tl
+              { ##1 / boolean }
+              {
+                \@@_keys_set:xn
+                  {
+                    \tl_use:N
+                      \l_@@_jekyll_data_current_position_tl
+                    / ##1 / boolean
+                  }
+                  { ##2 }
+              }
+              {
+                \@@_keys_set:xn
+                  {
+                    \tl_use:N
+                      \l_@@_jekyll_data_current_position_tl
+                    / ##1
+                  }
+                  { ##2 }
+              }
+          },
+          jekyllDataNumber = {
+            \tl_set:Nx
+              \l_@@_jekyll_data_current_position_tl
+              {
+                \seq_use:Nn
+                  \l_@@_jekyll_data_current_position_seq
+                  { / }
+              }
+            \keys_if_exist:VnTF
+              \l_@@_jekyll_data_current_position_tl
+              { ##1 / number }
+              {
+                \@@_keys_set:xn
+                  {
+                    \tl_use:N
+                      \l_@@_jekyll_data_current_position_tl
+                    / ##1 / number
+                  }
+                  { ##2 }
+              }
+              {
+                \@@_keys_set:xn
+                  {
+                    \tl_use:N
+                      \l_@@_jekyll_data_current_position_tl
+                    / ##1
+                  }
+                  { ##2 }
+              }
+          },
+%    \end{macrocode}
+% \begin{markdown}
+%
+% For the \meta{non-string type} of `empty`, no value is passed to the
+% key–value. Therefore, a default value should always be defined for nullable
+% keys using the key property `.default:n`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+          jekyllDataEmpty = {
+            \tl_set:Nx
+              \l_@@_jekyll_data_current_position_tl
+              {
+                \seq_use:Nn
+                  \l_@@_jekyll_data_current_position_seq
+                  { / }
+              }
+            \keys_if_exist:VnTF
+              \l_@@_jekyll_data_current_position_tl
+              { ##1 / empty }
+              {
+                  \keys_set:xn
+                  {
+                    \tl_use:N
+                      \l_@@_jekyll_data_current_position_tl
+                    / ##1
+                  }
+                  { empty }
+              }
+              {
+                \keys_set:Vn
+                  \l_@@_jekyll_data_current_position_tl
+                  { ##1 }
+              }
+          },
+%    \end{macrocode}
+% \begin{markdown}
+%
+% For every \acro{YAML} key `path.to.`\meta{key} with a value of type `string`,
+% set the keys `typographicString` and `programmaticString` of the key–value
+% \meta{module}`/path/to/`\meta{key} if they are known with the typographic and
+% programmatic strings of the value, respectively.  Furthermore, set the key
+% \meta{key} of the key–value \meta{module}`/path/to` with the typographic
+% string of the value unless the key `typographicString` is known. If the key
+% `programmaticString` is known, only set the key \meta{key} if it is known. In
+% contrast, if neither `typographicString` nor `programmaticString` are known,
+% set \meta{key} normally, i.e.  regardless of whether it is known or unknown.
+%
+% \end{markdown}
+%  \begin{macrocode}
+          jekyllDataTypographicString = {
+            \tl_set:Nx
+              \l_@@_jekyll_data_current_position_tl
+              {
+                \seq_use:Nn
+                  \l_@@_jekyll_data_current_position_seq
+                  { / }
+              }
+            \keys_if_exist:VnTF
+              \l_@@_jekyll_data_current_position_tl
+              { ##1 / typographicString }
+              {
+                \@@_keys_set:xn
+                  {
+                    \tl_use:N
+                      \l_@@_jekyll_data_current_position_tl
+                    / ##1 / typographicString
+                  }
+                  { ##2 }
+              }
+              {
+                \keys_if_exist:VnTF
+                  \l_@@_jekyll_data_current_position_tl
+                  { ##1 / programmaticString }
+                  {
+                    \@@_keys_set_known:xn
+                      {
+                        \tl_use:N
+                          \l_@@_jekyll_data_current_position_tl
+                        / ##1
+                      }
+                      { ##2 }
+                  }
+                  {
+                    \@@_keys_set:xn
+                      {
+                        \tl_use:N
+                          \l_@@_jekyll_data_current_position_tl
+                        / ##1
+                      }
+                      { ##2 }
+                  }
+              }
+          },
+          jekyllDataProgrammaticString = {
+            \tl_set:Nx
+              \l_@@_jekyll_data_current_position_tl
+              {
+                \seq_use:Nn
+                  \l_@@_jekyll_data_current_position_seq
+                  { / }
+              }
+            \keys_if_exist:VnT
+              \l_@@_jekyll_data_current_position_tl
+              { ##1 / programmaticString }
+              {
+                \@@_keys_set:xn
+                  {
+                    \tl_use:N
+                      \l_@@_jekyll_data_current_position_tl
+                    / ##1 / programmaticString
+                  }
+                  { ##2 }
+              }
+          },
+        },
+      }
+  }
+\cs_new:Nn
+  \@@_keys_set:nn
+  {
+    \keys_set:nn
+      { }
+      { { #1 } = { #2 } }
+  }
+\cs_new:Nn
+  \@@_keys_set_known:nn
+  {
+    \keys_set_known:nn
+      { }
+      { { #1 } = { #2 } }
+  }
+\cs_generate_variant:Nn
+  \@@_keys_set:nn
+  { xn }
+\cs_generate_variant:Nn
+  \@@_keys_set_known:nn
+  { xn }
+\cs_generate_variant:Nn
+  \keys_set:nn
+  { xn, Vn }
+\prg_generate_conditional_variant:Nnn
+  \keys_if_exist:nn
+  { Vn }
+  { T, TF }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \iffalse
