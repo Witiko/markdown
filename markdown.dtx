@@ -35928,12 +35928,12 @@ end
 % To keep track of our current place when we are traversing a \acro{yaml}
 % document, we will maintain the
 % \mdef{g_\@\@_jekyll_data_wildcard_absolute_address_seq} stack of keys using
-% the \mdef{markdown_jekyll_data_push_address_segment:n} macro.
+% the \mdef{\@\@_jekyll_data_push_address_segment:n} macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \seq_new:N \g_@@_jekyll_data_wildcard_absolute_address_seq
-\cs_new:Nn \markdown_jekyll_data_push_address_segment:n
+\cs_new:Nn \@@_jekyll_data_push_address_segment:n
   {
     \seq_if_empty:NF
       \g_@@_jekyll_data_datatypes_seq
@@ -35998,23 +35998,23 @@ end
 %     ```
 %
 % We will construct \mref{g_\@\@_jekyll_data_wildcard_absolute_address_tl}
-% using the \mdef{markdown_jekyll_data_concatenate_address:NN} macro and
+% using the \mdef{\@\@_jekyll_data_concatenate_address:NN} macro and
 % we will construct both token lists using the
-% \mdef{markdown_jekyll_data_update_address_tls:} macro.
+% \mdef{\@\@_jekyll_data_update_address_tls:} macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \tl_new:N  \g_@@_jekyll_data_wildcard_absolute_address_tl
 \tl_new:N  \g_@@_jekyll_data_wildcard_relative_address_tl
-\cs_new:Nn \markdown_jekyll_data_concatenate_address:NN
+\cs_new:Nn \@@_jekyll_data_concatenate_address:NN
   {
     \seq_pop_left:NN #1 \l_tmpa_tl
     \tl_set:Nx #2 { / \seq_use:Nn #1 { / } }
     \seq_put_left:NV #1 \l_tmpa_tl
   }
-\cs_new:Nn \markdown_jekyll_data_update_address_tls:
+\cs_new:Nn \@@_jekyll_data_update_address_tls:
   {
-    \markdown_jekyll_data_concatenate_address:NN
+    \@@_jekyll_data_concatenate_address:NN
       \g_@@_jekyll_data_wildcard_absolute_address_seq
       \g_@@_jekyll_data_wildcard_absolute_address_tl
     \seq_get_right:NN
@@ -36025,21 +36025,21 @@ end
 % \begin{markdown}
 %
 % To make sure that the stacks and token lists stay in sync, we will use the
-% \mdef{markdown_jekyll_data_push:nN} and \mdef{markdown_jekyll_data_pop:}
+% \mdef{\@\@_jekyll_data_push:nN} and \mdef{\@\@_jekyll_data_pop:}
 % macros.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\cs_new:Nn \markdown_jekyll_data_push:nN
+\cs_new:Nn \@@_jekyll_data_push:nN
   {
-    \markdown_jekyll_data_push_address_segment:n
+    \@@_jekyll_data_push_address_segment:n
       { #1 }
     \seq_put_right:NV
      \g_@@_jekyll_data_datatypes_seq
      #2
-    \markdown_jekyll_data_update_address_tls:
+    \@@_jekyll_data_update_address_tls:
   }
-\cs_new:Nn \markdown_jekyll_data_pop:
+\cs_new:Nn \@@_jekyll_data_pop:
   {
     \seq_pop_right:NN
       \g_@@_jekyll_data_wildcard_absolute_address_seq
@@ -36047,39 +36047,39 @@ end
     \seq_pop_right:NN
       \g_@@_jekyll_data_datatypes_seq
       \l_tmpa_tl
-    \markdown_jekyll_data_update_address_tls:
+    \@@_jekyll_data_update_address_tls:
   }
 %    \end{macrocode}
 % \begin{markdown}
 %
 % To set a single key--value, we will use the
-% \mdef{markdown_jekyll_data_set_keyval:Nn} macro, ignoring unknown keys.
+% \mdef{\@\@_jekyll_data_set_keyval:Nn} macro, ignoring unknown keys.
 % To set key--values for both absolute and relative wildcards, we will use the
-% \mdef{markdown_jekyll_data_set_keyvals:nn} macro.
+% \mdef{\@\@_jekyll_data_set_keyvals:nn} macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\cs_new:Nn \markdown_jekyll_data_set_keyval:nn
+\cs_new:Nn \@@_jekyll_data_set_keyval:nn
   {
     \keys_set_known:nn
       { markdown/jekyllData }
       { { #1 } = { #2 } }
   }
 \cs_generate_variant:Nn
-  \markdown_jekyll_data_set_keyval:nn
+  \@@_jekyll_data_set_keyval:nn
   { Vn }
-\cs_new:Nn \markdown_jekyll_data_set_keyvals:nn
+\cs_new:Nn \@@_jekyll_data_set_keyvals:nn
   {
-    \markdown_jekyll_data_push:nN
+    \@@_jekyll_data_push:nN
       { #1 }
       \c_@@_jekyll_data_scalar_tl
-    \markdown_jekyll_data_set_keyval:Vn
+    \@@_jekyll_data_set_keyval:Vn
       \g_@@_jekyll_data_wildcard_absolute_address_tl
       { #2 }
-    \markdown_jekyll_data_set_keyval:Vn
+    \@@_jekyll_data_set_keyval:Vn
       \g_@@_jekyll_data_wildcard_relative_address_tl
       { #2 }
-    \markdown_jekyll_data_pop:
+    \@@_jekyll_data_pop:
   }
 %    \end{macrocode}
 % \begin{markdown}
@@ -36090,29 +36090,29 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \def\markdownRendererJekyllDataSequenceBeginPrototype#1#2{
-  \markdown_jekyll_data_push:nN
+  \@@_jekyll_data_push:nN
     { #1 }
     \c_@@_jekyll_data_sequence_tl
 }
 \def\markdownRendererJekyllDataMappingBeginPrototype#1#2{
-  \markdown_jekyll_data_push:nN
+  \@@_jekyll_data_push:nN
     { #1 }
     \c_@@_jekyll_data_mapping_tl
 }
 \def\markdownRendererJekyllDataSequenceEndPrototype{
-  \markdown_jekyll_data_pop:
+  \@@_jekyll_data_pop:
 }
 \def\markdownRendererJekyllDataMappingEndPrototype{
-  \markdown_jekyll_data_pop:
+  \@@_jekyll_data_pop:
 }
 \def\markdownRendererJekyllDataBooleanPrototype#1#2{
-  \markdown_jekyll_data_set_keyvals:nn
+  \@@_jekyll_data_set_keyvals:nn
     { #1 }
     { #2 }
 }
 \def\markdownRendererJekyllDataEmptyPrototype#1{}
 \def\markdownRendererJekyllDataNumberPrototype#1#2{
-  \markdown_jekyll_data_set_keyvals:nn
+  \@@_jekyll_data_set_keyvals:nn
     { #1 }
     { #2 }
 }
@@ -36126,7 +36126,7 @@ end
 %  \begin{macrocode}
 \def\markdownRendererJekyllDataProgrammaticStringPrototype#1#2{}
 \def\markdownRendererJekyllDataTypographicStringPrototype#1#2{
-  \markdown_jekyll_data_set_keyvals:nn
+  \@@_jekyll_data_set_keyvals:nn
     { #1 }
     { #2 }
 }
