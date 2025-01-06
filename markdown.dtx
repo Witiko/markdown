@@ -688,6 +688,14 @@ abbr {
   url        = {https://tex.stackexchange.com/q/716362/70941},
   urldate    = {2024-04-28},
 }
+@online{starynovotny25,
+  author     = {Starý Novotný, Vít},
+  title      = {Routing YAML metadata to expl3 key–values},
+  titleaddon = {Markdown Enhancement Proposal},
+  url        = {https://github.com/witiko/markdown/discussions/517},
+  date       = {2024-10-14},
+  urldate    = {2025-01-06},
+}
 @book{tantau21,
   author     = {Till Tantau and Joseph Wright and Vedran Miletić},
   title      = {The Beamer class},
@@ -809,6 +817,13 @@ abbr {
   date       = {2024-06-01},
   url        = {https://mirrors.ctan.org/macros/latex/required/latex-lab/documentmetadata-support-code.pdf},
   urldate    = {2024-10-21}}
+@online{latex25,
+  author     = {{\LaTeX{} Project}},
+  title      = {l3kernel},
+  subtitle   = {\LaTeX3 programming conventions},
+  date       = {2024-12-25},
+  url        = {https://ctan.org/pkg/l3kernel},
+  urldate    = {2025-01-06}}
 %</techdoc-bibliography>
 %<@@=markdown>
 %<*themes-witiko-markdown-techdoc>
@@ -1220,8 +1235,8 @@ hard lua-tinyyaml
 %
 % \pkg{expl3}
 %
-%:    A package that enables the expl3 language from the \LaTeX3 kernel in
-%     \TeX{} Live${}\leq{}2019$. It is used to implement reflection
+%:    A package that enables the expl3 language [@latex25] from the \LaTeX3
+%     kernel in \TeX{} Live${}\leq{}2019$. It is used to implement reflection
 %     capabilities that allow us to enumerate and inspect high-level concepts
 %     such as options, renderers, and renderer prototypes.
 %
@@ -21751,9 +21766,9 @@ following text:
 
 #### YAML Metadata Renderer Prototypes {#expl3yamlmetadata}
 
-By default, the renderer prototypes for YAML metadata provide a high-level
-interface that can be programmed using the `markdown/jekyllData` key--values
-from the l3keys module of the \LaTeX{}3 kernel.
+For simple \acro{YAML} metadata, a simple high-level interface is provided
+that can be programmed by setting the expl3 key-values [@latex25] for the
+module `markdown/jekyllData`.
 
 % \end{markdown}
 % \iffalse
@@ -21877,8 +21892,9 @@ following text:
 %    \end{macrocode}
 % \begin{markdown}
 %
-% The `jekyllDataRenderers` key can be used as a syntactic sugar for setting
-% the `markdown/jekyllData` key--values without using the expl3 language.
+% The option `jekyllDataRenderers`=\meta{key-values} can be used to set the
+% \meta{key-values} for the module `markdown/jekyllData` without using the
+% expl3 syntax.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -21940,6 +21956,84 @@ following text:
   { nV }
 \ExplSyntaxOff
 %    \end{macrocode}
+% \begin{markdown}
+%
+% For complex \acro{YAML} metadata, the option `jekyllDataKeyValue`=\meta{module}
+% [@starynovotny25] can be used to route the processing of all \acro{YAML}
+% metadata in the current \TeX{} group to the key-values from \meta{module}.
+%
+% \end{markdown}
+% \iffalse
+%</tex>
+%<*manual-tokens>
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage{markdown}
+\ExplSyntaxOn
+\str_new:N \g_markdown_example_title_str
+\seq_new:N \g_markdown_example_author_seq
+\keys_define:nn
+  { markdown / some / example / module }
+  {  % Define a key-value that processes YAML metadata.
+    title / programmaticString .str_gset:N = \g_markdown_example_title_str,  % Store the raw title in a variable.
+    title .code:n = { \title { #1 } },  % Set the title. This is the same as writing `title / typographicString`.
+    author / unknown .code = {  % Store a variable-length list of authors in an array variable.
+      \seq_put_right:Nn
+        \g_markdown_example_author_seq
+        { #1 }
+    },
+  }
+\markdownSetupSnippet
+  { metadata }
+  {  % Define a snippet that routes YAML metadata to the above key key–value.
+    jekyllDataKeyValue = markdown / some / example / module,
+    renderers = {
+      jekyllDataEnd = {  % At the end of the YAML metadata, ...
+        \clist_set_from_seq:NN  % ... set the list of authors and
+          \l_tmpa_clist
+          \g_markdown_example_author_seq
+        \exp_args:Nx
+          \author
+          { \clist_use:Nn \l_tmpa_clist { ,~ } }
+        \AtBeginDocument { \maketitle }  % ... typeset the title page.
+      },
+    }
+  }
+\ExplSyntaxOff
+% Process the YAML metadata.
+\begin{yaml}[snippet=metadata]
+title: Some title that includes _markup_
+authors: [Jane Doe, John Moe]
+\end{yaml}
+\begin{document}
+The raw title of the document is:
+\ExplSyntaxOn
+\str_use:N \g_markdown_example_title_str
+\ExplSyntaxOff
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> ### Some title that includes _markup_
+> ##### Jane Doe, John Moe
+> ##### _⟨Current date⟩_
+>
+> The raw title of the document is:
+> Some title that includes \_markup\_
+
+%</manual-tokens>
+%<*tex>
+% \fi
 % \begin{markdown}
 %
 %#### Generating Plain \TeX{} Token Renderer Prototype Macros and Key-Values {#plain-tex-renderer-prototypes}
