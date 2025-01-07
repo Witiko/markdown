@@ -39105,12 +39105,19 @@ end
 %  \begin{macrocode}
 \ExplSyntaxOn
 \keys_define:nn
-  { markdown/jekyllData }
+  { markdown / jekyllData }
   {
-    author  .code:n = { \author{#1} },
-    date    .code:n = { \date{#1}   },
-    title   .code:n = { \title{#1}  },
-  }
+    author .code:n = {
+      \author
+        { #1 }
+    },
+    date .code:n = {
+      \date
+        { #1 }
+    },
+    title .code:n = {
+      \title
+        { #1 }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -39122,13 +39129,11 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\markdownSetup{
-  rendererPrototypes = {
-    jekyllDataEnd = {
-      \AddToHook{begindocument/end}{\maketitle}
+      \AddToHook
+        { begindocument / end }
+        { \maketitle }
     },
-  },
-}
+  }
 %    \end{macrocode}
 % \begin{markdown}
 %
