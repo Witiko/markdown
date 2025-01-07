@@ -688,6 +688,14 @@ abbr {
   url        = {https://tex.stackexchange.com/q/716362/70941},
   urldate    = {2024-04-28},
 }
+@online{starynovotny25,
+  author     = {Starý Novotný, Vít},
+  title      = {Routing YAML metadata to expl3 key–values},
+  titleaddon = {Markdown Enhancement Proposal},
+  url        = {https://github.com/witiko/markdown/discussions/517},
+  date       = {2024-10-14},
+  urldate    = {2025-01-06},
+}
 @book{tantau21,
   author     = {Till Tantau and Joseph Wright and Vedran Miletić},
   title      = {The Beamer class},
@@ -809,6 +817,13 @@ abbr {
   date       = {2024-06-01},
   url        = {https://mirrors.ctan.org/macros/latex/required/latex-lab/documentmetadata-support-code.pdf},
   urldate    = {2024-10-21}}
+@online{latex25,
+  author     = {{\LaTeX{} Project}},
+  title      = {l3kernel},
+  subtitle   = {\LaTeX3 programming conventions},
+  date       = {2024-12-25},
+  url        = {https://ctan.org/pkg/l3kernel},
+  urldate    = {2025-01-06}}
 %</techdoc-bibliography>
 %<@@=markdown>
 %<*themes-witiko-markdown-techdoc>
@@ -831,36 +846,47 @@ abbr {
     },
   },
 }
-\yamlSetup{
-  jekyllDataRenderers = {
-    /authors/* = {%
-      \expandafter\gdef
-        \expandafter\ltd@title@author
-          \expandafter{\ltd@title@author, #1}%
-    },
-    title = {%
-      \gdef\ltd@title@title{#1}%
-      \gdef\ltd@title@subtitle{}%
-      \hypersetup{pdftitle={#1}}%
-    },
-    date = {\gdef\ltd@title@date{#1}},
-    email = {\gdef\ltd@title@email{#1}},
-    revision = {\gdef\ltd@title@revision{#1}},
-    url = {\gdef\ltd@title@url{#1}},
-  }
-}
 \ExplSyntaxOn
-\markdownSetup{
-  rendererPrototypes = {
-    headerAttributeContextEnd = {
-      \seq_map_inline:Nn
-        \g_@@_header_identifiers_seq
-        { \label { sec:##1 } }
-      \seq_gclear:N
-        \g_@@_header_identifiers_seq
+\keys_define:nn
+  { markdown / techdoc }
+  {
+    authors / unknown .code:n = {
+      \tl_gput_right:Nn
+        \ltd@title@author
+        { ,~#1 }
     },
-  },
-}
+    title .code:n = {
+      \tl_gset:Nn
+        \ltd@title@title
+        { #1 }
+      \tl_gset:Nn
+        \ltd@title@subtitle
+        { }
+      \hypersetup
+        { pdftitle = { #1 } }
+    },
+    date .tl_gset:N = \ltd@title@date,
+    email .tl_gset:N = \ltd@title@email,
+    revision .tl_gset:N = \ltd@title@revision,
+    url .tl_gset:N = \ltd@title@url,
+  }
+\cs_generate_variant:Nn
+  \cs_gset:Npn
+  { NpV }
+\yamlSetup
+  { jekyllDataKeyValue = markdown / techdoc }
+\markdownSetup
+  {
+    rendererPrototypes = {
+      headerAttributeContextEnd = {
+        \seq_map_inline:Nn
+          \g_@@_header_identifiers_seq
+          { \label { sec:##1 } }
+        \seq_gclear:N
+          \g_@@_header_identifiers_seq
+      },
+    },
+  }
 \ExplSyntaxOff
 \renewcommand\markdownLaTeXRendererDirectOrIndirectLink[4]{%
   #1\footnote{See \url{#3}.}}
@@ -1220,8 +1246,8 @@ hard lua-tinyyaml
 %
 % \pkg{expl3}
 %
-%:    A package that enables the expl3 language from the \LaTeX3 kernel in
-%     \TeX{} Live${}\leq{}2019$. It is used to implement reflection
+%:    A package that enables the expl3 language [@latex25] from the \LaTeX3
+%     kernel in \TeX{} Live${}\leq{}2019$. It is used to implement reflection
 %     capabilities that allow us to enumerate and inspect high-level concepts
 %     such as options, renderers, and renderer prototypes.
 %
@@ -1347,7 +1373,7 @@ soft url
 % \pkg{graphicx}
 %
 %:    A package that provides the `\includegraphics` macro for the typesetting
-%     of images. Furthermore, it also provides a key-value interface that is
+%     of images. Furthermore, it also provides a key--value interface that is
 %     used in the default renderer prototypes for image attribute contexts.
 %
 % \end{markdown}
@@ -12312,16 +12338,16 @@ A PDF document named `document.pdf` should be produced and contain the text
 %#### Generating Plain \TeX{} Option Macros and Key-Values
 %
 % We define the command \mdef{@@_define_option_commands_and_keyvals:} that
-% defines plain \TeX{} macros and the key-value interface
+% defines plain \TeX{} macros and the key--value interface
 % of the \mref{markdownSetup} macro for the above plain \TeX{} options.
 %
-% The command also defines macros and key-values that map
+% The command also defines macros and key--values that map
 % directly to the options recognized by the Lua interface, such as
 % \mdef{markdownOptionHybrid} for the \Opt{hybrid} Lua option (see Section
 % <#sec:lua-options>), which are not processed by the plain \TeX{}
 % implementation, only passed along to Lua.
 %
-% Furthermore, the command also defines options and key-values
+% Furthermore, the command also defines options and key--values
 % for subsequently loaded layers that correspond to higher-level \TeX{} formats
 % such as \LaTeX{} and \Hologo{ConTeXt}.
 %
@@ -12653,7 +12679,7 @@ A PDF document named `document.pdf` should be produced and contain the text
 %
 % If plain \TeX{} is the top layer, we use the
 % \mref{@@_define_option_commands_and_keyvals:} macro to define plain \TeX{}
-% option macros and key-values immediately. Otherwise, we
+% option macros and key--values immediately. Otherwise, we
 % postpone the definition until the upper layers have been loaded.
 %
 % \end{markdown}
@@ -12681,7 +12707,7 @@ User-defined themes for the Markdown package provide a domain-specific
 interpretation of Markdown tokens. Themes allow the authors to achieve
 a specific look and other high-level goals without low-level programming.
 
-% The key-values `theme`=\meta{theme name} and `import`=\meta{theme name},
+% The key--values `theme`=\meta{theme name} and `import`=\meta{theme name},
 % optionally followed by `@`\meta{theme version}, load a \TeX{} document
 % (further referred to as *a theme*) named `markdowntheme`\meta{munged theme
 % name}`.tex`, where the *munged theme name* is the *theme name* after the
@@ -21190,7 +21216,7 @@ following text:
 % We define the command \mdef{@@_define_renderers:} that defines plain \TeX{}
 % macros for token renderers. Furthermore, the `\markdownSetup` macro also accepts
 % the `renderers` and `unprotectedRenderers` keys. The value for these keys
-% must be a list of key-values, where the keys correspond to the markdown token
+% must be a list of key--values, where the keys correspond to the markdown token
 % renderer macros and the values are new definitions of these token renderers.
 %
 % Whereas the key `renderers` defines protected functions, which are usually
@@ -21615,7 +21641,7 @@ following text:
 % \begin{markdown}
 %
 % If plain \TeX{} is the top layer, we use the \mref{@@_define_renderers:}
-% macro to define plain \TeX{} token renderer macros and key-values
+% macro to define plain \TeX{} token renderer macros and key--values
 % immediately. Otherwise, we postpone the definition until the upper layers
 % have been loaded.
 %
@@ -21751,9 +21777,9 @@ following text:
 
 #### YAML Metadata Renderer Prototypes {#expl3yamlmetadata}
 
-By default, the renderer prototypes for YAML metadata provide a high-level
-interface that can be programmed using the `markdown/jekyllData` key--values
-from the l3keys module of the \LaTeX{}3 kernel.
+For simple \acro{YAML} metadata, a simple high-level interface is provided
+that can be programmed by setting the expl3 key--values [@latex25] for the
+module `markdown/jekyllData`.
 
 % \end{markdown}
 % \iffalse
@@ -21877,8 +21903,9 @@ following text:
 %    \end{macrocode}
 % \begin{markdown}
 %
-% The `jekyllDataRenderers` key can be used as a syntactic sugar for setting
-% the `markdown/jekyllData` key--values without using the expl3 language.
+% The option `jekyllDataRenderers`=\meta{key--values} can be used to set the
+% \meta{key--values} for the module `markdown/jekyllData` without using the
+% expl3 syntax.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -21942,12 +21969,90 @@ following text:
 %    \end{macrocode}
 % \begin{markdown}
 %
+% For complex \acro{YAML} metadata, the option `jekyllDataKeyValue`=\meta{module}
+% [@starynovotny25] can be used to route the processing of all \acro{YAML}
+% metadata in the current \TeX{} group to the key--values from \meta{module}.
+%
+% \end{markdown}
+% \iffalse
+%</tex>
+%<*manual-tokens>
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage{markdown}
+\ExplSyntaxOn
+\str_new:N \g_markdown_example_title_str
+\seq_new:N \g_markdown_example_authors_seq
+\keys_define:nn
+  { markdown / example / module }
+  {  % Define a key--value that processes YAML metadata.
+    title / programmaticString .str_gset:N = \g_markdown_example_title_str,  % Store the raw title in a variable.
+    title .code:n = { \title { #1 } },  % Set the title. This is the same as writing `title / typographicString`.
+    authors / unknown .code:n = {  % Store a variable-length list of authors in an array variable.
+      \seq_put_right:Nn
+        \g_markdown_example_authors_seq
+        { #1 }
+    },
+  }
+\markdownSetupSnippet
+  { metadata }
+  {  % Define a snippet that routes YAML metadata to the above key key–value.
+    jekyllDataKeyValue = markdown / example / module,
+    renderers = {
+      jekyllDataEnd = {  % At the end of the YAML metadata, ...
+        \clist_set_from_seq:NN  % ... set the list of authors and
+          \l_tmpa_clist
+          \g_markdown_example_authors_seq
+        \exp_args:Nx
+          \author
+          { \clist_use:Nn \l_tmpa_clist { ,~ } }
+        \AtBeginDocument { \maketitle }  % ... typeset the title page.
+      },
+    }
+  }
+\ExplSyntaxOff
+% Process the YAML metadata.
+\begin{yaml}[snippet=metadata]
+title: Some title that includes _markup_
+authors: [Jane Doe, John Moe]
+\end{yaml}
+\begin{document}
+The raw title of the document is:
+\ExplSyntaxOn
+\str_use:N \g_markdown_example_title_str
+\ExplSyntaxOff
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> ### Some title that includes _markup_
+> ##### Jane Doe, John Moe
+> ##### _⟨Current date⟩_
+>
+> The raw title of the document is:
+> Some title that includes \_markup\_
+
+%</manual-tokens>
+%<*tex>
+% \fi
+% \begin{markdown}
+%
 %#### Generating Plain \TeX{} Token Renderer Prototype Macros and Key-Values {#plain-tex-renderer-prototypes}
 %
 % We define the command \mdef{@@_define_renderer_prototypes:} that defines plain \TeX{}
 % macros for token renderer prototypes. Furthermore, the `\markdownSetup` macro also accepts
 % the `rendererPrototypes` and `unprotectedRendererPrototypes` keys. The value
-% for these keys must be a list of key-values, where the keys correspond to the
+% for these keys must be a list of key--values, where the keys correspond to the
 % markdown token renderer prototype macros and the values are new definitions
 % of these token renderer prototypes.
 %
@@ -22269,7 +22374,7 @@ following text:
 % \begin{markdown}
 %
 % If plain \TeX{} is the top layer, we use the \mref{@@_define_renderer_prototypes:}
-% macro to define plain \TeX{} token renderer prototype macros and key-values
+% macro to define plain \TeX{} token renderer prototype macros and key--values
 % immediately. Otherwise, we postpone the definition until the upper layers
 % have been loaded.
 %
@@ -22838,7 +22943,7 @@ document:
 % If \LaTeX{} is the top layer, we use the
 % \mref{@@_define_option_commands_and_keyvals:}, \mref{@@_define_renderers:},
 % and \mref{@@_define_renderer_prototypes:} macro to define plain \TeX{}
-% option, token renderer, and token renderer prototype macros and key-values
+% option, token renderer, and token renderer prototype macros and key--values
 % immediately. Otherwise, we postpone the definition until the upper layers
 % have been loaded.
 %
@@ -22886,7 +22991,7 @@ In \LaTeX{}, we expand on the concept of
 [themes](#themes)
 % \fi
 by allowing a theme to be a full-blown \LaTeX{} package. Specifically, the
-key-values `theme`=\meta{theme name} and `import`=\meta{theme name} load a
+key--values `theme`=\meta{theme name} and `import`=\meta{theme name} load a
 \LaTeX{} package named `markdowntheme`\meta{munged theme name}`.sty` if it
 exists and a \TeX{} document named `markdowntheme`\meta{munged theme
 name}`.tex` otherwise.
@@ -23335,7 +23440,7 @@ following text:
 % If \Hologo{ConTeXt} is the top layer, we use the
 % \mref{@@_define_option_commands_and_keyvals:}, \mref{@@_define_renderers:},
 % and \mref{@@_define_renderer_prototypes:} macro to define plain \TeX{}
-% option, token renderer, and token renderer prototype macros and key-values
+% option, token renderer, and token renderer prototype macros and key--values
 % immediately. Otherwise, we postpone the definition until the upper layers
 % have been loaded.
 %
@@ -23368,7 +23473,7 @@ In \Hologo{ConTeXt}, we expand on the concept of
 [themes](#themes)
 % \fi
 by allowing a theme to be a full-blown \Hologo{ConTeXt} module. Specifically,
-the key-values `theme`=\meta{theme name} and `import`=\meta{theme name} load a
+the key--values `theme`=\meta{theme name} and `import`=\meta{theme name} load a
 \Hologo{ConTeXt} module named `t-markdowntheme`\meta{munged theme name}`.tex`
 if it exists and a \TeX{} document named `markdowntheme`\meta{munged theme
 name}`.tex` otherwise.
@@ -35796,7 +35901,10 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-%#### YAML Metadata Renderer Prototypes
+%#### Simple YAML Metadata Renderer Prototypes
+% In this section, we implement the simple high-level interface for processing
+% simple \acro{YAML} metadata using the key--value `markdown/jekyllData`. See
+% also Section <#sec:expl3yamlmetadata>.
 %
 % To keep track of the current type of structure we inhabit when we are
 % traversing a \acro{yaml} document, we will maintain the
@@ -35831,12 +35939,12 @@ end
 % To keep track of our current place when we are traversing a \acro{yaml}
 % document, we will maintain the
 % \mdef{g_\@\@_jekyll_data_wildcard_absolute_address_seq} stack of keys using
-% the \mdef{markdown_jekyll_data_push_address_segment:n} macro.
+% the \mdef{\@\@_jekyll_data_push_address_segment:n} macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \seq_new:N \g_@@_jekyll_data_wildcard_absolute_address_seq
-\cs_new:Nn \markdown_jekyll_data_push_address_segment:n
+\cs_new:Nn \@@_jekyll_data_push_address_segment:n
   {
     \seq_if_empty:NF
       \g_@@_jekyll_data_datatypes_seq
@@ -35901,23 +36009,23 @@ end
 %     ```
 %
 % We will construct \mref{g_\@\@_jekyll_data_wildcard_absolute_address_tl}
-% using the \mdef{markdown_jekyll_data_concatenate_address:NN} macro and
+% using the \mdef{\@\@_jekyll_data_concatenate_address:NN} macro and
 % we will construct both token lists using the
-% \mdef{markdown_jekyll_data_update_address_tls:} macro.
+% \mdef{\@\@_jekyll_data_update_address_tls:} macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \tl_new:N  \g_@@_jekyll_data_wildcard_absolute_address_tl
 \tl_new:N  \g_@@_jekyll_data_wildcard_relative_address_tl
-\cs_new:Nn \markdown_jekyll_data_concatenate_address:NN
+\cs_new:Nn \@@_jekyll_data_concatenate_address:NN
   {
     \seq_pop_left:NN #1 \l_tmpa_tl
     \tl_set:Nx #2 { / \seq_use:Nn #1 { / } }
     \seq_put_left:NV #1 \l_tmpa_tl
   }
-\cs_new:Nn \markdown_jekyll_data_update_address_tls:
+\cs_new:Nn \@@_jekyll_data_update_address_tls:
   {
-    \markdown_jekyll_data_concatenate_address:NN
+    \@@_jekyll_data_concatenate_address:NN
       \g_@@_jekyll_data_wildcard_absolute_address_seq
       \g_@@_jekyll_data_wildcard_absolute_address_tl
     \seq_get_right:NN
@@ -35928,21 +36036,21 @@ end
 % \begin{markdown}
 %
 % To make sure that the stacks and token lists stay in sync, we will use the
-% \mdef{markdown_jekyll_data_push:nN} and \mdef{markdown_jekyll_data_pop:}
+% \mdef{\@\@_jekyll_data_push:nN} and \mdef{\@\@_jekyll_data_pop:}
 % macros.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\cs_new:Nn \markdown_jekyll_data_push:nN
+\cs_new:Nn \@@_jekyll_data_push:nN
   {
-    \markdown_jekyll_data_push_address_segment:n
+    \@@_jekyll_data_push_address_segment:n
       { #1 }
     \seq_put_right:NV
      \g_@@_jekyll_data_datatypes_seq
      #2
-    \markdown_jekyll_data_update_address_tls:
+    \@@_jekyll_data_update_address_tls:
   }
-\cs_new:Nn \markdown_jekyll_data_pop:
+\cs_new:Nn \@@_jekyll_data_pop:
   {
     \seq_pop_right:NN
       \g_@@_jekyll_data_wildcard_absolute_address_seq
@@ -35950,39 +36058,39 @@ end
     \seq_pop_right:NN
       \g_@@_jekyll_data_datatypes_seq
       \l_tmpa_tl
-    \markdown_jekyll_data_update_address_tls:
+    \@@_jekyll_data_update_address_tls:
   }
 %    \end{macrocode}
 % \begin{markdown}
 %
 % To set a single key--value, we will use the
-% \mdef{markdown_jekyll_data_set_keyval:Nn} macro, ignoring unknown keys.
+% \mdef{\@\@_jekyll_data_set_keyval_known:nn} macro, ignoring unknown keys.
 % To set key--values for both absolute and relative wildcards, we will use the
-% \mdef{markdown_jekyll_data_set_keyvals:nn} macro.
+% \mdef{\@\@_jekyll_data_set_keyvals_known:nn} macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\cs_new:Nn \markdown_jekyll_data_set_keyval:nn
+\cs_new:Nn \@@_jekyll_data_set_keyval_known:nn
   {
     \keys_set_known:nn
       { markdown/jekyllData }
       { { #1 } = { #2 } }
   }
 \cs_generate_variant:Nn
-  \markdown_jekyll_data_set_keyval:nn
+  \@@_jekyll_data_set_keyval_known:nn
   { Vn }
-\cs_new:Nn \markdown_jekyll_data_set_keyvals:nn
+\cs_new:Nn \@@_jekyll_data_set_keyvals_known:nn
   {
-    \markdown_jekyll_data_push:nN
+    \@@_jekyll_data_push:nN
       { #1 }
       \c_@@_jekyll_data_scalar_tl
-    \markdown_jekyll_data_set_keyval:Vn
+    \@@_jekyll_data_set_keyval_known:Vn
       \g_@@_jekyll_data_wildcard_absolute_address_tl
       { #2 }
-    \markdown_jekyll_data_set_keyval:Vn
+    \@@_jekyll_data_set_keyval_known:Vn
       \g_@@_jekyll_data_wildcard_relative_address_tl
       { #2 }
-    \markdown_jekyll_data_pop:
+    \@@_jekyll_data_pop:
   }
 %    \end{macrocode}
 % \begin{markdown}
@@ -35993,29 +36101,29 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \def\markdownRendererJekyllDataSequenceBeginPrototype#1#2{
-  \markdown_jekyll_data_push:nN
+  \@@_jekyll_data_push:nN
     { #1 }
     \c_@@_jekyll_data_sequence_tl
 }
 \def\markdownRendererJekyllDataMappingBeginPrototype#1#2{
-  \markdown_jekyll_data_push:nN
+  \@@_jekyll_data_push:nN
     { #1 }
     \c_@@_jekyll_data_mapping_tl
 }
 \def\markdownRendererJekyllDataSequenceEndPrototype{
-  \markdown_jekyll_data_pop:
+  \@@_jekyll_data_pop:
 }
 \def\markdownRendererJekyllDataMappingEndPrototype{
-  \markdown_jekyll_data_pop:
+  \@@_jekyll_data_pop:
 }
 \def\markdownRendererJekyllDataBooleanPrototype#1#2{
-  \markdown_jekyll_data_set_keyvals:nn
+  \@@_jekyll_data_set_keyvals_known:nn
     { #1 }
     { #2 }
 }
 \def\markdownRendererJekyllDataEmptyPrototype#1{}
 \def\markdownRendererJekyllDataNumberPrototype#1#2{
-  \markdown_jekyll_data_set_keyvals:nn
+  \@@_jekyll_data_set_keyvals_known:nn
     { #1 }
     { #2 }
 }
@@ -36029,10 +36137,300 @@ end
 %  \begin{macrocode}
 \def\markdownRendererJekyllDataProgrammaticStringPrototype#1#2{}
 \def\markdownRendererJekyllDataTypographicStringPrototype#1#2{
-  \markdown_jekyll_data_set_keyvals:nn
+  \@@_jekyll_data_set_keyvals_known:nn
     { #1 }
     { #2 }
 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \begin{markdown}
+%
+%#### Complex YAML Metadata Renderer Prototypes
+% In this section, we implement the high-level interface for routing complex
+% \acro{YAML} metadata to expl3 key--values using the option
+% `jekyllDataKeyValue`=\meta{module}. See also Section <#sec:expl3yamlmetadata>.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\@@_with_various_cases:nn
+  { jekyllDataKeyValue }
+  {
+    \keys_define:nn
+      { markdown/options }
+      {
+        #1 .code:n = {
+          \@@_route_jekyll_data_to_key_values:n
+            { ##1 }
+        },
+%    \end{macrocode}
+% \begin{markdown}
+%
+% When no \meta{module} has been provided, assume that the \acro{YAML} metadata
+% specify absolute paths to key--values.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        #1 .default:n = { },
+      }
+  }
+\seq_new:N
+  \l_@@_jekyll_data_current_position_seq
+\tl_new:N
+  \l_@@_jekyll_data_current_position_tl
+\cs_new:Nn
+  \@@_route_jekyll_data_to_key_values:n
+  {
+    \markdownSetup
+      {
+        rendererPrototypes = {
+          jekyllData(Sequence|Mapping)Begin = {
+            \bool_lazy_and:nnTF
+              {
+                \seq_if_empty_p:N
+                  \l_@@_jekyll_data_current_position_seq
+              }
+              {
+                \str_if_eq_p:nn
+                  { ##1 }
+                  { null }
+              }
+              {
+                \tl_if_empty:nF
+                  { #1 }
+                  {
+                    \seq_put_right:Nn
+                      \l_@@_jekyll_data_current_position_seq
+                      { #1 }
+                  }
+              }
+              {
+                \seq_put_right:Nn
+                  \l_@@_jekyll_data_current_position_seq
+                  { ##1 }
+              }
+          },
+          jekyllData(Sequence|Mapping)End = {
+            \seq_pop_right:NN
+              \l_@@_jekyll_data_current_position_seq
+              \l_tmpa_tl
+          },
+%    \end{macrocode}
+% \begin{markdown}
+%
+% For every \acro{YAML} key `path.to.`\meta{key} with a value of type
+% \meta{non-string type}, set the key \meta{non-string type} of the key–value
+% \meta{module}`/path/to/`\meta{key} if it is known and the key \meta{key} of
+% the key–value \meta{module}`/path/to` otherwise. \meta{Non-string type} is
+% one of `boolean`, `number`, and `empty`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+          jekyllDataBoolean = {
+            \tl_set:Nx
+              \l_@@_jekyll_data_current_position_tl
+              {
+                \seq_use:Nn
+                  \l_@@_jekyll_data_current_position_seq
+                  { / }
+              }
+            \keys_if_exist:VnTF
+              \l_@@_jekyll_data_current_position_tl
+              { ##1 / boolean }
+              {
+                \@@_keys_set:xn
+                  {
+                    \tl_use:N
+                      \l_@@_jekyll_data_current_position_tl
+                    / ##1 / boolean
+                  }
+                  { ##2 }
+              }
+              {
+                \@@_keys_set:xn
+                  {
+                    \tl_use:N
+                      \l_@@_jekyll_data_current_position_tl
+                    / ##1
+                  }
+                  { ##2 }
+              }
+          },
+          jekyllDataNumber = {
+            \tl_set:Nx
+              \l_@@_jekyll_data_current_position_tl
+              {
+                \seq_use:Nn
+                  \l_@@_jekyll_data_current_position_seq
+                  { / }
+              }
+            \keys_if_exist:VnTF
+              \l_@@_jekyll_data_current_position_tl
+              { ##1 / number }
+              {
+                \@@_keys_set:xn
+                  {
+                    \tl_use:N
+                      \l_@@_jekyll_data_current_position_tl
+                    / ##1 / number
+                  }
+                  { ##2 }
+              }
+              {
+                \@@_keys_set:xn
+                  {
+                    \tl_use:N
+                      \l_@@_jekyll_data_current_position_tl
+                    / ##1
+                  }
+                  { ##2 }
+              }
+          },
+%    \end{macrocode}
+% \begin{markdown}
+%
+% For the \meta{non-string type} of `empty`, no value is passed to the
+% key–value. Therefore, a default value should always be defined for nullable
+% keys using the key property `.default:n`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+          jekyllDataEmpty = {
+            \tl_set:Nx
+              \l_@@_jekyll_data_current_position_tl
+              {
+                \seq_use:Nn
+                  \l_@@_jekyll_data_current_position_seq
+                  { / }
+              }
+            \keys_if_exist:VnTF
+              \l_@@_jekyll_data_current_position_tl
+              { ##1 / empty }
+              {
+                  \keys_set:xn
+                  {
+                    \tl_use:N
+                      \l_@@_jekyll_data_current_position_tl
+                    / ##1
+                  }
+                  { empty }
+              }
+              {
+                \keys_set:Vn
+                  \l_@@_jekyll_data_current_position_tl
+                  { ##1 }
+              }
+          },
+%    \end{macrocode}
+% \begin{markdown}
+%
+% For every \acro{YAML} key `path.to.`\meta{key} with a value of type `string`,
+% set the keys `typographicString` and `programmaticString` of the key–value
+% \meta{module}`/path/to/`\meta{key} if they are known with the typographic and
+% programmatic strings of the value, respectively.  Furthermore, set the key
+% \meta{key} of the key–value \meta{module}`/path/to` with the typographic
+% string of the value unless the key `typographicString` is known. If the key
+% `programmaticString` is known, only set the key \meta{key} if it is known. In
+% contrast, if neither `typographicString` nor `programmaticString` are known,
+% set \meta{key} normally, i.e.  regardless of whether it is known or unknown.
+%
+% \end{markdown}
+%  \begin{macrocode}
+          jekyllDataTypographicString = {
+            \tl_set:Nx
+              \l_@@_jekyll_data_current_position_tl
+              {
+                \seq_use:Nn
+                  \l_@@_jekyll_data_current_position_seq
+                  { / }
+              }
+            \keys_if_exist:VnTF
+              \l_@@_jekyll_data_current_position_tl
+              { ##1 / typographicString }
+              {
+                \@@_keys_set:xn
+                  {
+                    \tl_use:N
+                      \l_@@_jekyll_data_current_position_tl
+                    / ##1 / typographicString
+                  }
+                  { ##2 }
+              }
+              {
+                \keys_if_exist:VnTF
+                  \l_@@_jekyll_data_current_position_tl
+                  { ##1 / programmaticString }
+                  {
+                    \@@_keys_set_known:xn
+                      {
+                        \tl_use:N
+                          \l_@@_jekyll_data_current_position_tl
+                        / ##1
+                      }
+                      { ##2 }
+                  }
+                  {
+                    \@@_keys_set:xn
+                      {
+                        \tl_use:N
+                          \l_@@_jekyll_data_current_position_tl
+                        / ##1
+                      }
+                      { ##2 }
+                  }
+              }
+          },
+          jekyllDataProgrammaticString = {
+            \tl_set:Nx
+              \l_@@_jekyll_data_current_position_tl
+              {
+                \seq_use:Nn
+                  \l_@@_jekyll_data_current_position_seq
+                  { / }
+              }
+            \keys_if_exist:VnT
+              \l_@@_jekyll_data_current_position_tl
+              { ##1 / programmaticString }
+              {
+                \@@_keys_set:xn
+                  {
+                    \tl_use:N
+                      \l_@@_jekyll_data_current_position_tl
+                    / ##1 / programmaticString
+                  }
+                  { ##2 }
+              }
+          },
+        },
+      }
+  }
+\cs_new:Nn
+  \@@_keys_set:nn
+  {
+    \keys_set:nn
+      { }
+      { { #1 } = { #2 } }
+  }
+\cs_new:Nn
+  \@@_keys_set_known:nn
+  {
+    \keys_set_known:nn
+      { }
+      { { #1 } = { #2 } }
+  }
+\cs_generate_variant:Nn
+  \@@_keys_set:nn
+  { xn }
+\cs_generate_variant:Nn
+  \@@_keys_set_known:nn
+  { xn }
+\cs_generate_variant:Nn
+  \keys_set:nn
+  { xn, Vn }
+\prg_generate_conditional_variant:Nnn
+  \keys_if_exist:nn
+  { Vn }
+  { T, TF }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \iffalse
@@ -38712,12 +39110,19 @@ end
 %  \begin{macrocode}
 \ExplSyntaxOn
 \keys_define:nn
-  { markdown/jekyllData }
+  { markdown / jekyllData }
   {
-    author  .code:n = { \author{#1} },
-    date    .code:n = { \date{#1}   },
-    title   .code:n = { \title{#1}  },
-  }
+    author .code:n = {
+      \author
+        { #1 }
+    },
+    date .code:n = {
+      \date
+        { #1 }
+    },
+    title .code:n = {
+      \title
+        { #1 }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -38729,13 +39134,11 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\markdownSetup{
-  rendererPrototypes = {
-    jekyllDataEnd = {
-      \AddToHook{begindocument/end}{\maketitle}
+      \AddToHook
+        { begindocument / end }
+        { \maketitle }
     },
-  },
-}
+  }
 %    \end{macrocode}
 % \begin{markdown}
 %
