@@ -36185,9 +36185,16 @@ end
       {
         rendererPrototypes = {
           jekyllData(Sequence|Mapping)Begin = {
-            \str_if_eq:nnTF
-              { ##1 }
-              { null }
+            \bool_lazy_and:nnTF
+              {
+                \seq_if_empty_p:N
+                  \l_@@_jekyll_data_current_position_seq
+              }
+              {
+                \str_if_eq_p:nn
+                  { ##1 }
+                  { null }
+              }
               {
                 \tl_if_empty:nF
                   { #1 }
