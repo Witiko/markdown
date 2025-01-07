@@ -39,6 +39,10 @@ Development:
   \end{document}
   ```
 
+  This won't work for every package but many packages use expl3 key–values
+  internally for their configuration. If you are curious if your favorite
+  package does, look for `\keys_define` in its source code.
+
   For more examples, see #517.
 
  [matrix-517]: https://matrix.to/#/!UeAwznpYwwsinVTetR:matrix.org/$WzqBd_p3KB766wqbFBLbn3o9DmBJCJfPAOsC5w--gW4?via=matrix.org&via=im.f3l.de
