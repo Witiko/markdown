@@ -2,6 +2,48 @@
 
 ## 3.10.0
 
+Development:
+
+- Add option `jekyllDataKeyValue` for routing YAML metadata to expl3 key–values.
+  (#77, #517, [matrix.org][matrix-517], #539, [matrix.org][matrix-539],
+   originally suggested by @TeXhackse)
+
+  While the primary intended users of this new option are package authors,
+  writers can also use this feature to configure various (La)TeX packages
+  from YAML:
+
+  ``` tex
+  \documentclass{article}
+  \usepackage{chemformula, lua-widow-control, phonenumbers}
+  \usepackage[raw_attribute, tex_math_dollars]{markdown}
+  \begin{document}
+  \begin{markdown}[jekyll_data, jekyll_data_key_value]
+
+  ---
+  chemformula:
+    decimal-marker: $\cdot$
+  lua-widow-control:
+    draft: true
+    showcolours: true
+  phonenumbers:
+    area-code: place
+    area-code-sep: space
+    country: UK
+  ---
+
+  Phone number: `\phonenumber{02079460345}`{=tex}
+
+  Chemical reaction: `\ch{A + B -> 3.14159}`{=tex}
+
+  \end{markdown}
+  \end{document}
+  ```
+
+  For more examples, see #517.
+
+ [matrix-517]: https://matrix.to/#/!UeAwznpYwwsinVTetR:matrix.org/$WzqBd_p3KB766wqbFBLbn3o9DmBJCJfPAOsC5w--gW4?via=matrix.org&via=im.f3l.de
+ [matrix-539]: https://matrix.to/#/!UeAwznpYwwsinVTetR:matrix.org/$VZbdWB2EpHeg290MGsYsbUEwMoN68zT8tbIRUKRJ1wc?via=matrix.org&via=im.f3l.de
+
 ## 3.9.1 (2024-12-17)
 
 Development:
