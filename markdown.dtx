@@ -846,36 +846,47 @@ abbr {
     },
   },
 }
-\yamlSetup{
-  jekyllDataRenderers = {
-    /authors/* = {%
-      \expandafter\gdef
-        \expandafter\ltd@title@author
-          \expandafter{\ltd@title@author, #1}%
-    },
-    title = {%
-      \gdef\ltd@title@title{#1}%
-      \gdef\ltd@title@subtitle{}%
-      \hypersetup{pdftitle={#1}}%
-    },
-    date = {\gdef\ltd@title@date{#1}},
-    email = {\gdef\ltd@title@email{#1}},
-    revision = {\gdef\ltd@title@revision{#1}},
-    url = {\gdef\ltd@title@url{#1}},
-  }
-}
 \ExplSyntaxOn
-\markdownSetup{
-  rendererPrototypes = {
-    headerAttributeContextEnd = {
-      \seq_map_inline:Nn
-        \g_@@_header_identifiers_seq
-        { \label { sec:##1 } }
-      \seq_gclear:N
-        \g_@@_header_identifiers_seq
+\keys_define:nn
+  { markdown / techdoc }
+  {
+    authors / unknown .code:n = {
+      \tl_gput_right:Nn
+        \ltd@title@author
+        { ,~#1 }
     },
-  },
-}
+    title .code:n = {
+      \tl_gset:Nn
+        \ltd@title@title
+        { #1 }
+      \tl_gset:Nn
+        \ltd@title@subtitle
+        { }
+      \hypersetup
+        { pdftitle = { #1 } }
+    },
+    date .tl_gset:N = \ltd@title@date,
+    email .tl_gset:N = \ltd@title@email,
+    revision .tl_gset:N = \ltd@title@revision,
+    url .tl_gset:N = \ltd@title@url,
+  }
+\cs_generate_variant:Nn
+  \cs_gset:Npn
+  { NpV }
+\yamlSetup
+  { jekyllDataKeyValue = markdown / techdoc }
+\markdownSetup
+  {
+    rendererPrototypes = {
+      headerAttributeContextEnd = {
+        \seq_map_inline:Nn
+          \g_@@_header_identifiers_seq
+          { \label { sec:##1 } }
+        \seq_gclear:N
+          \g_@@_header_identifiers_seq
+      },
+    },
+  }
 \ExplSyntaxOff
 \renewcommand\markdownLaTeXRendererDirectOrIndirectLink[4]{%
   #1\footnote{See \url{#3}.}}
@@ -21982,7 +21993,7 @@ following content:
   {  % Define a key--value that processes YAML metadata.
     title / programmaticString .str_gset:N = \g_markdown_example_title_str,  % Store the raw title in a variable.
     title .code:n = { \title { #1 } },  % Set the title. This is the same as writing `title / typographicString`.
-    authors / unknown .code = {  % Store a variable-length list of authors in an array variable.
+    authors / unknown .code:n = {  % Store a variable-length list of authors in an array variable.
       \seq_put_right:Nn
         \g_markdown_example_authors_seq
         { #1 }
