@@ -21976,27 +21976,27 @@ following content:
 \usepackage{markdown}
 \ExplSyntaxOn
 \str_new:N \g_markdown_example_title_str
-\seq_new:N \g_markdown_example_author_seq
+\seq_new:N \g_markdown_example_authors_seq
 \keys_define:nn
-  { markdown / some / example / module }
+  { markdown / example / module }
   {  % Define a key--value that processes YAML metadata.
     title / programmaticString .str_gset:N = \g_markdown_example_title_str,  % Store the raw title in a variable.
     title .code:n = { \title { #1 } },  % Set the title. This is the same as writing `title / typographicString`.
-    author / unknown .code = {  % Store a variable-length list of authors in an array variable.
+    authors / unknown .code = {  % Store a variable-length list of authors in an array variable.
       \seq_put_right:Nn
-        \g_markdown_example_author_seq
+        \g_markdown_example_authors_seq
         { #1 }
     },
   }
 \markdownSetupSnippet
   { metadata }
   {  % Define a snippet that routes YAML metadata to the above key key–value.
-    jekyllDataKeyValue = markdown / some / example / module,
+    jekyllDataKeyValue = markdown / example / module,
     renderers = {
       jekyllDataEnd = {  % At the end of the YAML metadata, ...
         \clist_set_from_seq:NN  % ... set the list of authors and
           \l_tmpa_clist
-          \g_markdown_example_author_seq
+          \g_markdown_example_authors_seq
         \exp_args:Nx
           \author
           { \clist_use:Nn \l_tmpa_clist { ,~ } }
@@ -36168,7 +36168,7 @@ end
         rendererPrototypes = {
           jekyllData(Sequence|Mapping)Begin = {
             \str_if_eq:nnTF
-              { #1 }
+              { ##1 }
               { null }
               {
                 \seq_put_right:Nn
@@ -36184,7 +36184,7 @@ end
           jekyllData(Sequence|Mapping)End = {
             \seq_pop_right:NN
               \l_@@_jekyll_data_current_position_seq
-              \l_@@_jekyll_data_current_position_tl
+              \l_tmpa_tl
           },
 %    \end{macrocode}
 % \begin{markdown}
