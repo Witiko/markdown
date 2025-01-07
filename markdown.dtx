@@ -36163,6 +36163,15 @@ end
           \@@_route_jekyll_data_to_key_values:n
             { ##1 }
         },
+%    \end{macrocode}
+% \begin{markdown}
+%
+% When no \meta{module} has been provided, assume that the \acro{YAML} metadata
+% specify absolute paths to key--values.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        #1 .default:n = { },
       }
   }
 \seq_new:N
@@ -36182,9 +36191,13 @@ end
               { ##1 }
               { null }
               {
-                \seq_put_right:Nn
-                  \l_@@_jekyll_data_current_position_seq
+                \tl_if_empty:nF
                   { #1 }
+                  {
+                    \seq_put_right:Nn
+                      \l_@@_jekyll_data_current_position_seq
+                      { #1 }
+                  }
               }
               {
                 \seq_put_right:Nn
