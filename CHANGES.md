@@ -6,7 +6,7 @@ Development:
 
 - Add option `jekyllDataKeyValue` for routing YAML metadata to expl3 key–values.
   (#77, #517, [matrix.org][matrix-517], #539, [matrix.org][matrix-539],
-   originally suggested by @TeXhackse)
+   f57a8c45, originally suggested by @TeXhackse)
 
   While the primary intended users of this new option are package authors,
   writers can also use this feature to configure various (La)TeX packages
