@@ -27528,7 +27528,7 @@ parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
   end
 
   print("M.punctuation = {}")
-  print("local S = lpeg.S")
+  print("local P = lpeg.P")
   print("-- luacheck: push no max line length")
   for length, prefix_tree in pairs(prefix_trees) do
     local subparsers = {}
@@ -27536,9 +27536,9 @@ parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
       if type(node) == "string" then
         local suffix
         if node == "]" then
-          suffix = "S('" .. node .. "')"
+          suffix = "P('" .. node .. "')"
         else
-          suffix = "S([[" .. node .. "]])"
+          suffix = "P([[" .. node .. "]])"
         end
         if subparsers[path] ~= nil then
           subparsers[path] = subparsers[path] .. " + " .. suffix
@@ -27550,20 +27550,23 @@ parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
       if #path > 0 then
         local byte = path:sub(#path, #path)
         local parent_path = path:sub(1, #path-1)
-        if subparsers[path] ~= nil then
-          local suffix
-          if byte == "]" then
-            suffix = "S('" .. byte .. "')"
-          else
-            suffix = "S([[" .. byte .. "]])"
-          end
-          suffix = suffix .. " * (" .. subparsers[path] .. ")"
-          if subparsers[parent_path] ~= nil then
-            subparsers[parent_path] = subparsers[parent_path]
-                                   .. " + " .. suffix
-          else
-            subparsers[parent_path] = suffix
-          end
+        local prefix
+        if byte == "]" then
+          prefix = "P('" .. byte .. "')"
+        else
+          prefix = "P([[" .. byte .. "]])"
+        end
+        local suffix
+        if subparsers[path]:find(" %+ ") then
+          suffix = prefix .. " * (" .. subparsers[path] .. ")"
+        else
+          suffix = prefix .. " * " .. subparsers[path]
+        end
+        if subparsers[parent_path] ~= nil then
+          subparsers[parent_path] = subparsers[parent_path]
+                                 .. " + " .. suffix
+        else
+          subparsers[parent_path] = suffix
         end
       else
         print("M.punctuation[" .. length .. "] = " .. subparsers[path])
