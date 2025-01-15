@@ -2442,7 +2442,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
               \l_tmpa_tl
             \tl_set:Nx
               #2
-              { \the \cs:w \l_tmpa_tl \cs_end: }
+              { \the \cs:w \l_tmpa_tl \cs_end: }  % noqa: W200
           }
           {
             \@@_option_tl_to_csname:nN
@@ -12007,7 +12007,9 @@ you would include the following code in your plain \TeX{} document:
     Option~#1~has~type~#2,~
     but~a~boolean~was~expected.
   }
-\let\markdownIfOption=\@@_if_option:nTF
+\let
+  \markdownIfOption
+  \@@_if_option:nTF
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -12644,7 +12646,7 @@ A PDF document named `document.pdf` should be produced and contain the text
                 \l_tmpa_tl
               \clist_set:NV
                 \l_tmpa_clist
-                { \l_tmpa_tl, { ##1 } }
+                { \l_tmpa_tl , { ##1 } }
               \@@_set_option_value:nV
                 { #2 }
                 \l_tmpa_clist
@@ -23096,7 +23098,8 @@ Built-in \LaTeX{} themes provided with the Markdown package include:
   \c_@@_top_layer_tl
   \c_@@_option_layer_latex_tl
   {
-    \ExplSyntaxOff
+    \use:c
+      { ExplSyntaxOff }
     \AtEndOfPackage
       {
         \@@_if_option:nF
@@ -23114,7 +23117,8 @@ Built-in \LaTeX{} themes provided with the Markdown package include:
               }
           }
       }
-    \ExplSyntaxOn
+    \use:c
+      { ExplSyntaxOn }
   }
 \ExplSyntaxOff
 %    \end{macrocode}
@@ -35167,7 +35171,7 @@ end
         \prop_gput:Nnx
           \g_@@_plain_tex_loaded_themes_linenos_prop
           { #1 }
-          { \tex_the:D \tex_inputlineno:D }
+          { \tex_the:D \tex_inputlineno:D }  % noqa: W200
         \prop_gput:Nnn
           \g_@@_plain_tex_loaded_themes_versions_prop
           { #1 }
@@ -35336,7 +35340,7 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-    \markdownSetup{fencedCode}
+    \markdownSetup { fencedCode }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -36454,7 +36458,8 @@ end
   \c_@@_top_layer_tl
   \c_@@_option_layer_plain_tex_tl
   {
-    \ExplSyntaxOff
+    \use:c
+      { ExplSyntaxOff }
     \@@_if_option:nF
       { noDefaults }
       {
@@ -36469,7 +36474,8 @@ end
               { theme = witiko/markdown/defaults }
           }
       }
-    \ExplSyntaxOn
+    \use:c
+      { ExplSyntaxOn }
   }
 \ExplSyntaxOff
 %    \end{macrocode}
@@ -36575,8 +36581,16 @@ end
 \cs_generate_variant:Nn
   \clist_map_inline:nn
   { Vn }
-\let\markdownPrepareLuaOptions=\@@_format_lua_options:
-\def\markdownLuaOptions{{ \g_@@_formatted_lua_options_tl }}
+\let
+  \markdownPrepareLuaOptions
+  \@@_format_lua_options:
+\def
+  \markdownLuaOptions
+    {
+      {
+        \g_@@_formatted_lua_options_tl
+      }
+    }
 \sys_if_engine_luatex:TF
   {
     \cs_new:Nn
@@ -37441,7 +37455,8 @@ end
   { yaml }
   {
     \group_begin:
-    \yamlSetup{jekyllData, expectJekyllData, ensureJekyllData}%
+    \yamlSetup
+      { jekyllData, expectJekyllData, ensureJekyllData }
     \markdown
   }
   { \yamlEnd }
@@ -37600,7 +37615,7 @@ end
                 \prop_gput:Nnx
                   \g_@@_latex_loaded_themes_linenos_prop
                   { #1 }
-                  { \tex_the:D \tex_inputlineno:D }
+                  { \tex_the:D \tex_inputlineno:D }  % noqa: W200
                 \prop_gput:Nnn
                   \g_@@_latex_loaded_themes_versions_prop
                   { #1 }
@@ -37705,7 +37720,7 @@ end
   \c_backslash_str
 \tl_put_right:Nn
   \l_tmpa_tl
-  { begin{document} }
+  { begin { document } }
 \tl_set:Nn
   \l_tmpb_tl
   { Load~Markdown~theme~#1~before~ }
@@ -37714,7 +37729,7 @@ end
   \c_backslash_str
 \tl_put_right:Nn
   \l_tmpb_tl
-  { begin{document} }
+  { begin { document } }
 \msg_new:nnVV
   { markdown }
   { latex-theme-after-preamble }
@@ -37965,8 +37980,8 @@ end
   \l_@@_latex_fancy_list_item_label_number_style_tl
 \tl_new:N
   \l_@@_latex_fancy_list_item_label_delimiter_style_tl
-\@ifpackageloaded{enumitem}{
-  \markdownSetup{rendererPrototypes={
+\@ifpackageloaded { enumitem } {
+  \markdownSetup { rendererPrototypes = {
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -38044,7 +38059,7 @@ end
             { #1 }
         ]
     },
-  }}
+  } }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -38054,8 +38069,9 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-}{\@ifpackageloaded{paralist}{
-  \markdownSetup{rendererPrototypes={
+}
+{ \@ifpackageloaded { paralist } {
+  \markdownSetup { rendererPrototypes = {
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -38064,14 +38080,14 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-    ulBeginTight = {%
+    ulBeginTight = {
       \group_begin:
       \pltopsep=\topsep
       \plpartopsep=\partopsep
-      \begin{compactitem}
+      \begin { compactitem }
     },
     ulEndTight = {
-      \end{compactitem}
+      \end { compactitem }
       \group_end:
     },
     fancyOlBegin = {
@@ -38082,10 +38098,10 @@ end
       \tl_set:Nn
         \l_@@_latex_fancy_list_item_label_delimiter_style_tl
         { #2 }
-      \begin{enumerate}
+      \begin { enumerate }
     },
     fancyOlEnd = {
-      \end{enumerate}
+      \end { enumerate }
       \group_end:
     },
 %    \end{macrocode}
@@ -38096,14 +38112,14 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-    olBeginTight = {%
+    olBeginTight = {
       \group_begin:
       \plpartopsep=\partopsep
       \pltopsep=\topsep
-      \begin{compactenum}
+      \begin { compactenum }
     },
     olEndTight = {
-      \end{compactenum}
+      \end { compactenum }
       \group_end:
     },
     fancyOlBeginTight = {
@@ -38116,10 +38132,10 @@ end
         { #2 }
       \plpartopsep=\partopsep
       \pltopsep=\topsep
-      \begin{compactenum}
+      \begin { compactenum }
     },
     fancyOlEndTight = {
-      \end{compactenum}
+      \end { compactenum }
       \group_end:
     },
     fancyOlItemWithNumber = {
@@ -38143,14 +38159,15 @@ end
       \group_begin:
       \plpartopsep=\partopsep
       \pltopsep=\topsep
-      \begin{compactdesc}
+      \begin { compactdesc }
     },
     dlEndTight = {
-      \end{compactdesc}
+      \end { compactdesc }
       \group_end:
     }
-  }}
-}{
+  } }
+}
+{
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -38176,7 +38193,7 @@ end
         dlEndTight = \markdownRendererDlEnd,
       },
     }
-}}
+} }
 \ExplSyntaxOff
 \RequirePackage{amsmath}
 %    \end{macrocode}
@@ -38256,14 +38273,14 @@ end
         {
           { csv }
             {
-              \begin{table}
-                \begin{center}
-                  \csvautotabular{#3}
-                \end{center}
+              \begin { table }
+                \begin { center }
+                  \csvautotabular { #3 }
+                \end{ center }
                 \tl_if_empty:nF
                   { #4 }
-                  { \caption{#4} }
-              \end{table}
+                  { \caption { #4 } }
+              \end { table }
             }
           { html }
             {
@@ -38475,7 +38492,7 @@ end
 %  \begin{macrocode}
             \ltx@ifpackageloaded
               { listings }
-              { \lstinputlisting[language=\l_tmpa_tl]{#1} }
+              { \lstinputlisting [ language = \l_tmpa_tl ] { #1 } }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -38484,7 +38501,7 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-              { \markdownRendererInputFencedCode{#1}{}{} }
+              { \markdownRendererInputFencedCode { #1 } { } { } }
           }
       }
   }
@@ -38497,7 +38514,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\def\markdownLATEXStrongEmphasis#1{%
+\def\markdownLATEXStrongEmphasis#1{
   \str_if_in:NnTF
     \f@series
     { b }
@@ -38888,12 +38905,13 @@ end
       }
       {
         \markdownLaTeXRendererAutolink { #2 } { #3 }
-      }{
+      }
+      {
         \markdownLaTeXRendererDirectOrIndirectLink
           { #1 } { #2 } { #3 } { #4 }
       }
   }
-\def\markdownLaTeXRendererAutolink#1#2{%
+\def\markdownLaTeXRendererAutolink#1#2{
 %    \end{macrocode}
 % \begin{markdown}
 % If the URL begins with a hash sign, then we assume that it is a relative
@@ -38928,7 +38946,8 @@ end
       \exp_args:NV
         \ref
         \l_tmpb_tl
-    }{
+    }
+    {
       \url { #2 }
     }
 }
@@ -39664,7 +39683,7 @@ end
             \prop_gput:Nnx
               \g_@@_context_loaded_themes_linenos_prop
               { #1 }
-              { \tex_the:D \tex_inputlineno:D }
+              { \tex_the:D \tex_inputlineno:D }  % noqa: W200
             \prop_gput:Nnn
               \g_@@_context_loaded_themes_versions_prop
               { #1 }
@@ -39894,7 +39913,7 @@ end
         \seq_pop_left:NN
           \l_tmpa_seq
           \l_tmpa_tl
-        \typefile[\l_tmpa_tl][]{#1}
+        \typefile[ \l_tmpa_tl ][] {#1}
       }
   }
 \ExplSyntaxOff
@@ -40067,7 +40086,8 @@ end
   \c_@@_top_layer_tl
   \c_@@_option_layer_context_tl
   {
-    \ExplSyntaxOff
+    \use:c
+      { ExplSyntaxOff }
     \@@_if_option:nF
       { noDefaults }
       {
@@ -40082,7 +40102,8 @@ end
               { theme = witiko/markdown/defaults }
           }
       }
-    \ExplSyntaxOn
+    \use:c
+      { ExplSyntaxOn }
   }
 \ExplSyntaxOff
 \stopmodule
