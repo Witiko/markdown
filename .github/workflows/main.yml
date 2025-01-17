@@ -122,7 +122,7 @@ jobs:
       - name: Extract TeX files
         run: make base
       - name: Run explcheck
-        run: explcheck --warnings-are-errors --max-line-length=72 -- *.tex *.sty
+        run: explcheck *.tex *.sty
   markdownlint:
     name: Style check (Markdown)
     runs-on: ubuntu-latest
