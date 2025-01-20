@@ -35429,7 +35429,8 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% The `witiko/diagrams` loads the theme `witiko/dot`.
+% The theme `witiko/diagrams` loads either the theme `witiko/dot` for version
+% `v1` or the theme `witiko/diagrams/v2` for version `v2`.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -35444,7 +35445,7 @@ end
           {
             \markdownWarning
               {
-                Write~"witiko/diagrams@v1"~to~pin~version~"v1"~of~the~
+                Write~"witiko/diagrams@v2"~to~pin~version~"v2"~of~the~
                 theme~"witiko/diagrams".~This~will~keep~your~documents~
                 from~suddenly~breaking~when~we~have~released~future~
                 versions~of~the~theme~with~backwards-incompatible~
@@ -35452,7 +35453,14 @@ end
               }
             \markdownSetup
               {
-                import = witiko/dot@silent,
+                import = witiko/diagrams/v2,
+              }
+          }
+        { v2 }
+          {
+            \markdownSetup
+              {
+                import = witiko/diagrams/v2,
               }
           }
         { v1 }
@@ -35480,6 +35488,19 @@ end
   { unknown-theme-version }
   { Unknown~version~"#2"~of~theme~"#1"~has~been~requested. }
   { Known~versions~are:~#3 }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The theme `witiko/diagrams/v2` ...
+%
+% \end{markdown}
+%  \begin{macrocode}
+\prop_gput:Nnn
+  \g_@@_plain_tex_built_in_themes_prop
+  { witiko / diagrams / v2 }
+  {
+    % TODO
+  }
 %    \end{macrocode}
 % \begin{markdown}
 %
