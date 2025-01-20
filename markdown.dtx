@@ -35530,6 +35530,14 @@ end
     \@@_setup:n
       {
         rendererPrototypes = {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Route attributes on fenced code blocks to the image attribute renderer
+% prototypes.
+%
+% \end{markdown}
+%  \begin{macrocode}
           fencedCodeAttributeContextBegin = {
             \group_begin:
             \markdownRendererImageAttributeContextBegin
@@ -35561,6 +35569,37 @@ end
             \markdownRendererImageAttributeContextEnd
             \group_end:
           },
+        },
+      }
+    \cs_new:Nn
+      \@@_diagrams_render_diagram:nnnn
+      {
+        \@@_if_option:nF
+          { frozenCache }
+          {
+            \sys_shell_now:n
+              {
+                if~!~test~-e~#2.source~
+                ||~!~diff~#1~#2.source;
+                then~
+                  dot~-Tpdf~-o~#2~#1;
+                  (#3);
+                fi
+              }
+            \exp_args:NNnV
+              \exp_last_unbraced:No
+              \markdownRendererImage
+                {
+                  { #4 }
+                  { #2 }
+                  { #2 }
+                }
+                \l_@@_diagrams_caption_tl
+          }
+      }
+    \@@_setup:n
+      {
+        rendererPrototypes = {
           inputFencedCode = {
             \str_case:nnF
               { #2 }
@@ -35568,34 +35607,33 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Typeset fenced code with infostring `dot` using GraphViz.
+% Typeset fenced code with infostring `dot` using Graphviz.
 %
 % \end{markdown}
 %  \begin{macrocode}
                 { dot }
                 {
-                  \@@_if_option:nF
-                    { frozenCache }
-                    {
-                      \sys_shell_now:n
-                        {
-                          if~!~test~-e~#1.pdf.source~
-                          ||~!~diff~#1~#1.pdf.source;
-                          then~
-                            dot~-Tpdf~-o~#1.pdf~#1;
-                            cp~#1~#1.pdf.source;
-                          fi
-                        }
-                      \exp_args:NNnV
-                        \exp_last_unbraced:No
-                        \markdownRendererImage
-                          {
-                            { Graphviz~image }
-                            { #1.pdf }
-                            { #1.pdf }
-                          }
-                          \l_@@_diagrams_caption_tl
-                    }
+                  \@@_diagrams_render_diagram:nnnn
+                    { #1 }
+                    { #1.pdf }
+                    { dot~-Tpdf~-o~#1.pdf~#1 }
+                    { Graphviz~image }
+                }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Typeset fenced code with infostring `mermaid` using the npm package
+% [@mermaid-js/mermaid-cli](https://www.npmjs.com/package/@mermaid-js/mermaid-cli).
+%
+% \end{markdown}
+%  \begin{macrocode}
+                { mermaid }
+                {
+                  \@@_diagrams_render_diagram:nnnn
+                    { #1 }
+                    { #1.pdf }
+                    { npx~-p~@mermaid-js/mermaid-cli~mmdc~--pdfFit~-i~#1~-o~#1.pdf }
+                    { Mermaid~image }
                 }
               }
 %    \end{macrocode}
