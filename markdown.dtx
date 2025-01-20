@@ -35632,7 +35632,10 @@ end
                   \@@_diagrams_render_diagram:nnnn
                     { #1 }
                     { #1.pdf }
-                    { npx~-p~@mermaid-js/mermaid-cli~mmdc~--pdfFit~-i~#1~-o~#1.pdf }
+                    {
+                      npx~-p~@mermaid-js/mermaid-cli~mmdc~
+                        --pdfFit~-i~#1~-o~#1.pdf
+                    }
                     { Mermaid~image }
                 }
               }
