@@ -35526,7 +35526,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
     \tl_new:N
-      \@@_diagrams_caption_tl
+      \l_@@_diagrams_caption_tl
     \@@_setup:n
       {
         rendererPrototypes = {
@@ -35545,7 +35545,7 @@ end
                       { caption }
                       {
                         \tl_set:Nn
-                          \@@_diagrams_caption_tl
+                          \l_@@_diagrams_caption_tl
                           { ##2 }
                       }
                       {
@@ -35594,7 +35594,7 @@ end
                             { #1.pdf }
                             { #1.pdf }
                           }
-                          \@@_diagrams_caption_tl
+                          \l_@@_diagrams_caption_tl
                     }
                 }
               }
