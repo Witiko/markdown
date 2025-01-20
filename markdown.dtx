@@ -90,7 +90,7 @@
 ]{markdown}
 \markdownSetup{
   import = {
-    witiko/diagrams@v1,
+    witiko/diagrams@v2,
     witiko/graphicx/http,
     witiko/markdown/techdoc = {
       options as lua-options
@@ -12979,21 +12979,17 @@ a specific look and other high-level goals without low-level programming.
 
 Built-in plain \TeX{} themes provided with the Markdown package include:
 
-\pkg{witiko/diagrams@v1}
+\pkg{witiko/diagrams}
 
 :    A theme that typesets fenced code blocks with the `dot …` infostring
      as images of directed graphs rendered by the Graphviz tools. The
      right tail of the infostring is used as the image title.
 %    ```` tex
 %    \documentclass{article}
-%    \usepackage[import=witiko/diagrams@v1]{markdown}
-%    \setkeys{Gin}{
-%      width = \columnwidth,
-%      height = 0.65\paperheight,
-%      keepaspectratio}
+%    \usepackage[import=witiko/diagrams@v2, relativeReferences]{markdown}
 %    \begin{document}
 %    \begin{markdown}
-%    ``` dot Various formats of mathemathical formulae
+%    ``` dot {caption="Various formats of mathemathical formulae" width=10cm #diagram}
 %    digraph tree {
 %      margin = 0;
 %      rankdir = "LR";
@@ -13017,12 +13013,14 @@ Built-in plain \TeX{} themes provided with the Markdown package include:
 %      mterms [label = "M-Terms"];
 %    }
 %    ```
+%
+%    See the diagram in Figure <#diagram>.
 %    \end{markdown}
 %    \end{document}
 %    ````````
 %    Typesetting the above document produces the output shown in
-%    Figure <#fig:witiko/diagrams@v1>.
-%    ``` dot Various formats of mathemathical formulae \label{fig:witiko/diagrams@v1}
+%    Figure <#fig:witiko-diagrams>.
+%    ``` dot {caption="Various formats of mathemathical formulae" #fig:witiko-diagrams}
 %    digraph tree {
 %      margin = 0;
 %      rankdir = "LR";
@@ -13065,14 +13063,10 @@ Using a text editor, create a text document named `document.tex` with the
 following content:
 ```` tex
 \documentclass{article}
-\usepackage[import=witiko/diagrams@v1]{markdown}
-\setkeys{Gin}{
-  width=\columnwidth,
-  height=0.65\paperheight,
-  keepaspectratio}
+\usepackage[import=witiko/diagrams@v2, relativeReferences]{markdown}
 \begin{document}
 \begin{markdown}
-``` dot Various formats of mathemathical formulae
+``` dot {caption="Various formats of mathemathical formulae" width=10cm #diagram}
 digraph tree {
   margin = 0;
   rankdir = "LR";
@@ -13096,6 +13090,8 @@ digraph tree {
   mterms [label = "M-Terms"];
 }
 ```
+
+See the diagram in Figure <#diagram>.
 \end{markdown}
 \end{document}
 ````````
@@ -35520,7 +35516,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
     \cs_set_eq:NN
-      \@@_diagrams_previous_definition:nnn
+      \@@_diagrams_previous_fenced_code:nnn
       \markdownRendererInputFencedCodePrototype
 %    \end{macrocode}
 % \begin{markdown}
@@ -35536,11 +35532,15 @@ end
         rendererPrototypes = {
           fencedCodeAttributeContextBegin = {
             \group_begin:
+            \markdownRendererImageAttributeContextBegin
+            \cs_set_eq:NN
+              \@@_diagrams_previous_key_value:nn
+              \markdownRendererAttributeKeyValuePrototype
             \@@_setup:n
               {
                 rendererPrototypes = {
                   attributeKeyValue = {
-                    \str_if_eq:nnT
+                    \str_if_eq:nnTF
                       { ##1 }
                       { caption }
                       {
@@ -35548,11 +35548,17 @@ end
                           \@@_diagrams_caption_tl
                           { ##2 }
                       }
+                      {
+                        \@@_diagrams_previous_key_value:nn
+                          { ##1 }
+                          { ##2 }
+                      }
                   },
                 },
               }
           },
           fencedCodeAttributeContextEnd = {
+            \markdownRendererImageAttributeContextEnd
             \group_end:
           },
           inputFencedCode = {
@@ -35600,7 +35606,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
               {
-                \@@_diagrams_previous_definition:nnn
+                \@@_diagrams_previous_fenced_code:nnn
                   { #1 }
                   { #2 }
                   { #3 }
@@ -39417,31 +39423,31 @@ end
   { linkAttributes }
   {
     \RequirePackage { graphicx }
-    \markdownSetup {
-      rendererPrototypes = {
-        imageAttributeContextBegin = {
-          \group_begin:
-          \markdownSetup {
-            rendererPrototypes = {
-              attributeIdentifier = {
-                \seq_put_right:Nn
-                  \l_@@_image_identifiers_seq
-                  { ##1 }
-              },
-              attributeKeyValue = {
-                \setkeys
-                  { Gin }
-                  { { ##1 } = { ##2 } }
-              },
-            },
-          }
-        },
-        imageAttributeContextEnd = {
-          \group_end:
-        },
-      },
-    }
   }
+\markdownSetup {
+  rendererPrototypes = {
+    imageAttributeContextBegin = {
+      \group_begin:
+      \markdownSetup {
+        rendererPrototypes = {
+          attributeIdentifier = {
+            \seq_put_right:Nn
+              \l_@@_image_identifiers_seq
+              { ##1 }
+          },
+          attributeKeyValue = {
+            \setkeys
+              { Gin }
+              { { ##1 } = { ##2 } }
+          },
+        },
+      }
+    },
+    imageAttributeContextEnd = {
+      \group_end:
+    },
+  },
+}
 \ExplSyntaxOff
 %    \end{macrocode}
 % \begin{markdown}
