@@ -35597,47 +35597,38 @@ end
                 \l_@@_diagrams_caption_tl
           }
       }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Use the prop \mdef{\g_@@_diagrams_infostrings_prop} to determine how the code
+% with a given infostring should be processed and routed to the token renderer
+% prototype(s) for images.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \prop_new:N
+      \g_@@_diagrams_infostrings_prop
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If we know a processing function for a given infostring, use it.
+%
+% \end{markdown}
+%  \begin{macrocode}
     \@@_setup:n
       {
         rendererPrototypes = {
           inputFencedCode = {
-            \str_case:nnF
+            \prop_get:NnNTF
+              \g_@@_diagrams_infostrings_prop
               { #2 }
+              \l_tmpa_tl
               {
-%    \end{macrocode}
-% \begin{markdown}
-%
-% Typeset fenced code with infostring `dot` using Graphviz.
-%
-% \end{markdown}
-%  \begin{macrocode}
-                { dot }
-                {
-                  \@@_diagrams_render_diagram:nnnn
-                    { #1 }
-                    { #1.pdf }
-                    { dot~-Tpdf~-o~#1.pdf~#1 }
-                    { Graphviz~image }
-                }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% Typeset fenced code with infostring `mermaid` using the npm package
-% [@mermaid-js/mermaid-cli](https://www.npmjs.com/package/@mermaid-js/mermaid-cli).
-%
-% \end{markdown}
-%  \begin{macrocode}
-                { mermaid }
-                {
-                  \@@_diagrams_render_diagram:nnnn
-                    { #1 }
-                    { #1.pdf }
-                    {
-                      npx~-p~@mermaid-js/mermaid-cli~mmdc~
-                        --pdfFit~-i~#1~-o~#1.pdf
-                    }
-                    { Mermaid~image }
-                }
+                \cs_set:NV
+                  \@@_diagrams_infostrings_current:n
+                  \l_tmpa_tl
+                \@@_diagrams_infostrings_current:n
+                  { #1 }
               }
 %    \end{macrocode}
 % \begin{markdown}
@@ -35655,6 +35646,61 @@ end
           },
         },
       }
+    \cs_generate_variant:Nn
+      \cs_set:Nn
+      { NV }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Typeset fenced code with infostring `dot` using Graphviz.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \cs_new:Nn
+      \@@_diagrams_infostrings_dot:n
+      {
+        \@@_diagrams_render_diagram:nnnn
+          { #1 }
+          { #1.pdf }
+          { dot~-Tpdf~-o~#1.pdf~#1 }
+          { Graphviz~image }
+      }
+    \@@_tl_set_from_cs:NNn
+      \l_tmpa_tl
+      \@@_diagrams_infostrings_dot:n
+      { 1 }
+    \prop_gput:NnV
+      \g_@@_diagrams_infostrings_prop
+      { dot }
+      \l_tmpa_tl
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Typeset fenced code with infostring `mermaid` using the npm package
+% [@mermaid-js/mermaid-cli](https://www.npmjs.com/package/@mermaid-js/mermaid-cli).
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \cs_new:Nn
+      \@@_diagrams_infostrings_mermaid:n
+      {
+        \@@_diagrams_render_diagram:nnnn
+          { #1 }
+          { #1.pdf }
+          {
+            npx~-p~@mermaid-js/mermaid-cli~mmdc~
+              --pdfFit~-i~#1~-o~#1.pdf
+          }
+          { Mermaid~image }
+      }
+    \@@_tl_set_from_cs:NNn
+      \l_tmpa_tl
+      \@@_diagrams_infostrings_mermaid:n
+      { 1 }
+    \prop_gput:NnV
+      \g_@@_diagrams_infostrings_prop
+      { mermaid }
+      \l_tmpa_tl
   }
 %    \end{macrocode}
 % \begin{markdown}
