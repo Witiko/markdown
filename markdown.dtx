@@ -39441,19 +39441,28 @@ end
 \markdownSetup {
   rendererPrototypes = {
     image = {
-      \begin { figure }
-        \begin { center }
-          \includegraphics
-            [ alt = { #1 } ]
-            { #3 }
-          \tl_if_empty:nF
-            { #4 }
-            { \caption { #4 } }
-          \seq_map_inline:Nn
-            \l_@@_image_identifiers_seq
-            { \label { ##1 } }
-        \end { center }
-      \end { figure }
+      \tl_if_empty:nTF
+        { #4 }
+        {
+          \begin { center }
+            \includegraphics
+              [ alt = { #1 } ]
+              { #3 }
+          \end { center }
+        }
+        {
+          \begin { figure }
+            \begin { center }
+              \includegraphics
+                [ alt = { #1 } ]
+                { #3 }
+              \caption { #4 }
+              \seq_map_inline:Nn
+                \l_@@_image_identifiers_seq
+                { \label { ##1 } }
+            \end { center }
+          \end { figure }
+        }
     },
   }
 }
