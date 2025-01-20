@@ -35582,8 +35582,8 @@ end
                 if~!~test~-e~#2.source~
                 ||~!~diff~#1~#2.source;
                 then~
-                  dot~-Tpdf~-o~#2~#1;
                   (#3);
+                  cp~#1~#2.source;
                 fi
               }
             \exp_args:NNnV
