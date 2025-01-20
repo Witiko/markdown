@@ -35491,7 +35491,7 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% The theme `witiko/diagrams/v2` ...
+% Next, we implement the theme `witiko/diagrams/v2`.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -35499,7 +35499,115 @@ end
   \g_@@_plain_tex_built_in_themes_prop
   { witiko / diagrams / v2 }
   {
-    % TODO
+%    \end{macrocode}
+% \begin{markdown}
+%
+% We enable the \Opt{fencedCode} and \Opt{fencedCodeAttributes} Lua
+% option.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \@@_setup:n
+      {
+        fencedCode = true,
+        fencedCodeAttributes = true,
+      }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Store the previous fenced code token renderer prototype.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \cs_set_eq:NN
+      \@@_diagrams_previous_definition:nnn
+      \markdownRendererInputFencedCodePrototype
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Store the caption of the diagram.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \tl_new:N
+      \@@_diagrams_caption_tl
+    \@@_setup:n
+      {
+        rendererPrototypes = {
+          fencedCodeAttributeContextBegin = {
+            \group_begin:
+            \@@_setup:n
+              {
+                rendererPrototypes = {
+                  attributeKeyValue = {
+                    \str_if_eq:nnT
+                      { ##1 }
+                      { caption }
+                      {
+                        \tl_set:Nn
+                          \@@_diagrams_caption_tl
+                          { ##2 }
+                      }
+                  },
+                },
+              }
+          },
+          fencedCodeAttributeContextEnd = {
+            \group_end:
+          },
+          inputFencedCode = {
+            \str_case:nnF
+              { #2 }
+              {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Typeset fenced code with infostring `dot` using GraphViz.
+%
+% \end{markdown}
+%  \begin{macrocode}
+                { dot }
+                {
+                  \@@_if_option:nF
+                    { frozenCache }
+                    {
+                      \sys_shell_now:n
+                        {
+                          if~!~test~-e~#1.pdf.source~
+                          ||~!~diff~#1~#1.pdf.source;
+                          then~
+                            dot~-Tpdf~-o~#1.pdf~#1;
+                            cp~#1~#1.pdf.source;
+                          fi
+                        }
+                      \exp_args:NNnV
+                        \exp_last_unbraced:No
+                        \markdownRendererImage
+                          {
+                            { Graphviz~image }
+                            { #1.pdf }
+                            { #1.pdf }
+                          }
+                          \@@_diagrams_caption_tl
+                    }
+                }
+              }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Otherwise, use the previous fenced code token renderer prototype.
+%
+% \end{markdown}
+%  \begin{macrocode}
+              {
+                \@@_diagrams_previous_definition:nnn
+                  { #1 }
+                  { #2 }
+                  { #3 }
+              }
+          },
+        },
+      }
   }
 %    \end{macrocode}
 % \begin{markdown}
