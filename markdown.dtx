@@ -35600,14 +35600,14 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Use the prop \mdef{\g_@@_diagrams_infostrings_prop} to determine how the code
-% with a given infostring should be processed and routed to the token renderer
-% prototype(s) for images.
+% Use the prop \mdef{g_markdown_diagrams_infostrings_prop} to determine how the
+% code with a given infostring should be processed and routed to the token
+% renderer prototype(s) for images.
 %
 % \end{markdown}
 %  \begin{macrocode}
     \prop_new:N
-      \g_@@_diagrams_infostrings_prop
+      \g_markdown_diagrams_infostrings_prop
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -35620,7 +35620,7 @@ end
         rendererPrototypes = {
           inputFencedCode = {
             \prop_get:NnNTF
-              \g_@@_diagrams_infostrings_prop
+              \g_markdown_diagrams_infostrings_prop
               { #2 }
               \l_tmpa_tl
               {
@@ -35670,7 +35670,7 @@ end
       \@@_diagrams_infostrings_current:n
       { 1 }
     \prop_gput:NnV
-      \g_@@_diagrams_infostrings_prop
+      \g_markdown_diagrams_infostrings_prop
       { dot }
       \l_tmpa_tl
 %    \end{macrocode}
@@ -35698,7 +35698,7 @@ end
       \@@_diagrams_infostrings_current:n
       { 1 }
     \prop_gput:NnV
-      \g_@@_diagrams_infostrings_prop
+      \g_markdown_diagrams_infostrings_prop
       { mermaid }
       \l_tmpa_tl
 %    \end{macrocode}
@@ -35735,7 +35735,7 @@ end
       \@@_diagrams_infostrings_current:n
       { 1 }
     \prop_gput:NnV
-      \g_@@_diagrams_infostrings_prop
+      \g_markdown_diagrams_infostrings_prop
       { plantuml }
       \l_tmpa_tl
   }
