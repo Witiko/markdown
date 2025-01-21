@@ -13,24 +13,26 @@ ARG AUXILIARY_FILES="\
 
 ARG DEPENDENCIES="\
     ca-certificates \
-    curl \
     gawk \
     git \
-    graphviz \
     m4 \
     moreutils \
-    npm \
-    pandoc \
-    parallel \
-    plantuml \
     poppler-utils \
-    python3-pygments \
     python3-venv \
     rename \
     retry \
     unzip \
-    wget \
     zip \
+"
+
+ARG PRODUCTION_DEPENDENCIES="\
+    curl \
+    graphviz \
+    npm \
+    pandoc \
+    plantuml \
+    python3-pygments \
+    wget \
 "
 
 ARG DEV_DEPENDENCIES="\
@@ -57,6 +59,7 @@ ARG DEV_IMAGE=false
 FROM $FROM_IMAGE:$TEXLIVE_TAG as build
 
 ARG DEPENDENCIES
+ARG PRODUCTION_DEPENDENCIES
 ARG TEXLIVE_DEPENDENCIES
 
 ARG BINARY_DIR
@@ -82,8 +85,12 @@ set -o xtrace
 # Install OS dependencies
 apt-get -qy update
 apt-get -qy install --no-install-recommends ${DEPENDENCIES}
-npm install -g @mermaid-js/mermaid-cli
-sed -i "s/headless: 'shell'/&, args: ['--no-sandbox']/" /usr/local/lib/node_modules/@mermaid-js/mermaid-cli/src/index.js
+if [ ${DEV_IMAGE} = false ]
+then
+  apt-get -qy install --no-install-recommends ${PRODUCTION_DEPENDENCIES}
+  npm install -g @mermaid-js/mermaid-cli
+  sed -i "s/headless: 'shell'/&, args: ['--no-sandbox']/" /usr/local/lib/node_modules/@mermaid-js/mermaid-cli/src/index.js
+fi
 
 # Update packages in non-historic TeX Live versions
 if echo ${TEXLIVE_TAG} | grep -q latest
@@ -171,6 +178,7 @@ FROM $FROM_IMAGE:$TEXLIVE_TAG
 
 ARG AUXILIARY_FILES
 ARG DEPENDENCIES
+ARG PRODUCTION_DEPENDENCIES
 ARG DEV_DEPENDENCIES
 
 ARG BINARY_DIR
@@ -199,11 +207,13 @@ set -o xtrace
 # Install dependencies, but this time we clean up after ourselves
 apt-get -qy update
 apt-get -qy install --no-install-recommends ${DEPENDENCIES}
-npm install -g @mermaid-js/mermaid-cli
-sed -i "s/headless: 'shell'/&, args: ['--no-sandbox']/" /usr/local/lib/node_modules/@mermaid-js/mermaid-cli/src/index.js
 if [ ${DEV_IMAGE} = true ]
 then
   apt-get -qy install --no-install-recommends ${DEV_DEPENDENCIES}
+else
+  apt-get -qy install --no-install-recommends ${PRODUCTION_DEPENDENCIES}
+  npm install -g @mermaid-js/mermaid-cli
+  sed -i "s/headless: 'shell'/&, args: ['--no-sandbox']/" /usr/local/lib/node_modules/@mermaid-js/mermaid-cli/src/index.js
 fi
 apt-get -qy autoclean
 apt-get -qy clean
