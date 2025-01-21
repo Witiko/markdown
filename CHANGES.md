@@ -5,7 +5,10 @@
 Development:
 
 - Add a built-in theme `witiko/diagrams@v2` for drawing different types of
-  diagrams. (#448, #514, #531, originally suggested by @anubane)
+  diagrams. (#448, #514, #531, #542, [matrix.org][matrix-542], originally
+  suggested by @anubane)
+
+   [matrix-542]: https://matrix.to/#/!UeAwznpYwwsinVTetR:matrix.org/$CpfhKJT8DAkzH7Rx6ynV1BKFKbfMUtxkpNzqftvLGec?via=matrix.org&via=im.f3l.de
 
   Here is an example LaTeX document using the new theme:
 
@@ -131,6 +134,12 @@ Development:
 Fixes:
 
 - Allow using the options `linkAttributes` and `notes` together. (#543, #544)
+
+Docker:
+
+- Produce Docker image `witiko/markdown:latest-minimal` with a minimum
+  installation of the Markdown package for TeX based on the Docker image
+  `texlive/texlive:latest-minimal`. (61a3aa2b)
 
 ## 3.9.1 (2024-12-17)
 
