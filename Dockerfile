@@ -18,6 +18,7 @@ ARG DEPENDENCIES="\
     m4 \
     moreutils \
     poppler-utils \
+    python3-pygments \
     python3-venv \
     rename \
     retry \
@@ -31,7 +32,6 @@ ARG PRODUCTION_DEPENDENCIES="\
     npm \
     pandoc \
     plantuml \
-    python3-pygments \
     wget \
 "
 
@@ -85,7 +85,7 @@ set -o xtrace
 # Install OS dependencies
 apt-get -qy update
 apt-get -qy install --no-install-recommends ${DEPENDENCIES}
-if [ ${DEV_IMAGE} = false ]
+if [ ${DEV_IMAGE} = false ] && echo ${TEXLIVE_TAG} | { ! grep -q latest-minimal; }
 then
   apt-get -qy install --no-install-recommends ${PRODUCTION_DEPENDENCIES}
   npm install -g @mermaid-js/mermaid-cli
@@ -152,7 +152,7 @@ cp lt3luabridge.sty    ${INSTALL_DIR}/tex/generic/lt3luabridge/
 cp t-lt3luabridge.tex  ${INSTALL_DIR}/tex/generic/lt3luabridge/
 
 # Generate the ConTeXt file database
-if test ${DEV_IMAGE} != true
+if echo ${TEXLIVE_TAG} | { ! grep -q latest-minimal; }
 then
   mtxrun --generate
 fi
@@ -161,7 +161,12 @@ fi
 texhash
 
 # Produce the complete distribution archive of the Markdown package
-make -C ${BUILD_DIR} dist NO_DOCUMENTATION=${DEV_IMAGE}
+if [ ${DEV_IMAGE} = false ] && echo ${TEXLIVE_TAG} | { ! grep -q latest-minimal; }
+then
+  make -C ${BUILD_DIR} dist NO_DOCUMENTATION=false
+else
+  make -C ${BUILD_DIR} dist NO_DOCUMENTATION=true
+fi
 mkdir ${BUILD_DIR}/dist
 unzip ${BUILD_DIR}/markdown.tds.zip -d ${BUILD_DIR}/dist
 
@@ -210,7 +215,8 @@ apt-get -qy install --no-install-recommends ${DEPENDENCIES}
 if [ ${DEV_IMAGE} = true ]
 then
   apt-get -qy install --no-install-recommends ${DEV_DEPENDENCIES}
-else
+elif echo ${TEXLIVE_TAG} | { ! grep -q latest-minimal; }
+then
   apt-get -qy install --no-install-recommends ${PRODUCTION_DEPENDENCIES}
   npm install -g @mermaid-js/mermaid-cli
   sed -i "s/headless: 'shell'/&, args: ['--no-sandbox']/" /usr/local/lib/node_modules/@mermaid-js/mermaid-cli/src/index.js

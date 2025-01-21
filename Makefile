@@ -59,8 +59,10 @@ EVERYTHING=$(RESOURCES) $(INSTALLABLES)
 GITHUB_PAGES=gh-pages
 
 ifeq ($(NO_DOCUMENTATION), true)
-  TECHNICAL_DOCUMENTATION=
   EXAMPLES=
+  TECHNICAL_DOCUMENTATION=
+  MARKDOWN_USER_MANUAL=
+  HTML_USER_MANUAL=
 endif
 
 VERSION=$(shell git describe --tags --always --long --exclude latest)
