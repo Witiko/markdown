@@ -84,6 +84,7 @@
   hybrid,
   inlineNotes,
   jekyllData,
+  linkAttributes,
   relativeReferences,
   stripPercentSigns,
   underscores = false,
@@ -12981,19 +12982,24 @@ Built-in plain \TeX{} themes provided with the Markdown package include:
 
 \pkg{witiko/diagrams}
 
-:    A theme that typesets fenced code blocks with the `dot …` infostring
-     as images of directed graphs rendered by the Graphviz tools. The
-     right tail of the infostring is used as the image title.
+:    A theme that typesets fenced code blocks with the infostrings
+     `dot`, `mermaid`, and `plantuml` as figures with diagrams produced with
+     the command `dot` from Graphviz tools, the command `mmdc` from the npm
+     package `@mermaid-js/mermaid-cli`, and the command `plantuml` from the
+     package PlantUML, respectively. The key-value attribute `caption` can be
+     used to specify the caption of the figure. The remaining attributes are
+     treated as image attributes.
+
 %    ```` tex
 %    \documentclass{article}
 %    \usepackage[import=witiko/diagrams@v2, relativeReferences]{markdown}
 %    \begin{document}
 %    \begin{markdown}
-%    ``` dot {caption="Various formats of mathemathical formulae" width=10cm #diagram}
+%    ``` dot {caption="An example directed graph" width=12cm #dot}
 %    digraph tree {
 %      margin = 0;
 %      rankdir = "LR";
-%
+%    
 %      latex -> pmml;
 %      latex -> cmml;
 %      pmml -> slt;
@@ -13002,7 +13008,7 @@ Built-in plain \TeX{} themes provided with the Markdown package include:
 %      cmml -> infix;
 %      pmml -> mterms [style=dashed];
 %      cmml -> mterms;
-%
+%    
 %      latex [label = "LaTeX"];
 %      pmml [label = "Presentation MathML"];
 %      cmml [label = "Content MathML"];
@@ -13013,18 +13019,54 @@ Built-in plain \TeX{} themes provided with the Markdown package include:
 %      mterms [label = "M-Terms"];
 %    }
 %    ```
+%    
+%    ``` mermaid {caption="An example mindmap" width=9cm #mermaid}
+%    mindmap
+%        root )base-idea(
+%            sub<br/>idea 1
+%                ((?))
+%            sub<br/>idea 2
+%                ((?))
+%            sub<br/>idea 3
+%                ((?))
+%            sub<br/>idea 4
+%                ((?))
+%    ```
+%    
+%    ``` plantuml {caption="An example UML sequence diagram" width=11cm #plantuml}
+%    @startuml
+%    participant Participant as Foo
+%    actor       Actor       as Foo1
+%    boundary    Boundary    as Foo2
+%    control     Control     as Foo3
+%    entity      Entity      as Foo4
+%    database    Database    as Foo5
+%    collections Collections as Foo6
+%    queue       Queue       as Foo7
+%    Foo -> Foo1 : To actor 
+%    Foo -> Foo2 : To boundary
+%    Foo -> Foo3 : To control
+%    Foo -> Foo4 : To entity
+%    Foo -> Foo5 : To database
+%    Foo -> Foo6 : To collections
+%    Foo -> Foo7: To queue
+%    @enduml
+%    ```
 %
-%    See the diagram in Figure <#diagram>.
+%    See the diagrams in figures <#dot>, <#mermaid>, and <#plantuml>.
 %    \end{markdown}
 %    \end{document}
 %    ````````
+%
 %    Typesetting the above document produces the output shown in
-%    Figure <#fig:witiko-diagrams>.
-%    ``` dot {caption="Various formats of mathemathical formulae" #fig:witiko-diagrams}
+%    figures <#fig:witiko-diagrams-dot>, <#fig:witiko-diagrams-mermaid>, and
+%    <#fig:witiko-diagrams-plantuml>.
+%
+%    ``` dot {caption="An example directed graph" #fig:witiko-diagrams-dot}
 %    digraph tree {
 %      margin = 0;
 %      rankdir = "LR";
-%
+%    
 %      latex -> pmml;
 %      latex -> cmml;
 %      pmml -> slt;
@@ -13033,7 +13075,7 @@ Built-in plain \TeX{} themes provided with the Markdown package include:
 %      cmml -> infix;
 %      pmml -> mterms [style=dashed];
 %      cmml -> mterms;
-%
+%    
 %      latex [label = "LaTeX"];
 %      pmml [label = "Presentation MathML"];
 %      cmml [label = "Content MathML"];
@@ -13044,15 +13086,46 @@ Built-in plain \TeX{} themes provided with the Markdown package include:
 %      mterms [label = "M-Terms"];
 %    }
 %    ```
-     The theme requires a Unix-like operating system with GNU Diffutils and
-     Graphviz installed. The theme also requires shell access unless the
-     \Opt{frozenCache} plain \TeX{} option is enabled.
+%    
+%    ``` mermaid {caption="An example mindmap" #fig:witiko-diagrams-mermaid}
+%    mindmap
+%        root )base-idea(
+%            sub<br/>idea 1
+%                ((?))
+%            sub<br/>idea 2
+%                ((?))
+%            sub<br/>idea 3
+%                ((?))
+%            sub<br/>idea 4
+%                ((?))
+%    ```
+%    
+%    ``` plantuml {caption="An example UML sequence diagram" #fig:witiko-diagrams-plantuml}
+%    @startuml
+%    participant Participant as Foo
+%    actor       Actor       as Foo1
+%    boundary    Boundary    as Foo2
+%    control     Control     as Foo3
+%    entity      Entity      as Foo4
+%    database    Database    as Foo5
+%    collections Collections as Foo6
+%    queue       Queue       as Foo7
+%    Foo -> Foo1 : To actor 
+%    Foo -> Foo2 : To boundary
+%    Foo -> Foo3 : To control
+%    Foo -> Foo4 : To entity
+%    Foo -> Foo5 : To database
+%    Foo -> Foo6 : To collections
+%    Foo -> Foo7: To queue
+%    @enduml
+%    ```
 
-     The above example loads version `v1` of the theme, which is an alias for
-     an earlier theme named `witiko/dot`. Future versions of the theme may have
-     backwards-incompatible syntax and behavior. Therefore, you are encouraged
-     to always specify the version `v1` to keep your documents from suddenly
-     breaking.
+     The theme requires a Unix-like operating system with GNU Diffutils,
+     Graphviz, the npm package `@mermaid-js/mermaid-cli`, and PlantUML
+     installed. All these packages are already included in the Docker image
+     `witiko/markdown`; consult `Dockerfile` to see how they are installed.
+     The theme also requires shell access unless the \Opt{frozenCache} plain
+     \TeX{} option is enabled.
 
 % \markdownEnd
 % \iffalse
@@ -13066,7 +13139,7 @@ following content:
 \usepackage[import=witiko/diagrams@v2, relativeReferences]{markdown}
 \begin{document}
 \begin{markdown}
-``` dot {caption="Various formats of mathemathical formulae" width=10cm #diagram}
+``` dot {caption="An example directed graph" width=12cm #dot}
 digraph tree {
   margin = 0;
   rankdir = "LR";
@@ -13091,7 +13164,40 @@ digraph tree {
 }
 ```
 
-See the diagram in Figure <#diagram>.
+``` mermaid {caption="An example mindmap" width=9cm #mermaid}
+mindmap
+    root )base-idea(
+        sub<br/>idea 1
+            ((?))
+        sub<br/>idea 2
+            ((?))
+        sub<br/>idea 3
+            ((?))
+        sub<br/>idea 4
+            ((?))
+```
+
+``` plantuml {caption="An example UML sequence diagram" width=11cm #plantuml}
+@startuml
+participant Participant as Foo
+actor       Actor       as Foo1
+boundary    Boundary    as Foo2
+control     Control     as Foo3
+entity      Entity      as Foo4
+database    Database    as Foo5
+collections Collections as Foo6
+queue       Queue       as Foo7
+Foo -> Foo1 : To actor 
+Foo -> Foo2 : To boundary
+Foo -> Foo3 : To control
+Foo -> Foo4 : To entity
+Foo -> Foo5 : To database
+Foo -> Foo6 : To collections
+Foo -> Foo7: To queue
+@enduml
+```
+
+See the diagrams in figures <#dot>, <#mermaid>, and <#plantuml>.
 \end{markdown}
 \end{document}
 ````````
@@ -13100,14 +13206,7 @@ Next, invoke LuaTeX from the terminal:
 lualatex --shell-escape document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain
-a drawing of a directed graph similar to Figure 1 from the following
-conference article:
-
-> NOVOTNÝ, Vít, Petr SOJKA, Michal ŠTEFÁNIK and Dávid LUPTÁK. Three is Better
-> than One: Ensembling Math Information Retrieval Systems. *CEUR Workshop
-> Proceedings*. Thessaloniki, Greece: M. Jeusfeld c/o Redaktion Sun SITE,
-> Informatik V, RWTH Aachen., 2020, vol. 2020, No 2696, p. 1-30. ISSN 1613-0073.
-> <http://ceur-ws.org/Vol-2696/paper_235.pdf>
+three diagrams.
 
 % \fi
 % \markdownBegin
@@ -13129,7 +13228,7 @@ conference article:
 %    Typesetting the above document produces the output shown in
 %    Figure <#fig:witiko/graphicx/http>.
 %    ![img](https://github.com/witiko/markdown/raw/main/markdown.png
-%           "The banner of the Markdown package \label{fig:witiko/graphicx/http}")
+%           "The banner of the Markdown package"){#fig:witiko/graphicx/http}
      The theme requires the \pkg{catchfile} \LaTeX{} package and a Unix-like
      operating system with GNU Coreutils `md5sum` and either GNU Wget or cURL
      installed. The theme also requires shell access unless the
@@ -35652,7 +35751,8 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Typeset fenced code with infostring `dot` using Graphviz.
+% Typeset fenced code with infostring `dot` using the command `dot` from
+% the package Graphviz.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -35701,7 +35801,8 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Typeset fenced code with infostring `plantuml` using PlantUML.
+% Typeset fenced code with infostring `plantuml` using the command `plantuml`
+% from the package PlantUML.
 %
 % \end{markdown}
 %  \begin{macrocode}
