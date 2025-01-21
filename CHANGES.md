@@ -4,6 +4,86 @@
 
 Development:
 
+- Add a built-in theme `witiko/diagrams@v2` for drawing different types of
+  diagrams. (#448, #514, #531, originally suggested by @anubane)
+
+  Here is an example LaTeX document using the new theme:
+
+  ```` tex
+  \documentclass{article}
+  \usepackage[import=witiko/diagrams@v2, relativeReferences]{markdown}
+  \begin{document}
+  \begin{markdown}
+  ``` dot {caption="An example directed graph" width=12cm #dot}
+  digraph tree {
+    margin = 0;
+    rankdir = "LR";
+
+    latex -> pmml;
+    latex -> cmml;
+    pmml -> slt;
+    cmml -> opt;
+    cmml -> prefix;
+    cmml -> infix;
+    pmml -> mterms [style=dashed];
+    cmml -> mterms;
+
+    latex [label = "LaTeX"];
+    pmml [label = "Presentation MathML"];
+    cmml [label = "Content MathML"];
+    slt [label = "Symbol Layout Tree"];
+    opt [label = "Operator Tree"];
+    prefix [label = "Prefix"];
+    infix [label = "Infix"];
+    mterms [label = "M-Terms"];
+  }
+  ```
+
+  ``` mermaid {caption="An example mindmap" width=9cm #mermaid}
+  mindmap
+      root )base-idea(
+          sub<br/>idea 1
+              ((?))
+          sub<br/>idea 2
+              ((?))
+          sub<br/>idea 3
+              ((?))
+          sub<br/>idea 4
+              ((?))
+  ```
+
+  ``` plantuml {caption="An example UML sequence diagram" width=7cm #plantuml}
+  @startuml
+  ' Define participants (actors)
+  participant "Client" as C
+  participant "Server" as S
+  participant "Database" as DB
+
+  ' Diagram title
+  title Simple Request-Response Flow
+
+  ' Messages
+  C -> S: Send Request
+  note over S: Process request
+
+  alt Request is valid
+      S -> DB: Query Data
+      DB -> S: Return Data
+      S -> C: Respond with Data
+  else Request is invalid
+      S -> C: Return Error
+  end
+  @enduml
+  ```
+
+  See the diagrams in figures <#dot>, <#mermaid>, and <#plantuml>.
+  \end{markdown}
+  \end{document}
+  ````````
+
+  You may use the expl3 prop `\g_markdown_diagrams_infostrings_prop` to
+  register other types of diagrams.
+
 - Add option `jekyllDataKeyValue` for routing YAML metadata to expl3 key–values.
   (#77, #517, [matrix.org][matrix-517], #539, [matrix.org][matrix-539],
    f57a8c45, originally suggested by @TeXhackse)

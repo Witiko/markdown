@@ -84,13 +84,14 @@
   hybrid,
   inlineNotes,
   jekyllData,
+  linkAttributes,
   relativeReferences,
   stripPercentSigns,
   underscores = false,
 ]{markdown}
 \markdownSetup{
   import = {
-    witiko/diagrams@v1,
+    witiko/diagrams@v2,
     witiko/graphicx/http,
     witiko/markdown/techdoc = {
       options as lua-options
@@ -12979,21 +12980,22 @@ a specific look and other high-level goals without low-level programming.
 
 Built-in plain \TeX{} themes provided with the Markdown package include:
 
-\pkg{witiko/diagrams@v1}
+\pkg{witiko/diagrams}
 
-:    A theme that typesets fenced code blocks with the `dot …` infostring
-     as images of directed graphs rendered by the Graphviz tools. The
-     right tail of the infostring is used as the image title.
+:    A theme that typesets fenced code blocks with the infostrings
+     `dot`, `mermaid`, and `plantuml` as figures with diagrams produced with
+     the command `dot` from Graphviz tools, the command `mmdc` from the npm
+     package `@mermaid-js/mermaid-cli`, and the command `plantuml` from the
+     package PlantUML, respectively. The key-value attribute `caption` can be
+     used to specify the caption of the figure. The remaining attributes are
+     treated as image attributes.
+
 %    ```` tex
 %    \documentclass{article}
-%    \usepackage[import=witiko/diagrams@v1]{markdown}
-%    \setkeys{Gin}{
-%      width = \columnwidth,
-%      height = 0.65\paperheight,
-%      keepaspectratio}
+%    \usepackage[import=witiko/diagrams@v2, relativeReferences]{markdown}
 %    \begin{document}
 %    \begin{markdown}
-%    ``` dot Various formats of mathemathical formulae
+%    ``` dot {caption="An example directed graph" width=12cm #dot}
 %    digraph tree {
 %      margin = 0;
 %      rankdir = "LR";
@@ -13017,12 +13019,54 @@ Built-in plain \TeX{} themes provided with the Markdown package include:
 %      mterms [label = "M-Terms"];
 %    }
 %    ```
+%
+%    ``` mermaid {caption="An example mindmap" width=9cm #mermaid}
+%    mindmap
+%        root )base-idea(
+%            sub<br/>idea 1
+%                ((?))
+%            sub<br/>idea 2
+%                ((?))
+%            sub<br/>idea 3
+%                ((?))
+%            sub<br/>idea 4
+%                ((?))
+%    ```
+%
+%    ``` plantuml {caption="An example UML sequence diagram" width=7cm #plantuml}
+%    @startuml
+%    ' Define participants (actors)
+%    participant "Client" as C
+%    participant "Server" as S
+%    participant "Database" as DB
+%
+%    ' Diagram title
+%    title Simple Request-Response Flow
+%
+%    ' Messages
+%    C -> S: Send Request
+%    note over S: Process request
+%
+%    alt Request is valid
+%        S -> DB: Query Data
+%        DB -> S: Return Data
+%        S -> C: Respond with Data
+%    else Request is invalid
+%        S -> C: Return Error
+%    end
+%    @enduml
+%    ```
+%
+%    See the diagrams in figures <#dot>, <#mermaid>, and <#plantuml>.
 %    \end{markdown}
 %    \end{document}
 %    ````````
+%
 %    Typesetting the above document produces the output shown in
-%    Figure <#fig:witiko/diagrams@v1>.
-%    ``` dot Various formats of mathemathical formulae \label{fig:witiko/diagrams@v1}
+%    figures <#fig:witiko-diagrams-dot>, <#fig:witiko-diagrams-mermaid>, and
+%    <#fig:witiko-diagrams-plantuml>.
+%
+%    ``` dot {caption="An example directed graph" #fig:witiko-diagrams-dot}
 %    digraph tree {
 %      margin = 0;
 %      rankdir = "LR";
@@ -13046,15 +13090,50 @@ Built-in plain \TeX{} themes provided with the Markdown package include:
 %      mterms [label = "M-Terms"];
 %    }
 %    ```
-     The theme requires a Unix-like operating system with GNU Diffutils and
-     Graphviz installed. The theme also requires shell access unless the
-     \Opt{frozenCache} plain \TeX{} option is enabled.
+%
+%    ``` mermaid {caption="An example mindmap" #fig:witiko-diagrams-mermaid}
+%    mindmap
+%        root )base-idea(
+%            sub<br/>idea 1
+%                ((?))
+%            sub<br/>idea 2
+%                ((?))
+%            sub<br/>idea 3
+%                ((?))
+%            sub<br/>idea 4
+%                ((?))
+%    ```
+%
+%    ``` plantuml {caption="An example UML sequence diagram" #fig:witiko-diagrams-plantuml}
+%    @startuml
+%    ' Define participants (actors)
+%    participant "Client" as C
+%    participant "Server" as S
+%    participant "Database" as DB
+%
+%    ' Diagram title
+%    title Simple Request-Response Flow
+%
+%    ' Messages
+%    C -> S: Send Request
+%    note over S: Process request
+%
+%    alt Request is valid
+%        S -> DB: Query Data
+%        DB -> S: Return Data
+%        S -> C: Respond with Data
+%    else Request is invalid
+%        S -> C: Return Error
+%    end
+%    @enduml
+%    ```
 
-     The above example loads version `v1` of the theme, which is an alias for
-     an earlier theme named `witiko/dot`. Future versions of the theme may have
-     backwards-incompatible syntax and behavior. Therefore, you are encouraged
-     to always specify the version `v1` to keep your documents from suddenly
-     breaking.
+     The theme requires a Unix-like operating system with GNU Diffutils,
+     Graphviz, the npm package `@mermaid-js/mermaid-cli`, and PlantUML
+     installed. All these packages are already included in the Docker image
+     `witiko/markdown`; consult `Dockerfile` to see how they are installed.
+     The theme also requires shell access unless the \Opt{frozenCache} plain
+     \TeX{} option is enabled.
 
 % \markdownEnd
 % \iffalse
@@ -13065,14 +13144,10 @@ Using a text editor, create a text document named `document.tex` with the
 following content:
 ```` tex
 \documentclass{article}
-\usepackage[import=witiko/diagrams@v1]{markdown}
-\setkeys{Gin}{
-  width=\columnwidth,
-  height=0.65\paperheight,
-  keepaspectratio}
+\usepackage[import=witiko/diagrams@v2, relativeReferences]{markdown}
 \begin{document}
 \begin{markdown}
-``` dot Various formats of mathemathical formulae
+``` dot {caption="An example directed graph" width=12cm #dot}
 digraph tree {
   margin = 0;
   rankdir = "LR";
@@ -13096,6 +13171,45 @@ digraph tree {
   mterms [label = "M-Terms"];
 }
 ```
+
+``` mermaid {caption="An example mindmap" width=9cm #mermaid}
+mindmap
+    root )base-idea(
+        sub<br/>idea 1
+            ((?))
+        sub<br/>idea 2
+            ((?))
+        sub<br/>idea 3
+            ((?))
+        sub<br/>idea 4
+            ((?))
+```
+
+``` plantuml {caption="An example UML sequence diagram" width=7cm #plantuml}
+@startuml
+' Define participants (actors)
+participant "Client" as C
+participant "Server" as S
+participant "Database" as DB
+
+' Diagram title
+title Simple Request-Response Flow
+
+' Messages
+C -> S: Send Request
+note over S: Process request
+
+alt Request is valid
+    S -> DB: Query Data
+    DB -> S: Return Data
+    S -> C: Respond with Data
+else Request is invalid
+    S -> C: Return Error
+end
+@enduml
+```
+
+See the diagrams in figures <#dot>, <#mermaid>, and <#plantuml>.
 \end{markdown}
 \end{document}
 ````````
@@ -13104,14 +13218,7 @@ Next, invoke LuaTeX from the terminal:
 lualatex --shell-escape document.tex
 ``````
 A PDF document named `document.pdf` should be produced and contain
-a drawing of a directed graph similar to Figure 1 from the following
-conference article:
-
-> NOVOTNÝ, Vít, Petr SOJKA, Michal ŠTEFÁNIK and Dávid LUPTÁK. Three is Better
-> than One: Ensembling Math Information Retrieval Systems. *CEUR Workshop
-> Proceedings*. Thessaloniki, Greece: M. Jeusfeld c/o Redaktion Sun SITE,
-> Informatik V, RWTH Aachen., 2020, vol. 2020, No 2696, p. 1-30. ISSN 1613-0073.
-> <http://ceur-ws.org/Vol-2696/paper_235.pdf>
+three diagrams.
 
 % \fi
 % \markdownBegin
@@ -13131,9 +13238,9 @@ conference article:
 %    \end{document}
 %    ```````
 %    Typesetting the above document produces the output shown in
-%    Figure <#fig:witiko/graphicx/http>.
+%    Figure <#fig:witiko-graphicx-http>.
 %    ![img](https://github.com/witiko/markdown/raw/main/markdown.png
-%           "The banner of the Markdown package \label{fig:witiko/graphicx/http}")
+%           "The banner of the Markdown package"){#fig:witiko-graphicx-http}
      The theme requires the \pkg{catchfile} \LaTeX{} package and a Unix-like
      operating system with GNU Coreutils `md5sum` and either GNU Wget or cURL
      installed. The theme also requires shell access unless the
@@ -35433,7 +35540,8 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% The `witiko/diagrams` loads the theme `witiko/dot`.
+% The theme `witiko/diagrams` loads either the theme `witiko/dot` for version
+% `v1` or the theme `witiko/diagrams/v2` for version `v2`.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -35448,7 +35556,7 @@ end
           {
             \markdownWarning
               {
-                Write~"witiko/diagrams@v1"~to~pin~version~"v1"~of~the~
+                Write~"witiko/diagrams@v2"~to~pin~version~"v2"~of~the~
                 theme~"witiko/diagrams".~This~will~keep~your~documents~
                 from~suddenly~breaking~when~we~have~released~future~
                 versions~of~the~theme~with~backwards-incompatible~
@@ -35456,7 +35564,14 @@ end
               }
             \markdownSetup
               {
-                import = witiko/dot@silent,
+                import = witiko/diagrams/v2,
+              }
+          }
+        { v2 }
+          {
+            \markdownSetup
+              {
+                import = witiko/diagrams/v2,
               }
           }
         { v1 }
@@ -35484,6 +35599,260 @@ end
   { unknown-theme-version }
   { Unknown~version~"#2"~of~theme~"#1"~has~been~requested. }
   { Known~versions~are:~#3 }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, we implement the theme `witiko/diagrams/v2`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\prop_gput:Nnn
+  \g_@@_plain_tex_built_in_themes_prop
+  { witiko / diagrams / v2 }
+  {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% We enable the \Opt{fencedCode} and \Opt{fencedCodeAttributes} Lua
+% option.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \@@_setup:n
+      {
+        fencedCode = true,
+        fencedCodeAttributes = true,
+      }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Store the previous fenced code token renderer prototype.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \cs_set_eq:NN
+      \@@_diagrams_previous_fenced_code:nnn
+      \markdownRendererInputFencedCodePrototype
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Store the caption of the diagram.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \tl_new:N
+      \l_@@_diagrams_caption_tl
+    \@@_setup:n
+      {
+        rendererPrototypes = {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Route attributes on fenced code blocks to the image attribute renderer
+% prototypes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+          fencedCodeAttributeContextBegin = {
+            \group_begin:
+            \markdownRendererImageAttributeContextBegin
+            \cs_set_eq:NN
+              \@@_diagrams_previous_key_value:nn
+              \markdownRendererAttributeKeyValuePrototype
+            \@@_setup:n
+              {
+                rendererPrototypes = {
+                  attributeKeyValue = {
+                    \str_if_eq:nnTF
+                      { ##1 }
+                      { caption }
+                      {
+                        \tl_set:Nn
+                          \l_@@_diagrams_caption_tl
+                          { ##2 }
+                      }
+                      {
+                        \@@_diagrams_previous_key_value:nn
+                          { ##1 }
+                          { ##2 }
+                      }
+                  },
+                },
+              }
+          },
+          fencedCodeAttributeContextEnd = {
+            \markdownRendererImageAttributeContextEnd
+            \group_end:
+          },
+        },
+      }
+    \cs_new:Nn
+      \@@_diagrams_render_diagram:nnnn
+      {
+        \@@_if_option:nF
+          { frozenCache }
+          {
+            \sys_shell_now:n
+              {
+                if~!~test~-e~#2.source~
+                ||~!~diff~#1~#2.source;
+                then~
+                  (#3);
+                  cp~#1~#2.source;
+                fi
+              }
+            \exp_args:NNnV
+              \exp_last_unbraced:No
+              \markdownRendererImage
+                {
+                  { #4 }
+                  { #2 }
+                  { #2 }
+                }
+                \l_@@_diagrams_caption_tl
+          }
+      }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Use the prop \mdef{g_markdown_diagrams_infostrings_prop} to determine how the
+% code with a given infostring should be processed and routed to the token
+% renderer prototype(s) for images.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \prop_new:N
+      \g_markdown_diagrams_infostrings_prop
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If we know a processing function for a given infostring, use it.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \@@_setup:n
+      {
+        rendererPrototypes = {
+          inputFencedCode = {
+            \prop_get:NnNTF
+              \g_markdown_diagrams_infostrings_prop
+              { #2 }
+              \l_tmpa_tl
+              {
+                \cs_set:NV
+                  \@@_diagrams_infostrings_current:n
+                  \l_tmpa_tl
+                \@@_diagrams_infostrings_current:n
+                  { #1 }
+              }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Otherwise, use the previous fenced code token renderer prototype.
+%
+% \end{markdown}
+%  \begin{macrocode}
+              {
+                \@@_diagrams_previous_fenced_code:nnn
+                  { #1 }
+                  { #2 }
+                  { #3 }
+              }
+          },
+        },
+      }
+    \cs_generate_variant:Nn
+      \cs_set:Nn
+      { NV }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Typeset fenced code with infostring `dot` using the command `dot` from
+% the package Graphviz.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \cs_set:Nn
+      \@@_diagrams_infostrings_current:n
+      {
+        \@@_diagrams_render_diagram:nnnn
+          { #1 }
+          { #1.pdf }
+          { dot~-Tpdf~-o~#1.pdf~#1 }
+          { Graphviz~image }
+      }
+    \@@_tl_set_from_cs:NNn
+      \l_tmpa_tl
+      \@@_diagrams_infostrings_current:n
+      { 1 }
+    \prop_gput:NnV
+      \g_markdown_diagrams_infostrings_prop
+      { dot }
+      \l_tmpa_tl
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Typeset fenced code with infostring `mermaid` using the command `mmdc` from
+% the npm package `@mermaid-js/mermaid-cli`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \cs_set:Nn
+      \@@_diagrams_infostrings_current:n
+      {
+        \@@_diagrams_render_diagram:nnnn
+          { #1 }
+          { #1.pdf }
+          { mmdc~--pdfFit~-i~#1~-o~#1.pdf }
+          { Mermaid~image }
+      }
+    \@@_tl_set_from_cs:NNn
+      \l_tmpa_tl
+      \@@_diagrams_infostrings_current:n
+      { 1 }
+    \prop_gput:NnV
+      \g_markdown_diagrams_infostrings_prop
+      { mermaid }
+      \l_tmpa_tl
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Typeset fenced code with infostring `plantuml` using the command `plantuml`
+% from the package PlantUML.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \regex_const:Nn
+      \c_@@_diagrams_filename_suffix_regex
+      { \.[^.]*$ }
+    \cs_set:Nn
+      \@@_diagrams_infostrings_current:n
+      {
+        \tl_set:Nn
+          \l_tmpa_tl
+          { #1 }
+        \regex_replace_once:NnN
+          \c_@@_diagrams_filename_suffix_regex
+          { .pdf }
+          \l_tmpa_tl
+        \@@_diagrams_render_diagram:nVnn
+          { #1 }
+          \l_tmpa_tl
+          { plantuml~-tpdf~#1 }
+          { PlantUML~image }
+      }
+    \cs_generate_variant:Nn
+      \@@_diagrams_render_diagram:nnnn
+      { nVnn }
+    \@@_tl_set_from_cs:NNn
+      \l_tmpa_tl
+      \@@_diagrams_infostrings_current:n
+      { 1 }
+    \prop_gput:NnV
+      \g_markdown_diagrams_infostrings_prop
+      { plantuml }
+      \l_tmpa_tl
+  }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -39272,19 +39641,28 @@ end
 \markdownSetup {
   rendererPrototypes = {
     image = {
-      \begin { figure }
-        \begin { center }
-          \includegraphics
-            [ alt = { #1 } ]
-            { #3 }
-          \tl_if_empty:nF
-            { #4 }
-            { \caption { #4 } }
-          \seq_map_inline:Nn
-            \l_@@_image_identifiers_seq
-            { \label { ##1 } }
-        \end { center }
-      \end { figure }
+      \tl_if_empty:nTF
+        { #4 }
+        {
+          \begin { center }
+            \includegraphics
+              [ alt = { #1 } ]
+              { #3 }
+          \end { center }
+        }
+        {
+          \begin { figure }
+            \begin { center }
+              \includegraphics
+                [ alt = { #1 } ]
+                { #3 }
+              \caption { #4 }
+              \seq_map_inline:Nn
+                \l_@@_image_identifiers_seq
+                { \label { ##1 } }
+            \end { center }
+          \end { figure }
+        }
     },
   }
 }
@@ -39292,31 +39670,31 @@ end
   { linkAttributes }
   {
     \RequirePackage { graphicx }
-    \markdownSetup {
-      rendererPrototypes = {
-        imageAttributeContextBegin = {
-          \group_begin:
-          \markdownSetup {
-            rendererPrototypes = {
-              attributeIdentifier = {
-                \seq_put_right:Nn
-                  \l_@@_image_identifiers_seq
-                  { ##1 }
-              },
-              attributeKeyValue = {
-                \setkeys
-                  { Gin }
-                  { { ##1 } = { ##2 } }
-              },
-            },
-          }
-        },
-        imageAttributeContextEnd = {
-          \group_end:
-        },
-      },
-    }
   }
+\markdownSetup {
+  rendererPrototypes = {
+    imageAttributeContextBegin = {
+      \group_begin:
+      \markdownSetup {
+        rendererPrototypes = {
+          attributeIdentifier = {
+            \seq_put_right:Nn
+              \l_@@_image_identifiers_seq
+              { ##1 }
+          },
+          attributeKeyValue = {
+            \setkeys
+              { Gin }
+              { { ##1 } = { ##2 } }
+          },
+        },
+      }
+    },
+    imageAttributeContextEnd = {
+      \group_end:
+    },
+  },
+}
 \ExplSyntaxOff
 %    \end{macrocode}
 % \begin{markdown}
