@@ -35676,8 +35676,8 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Typeset fenced code with infostring `mermaid` using the npm package
-% [@mermaid-js/mermaid-cli](https://www.npmjs.com/package/@mermaid-js/mermaid-cli).
+% Typeset fenced code with infostring `mermaid` using the command `mmdc` from
+% the npm package `@mermaid-js/mermaid-cli`.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -35687,10 +35687,7 @@ end
         \@@_diagrams_render_diagram:nnnn
           { #1 }
           { #1.pdf }
-          {
-            npx~-p~@mermaid-js/mermaid-cli~mmdc~
-              --pdfFit~-i~#1~-o~#1.pdf
-          }
+          { mmdc~--pdfFit~-i~#1~-o~#1.pdf }
           { Mermaid~image }
       }
     \@@_tl_set_from_cs:NNn
