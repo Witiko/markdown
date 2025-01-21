@@ -140,7 +140,7 @@ For further information, consult one of the following:
     - [Using Markdown in LaTeX documents][overleaf-6].
 4. Journal articles published by [TUGboat][]:
     - [Using Markdown Inside TeX Documents][tb119],
-    - [Markdown 2.7.0: Towards Lightweight mMrkup in TeX][tb124],
+    - [Markdown 2.7.0: Towards Lightweight markup in TeX][tb124],
     - [Making Markdown into a Microwave Meal][tb129],
     - [Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX][tb131],
     - [Markdown 2.15.0: What's New?][tb133],
