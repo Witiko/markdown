@@ -19,8 +19,10 @@ ARG DEPENDENCIES="\
     graphviz \
     m4 \
     moreutils \
+    npm \
     pandoc \
     parallel \
+    plantuml \
     poppler-utils \
     python3-pygments \
     python3-venv \
@@ -80,6 +82,8 @@ set -o xtrace
 # Install OS dependencies
 apt-get -qy update
 apt-get -qy install --no-install-recommends ${DEPENDENCIES}
+npm install -g @mermaid-js/mermaid-cli
+sed -i "s/headless: 'shell'/&, args: ['--no-sandbox']/" /usr/local/lib/node_modules/@mermaid-js/mermaid-cli/src/index.js
 
 # Update packages in non-historic TeX Live versions
 if echo ${TEXLIVE_TAG} | grep -q latest
@@ -195,6 +199,8 @@ set -o xtrace
 # Install dependencies, but this time we clean up after ourselves
 apt-get -qy update
 apt-get -qy install --no-install-recommends ${DEPENDENCIES}
+npm install -g @mermaid-js/mermaid-cli
+sed -i "s/headless: 'shell'/&, args: ['--no-sandbox']/" /usr/local/lib/node_modules/@mermaid-js/mermaid-cli/src/index.js
 if [ ${DEV_IMAGE} = true ]
 then
   apt-get -qy install --no-install-recommends ${DEV_DEPENDENCIES}
