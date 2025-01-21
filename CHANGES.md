@@ -48,6 +48,10 @@ Development:
  [matrix-517]: https://matrix.to/#/!UeAwznpYwwsinVTetR:matrix.org/$WzqBd_p3KB766wqbFBLbn3o9DmBJCJfPAOsC5w--gW4?via=matrix.org&via=im.f3l.de
  [matrix-539]: https://matrix.to/#/!UeAwznpYwwsinVTetR:matrix.org/$VZbdWB2EpHeg290MGsYsbUEwMoN68zT8tbIRUKRJ1wc?via=matrix.org&via=im.f3l.de
 
+Fixes:
+
+- Allow using the options `linkAttributes` and `notes` together. (#543, #544)
+
 ## 3.9.1 (2024-12-17)
 
 Development:

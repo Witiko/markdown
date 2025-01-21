@@ -33701,9 +33701,13 @@ M.extensions.notes = function(notes, inline_notes)
                     * parsers.spnlc * indented_blocks(chunk)
                     / register_note
 
-        local Reference = NoteBlock + parsers.Reference
+        self.update_rule("Reference", function(previous_pattern)
+          if previous_pattern == nil then
+            previous_pattern = parsers.Reference
+          end
+          return NoteBlock + previous_pattern
+        end)
 
-        self.update_rule("Reference", Reference)
         self.insert_pattern("Inline before LinkAndEmph",
                             NoteRef, "NoteRef")
       end
