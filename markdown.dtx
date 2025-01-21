@@ -13033,23 +13033,27 @@ Built-in plain \TeX{} themes provided with the Markdown package include:
 %                ((?))
 %    ```
 %
-%    ``` plantuml {caption="An example UML sequence diagram" width=11cm #plantuml}
+%    ``` plantuml {caption="An example UML sequence diagram" width=7cm #plantuml}
 %    @startuml
-%    participant Participant as Foo
-%    actor       Actor       as Foo1
-%    boundary    Boundary    as Foo2
-%    control     Control     as Foo3
-%    entity      Entity      as Foo4
-%    database    Database    as Foo5
-%    collections Collections as Foo6
-%    queue       Queue       as Foo7
-%    Foo -> Foo1 : To actor
-%    Foo -> Foo2 : To boundary
-%    Foo -> Foo3 : To control
-%    Foo -> Foo4 : To entity
-%    Foo -> Foo5 : To database
-%    Foo -> Foo6 : To collections
-%    Foo -> Foo7: To queue
+%    ' Define participants (actors)
+%    participant "Client" as C
+%    participant "Server" as S
+%    participant "Database" as DB
+%
+%    ' Diagram title
+%    title Simple Request-Response Flow
+%
+%    ' Messages
+%    C -> S: Send Request
+%    note over S: Process request
+%
+%    alt Request is valid
+%        S -> DB: Query Data
+%        DB -> S: Return Data
+%        S -> C: Respond with Data
+%    else Request is invalid
+%        S -> C: Return Error
+%    end
 %    @enduml
 %    ```
 %
@@ -13102,21 +13106,25 @@ Built-in plain \TeX{} themes provided with the Markdown package include:
 %
 %    ``` plantuml {caption="An example UML sequence diagram" #fig:witiko-diagrams-plantuml}
 %    @startuml
-%    participant Participant as Foo
-%    actor       Actor       as Foo1
-%    boundary    Boundary    as Foo2
-%    control     Control     as Foo3
-%    entity      Entity      as Foo4
-%    database    Database    as Foo5
-%    collections Collections as Foo6
-%    queue       Queue       as Foo7
-%    Foo -> Foo1 : To actor
-%    Foo -> Foo2 : To boundary
-%    Foo -> Foo3 : To control
-%    Foo -> Foo4 : To entity
-%    Foo -> Foo5 : To database
-%    Foo -> Foo6 : To collections
-%    Foo -> Foo7: To queue
+%    ' Define participants (actors)
+%    participant "Client" as C
+%    participant "Server" as S
+%    participant "Database" as DB
+%
+%    ' Diagram title
+%    title Simple Request-Response Flow
+%
+%    ' Messages
+%    C -> S: Send Request
+%    note over S: Process request
+%
+%    alt Request is valid
+%        S -> DB: Query Data
+%        DB -> S: Return Data
+%        S -> C: Respond with Data
+%    else Request is invalid
+%        S -> C: Return Error
+%    end
 %    @enduml
 %    ```
 
@@ -13177,23 +13185,27 @@ mindmap
             ((?))
 ```
 
-``` plantuml {caption="An example UML sequence diagram" width=11cm #plantuml}
+``` plantuml {caption="An example UML sequence diagram" width=7cm #plantuml}
 @startuml
-participant Participant as Foo
-actor       Actor       as Foo1
-boundary    Boundary    as Foo2
-control     Control     as Foo3
-entity      Entity      as Foo4
-database    Database    as Foo5
-collections Collections as Foo6
-queue       Queue       as Foo7
-Foo -> Foo1 : To actor
-Foo -> Foo2 : To boundary
-Foo -> Foo3 : To control
-Foo -> Foo4 : To entity
-Foo -> Foo5 : To database
-Foo -> Foo6 : To collections
-Foo -> Foo7: To queue
+' Define participants (actors)
+participant "Client" as C
+participant "Server" as S
+participant "Database" as DB
+
+' Diagram title
+title Simple Request-Response Flow
+
+' Messages
+C -> S: Send Request
+note over S: Process request
+
+alt Request is valid
+    S -> DB: Query Data
+    DB -> S: Return Data
+    S -> C: Respond with Data
+else Request is invalid
+    S -> C: Return Error
+end
 @enduml
 ```
 
