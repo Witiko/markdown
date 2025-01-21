@@ -35701,6 +35701,43 @@ end
       \g_@@_diagrams_infostrings_prop
       { mermaid }
       \l_tmpa_tl
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Typeset fenced code with infostring `plantuml` using PlantUML.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \regex_const:Nn
+      \c_@@_diagrams_filename_suffix_regex
+      { \.[^.]*$ }
+    \cs_set:Nn
+      \@@_diagrams_infostrings_current:n
+      {
+        \tl_set:Nn
+          \l_tmpa_tl
+          { #1 }
+        \regex_replace_once:NnN
+          \c_@@_diagrams_filename_suffix_regex
+          { .pdf }
+          \l_tmpa_tl
+        \@@_diagrams_render_diagram:nVnn
+          { #1 }
+          \l_tmpa_tl
+          { plantuml~-tpdf~#1 }
+          { PlantUML~image }
+      }
+    \cs_generate_variant:Nn
+      \@@_diagrams_render_diagram:nnnn
+      { nVnn }
+    \@@_tl_set_from_cs:NNn
+      \l_tmpa_tl
+      \@@_diagrams_infostrings_current:n
+      { 1 }
+    \prop_gput:NnV
+      \g_@@_diagrams_infostrings_prop
+      { plantuml }
+      \l_tmpa_tl
   }
 %    \end{macrocode}
 % \begin{markdown}
