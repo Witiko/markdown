@@ -35656,8 +35656,8 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-    \cs_new:Nn
-      \@@_diagrams_infostrings_dot:n
+    \cs_set:Nn
+      \@@_diagrams_infostrings_current:n
       {
         \@@_diagrams_render_diagram:nnnn
           { #1 }
@@ -35667,7 +35667,7 @@ end
       }
     \@@_tl_set_from_cs:NNn
       \l_tmpa_tl
-      \@@_diagrams_infostrings_dot:n
+      \@@_diagrams_infostrings_current:n
       { 1 }
     \prop_gput:NnV
       \g_@@_diagrams_infostrings_prop
@@ -35681,8 +35681,8 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-    \cs_new:Nn
-      \@@_diagrams_infostrings_mermaid:n
+    \cs_set:Nn
+      \@@_diagrams_infostrings_current:n
       {
         \@@_diagrams_render_diagram:nnnn
           { #1 }
@@ -35695,7 +35695,7 @@ end
       }
     \@@_tl_set_from_cs:NNn
       \l_tmpa_tl
-      \@@_diagrams_infostrings_mermaid:n
+      \@@_diagrams_infostrings_current:n
       { 1 }
     \prop_gput:NnV
       \g_@@_diagrams_infostrings_prop
