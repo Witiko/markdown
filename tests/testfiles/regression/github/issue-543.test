@@ -1,0 +1,33 @@
+\markdownSetup{notes=true, linkAttributes=true}
+<<<
+This test ensures that the Lua `linkAttributes` and `notes` options
+correctly propagate through the plain TeX interface and can be used together.
+
+A image reference ![image][ref]{.another-class} with attributes and a note
+reference.[^note]
+
+[^note]: This is a note.
+[ref]: foo.jpg "optional title" {#id .class key="val 2"}
+>>>
+BEGIN document
+codeSpan: linkAttributes
+codeSpan: notes
+softLineBreak
+paragraphSeparator
+BEGIN imageAttributeContext
+attributeIdentifier: id
+attributeClassName: another-class
+attributeClassName: class
+BEGIN attributeKeyValue
+- key: key
+- value: val 2
+END attributeKeyValue
+BEGIN image
+- label: image
+- URI: foo.jpg
+- title: optional title
+END image
+END imageAttributeContext
+softLineBreak
+note: This is a note.
+END document
