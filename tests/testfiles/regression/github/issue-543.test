@@ -7,6 +7,7 @@ A image reference ![image][ref]{.another-class} with attributes and a note
 reference.[^note]
 
 [^note]: This is a note.
+
 [ref]: foo.jpg "optional title" {#id .class key="val 2"}
 >>>
 BEGIN document
