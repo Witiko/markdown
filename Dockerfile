@@ -89,7 +89,7 @@ if [ ${DEV_IMAGE} = false ] && echo ${TEXLIVE_TAG} | { ! grep -q latest-minimal;
 then
   apt-get -qy install --no-install-recommends ${PRODUCTION_DEPENDENCIES}
   npm install -g @mermaid-js/mermaid-cli
-  sed -i "s/headless: 'shell'/&, args: ['--no-sandbox']/" /usr/local/lib/node_modules/@mermaid-js/mermaid-cli/src/index.js
+  sed -i "s/headless: 'shell'/&, cacheDirectory: '/puppeteer_cache', args: ['--no-sandbox']/" /usr/local/lib/node_modules/@mermaid-js/mermaid-cli/src/index.js
 fi
 
 # Update packages in non-historic TeX Live versions
@@ -219,7 +219,7 @@ elif echo ${TEXLIVE_TAG} | { ! grep -q latest-minimal; }
 then
   apt-get -qy install --no-install-recommends ${PRODUCTION_DEPENDENCIES}
   npm install -g @mermaid-js/mermaid-cli
-  sed -i "s/headless: 'shell'/&, args: ['--no-sandbox']/" /usr/local/lib/node_modules/@mermaid-js/mermaid-cli/src/index.js
+  sed -i "s/headless: 'shell'/&, cacheDirectory: '/puppeteer_cache', args: ['--no-sandbox']/" /usr/local/lib/node_modules/@mermaid-js/mermaid-cli/src/index.js
 fi
 apt-get -qy autoclean
 apt-get -qy clean
