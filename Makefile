@@ -72,6 +72,9 @@ LASTMODIFIED=$(shell git log -1 --date=format:%Y-%m-%d --format=%ad)
 ifndef DOCKER_TEXLIVE_TAG
 	DOCKER_TEXLIVE_TAG=latest
 endif
+ifndef DOCKER_DEV_IMAGE
+	DOCKER_DEV_IMAGE=false
+endif
 ifeq ($(DOCKER_DEV_IMAGE), true)
 	DOCKER_TAG_POSTFIX=-no_docs
 ifeq ($(DOCKER_TEXLIVE_TAG), latest)
