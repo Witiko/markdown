@@ -99,7 +99,7 @@ ANOTHER_EOF
   mv ${BINARY_DIR}/mmdc ${BINARY_DIR}/mmdc.old
   cat > ${BINARY_DIR}/mmdc <<-'ANOTHER_EOF'
 #!/bin/bash
-${BINARY_DIR}/mmdc.old -p /.puppeteerrc.json "$@"
+mmdc.old -p /.puppeteerrc.json "$@"
 ANOTHER_EOF
   chmod +x ${BINARY_DIR}/mmdc
 fi
@@ -241,7 +241,7 @@ ANOTHER_EOF
   mv ${BINARY_DIR}/mmdc ${BINARY_DIR}/mmdc.old
   cat > ${BINARY_DIR}/mmdc <<-'ANOTHER_EOF'
 #!/bin/bash
-${BINARY_DIR}/mmdc.old -p /.puppeteerrc.json "$@"
+mmdc.old -p /.puppeteerrc.json "$@"
 ANOTHER_EOF
   chmod +x ${BINARY_DIR}/mmdc
 fi
