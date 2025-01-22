@@ -89,7 +89,13 @@ if [ ${DEV_IMAGE} = false ] && echo ${TEXLIVE_TAG} | { ! grep -q latest-minimal;
 then
   apt-get -qy install --no-install-recommends ${PRODUCTION_DEPENDENCIES}
   npm install -g @mermaid-js/mermaid-cli
-  cp ${BUILD_DIR}/.puppeteerrc.json /.puppeteerrc.json
+  mv /root/.cache/puppeteer /puppeteer_cache
+  cat > /.puppeteerrc.json <<-'ANOTHER_EOF'
+{
+  "args": ["--no-sandbox"],
+  "cacheDirectory": "/puppeteer_cache"
+}
+ANOTHER_EOF
   mv ${BINARY_DIR}/mmdc ${BINARY_DIR}/mmdc.old
   cat > ${BINARY_DIR}/mmdc <<-'ANOTHER_EOF'
 #!/bin/bash
@@ -225,7 +231,13 @@ elif echo ${TEXLIVE_TAG} | { ! grep -q latest-minimal; }
 then
   apt-get -qy install --no-install-recommends ${PRODUCTION_DEPENDENCIES}
   npm install -g @mermaid-js/mermaid-cli
-  cp ${BUILD_DIR}/.puppeteerrc.json /.puppeteerrc.json
+  mv /root/.cache/puppeteer /puppeteer_cache
+  cat > /.puppeteerrc.json <<-'ANOTHER_EOF'
+{
+  "args": ["--no-sandbox"],
+  "cacheDirectory": "/puppeteer_cache"
+}
+ANOTHER_EOF
   mv ${BINARY_DIR}/mmdc ${BINARY_DIR}/mmdc.old
   cat > ${BINARY_DIR}/mmdc <<-'ANOTHER_EOF'
 #!/bin/bash
