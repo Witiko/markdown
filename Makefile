@@ -77,9 +77,6 @@ ifndef DOCKER_DEV_IMAGE
 endif
 ifeq ($(DOCKER_DEV_IMAGE), true)
 	DOCKER_TAG_POSTFIX=-no_docs
-ifeq ($(DOCKER_TEXLIVE_TAG), latest)
-	DOCKER_TEXLIVE_TAG=latest-minimal
-endif
 endif
 DOCKER_TEMPORARY_IMAGE=ghcr.io/witiko/markdown
 DOCKER_TEMPORARY_TAG=$(VERSION)-$(DOCKER_TEXLIVE_TAG)$(DOCKER_TAG_POSTFIX)
