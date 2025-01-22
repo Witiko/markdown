@@ -1,0 +1,4 @@
+{
+  "args": ["--no-sandbox"],
+  "cacheDirectory": "/puppeteer_cache"
+}

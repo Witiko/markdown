@@ -89,7 +89,13 @@ if [ ${DEV_IMAGE} = false ] && echo ${TEXLIVE_TAG} | { ! grep -q latest-minimal;
 then
   apt-get -qy install --no-install-recommends ${PRODUCTION_DEPENDENCIES}
   npm install -g @mermaid-js/mermaid-cli
-  sed -i "s/headless: 'shell'/&, cacheDirectory: '/puppeteer_cache', args: ['--no-sandbox']/" /usr/local/lib/node_modules/@mermaid-js/mermaid-cli/src/index.js
+  cp ${BUILD_DIR}/.puppeteerrc.json /.puppeteerrc.json
+  mv ${BINARY_DIR}/mmdc ${BINARY_DIR}/mmdc.old
+  cat > ${BINARY_DIR}/mmdc <<-'ANOTHER_EOF'
+#!/bin/bash
+${BINARY_DIR}/mmdc.old -p /.puppeteerrc.json "$@"
+ANOTHER_EOF
+  chmod +x ${BINARY_DIR}/mmdc
 fi
 
 # Update packages in non-historic TeX Live versions
@@ -219,7 +225,13 @@ elif echo ${TEXLIVE_TAG} | { ! grep -q latest-minimal; }
 then
   apt-get -qy install --no-install-recommends ${PRODUCTION_DEPENDENCIES}
   npm install -g @mermaid-js/mermaid-cli
-  sed -i "s/headless: 'shell'/&, cacheDirectory: '/puppeteer_cache', args: ['--no-sandbox']/" /usr/local/lib/node_modules/@mermaid-js/mermaid-cli/src/index.js
+  cp ${BUILD_DIR}/.puppeteerrc.json /.puppeteerrc.json
+  mv ${BINARY_DIR}/mmdc ${BINARY_DIR}/mmdc.old
+  cat > ${BINARY_DIR}/mmdc <<-'ANOTHER_EOF'
+#!/bin/bash
+${BINARY_DIR}/mmdc.old -p /.puppeteerrc.json "$@"
+ANOTHER_EOF
+  chmod +x ${BINARY_DIR}/mmdc
 fi
 apt-get -qy autoclean
 apt-get -qy clean
