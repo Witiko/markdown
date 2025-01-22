@@ -6,7 +6,7 @@ Development:
 
 - Add a built-in theme `witiko/diagrams@v2` for drawing different types of
   diagrams. (#448, #514, #531, #542, [matrix.org][matrix-542], a9cadc41,
-  originally suggested by @anubane)
+  578e64d6, originally suggested by @anubane)
 
    [matrix-542]: https://matrix.to/#/!UeAwznpYwwsinVTetR:matrix.org/$CpfhKJT8DAkzH7Rx6ynV1BKFKbfMUtxkpNzqftvLGec?via=matrix.org&via=im.f3l.de
 
