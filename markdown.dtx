@@ -1040,7 +1040,7 @@ make base
 Either of the two abovelisted approaches should produce the following files:
 
 * `markdown.lua`, `markdown-parser.lua`, and `markdown-unicode-data.lua`: The Lua module
-* `markdown-cli.lua`: The Lua command-line interface
+* `markdown-cli.lua` and `markdown2tex.lua`: The Lua command-line interface
 * `markdown.tex`: The plain \TeX{} macro package
 * `markdown.sty`: The \LaTeX{} package
 * `markdownthemewitiko_markdown_defaults.tex`,
@@ -1059,6 +1059,7 @@ placed:
 * `⟨TEXMF⟩/tex/luatex/markdown/markdown-parser.lua`
 * `⟨TEXMF⟩/tex/luatex/markdown/markdown-unicode-data.lua`
 * `⟨TEXMF⟩/scripts/markdown/markdown-cli.lua`
+* `⟨TEXMF⟩/scripts/markdown/markdown2tex.lua`
 * `⟨TEXMF⟩/tex/generic/markdown/markdown.tex`
 * `⟨TEXMF⟩/tex/generic/markdown/markdownthemewitiko_markdown_defaults.tex`
 * `⟨TEXMF⟩/tex/latex/markdown/markdown.sty`
@@ -1083,6 +1084,7 @@ This is where the individual files should be placed:
 * `./markdown-parser.lua`
 * `./markdown-unicode-data.lua`
 * `./markdown-cli.lua`
+* `./markdown2tex.lua`
 * `./markdown/markdown.tex`
 * `./markdown.sty`
 * `./t-markdown.tex`
@@ -1655,14 +1657,14 @@ Hello *world*!
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-markdown-cli -- hello.md hello.tex
+markdown2tex -- hello.md hello.tex
 luatex document.tex
 ``````
 
 A PDF document named `document.pdf` should be produced and contain the text “Hello
 *world*!” Invoking pdfTeX should have the same effect:
 ``` sh
-markdown-cli -- hello.md hello.tex
+markdown2tex -- hello.md hello.tex
 pdftex document.tex
 ``````
 
@@ -2131,8 +2133,8 @@ $\sqrt{-1}$ *equals* $i$.
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-markdown-cli -- example.md nomath.tex
-markdown-cli tex_math_dollars=true -- example.md math.tex
+markdown2tex -- example.md nomath.tex
+markdown2tex tex_math_dollars=true -- example.md math.tex
 luatex document.tex
 ``````
 
@@ -2147,8 +2149,8 @@ following text:
 
 Invoking pdfTeX should have the same effect:
 ``` sh
-markdown-cli -- example.md nomath.tex
-markdown-cli tex_math_dollars=true -- example.md math.tex
+markdown2tex -- example.md nomath.tex
+markdown2tex tex_math_dollars=true -- example.md math.tex
 pdftex document.tex
 ``````
 
@@ -2603,7 +2605,7 @@ Hello *world*!
 Next, invoke LuaTeX from the terminal with the \Opt{eagerCache} option
 disabled:
 ``` sh
-markdown-cli eagerCache=false -- hello.md hello.tex
+markdown2tex eagerCache=false -- hello.md hello.tex
 ```````
 
 A \TeX{} document named `hello.tex` should be produced and contain the
@@ -2618,7 +2620,7 @@ Invoke LuaTeX from the terminal again, this time with the \Opt{eagerCache}
 option enabled:
 
 ``` tex
-markdown-cli eagerCache=true -- hello.md hello.tex
+markdown2tex eagerCache=true -- hello.md hello.tex
 ```
 
 A \TeX{} document named `hello.tex` should be produced and contain the
@@ -2971,7 +2973,7 @@ Hello *world*!
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-markdown-cli cacheDir=cache -- hello.md hello.tex
+markdown2tex cacheDir=cache -- hello.md hello.tex
 luatex document.tex
 ```````
 
@@ -3345,7 +3347,7 @@ Hello *world*!
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-markdown-cli finalizeCache=true frozenCacheFileName=cache.tex -- hello.md hello.tex
+markdown2tex finalizeCache=true frozenCacheFileName=cache.tex -- hello.md hello.tex
 luatex document.tex
 ```````
 
@@ -3650,8 +3652,8 @@ A paragraph.
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-markdown-cli -- content.md optionfalse.tex
-markdown-cli blankBeforeBlockquote=true -- content.md optiontrue.tex
+markdown2tex -- content.md optionfalse.tex
+markdown2tex blankBeforeBlockquote=true -- content.md optiontrue.tex
 luatex document.tex
 ```````
 
@@ -3879,8 +3881,8 @@ A code fence?
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-markdown-cli fencedCode=true -- content.md optionfalse.tex
-markdown-cli fencedCode=true blankBeforeCodeFence=true  -- content.md optiontrue.tex
+markdown2tex fencedCode=true -- content.md optionfalse.tex
+markdown2tex fencedCode=true blankBeforeCodeFence=true  -- content.md optiontrue.tex
 luatex document.tex
 ```````
 
@@ -4207,8 +4209,8 @@ A heading?
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-markdown-cli -- content.md optionfalse.tex
-markdown-cli blankBeforeHeading=true  -- content.md optiontrue.tex
+markdown2tex -- content.md optionfalse.tex
+markdown2tex blankBeforeHeading=true  -- content.md optiontrue.tex
 luatex document.tex
 ```````
 
@@ -4437,8 +4439,8 @@ A paragraph.
 ```````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-markdown-cli -- content.md optionfalse.tex
-markdown-cli blankBeforeList=true  -- content.md optiontrue.tex
+markdown2tex -- content.md optionfalse.tex
+markdown2tex blankBeforeList=true  -- content.md optiontrue.tex
 luatex document.tex
 ```````
 
@@ -4752,8 +4754,8 @@ following content:
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-markdown-cli breakableBlockquotes=false -- content.md optionfalse.tex
-markdown-cli  -- content.md optiontrue.tex
+markdown2tex breakableBlockquotes=false -- content.md optionfalse.tex
+markdown2tex  -- content.md optiontrue.tex
 luatex document.tex
 ```````
 
@@ -5183,8 +5185,8 @@ following content:
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-markdown-cli codeSpans=false -- content.md optionfalse.tex
-markdown-cli -- content.md optiontrue.tex
+markdown2tex codeSpans=false -- content.md optionfalse.tex
+markdown2tex -- content.md optiontrue.tex
 luatex document.tex
 ```````
 
@@ -7230,8 +7232,8 @@ _Is there <? HTML instruction ?> support?_
 ````````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-markdown-cli html=false -- content.md optionfalse.tex
-markdown-cli -- content.md optiontrue.tex
+markdown2tex html=false -- content.md optionfalse.tex
+markdown2tex -- content.md optiontrue.tex
 luatex document.tex
 ```````
 
@@ -7538,8 +7540,8 @@ $\sqrt{-1}$ *equals* $i$.
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-markdown-cli -- content.md optionfalse.tex
-markdown-cli hybrid=true -- content.md optiontrue.tex
+markdown2tex -- content.md optionfalse.tex
+markdown2tex hybrid=true -- content.md optiontrue.tex
 luatex document.tex
 ```````
 
@@ -9257,8 +9259,8 @@ Are these just three regular dots, a victorian ellipsis, or ... ?
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-markdown-cli -- content.md optionfalse.tex
-markdown-cli smartEllipses=true -- content.md optiontrue.tex
+markdown2tex -- content.md optionfalse.tex
+markdown2tex smartEllipses=true -- content.md optiontrue.tex
 luatex document.tex
 ```````
 
@@ -10501,8 +10503,8 @@ $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-markdown-cli -- content.md optionfalse.tex
-markdown-cli texMathDollars=true -- content.md optiontrue.tex
+markdown2tex -- content.md optionfalse.tex
+markdown2tex texMathDollars=true -- content.md optiontrue.tex
 luatex document.tex
 ```````
 
@@ -10706,8 +10708,8 @@ following content:
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-markdown-cli -- content.md optionfalse.tex
-markdown-cli texMathDoubleBackslash=true -- content.md optiontrue.tex
+markdown2tex -- content.md optionfalse.tex
+markdown2tex texMathDoubleBackslash=true -- content.md optiontrue.tex
 luatex document.tex
 ```````
 
@@ -10911,8 +10913,8 @@ following content:
 ``````
 Next, invoke LuaTeX from the terminal:
 ``` sh
-markdown-cli -- content.md optionfalse.tex
-markdown-cli texMathSingleBackslash=true -- content.md optiontrue.tex
+markdown2tex -- content.md optionfalse.tex
+markdown2tex texMathSingleBackslash=true -- content.md optiontrue.tex
 luatex document.tex
 ```````
 
@@ -11367,7 +11369,7 @@ Report bugs to: witiko@mail.muni.cz
 Markdown package home page: <https://github.com/witiko/markdown>]]
 
 local VERSION_STRING = [[
-markdown-cli.lua (Markdown) ]] .. metadata.version .. [[
+markdown-cli (Markdown) ]] .. metadata.version .. [[
 
 Copyright (C) ]] .. table.concat(metadata.copyright,
                                  "\nCopyright (C) ") .. [[
