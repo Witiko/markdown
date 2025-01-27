@@ -45,7 +45,8 @@ HTML_USER_MANUAL=markdown.html markdown.css
 USER_MANUAL=$(MARKDOWN_USER_MANUAL) $(HTML_USER_MANUAL)
 DOCUMENTATION=$(TECHNICAL_DOCUMENTATION) $(HTML_USER_MANUAL) $(ROOT_README) $(VERSION_FILE) \
   $(CHANGES_FILE) $(DEPENDENCIES)
-INSTALLABLES=markdown.lua markdown-parser.lua markdown-cli.lua markdown-unicode-data.lua \
+INSTALLABLES=markdown.lua markdown-parser.lua markdown-cli.lua markdown2tex.lua \
+  markdown-unicode-data.lua \
   markdown.tex markdown.sty t-markdown.tex \
   markdownthemewitiko_markdown_defaults.tex \
   markdownthemewitiko_markdown_defaults.sty \
@@ -131,8 +132,8 @@ $(GITHUB_PAGES): $(HTML_USER_MANUAL)
 # This target extracts the source files out of the DTX archive.
 $(EXTRACTABLES): $(INSTALLER) $(DTXARCHIVE)
 	luatex $<
-	sed -i '1i#!/usr/bin/env texlua' markdown-cli.lua
-	chmod +x markdown-cli.lua
+	sed -i '1i#!/usr/bin/env texlua' markdown-cli.lua markdown2tex.lua
+	chmod +x markdown-cli.lua markdown2tex.lua
 	texlua markdown-unicode-data-generator.lua >> markdown-unicode-data.lua
 	sed -i \
 	    -e 's#(((VERSION)))#$(VERSION)#g' \
@@ -228,7 +229,7 @@ $(TDSARCHIVE): $(DTXARCHIVE) $(INSTALLER) $(INSTALLABLES) $(DOCUMENTATION) $(EXA
 	  tex/context/third/markdown scripts/markdown
 	cp markdown.lua markdown-parser.lua markdown-unicode-data.lua \
 	  tex/luatex/markdown/
-	cp markdown-cli.lua scripts/markdown/
+	cp markdown-cli.lua markdown2tex.lua scripts/markdown/
 	cp markdown.tex markdownthemewitiko_markdown_defaults.tex tex/generic/markdown/
 	cp markdown.sty markdownthemewitiko_markdown_defaults.sty tex/latex/markdown/
 	cp t-markdown.tex t-markdownthemewitiko_markdown_defaults.tex tex/context/third/markdown/

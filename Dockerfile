@@ -127,6 +127,7 @@ rm -rfv ${PREINSTALLED_DIR}/tex/generic/markdown/
 rm -rfv ${PREINSTALLED_DIR}/tex/latex/markdown/
 rm -rfv ${PREINSTALLED_DIR}/tex/context/third/markdown/
 rm -fv ${BINARY_DIR}/markdown-cli
+rm -fv ${BINARY_DIR}/markdown2tex
 
 # Uninstall the distribution lt3luabridge package
 rm -rfv ${PREINSTALLED_DIR}/tex/generic/lt3luabridge/
@@ -140,6 +141,7 @@ cp ${BUILD_DIR}/markdown-parser.lua                          ${INSTALL_DIR}/tex/
 cp ${BUILD_DIR}/markdown-unicode-data.lua                    ${INSTALL_DIR}/tex/luatex/markdown/
 mkdir -p                                                     ${INSTALL_DIR}/scripts/markdown/
 cp ${BUILD_DIR}/markdown-cli.lua                             ${INSTALL_DIR}/scripts/markdown/
+cp ${BUILD_DIR}/markdown2tex.lua                             ${INSTALL_DIR}/scripts/markdown/
 mkdir -p                                                     ${INSTALL_DIR}/tex/generic/markdown/
 cp ${BUILD_DIR}/markdown.tex                                 ${INSTALL_DIR}/tex/generic/markdown/
 cp ${BUILD_DIR}/markdownthemewitiko_markdown_defaults.tex    ${INSTALL_DIR}/tex/generic/markdown/
@@ -150,8 +152,9 @@ mkdir -p                                                     ${INSTALL_DIR}/tex/
 cp ${BUILD_DIR}/t-markdown.tex                               ${INSTALL_DIR}/tex/context/third/markdown/
 cp ${BUILD_DIR}/t-markdownthemewitiko_markdown_defaults.tex  ${INSTALL_DIR}/tex/context/third/markdown/
 
-# Make the markdown-cli script executable
+# Make the markdown-cli and markdown2tex scripts executable
 ln -s ${INSTALL_DIR}/scripts/markdown/markdown-cli.lua       ${BINARY_DIR}/markdown-cli
+ln -s ${INSTALL_DIR}/scripts/markdown/markdown2tex.lua       ${BINARY_DIR}/markdown2tex
 
 # Install the current lt3luabridge package
 git clone https://github.com/witiko/lt3luabridge.git
@@ -273,6 +276,7 @@ rm -rfv ${PREINSTALLED_DIR}/tex/generic/markdown/
 rm -rfv ${PREINSTALLED_DIR}/tex/latex/markdown/
 rm -rfv ${PREINSTALLED_DIR}/tex/context/third/markdown/
 rm -fv ${BINARY_DIR}/markdown-cli
+rm -fv ${BINARY_DIR}/markdown2tex
 
 # Uninstall the distribution lt3luabridge package
 rm -rfv ${PREINSTALLED_DIR}/tex/generic/lt3luabridge/
@@ -288,8 +292,9 @@ set -o errexit
 set -o nounset
 set -o xtrace
 
-# Make the markdown-cli script executable
+# Make the markdown-cli and markdown2tex scripts executable
 ln -s ${INSTALL_DIR}/scripts/markdown/markdown-cli.lua       ${BINARY_DIR}/markdown-cli
+ln -s ${INSTALL_DIR}/scripts/markdown/markdown2tex.lua       ${BINARY_DIR}/markdown2tex
 
 # Generate the ConTeXt file database
 if echo ${TEXLIVE_TAG} | grep -q latest-minimal
