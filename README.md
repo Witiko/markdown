@@ -348,7 +348,7 @@ BibTeX file that is included in your TeX distribution like this:
 Notes to Distributors
 ---------------------
 
-The file `markdown-cli.lua` should be installed in the TDS directory
+The file `markdown2tex.lua` should be installed in the TDS directory
 `scripts/markdown`. Furthermore, it should be made executable and either
-symlinked to system directories as `markdown-cli` on Unix or have a wrapper
-`markdown-cli.exe` installed on Windows.
+symlinked to system directories as `markdown2tex` on Unix or have a wrapper
+`markdown2tex.exe` installed on Windows.
