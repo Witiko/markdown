@@ -135,6 +135,14 @@ Fixes:
 
 - Allow using the options `linkAttributes` and `notes` together. (#543, #544)
 
+
+Distribution:
+
+- Alias the command `markdown-cli` as `markdown2tex`.
+  (#545, #546, [tex-live@tug.org][tex-live-2025-01-051051])
+
+ [tex-live-2025-01-051051]: https://tug.org/pipermail/tex-live/2025-January/051051.html
+
 Docker:
 
 - Produce Docker image `witiko/markdown:latest-minimal` with a minimum
