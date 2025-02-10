@@ -1,0 +1,38 @@
+\markdownSetup{jekyllData=true}
+<<<
+This test ensures that the Lua `jekyllData` option correctly propagates
+through the plain TeX interface and that nested numbers are correctly parsed.
+
+---
+foo: [1, 2, 3]
+---
+>>>
+BEGIN document
+codeSpan: jekyllData
+softLineBreak
+interblockSeparator
+jekyllDataBegin
+BEGIN jekyllDataMappingBegin
+- key: null
+- length: 1
+END jekyllDataMappingBegin
+BEGIN jekyllDataSequenceBegin
+- key: null
+- length: 3
+END jekyllDatSequenceBegin
+BEGIN jekyllDataNumber
+- key: 1
+- value: 1
+END jekyllDataNumber
+BEGIN jekyllDataNumber
+- key: 2
+- value: 2
+END jekyllDataNumber
+BEGIN jekyllDataNumber
+- key: 3
+- value: 3
+END jekyllDataNumber
+jekyllDataSequenceEnd
+jekyllDataMappingEnd
+jekyllDataEnd
+END document
