@@ -1,8 +1,8 @@
 # Detective Wolf at the Bar
 
- ![artwork](detective-wolf.png "Detective Wolf at the Bar by <https://fiverr.com/quickcartoon>")
+ ![artwork](detective-wolf.png "Detective Wolf at the Bar by <https://www.quickcartoons.com/>")
 
-This artwork was created by <https://fiverr.com/quickcartoon> in May 2024.
+This artwork was created by <https://www.quickcartoons.com/> in May 2024.
 
 It first appeared in the TUGboat article [_Markdown Themes in Practice_][tb140], published in August 2024.
 
@@ -14,7 +14,7 @@ If you wish to use this artwork in your materials, you must provide attribution 
 
 A suggested attribution is:
 
-> Illustration by <https://fiverr.com/quickcartoon>.
+> Illustration by <https://www.quickcartoons.com/>.
 
  [tb140]: https://www.tug.org/TUGboat/tb45-2/tb140starynovotny-markdown-themes.pdf
  [cc-by]: https://creativecommons.org/licenses/by/4.0/legalcode

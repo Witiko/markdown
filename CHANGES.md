@@ -182,7 +182,7 @@ Fixes:
 
 Documentation:
 
-- Add artwork by <https://fiverr.com/quickcartoon> to directory `artwork/`. (#533)
+- Add artwork by <https://www.quickcartoons.com/> to directory `artwork/`. (#533)
 
   You are welcome to use these artworks in your promotional materials, provided
   you comply with the license terms specified for each piece. Typically, proper

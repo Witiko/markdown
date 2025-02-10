@@ -1,8 +1,8 @@
 # Wolf's Microwave Meal
 
- ![artwork](wolf-microwave.png "Wolf's Microwave Meal by <https://fiverr.com/quickcartoon>")
+ ![artwork](wolf-microwave.png "Wolf's Microwave Meal by <https://www.quickcartoons.com/>")
 
-This artwork was created by <https://fiverr.com/quickcartoon> in September 2020.
+This artwork was created by <https://www.quickcartoons.com/> in September 2020.
 
 It first appeared in the TUGboat article [_Making Markdown into a Microwave Meal_][tb129], published in November 2020.
 
@@ -14,7 +14,7 @@ If you wish to use this artwork in your materials, you must provide attribution 
 
 A suggested attribution is:
 
-> Illustration by <https://fiverr.com/quickcartoon>.
+> Illustration by <https://www.quickcartoons.com/>.
 
  [tb129]: https://www.tug.org/TUGboat/tb41-3/tb129novotny-frozen.pdf
  [cc-by]: https://creativecommons.org/licenses/by/4.0/legalcode
