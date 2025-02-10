@@ -30210,9 +30210,6 @@ function M.reader.new(writer, options)
       ::continue::
     end
   end
-
-  local cont = lpeg.R("\128\191") -- continuation byte
-
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -30222,7 +30219,6 @@ function M.reader.new(writer, options)
 % \end{markdown}
 %  \begin{macrocode}
   local function check_unicode_type(s, i, start_pos, end_pos, chartype)
-    local c
     local char_length
     for pos = start_pos, end_pos, 1 do
       if (start_pos < 0) then
