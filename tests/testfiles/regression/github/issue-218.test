@@ -17,9 +17,9 @@ BEGIN jekyllDataMappingBegin
 - length: 1
 END jekyllDataMappingBegin
 BEGIN jekyllDataSequenceBegin
-- key: null
+- key: foo
 - length: 3
-END jekyllDatSequenceBegin
+END jekyllDataSequenceBegin
 BEGIN jekyllDataNumber
 - key: 1
 - value: 1
