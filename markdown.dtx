@@ -27567,14 +27567,11 @@ parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
 % \fi
 % \begin{markdown}
 %
-%### Unicode punctuation
-% This section documents [the Unicode punctuation][unicode-punctuation]
-% recognized by the markdown reader. The punctuation is organized in the
-% \luamdef{parsers.punctuation} table according to the number of bytes occupied
-% after conversion to \acro{utf}8.
-%
-% [unicode-punctuation]: https://spec.commonmark.org/0.31.2/#unicode-punctuation-character
-%                        (CommonMark Spec, Version 0.31.2 (2024-01-28))
+%### Unicode data
+% This section documents different Unicode character categories recognized by
+% the markdown reader. The parsers for the different categories are organized
+% in the table \luamdef{parsers.unicode_data} according to the number of bytes
+% occupied after conversion to \acro{utf}8.
 %
 % All code from this section will be executed during the compilation of
 % the Markdown package and the standard output will be stored in a file
@@ -27592,20 +27589,29 @@ parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
 % \begin{markdown}
 %
 % In order to minimize the size and speed of the parser, we will first
-% construct a prefix tree of UTF-8 encodings for all codepoints of a
-% given code length.
+% construct prefixs tree of UTF-8 encodings for all codepoints of a
+% given Unicode category and code length.
 %
 % \end{markdown}
 %  \begin{macrocode}
+  local categories = {"L", "N", "P", "Pc", "S", "Z"}
   local prefix_trees = {}
+  for _, category in ipairs(categories) do
+    prefix_trees[category] = {}
+    for char_length = 1, 4 do
+      prefix_trees[category][char_length] = {}
+    end
+  end
   for line in file:lines() do
-    local codepoint, major_category = line:match("^(%x+);[^;]*;(%a)")
-    if major_category == "P" or major_category == "S" then
-      local code = utf8.char(tonumber(codepoint, 16))
-      if prefix_trees[#code] == nil then
-        prefix_trees[#code] = {}
+    local codepoint, full_category = line:match("^(%x+);[^;]*;(%a*)")
+    assert(#full_category >= 1)
+    local major_category = full_category:sub(1, 1)
+    for _, category in ipairs({full_category, major_category}) do
+      if prefix_trees[category] == nil then
+        goto continue
       end
-      local node = prefix_trees[#code]
+      local code = utf8.char(tonumber(codepoint, 16))
+      local node = prefix_trees[category][#code]
       for i = 1, #code do
         local byte = code:sub(i, i)
         if i < #code then
@@ -27617,6 +27623,7 @@ parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
           table.insert(node, byte)
         end
       end
+      ::continue::
     end
   end
   assert(file:close())
@@ -27624,7 +27631,7 @@ parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Next, we will construct a parser out of the prefix tree.
+% Next, we will construct parsers out of the prefix trees.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -27640,51 +27647,58 @@ parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
     leave(node, path)
   end
 
-  print("M.punctuation = {}")
+  print("M.categories = {}")
   print("local P = lpeg.P")
+  print("local fail = P(false)")
   print("-- luacheck: push no max line length")
-  for length, prefix_tree in pairs(prefix_trees) do
-    local subparsers = {}
-    depth_first_search(prefix_tree, "", function(node, path)
-      if type(node) == "string" then
-        local suffix
-        if node == "]" then
-          suffix = "P('" .. node .. "')"
-        else
-          suffix = "P([[" .. node .. "]])"
+  for _, category in ipairs(categories) do
+    print("M.categories." .. category .. " = {}")
+    for length, prefix_tree in pairs(prefix_trees[category]) do
+      local subparsers = {}
+      depth_first_search(prefix_tree, "", function(node, path)
+        if type(node) == "string" then
+          local suffix
+          if node == "]" then
+            suffix = "P('" .. node .. "')"
+          else
+            suffix = "P([[" .. node .. "]])"
+          end
+          if subparsers[path] ~= nil then
+            subparsers[path] = subparsers[path] .. " + " .. suffix
+          else
+            subparsers[path] = suffix
+          end
         end
-        if subparsers[path] ~= nil then
-          subparsers[path] = subparsers[path] .. " + " .. suffix
+      end, function(_, path)
+        if #path > 0 then
+          local byte = path:sub(#path, #path)
+          local parent_path = path:sub(1, #path-1)
+          local prefix
+          if byte == "]" then
+            prefix = "P('" .. byte .. "')"
+          else
+            prefix = "P([[" .. byte .. "]])"
+          end
+          local suffix
+          if subparsers[path]:find(" %+ ") then
+            suffix = prefix .. " * (" .. subparsers[path] .. ")"
+          else
+            suffix = prefix .. " * " .. subparsers[path]
+          end
+          if subparsers[parent_path] ~= nil then
+            subparsers[parent_path] = subparsers[parent_path]
+                                   .. " + " .. suffix
+          else
+            subparsers[parent_path] = suffix
+          end
         else
-          subparsers[path] = suffix
+          print(
+            "M.categories." .. category .. "[" .. length .. "] = "
+            .. (subparsers[path] or "fail")
+          )
         end
-      end
-    end, function(_, path)
-      if #path > 0 then
-        local byte = path:sub(#path, #path)
-        local parent_path = path:sub(1, #path-1)
-        local prefix
-        if byte == "]" then
-          prefix = "P('" .. byte .. "')"
-        else
-          prefix = "P([[" .. byte .. "]])"
-        end
-        local suffix
-        if subparsers[path]:find(" %+ ") then
-          suffix = prefix .. " * (" .. subparsers[path] .. ")"
-        else
-          suffix = prefix .. " * " .. subparsers[path]
-        end
-        if subparsers[parent_path] ~= nil then
-          subparsers[parent_path] = subparsers[parent_path]
-                                 .. " + " .. suffix
-        else
-          subparsers[parent_path] = suffix
-        end
-      else
-        print("M.punctuation[" .. length .. "] = " .. subparsers[path])
-      end
-    end)
+      end)
+    end
   end
   print("-- luacheck: pop")
 end)()
@@ -27696,8 +27710,8 @@ print("return M")
 % \fi
 % \begin{markdown}
 %
-% Back in the Markdown package, we will load the precompiled parser of
-% Unicode punctuation.
+% Back in the Markdown package, we will load the precompiled parsers of
+% Unicode categories.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -27708,7 +27722,71 @@ if metadata.version ~= unicode_data.metadata.version then
     "markdown-unicode-data.lua " .. unicode_data.metadata.version .. "."
   )
 end
-parsers.punctuation = unicode_data.punctuation
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Finally, we define high-level parsers for specific types of characters that
+% are interesting for us.
+%
+% \end{markdown}
+%  \begin{macrocode}
+parsers.unicode = {}
+parsers.unicode.punctuation = {}
+parsers.unicode.alpha = {}
+parsers.unicode.word = {}
+parsers.unicode.space = {}
+for n = 1, 4 do
+%    \end{macrocode}
+% \begin{markdown}
+%
+% For punctuation, accept any characters from Unicode categories P
+% (punctuation) and S (symbol), as mandated by [the CommonMark standard][1].
+%
+% [1]: https://spec.commonmark.org/0.31.2/#unicode-punctuation-character
+%     (CommonMark Spec, Version 0.31.2 (2024-01-28))
+%
+% \end{markdown}
+%  \begin{macrocode}
+  parsers.unicode.punctuation[n] = unicode_data.categories.P[n]
+                                 + unicode_data.categories.S[n]
+%    \end{macrocode}
+% \begin{markdown}
+%
+% For alphabetical characters, accept any characters from Unicode category
+% L (letter), similar to the character class `%a` from the Lua library Selene
+% Unicode.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  parsers.unicode.alpha[n] = unicode_data.categories.L[n]
+%    \end{macrocode}
+% \begin{markdown}
+%
+% For word characters, accept any characters from Unicode categories
+% L (letter), N (number), and Pc (connector punctuation), similar to the
+% character class `%w` from the Lua library Selene Unicode.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  parsers.unicode.word[n] = unicode_data.categories.L[n]
+                          + unicode_data.categories.N[n]
+                          + unicode_data.categories.Pc[n]
+%    \end{macrocode}
+% \begin{markdown}
+%
+% For space characters, accept any characters from Unicode category Z
+% (separator), as well as the ASCII control characters 9 (horizontal tab)
+% through 13 (carriage return), similar to the character class `%s` from the
+% Lua library Selene Unicode.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  parsers.unicode.space[n] = unicode_data.categories.Z[n]
+  if n == 1 then
+    parsers.unicode.space[n] = parsers.unicode.space[n]
+                             + R("\t\r")
+  end
+end
 
 parsers.escapable              = parsers.ascii_punctuation
 parsers.anyescaped             = parsers.backslash / ""
@@ -30138,27 +30216,6 @@ function M.reader.new(writer, options)
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Match a UTF-8 character of byte length `n`.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  local function utf8_by_byte_count(n)
-    if (n == 1) then
-      return lpeg.R("\0\127")
-    end
-    if (n == 2) then
-      return lpeg.R("\194\223") * cont
-    end
-    if (n == 3) then
-      return lpeg.R("\224\239") * cont * cont
-    end
-    if (n == 4) then
-      return lpeg.R("\240\244") * cont * cont * cont
-    end
-  end
-%    \end{macrocode}
-% \begin{markdown}
-%
 % Check if a there is a character of a type `chartype` between the start position `start_pos`
 % and end position `end_pos` in a string `s` relative to current index `i`.
 %
@@ -30173,16 +30230,13 @@ function M.reader.new(writer, options)
       else
         char_length = pos + 1
       end
-
-      if (chartype == "punctuation") then
-        if lpeg.match(parsers.punctuation[char_length], s, i+pos) then
+      local parser = parsers.unicode[chartype]
+      if parser ~= nil then
+        if lpeg.match(parser[char_length], s, i+pos) then
           return i
         end
       else
-        c = lpeg.match({ C(utf8_by_byte_count(char_length)) },s,i+pos)
-        if (c ~= nil) and (unicode.utf8.match(c, chartype)) then
-          return i
-        end
+        assert(false, 'Unknown character type "' .. chartype .. '"')
       end
     end
   end
@@ -30192,7 +30246,7 @@ function M.reader.new(writer, options)
   end
 
   local function check_preceding_unicode_whitespace(s, i)
-    return check_unicode_type(s, i, -4, -1, "%s")
+    return check_unicode_type(s, i, -4, -1, "space")
   end
 
   local function check_following_unicode_punctuation(s, i)
@@ -30200,7 +30254,7 @@ function M.reader.new(writer, options)
   end
 
   local function check_following_unicode_whitespace(s, i)
-    return check_unicode_type(s, i, 0, 3, "%s")
+    return check_unicode_type(s, i, 0, 3, "space")
   end
 
   parsers.unicode_preceding_punctuation
