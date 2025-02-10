@@ -27268,8 +27268,8 @@ function M.writer.new(options)
           prev_space = true
         end
       else
-        -- Convert all alphabetic characters to lowercase.
-        char = unicode.utf8.lower(char)
+        -- Case-fold all alphabetic characters.
+        char = uni_algos.case.casefold(char)
         prev_space = false
       end
 
@@ -27332,8 +27332,8 @@ function M.writer.new(options)
           prev_space = true
         end
       else
-        -- Convert all alphabetic characters to lowercase.
-        char = unicode.utf8.lower(char)
+        -- Case-fold all alphabetic characters.
+        char = uni_algos.case.casefold(char)
         prev_space = false
       end
 
