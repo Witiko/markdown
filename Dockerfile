@@ -26,6 +26,10 @@ ARG DEPENDENCIES="\
     zip \
 "
 
+ARG BUILD_DEPENDENCIES="\
+    wget \
+"
+
 ARG PRODUCTION_DEPENDENCIES="\
     curl \
     graphviz \
@@ -59,6 +63,7 @@ ARG DEV_IMAGE=false
 FROM $FROM_IMAGE:$TEXLIVE_TAG as build
 
 ARG DEPENDENCIES
+ARG BUILD_DEPENDENCIES
 ARG PRODUCTION_DEPENDENCIES
 ARG TEXLIVE_DEPENDENCIES
 
@@ -84,7 +89,7 @@ set -o xtrace
 
 # Install OS dependencies
 apt-get -qy update
-apt-get -qy install --no-install-recommends ${DEPENDENCIES}
+apt-get -qy install --no-install-recommends ${DEPENDENCIES} ${BUILD_DEPENDENCIES}
 if [ ${DEV_IMAGE} = false ] && echo ${TEXLIVE_TAG} | { ! grep -q latest-minimal; }
 then
   apt-get -qy install --no-install-recommends ${PRODUCTION_DEPENDENCIES}
