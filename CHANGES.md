@@ -1,6 +1,18 @@
 # Changes
 
-## 3.10.0
+## 3.11.0
+
+Docker:
+
+- Install the current package `tinyyaml` in historical TeX Live Docker images.
+  (18cb17f2, many thanks to @zepinglee for keeping the CTAN package up-to-date)
+
+Tests:
+
+- Test that nested numbers are correctly parsed by package `tinyyaml` in YAML
+  metadata. (#218, istqb_product_base#172)
+
+## 3.10.0 (2025-01-27)
 
 Development:
 
