@@ -26229,7 +26229,7 @@ function entities.dec_entity(s)
   if n == nil then
     return "&#" .. s .. ";"  -- fallback for unknown entities
   end
-  return unicode.utf8.char(n)
+  return utf8.char(n)
 end
 %    \end{macrocode}
 % \begin{markdown}
@@ -26245,7 +26245,7 @@ function entities.hex_entity(s)
   if n == nil then
     return "&#x" .. s .. ";"  -- fallback for unknown entities
   end
-  return unicode.utf8.char(n)
+  return utf8.char(n)
 end
 %    \end{macrocode}
 % \begin{markdown}
@@ -26261,7 +26261,7 @@ function entities.hex_entity_with_x_char(x, s)
   if n == nil then
     return "&#" .. x .. s .. ";"  -- fallback for unknown entities
   end
-  return unicode.utf8.char(n)
+  return utf8.char(n)
 end
 %    \end{macrocode}
 % \begin{markdown}
@@ -26282,7 +26282,7 @@ function entities.char_entity(s)
   end
   local char_table = {}
     for _, code_point in ipairs(code_points) do
-      table.insert(char_table, unicode.utf8.char(code_point))
+      table.insert(char_table, utf8.char(code_point))
     end
   return table.concat(char_table)
 end
@@ -27601,7 +27601,7 @@ parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
   for line in file:lines() do
     local codepoint, major_category = line:match("^(%x+);[^;]*;(%a)")
     if major_category == "P" or major_category == "S" then
-      local code = unicode.utf8.char(tonumber(codepoint, 16))
+      local code = utf8.char(tonumber(codepoint, 16))
       if prefix_trees[#code] == nil then
         prefix_trees[#code] = {}
       end
