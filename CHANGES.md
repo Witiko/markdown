@@ -5,7 +5,8 @@
 Docker:
 
 - Install the current package `tinyyaml` in historical TeX Live Docker images.
-  (18cb17f2, many thanks to @zepinglee for keeping the CTAN package up-to-date)
+  (18cb17f2, bfb6dfbc, many thanks to @zepinglee for keeping the CTAN package
+  up-to-date)
 
 Tests:
 
