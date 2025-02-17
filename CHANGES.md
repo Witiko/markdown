@@ -1,6 +1,19 @@
 # Changes
 
-## 3.10.0
+## 3.11.0
+
+Docker:
+
+- Install the current package `tinyyaml` in historical TeX Live Docker images.
+  (18cb17f2, bfb6dfbc, many thanks to @zepinglee for keeping the CTAN package
+  up-to-date)
+
+Tests:
+
+- Test that nested numbers are correctly parsed by package `tinyyaml` in YAML
+  metadata. (#218, istqb_product_base#172)
+
+## 3.10.0 (2025-01-27)
 
 Development:
 
@@ -169,7 +182,7 @@ Fixes:
 
 Documentation:
 
-- Add artwork by <https://fiverr.com/quickcartoon> to directory `artwork/`. (#533)
+- Add artwork by <https://www.quickcartoons.com/> to directory `artwork/`. (#533)
 
   You are welcome to use these artworks in your promotional materials, provided
   you comply with the license terms specified for each piece. Typically, proper

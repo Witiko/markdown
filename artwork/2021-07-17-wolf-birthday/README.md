@@ -1,8 +1,8 @@
 # Wolf's Fifth Birthday
 
- ![artwork](wolf-birthday.png "Wolf's Fifth Birthday by <https://fiverr.com/quickcartoon>")
+ ![artwork](wolf-birthday.png "Wolf's Fifth Birthday by <https://www.quickcartoons.com/>")
 
-This artwork was created by <https://fiverr.com/quickcartoon> in July 2021.
+This artwork was created by <https://www.quickcartoons.com/> in July 2021.
 
 It first appeared in the TUGboat article [_Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX_][tb131], published in September 2021.
 
@@ -14,7 +14,7 @@ If you wish to use this artwork in your materials, you must provide attribution 
 
 A suggested attribution is:
 
-> Illustration by <https://fiverr.com/quickcartoon>.
+> Illustration by <https://www.quickcartoons.com/>.
 
  [tb131]: https://www.tug.org/TUGboat/tb42-2/tb131novotny-markdown.pdf
  [cc-by]: https://creativecommons.org/licenses/by/4.0/legalcode

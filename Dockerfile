@@ -26,6 +26,10 @@ ARG DEPENDENCIES="\
     zip \
 "
 
+ARG BUILD_DEPENDENCIES="\
+    wget \
+"
+
 ARG PRODUCTION_DEPENDENCIES="\
     curl \
     graphviz \
@@ -59,6 +63,7 @@ ARG DEV_IMAGE=false
 FROM $FROM_IMAGE:$TEXLIVE_TAG as build
 
 ARG DEPENDENCIES
+ARG BUILD_DEPENDENCIES
 ARG PRODUCTION_DEPENDENCIES
 ARG TEXLIVE_DEPENDENCIES
 
@@ -84,7 +89,7 @@ set -o xtrace
 
 # Install OS dependencies
 apt-get -qy update
-apt-get -qy install --no-install-recommends ${DEPENDENCIES}
+apt-get -qy install --no-install-recommends ${DEPENDENCIES} ${BUILD_DEPENDENCIES}
 if [ ${DEV_IMAGE} = false ] && echo ${TEXLIVE_TAG} | { ! grep -q latest-minimal; }
 then
   apt-get -qy install --no-install-recommends ${PRODUCTION_DEPENDENCIES}
@@ -132,6 +137,9 @@ rm -fv ${BINARY_DIR}/markdown2tex
 # Uninstall the distribution lt3luabridge package
 rm -rfv ${PREINSTALLED_DIR}/tex/generic/lt3luabridge/
 
+# Uninstall the distribution tinyyaml package
+rm -rfv ${PREINSTALLED_DIR}/scripts/lua-tinyyaml/
+
 # Install the current Markdown package
 make -C ${BUILD_DIR} implode
 make -C ${BUILD_DIR} base
@@ -166,6 +174,11 @@ cp lt3luabridge.tex    ${INSTALL_DIR}/tex/generic/lt3luabridge/
 cp lt3luabridge.sty    ${INSTALL_DIR}/tex/generic/lt3luabridge/
 cp t-lt3luabridge.tex  ${INSTALL_DIR}/tex/generic/lt3luabridge/
 
+# Install the current tinyyaml package
+mkdir -p               ${INSTALL_DIR}/scripts/lua-tinyyaml/
+wget https://mirrors.ctan.org/macros/luatex/generic/lua-tinyyaml/tinyyaml.lua \
+                    -O ${INSTALL_DIR}/scripts/lua-tinyyaml/tinyyaml.lua
+
 # Generate the ConTeXt file database
 if echo ${TEXLIVE_TAG} | { ! grep -q latest-minimal; }
 then
@@ -186,10 +199,14 @@ mkdir ${BUILD_DIR}/dist
 unzip ${BUILD_DIR}/markdown.tds.zip -d ${BUILD_DIR}/dist
 
 # Include the current lt3luabridge package in the distribution directory
-mkdir -p               ${BUILD_DIR}/dist/tex/generic/lt3luabridge/
-cp lt3luabridge.tex    ${BUILD_DIR}/dist/tex/generic/lt3luabridge/
-cp lt3luabridge.sty    ${BUILD_DIR}/dist/tex/generic/lt3luabridge/
-cp t-lt3luabridge.tex  ${BUILD_DIR}/dist/tex/generic/lt3luabridge/
+mkdir -p                                                       ${BUILD_DIR}/dist/tex/generic/lt3luabridge/
+cp ${INSTALL_DIR}/tex/generic/lt3luabridge/lt3luabridge.tex    ${BUILD_DIR}/dist/tex/generic/lt3luabridge/
+cp ${INSTALL_DIR}/tex/generic/lt3luabridge/lt3luabridge.sty    ${BUILD_DIR}/dist/tex/generic/lt3luabridge/
+cp ${INSTALL_DIR}/tex/generic/lt3luabridge/t-lt3luabridge.tex  ${BUILD_DIR}/dist/tex/generic/lt3luabridge/
+
+# Include the current tinyyaml package in the distribution directory
+mkdir -p                                             ${BUILD_DIR}/dist/scripts/lua-tinyyaml/
+cp ${INSTALL_DIR}/scripts/lua-tinyyaml/tinyyaml.lua  ${BUILD_DIR}/dist/scripts/lua-tinyyaml/
 
 EOF
 
@@ -281,9 +298,12 @@ rm -fv ${BINARY_DIR}/markdown2tex
 # Uninstall the distribution lt3luabridge package
 rm -rfv ${PREINSTALLED_DIR}/tex/generic/lt3luabridge/
 
+# Uninstall the distribution tinyyaml package
+rm -rfv ${PREINSTALLED_DIR}/scripts/lua-tinyyaml/
+
 EOF
 
-# Install the Markdown package and the current lt3luabridge package
+# Install the Markdown package and the current lt3luabridge and tinyyaml packages
 COPY --from=build ${BUILD_DIR}/dist ${INSTALL_DIR}/
 
 RUN <<EOF

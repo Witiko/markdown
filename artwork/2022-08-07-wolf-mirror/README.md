@@ -1,8 +1,8 @@
 # Wolf in Front of a Mirror
 
- ![artwork](wolf-mirror.png "Wolf in Front of a Mirror by <https://fiverr.com/quickcartoon>")
+ ![artwork](wolf-mirror.png "Wolf in Front of a Mirror by <https://www.quickcartoons.com/>")
 
-This artwork was created by <https://fiverr.com/quickcartoon> in August 2022.
+This artwork was created by <https://www.quickcartoons.com/> in August 2022.
 
 It first appeared in the TUGboat article [_Markdown 2.17.1: What's New, What's Next?_][tb135], published in November 2022.
 
@@ -14,7 +14,7 @@ If you wish to use this artwork in your materials, you must provide attribution 
 
 A suggested attribution is:
 
-> Illustration by <https://fiverr.com/quickcartoon>.
+> Illustration by <https://www.quickcartoons.com/>.
 
  [tb135]: https://www.tug.org/TUGboat/tb43-3/tb135novotny-markdown.pdf
  [cc-by]: https://creativecommons.org/licenses/by/4.0/legalcode
