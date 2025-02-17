@@ -11394,7 +11394,7 @@ Report bugs to: witiko@mail.muni.cz
 Markdown package home page: <https://github.com/witiko/markdown>]]
 
 local VERSION_STRING = [[
-markdown-cli (Markdown) ]] .. metadata.version .. [[
+markdown2tex (Markdown) ]] .. metadata.version .. [[
 
 Copyright (C) ]] .. table.concat(metadata.copyright,
                                  "\nCopyright (C) ") .. [[
@@ -11551,10 +11551,10 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% The command-line Lua interface is implemented by the `markdown-cli.lua`
-% file that can be invoked from the command line as follows:
+% The command-line Lua interface is implemented by the files `markdown-cli.lua`
+% and `markdown2tex.lua`, which can be invoked from the command line as follows:
 % ``` sh
-% texlua /path/to/markdown-cli.lua cacheDir=. -- hello.md hello.tex
+% markdown2tex cacheDir=. -- hello.md hello.tex
 % ``````
 % \noindent to convert the Markdown document `hello.md` to a \TeX{} document
 % `hello.tex`.  After the Markdown package for our \TeX{} format has been
