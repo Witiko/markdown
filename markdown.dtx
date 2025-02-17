@@ -23762,8 +23762,10 @@ end
 %
 % The \luamdef{util.cache} method used `dir`, `string`, `salt`, and `suffix`
 % to determine a pathname. If a file with such a pathname does not exists,
-% it gets created with `transform(string)` as its content. Regardless, the
-% pathname is then returned.
+% it gets created with `transform(string)` as its content and the result of
+% `transform(string)` is returned as the second return value in case it's
+% useful to the caller. Regardless, the pathname is always returned as the
+% first return value.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -23771,17 +23773,18 @@ function util.cache(dir, string, salt, transform, suffix)
   local digest = md5.sumhexa(string .. (salt or ""))
   local name = util.pathname(dir, digest .. suffix)
   local file = io.open(name, "r")
+  local result = nil
   if file == nil then -- If no cache entry exists, create a new one.
     file = assert(io.open(name, "w"),
       [[Could not open file "]] .. name .. [[" for writing]])
-    local result = string
+    result = string
     if transform ~= nil then
       result = transform(result)
     end
     assert(file:write(result))
     assert(file:close())
   end
-  return name
+  return name, result
 end
 %    \end{macrocode}
 % \iffalse
@@ -34665,7 +34668,7 @@ end
 %### Conversion from Markdown to Plain \TeX{}
 %
 % The \luamref{new} function of file `markdown.lua` loads file
-% `markdown-parser.lua` and calls its own function \luamref{new} unless option
+% `markdown-parser.lua` and calls its function \luamref{new} unless option
 % \Opt{eagerCache} or \Opt{finalizeCache} has been enabled and a cached
 % conversion output exists, in which case it is returned without loading file
 % `markdown-parser.lua`.
@@ -34728,18 +34731,31 @@ function M.new(options)
 % \end{markdown}
 %  \begin{macrocode}
     local output
+    local raw_output, flat_output
     if options.eagerCache or options.finalizeCache then
       local salt = util.salt(options)
-      local name = util.cache(options.cacheDir, input, salt, convert,
-                              ".md.tex")
-      output = [[\input{]] .. name .. [[}\relax]]
+      local name, result = util.cache(options.cacheDir, input, salt,
+                                      convert, ".md.tex")
+      raw_output = [[\input{]] .. name .. [[}\relax]]
+      flat_output = function()
+        if result == nil then
+          local input_file = assert(io.open(name, "r"),
+            [[Could not open file "]] .. name .. [[" for reading]])
+          result = assert(input_file:read("*a"))
+          assert(input_file:close())
+        end
+        return result
+      end
 %    \end{macrocode}
 % \begin{markdown}
 % Otherwise, return the result of the conversion directly.
 % \end{markdown}
 %  \begin{macrocode}
     else
-      output = convert(input)
+      raw_output = convert(input)
+      flat_output = function()
+        return raw_output
+      end
     end
 %    \end{macrocode}
 % \begin{markdown}
@@ -34761,10 +34777,17 @@ function M.new(options)
       assert(file:write(
         [[\expandafter\global\expandafter\def\csname ]]
         .. [[markdownFrozenCache]] .. options.frozenCacheCounter
-        .. [[\endcsname{]] .. output .. [[}]] .. "\n"))
+        .. [[\endcsname{]] .. raw_output .. [[}]] .. "\n"))
       assert(file:close())
     end
-    return output
+%    \end{macrocode}
+% \begin{markdown}
+% Besides the canonical output of the conversion, which may contain cached
+% files behind \m{input}, also return a function that always produces a flat
+% output regardless of caching as the second return value.
+% \end{markdown}
+%  \begin{macrocode}
+    return raw_output, flat_output
   end
 end
 %    \end{macrocode}
@@ -35163,8 +35186,19 @@ if metadata.version ~= md.metadata.version then
   warn("markdown-cli.lua " .. metadata.version .. " used with " ..
        "markdown.lua " .. md.metadata.version .. ".")
 end
+
 local convert = md.new(options)
-local output = convert(input)
+local raw_output, flat_output = convert(input)
+local output
+if flat_output == nil then
+  warn("markdown.lua has not produced flat output, using " ..
+       "backwards-compatible raw output instead. This may cause " ..
+       "the result of the conversion may to be hidden behind " ..
+       [[`\input` when option `eagerCache` is enabled.]])
+  output = raw_output
+else
+  output = flat_output()
+end
 
 if output_filename then
   local output_file = assert(io.open(output_filename, "w"),
