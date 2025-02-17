@@ -4,7 +4,7 @@
 These are *not left-flanking* delimiter runs, because they are followed by Unicode whitespaces:
 - abc* abc* (Space, U+0020, ASCII / Basic Latin, 1 UTF8-encoded byte)
 - abc* abc* (No-Break Space, U+00A0, Latin-1 Supplement, 1 UTF8-encoded byte)
-- abc* abc* (En Quad, U+2000 , General Punctuation, 3 UTF8-encoded bytes, _fails in #552_)
+- abc* abc* (En Quad, U+2000, General Punctuation, 3 UTF8-encoded bytes, _fails in #552_)
 
 These are *not left-flanking* delimiter runs, because they are followed by Unicode punctuation and not preceded by Unicode whitespaces/punctuation:
 - abc*.abc* (Full Stop, U+002E, ASCII / Basic Latin, 1 UTF8-encoded byte)
@@ -15,7 +15,7 @@ These are *not left-flanking* delimiter runs, because they are followed by Unico
 These are *left-flanking* delimiter runs, because they are followed by Unicode punctuation and preceded by Unicode whitespaces:
 - abc *.abc* (Space, U+0020, ASCII / Basic Latin, 1 UTF8-encoded byte)
 - abc *.abc* (No-Break Space, U+00A0, Latin-1 Supplement, 1 UTF8-encoded byte)
-- abc *.abc* (En Quad, U+2000 , General Punctuation, 3 UTF8-encoded bytes)
+- abc *.abc* (En Quad, U+2000, General Punctuation, 3 UTF8-encoded bytes)
 
 These are *left-flanking* delimiter runs, because they are preceded and followed by Unicode punctuation:
 - abc.*.abc* (Full Stop, U+002E, ASCII / Basic Latin, 1 UTF8-encoded byte)
@@ -28,7 +28,7 @@ These are *left-flanking* delimiter runs, because they are preceded and followed
 These are *not right-flanking delimiter* runs, because they are preceded by Unicode whitespaces:
 - *abc *abc (Space, U+0020, ASCII / Basic Latin, 1 UTF8-encoded byte)
 - *abc *abc (No-Break Space, U+00A0, Latin-1 Supplement, 1 UTF8-encoded byte)
-- *abc *abc (En Quad, U+2000 , General Punctuation, 3 UTF8-encoded bytes)
+- *abc *abc (En Quad, U+2000, General Punctuation, 3 UTF8-encoded bytes)
 
 These are *not right-flanking* delimiter runs, because they are preceded by Unicode punctuation and not followed by Unicode whitespaces/punctuation:
 - *abc.*abc (Full Stop, U+002E, ASCII / Basic Latin, 1 UTF8-encoded byte)
@@ -39,7 +39,7 @@ These are *not right-flanking* delimiter runs, because they are preceded by Unic
 These are *right-flanking* delimiter runs, because they are preceded by Unicode punctuation and followed by Unicode whitespaces:
 - *abc.* abc (Space, U+0020, ASCII / Basic Latin, 1 UTF8-encoded byte)
 - *abc.* abc (No-Break Space, U+00A0, Latin-1 Supplement, 1 UTF8-encoded byte)
-- *abc.* abc (En Quad, U+2000 , General Punctuation, 3 UTF8-encoded bytes, _fails in #552_)
+- *abc.* abc (En Quad, U+2000, General Punctuation, 3 UTF8-encoded bytes, _fails in #552_)
 
 These are *right-flanking* delimiter runs, because they are preceded and followed by Unicode punctuation:
 - *abc.*.abc (Full Stop, U+002E, ASCII / Basic Latin, 1 UTF8-encoded byte)
