@@ -11293,7 +11293,7 @@ defaultOptions.underscores = true
 % \endgroup
 % \iffalse
 %</lua,lua-cli,lua-loader>
-%<*lua-cli>
+%<*lua-cli-manpage>
 % \fi
 % \begin{markdown}
 %
@@ -11355,15 +11355,40 @@ defaultOptions.underscores = true
 % \label{fig:sequence-diagram-lua-cli}
 % \end{figure}
 %  \begin{macrocode}
+.TH MARKDOWN2TEX 1 "(((LASTMODIFIED)))"
+.SH NAME
+markdown2tex \- convert .md files to .tex
+.SH SYNOPSIS
+%    \end{macrocode}
+%</lua-cli-manpage>
+%<*lua-cli>
+%  \begin{macrocode}
+local HELP_STRING = "Usage: " .. [[
+%    \end{macrocode}
+%</lua-cli>
+%<*lua-cli,lua-cli-manpage>
+%  \begin{macrocode}
+markdown2tex [OPTIONS] -- [INPUT_FILE] [OUTPUT_FILE]
 
-local HELP_STRING = [[
-Usage: texlua ]] .. arg[0] .. [[ [OPTIONS] -- [INPUT_FILE] [OUTPUT_FILE]
-where OPTIONS are documented in the Lua interface section of the
-technical Markdown package documentation.
+%    \end{macrocode}
+%</lua-cli,lua-cli-manpage>
+%<*lua-cli-manpage>
+%  \begin{macrocode}
+.SH DESCRIPTION
+%  \end{macrocode}
+%</lua-cli-manpage>
+%<*lua-cli,lua-cli-manpage>
+%  \begin{macrocode}
+OPTIONS are documented in Section 2.2.1 of the Markdown Package User
+Manual (https://ctan.org/pkg/markdown).
 
 When OUTPUT_FILE is unspecified, the result of the conversion will be
 written to the standard output. When INPUT_FILE is also unspecified, the
 result of the conversion will be read from the standard input.
+%  \end{macrocode}
+%</lua-cli,lua-cli-manpage>
+%<*lua-cli>
+%  \begin{macrocode}
 
 Report bugs to: witiko@mail.muni.cz
 Markdown package home page: <https://github.com/witiko/markdown>]]
