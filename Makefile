@@ -42,6 +42,7 @@ DEPENDENCIES=DEPENDS.txt
 TECHNICAL_DOCUMENTATION=markdown.pdf
 MARKDOWN_USER_MANUAL=markdown.md markdown.css
 HTML_USER_MANUAL=markdown.html markdown.css
+MAN_PAGES=markdown2tex.1
 USER_MANUAL=$(MARKDOWN_USER_MANUAL) $(HTML_USER_MANUAL)
 DOCUMENTATION=$(TECHNICAL_DOCUMENTATION) $(HTML_USER_MANUAL) $(ROOT_README) $(VERSION_FILE) \
   $(CHANGES_FILE) $(DEPENDENCIES)
@@ -52,7 +53,7 @@ INSTALLABLES=markdown.lua markdown-parser.lua markdown-cli.lua markdown2tex.lua 
   markdownthemewitiko_markdown_defaults.sty \
   t-markdownthemewitiko_markdown_defaults.tex
 EXTRACTABLES=$(INSTALLABLES) $(MARKDOWN_USER_MANUAL) $(TECHNICAL_DOCUMENTATION_RESOURCES) \
-  $(RAW_DEPENDENCIES)
+  $(RAW_DEPENDENCIES) $(MAN_PAGES)
 MAKEABLES=$(TECHNICAL_DOCUMENTATION) $(USER_MANUAL) $(INSTALLABLES) $(EXAMPLES) $(DEPENDENCIES)
 RESOURCES=$(DOCUMENTATION) $(EXAMPLES_RESOURCES) $(EXAMPLES_SOURCES) $(EXAMPLES) \
   $(MAKES) $(READMES) $(INSTALLER) $(DTXARCHIVE) $(TESTS)
@@ -92,7 +93,7 @@ all: $(MAKEABLES)
 	$(MAKE) clean
 
 # This pseudo-target extracts the source files out of the DTX archive.
-base: $(INSTALLABLES)
+base: $(EXTRACTABLES)
 	$(MAKE) clean
 
 # This pseudo-target builds a witiko/markdown Docker image.
@@ -139,7 +140,8 @@ $(EXTRACTABLES): $(INSTALLER) $(DTXARCHIVE)
 	    -e 's#(((VERSION)))#$(VERSION)#g' \
 	    -e 's#(((SHORTVERSION)))#$(SHORTVERSION)#g' \
 	    -e 's#(((LASTMODIFIED)))#$(LASTMODIFIED)#g' \
-	    $(INSTALLABLES)
+	    $(INSTALLABLES) \
+	    $(MAN_PAGES)
 	sed -i \
 	    -e '/\\ExplSyntaxOff/ { N; /\\ExplSyntaxOn/d; }' \
 	    $(INSTALLABLES)
@@ -223,7 +225,7 @@ dist: implode
 	$(MAKE) clean
 
 # This target produces the TeX directory structure archive.
-$(TDSARCHIVE): $(DTXARCHIVE) $(INSTALLER) $(INSTALLABLES) $(DOCUMENTATION) $(EXAMPLES_RESOURCES) $(EXAMPLES_SOURCES)
+$(TDSARCHIVE): $(DTXARCHIVE) $(INSTALLER) $(INSTALLABLES) $(DOCUMENTATION) $(MAN_PAGES) $(EXAMPLES_RESOURCES) $(EXAMPLES_SOURCES)
 	@# Installing the macro package.
 	mkdir -p tex/generic/markdown tex/luatex/markdown tex/latex/markdown \
 	  tex/context/third/markdown scripts/markdown
@@ -234,9 +236,10 @@ $(TDSARCHIVE): $(DTXARCHIVE) $(INSTALLER) $(INSTALLABLES) $(DOCUMENTATION) $(EXA
 	cp markdown.sty markdownthemewitiko_markdown_defaults.sty tex/latex/markdown/
 	cp t-markdown.tex t-markdownthemewitiko_markdown_defaults.tex tex/context/third/markdown/
 	@# Installing the documentation.
-	mkdir -p doc/generic/markdown doc/latex/markdown/examples \
+	mkdir -p doc/generic/markdown doc/man/man1 doc/latex/markdown/examples \
 	  doc/context/third/markdown/examples doc/optex/markdown/examples
 	cp $(DOCUMENTATION) doc/generic/markdown/
+	cp $(MAN_PAGES) doc/man/man1/
 	cp examples/context-mkiv.tex $(EXAMPLES_RESOURCES) \
 	  doc/context/third/markdown/examples/
 	cp -L examples/latex-*.tex $(EXAMPLES_RESOURCES) doc/latex/markdown/examples/
