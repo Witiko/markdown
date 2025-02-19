@@ -2,6 +2,10 @@
 
 ## 3.11.0
 
+Documentation:
+
+- Add a man page for `markdown2tex`. (#547, #554, suggested by @kberry)
+
 Docker:
 
 - Install the current package `tinyyaml` in historical TeX Live Docker images.

@@ -283,7 +283,7 @@ jobs:
       - name: Test Lua command-line interface
         run: |
           set -ex
-          printf '%s\n' 'Hello *Markdown*! $a_x + b_x = c_x$' | bash -c 'time markdown-cli eagerCache=false texMathDollars=true' 1>stdout 2>stderr
+          printf '%s\n' 'Hello *Markdown*! $a_x + b_x = c_x$' | bash -c 'time markdown2tex texMathDollars=true' 1>stdout 2>stderr
           test "$(cat stdout)" = '\markdownRendererDocumentBegin
           Hello \markdownRendererEmphasis{Markdown}! \markdownRendererInlineMath{a_x + b_x = c_x}\markdownRendererDocumentEnd'  # Check that the output is correct.
           grep 'real\s*0m[01]' stderr  # Check that the command finishes in less than a second.
