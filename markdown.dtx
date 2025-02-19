@@ -27760,9 +27760,11 @@ end
 %  \begin{macrocode}
 parsers.unicode = {}
 parsers.unicode.punctuation = {}
+parsers.unicode.following_punctuation = parsers.fail
 parsers.unicode.alpha = {}
 parsers.unicode.word = {}
-parsers.unicode.space = {}
+parsers.unicode.whitespace = {}
+parsers.unicode.following_whitespace = parsers.fail
 for n = 1, 4 do
 %    \end{macrocode}
 % \begin{markdown}
@@ -27777,6 +27779,9 @@ for n = 1, 4 do
 %  \begin{macrocode}
   parsers.unicode.punctuation[n] = unicode_data.categories.P[n]
                                  + unicode_data.categories.S[n]
+  parsers.unicode.following_punctuation
+    = parsers.unicode.following_punctuation
+    + #parsers.unicode.punctuation[n]
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -27809,12 +27814,44 @@ for n = 1, 4 do
 %
 % \end{markdown}
 %  \begin{macrocode}
-  parsers.unicode.space[n] = unicode_data.categories.Z[n]
+  parsers.unicode.whitespace[n] = unicode_data.categories.Z[n]
   if n == 1 then
-    parsers.unicode.space[n] = parsers.unicode.space[n]
-                             + R("\t\r")
+    parsers.unicode.whitespace[n] = parsers.unicode.whitespace[n]
+                                  + R("\t\r")
+  end
+  parsers.unicode.following_whitespace
+    = parsers.unicode.following_whitespace
+    + #parsers.unicode.whitespace[n]
+end
+
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Check if a there is a character of a type `chartype` between the start position `start_pos`
+% and end position `end_pos` in a string `s` relative to current index `i`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function check_preceding_unicode(chartype)
+  local parser = parsers.unicode[chartype]
+  if parser ~= nil then
+    return function(s, i)
+      for pos = -4, -1, 1 do
+        if lpeg.match(parser[-pos], s, i+pos) then
+          return i
+        end
+      end
+    end
+  else
+    assert(false, 'Unknown character type "' .. chartype .. '"')
   end
 end
+
+parsers.unicode.preceding_punctuation
+  = Cmt(parsers.succeed, check_preceding_unicode("punctuation"))
+
+parsers.unicode.preceding_whitespace
+  = Cmt(parsers.succeed, check_preceding_unicode("whitespace"))
 
 parsers.escapable              = parsers.ascii_punctuation
 parsers.anyescaped             = parsers.backslash / ""
@@ -30238,62 +30275,6 @@ function M.reader.new(writer, options)
       ::continue::
     end
   end
-%    \end{macrocode}
-% \begin{markdown}
-%
-% Check if a there is a character of a type `chartype` between the start position `start_pos`
-% and end position `end_pos` in a string `s` relative to current index `i`.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  local function check_unicode_type(s, i, start_pos, end_pos, chartype)
-    local char_length
-    for pos = start_pos, end_pos, 1 do
-      if (start_pos < 0) then
-        char_length = -pos
-      else
-        char_length = pos + 1
-      end
-      local parser = parsers.unicode[chartype]
-      if parser ~= nil then
-        if lpeg.match(parser[char_length], s, i+pos) then
-          return i
-        end
-      else
-        assert(false, 'Unknown character type "' .. chartype .. '"')
-      end
-    end
-  end
-
-  local function check_preceding_unicode_punctuation(s, i)
-    return check_unicode_type(s, i, -4, -1, "punctuation")
-  end
-
-  local function check_preceding_unicode_whitespace(s, i)
-    return check_unicode_type(s, i, -4, -1, "space")
-  end
-
-  local function check_following_unicode_punctuation(s, i)
-    return check_unicode_type(s, i, 0, 3, "punctuation")
-  end
-
-  local function check_following_unicode_whitespace(s, i)
-    return check_unicode_type(s, i, 0, 3, "space")
-  end
-
-  parsers.unicode_preceding_punctuation
-    = B(parsers.escapable)
-    + Cmt(parsers.succeed, check_preceding_unicode_punctuation)
-
-  parsers.unicode_preceding_whitespace
-    = Cmt(parsers.succeed, check_preceding_unicode_whitespace)
-
-  parsers.unicode_following_punctuation
-    = #parsers.escapable
-    + Cmt(parsers.succeed, check_following_unicode_punctuation)
-
-  parsers.unicode_following_whitespace
-    = Cmt(parsers.succeed, check_following_unicode_whitespace)
 
   parsers.delimiter_run = function(character)
     return  (B(parsers.backslash * character) + -B(character))
@@ -30303,26 +30284,26 @@ function M.reader.new(writer, options)
 
   parsers.left_flanking_delimiter_run = function(character)
     return  (B( parsers.any)
-              * ( parsers.unicode_preceding_punctuation
-                + parsers.unicode_preceding_whitespace)
+              * ( parsers.unicode.preceding_punctuation
+                + parsers.unicode.preceding_whitespace)
              + -B(parsers.any))
             * parsers.delimiter_run(character)
-            * parsers.unicode_following_punctuation
+            * parsers.unicode.following_punctuation
             + parsers.delimiter_run(character)
-            * -#( parsers.unicode_following_punctuation
-                + parsers.unicode_following_whitespace
+            * -#( parsers.unicode.following_punctuation
+                + parsers.unicode.following_whitespace
                 + parsers.eof)
   end
 
   parsers.right_flanking_delimiter_run = function(character)
-    return  parsers.unicode_preceding_punctuation
+    return  parsers.unicode.preceding_punctuation
           * parsers.delimiter_run(character)
-          * ( parsers.unicode_following_punctuation
-            + parsers.unicode_following_whitespace
+          * ( parsers.unicode.following_punctuation
+            + parsers.unicode.following_whitespace
             + parsers.eof)
           + (B(parsers.any)
-            * -( parsers.unicode_preceding_punctuation
-               + parsers.unicode_preceding_whitespace))
+            * -( parsers.unicode.preceding_punctuation
+               + parsers.unicode.preceding_whitespace))
           * parsers.delimiter_run(character)
   end
 
@@ -30330,7 +30311,7 @@ function M.reader.new(writer, options)
     parsers.emph_start
       = parsers.left_flanking_delimiter_run(parsers.asterisk)
       + ( -#parsers.right_flanking_delimiter_run(parsers.underscore)
-        + ( parsers.unicode_preceding_punctuation
+        + ( parsers.unicode.preceding_punctuation
           * #parsers.right_flanking_delimiter_run(parsers.underscore)))
       * parsers.left_flanking_delimiter_run(parsers.underscore)
 
@@ -30338,7 +30319,7 @@ function M.reader.new(writer, options)
       = parsers.right_flanking_delimiter_run(parsers.asterisk)
       + ( -#parsers.left_flanking_delimiter_run(parsers.underscore)
         + #( parsers.left_flanking_delimiter_run(parsers.underscore)
-           * parsers.unicode_following_punctuation))
+           * parsers.unicode.following_punctuation))
       * parsers.right_flanking_delimiter_run(parsers.underscore)
   else
     parsers.emph_start
