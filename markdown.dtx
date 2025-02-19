@@ -27760,10 +27760,12 @@ end
 %  \begin{macrocode}
 parsers.unicode = {}
 parsers.unicode.punctuation = {}
+parsers.unicode.preceding_punctuation = parsers.fail
 parsers.unicode.following_punctuation = parsers.fail
 parsers.unicode.alpha = {}
 parsers.unicode.word = {}
 parsers.unicode.whitespace = {}
+parsers.unicode.preceding_whitespace = parsers.fail
 parsers.unicode.following_whitespace = parsers.fail
 for n = 1, 4 do
 %    \end{macrocode}
@@ -27779,6 +27781,9 @@ for n = 1, 4 do
 %  \begin{macrocode}
   parsers.unicode.punctuation[n] = unicode_data.categories.P[n]
                                  + unicode_data.categories.S[n]
+  parsers.unicode.preceding_punctuation
+    = parsers.unicode.preceding_punctuation
+    + B(parsers.unicode.punctuation[n])
   parsers.unicode.following_punctuation
     = parsers.unicode.following_punctuation
     + #parsers.unicode.punctuation[n]
@@ -27819,39 +27824,13 @@ for n = 1, 4 do
     parsers.unicode.whitespace[n] = parsers.unicode.whitespace[n]
                                   + R("\t\r")
   end
+  parsers.unicode.preceding_whitespace
+    = parsers.unicode.preceding_whitespace
+    + B(parsers.unicode.whitespace[n])
   parsers.unicode.following_whitespace
     = parsers.unicode.following_whitespace
     + #parsers.unicode.whitespace[n]
 end
-
-%    \end{macrocode}
-% \begin{markdown}
-%
-% Check if a there is a character of a type `chartype` between the start position `start_pos`
-% and end position `end_pos` in a string `s` relative to current index `i`.
-%
-% \end{markdown}
-%  \begin{macrocode}
-local function check_preceding_unicode(chartype)
-  local parser = parsers.unicode[chartype]
-  if parser ~= nil then
-    return function(s, i)
-      for pos = -4, -1, 1 do
-        if lpeg.match(parser[-pos], s, i+pos) then
-          return i
-        end
-      end
-    end
-  else
-    assert(false, 'Unknown character type "' .. chartype .. '"')
-  end
-end
-
-parsers.unicode.preceding_punctuation
-  = Cmt(parsers.succeed, check_preceding_unicode("punctuation"))
-
-parsers.unicode.preceding_whitespace
-  = Cmt(parsers.succeed, check_preceding_unicode("whitespace"))
 
 parsers.escapable              = parsers.ascii_punctuation
 parsers.anyescaped             = parsers.backslash / ""
