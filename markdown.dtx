@@ -27759,12 +27759,10 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 parsers.unicode = {}
-parsers.unicode.punctuation = {}
 parsers.unicode.preceding_punctuation = parsers.fail
 parsers.unicode.following_punctuation = parsers.fail
-parsers.unicode.alpha = {}
-parsers.unicode.word = {}
-parsers.unicode.whitespace = {}
+parsers.unicode.following_alpha = parsers.fail
+parsers.unicode.following_word = parsers.fail
 parsers.unicode.preceding_whitespace = parsers.fail
 parsers.unicode.following_whitespace = parsers.fail
 for n = 1, 4 do
@@ -27779,14 +27777,15 @@ for n = 1, 4 do
 %
 % \end{markdown}
 %  \begin{macrocode}
-  parsers.unicode.punctuation[n] = unicode_data.categories.P[n]
-                                 + unicode_data.categories.S[n]
+  local punctuation_of_length_n
+    = unicode_data.categories.P[n]
+    + unicode_data.categories.S[n]
   parsers.unicode.preceding_punctuation
     = parsers.unicode.preceding_punctuation
-    + B(parsers.unicode.punctuation[n])
+    + B(punctuation_of_length_n)
   parsers.unicode.following_punctuation
     = parsers.unicode.following_punctuation
-    + #parsers.unicode.punctuation[n]
+    + #punctuation_of_length_n
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -27796,7 +27795,10 @@ for n = 1, 4 do
 %
 % \end{markdown}
 %  \begin{macrocode}
-  parsers.unicode.alpha[n] = unicode_data.categories.L[n]
+  local alpha_of_length_n = unicode_data.categories.L[n]
+  parsers.unicode.following_alpha
+    = parsers.unicode.following_alpha
+    + alpha_of_length_n
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -27806,9 +27808,13 @@ for n = 1, 4 do
 %
 % \end{markdown}
 %  \begin{macrocode}
-  parsers.unicode.word[n] = unicode_data.categories.L[n]
-                          + unicode_data.categories.N[n]
-                          + unicode_data.categories.Pc[n]
+  local word_of_length_n
+    = unicode_data.categories.L[n]
+    + unicode_data.categories.N[n]
+    + unicode_data.categories.Pc[n]
+  parsers.unicode.following_word
+    = parsers.unicode.following_word
+    + word_of_length_n
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -27819,17 +27825,18 @@ for n = 1, 4 do
 %
 % \end{markdown}
 %  \begin{macrocode}
-  parsers.unicode.whitespace[n] = unicode_data.categories.Z[n]
+  local whitespace_of_length_n = unicode_data.categories.Z[n]
   if n == 1 then
-    parsers.unicode.whitespace[n] = parsers.unicode.whitespace[n]
-                                  + R("\t\r")
+    whitespace_of_length_n
+      = whitespace_of_length_n
+      + R("\t\r")
   end
   parsers.unicode.preceding_whitespace
     = parsers.unicode.preceding_whitespace
-    + B(parsers.unicode.whitespace[n])
+    + B(whitespace_of_length_n)
   parsers.unicode.following_whitespace
     = parsers.unicode.following_whitespace
-    + #parsers.unicode.whitespace[n]
+    + #whitespace_of_length_n
 end
 
 parsers.escapable              = parsers.ascii_punctuation
