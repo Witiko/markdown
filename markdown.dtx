@@ -34700,7 +34700,7 @@ function M.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   local parser_convert = nil
-  return function(input)
+  return function(input, include_flat_output)
     local function convert(input)
       if parser_convert == nil then
 %    \end{macrocode}
@@ -34786,7 +34786,11 @@ function M.new(options)
 % a flat output regardless of caching as the second return value.
 % \end{markdown}
 %  \begin{macrocode}
-    return raw_output, flat_output
+    if include_flat_output then
+      return raw_output, flat_output
+    else
+      return raw_output
+    end
   end
 end
 %    \end{macrocode}
@@ -35187,13 +35191,14 @@ if metadata.version ~= md.metadata.version then
 end
 
 local convert = md.new(options)
-local raw_output, flat_output = convert(input)
+local raw_output, flat_output = convert(input, true)
 local output
 if flat_output == nil then
-  warn("markdown.lua has not produced flat output, using " ..
-       "backwards-compatible raw output instead. This may cause " ..
-       "the result of the conversion may to be hidden behind " ..
-       [[`\input` when option `eagerCache` is enabled.]])
+  if options.eagerCache then
+    warn("markdown.lua has not produced flat output, so I am using " ..
+         "backwards-compatible raw output instead. This may cause " ..
+         'the conversion result to be hidden behind "\\input".')
+  end
   output = raw_output
 else
   output = flat_output()
