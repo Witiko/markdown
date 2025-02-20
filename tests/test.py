@@ -806,7 +806,7 @@ def run_tests(testfiles: Iterable[TestFile], fail_fast: bool) -> Iterable[Option
                 LOGGER.debug(f'The testfiles break down into {num_batches} batches.')
                 sequential_results = list(sequential_results)  # Materialize the results for the first testfile before we parallelize.
                 with Pool(NUM_PROCESSES) as pool:
-                    parallel_results = pool.imap(BatchResult.run_test_batch, remaining_batches, chunksize=1)
+                    parallel_results = pool.imap_unordered(BatchResult.run_test_batch, remaining_batches, chunksize=1)
                     all_results = chain(sequential_results, parallel_results)
                     yield from all_results
             else:
