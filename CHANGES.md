@@ -6,8 +6,8 @@
 
 Development:
 
-- Remove dependency on Selene Unicode and support ConTeXt standalone.
-  (originally reported by @andreiborisov in #402 and #436,
+- Remove dependency on Selene Unicode and support LuaMetaTeX and ConTeXt
+  standalone. (originally reported by @andreiborisov in #402 and #436,
   fixed in #551..#553 with contributions from @lostenderman)
 
 Fixes:
@@ -18,7 +18,7 @@ Fixes:
 
 Documentation:
 
-- Add a man page for `markdown2tex`. (#547, #554..#556 suggested by @kberry)
+- Add a man page for `markdown2tex`. (#547, #554..#556, suggested by @kberry)
 
 Docker:
 
