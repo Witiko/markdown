@@ -6,28 +6,33 @@ Development:
 
 - Remove dependency on Selene Unicode and support LuaMetaTeX and ConTeXt
   standalone. (originally reported by @andreiborisov in #402 and #436,
-  fixed in #551..#553 with contributions from @lostenderman)
+  and by @witiko in latex3#1518 and [dev-context@ntg.nl][dev-context-msg03280];
+  fixed in #551..#553 by @witiko and @lostenderman, and in latex3#1670
+  and latex3#1671 by @hanshagen, @josephwright, @Skillmon, and @muzimuzhi)
+
+ [dev-context-msg03280]: https://www.mail-archive.com/dev-context@ntg.nl/msg03280.html
 
 Fixes:
 
 - Prevent left-flanking and right-flanking delimiter runs followed by
-  multi-byte whitespace or punctuation characters. (#552, #553, with
-  contributions from @lostenderman)
+  multi-byte whitespace or punctuation characters. (fixed in #552 and #553
+  by @witiko and @lostenderman)
 
 Documentation:
 
-- Add a man page for `markdown2tex`. (#547, #554..#556, suggested by @kberry)
+- Add a man page for `markdown2tex`. (suggested by @karlberry in #547; added by
+  @witiko in #554..#556)
 
 Docker:
 
 - Install the current package `tinyyaml` in historical TeX Live Docker images.
-  (18cb17f2, bfb6dfbc, many thanks to @zepinglee for keeping the CTAN package
-  up-to-date)
+  (added by @witiko in 18cb17f2 and bfb6dfbc, many thanks to @zepinglee for
+  keeping the CTAN package up-to-date)
 
 Tests:
 
 - Test that nested numbers are correctly parsed by package `tinyyaml` in YAML
-  metadata. (#218, istqb_product_base#172)
+  metadata. (added by @witiko in #218 and istqb_product_base#172)
 
 ## 3.10.0 (2025-01-27)
 
