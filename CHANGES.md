@@ -2,6 +2,18 @@
 
 ## 3.11.0
 
+Development:
+
+- Remove dependency on Selene Unicode and support ConTeXt standalone.
+  (originally reported by @andreiborisov in #402 and #436,
+  fixed in #551..#553 with contributions from @lostenderman)
+
+Fixes:
+
+- Prevent left-flanking and right-flanking delimiter runs followed by
+  multi-byte whitespace or punctuation characters. (#552, #553, with
+  contributions from @lostenderman)
+
 Documentation:
 
 - Add a man page for `markdown2tex`. (#547, #554..#556 suggested by @kberry)

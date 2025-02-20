@@ -1,0 +1,177 @@
+<<<
+# Left-flanking delimiter runs
+
+These are *not left-flanking* delimiter runs, because they are followed by Unicode whitespaces:
+- abc* abc* (Space, U+0020, ASCII / Basic Latin, 1 UTF8-encoded byte)
+- abc* abc* (No-Break Space, U+00A0, Latin-1 Supplement, 1 UTF8-encoded byte)
+- abc* abc* (En Quad, U+2000, General Punctuation, 3 UTF8-encoded bytes, _fails in #552_)
+
+These are *not left-flanking* delimiter runs, because they are followed by Unicode punctuation and not preceded by Unicode whitespaces/punctuation:
+- abc*.abc* (Full Stop, U+002E, ASCII / Basic Latin, 1 UTF8-encoded byte)
+- abc*§abc* (Section Sign, U+00A7, Latin-1 Supplement, 2 UTF8-encoded bytes, _fails in #552_)
+- abc*᐀abc* (Canadian Syllabics Hyphen, U+1400, Unified Canadian Aboriginal Syllabics, 3 UTF8-encoded bytes, _fails in #552_)
+- abc*𐄹abc* (Aegean Weight Second Subunit, U+10139, Aegean Numbers, 4 UTF8-encoded bytes, _fails in #552_)
+
+These are *left-flanking* delimiter runs, because they are followed by Unicode punctuation and preceded by Unicode whitespaces:
+- abc *.abc* (Space, U+0020, ASCII / Basic Latin, 1 UTF8-encoded byte)
+- abc *.abc* (No-Break Space, U+00A0, Latin-1 Supplement, 1 UTF8-encoded byte)
+- abc *.abc* (En Quad, U+2000, General Punctuation, 3 UTF8-encoded bytes)
+
+These are *left-flanking* delimiter runs, because they are preceded and followed by Unicode punctuation:
+- abc.*.abc* (Full Stop, U+002E, ASCII / Basic Latin, 1 UTF8-encoded byte)
+- abc§*.abc* (Section Sign, U+00A7, Latin-1 Supplement, 2 UTF8-encoded bytes)
+- abc᐀*.abc* (Canadian Syllabics Hyphen, U+1400, Unified Canadian Aboriginal Syllabics, 3 UTF8-encoded bytes)
+- abc𐄹*.abc* (Aegean Weight Second Subunit, U+10139, Aegean Numbers, 4 UTF8-encoded bytes)
+
+# Right-flanking delimiter runs
+
+These are *not right-flanking delimiter* runs, because they are preceded by Unicode whitespaces:
+- *abc *abc (Space, U+0020, ASCII / Basic Latin, 1 UTF8-encoded byte)
+- *abc *abc (No-Break Space, U+00A0, Latin-1 Supplement, 1 UTF8-encoded byte)
+- *abc *abc (En Quad, U+2000, General Punctuation, 3 UTF8-encoded bytes)
+
+These are *not right-flanking* delimiter runs, because they are preceded by Unicode punctuation and not followed by Unicode whitespaces/punctuation:
+- *abc.*abc (Full Stop, U+002E, ASCII / Basic Latin, 1 UTF8-encoded byte)
+- *abc§*abc (Section Sign, U+00A7, Latin-1 Supplement, 2 UTF8-encoded bytes)
+- *abc᐀*abc (Canadian Syllabics Hyphen, U+1400, Unified Canadian Aboriginal Syllabics, 3 UTF8-encoded bytes)
+- *abc𐄹*abc (Aegean Weight Second Subunit, U+10139, Aegean Numbers, 4 UTF8-encoded bytes)
+
+These are *right-flanking* delimiter runs, because they are preceded by Unicode punctuation and followed by Unicode whitespaces:
+- *abc.* abc (Space, U+0020, ASCII / Basic Latin, 1 UTF8-encoded byte)
+- *abc.* abc (No-Break Space, U+00A0, Latin-1 Supplement, 1 UTF8-encoded byte)
+- *abc.* abc (En Quad, U+2000, General Punctuation, 3 UTF8-encoded bytes, _fails in #552_)
+
+These are *right-flanking* delimiter runs, because they are preceded and followed by Unicode punctuation:
+- *abc.*.abc (Full Stop, U+002E, ASCII / Basic Latin, 1 UTF8-encoded byte)
+- *abc.*§abc (Section Sign, U+00A7, Latin-1 Supplement, 2 UTF8-encoded bytes, _fails in #552_)
+- *abc.*᐀abc (Canadian Syllabics Hyphen, U+1400, Unified Canadian Aboriginal Syllabics, 3 UTF8-encoded bytes, _fails in #552_)
+- *abc.*𐄹abc (Aegean Weight Second Subunit, U+10139, Aegean Numbers, 4 UTF8-encoded bytes, _fails in #552_)
+
+>>>
+BEGIN document
+BEGIN section
+headingOne: Left-flanking delimiter runs
+interblockSeparator
+emphasis: not left-flanking
+interblockSeparator
+ulBeginTight
+ulItem
+ulItemEnd
+ulItem
+ulItemEnd
+ulItem
+emphasis: fails in (hash)552
+ulItemEnd
+ulEndTight
+interblockSeparator
+emphasis: not left-flanking
+interblockSeparator
+ulBeginTight
+ulItem
+ulItemEnd
+ulItem
+emphasis: fails in (hash)552
+ulItemEnd
+ulItem
+emphasis: fails in (hash)552
+ulItemEnd
+ulItem
+emphasis: fails in (hash)552
+ulItemEnd
+ulEndTight
+interblockSeparator
+emphasis: left-flanking
+interblockSeparator
+ulBeginTight
+ulItem
+emphasis: .abc
+ulItemEnd
+ulItem
+emphasis: .abc
+ulItemEnd
+ulItem
+emphasis: .abc
+ulItemEnd
+ulEndTight
+interblockSeparator
+emphasis: left-flanking
+interblockSeparator
+ulBeginTight
+ulItem
+emphasis: .abc
+ulItemEnd
+ulItem
+emphasis: .abc
+ulItemEnd
+ulItem
+emphasis: .abc
+ulItemEnd
+ulItem
+emphasis: .abc
+ulItemEnd
+ulEndTight
+interblockSeparator
+END section
+BEGIN section
+headingOne: Right-flanking delimiter runs
+interblockSeparator
+emphasis: not right-flanking delimiter
+interblockSeparator
+ulBeginTight
+ulItem
+ulItemEnd
+ulItem
+ulItemEnd
+ulItem
+ulItemEnd
+ulEndTight
+interblockSeparator
+emphasis: not right-flanking
+interblockSeparator
+ulBeginTight
+ulItem
+ulItemEnd
+ulItem
+ulItemEnd
+ulItem
+ulItemEnd
+ulItem
+ulItemEnd
+ulEndTight
+interblockSeparator
+emphasis: right-flanking
+interblockSeparator
+ulBeginTight
+ulItem
+emphasis: abc.
+ulItemEnd
+ulItem
+emphasis: abc.
+ulItemEnd
+ulItem
+emphasis: abc.
+emphasis: fails in (hash)552
+ulItemEnd
+ulEndTight
+interblockSeparator
+emphasis: right-flanking
+interblockSeparator
+ulBeginTight
+ulItem
+emphasis: abc.
+ulItemEnd
+ulItem
+emphasis: abc.
+emphasis: fails in (hash)552
+ulItemEnd
+ulItem
+emphasis: abc.
+emphasis: fails in (hash)552
+ulItemEnd
+ulItem
+emphasis: abc.
+emphasis: fails in (hash)552
+ulItemEnd
+ulEndTight
+END section
+END document
