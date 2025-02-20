@@ -4,7 +4,7 @@
 
 Documentation:
 
-- Add a man page for `markdown2tex`. (#547, #554, suggested by @kberry)
+- Add a man page for `markdown2tex`. (#547, #554..#556 suggested by @kberry)
 
 Docker:
 
