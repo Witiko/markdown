@@ -21,7 +21,7 @@ from tempfile import mkdtemp
 import click
 from git import Repo, InvalidGitRepositoryError
 from more_itertools import chunked, zip_equal
-from tqdm import tqdm
+from tqdm_loggable.auto import tqdm
 import yaml
 
 
