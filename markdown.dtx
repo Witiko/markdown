@@ -27282,7 +27282,7 @@ function M.writer.new(options)
       end
 
       -- Replace all spaces and newlines with hyphens.
-      if not lpeg.match(
+      if lpeg.match(
         ( parsers.newline
         + parsers.unicode.following_whitespace ),
         char
@@ -27359,7 +27359,7 @@ function M.writer.new(options)
       end
 
       -- Replace all spaces and newlines with hyphens.
-      if not lpeg.match(
+      if lpeg.match(
         ( parsers.newline
         + parsers.unicode.following_whitespace ),
         char
