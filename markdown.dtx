@@ -27257,7 +27257,10 @@ function M.writer.new(options)
 
       -- Remove everything up to the first letter.
       if not letter_found then
-        local is_letter = lpeg.match(parsers.following_alpha, char)
+        local is_letter = lpeg.match(
+          parsers.unicode.following_alpha,
+          char
+        )
         if is_letter then
           letter_found = true
         else
@@ -27332,7 +27335,7 @@ function M.writer.new(options)
       -- Remove everything up to the first non-space.
       if not letter_found then
         local is_letter = not lpeg.match(
-          parsers.following_whitespace,
+          parsers.unicode.following_whitespace,
           char
         )
         if is_letter then
