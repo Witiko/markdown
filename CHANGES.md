@@ -1,10 +1,12 @@
 # Changes
 
+## 3.11.1 (2025-0X-XX)
+
 ## 3.11.0 (2025-02-21)
 
 Development:
 
-- Remove dependency on Selene Unicode and preliminary support LuaMetaTeX and
+- Remove dependency on Selene Unicode and add preliminary support LuaMetaTeX and
   ConTeXt standalone. (originally reported by @andreiborisov in #402 and #436,
   and by @witiko in latex3#1518 and [dev-context@ntg.nl][dev-context-msg03280];
   fixed in #551..#553 by @witiko and @lostenderman, and in latex3#1670
