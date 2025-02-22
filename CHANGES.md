@@ -2,6 +2,30 @@
 
 ## 3.11.1 (2025-0X-XX)
 
+Development:
+
+- In theme `witiko/markdown`, add parameter `format` for PlantUML diagrams.
+  (reported by @mrkissinger in #555, fixed by @witiko in 7d58f3d8)
+
+  Here is an example LaTeX document using the new parameter:
+
+  ```` tex
+  \documentclass{article}
+  \usepackage[import=witiko/diagrams@v2, relativeReferences]{markdown}
+  \begin{document}
+  \begin{markdown}
+  ``` plantuml {caption="An example UML sequence diagram" format=eps width=7cm #plantuml}
+  @startmindmap
+  + SIR
+  ++ 指標引擎
+  @endmindmap
+  ```
+
+  See the diagram in Figure <#plantuml>.
+  \end{markdown}
+  \end{document}
+  ````
+
 ## 3.11.0 (2025-02-21)
 
 Development:
