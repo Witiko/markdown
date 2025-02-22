@@ -35729,12 +35729,17 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Store the caption of the diagram.
+% Store the caption and the desired format of the diagram.
 %
 % \end{markdown}
 %  \begin{macrocode}
     \tl_new:N
       \l_@@_diagrams_caption_tl
+    \tl_new:N
+      \l_@@_diagrams_format_tl
+    \tl_set:Nn
+      \l_@@_diagrams_format_tl
+      { pdf }
     \@@_setup:n
       {
         rendererPrototypes = {
@@ -35756,13 +35761,21 @@ end
               {
                 rendererPrototypes = {
                   attributeKeyValue = {
-                    \str_if_eq:nnTF
+                    \str_case:nnF
                       { ##1 }
-                      { caption }
                       {
-                        \tl_set:Nn
-                          \l_@@_diagrams_caption_tl
-                          { ##2 }
+                        { caption }
+                          {
+                            \tl_set:Nn
+                              \l_@@_diagrams_caption_tl
+                              { ##2 }
+                          }
+                        { format }
+                          {
+                            \tl_set:Nn
+                              \l_@@_diagrams_format_tl
+                              { ##2 }
+                          }
                       }
                       {
                         \@@_diagrams_previous_key_value:nn
@@ -35924,19 +35937,42 @@ end
         \tl_set:Nn
           \l_tmpa_tl
           { #1 }
-        \regex_replace_once:NnN
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Use the output format provided by the user.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        \regex_replace_once:NxN
           \c_@@_diagrams_filename_suffix_regex
-          { .pdf }
+          {
+            .
+            \tl_use:N
+              \l_@@_diagrams_format_tl
+          }
           \l_tmpa_tl
-        \@@_diagrams_render_diagram:nVnn
+        \tl_set:Nn
+          \l_tmpb_tl
+          { plantuml~-t }
+        \tl_put_right:NV
+          \l_tmpb_tl
+          \l__markdown_diagrams_format_tl
+        \tl_put_right:Nn
+          \l_tmpb_tl
+          { ~#1 }
+        \@@_diagrams_render_diagram:nVVn
           { #1 }
           \l_tmpa_tl
-          { plantuml~-tpdf~#1 }
+          \l_tmpb_tl
           { PlantUML~image }
       }
     \cs_generate_variant:Nn
       \@@_diagrams_render_diagram:nnnn
-      { nVnn }
+      { nVVn }
+    \cs_generate_variant:Nn
+      \regex_replace_once:NnN
+      { NxN }
     \@@_tl_set_from_cs:NNn
       \l_tmpa_tl
       \@@_diagrams_infostrings_current:n
