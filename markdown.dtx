@@ -35934,9 +35934,6 @@ end
     \cs_set:Nn
       \@@_diagrams_infostrings_current:n
       {
-        \tl_set:Nn
-          \l_tmpa_tl
-          { #1 }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -35944,6 +35941,9 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
+        \tl_set:Nn
+          \l_tmpa_tl
+          { #1 }
         \regex_replace_once:NxN
           \c_@@_diagrams_filename_suffix_regex
           {
@@ -35961,6 +35961,37 @@ end
         \tl_put_right:Nn
           \l_tmpb_tl
           { ~#1 }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% For the SVG format, use Inkscape to convert the resulting image to PDF.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        \str_if_eq:VnT
+          \l_@@_diagrams_format_tl
+          { svg }
+          {
+            \tl_put_right:Nn
+              \l_tmpb_tl
+              { ;~inkscape~ }
+            \tl_put_right:NV
+              \l_tmpb_tl
+              \l_tmpa_tl
+            \tl_put_right:Nn
+              \l_tmpb_tl
+              { ~--export-area-drawing~--export-dpi=300~-o~ }
+            \tl_set:Nn
+              \l_tmpa_tl
+              { #1 }
+            \regex_replace_once:NnN
+              \c_@@_diagrams_filename_suffix_regex
+              { .pdf }
+              \l_tmpa_tl
+            \tl_put_right:NV
+              \l_tmpb_tl
+              \l_tmpa_tl
+          }
         \@@_diagrams_render_diagram:nVVn
           { #1 }
           \l_tmpa_tl

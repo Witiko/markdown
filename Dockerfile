@@ -33,6 +33,7 @@ ARG BUILD_DEPENDENCIES="\
 ARG PRODUCTION_DEPENDENCIES="\
     curl \
     graphviz \
+    inkscape \
     npm \
     pandoc \
     plantuml \
