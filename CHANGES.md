@@ -4,8 +4,8 @@
 
 Development:
 
-- In theme `witiko/markdown`, add parameter `format` for PlantUML diagrams.
-  (reported by @mrkissinger in #555, fixed by @witiko in 7d58f3d8)
+- In theme `witiko/diagrams`, add parameter `format` for PlantUML diagrams.
+  (reported by @mrkissinger in #555, fixed by @witiko in 7d58f3d8 and 64c78f17)
 
   Here is an example LaTeX document using the new parameter:
 
