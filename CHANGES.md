@@ -26,6 +26,13 @@ Development:
   \end{document}
   ````
 
+Continuous Integration:
+
+- Hotfix explcheck. (ec9b37c7, [tex-live@tug.org][tex-live-2025-03-051355],
+  co-authored by @gucci-on-fleek in revision 74551 of <https://svn.tug.org:8369/texlive>)
+
+ [tex-live-2025-03-051355]: https://tug.org/pipermail/tex-live/2025-March/051355.html
+
 ## 3.11.0 (2025-02-21)
 
 Development:
