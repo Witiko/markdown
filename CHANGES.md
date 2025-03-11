@@ -33,6 +33,11 @@ Continuous Integration:
 
  [tex-live-2025-03-051355]: https://tug.org/pipermail/tex-live/2025-March/051355.html
 
+Docker:
+
+- Start building Docker images `witiko/markdown:TL2024-historic`. (bcae00a6)
+- Switch Docker images `witiko/markdown:latest` from TeX Live 2024 to 2025. (bcae00a6)
+
 ## 3.11.0 (2025-02-21)
 
 Development:
