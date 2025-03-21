@@ -4,7 +4,7 @@
 
 This artwork was created by <https://www.quickcartoons.com/> in March 2025.
 
-It first appeared in the TUGboat article [_Piping YAML files into LaTeX3 key–values_][tb142], to appear.
+It is to appear in the TUGboat article [_Piping YAML files into LaTeX3 key–values_][tb142] later this year.
 
 ## License terms
 
