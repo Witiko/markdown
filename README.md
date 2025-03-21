@@ -149,7 +149,7 @@ For further information, consult one of the following:
     - [Markdown 3 at TUG 2023: Reflections from the Q&A Session][tb138],
     - [Fast Regression Testing of TeX Packages: Multiprocessing and Batching][tb139],
     - [Markdown Themes in Practice][tb140], and
-    - [Piping YAML files into LaTeX3 key–values][tb142] (preprint).
+    - Piping YAML files into LaTeX3 key–values ([preprint][tb142]).
 5. Journal articles published by [CSTUG Bulletin][csbul] (in Czech and Slovak):
     - [Rendering Markdown inside TeX Documents][10.5300/2016-1-4/78],
     - [Markdown 2.8.1: Boldly Unto the Throne of Lightweight Markup in TeX][10.5300/2020-1-2/48],
