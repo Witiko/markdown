@@ -26,6 +26,11 @@ Development:
   \end{document}
   ````
 
+Documentation:
+
+- Add preprint and artwork for an upcoming TUGboat article titled _Piping YAML
+  files into LaTeX3 key–values_. (c684ce2e)
+
 Continuous Integration:
 
 - Hotfix explcheck. (ec9b37c7, [tex-live@tug.org][tex-live-2025-03-051355],
