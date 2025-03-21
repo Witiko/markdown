@@ -25,7 +25,7 @@ encouraged. 😉
 
  [commonmark]: https://commonmark.org/ "CommonMark: A strongly defined, highly compatible specification of Markdown"
 
-Your first Markdown document
+Your first markdown document
 ----------------------------
 
 Using a text editor, create an empty directory named `workdir/`. In it, create
@@ -74,7 +74,7 @@ Congratulations, you have just typeset your first Markdown document! 🥳
 
  [tex-live]: https://www.tug.org/texlive/ "TeX Live - TeX Users Group"
 
-Use Markdown for continuous integration
+Use markdown for continuous integration
 ---------------------------------------
 
 Can't live without the latest features of the Markdown package in your
@@ -266,7 +266,7 @@ Acknowledgements
  [MUNI/33/1654/2022]: https://www.muni.cz/en/research/projects/69763 "An Implementation of the CommonMark Standard into the Markdown Package for TeX"
  [MUNI/33/1658/2022]: https://www.muni.cz/en/research/projects/69762 "Syntax Extensions of the Markdown Package for TeX"
 
-Contributing to the Development of Markdown
+Contributing to the development of markdown
 -------------------------------------------
 
 Apart from the example markdown documents, tests, and continuous integration,
@@ -303,7 +303,7 @@ reproduced by running the `docker build` command on `Dockerfile` (`docker build
  [literate programming]: https://en.wikipedia.org/wiki/Literate_programming "Literate programming"
  [ltxdockit]:            https://ctan.org/pkg/ltxdockit                     "ltxdockit – Documentation support"
 
-Related Work
+Related work
 ------------
 
 Links to third-party software for the Markdown package are available in the
@@ -316,7 +316,7 @@ You are welcome to use these artworks in your promotional materials, provided
 you comply with the license terms specified for each piece. Typically, proper
 attribution to the artist is required.
 
-Citing Markdown
+Citing markdown
 ---------------
 
 When citing Markdown in academic papers and theses, please use the following
@@ -347,7 +347,7 @@ BibTeX file that is included in your TeX distribution like this:
 
  [tugboat.bib]: http://mirrors.ctan.org/info/digests/tugboat/biblio/tugboat.bib
 
-Notes to Distributors
+Notes to distributors
 ---------------------
 
 The file `markdown2tex.lua` should be installed in the TDS directory
