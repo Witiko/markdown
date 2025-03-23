@@ -29,7 +29,7 @@ Development:
 Documentation:
 
 - Add preprint and artwork for an upcoming TUGboat article titled _Piping YAML
-  files into LaTeX3 key–values_. (c684ce2e)
+  files into LaTeX3 key–values_. (c684ce2e, 2214706b, 52ccb7a1, 85e96805)
 
 Continuous Integration:
 
