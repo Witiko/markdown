@@ -114,9 +114,6 @@ jobs:
             latexmk
             scheme-minimal
             xetex
-      - name: Hotfix explcheck  # See <https://tug.org/pipermail/tex-live/2025-March/051355.html>.
-        run: |
-          wget https://raw.githubusercontent.com/witiko/expltools/refs/tags/2025-02-25/explcheck/src/explcheck-config.toml -O "$(dirname "$(kpsewhich explcheck.lua)")"/explcheck-config.toml
       - name: Install additional packages
         run: |
           set -ex
