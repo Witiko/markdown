@@ -31,13 +31,6 @@ Documentation:
 - Add preprint and artwork for an upcoming TUGboat article titled _Piping YAML
   files into LaTeX3 key–values_. (c684ce2e, 2214706b, 52ccb7a1, 85e96805)
 
-Continuous Integration:
-
-- Hotfix explcheck. (ec9b37c7, [tex-live@tug.org][tex-live-2025-03-051355],
-  co-authored by @gucci-on-fleek in revision 74551 of <https://svn.tug.org:8369/texlive>)
-
- [tex-live-2025-03-051355]: https://tug.org/pipermail/tex-live/2025-March/051355.html
-
 Docker:
 
 - Start building Docker images `witiko/markdown:TL2024-historic`. (bcae00a6)
