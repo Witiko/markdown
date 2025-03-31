@@ -16,10 +16,10 @@ CTANARCHIVE=markdown.ctan.zip
 DISTARCHIVE=markdown.zip
 ARCHIVES=$(TDSARCHIVE) $(CTANARCHIVE) $(DISTARCHIVE)
 EXAMPLES_RESOURCES=examples/example.md examples/scientists.csv
-EXAMPLES_SOURCES=examples/context-mkiv.tex \
+EXAMPLES_SOURCES=examples/context-mkiv.tex examples/context-lmtx.tex \
   examples/latex-pdftex.tex examples/latex-xetex.tex examples/latex-luatex.tex \
   examples/optex.tex
-EXAMPLES=examples/context-mkiv.pdf \
+EXAMPLES=examples/context-mkiv.pdf examples/context-lmtx.pdf \
   examples/latex-pdftex.pdf examples/latex-xetex.pdf examples/latex-luatex.pdf \
   examples/latex-tex4ht.html examples/latex-tex4ht.css \
   examples/optex.pdf
