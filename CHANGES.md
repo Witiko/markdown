@@ -4,7 +4,11 @@
 
 Fixes:
 
-- Fix style issues identified by explcheck's semantic analysis. (expltools#75, #562, #564)
+- Fix style issues identified by explcheck's semantic analysis.
+  (expltools#75, #562, #564)
+
+- Make `\markdownInput` handle file names with spaces correctly.
+  (reported by @u-fischer in #563, fixed by @witiko in #565)
 
 ## 3.11.1 (2025-03-30)
 
