@@ -1,5 +1,11 @@
 # Changes
 
+## 3.11.2 (2025-04-XX)
+
+Fixes:
+
+- Fix style issues identified by explcheck's semantic analysis. (expltools#75, #562, #564)
+
 ## 3.11.1 (2025-03-30)
 
 Development:
