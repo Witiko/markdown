@@ -313,7 +313,7 @@ jobs:
         include:
           - { texlive: latest-minimal }
     runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request_target' && github.ref == 'refs/heads/main' && always() && (needs.test.result == 'success' || needs.test.result == 'skipped')
+    if: github.event_name != 'pull_request_target' && github.ref == 'refs/heads/main' && always() && (needs.test.result == 'success' || needs.test.result == 'skipped') && needs.build-docker-image.result == 'success'
     env:
       DOCKER_TEXLIVE_TAG: ${{ matrix.texlive }}
     steps:
@@ -338,7 +338,7 @@ jobs:
       contents: write
     container:
       image: ghcr.io/witiko/markdown:${{ needs.build-docker-image.outputs.latest }}
-    if: github.event_name != 'pull_request_target' && github.ref == 'refs/heads/main' && always() && (needs.test.result == 'success' || needs.test.result == 'skipped')
+    if: github.event_name != 'pull_request_target' && github.ref == 'refs/heads/main' && always() && (needs.test.result == 'success' || needs.test.result == 'skipped') && needs.build-docker-image.result == 'success'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -395,7 +395,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    if: github.event_name == 'pull_request_target' && github.event.pull_request.draft == false && always() && (needs.test.result == 'success' || needs.test.result == 'skipped')
+    if: github.event_name == 'pull_request_target' && github.event.pull_request.draft == false && always() && needs.test.result == 'success'
     steps:
       - name: Automatically merge pull request
         uses: pascalgn/automerge-action@v0.16.3
