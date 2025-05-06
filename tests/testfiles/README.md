@@ -18,7 +18,7 @@ currently only process the `if` key that can be used to specify for which
 TeX formats and templates the testfile should run using Python syntax:
 
 ``` yaml
-if: format == 'context-mkiv' or template == 'verbatim'
+if: format == 'context' or template == 'verbatim'
 ```
 
 If no YAML metadata are specified, the `---` delimiter may also be omitted.
