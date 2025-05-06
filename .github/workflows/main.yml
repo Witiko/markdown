@@ -377,12 +377,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create a prerelease
-        uses: marvinpinto/action-automatic-releases@latest
+        uses: softprops/action-gh-release@v2
         with:
-          title: The latest version
-          automatic_release_tag: latest
+          name: The latest version
+          tag_name: latest
           prerelease: true
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           files: |
             markdown.tds.zip
             markdown.ctan.zip
