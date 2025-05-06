@@ -2,6 +2,11 @@
 
 ## 3.11.3 (2025-05-XX)
 
+Continuous integration:
+
+- Switch to the GitHub Action `softprops/action-gh-release` for automatic
+  pre-releases. (contributed by @muzimuzhi in expltools#82, 58698ad1)
+
 ## 3.11.2 (2025-04-28)
 
 Fixes:
