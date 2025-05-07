@@ -23701,9 +23701,11 @@ Built-in \Hologo{ConTeXt} themes provided with the Markdown package include:
 %
 % \end{markdown}
 %  \begin{macrocode}
+local early_warnings = {}
 local unicode_data = require("markdown-unicode-data")
 if metadata.version ~= unicode_data.metadata.version then
-  print(
+  table.insert(
+    early_warnings,
     "markdown.lua " .. metadata.version .. " used with " ..
     "markdown-unicode-data.lua " .. unicode_data.metadata.version .. "."
   )
@@ -24103,9 +24105,27 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-function util.warning(s)
-  io.stderr:write("Warning: " .. s .. "\n")
-end
+util.warning = (function()
+  local function warning(s)
+    io.stderr:write("Warning: " .. s .. "\n")
+  end
+%    \end{macrocode}
+% \iffalse
+%</lua,lua-loader>
+%<*lua>
+% \fi
+% \begin{markdown}
+  for _, message in ipairs(early_warnings) do
+    warning(message)
+  end
+%    \end{macrocode}
+% \iffalse
+%</lua>
+%<*lua,lua-loader>
+% \fi
+% \begin{markdown}
+  return warning
+end)()
 %    \end{macrocode}
 % \iffalse
 %</lua,lua-loader>
@@ -26381,6 +26401,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Slicing
 % Parse the \Opt{slice} option and define \luamdef{writer->slice\_begin},
 % \luamdef{writer->slice\_end}, and \luamdef{writer->is\_writing}. The
 % \luamref{writer->is\_writing} member variable is mutable.
@@ -26420,6 +26441,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Basic Formatter Variables and Functions
 % Define \luamdef{writer->space} as the output format of a space character.
 %
 % \end{markdown}
@@ -26545,6 +26567,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Escaping Special Characters
 % Define tables \luamdef{writer->escaped_uri_chars} and
 % \luamdef{writer->escaped_minimal_strings} containing the mapping from
 % special plain characters and character strings that always need to be
@@ -26659,6 +26682,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatters of Warnings and Errors
 % Define \luamdef{writer->warning} as a function that will transform an input
 % warning `t` with optional more warning text `m` to the output format.
 %
@@ -26685,6 +26709,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatter of Code Spans
 % Define \luamdef{writer->code} as a function that will transform an input
 % inline code span `s` with optional attributes `attributes` to the output
 % format.
@@ -26710,6 +26735,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatter of Hyperlinks
 % Define \luamdef{writer->link} as a function that will transform an input
 % hyperlink to the output format, where `lab` corresponds to the label,
 % `src` to \acro{uri}, `tit` to the title of the link, and `attributes` to
@@ -26738,6 +26764,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatter of Images
 % Define \luamdef{writer->image} as a function that will transform an input
 % image to the output format, where `lab` corresponds to the label, `src`
 % to the \acro{url}, `tit` to the title of the image, and `attributes` to
@@ -26766,6 +26793,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatters of Lists
 % Define \luamdef{writer->bulletlist} as a function that will transform an input
 % bulleted list to the output format, where `items` is an array of the list
 % items and `tight` specifies, whether the list is tight or not.
@@ -26856,6 +26884,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatters of HTML Tags, Elements, and Comments
 % Define \luamdef{writer->inline_html_comment} as a function that will
 % transform the contents of an inline \acro{HTML} comment, to the output
 % format, where `contents` are the contents of the \acro{HTML} comment.
@@ -26898,6 +26927,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatter of Emphasis
 % Define \luamdef{writer->emphasis} as a function that will transform an
 % emphasized span `s` of input text to the output format.
 %
@@ -26910,6 +26940,20 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatter of Strong Emphasis
+% Define \luamdef{writer->strong} as a function that will transform a strongly
+% emphasized span `s` of input text to the output format.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  function self.strong(s)
+    if self.flatten_inlines then return s end
+    return {"\\markdownRendererStrongEmphasis{",s,"}"}
+  end
+%    \end{macrocode}
+% \begin{markdown}
+%
+%#### Formatter of Tickboxes
 % Define \luamdef{writer->tickbox} as a function that will transform a
 % number `f` to the output format.
 %
@@ -26927,18 +26971,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Define \luamdef{writer->strong} as a function that will transform a strongly
-% emphasized span `s` of input text to the output format.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  function self.strong(s)
-    if self.flatten_inlines then return s end
-    return {"\\markdownRendererStrongEmphasis{",s,"}"}
-  end
-%    \end{macrocode}
-% \begin{markdown}
-%
+%#### Formatter of Blockquotes
 % Define \luamdef{writer->blockquote} as a function that will transform an
 % input block quote `s` to the output format.
 %
@@ -26952,6 +26985,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatter of Code Blocks
 % Define \luamdef{writer->verbatim} as a function that will transform an
 % input code block `s` to the output format.
 %
@@ -26966,6 +27000,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatter of Documents
 % Define \luamdef{writer->document} as a function that will transform a
 % document `d` to the output format.
 %
@@ -27000,6 +27035,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatter of Attributes
 % Define \luamdef{writer->attributes} as a function that will transform
 % input attributes `attrs` to the output format.
 %
@@ -27109,6 +27145,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Tracking Active Attributes
 % Define \luamdef{writer->active\_attributes} as a stack of block-level
 % attributes that are currently active. The
 % \luamref{writer->active\_attributes} member variable is mutable.
@@ -27261,6 +27298,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Automatically Generated Identifiers for Headings
 % Create an auto identifier string by stripping and converting characters from string `s`.
 %
 % \end{markdown}
@@ -27415,6 +27453,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatter of Headings
 % Define \luamdef{writer->heading} as a function that will transform an
 % input heading `s` at level `level` with attributes `attributes` to the
 % output format.
@@ -27502,6 +27541,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Managing State and Deferred Writer Calls
 % Define \luamdef{writer->get_state} as a function that returns the current
 % state of the writer, where the state of a writer are its mutable member
 % variables.
@@ -27665,7 +27705,7 @@ parsers.nonemptyline           = parsers.line - parsers.blankline
 % \fi
 % \begin{markdown}
 %
-%#### Unicode character categories {#unicode-character-categories}
+%#### Unicode Character Categories {#unicode-character-categories}
 % This section documents different Unicode character categories recognized by
 % the markdown reader. The parsers for the different categories are organized
 % in the table \luamdef{parsers.unicode_data} according to the number of bytes
