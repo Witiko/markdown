@@ -825,6 +825,13 @@ abbr {
   date       = {2024-12-25},
   url        = {https://ctan.org/pkg/l3kernel},
   urldate    = {2025-01-06}}
+@online{unicode24,
+  author     = {{Unicode Consortium}},
+  title      = {The Unicode Standard},
+  subtitle   = {Version 16.0 -- Core Specification},
+  date       = {2024-09-10},
+  url        = {https://www.unicode.org/versions/Unicode16.0.0/UnicodeStandard-16.0.pdf},
+  urldate    = {2025-05-07}}
 %</techdoc-bibliography>
 %<@@=markdown>
 %<*themes-witiko-markdown-techdoc>
@@ -23696,6 +23703,31 @@ Built-in \Hologo{ConTeXt} themes provided with the Markdown package include:
 % were hidden behind the converter functions exposed by the Lua interface (see
 % Section <#sec:luainterface>).
 %
+% To start off, we load a Lua file named `markdown-unicode-data.lua` that
+% contains our implementation of various Unicode algorithms.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local early_warnings = {}
+local unicode_data = require("markdown-unicode-data")
+if metadata.version ~= unicode_data.metadata.version then
+  table.insert(
+    early_warnings,
+    "markdown.lua " .. metadata.version .. " used with " ..
+    "markdown-unicode-data.lua " .. unicode_data.metadata.version .. "."
+  )
+end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% We'll write a second-order file named `markdown-unicode-data-generator.lua`
+% that generates the file `markdown-unicode-data.lua` during the compilation of
+% the Markdown package as we go along, specifically in sections
+% <#sec:unicode-case-folding> and <#sec:unicode-character-categories>.
+%
+% Furthermore, here are some abbreviations that we inherited from the Lunamark
+% library and which are used throughout the Lua implementation.
+%
 % \end{markdown}
 %  \begin{macrocode}
 local upper, format, length =
@@ -24080,9 +24112,27 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-function util.warning(s)
-  io.stderr:write("Warning: " .. s .. "\n")
-end
+util.warning = (function()
+  local function warning(s)
+    io.stderr:write("Warning: " .. s .. "\n")
+  end
+%    \end{macrocode}
+% \iffalse
+%</lua,lua-loader>
+%<*lua>
+% \fi
+% \begin{markdown}
+  for _, message in ipairs(early_warnings) do
+    warning(message)
+  end
+%    \end{macrocode}
+% \iffalse
+%</lua>
+%<*lua,lua-loader>
+% \fi
+% \begin{markdown}
+  return warning
+end)()
 %    \end{macrocode}
 % \iffalse
 %</lua,lua-loader>
@@ -26358,6 +26408,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Slicing
 % Parse the \Opt{slice} option and define \luamdef{writer->slice\_begin},
 % \luamdef{writer->slice\_end}, and \luamdef{writer->is\_writing}. The
 % \luamref{writer->is\_writing} member variable is mutable.
@@ -26397,6 +26448,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Basic Formatter Variables and Functions
 % Define \luamdef{writer->space} as the output format of a space character.
 %
 % \end{markdown}
@@ -26522,6 +26574,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Escaping Special Characters
 % Define tables \luamdef{writer->escaped_uri_chars} and
 % \luamdef{writer->escaped_minimal_strings} containing the mapping from
 % special plain characters and character strings that always need to be
@@ -26636,6 +26689,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatters of Warnings and Errors
 % Define \luamdef{writer->warning} as a function that will transform an input
 % warning `t` with optional more warning text `m` to the output format.
 %
@@ -26662,6 +26716,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatter of Code Spans
 % Define \luamdef{writer->code} as a function that will transform an input
 % inline code span `s` with optional attributes `attributes` to the output
 % format.
@@ -26687,6 +26742,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatter of Hyperlinks
 % Define \luamdef{writer->link} as a function that will transform an input
 % hyperlink to the output format, where `lab` corresponds to the label,
 % `src` to \acro{uri}, `tit` to the title of the link, and `attributes` to
@@ -26715,6 +26771,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatter of Images
 % Define \luamdef{writer->image} as a function that will transform an input
 % image to the output format, where `lab` corresponds to the label, `src`
 % to the \acro{url}, `tit` to the title of the image, and `attributes` to
@@ -26743,6 +26800,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatters of Lists
 % Define \luamdef{writer->bulletlist} as a function that will transform an input
 % bulleted list to the output format, where `items` is an array of the list
 % items and `tight` specifies, whether the list is tight or not.
@@ -26833,6 +26891,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatters of HTML Tags, Elements, and Comments
 % Define \luamdef{writer->inline_html_comment} as a function that will
 % transform the contents of an inline \acro{HTML} comment, to the output
 % format, where `contents` are the contents of the \acro{HTML} comment.
@@ -26875,6 +26934,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatter of Emphasis
 % Define \luamdef{writer->emphasis} as a function that will transform an
 % emphasized span `s` of input text to the output format.
 %
@@ -26887,6 +26947,20 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatter of Strong Emphasis
+% Define \luamdef{writer->strong} as a function that will transform a strongly
+% emphasized span `s` of input text to the output format.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  function self.strong(s)
+    if self.flatten_inlines then return s end
+    return {"\\markdownRendererStrongEmphasis{",s,"}"}
+  end
+%    \end{macrocode}
+% \begin{markdown}
+%
+%#### Formatter of Tickboxes
 % Define \luamdef{writer->tickbox} as a function that will transform a
 % number `f` to the output format.
 %
@@ -26904,18 +26978,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Define \luamdef{writer->strong} as a function that will transform a strongly
-% emphasized span `s` of input text to the output format.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  function self.strong(s)
-    if self.flatten_inlines then return s end
-    return {"\\markdownRendererStrongEmphasis{",s,"}"}
-  end
-%    \end{macrocode}
-% \begin{markdown}
-%
+%#### Formatter of Blockquotes
 % Define \luamdef{writer->blockquote} as a function that will transform an
 % input block quote `s` to the output format.
 %
@@ -26929,6 +26992,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatter of Code Blocks
 % Define \luamdef{writer->verbatim} as a function that will transform an
 % input code block `s` to the output format.
 %
@@ -26943,6 +27007,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatter of Documents
 % Define \luamdef{writer->document} as a function that will transform a
 % document `d` to the output format.
 %
@@ -26977,6 +27042,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatter of Attributes
 % Define \luamdef{writer->attributes} as a function that will transform
 % input attributes `attrs` to the output format.
 %
@@ -27086,6 +27152,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Tracking Active Attributes
 % Define \luamdef{writer->active\_attributes} as a stack of block-level
 % attributes that are currently active. The
 % \luamref{writer->active\_attributes} member variable is mutable.
@@ -27236,8 +27303,30 @@ function M.writer.new(options)
     return buf
   end
 %    \end{macrocode}
+% \iffalse
+%</lua>
+%<*lua-unicode-data-generator>
+% \fi
 % \begin{markdown}
 %
+%#### Unicode Case Folding {#unicode-case-folding}
+% A parser that case-folds a UTF-8-encoded Unicode string using the full
+% mapping (C and F) [@unicode24, Section 3.13.3] is available as the function
+% \luamdef{unicode_data.case_fold}.
+%
+% \end{markdown}
+%  \begin{macrocode}
+;(function()
+  -- TODO
+end)()
+%    \end{macrocode}
+% \iffalse
+%</lua-unicode-data-generator>
+%<*lua>
+% \fi
+% \begin{markdown}
+%
+%#### Automatically Generated Identifiers for Headings
 % Create an auto identifier string by stripping and converting characters from string `s`.
 %
 % \end{markdown}
@@ -27392,6 +27481,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatter of Headings
 % Define \luamdef{writer->heading} as a function that will transform an
 % input heading `s` at level `level` with attributes `attributes` to the
 % output format.
@@ -27479,6 +27569,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Managing State and Deferred Writer Calls
 % Define \luamdef{writer->get_state} as a function that returns the current
 % state of the writer, where the state of a writer are its mutable member
 % variables.
@@ -27599,6 +27690,42 @@ parsers.fail                   = P(false)
 parsers.internal_punctuation   = S(":;,.?")
 parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
 
+parsers.escapable              = parsers.ascii_punctuation
+parsers.anyescaped             = parsers.backslash / ""
+                               * parsers.escapable
+                               + parsers.any
+
+parsers.spacechar              = S("\t ")
+parsers.spacing                = S(" \n\r\t")
+parsers.nonspacechar           = parsers.any - parsers.spacing
+parsers.optionalspace          = parsers.spacechar^0
+
+parsers.normalchar             = parsers.any - (V("SpecialChar")
+                                                + parsers.spacing)
+parsers.eof                    = -parsers.any
+parsers.nonindentspace         = parsers.space^-3 * - parsers.spacechar
+parsers.indent                 = parsers.space^-3 * parsers.tab
+                               + parsers.fourspaces / ""
+parsers.linechar               = P(1 - parsers.newline)
+
+parsers.blankline              = parsers.optionalspace
+                               * parsers.newline / "\n"
+parsers.blanklines             = parsers.blankline^0
+parsers.skipblanklines         = ( parsers.optionalspace
+                                 * parsers.newline)^0
+parsers.indentedline           = parsers.indent    /""
+                               * C( parsers.linechar^1
+                                  * parsers.newline^-1)
+parsers.optionallyindentedline = parsers.indent^-1 /""
+                               * C( parsers.linechar^1
+                                  * parsers.newline^-1)
+parsers.sp                     = parsers.spacing^0
+parsers.spnl                   = parsers.optionalspace
+                               * ( parsers.newline
+                                 * parsers.optionalspace)^-1
+parsers.line                   = parsers.linechar^0 * parsers.newline
+parsers.nonemptyline           = parsers.line - parsers.blankline
+
 %    \end{macrocode}
 % \iffalse
 %</lua>
@@ -27606,16 +27733,15 @@ parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
 % \fi
 % \begin{markdown}
 %
-%### Unicode data
-% This section documents different Unicode character categories recognized by
-% the markdown reader. The parsers for the different categories are organized
-% in the table \luamdef{parsers.unicode_data} according to the number of bytes
-% occupied after conversion to \acro{utf}8.
+%#### Unicode Character Categories {#unicode-character-categories}
+% Low-level parsers of UTF-8-encoded Unicode characters from different
+% categories are organized in table \luamdef{unicode_data.categories} based on
+% the number of bytes they occupy after conversion to UTF-8.
 %
-% All code from this section will be executed during the compilation of
-% the Markdown package and the standard output will be stored in a file
-% named `markdown-unicode-data.lua` with the precompiled parser of Unicode
-% punctuation.
+% The following code from this section will be executed during the compilation
+% of the Markdown package as a part of file
+% `markdown-unicode-data-generator.lua` and the standard output will be stored
+% in a file named `markdown-unicode-data.lua`.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -27749,23 +27875,11 @@ print("return M")
 % \fi
 % \begin{markdown}
 %
-% Back in the Markdown package, we will load the precompiled parsers of
-% Unicode categories.
-%
-% \end{markdown}
-%  \begin{macrocode}
-local unicode_data = require("markdown-unicode-data")
-if metadata.version ~= unicode_data.metadata.version then
-  util.warning(
-    "markdown.lua " .. metadata.version .. " used with " ..
-    "markdown-unicode-data.lua " .. unicode_data.metadata.version .. "."
-  )
-end
-%    \end{macrocode}
-% \begin{markdown}
-%
-% Finally, we define high-level parsers for specific types of characters that
-% are interesting for us.
+% Back in the file `markdown-parser.lua`, we define high-level parsers in table
+% \luamdef{parsers.unicode} based on the low-level parsers in
+% \luamref{unicode_data.categories}. Unlike the latter, the former are
+% invariant to the number of bytes Unicode characters occupy after conversion
+% to UTF-8.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -27784,7 +27898,6 @@ for n = 1, 4 do
 % (punctuation) and S (symbol), as mandated by [the CommonMark standard][1].
 %
 % [1]: https://spec.commonmark.org/0.31.2/#unicode-punctuation-character
-%     (CommonMark Spec, Version 0.31.2 (2024-01-28))
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -27849,42 +27962,6 @@ for n = 1, 4 do
     = parsers.unicode.following_whitespace
     + #whitespace_of_length_n
 end
-
-parsers.escapable              = parsers.ascii_punctuation
-parsers.anyescaped             = parsers.backslash / ""
-                               * parsers.escapable
-                               + parsers.any
-
-parsers.spacechar              = S("\t ")
-parsers.spacing                = S(" \n\r\t")
-parsers.nonspacechar           = parsers.any - parsers.spacing
-parsers.optionalspace          = parsers.spacechar^0
-
-parsers.normalchar             = parsers.any - (V("SpecialChar")
-                                                + parsers.spacing)
-parsers.eof                    = -parsers.any
-parsers.nonindentspace         = parsers.space^-3 * - parsers.spacechar
-parsers.indent                 = parsers.space^-3 * parsers.tab
-                               + parsers.fourspaces / ""
-parsers.linechar               = P(1 - parsers.newline)
-
-parsers.blankline              = parsers.optionalspace
-                               * parsers.newline / "\n"
-parsers.blanklines             = parsers.blankline^0
-parsers.skipblanklines         = ( parsers.optionalspace
-                                 * parsers.newline)^0
-parsers.indentedline           = parsers.indent    /""
-                               * C( parsers.linechar^1
-                                  * parsers.newline^-1)
-parsers.optionallyindentedline = parsers.indent^-1 /""
-                               * C( parsers.linechar^1
-                                  * parsers.newline^-1)
-parsers.sp                     = parsers.spacing^0
-parsers.spnl                   = parsers.optionalspace
-                               * ( parsers.newline
-                                 * parsers.optionalspace)^-1
-parsers.line                   = parsers.linechar^0 * parsers.newline
-parsers.nonemptyline           = parsers.line - parsers.blankline
 %    \end{macrocode}
 % \begin{markdown}
 %
