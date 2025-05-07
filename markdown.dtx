@@ -825,6 +825,13 @@ abbr {
   date       = {2024-12-25},
   url        = {https://ctan.org/pkg/l3kernel},
   urldate    = {2025-01-06}}
+@online{unicode24,
+  author     = {{Unicode Consortium}},
+  title      = {The Unicode Standard},
+  subtitle   = {Version 16.0 -- Core Specification},
+  date       = {2024-09-10},
+  url        = {https://www.unicode.org/versions/Unicode16.0.0/UnicodeStandard-16.0.pdf},
+  urldate    = {2025-05-07}}
 %</techdoc-bibliography>
 %<@@=markdown>
 %<*themes-witiko-markdown-techdoc>
@@ -23715,8 +23722,8 @@ end
 %
 % We'll write a second-order file named `markdown-unicode-data-generator.lua`
 % that generates the file `markdown-unicode-data.lua` during the compilation of
-% the Markdown package as we go along, specifically in Section
-% <#sec:unicode-character-categories>.
+% the Markdown package as we go along, specifically in sections
+% <#sec:unicode-case-folding> and <#sec:unicode-character-categories>.
 %
 % Furthermore, here are some abbreviations that we inherited from the Lunamark
 % library and which are used throughout the Lua implementation.
@@ -27296,6 +27303,27 @@ function M.writer.new(options)
     return buf
   end
 %    \end{macrocode}
+% \iffalse
+%</lua>
+%<*lua-unicode-data-generator>
+% \fi
+% \begin{markdown}
+%
+%#### Unicode Case Folding {#unicode-case-folding}
+% A parser that case-folds a UTF-8-encoded Unicode string using the full
+% mapping (C and F) [@unicode24, Section 3.13.3] is available as the function
+% \luamdef{unicode_data.case_fold}.
+%
+% \end{markdown}
+%  \begin{macrocode}
+;(function()
+  -- TODO
+end)()
+%    \end{macrocode}
+% \iffalse
+%</lua-unicode-data-generator>
+%<*lua>
+% \fi
 % \begin{markdown}
 %
 %#### Automatically Generated Identifiers for Headings
@@ -27706,15 +27734,14 @@ parsers.nonemptyline           = parsers.line - parsers.blankline
 % \begin{markdown}
 %
 %#### Unicode Character Categories {#unicode-character-categories}
-% This section documents different Unicode character categories recognized by
-% the markdown reader. The parsers for the different categories are organized
-% in the table \luamdef{parsers.unicode_data} according to the number of bytes
-% occupied after conversion to \acro{utf}8.
+% Low-level parsers of UTF-8-encoded Unicode characters from different
+% categories are organized in table \luamdef{unicode_data.categories} based on
+% the number of bytes they occupy after conversion to UTF-8.
 %
-% All code from this section will be executed during the compilation of
-% the Markdown package as a part of file `markdown-unicode-data-generator.lua`
-% and the standard output will be stored in a file named
-% `markdown-unicode-data.lua`.
+% The following code from this section will be executed during the compilation
+% of the Markdown package as a part of file
+% `markdown-unicode-data-generator.lua` and the standard output will be stored
+% in a file named `markdown-unicode-data.lua`.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -27848,8 +27875,11 @@ print("return M")
 % \fi
 % \begin{markdown}
 %
-% Back in the Markdown package, we define high-level parsers for specific types
-% of characters that are interesting for us.
+% Back in the file `markdown-parser.lua`, we define high-level parsers in table
+% \luamdef{parsers.unicode} based on the low-level parsers in
+% \luamref{unicode_data.categories}. Unlike the latter, the former are
+% invariant to the number of bytes Unicode characters occupy after conversion
+% to UTF-8.
 %
 % \end{markdown}
 %  \begin{macrocode}
