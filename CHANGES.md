@@ -8,7 +8,7 @@ Fixes:
   (reported by @obskyr in #568, fixed by @witiko in #571)
 
 - Use `status.output_directory` to determine option `outputDir` on MikTeX.
-  (reported by @obskyr in #566, fixed by @gucci-on-fleek, @@cfr42, and @witiko
+  (reported by @obskyr in #566, fixed by @gucci-on-fleek, @cfr42, and @witiko
   on [TeX StackExchange][tse-742209] and in #571)
 
  [tse-742209]: https://tex.stackexchange.com/questions/742209/
