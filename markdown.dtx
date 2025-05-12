@@ -709,13 +709,13 @@ abbr {
   date       = {2017-01-19},
   url        = {https://github.com/iainc/Markdown-Content-Blocks},
   urldate    = {2018-01-08}}
-@book{luatex21,
+@book{luatex25,
   author     = {{Lua\TeX{} development team}},
   title      = {Lua\TeX{} reference manual},
-  date       = {2021-07-23},
-  note       = {Version 1.10 (stable)},
-  url        = {https://www.pragma-ade.com/general/manuals/luatex.pdf},
-  urldate    = {2022-09-30}}
+  date       = {2025-02-01},
+  note       = {Version 1.21},
+  url        = {http://mirrors.ctan.org/systems/doc/luatex/luatex.pdf},
+  urldate    = {2025-05-12}}
 @book{latex17,
   author     = {Braams, Johannes and Carlisle, David and Jeffrey, Alan and
                Lamport, Leslie and Mittelbach, Frank and Rowley, Chris and
@@ -1180,7 +1180,7 @@ end)()
 % \begin{markdown}
 %
 % All the abovelisted modules are statically linked into the current version of
-% the Lua\TeX{} engine~[@luatex21, Section 4.3]. Beside these, we also include
+% the Lua\TeX{} engine~[@luatex25, Section 4.3]. Beside these, we also include
 % the following third-party Lua libraries:
 %
 % \pkg{lua-uni-algos}
@@ -1299,10 +1299,10 @@ hard lt3luabridge
 %
 %     The plain \TeX{} code makes use of the `isdir` method that was added
 %     to the \pkg{Lua File System} library by the Lua\TeX{} engine
-%     developers~[@luatex21, Section 4.2.4].
+%     developers~[@luatex25, Section 4.2.4].
 %
 % The \pkg{Lua File System} module is statically linked into the Lua\TeX{}
-% engine~[@luatex21, Section 4.3].
+% engine~[@luatex25, Section 4.3].
 %
 % Unless you convert markdown documents to \TeX{} manually using the Lua
 % command-line interface (see Section <#sec:lua-cli-interface>), the plain
@@ -12472,10 +12472,10 @@ A PDF document named `document.pdf` should be produced and contain the text
 % Use the \pkg{lt3luabridge} library to determine the default value of the
 % \mref{markdownOptionOutputDir} macro by using one of the following:
 %
-% 1. The `status.output_directory` variable, which is available since Lua\TeX{}
-%    1.18.0 from TeX~Live 2024 and in other \TeX{} distributions like
-%    Mik\TeX{} since ca March 2024. We are only able to read this variable in
-%    Lua\TeX{} and not other \TeX{} engines.
+% 1. The `status.output_directory` variable~[@luatex25, Section 10.2], which is
+%    available since Lua\TeX{} 1.18.0 from TeX~Live 2024 and in other \TeX{}
+%    distributions like Mik\TeX{} since ca March 2024. We are only able to read
+%    this variable in Lua\TeX{} and not other \TeX{} engines.
 %
 % 2. The `TEXMF_OUTPUT_DIRECTORY` environmental variable, which is available
 %    since TeX~Live 2024. We are only able to read this variable in \TeX{} Live
