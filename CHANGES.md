@@ -2,6 +2,11 @@
 
 ## 3.11.3 (2025-05-XX)
 
+Fixes:
+
+- Support .tex files with spaces in the filename.
+  (reported by @obskyr in #568, fixed by @witiko in #571)
+
 Continuous integration:
 
 - Switch to the GitHub Action `softprops/action-gh-release` for automatic
