@@ -3034,10 +3034,24 @@ option.
 %<*tex>
 % \fi
 %  \begin{macrocode}
+\str_new:N
+  \g_@@_unquoted_jobname_str
+\str_set:NV
+  \g_@@_unquoted_jobname_str
+  \c_sys_jobname_str
+\regex_replace_all:nnN
+  { \A ("|') ( .* ) ("|') \Z }
+  { \2 }
+  \g_@@_unquoted_jobname_str
 \@@_add_lua_option:nnn
   { cacheDir }
   { path }
-  { \markdownOptionOutputDir / _markdown_\jobname }
+  {
+    \markdownOptionOutputDir
+    / _markdown_
+    \str_use:N
+      \g_@@_unquoted_jobname_str
+  }
 %    \end{macrocode}
 % \iffalse
 %</tex>
@@ -3248,7 +3262,13 @@ defaultOptions.contentBlocksLanguageMap = "markdown-languages.json"
 \@@_add_lua_option:nnn
   { debugExtensionsFileName }
   { path }
-  { \markdownOptionOutputDir / \jobname .debug-extensions.json }
+  {
+    \markdownOptionOutputDir
+    /
+    \str_use:N
+      \g_@@_unquoted_jobname_str
+    .debug-extensions.json
+  }
 %    \end{macrocode}
 % \iffalse
 %</tex>
@@ -12101,15 +12121,18 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 % from a \TeX{} source. It defaults to `\jobname.markdown.in`.
 %
 % The expansion of this macro must not contain quotation marks (`"`) or
-% backslash symbols (`\`). Mind that \TeX{} engines tend to
-% put quotation marks around `\jobname`, when it contains spaces.
+% backslash symbols (`\`).
 %
 % \end{markdown}
 %  \begin{macrocode}
 \@@_add_plain_tex_option:nnn
   { inputTempFileName }
   { path }
-  { \jobname.markdown.in }
+  {
+    \str_use:N
+      \g_@@_unquoted_jobname_str
+    .markdown.in
+  }
 %    \end{macrocode}
 % \begin{markdown}
 %
