@@ -37344,7 +37344,7 @@ end
 %  \begin{macrocode}
     |markdownIfOption{frozenCache}{}{@
       |immediate|openout|markdownOutputFileStream@
-        |markdownOptionInputTempFileName|relax@
+        "|markdownOptionInputTempFileName"|relax@
       |markdownInfo{@
         Buffering block-level markdown input into the temporary @
         input file "|markdownOptionInputTempFileName" and scanning @
@@ -37571,7 +37571,7 @@ end
         \immediate
           \openout
           \markdownOutputFileStream
-          \markdownOptionInputTempFileName
+          "\markdownOptionInputTempFileName"
           \relax
         \msg_info:nne
           { markdown }
