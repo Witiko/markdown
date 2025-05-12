@@ -12433,8 +12433,7 @@ A PDF document named `document.pdf` should be produced and contain the text
 % \begin{markdown}
 %
 % Use the \pkg{lt3luabridge} library to determine the default value of the
-% \mref{markdownOptionOutputDir} macro by using the environmental variable
-% `TEXMF_OUTPUT_DIRECTORY` that is available since TeX~Live 2024.
+% \mref{markdownOptionOutputDir} macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -12471,8 +12470,16 @@ A PDF document named `document.pdf` should be produced and contain the text
 % \begin{markdown}
 %
 % Use the \pkg{lt3luabridge} library to determine the default value of the
-% \mref{markdownOptionOutputDir} macro by using the environmental variable
-% `TEXMF_OUTPUT_DIRECTORY` that is available since TeX~Live 2024.
+% \mref{markdownOptionOutputDir} macro by using one of the following:
+%
+% 1. The `status.output_directory` variable, which is available since Lua\TeX{}
+%    1.18.0 from TeX~Live 2024 and in other \TeX{} distributions like
+%    Mik\TeX{} since ca March 2024. We are only able to read this variable in
+%    Lua\TeX{} and not other \TeX{} engines.
+%
+% 2. The `TEXMF_OUTPUT_DIRECTORY` environmental variable, which is available
+%    since TeX~Live 2024. We are only able to read this variable in \TeX{} Live
+%    and not some other \TeX{} distributions like Mik\TeX{}.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -12500,7 +12507,7 @@ A PDF document named `document.pdf` should be produced and contain the text
 % \begin{markdown}
 %
 % Set most catcodes to category 12 (other) to ensure that special characters in
-% `TEXMF_OUTPUT_DIRECTORY` such as backslashes (`\`) are not interpreted as
+% the output directory name such as backslashes (`\`) are not interpreted as
 % control sequences.
 %
 % \end{markdown}
@@ -12510,7 +12517,13 @@ A PDF document named `document.pdf` should be produced and contain the text
               \c_str_cctab
             \luabridge_tl_set:Nn
               \l_tmpa_tl
-              { print(os.getenv("TEXMF_OUTPUT_DIRECTORY") or ".") }
+              {
+                print(
+                  (status.output_directory)
+                  or~os.getenv("TEXMF_OUTPUT_DIRECTORY")
+                  or~"."
+                )
+              }
             \tl_gset:NV
               \markdownOptionOutputDir
               \l_tmpa_tl
