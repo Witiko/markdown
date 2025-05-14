@@ -27310,14 +27310,179 @@ function M.writer.new(options)
 % \begin{markdown}
 %
 %#### Unicode Case Folding {#unicode-case-folding}
-% A parser that case-folds a UTF-8-encoded Unicode string using the full
-% mapping (C and F) [@unicode24, Section 3.13.3] is available as the function
-% \luamdef{unicode_data.case_fold}.
+% Low-level parsers that case-fold UTF-8-encoded Unicode characters using the
+% full mapping (C and F) [@unicode24, Section 3.13.3] are organized in table
+% \luamdef{unicode_data.case_fold_mapping} based on the number of bytes they
+% occupy after conversion to UTF-8.
+%
+% The following code from this section will be executed during the compilation
+% of the Markdown package as a part of file
+% `markdown-unicode-data-generator.lua` and the standard output will be stored
+% in a generated file named `markdown-unicode-data.lua`.
+%
+% First, let's define a couple helper functions.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function depth_first_search(node, path, visit, leave)
+  assert(node._type == "intermediate")
+  visit(node, path)
+  for label, child in pairs(node) do
+    if label == "_type" then
+      goto continue
+    end
+    if child._type == "intermediate" then
+      depth_first_search(child, path .. label, visit, leave)
+    else
+      assert(child._type == "leaf")
+      visit(child, path)
+    end
+    ::continue::
+  end
+  leave(node, path)
+end
+local function serialize_byte_parser(byte)
+  if byte == '"' then
+    return "P('" .. byte .. "')"
+  elseif byte == "\\" then
+    return 'P("\\\\")'
+  else
+    return 'P("' .. byte .. '")'
+  end
+end
+local function serialize_replacement(codepoints)
+  local buffer = {'"'}
+  for _, codepoint in ipairs(codepoints) do
+    local code = utf8.char(codepoint)
+    for i = 1, #code do
+      local byte = code:sub(i, i)
+      if byte == '"' then
+        table.insert(buffer, '\\\"')
+      elseif byte == "\\" then
+        table.insert(buffer, "\\\\")
+      else
+        table.insert(buffer, byte)
+      end
+    end
+  end
+  table.insert(buffer, '"')
+  return table.concat(buffer)
+end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, let's define some aliases in the generated file.
+%
+% \end{markdown}
+%  \begin{macrocode}
+print("local P = lpeg.P")
+print("local fail = P(false)")
+print("-- luacheck: push no max line length")
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, let's read the file `CaseFolding.txt`.
 %
 % \end{markdown}
 %  \begin{macrocode}
 ;(function()
-  -- TODO
+  local pathname = assert(kpse.find_file("CaseFolding.txt"),
+    [[Could not locate file "CaseFolding.txt"]])
+  local file = assert(io.open(pathname, "r"),
+    [[Could not open file "CaseFolding.txt"]])
+%    \end{macrocode}
+% \begin{markdown}
+%
+% In order to minimize the size and speed of the parser, we will first
+% construct prefix trees of UTF-8 encodings for all codepoints of a
+% given Unicode category and code length.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local prefix_trees = {}
+  for char_length = 1, 4 do
+    prefix_trees[char_length] = {_type = "intermediate"}
+  end
+  for line in file:lines() do
+    if #line == 0 or line:sub(1, 1) == "#" then
+      goto continue
+    end
+    local raw_from_codepoint, status, raw_to_codepoints
+      = line:match("^(%x+); ([CFST]); ([%x ]+);")
+    assert(raw_from_codepoint ~= nil)
+    assert(status ~= nil)
+    assert(raw_to_codepoints ~= nil)
+    if status ~= "C" and status ~= "F" then
+      goto continue
+    end
+    local from_codepoint = tonumber(raw_from_codepoint, 16)
+    local to_codepoints = {}
+    for raw_codepoint in raw_to_codepoints:gmatch('%x+') do
+      local codepoint = tonumber(raw_codepoint, 16)
+      table.insert(to_codepoints, codepoint)
+    end
+    local from_code = utf8.char(from_codepoint)
+    local node = prefix_trees[#from_code]
+    for i = 1, #from_code do
+      local from_byte = from_code:sub(i, i)
+      if i < #from_code then
+        if node[from_byte] == nil then
+          node[from_byte] = {_type = "intermediate"}
+        end
+        node = node[from_byte]
+      else
+        table.insert(node, {from_byte, to_codepoints, _type = "leaf"})
+      end
+    end
+    ::continue::
+  end
+  assert(file:close())
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, we will construct a parser out of the prefix trees.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  print("M.case_fold_mapping = {}")
+  for length, prefix_tree in pairs(prefix_trees) do
+    local subparsers = {}
+    depth_first_search(prefix_tree, "", function(node, path)
+      if node._type == "leaf" then
+        local from_byte, to_codepoints = table.unpack(node)
+        local suffix = serialize_byte_parser(from_byte)
+          .. " / " .. serialize_replacement(to_codepoints)
+        if subparsers[path] ~= nil then
+          subparsers[path] = subparsers[path] .. " + " .. suffix
+        else
+          subparsers[path] = suffix
+        end
+      end
+    end, function(_, path)
+      if #path > 0 then
+        local byte = path:sub(#path, #path)
+        local parent_path = path:sub(1, #path-1)
+        local prefix = serialize_byte_parser(byte)
+        local suffix
+        if subparsers[path]:find(" %+ ") then
+          suffix = prefix .. " * (" .. subparsers[path] .. ")"
+        else
+          suffix = prefix .. " * " .. subparsers[path]
+        end
+        if subparsers[parent_path] ~= nil then
+          subparsers[parent_path] = subparsers[parent_path]
+                                 .. " + " .. suffix
+        else
+          subparsers[parent_path] = suffix
+        end
+      else
+        print(
+          "M.case_fold_mapping[" .. length .. "] = "
+          .. (subparsers[path] or "fail")
+        )
+      end
+    end)
+  end
 end)()
 %    \end{macrocode}
 % \iffalse
@@ -27741,7 +27906,9 @@ parsers.nonemptyline           = parsers.line - parsers.blankline
 % The following code from this section will be executed during the compilation
 % of the Markdown package as a part of file
 % `markdown-unicode-data-generator.lua` and the standard output will be stored
-% in a file named `markdown-unicode-data.lua`.
+% in a generated file named `markdown-unicode-data.lua`.
+%
+% First, let's read the file `UnicodeData.txt`.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -27754,7 +27921,7 @@ parsers.nonemptyline           = parsers.line - parsers.blankline
 % \begin{markdown}
 %
 % In order to minimize the size and speed of the parser, we will first
-% construct prefixs tree of UTF-8 encodings for all codepoints of a
+% construct prefix trees of UTF-8 encodings for all codepoints of a
 % given Unicode category and code length.
 %
 % \end{markdown}
@@ -27764,7 +27931,7 @@ parsers.nonemptyline           = parsers.line - parsers.blankline
   for _, category in ipairs(categories) do
     prefix_trees[category] = {}
     for char_length = 1, 4 do
-      prefix_trees[category][char_length] = {}
+      prefix_trees[category][char_length] = {_type = "intermediate"}
     end
   end
   for line in file:lines() do
@@ -27781,18 +27948,17 @@ parsers.nonemptyline           = parsers.line - parsers.blankline
         local byte = code:sub(i, i)
         if i < #code then
           if node[byte] == nil then
-            node[byte] = {}
+            node[byte] = {_type = "intermediate"}
           end
           node = node[byte]
         else
-          table.insert(node, byte)
+          table.insert(node, {byte, _type = "leaf"})
         end
       end
       ::continue::
     end
   end
   assert(file:close())
-
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -27800,34 +27966,15 @@ parsers.nonemptyline           = parsers.line - parsers.blankline
 %
 % \end{markdown}
 %  \begin{macrocode}
-  local function depth_first_search(node, path, visit, leave)
-    visit(node, path)
-    for label, child in pairs(node) do
-      if type(child) == "table" then
-        depth_first_search(child, path .. label, visit, leave)
-      else
-        visit(child, path)
-      end
-    end
-    leave(node, path)
-  end
-
   print("M.categories = {}")
-  print("local P = lpeg.P")
-  print("local fail = P(false)")
-  print("-- luacheck: push no max line length")
   for _, category in ipairs(categories) do
     print("M.categories." .. category .. " = {}")
     for length, prefix_tree in pairs(prefix_trees[category]) do
       local subparsers = {}
       depth_first_search(prefix_tree, "", function(node, path)
-        if type(node) == "string" then
-          local suffix
-          if node == "]" then
-            suffix = "P('" .. node .. "')"
-          else
-            suffix = "P([[" .. node .. "]])"
-          end
+        if node._type == "leaf" then
+          local byte = node[1]
+          local suffix = serialize_byte_parser(byte)
           if subparsers[path] ~= nil then
             subparsers[path] = subparsers[path] .. " + " .. suffix
           else
@@ -27838,12 +27985,7 @@ parsers.nonemptyline           = parsers.line - parsers.blankline
         if #path > 0 then
           local byte = path:sub(#path, #path)
           local parent_path = path:sub(1, #path-1)
-          local prefix
-          if byte == "]" then
-            prefix = "P('" .. byte .. "')"
-          else
-            prefix = "P([[" .. byte .. "]])"
-          end
+          local prefix = serialize_byte_parser(byte)
           local suffix
           if subparsers[path]:find(" %+ ") then
             suffix = prefix .. " * (" .. subparsers[path] .. ")"
