@@ -187,7 +187,7 @@ For further information, consult one of the following:
  [tb139]: https://www.tug.org/TUGboat/tb45-1/tb139starynovotny-testing.pdf         "Fast Regression Testing of TeX Packages: The Unreasonable Effectiveness of Batching"
  [tb140]: https://www.tug.org/TUGboat/tb45-2/tb140starynovotny-markdown-themes.pdf "Markdown Themes in Practice"
 
- [tb142-preprint]: https://tug.org/TUGboat/production/46-1/tb142starynovotny-piping-yaml.pdf "Piping YAML files into LaTeX3 key–values"
+ [tb142-preprint]: https://www.overleaf.com/read/gbtmtybxhnjj "Piping YAML files into LaTeX3 key–values"
 
  [tb131-slides]:       https://tug.org/tug2021/assets/pdf/tug2021-novotny-slides.pdf                            "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"
  [tb131-video]:        https://youtu.be/i2GJMnLCZls                                                             "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"
