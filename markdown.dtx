@@ -24339,20 +24339,19 @@ end)()
 %  \begin{macrocode}
 util.casefold = (function()
   local fail, any = P(false), P(1)
-  local grammar = {"fold_word"}
-  grammar.fold_word = Ct(V("fold_character")^0)
-  grammar.fold_character = fail
+  local fold_character, fold_word
+  fold_character = fail
   for n = 1, 4 do
-    grammar.fold_character
-      = grammar.fold_character
+    fold_character
+      = fold_character
       + unicode_data.casefold_mapping[n]
   end
-  grammar.fold_character
-    = grammar.fold_character
+  fold_character
+    = fold_character
     + C(any)
-  grammar = P(grammar)
+  fold_word = Ct(fold_character^0)
   return function(s)
-    return table.concat(lpeg.match(grammar, s))
+    return table.concat(lpeg.match(fold_word, s))
   end
 end)()
 %    \end{macrocode}
