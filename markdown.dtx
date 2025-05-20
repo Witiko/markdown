@@ -709,13 +709,13 @@ abbr {
   date       = {2017-01-19},
   url        = {https://github.com/iainc/Markdown-Content-Blocks},
   urldate    = {2018-01-08}}
-@book{luatex21,
+@book{luatex25,
   author     = {{Lua\TeX{} development team}},
   title      = {Lua\TeX{} reference manual},
-  date       = {2021-07-23},
-  note       = {Version 1.10 (stable)},
-  url        = {https://www.pragma-ade.com/general/manuals/luatex.pdf},
-  urldate    = {2022-09-30}}
+  date       = {2025-02-01},
+  note       = {Version 1.21},
+  url        = {http://mirrors.ctan.org/systems/doc/luatex/luatex.pdf},
+  urldate    = {2025-05-12}}
 @book{latex17,
   author     = {Braams, Johannes and Carlisle, David and Jeffrey, Alan and
                Lamport, Leslie and Mittelbach, Frank and Rowley, Chris and
@@ -1187,7 +1187,7 @@ end)()
 % \begin{markdown}
 %
 % All the abovelisted modules are statically linked into the current version of
-% the Lua\TeX{} engine~[@luatex21, Section 4.3]. Beside these, we also include
+% the Lua\TeX{} engine~[@luatex25, Section 4.3]. Beside these, we also include
 % the following third-party Lua libraries:
 %
 % \pkg{lua-uni-algos}
@@ -1306,10 +1306,10 @@ hard lt3luabridge
 %
 %     The plain \TeX{} code makes use of the `isdir` method that was added
 %     to the \pkg{Lua File System} library by the Lua\TeX{} engine
-%     developers~[@luatex21, Section 4.2.4].
+%     developers~[@luatex25, Section 4.2.4].
 %
 % The \pkg{Lua File System} module is statically linked into the Lua\TeX{}
-% engine~[@luatex21, Section 4.3].
+% engine~[@luatex25, Section 4.3].
 %
 % Unless you convert markdown documents to \TeX{} manually using the Lua
 % command-line interface (see Section <#sec:lua-cli-interface>), the plain
@@ -3041,10 +3041,24 @@ option.
 %<*tex>
 % \fi
 %  \begin{macrocode}
+\str_new:N
+  \g_@@_unquoted_jobname_str
+\str_set:NV
+  \g_@@_unquoted_jobname_str
+  \c_sys_jobname_str
+\regex_replace_all:nnN
+  { \A ("|') ( .* ) ("|') \Z }
+  { \2 }
+  \g_@@_unquoted_jobname_str
 \@@_add_lua_option:nnn
   { cacheDir }
   { path }
-  { \markdownOptionOutputDir / _markdown_\jobname }
+  {
+    \markdownOptionOutputDir
+    / _markdown_
+    \str_use:N
+      \g_@@_unquoted_jobname_str
+  }
 %    \end{macrocode}
 % \iffalse
 %</tex>
@@ -3255,7 +3269,13 @@ defaultOptions.contentBlocksLanguageMap = "markdown-languages.json"
 \@@_add_lua_option:nnn
   { debugExtensionsFileName }
   { path }
-  { \markdownOptionOutputDir / \jobname .debug-extensions.json }
+  {
+    \markdownOptionOutputDir
+    /
+    \str_use:N
+      \g_@@_unquoted_jobname_str
+    .debug-extensions.json
+  }
 %    \end{macrocode}
 % \iffalse
 %</tex>
@@ -12108,15 +12128,18 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 % from a \TeX{} source. It defaults to `\jobname.markdown.in`.
 %
 % The expansion of this macro must not contain quotation marks (`"`) or
-% backslash symbols (`\`). Mind that \TeX{} engines tend to
-% put quotation marks around `\jobname`, when it contains spaces.
+% backslash symbols (`\`).
 %
 % \end{markdown}
 %  \begin{macrocode}
 \@@_add_plain_tex_option:nnn
   { inputTempFileName }
   { path }
-  { \jobname.markdown.in }
+  {
+    \str_use:N
+      \g_@@_unquoted_jobname_str
+    .markdown.in
+  }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -12417,8 +12440,7 @@ A PDF document named `document.pdf` should be produced and contain the text
 % \begin{markdown}
 %
 % Use the \pkg{lt3luabridge} library to determine the default value of the
-% \mref{markdownOptionOutputDir} macro by using the environmental variable
-% `TEXMF_OUTPUT_DIRECTORY` that is available since TeX~Live 2024.
+% \mref{markdownOptionOutputDir} macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -12455,8 +12477,16 @@ A PDF document named `document.pdf` should be produced and contain the text
 % \begin{markdown}
 %
 % Use the \pkg{lt3luabridge} library to determine the default value of the
-% \mref{markdownOptionOutputDir} macro by using the environmental variable
-% `TEXMF_OUTPUT_DIRECTORY` that is available since TeX~Live 2024.
+% \mref{markdownOptionOutputDir} macro by using one of the following:
+%
+% 1. The `status.output_directory` variable~[@luatex25, Section 10.2], which is
+%    available since Lua\TeX{} 1.18.0 from TeX~Live 2024 and in other \TeX{}
+%    distributions like Mik\TeX{} since ca March 2024. We are only able to read
+%    this variable in Lua\TeX{} and not other \TeX{} engines.
+%
+% 2. The `TEXMF_OUTPUT_DIRECTORY` environmental variable, which is available
+%    since TeX~Live 2024. We are only able to read this variable in \TeX{} Live
+%    and not some other \TeX{} distributions like Mik\TeX{}.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -12484,7 +12514,7 @@ A PDF document named `document.pdf` should be produced and contain the text
 % \begin{markdown}
 %
 % Set most catcodes to category 12 (other) to ensure that special characters in
-% `TEXMF_OUTPUT_DIRECTORY` such as backslashes (`\`) are not interpreted as
+% the output directory name such as backslashes (`\`) are not interpreted as
 % control sequences.
 %
 % \end{markdown}
@@ -12494,7 +12524,13 @@ A PDF document named `document.pdf` should be produced and contain the text
               \c_str_cctab
             \luabridge_tl_set:Nn
               \l_tmpa_tl
-              { print(os.getenv("TEXMF_OUTPUT_DIRECTORY") or ".") }
+              {
+                print(
+                  (status.output_directory)
+                  or~os.getenv("TEXMF_OUTPUT_DIRECTORY")
+                  or~"."
+                )
+              }
             \tl_gset:NV
               \markdownOptionOutputDir
               \l_tmpa_tl
@@ -37558,7 +37594,7 @@ end
 %  \begin{macrocode}
     |markdownIfOption{frozenCache}{}{@
       |immediate|openout|markdownOutputFileStream@
-        |markdownOptionInputTempFileName|relax@
+        "|markdownOptionInputTempFileName"|relax@
       |markdownInfo{@
         Buffering block-level markdown input into the temporary @
         input file "|markdownOptionInputTempFileName" and scanning @
@@ -37785,7 +37821,7 @@ end
         \immediate
           \openout
           \markdownOutputFileStream
-          \markdownOptionInputTempFileName
+          "\markdownOptionInputTempFileName"
           \relax
         \msg_info:nne
           { markdown }

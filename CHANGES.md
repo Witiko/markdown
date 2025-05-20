@@ -2,6 +2,17 @@
 
 ## 3.11.3 (2025-05-XX)
 
+Fixes:
+
+- Support .tex files with spaces in the filename.
+  (reported by @obskyr in #568, fixed by @witiko in #571)
+
+- Use `status.output_directory` to determine option `outputDir` on MikTeX.
+  (reported by @obskyr in #566, fixed by @gucci-on-fleek, @cfr42, and @witiko
+  on [TeX StackExchange][tse-742209] and in #571)
+
+ [tse-742209]: https://tex.stackexchange.com/questions/742209/
+
 Continuous integration:
 
 - Switch to the GitHub Action `softprops/action-gh-release` for automatic

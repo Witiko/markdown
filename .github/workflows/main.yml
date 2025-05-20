@@ -46,6 +46,7 @@ jobs:
       - name: Install TeX Live
         uses: teatimeguest/setup-texlive-action@v3
         with:
+          cache: false
           packages: |
             latexmk
             scheme-minimal
@@ -84,6 +85,7 @@ jobs:
       - name: Install TeX Live
         uses: teatimeguest/setup-texlive-action@v3
         with:
+          cache: false
           packages: |
             latexmk
             scheme-minimal
@@ -109,6 +111,7 @@ jobs:
       - name: Install TeX Live
         uses: teatimeguest/setup-texlive-action@v3
         with:
+          cache: false
           packages: |
             expltools
             latexmk
@@ -135,6 +138,7 @@ jobs:
       - name: Install TeX Live
         uses: teatimeguest/setup-texlive-action@v3
         with:
+          cache: false
           packages: |
             latexmk
             scheme-minimal
