@@ -23759,7 +23759,7 @@ end
 % We'll write a second-order file named `markdown-unicode-data-generator.lua`
 % that generates the file `markdown-unicode-data.lua` during the compilation of
 % the Markdown package as we go along, specifically in sections
-% <#sec:unicode-case-folding> and <#sec:unicode-character-categories>.
+% <#sec:unicode-case-folding>, <#sec:unicode-character-classes-and-categories>.
 %
 % Furthermore, here are some abbreviations that we inherited from the Lunamark
 % library and which are used throughout the Lua implementation.
@@ -27965,10 +27965,12 @@ parsers.nonemptyline           = parsers.line - parsers.blankline
 % \fi
 % \begin{markdown}
 %
-%#### Unicode Character Categories {#unicode-character-categories}
+%#### Unicode Character Classes and Categories {#unicode-character-classes-and-categories}
 % Low-level parsers of UTF-8-encoded Unicode characters from different
-% categories are organized in table \luamdef{unicode_data.categories} based on
-% the number of bytes they occupy after conversion to UTF-8.
+% canonical ordering classes [@unicode24, Section 3.11] and general categories
+% [@unicode24, Section 4.5] are organized in tables \luamdef{unicode_data.ccc}
+% and \luamdef{unicode_data.categories}, respectively, based on the number of
+% bytes they occupy after conversion to UTF-8.
 %
 % The following code from this section will be executed during the compilation
 % of the Markdown package as a part of file
