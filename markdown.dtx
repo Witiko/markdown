@@ -2486,18 +2486,6 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
 %    \end{macrocode}
 % \begin{markdown}
 %
-% To interrupt the \mref{\@\@_with_various_cases:nn} function
-% prematurely, use the \mdef{\@\@_with_various_cases_break:} function.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\cs_new:Nn \@@_with_various_cases_break:
-  {
-    \seq_map_break:
-  }
-%    \end{macrocode}
-% \begin{markdown}
-%
 % By default, camelCase and snake\\\_case are supported.
 % Additional cases can be added by adding functions to the
 % \mdef{g_\@\@_cases_seq} sequence.
@@ -2505,7 +2493,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
 % \end{markdown}
 %  \begin{macrocode}
 \seq_new:N \g_@@_cases_seq
-\cs_new:Nn \@@_camel_case:N
+\cs_new:Nn \@@_camel_case:N  % noqa: w401
   {
     \regex_replace_all:nnN
       { _ ([a-z]) }
@@ -2516,7 +2504,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
       { #1 }
   }
 \seq_gput_right:Nn \g_@@_cases_seq { @@_camel_case:N }
-\cs_new:Nn \@@_snake_case:N
+\cs_new:Nn \@@_snake_case:N  % noqa: w401
   {
     \regex_replace_all:nnN
       { ([a-z])([A-Z]) }
@@ -12005,7 +11993,7 @@ you would include the following code in your plain \TeX{} document:
 %
 % \end{markdown}
 %  \begin{macrocode}
-\prg_new_conditional:Nnn
+\prg_new_conditional:Nnn  % noqa: w401
   \@@_if_option:n
   { TF, T, F }
   {
@@ -12709,9 +12697,6 @@ A PDF document named `document.pdf` should be produced and contain the text
   { NV }
 \cs_generate_variant:Nn
   \keys_define:nn
-  { nV }
-\cs_generate_variant:Nn
-  \@@_set_option_value:nn
   { nV }
 \prg_generate_conditional_variant:Nnn
   \str_if_eq:nn
@@ -13457,7 +13442,7 @@ options locally.
   \l_@@_current_snippet_tl
 \prg_new_conditional:Nnn
   \@@_if_snippet_exists:n
-  { TF, T, F }
+  { TF, T }
   {
     \tl_set:NV
       \l_@@_current_snippet_tl
@@ -22117,9 +22102,6 @@ following text:
         \l_tmpa_tl
     }
   }
-\cs_generate_variant:Nn
-  \keys_define:nn
-  { nV }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \begin{markdown}
@@ -23580,7 +23562,7 @@ following text:
 %
 % \end{markdown}
 %  \begin{macrocode}
-\cs_new:Nn \@@_caseless:N
+\cs_new:Nn \@@_caseless:N  % noqa: w401
   {
     \regex_replace_all:nnN
       { ([a-z])([A-Z]) }
@@ -38036,7 +38018,7 @@ end
     The~markdown*~LaTeX~environment~has~been~deprecated~and~will~
     be~removed~in~the~next~major~version~of~the~Markdown~package.
   }
-\cs_generate_variant:Nn
+\cs_generate_variant:Nn  % noqa: e405, w402
   \@@_setup:n
   { V }
 \ExplSyntaxOff
@@ -38070,7 +38052,7 @@ end
 \ExplSyntaxOn
 \prop_new:N \g_@@_latex_loaded_themes_linenos_prop
 \prop_new:N \g_@@_latex_loaded_themes_versions_prop
-\cs_gset:Nn
+\cs_gset:Nn  % noqa: w401
   \@@_load_theme:nnn
   {
 %    \end{macrocode}
@@ -40200,7 +40182,7 @@ end
 \ExplSyntaxOn
 \prop_new:N \g_@@_context_loaded_themes_linenos_prop
 \prop_new:N \g_@@_context_loaded_themes_versions_prop
-\cs_gset:Nn
+\cs_gset:Nn  % noqa: w401
   \@@_load_theme:nnn
   {
 %    \end{macrocode}
