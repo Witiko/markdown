@@ -21606,7 +21606,8 @@ following text:
 %
 % \end{markdown}
 %  \begin{macrocode}
-      \regex_match:NVTF
+      % TODO: Use `\regex_if_match` in TeX Live 2025.
+      \regex_match:NVTF  % noqa: w202
         \c_@@_appending_key_regex
         \l_keys_key_str
         {
@@ -21718,7 +21719,8 @@ following text:
   \msg_error:nnn
   { nnV }
 \prg_generate_conditional_variant:Nnn
-  \regex_match:Nn
+  % TODO: Use `\regex_if_match` in TeX Live 2025.
+  \regex_match:Nn  % noqa: w202
   { NV }
   { TF }
 \prop_new:N
@@ -21753,7 +21755,8 @@ following text:
         \seq_map_inline:cn
           { #2 }
           {
-            \regex_match:NnT
+            % TODO: Use `\regex_if_match` in TeX Live 2025.
+            \regex_match:NnT  % noqa: w202
               \l_tmpa_regex
               { ##1 }
               {
@@ -22374,7 +22377,8 @@ following text:
 %
 % \end{markdown}
 %  \begin{macrocode}
-      \regex_match:NVTF
+      % TODO: Use `\regex_if_match` in TeX Live 2025.
+      \regex_match:NVTF  % noqa: w202
         \c_@@_appending_key_regex
         \l_keys_key_str
         {
