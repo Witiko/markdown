@@ -2,6 +2,12 @@
 
 ## 3.11.4 (2025-06-XX)
 
+Housekeeping:
+
+- Mark uses of the deprecated conditional functions `\regex_match:*` for
+  removal after we have dropped support for TeX Live 2024 and earlier.
+  (8cd8bb5f)
+
 ## 3.11.3 (2025-05-28)
 
 Fixes:
