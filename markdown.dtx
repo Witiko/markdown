@@ -1023,7 +1023,7 @@ pdf\TeX{}, \Hologo{XeTeX} and other \TeX{} engines comes with several limitation
  [issue-573]: https://github.com/Witiko/markdown/issues/573 (Compilation fails if the file name contains spaces)
  [issue-1630]: https://github.com/MiKTeX/miktex/issues/1630 (Environmental variable TEXMF_OUTPUT_DIRECTORY not set by MikTeX binaries)
 
- [^issue-1630]: To support `-output-directory` in MikTeX with engines other than Lua\TeX{}, you must manually set the environmental variable `TEXMF_OUTPUT_DIRECTORY` to the same value.
+ [^issue-1630]: To support `-output-directory` in MikTeX with engines other than Lua\TeX{}, you set either the environmental variable `TEXMF_OUTPUT_DIRECTORY` or the \TeX{} macro `\markdownOptionOutputDir` to the same value.
 
 Installation
 ------------
@@ -12161,9 +12161,6 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 % to make the Lua implementation aware where it should store the helper files.
 % The same limitations apply here as in the case of the
 % \Opt{inputTempFileName} macro.
-%
-% The \mref{markdownOptionOutputDir} macro has been deprecated and will be
-% removed in the next major version of the Markdown package.
 %
 %  [1]: https://github.com/MiKTeX/miktex/issues/1630 (Environmental variable TEXMF_OUTPUT_DIRECTORY not set by MikTeX binaries)
 %
