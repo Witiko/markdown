@@ -7,12 +7,12 @@ Documentation:
 - Document the current limitations of the MikTeX distribution and TeX engines
   other than LuaTeX. (reported by @obskyr in #566 and by @viocha in #573,
   escalated upstream by @witiko in [miktex/miktex#1630][miktex-1630],
-  documented by @witiko in #574)
+  documented by @witiko in #574 and [witiko/lt3luabridge#32][lt3luabridge-32])
 
   These are the current limitations:
   1. The filenames of your .tex files may not contain spaces, see also #573.
   2. If `-output-directory` is provided, it may not contain spaces and it won't be
-     automatically detected by Mik\TeX{}, see also [miktex/miktex#1630][miktex-1630].
+     automatically detected by MikTeX, see also [miktex/miktex#1630][miktex-1630].
 
 Housekeeping:
 
@@ -31,6 +31,7 @@ Deprecation:
   option. Therefore, it doesn't make sense to deprecate it.
 
  [miktex-1630]: https://github.com/MiKTeX/miktex/issues/1630
+ [lt3luabridge-32]: https://github.com/Witiko/lt3luabridge/pull/32
 
 ## 3.11.3 (2025-05-28)
 
