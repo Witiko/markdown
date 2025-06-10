@@ -198,6 +198,7 @@ markdown-transcluded.md: markdown.md markdown-interfaces.md markdown-options.md 
 	    -e 's#\\TeX{}#<span class="tex">T<sub>e</sub>X</span>#g' \
 	    -e 's#\\LaTeX{}#<span class="latex">L<sup>a</sup>T<sub>e</sub>X</span>#g' \
 	    -e 's#\\Hologo{ConTeXt}#Con<span class="tex">T<sub>e</sub>X</span>t#g' \
+	    -e 's#\\Hologo{XeTeX}#Xe<span class="tex">T<sub>e</sub>X</span>t#g' \
 	    -e 's#\\\(Opt\|pkg\){\([^}]*\)}#<code><strong>\2</strong></code>#g' \
 	    -e 's#\\,# #g' \
 	    -e 's#\\meta{\([^}]*\)}#\&LeftAngleBracket;*\1*\&RightAngleBracket;#g' \

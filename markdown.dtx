@@ -1009,9 +1009,21 @@ If you are using an older, incomplete, or atypical \TeX{} distribution, please
 consult the [technical documentation][techdoc] for a detailed list of
 requirements.
 
+You are also advised to use Lua\TeX{} with the Markdown Package for \TeX{}. Using
+pdf\TeX{}, \Hologo{XeTeX} and other \TeX{} engines comes with several limitations:
+
+ 1. The filenames of your .tex files may not contain spaces, see also [#573][issue-573].
+ 2. If `-output-directory` is provided, it may not contain spaces and it won't be
+    automatically detected by Mik\TeX{}, see also [miktex/miktex#1630][issue-1630].[^issue-1630]
+
  [docker]: https://hub.docker.com/r/witiko/markdown/tags (witiko/markdown - Docker Image)
  [tl]: https://www.tug.org/texlive/ (TeX Live - TeX Users Group)
  [mik]: https://miktex.org/ (Home - MiKTeXorg)
+
+ [issue-573]: https://github.com/Witiko/markdown/issues/573 (Compilation fails if the file name contains spaces)
+ [issue-1630]: https://github.com/MiKTeX/miktex/issues/1630 (Environmental variable TEXMF_OUTPUT_DIRECTORY not set by MikTeX binaries)
+
+ [^issue-1630]: To support `-output-directory` in MikTeX with engines other than Lua\TeX{}, you set either the environmental variable `TEXMF_OUTPUT_DIRECTORY` or the \TeX{} macro `\markdownOptionOutputDir` to the same value.
 
 Installation
 ------------
@@ -1269,9 +1281,16 @@ hard l3kernel
 %
 % \pkg{lt3luabridge}
 %
-%:    A package that allows us to execute Lua code with LuaTeX as well as
+%:    A package that allows us to execute Lua code with Lua\TeX{} as well as
 %     with other TeX engines that provide the *shell escape* capability,
 %     which allows them to execute code with the system's shell.
+%
+%     Note that this support for \TeX{} engines other than Lua\TeX{} comes with
+%     some limitations with respect to file and directory names. Specifically,
+%     the filenames of your .tex files [may not contain spaces][1]. If
+%     `-output-directory` is provided, it may not contain spaces either.
+%
+% [1]: https://github.com/Witiko/markdown/issues/573 (Compilation fails if the file name contains spaces)
 %
 % \end{markdown}
 % \iffalse
@@ -11663,7 +11682,8 @@ pdftex --shell-escape document.tex
 % \mref{markdownEnd} macro to produce special effects before and after the
 % markdown block.
 %
-% There are several limitations to the macros you need to be aware of.
+% There are several limitations to the macros you need to be aware of:
+%
 % The first limitation concerns the \mref{markdownEnd} macro, which must be
 % visible directly from the input line buffer (it may not be produced as a
 % result of input expansion). Otherwise, it will not be recognized as the end
@@ -12130,14 +12150,19 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 % option defaults to `.` or, since \TeX{} Live 2024, to the value of the
 % `-output-directory` option of your \TeX{} engine.
 %
+% In Mik\TeX{}, this automatic detection is [currently only supported with
+% Lua\TeX{}][1]. If you need to use Mik\TeX{} and cannot use Lua\TeX{}, you can
+% either a) fix the automatic detection by setting the environmental variable
+% `TEXMF_OUTPUT_DIRECTORY` manually or by setting the
+% \mref{markdownOptionOutputDir} option manually.
+%
 % The path must be set to the same value as the `-output-directory` option of
 % your \TeX{} engine for the package to function correctly. We need this macro
 % to make the Lua implementation aware where it should store the helper files.
 % The same limitations apply here as in the case of the
 % \Opt{inputTempFileName} macro.
 %
-% The \mref{markdownOptionOutputDir} macro has been deprecated and will be
-% removed in the next major version of the Markdown package.
+%  [1]: https://github.com/MiKTeX/miktex/issues/1630 (Environmental variable TEXMF_OUTPUT_DIRECTORY not set by MikTeX binaries)
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -12466,7 +12491,7 @@ A PDF document named `document.pdf` should be produced and contain the text
 %    this variable in Lua\TeX{} and not other \TeX{} engines.
 %
 % 2. The `TEXMF_OUTPUT_DIRECTORY` environmental variable, which is available
-%    since TeX~Live 2024. We are only able to read this variable in \TeX{} Live
+%    since \TeX{}~Live 2024. We are only able to read this variable in \TeX{} Live
 %    and not some other \TeX{} distributions like Mik\TeX{}.
 %
 % \end{markdown}
