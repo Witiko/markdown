@@ -28,7 +28,6 @@ LUACLI_OPTIONS=\
   texMathDoubleBackslash=true \
   texMathSingleBackslash=true
 OUTPUT=\
-  context-mkiv.pdf \
   latex-pdftex.pdf latex-xetex.pdf latex-luatex.pdf \
   latex-tex4ht.html latex-tex4ht.css \
   optex.pdf
