@@ -329,7 +329,7 @@ then
 fi
 
 mtxrun --generate
-mtxrun --luatex --generate
+texlua /usr/bin/mtxrun.lua --luatex --generate
 
 if echo ${TEXLIVE_TAG} | grep -q latest-minimal
 then
