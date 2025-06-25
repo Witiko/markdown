@@ -180,14 +180,15 @@ mkdir -p               ${INSTALL_DIR}/scripts/lua-tinyyaml/
 wget https://mirrors.ctan.org/macros/luatex/generic/lua-tinyyaml/tinyyaml.lua \
                     -O ${INSTALL_DIR}/scripts/lua-tinyyaml/tinyyaml.lua
 
+# Reindex the TeX directory structure
+texhash
+
 # Generate the ConTeXt file database
 if echo ${TEXLIVE_TAG} | { ! grep -q latest-minimal; }
 then
   mtxrun --generate
+  mtxrun --luatex --generate
 fi
-
-# Reindex the TeX directory structure
-texhash
 
 # Produce the complete distribution archive of the Markdown package
 if [ ${DEV_IMAGE} = false ] && echo ${TEXLIVE_TAG} | { ! grep -q latest-minimal; }
@@ -317,22 +318,24 @@ set -o xtrace
 ln -s ${INSTALL_DIR}/scripts/markdown/markdown-cli.lua       ${BINARY_DIR}/markdown-cli
 ln -s ${INSTALL_DIR}/scripts/markdown/markdown2tex.lua       ${BINARY_DIR}/markdown2tex
 
+# Reindex the TeX directory structure
+texhash
+
 # Generate the ConTeXt file database
 if echo ${TEXLIVE_TAG} | grep -q latest-minimal
 then
   # A temporary fix for ConTeXt, see <https://gitlab.com/islandoftex/images/texlive/-/issues/30>.
   sed -i '/package.loaded\["data-ini"\]/a if os.selfpath then environment.ownbin=lfs.symlinktarget(os.selfpath..io.fileseparator..os.selfname);environment.ownpath=environment.ownbin:match("^.*"..io.fileseparator) else environment.ownpath=kpse.new("luatex"):var_value("SELFAUTOLOC");environment.ownbin=environment.ownpath..io.fileseparator..(arg[-2] or arg[-1] or arg[0] or "luatex"):match("[^"..io.fileseparator.."]*$") end' /usr/bin/mtxrun.lua || true
 fi
+
 mtxrun --generate
+mtxrun --luatex --generate
+
 if echo ${TEXLIVE_TAG} | grep -q latest-minimal
 then
-  texlua /usr/bin/mtxrun.lua --luatex --generate
   context --make
   context --luatex --make
 fi
-
-# Reindex the TeX directory structure
-texhash
 
 # Remove the build directory
 rm -rfv ${BUILD_DIR}
