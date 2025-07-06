@@ -7,7 +7,8 @@ Fixes:
 - Correctly regenerate ConTeXT databases in `Dockerfile`. (reported by @witiko
   in gucci-on-fleek/context-packaging#2 and #575, fixed by @witiko and
   @gucci-on-fleek in gucci-on-fleek/context-packaging@0459634,
-  gucci-on-fleek/context-packaging@f8ee60e, d4c0054, 6fbd4dc, ccf580b, 850bef88)
+  gucci-on-fleek/context-packaging@f8ee60e, d4c0054, 6fbd4dc, ccf580b, 850bef8,
+  and 53a3335)
 
 ## 3.11.4 (2025-06-24)
 
