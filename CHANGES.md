@@ -10,6 +10,11 @@ Fixes:
   gucci-on-fleek/context-packaging@f8ee60e, d4c0054, 6fbd4dc, ccf580b, 850bef8,
   and 53a3335)
 
+Continuous integration:
+
+- Rename GitHub Action `teatimeguest/setup-texlive-action@v3` to `TeX-Live/...`.
+  (reported by @pablogonz in #576, fixed by @witiko in 28ba10b5)
+
 ## 3.11.4 (2025-06-24)
 
 Documentation:
