@@ -44,7 +44,7 @@ jobs:
           repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
           ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
       - name: Install TeX Live
-        uses: teatimeguest/setup-texlive-action@v3
+        uses: TeX-Live/setup-texlive-action@v3
         with:
           cache: false
           packages: |
@@ -83,7 +83,7 @@ jobs:
           repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
           ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
       - name: Install TeX Live
-        uses: teatimeguest/setup-texlive-action@v3
+        uses: TeX-Live/setup-texlive-action@v3
         with:
           cache: false
           packages: |
@@ -109,7 +109,7 @@ jobs:
           repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
           ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
       - name: Install TeX Live
-        uses: teatimeguest/setup-texlive-action@v3
+        uses: TeX-Live/setup-texlive-action@v3
         with:
           cache: false
           packages: |
@@ -136,7 +136,7 @@ jobs:
           repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
           ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
       - name: Install TeX Live
-        uses: teatimeguest/setup-texlive-action@v3
+        uses: TeX-Live/setup-texlive-action@v3
         with:
           cache: false
           packages: |
