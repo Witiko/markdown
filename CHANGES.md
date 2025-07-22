@@ -10,6 +10,12 @@ Fixes:
   gucci-on-fleek/context-packaging@f8ee60e, d4c0054, 6fbd4dc, ccf580b, 850bef8,
   and 53a3335)
 
+Defaults:
+
+- In LaTeX, load enumitem instead of paralist when the user has expressed an
+  intent to use new tag-friendly code by writing `\DocumentMetadata`.
+  (reported by @witiko in #578, fixed by @witiko and @u-fischer in #579)
+
 Continuous integration:
 
 - Rename GitHub Action `teatimeguest/setup-texlive-action@v3` to `TeX-Live/...`.
