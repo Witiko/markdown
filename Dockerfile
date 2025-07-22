@@ -191,18 +191,17 @@ fi
 # Reindex the TeX directory structure
 texhash
 
-# Install the current pkgcheck
-git clone https://codeberg.org/ManfredLotz/pkgcheck.git
-pushd pkgcheck
-  wget https://codeberg.org/ManfredLotz/pkgcheck/releases/download/"$(git describe --tags --abbrev=0)"/pkgcheck-x86_64-unknown-linux-musl \
-        -O ${BINARY_DIR}/pkgcheck
-  chmod +x ${BINARY_DIR}/pkgcheck
-  hash -r
-popd
-
 # Produce the complete distribution archive of the Markdown package
 if [ ${DEV_IMAGE} = false ] && echo ${TEXLIVE_TAG} | { ! grep -q latest-minimal; }
 then
+  # Install the current pkgcheck
+  git clone https://codeberg.org/ManfredLotz/pkgcheck.git
+  pushd pkgcheck
+    wget https://codeberg.org/ManfredLotz/pkgcheck/releases/download/"$(git describe --tags --abbrev=0)"/pkgcheck-x86_64-unknown-linux-musl \
+          -O ${BINARY_DIR}/pkgcheck
+    chmod +x ${BINARY_DIR}/pkgcheck
+    hash -r
+  popd
   make -C ${BUILD_DIR} dist NO_DOCUMENTATION=false
 else
   make -C ${BUILD_DIR} dist NO_DOCUMENTATION=true
