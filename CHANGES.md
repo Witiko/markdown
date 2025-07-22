@@ -21,6 +21,9 @@ Continuous integration:
 - Rename GitHub Action `teatimeguest/setup-texlive-action@v3` to `TeX-Live/...`.
   (reported by @pablogonz in #576, fixed by @witiko in 28ba10b5)
 
+- Use current pkgcheck. (reported by @manfredlotz via email and by @witiko
+  in #580, fixed in #581)
+
 ## 3.11.4 (2025-06-24)
 
 Documentation:

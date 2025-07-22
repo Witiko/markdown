@@ -82,6 +82,8 @@ ENV TEXMFLOCAL=${INSTALL_DIR}
 
 COPY . ${BUILD_DIR}/
 
+SHELL ["/bin/bash", "-c"]
+
 RUN <<EOF
 
 set -o errexit
@@ -167,18 +169,18 @@ ln -s ${INSTALL_DIR}/scripts/markdown/markdown2tex.lua       ${BINARY_DIR}/markd
 
 # Install the current lt3luabridge package
 git clone https://github.com/witiko/lt3luabridge.git
-cd lt3luabridge
-luatex lt3luabridge.ins
-
-mkdir -p               ${INSTALL_DIR}/tex/generic/lt3luabridge/
-cp lt3luabridge.tex    ${INSTALL_DIR}/tex/generic/lt3luabridge/
-cp lt3luabridge.sty    ${INSTALL_DIR}/tex/generic/lt3luabridge/
-cp t-lt3luabridge.tex  ${INSTALL_DIR}/tex/generic/lt3luabridge/
+pushd lt3luabridge
+  luatex lt3luabridge.ins
+  mkdir -p               ${INSTALL_DIR}/tex/generic/lt3luabridge/
+  cp lt3luabridge.tex    ${INSTALL_DIR}/tex/generic/lt3luabridge/
+  cp lt3luabridge.sty    ${INSTALL_DIR}/tex/generic/lt3luabridge/
+  cp t-lt3luabridge.tex  ${INSTALL_DIR}/tex/generic/lt3luabridge/
+popd
 
 # Install the current tinyyaml package
-mkdir -p               ${INSTALL_DIR}/scripts/lua-tinyyaml/
+mkdir -p ${INSTALL_DIR}/scripts/lua-tinyyaml/
 wget https://mirrors.ctan.org/macros/luatex/generic/lua-tinyyaml/tinyyaml.lua \
-                    -O ${INSTALL_DIR}/scripts/lua-tinyyaml/tinyyaml.lua
+      -O ${INSTALL_DIR}/scripts/lua-tinyyaml/tinyyaml.lua
 
 # Generate the ConTeXt file database
 if echo ${TEXLIVE_TAG} | { ! grep -q latest-minimal; }
@@ -192,6 +194,14 @@ texhash
 # Produce the complete distribution archive of the Markdown package
 if [ ${DEV_IMAGE} = false ] && echo ${TEXLIVE_TAG} | { ! grep -q latest-minimal; }
 then
+  # Install the current pkgcheck
+  git clone https://codeberg.org/ManfredLotz/pkgcheck.git
+  pushd pkgcheck
+    wget https://codeberg.org/ManfredLotz/pkgcheck/releases/download/"$(git describe --tags --abbrev=0)"/pkgcheck-x86_64-unknown-linux-musl \
+          -O ${BINARY_DIR}/pkgcheck
+    chmod +x ${BINARY_DIR}/pkgcheck
+    hash -r
+  popd
   make -C ${BUILD_DIR} dist NO_DOCUMENTATION=false
 else
   make -C ${BUILD_DIR} dist NO_DOCUMENTATION=true
@@ -235,6 +245,8 @@ ENV TEXMFLOCAL=${INSTALL_DIR}
 
 COPY --from=build ${BUILD_DIR}/DEPENDS.txt ${BUILD_DIR}/DEPENDS.txt
 COPY --from=build ${BUILD_DIR}/tests/DEPENDS.txt ${BUILD_DIR}/tests/DEPENDS.txt
+
+SHELL ["/bin/bash", "-c"]
 
 RUN <<EOF
 
