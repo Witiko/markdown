@@ -10,7 +10,7 @@ AUXFILES=markdown.bbl markdown.cb markdown.cb2 markdown.glo markdown.bbl \
   markdown-options.md markdown-tokens.md $(TECHNICAL_DOCUMENTATION_RESOURCES) \
   $(VERSION_FILE) $(RAW_DEPENDENCIES) markdown-unicode-data-generator.lua \
   markdown-transcluded.md
-AUXDIRS=_minted-markdown _markdown_markdown markdown pkgcheck
+AUXDIRS=_minted-markdown _markdown_markdown markdown
 TDSARCHIVE=markdown.tds.zip
 CTANARCHIVE=markdown.ctan.zip
 DISTARCHIVE=markdown.zip
@@ -219,9 +219,8 @@ dist: implode
 	if [[ '$(NO_DOCUMENTATION)' != true ]]; \
 	then \
 	    set -e -o xtrace; \
-	    git clone https://gitlab.com/Lotz/pkgcheck.git; \
 	    unzip $(CTANARCHIVE) -d markdown; \
-	    pkgcheck/bin/pkgcheck -d markdown/markdown -T $(TDSARCHIVE); \
+	    pkgcheck -d markdown/markdown -T $(TDSARCHIVE); \
 	fi
 	$(MAKE) clean
 
