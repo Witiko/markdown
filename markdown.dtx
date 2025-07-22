@@ -38396,10 +38396,10 @@ end
 % and the current document class is not \pkg{beamer}, use a package that
 % provides support for tight and fancy lists.
 %
-% If either the package \pkg{paralist} or the package \pkg{enumitem} have already
-% been loaded, use them. Otherwise, if the option \Opt{experimental} or any test
-% phase has been enabled, use the package \pkg{enumitem}. Otherwise, use the
-% package \pkg{paralist}.
+% If either the package \pkg{paralist} or the package \pkg{enumitem} have
+% already been loaded, use them. Otherwise, if the option \Opt{experimental}
+% or the command \mref{DocumentMetadata} have been used, use the package
+% \pkg{enumitem}. Otherwise, use the package \pkg{paralist}.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -38449,64 +38449,23 @@ end
     ! \g_@@_beamer_paralist_or_enumitem_bool
   }
   {
-    \bool_if:nTF
-      {
-        \bool_lazy_or_p:nn
-          {
-            \str_if_eq_p:en
-              { \markdownThemeVersion }
-              { experimental }
-          }
-          {
-            \bool_lazy_and_p:nn
-              {
-                \prop_if_exist_p:N
-                  \g__pdfmanagement_documentproperties_prop
-              }
-              {
-                \bool_lazy_any_p:n
-                  {
-                    {
-                      \prop_if_in_p:Nn
-                        \g__pdfmanagement_documentproperties_prop
-                        { document / testphase / phase-I }
-                    }
-                    {
-                      \prop_if_in_p:Nn
-                        \g__pdfmanagement_documentproperties_prop
-                        { document / testphase / phase-II }
-                    }
-                    {
-                      \prop_if_in_p:Nn
-                        \g__pdfmanagement_documentproperties_prop
-                        { document / testphase / phase-III }
-                    }
-                    {
-                      \prop_if_in_p:Nn
-                        \g__pdfmanagement_documentproperties_prop
-                        { document / testphase / phase-IV }
-                    }
-                    {
-                      \prop_if_in_p:Nn
-                        \g__pdfmanagement_documentproperties_prop
-                        { document / testphase / phase-V }
-                    }
-                    {
-                      \prop_if_in_p:Nn
-                        \g__pdfmanagement_documentproperties_prop
-                        { document / testphase / phase-VI }
-                    }
-                  }
-              }
-          }
-      }
+    \str_if_eq:enTF
+      { \markdownThemeVersion }
+      { experimental }
       {
         \RequirePackage
           { enumitem }
       }
       {
-        \RequirePackage
-          { paralist }
+        \IfDocumentMetadataTF
+          {
+            \RequirePackage
+              { enumitem }
+          }
+          {
+            \RequirePackage
+              { paralist }
+          }
       }
   }
 \ExplSyntaxOff
