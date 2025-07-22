@@ -82,6 +82,8 @@ ENV TEXMFLOCAL=${INSTALL_DIR}
 
 COPY . ${BUILD_DIR}/
 
+SHELL ["/bin/bash", "-c"]
+
 RUN <<EOF
 
 set -o errexit
@@ -244,6 +246,8 @@ ENV TEXMFLOCAL=${INSTALL_DIR}
 
 COPY --from=build ${BUILD_DIR}/DEPENDS.txt ${BUILD_DIR}/DEPENDS.txt
 COPY --from=build ${BUILD_DIR}/tests/DEPENDS.txt ${BUILD_DIR}/tests/DEPENDS.txt
+
+SHELL ["/bin/bash", "-c"]
 
 RUN <<EOF
 
