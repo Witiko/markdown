@@ -319,6 +319,9 @@ EOF
 # Install the Markdown package and the current lt3luabridge and tinyyaml packages
 COPY --from=build ${BUILD_DIR}/dist ${INSTALL_DIR}/
 
+# Install the current pkgcheck
+COPY --from=build ${BINARY_DIR}/pkgcheck* ${BINARY_DIR}/
+
 RUN <<EOF
 
 set -o errexit
