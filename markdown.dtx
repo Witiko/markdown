@@ -24097,9 +24097,7 @@ end)()
       end)
     end
   end
-  print("-- luacheck: pop")
 end)()
-print("return M")
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -24109,7 +24107,99 @@ print("return M")
 % \luamdef{unicode_data.ccc} based on the number of bytes they occupy
 % after conversion to UTF-8.
 %
+% First, let's read the file `UnicodeData.txt`.
+%
 % \end{markdown}
+%  \begin{macrocode}
+;(function()
+  local pathname = assert(kpse.find_file("UnicodeData.txt"),
+    [[Could not locate file "UnicodeData.txt"]])
+  local file = assert(io.open(pathname, "r"),
+    [[Could not open file "UnicodeData.txt"]])
+%    \end{macrocode}
+% \begin{markdown}
+%
+% In order to minimize the size and speed of the parser, we will first
+% construct prefix trees of UTF-8 encodings for all codepoints of a
+% given Unicode combining class and code length.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local prefix_trees = {}
+  for char_length = 1, 4 do
+    prefix_trees[char_length] = {_type = "intermediate"}
+  end
+  for line in file:lines() do
+    local codepoint, combining_class = line:match("^(%x+);[^;]*;%a*;(%d+)")
+    combining_class = tonumber(combining_class)
+    if combining_class <= 0 then
+      goto continue
+    end
+    local code = utf8.char(tonumber(codepoint, 16))
+    local node = prefix_trees[#code]
+    for i = 1, #code do
+      local byte = code:sub(i, i)
+      if i < #code then
+        if node[byte] == nil then
+          node[byte] = {_type = "intermediate"}
+        end
+        node = node[byte]
+      else
+        table.insert(node, {byte, combining_class, _type = "leaf"})
+      end
+    end
+    ::continue::
+  end
+  assert(file:close())
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, we will construct parsers out of the prefix trees.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  print("M.ccc = {}")
+  for length, prefix_tree in pairs(prefix_trees) do
+    local subparsers = {}
+    depth_first_search(prefix_tree, "", function(node, path)
+      if node._type == "leaf" then
+        local byte, combining_class = table.unpack(node)
+        local suffix = serialize_byte_parser(byte)
+          .. " / " .. tostring(combining_class)
+        if subparsers[path] ~= nil then
+          subparsers[path] = subparsers[path] .. " + " .. suffix
+        else
+          subparsers[path] = suffix
+        end
+      end
+    end, function(_, path)
+      if #path > 0 then
+        local byte = path:sub(#path, #path)
+        local parent_path = path:sub(1, #path-1)
+        local prefix = serialize_byte_parser(byte)
+        local suffix
+        if subparsers[path]:find(" %+ ") then
+          suffix = prefix .. " * (" .. subparsers[path] .. ")"
+        else
+          suffix = prefix .. " * " .. subparsers[path]
+        end
+        if subparsers[parent_path] ~= nil then
+          subparsers[parent_path] = subparsers[parent_path]
+                                 .. " + " .. suffix
+        else
+          subparsers[parent_path] = suffix
+        end
+      else
+        print(
+          "M.ccc[" .. length .. "] = " .. (subparsers[path] or "fail")
+        )
+      end
+    end)
+  end
+end)()
+print("-- luacheck: pop")
+print("return M")
+%    \end{macrocode}
 % \iffalse
 %</lua-unicode-data-generator>
 %<*lua>
