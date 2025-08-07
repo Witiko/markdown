@@ -23739,6 +23739,20 @@ Built-in \Hologo{ConTeXt} themes provided with the Markdown package include:
 % were hidden behind the converter functions exposed by the Lua interface (see
 % Section <#sec:luainterface>).
 %
+% Furthermore, here are some abbreviations that we inherited from the Lunamark
+% library and which are used throughout the Lua implementation.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local upper, format, length =
+  string.upper, string.format, string.len
+local P, R, S, V, C, Cg, Cb, Cmt, Cc, Ct, B, Cs, Cp, any =
+  lpeg.P, lpeg.R, lpeg.S, lpeg.V, lpeg.C, lpeg.Cg, lpeg.Cb,
+  lpeg.Cmt, lpeg.Cc, lpeg.Ct, lpeg.B, lpeg.Cs, lpeg.Cp, lpeg.P(1)
+%    \end{macrocode}
+% \begin{markdown}
+%
+%# Unicode Support
 % To start off, we load a Lua file named `markdown-unicode-data.lua` that
 % contains our implementation of various Unicode algorithms.
 %
@@ -23756,38 +23770,17 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% We'll write a second-order file named `markdown-unicode-data-generator.lua`
-% that generates the file `markdown-unicode-data.lua` during the compilation of
-% the Markdown package as we go along, specifically in sections
-% <#sec:unicode-case-folding>, <#sec:unicode-character-classes-and-categories>.
-%
-% Furthermore, here are some abbreviations that we inherited from the Lunamark
-% library and which are used throughout the Lua implementation.
+% In the following subsections, we'll write a second-order file named
+% `markdown-unicode-data-generator.lua`. The code from this file will be
+% executed during the compilation of the Markdown package and the standard
+% output will be stored in a generated file named `markdown-unicode-data.lua`.
 %
 % \end{markdown}
-%  \begin{macrocode}
-local upper, format, length =
-  string.upper, string.format, string.len
-local P, R, S, V, C, Cg, Cb, Cmt, Cc, Ct, B, Cs, Cp, any =
-  lpeg.P, lpeg.R, lpeg.S, lpeg.V, lpeg.C, lpeg.Cg, lpeg.Cb,
-  lpeg.Cmt, lpeg.Cc, lpeg.Ct, lpeg.B, lpeg.Cs, lpeg.Cp, lpeg.P(1)
-%    \end{macrocode}
 % \iffalse
 %</lua>
 %<*lua-unicode-data-generator>
 % \fi
 % \begin{markdown}
-%
-%#### Unicode Case Folding {#unicode-case-folding}
-% Low-level parsers that case-fold UTF-8-encoded Unicode characters using the
-% full mapping (C and F) [@unicode24, Section 3.13.3] are organized in table
-% \luamdef{unicode_data.casefold_mapping} based on the number of bytes they
-% occupy after conversion to UTF-8.
-%
-% The following code from this section will be executed during the compilation
-% of the Markdown package as a part of file
-% `markdown-unicode-data-generator.lua` and the standard output will be stored
-% in a generated file named `markdown-unicode-data.lua`.
 %
 % First, let's define a couple helper functions.
 %
@@ -23846,14 +23839,20 @@ end
 %  \begin{macrocode}
 print("local P = lpeg.P")
 print("local fail = P(false)")
-print("-- luacheck: push no max line length")
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Next, let's read the file `CaseFolding.txt`.
+%#### Case Folding {#unicode-case-folding}
+% Low-level parsers that case-fold UTF-8-encoded Unicode characters using the
+% full mapping (C and F) [@unicode24, Section 3.13.3] are organized in table
+% \luamdef{unicode_data.casefold_mapping} based on the number of bytes they
+% occupy after conversion to UTF-8.
+%
+% First, let's read the file `CaseFolding.txt`.
 %
 % \end{markdown}
 %  \begin{macrocode}
+print("-- luacheck: push no max line length")
 ;(function()
   local pathname = assert(kpse.find_file("CaseFolding.txt"),
     [[Could not locate file "CaseFolding.txt"]])
@@ -23954,12 +23953,122 @@ print("-- luacheck: push no max line length")
   end
 end)()
 %    \end{macrocode}
+% \begin{markdown}
+%
+%#### Character Classes and Categories {#unicode-character-classes-and-categories}
+% Low-level parsers of UTF-8-encoded Unicode characters from different
+% canonical ordering classes [@unicode24, Section 3.11] and general categories
+% [@unicode24, Section 4.5] are organized in tables \luamdef{unicode_data.ccc}
+% and \luamdef{unicode_data.categories}, respectively, based on the number of
+% bytes they occupy after conversion to UTF-8.
+%
+% First, let's read the file `UnicodeData.txt`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+;(function()
+  local pathname = assert(kpse.find_file("UnicodeData.txt"),
+    [[Could not locate file "UnicodeData.txt"]])
+  local file = assert(io.open(pathname, "r"),
+    [[Could not open file "UnicodeData.txt"]])
+%    \end{macrocode}
+% \begin{markdown}
+%
+% In order to minimize the size and speed of the parser, we will first
+% construct prefix trees of UTF-8 encodings for all codepoints of a
+% given Unicode category and code length.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local categories = {"L", "N", "P", "Pc", "S", "Z"}
+  local prefix_trees = {}
+  for _, category in ipairs(categories) do
+    prefix_trees[category] = {}
+    for char_length = 1, 4 do
+      prefix_trees[category][char_length] = {_type = "intermediate"}
+    end
+  end
+  for line in file:lines() do
+    local codepoint, full_category = line:match("^(%x+);[^;]*;(%a*)")
+    assert(#full_category >= 1)
+    local major_category = full_category:sub(1, 1)
+    for _, category in ipairs({full_category, major_category}) do
+      if prefix_trees[category] == nil then
+        goto continue
+      end
+      local code = utf8.char(tonumber(codepoint, 16))
+      local node = prefix_trees[category][#code]
+      for i = 1, #code do
+        local byte = code:sub(i, i)
+        if i < #code then
+          if node[byte] == nil then
+            node[byte] = {_type = "intermediate"}
+          end
+          node = node[byte]
+        else
+          table.insert(node, {byte, _type = "leaf"})
+        end
+      end
+      ::continue::
+    end
+  end
+  assert(file:close())
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, we will construct parsers out of the prefix trees.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  print("M.categories = {}")
+  for _, category in ipairs(categories) do
+    print("M.categories." .. category .. " = {}")
+    for length, prefix_tree in pairs(prefix_trees[category]) do
+      local subparsers = {}
+      depth_first_search(prefix_tree, "", function(node, path)
+        if node._type == "leaf" then
+          local byte = node[1]
+          local suffix = serialize_byte_parser(byte)
+          if subparsers[path] ~= nil then
+            subparsers[path] = subparsers[path] .. " + " .. suffix
+          else
+            subparsers[path] = suffix
+          end
+        end
+      end, function(_, path)
+        if #path > 0 then
+          local byte = path:sub(#path, #path)
+          local parent_path = path:sub(1, #path-1)
+          local prefix = serialize_byte_parser(byte)
+          local suffix
+          if subparsers[path]:find(" %+ ") then
+            suffix = prefix .. " * (" .. subparsers[path] .. ")"
+          else
+            suffix = prefix .. " * " .. subparsers[path]
+          end
+          if subparsers[parent_path] ~= nil then
+            subparsers[parent_path] = subparsers[parent_path]
+                                   .. " + " .. suffix
+          else
+            subparsers[parent_path] = suffix
+          end
+        else
+          print(
+            "M.categories." .. category .. "[" .. length .. "] = "
+            .. (subparsers[path] or "fail")
+          )
+        end
+      end)
+    end
+  end
+  print("-- luacheck: pop")
+end)()
+print("return M")
+%    \end{macrocode}
 % \iffalse
 %</lua-unicode-data-generator>
 %<*lua>
 % \fi
-% \begin{markdown}
-%    \end{macrocode}
 % \begin{markdown}
 %
 %### Utility Functions
@@ -24365,11 +24474,12 @@ end)()
 % \fi
 % \begin{markdown}
 %
-% The \luamdef{util.casefold} method performs a full case-filding of a string
+% The \luamdef{util.casefold} method performs a full case-folding of a string
 % `s` based on the low-level parsers in
-% \luamref{unicode_data.casefold_mapping}. Unlike the low-level parsers, the
-% high-level function is invariant to the number of bytes the Unicode
-% characters occupy after conversion to UTF-8.
+% \luamref{unicode_data.casefold_mapping}, defined in Section
+% <#sec:unicode-case-folding>. Unlike the low-level parsers, the high-level
+% function is invariant to the number of bytes the Unicode characters occupy
+% after conversion to UTF-8.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -27959,138 +28069,14 @@ parsers.line                   = parsers.linechar^0 * parsers.newline
 parsers.nonemptyline           = parsers.line - parsers.blankline
 
 %    \end{macrocode}
-% \iffalse
-%</lua>
-%<*lua-unicode-data-generator>
-% \fi
 % \begin{markdown}
 %
-%#### Unicode Character Classes and Categories {#unicode-character-classes-and-categories}
-% Low-level parsers of UTF-8-encoded Unicode characters from different
-% canonical ordering classes [@unicode24, Section 3.11] and general categories
-% [@unicode24, Section 4.5] are organized in tables \luamdef{unicode_data.ccc}
-% and \luamdef{unicode_data.categories}, respectively, based on the number of
-% bytes they occupy after conversion to UTF-8.
-%
-% The following code from this section will be executed during the compilation
-% of the Markdown package as a part of file
-% `markdown-unicode-data-generator.lua` and the standard output will be stored
-% in a generated file named `markdown-unicode-data.lua`.
-%
-% First, let's read the file `UnicodeData.txt`.
-%
-% \end{markdown}
-%  \begin{macrocode}
-;(function()
-  local pathname = assert(kpse.find_file("UnicodeData.txt"),
-    [[Could not locate file "UnicodeData.txt"]])
-  local file = assert(io.open(pathname, "r"),
-    [[Could not open file "UnicodeData.txt"]])
-%    \end{macrocode}
-% \begin{markdown}
-%
-% In order to minimize the size and speed of the parser, we will first
-% construct prefix trees of UTF-8 encodings for all codepoints of a
-% given Unicode category and code length.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  local categories = {"L", "N", "P", "Pc", "S", "Z"}
-  local prefix_trees = {}
-  for _, category in ipairs(categories) do
-    prefix_trees[category] = {}
-    for char_length = 1, 4 do
-      prefix_trees[category][char_length] = {_type = "intermediate"}
-    end
-  end
-  for line in file:lines() do
-    local codepoint, full_category = line:match("^(%x+);[^;]*;(%a*)")
-    assert(#full_category >= 1)
-    local major_category = full_category:sub(1, 1)
-    for _, category in ipairs({full_category, major_category}) do
-      if prefix_trees[category] == nil then
-        goto continue
-      end
-      local code = utf8.char(tonumber(codepoint, 16))
-      local node = prefix_trees[category][#code]
-      for i = 1, #code do
-        local byte = code:sub(i, i)
-        if i < #code then
-          if node[byte] == nil then
-            node[byte] = {_type = "intermediate"}
-          end
-          node = node[byte]
-        else
-          table.insert(node, {byte, _type = "leaf"})
-        end
-      end
-      ::continue::
-    end
-  end
-  assert(file:close())
-%    \end{macrocode}
-% \begin{markdown}
-%
-% Next, we will construct parsers out of the prefix trees.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  print("M.categories = {}")
-  for _, category in ipairs(categories) do
-    print("M.categories." .. category .. " = {}")
-    for length, prefix_tree in pairs(prefix_trees[category]) do
-      local subparsers = {}
-      depth_first_search(prefix_tree, "", function(node, path)
-        if node._type == "leaf" then
-          local byte = node[1]
-          local suffix = serialize_byte_parser(byte)
-          if subparsers[path] ~= nil then
-            subparsers[path] = subparsers[path] .. " + " .. suffix
-          else
-            subparsers[path] = suffix
-          end
-        end
-      end, function(_, path)
-        if #path > 0 then
-          local byte = path:sub(#path, #path)
-          local parent_path = path:sub(1, #path-1)
-          local prefix = serialize_byte_parser(byte)
-          local suffix
-          if subparsers[path]:find(" %+ ") then
-            suffix = prefix .. " * (" .. subparsers[path] .. ")"
-          else
-            suffix = prefix .. " * " .. subparsers[path]
-          end
-          if subparsers[parent_path] ~= nil then
-            subparsers[parent_path] = subparsers[parent_path]
-                                   .. " + " .. suffix
-          else
-            subparsers[parent_path] = suffix
-          end
-        else
-          print(
-            "M.categories." .. category .. "[" .. length .. "] = "
-            .. (subparsers[path] or "fail")
-          )
-        end
-      end)
-    end
-  end
-  print("-- luacheck: pop")
-end)()
-print("return M")
-%    \end{macrocode}
-% \iffalse
-%</lua-unicode-data-generator>
-%<*lua>
-% \fi
-% \begin{markdown}
-%
-% Back in the file `markdown-parser.lua`, we define high-level parsers in table
-% \luamdef{parsers.unicode} based on the low-level parsers in
-% \luamref{unicode_data.categories}. Unlike the low-level parsers, the
-% high-level parsers are invariant to the number of bytes the Unicode
-% characters occupy after conversion to UTF-8.
+%#### Parsers for Unicode Character Classes and Categories
+% We define high-level parsers in table \luamdef{parsers.unicode} based on the
+% low-level parsers in \luamref{unicode_data.categories}, defined in Section
+% <#sec:unicode-character-classes-and-categories>. Unlike the low-level
+% parsers, the high-level parsers are invariant to the number of bytes the
+% Unicode characters occupy after conversion to UTF-8.
 %
 % \end{markdown}
 %  \begin{macrocode}
