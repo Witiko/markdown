@@ -3043,13 +3043,23 @@ option.
 %  \begin{macrocode}
 \str_new:N
   \g_@@_unquoted_jobname_str
-\str_set:NV
+\str_gset:NV
   \g_@@_unquoted_jobname_str
   \c_sys_jobname_str
-\regex_replace_all:nnN
+\bool_new:N
+  \g_@@_jobname_quoted_bool
+\regex_replace_all:nnNTF
   { \A ("|') ( .* ) ("|') \Z }
   { \2 }
   \g_@@_unquoted_jobname_str
+  {
+    \bool_gset_true:N
+      \g_@@_jobname_quoted_bool
+  }
+  {
+    \bool_gset_false:N
+      \g_@@_jobname_quoted_bool
+  }
 \@@_add_lua_option:nnn
   { cacheDir }
   { path }
@@ -12133,14 +12143,30 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\@@_add_plain_tex_option:nnn
-  { inputTempFileName }
-  { path }
+\tl_set:Nn
+  \l_tmpa_tl
   {
     \str_use:N
       \g_@@_unquoted_jobname_str
     .markdown.in
   }
+\bool_if:NT
+  \g_@@_jobname_quoted_bool
+  {
+    \tl_put_left:Nn
+      \l_tmpa_tl
+      { " }
+    \tl_put_right:Nn
+      \l_tmpa_tl
+      { " }
+  }
+\cs_generate_variant:Nn
+  \@@_add_plain_tex_option:nnn
+  { nnV }
+\@@_add_plain_tex_option:nnV
+  { inputTempFileName }
+  { path }
+  \l_tmpa_tl
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -37355,7 +37381,7 @@ end
 %  \begin{macrocode}
     |markdownIfOption{frozenCache}{}{@
       |immediate|openout|markdownOutputFileStream@
-        "|markdownOptionInputTempFileName"|relax@
+        |markdownOptionInputTempFileName|relax@
       |markdownInfo{@
         Buffering block-level markdown input into the temporary @
         input file "|markdownOptionInputTempFileName" and scanning @
@@ -37582,7 +37608,7 @@ end
         \immediate
           \openout
           \markdownOutputFileStream
-          "\markdownOptionInputTempFileName"
+          \markdownOptionInputTempFileName
           \relax
         \msg_info:nne
           { markdown }
