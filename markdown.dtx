@@ -23992,12 +23992,11 @@ end)()
 %    \end{macrocode}
 % \begin{markdown}
 %
-%#### Character Classes and Categories {#unicode-character-classes-and-categories}
+%#### Character Categories {#unicode-character-classes-and-categories}
 % Low-level parsers of UTF-8-encoded Unicode characters from different
-% canonical ordering classes [@unicode24, Section 3.11] and general categories
-% [@unicode24, Section 4.5] are organized in tables \luamdef{unicode_data.ccc}
-% and \luamdef{unicode_data.categories}, respectively, based on the number of
-% bytes they occupy after conversion to UTF-8.
+% general categories [@unicode24, Section 4.5] are organized in table
+% \luamdef{unicode_data.categories} based on the number of bytes they occupy
+% after conversion to UTF-8.
 %
 % First, let's read the file `UnicodeData.txt`.
 %
@@ -24102,6 +24101,15 @@ end)()
 end)()
 print("return M")
 %    \end{macrocode}
+% \begin{markdown}
+%
+%#### Canonical Ordering Classes
+% Low-level parsers of UTF-8-encoded Unicode characters from different
+% character classes [@unicode24, Section 3.11] are organized in table
+% \luamdef{unicode_data.ccc} based on the number of bytes they occupy
+% after conversion to UTF-8.
+%
+% \end{markdown}
 % \iffalse
 %</lua-unicode-data-generator>
 %<*lua>
