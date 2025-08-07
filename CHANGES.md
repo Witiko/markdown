@@ -1,6 +1,6 @@
 # Changes
 
-## 3.XX.X (2025-07-XX)
+## 3.XX.X (2025-08-XX)
 
 Fixes:
 
@@ -9,6 +9,11 @@ Fixes:
   @gucci-on-fleek in gucci-on-fleek/context-packaging@0459634,
   gucci-on-fleek/context-packaging@f8ee60e, d4c0054, 6fbd4dc, ccf580b, 850bef8,
   and 53a3335)
+
+- Only quote `\jobname`-based token lists when the engine would. (reported by
+  @andreiborisov in #557, fixed by @witiko in #582)
+
+  This change improves support for LuaMetaTeX.
 
 Defaults:
 
