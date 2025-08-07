@@ -10,7 +10,7 @@ AUXFILES=markdown.bbl markdown.cb markdown.cb2 markdown.glo markdown.bbl \
   markdown-options.md markdown-tokens.md $(TECHNICAL_DOCUMENTATION_RESOURCES) \
   $(VERSION_FILE) $(RAW_DEPENDENCIES) markdown-unicode-data-generator.lua \
   markdown-transcluded.md $(UNICODE_DATA)
-AUXDIRS=_minted-markdown _markdown_markdown markdown pkgcheck
+AUXDIRS=_minted-markdown _markdown_markdown markdown
 TDSARCHIVE=markdown.tds.zip
 CTANARCHIVE=markdown.ctan.zip
 DISTARCHIVE=markdown.zip
@@ -203,6 +203,7 @@ markdown-transcluded.md: markdown.md markdown-interfaces.md markdown-options.md 
 	    -e 's#\\TeX{}#<span class="tex">T<sub>e</sub>X</span>#g' \
 	    -e 's#\\LaTeX{}#<span class="latex">L<sup>a</sup>T<sub>e</sub>X</span>#g' \
 	    -e 's#\\Hologo{ConTeXt}#Con<span class="tex">T<sub>e</sub>X</span>t#g' \
+	    -e 's#\\Hologo{XeTeX}#Xe<span class="tex">T<sub>e</sub>X</span>t#g' \
 	    -e 's#\\\(Opt\|pkg\){\([^}]*\)}#<code><strong>\2</strong></code>#g' \
 	    -e 's#\\,# #g' \
 	    -e 's#\\meta{\([^}]*\)}#\&LeftAngleBracket;*\1*\&RightAngleBracket;#g' \
@@ -223,9 +224,8 @@ dist: implode
 	if [[ '$(NO_DOCUMENTATION)' != true ]]; \
 	then \
 	    set -e -o xtrace; \
-	    git clone https://gitlab.com/Lotz/pkgcheck.git; \
 	    unzip $(CTANARCHIVE) -d markdown; \
-	    pkgcheck/bin/pkgcheck -d markdown/markdown -T $(TDSARCHIVE); \
+	    pkgcheck -d markdown/markdown -T $(TDSARCHIVE); \
 	fi
 	$(MAKE) clean
 

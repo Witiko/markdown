@@ -1,6 +1,63 @@
 # Changes
 
-## 3.11.3 (2025-05-XX)
+## 3.XX.X (2025-07-XX)
+
+Fixes:
+
+- Correctly regenerate ConTeXT databases in `Dockerfile`. (reported by @witiko
+  in gucci-on-fleek/context-packaging#2 and #575, fixed by @witiko and
+  @gucci-on-fleek in gucci-on-fleek/context-packaging@0459634,
+  gucci-on-fleek/context-packaging@f8ee60e, d4c0054, 6fbd4dc, ccf580b, 850bef8,
+  and 53a3335)
+
+Defaults:
+
+- In LaTeX, load enumitem instead of paralist when the user has expressed an
+  intent to use new tag-friendly code by writing `\DocumentMetadata`.
+  (reported by @witiko in #578, fixed by @witiko and @u-fischer in #579)
+
+Continuous integration:
+
+- Rename GitHub Action `teatimeguest/setup-texlive-action@v3` to `TeX-Live/...`.
+  (reported by @pablogonz in #576, fixed by @witiko in 28ba10b5)
+
+- Use current pkgcheck. (reported by @manfredlotz via email and by @witiko
+  in #580, fixed in #581)
+
+## 3.11.4 (2025-06-24)
+
+Documentation:
+
+- Document the current limitations of the MikTeX distribution and TeX engines
+  other than LuaTeX. (reported by @obskyr in #566 and by @viocha in #573,
+  escalated upstream by @witiko in [miktex/miktex#1630][miktex-1630],
+  documented by @witiko in #574 and [witiko/lt3luabridge#32][lt3luabridge-32])
+
+  These are the current limitations:
+  1. The filenames of your .tex files may not contain spaces, see also #573.
+  2. If `-output-directory` is provided, it may not contain spaces and it won't be
+     automatically detected by MikTeX, see also [miktex/miktex#1630][miktex-1630].
+
+Housekeeping:
+
+- Mark uses of the deprecated conditional functions `\regex_match:*` for
+  removal after we have dropped support for TeX Live 2024 and earlier.
+  (8cd8bb5f)
+
+Deprecation:
+
+- Undeprecate `\markdownOptionOutputDir`.
+  (#566, [miktex/miktex#1630][miktex-1630], #574)
+
+  Due to the lack of support for the automatic detection of `-output-directory`
+  in MikTeX with TeX engines other than LuaTeX (see
+  [miktex/miktex#1630][miktex-1630]), there are still genuine uses of this
+  option. Therefore, it doesn't make sense to deprecate it.
+
+ [miktex-1630]: https://github.com/MiKTeX/miktex/issues/1630
+ [lt3luabridge-32]: https://github.com/Witiko/lt3luabridge/pull/32
+
+## 3.11.3 (2025-05-28)
 
 Fixes:
 

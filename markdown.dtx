@@ -1016,9 +1016,21 @@ If you are using an older, incomplete, or atypical \TeX{} distribution, please
 consult the [technical documentation][techdoc] for a detailed list of
 requirements.
 
+You are also advised to use Lua\TeX{} with the Markdown Package for \TeX{}. Using
+pdf\TeX{}, \Hologo{XeTeX} and other \TeX{} engines comes with several limitations:
+
+ 1. The filenames of your .tex files may not contain spaces, see also [#573][issue-573].
+ 2. If `-output-directory` is provided, it may not contain spaces and it won't be
+    automatically detected by Mik\TeX{}, see also [miktex/miktex#1630][issue-1630].[^issue-1630]
+
  [docker]: https://hub.docker.com/r/witiko/markdown/tags (witiko/markdown - Docker Image)
  [tl]: https://www.tug.org/texlive/ (TeX Live - TeX Users Group)
  [mik]: https://miktex.org/ (Home - MiKTeXorg)
+
+ [issue-573]: https://github.com/Witiko/markdown/issues/573 (Compilation fails if the file name contains spaces)
+ [issue-1630]: https://github.com/MiKTeX/miktex/issues/1630 (Environmental variable TEXMF_OUTPUT_DIRECTORY not set by MikTeX binaries)
+
+ [^issue-1630]: To support `-output-directory` in MikTeX with engines other than Lua\TeX{}, you set either the environmental variable `TEXMF_OUTPUT_DIRECTORY` or the \TeX{} macro `\markdownOptionOutputDir` to the same value.
 
 Installation
 ------------
@@ -1276,9 +1288,16 @@ hard l3kernel
 %
 % \pkg{lt3luabridge}
 %
-%:    A package that allows us to execute Lua code with LuaTeX as well as
+%:    A package that allows us to execute Lua code with Lua\TeX{} as well as
 %     with other TeX engines that provide the *shell escape* capability,
 %     which allows them to execute code with the system's shell.
+%
+%     Note that this support for \TeX{} engines other than Lua\TeX{} comes with
+%     some limitations with respect to file and directory names. Specifically,
+%     the filenames of your .tex files [may not contain spaces][1]. If
+%     `-output-directory` is provided, it may not contain spaces either.
+%
+% [1]: https://github.com/Witiko/markdown/issues/573 (Compilation fails if the file name contains spaces)
 %
 % \end{markdown}
 % \iffalse
@@ -2493,18 +2512,6 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
 %    \end{macrocode}
 % \begin{markdown}
 %
-% To interrupt the \mref{\@\@_with_various_cases:nn} function
-% prematurely, use the \mdef{\@\@_with_various_cases_break:} function.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\cs_new:Nn \@@_with_various_cases_break:
-  {
-    \seq_map_break:
-  }
-%    \end{macrocode}
-% \begin{markdown}
-%
 % By default, camelCase and snake\\\_case are supported.
 % Additional cases can be added by adding functions to the
 % \mdef{g_\@\@_cases_seq} sequence.
@@ -2512,7 +2519,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
 % \end{markdown}
 %  \begin{macrocode}
 \seq_new:N \g_@@_cases_seq
-\cs_new:Nn \@@_camel_case:N
+\cs_new:Nn \@@_camel_case:N  % noqa: w401
   {
     \regex_replace_all:nnN
       { _ ([a-z]) }
@@ -2523,7 +2530,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
       { #1 }
   }
 \seq_gput_right:Nn \g_@@_cases_seq { @@_camel_case:N }
-\cs_new:Nn \@@_snake_case:N
+\cs_new:Nn \@@_snake_case:N  % noqa: w401
   {
     \regex_replace_all:nnN
       { ([a-z])([A-Z]) }
@@ -11682,7 +11689,8 @@ pdftex --shell-escape document.tex
 % \mref{markdownEnd} macro to produce special effects before and after the
 % markdown block.
 %
-% There are several limitations to the macros you need to be aware of.
+% There are several limitations to the macros you need to be aware of:
+%
 % The first limitation concerns the \mref{markdownEnd} macro, which must be
 % visible directly from the input line buffer (it may not be produced as a
 % result of input expansion). Otherwise, it will not be recognized as the end
@@ -12012,7 +12020,7 @@ you would include the following code in your plain \TeX{} document:
 %
 % \end{markdown}
 %  \begin{macrocode}
-\prg_new_conditional:Nnn
+\prg_new_conditional:Nnn  % noqa: w401
   \@@_if_option:n
   { TF, T, F }
   {
@@ -12149,14 +12157,19 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 % option defaults to `.` or, since \TeX{} Live 2024, to the value of the
 % `-output-directory` option of your \TeX{} engine.
 %
+% In Mik\TeX{}, this automatic detection is [currently only supported with
+% Lua\TeX{}][1]. If you need to use Mik\TeX{} and cannot use Lua\TeX{}, you can
+% either a) fix the automatic detection by setting the environmental variable
+% `TEXMF_OUTPUT_DIRECTORY` manually or by setting the
+% \mref{markdownOptionOutputDir} option manually.
+%
 % The path must be set to the same value as the `-output-directory` option of
 % your \TeX{} engine for the package to function correctly. We need this macro
 % to make the Lua implementation aware where it should store the helper files.
 % The same limitations apply here as in the case of the
 % \Opt{inputTempFileName} macro.
 %
-% The \mref{markdownOptionOutputDir} macro has been deprecated and will be
-% removed in the next major version of the Markdown package.
+%  [1]: https://github.com/MiKTeX/miktex/issues/1630 (Environmental variable TEXMF_OUTPUT_DIRECTORY not set by MikTeX binaries)
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -12224,7 +12237,7 @@ document converted to \TeX{}.
 
 The Markdown package provides default definitions for token renderer prototypes
 using the `witiko/markdown/defaults`
-% theme (see Section~<sec:#themes>).
+% theme (see Section~<#sec:themes>).
 % \iffalse
 theme.
 % \fi
@@ -12485,7 +12498,7 @@ A PDF document named `document.pdf` should be produced and contain the text
 %    this variable in Lua\TeX{} and not other \TeX{} engines.
 %
 % 2. The `TEXMF_OUTPUT_DIRECTORY` environmental variable, which is available
-%    since TeX~Live 2024. We are only able to read this variable in \TeX{} Live
+%    since \TeX{}~Live 2024. We are only able to read this variable in \TeX{} Live
 %    and not some other \TeX{} distributions like Mik\TeX{}.
 %
 % \end{markdown}
@@ -12716,9 +12729,6 @@ A PDF document named `document.pdf` should be produced and contain the text
   { NV }
 \cs_generate_variant:Nn
   \keys_define:nn
-  { nV }
-\cs_generate_variant:Nn
-  \@@_set_option_value:nn
   { nV }
 \prg_generate_conditional_variant:Nnn
   \str_if_eq:nn
@@ -13464,7 +13474,7 @@ options locally.
   \l_@@_current_snippet_tl
 \prg_new_conditional:Nnn
   \@@_if_snippet_exists:n
-  { TF, T, F }
+  { TF, T }
   {
     \tl_set:NV
       \l_@@_current_snippet_tl
@@ -21628,7 +21638,8 @@ following text:
 %
 % \end{markdown}
 %  \begin{macrocode}
-      \regex_match:NVTF
+      % TODO: Use `\regex_if_match` in TeX Live 2025.
+      \regex_match:NVTF  % noqa: w202
         \c_@@_appending_key_regex
         \l_keys_key_str
         {
@@ -21740,7 +21751,8 @@ following text:
   \msg_error:nnn
   { nnV }
 \prg_generate_conditional_variant:Nnn
-  \regex_match:Nn
+  % TODO: Use `\regex_if_match` in TeX Live 2025.
+  \regex_match:Nn  % noqa: w202
   { NV }
   { TF }
 \prop_new:N
@@ -21775,7 +21787,8 @@ following text:
         \seq_map_inline:cn
           { #2 }
           {
-            \regex_match:NnT
+            % TODO: Use `\regex_if_match` in TeX Live 2025.
+            \regex_match:NnT  % noqa: w202
               \l_tmpa_regex
               { ##1 }
               {
@@ -22124,9 +22137,6 @@ following text:
         \l_tmpa_tl
     }
   }
-\cs_generate_variant:Nn
-  \keys_define:nn
-  { nV }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \begin{markdown}
@@ -22399,7 +22409,8 @@ following text:
 %
 % \end{markdown}
 %  \begin{macrocode}
-      \regex_match:NVTF
+      % TODO: Use `\regex_if_match` in TeX Live 2025.
+      \regex_match:NVTF  % noqa: w202
         \c_@@_appending_key_regex
         \l_keys_key_str
         {
@@ -23587,7 +23598,7 @@ following text:
 %
 % \end{markdown}
 %  \begin{macrocode}
-\cs_new:Nn \@@_caseless:N
+\cs_new:Nn \@@_caseless:N  % noqa: w401
   {
     \regex_replace_all:nnN
       { ([a-z])([A-Z]) }
@@ -38274,7 +38285,7 @@ end
     The~markdown*~LaTeX~environment~has~been~deprecated~and~will~
     be~removed~in~the~next~major~version~of~the~Markdown~package.
   }
-\cs_generate_variant:Nn
+\cs_generate_variant:Nn  % noqa: e405, w402
   \@@_setup:n
   { V }
 \ExplSyntaxOff
@@ -38308,7 +38319,7 @@ end
 \ExplSyntaxOn
 \prop_new:N \g_@@_latex_loaded_themes_linenos_prop
 \prop_new:N \g_@@_latex_loaded_themes_versions_prop
-\cs_gset:Nn
+\cs_gset:Nn  % noqa: w401
   \@@_load_theme:nnn
   {
 %    \end{macrocode}
@@ -38623,10 +38634,10 @@ end
 % and the current document class is not \pkg{beamer}, use a package that
 % provides support for tight and fancy lists.
 %
-% If either the package \pkg{paralist} or the package \pkg{enumitem} have already
-% been loaded, use them. Otherwise, if the option \Opt{experimental} or any test
-% phase has been enabled, use the package \pkg{enumitem}. Otherwise, use the
-% package \pkg{paralist}.
+% If either the package \pkg{paralist} or the package \pkg{enumitem} have
+% already been loaded, use them. Otherwise, if the option \Opt{experimental}
+% or the command \mref{DocumentMetadata} have been used, use the package
+% \pkg{enumitem}. Otherwise, use the package \pkg{paralist}.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -38670,70 +38681,33 @@ end
         }
       }
   }
+\prg_generate_conditional_variant:Nnn
+  \str_if_eq:nn
+  { en }
+  { TF }
 \bool_if:nT
   {
     \g_@@_tight_or_fancy_lists_bool &&
     ! \g_@@_beamer_paralist_or_enumitem_bool
   }
   {
-    \bool_if:nTF
-      {
-        \bool_lazy_or_p:nn
-          {
-            \str_if_eq_p:en
-              { \markdownThemeVersion }
-              { experimental }
-          }
-          {
-            \bool_lazy_and_p:nn
-              {
-                \prop_if_exist_p:N
-                  \g__pdfmanagement_documentproperties_prop
-              }
-              {
-                \bool_lazy_any_p:n
-                  {
-                    {
-                      \prop_if_in_p:Nn
-                        \g__pdfmanagement_documentproperties_prop
-                        { document / testphase / phase-I }
-                    }
-                    {
-                      \prop_if_in_p:Nn
-                        \g__pdfmanagement_documentproperties_prop
-                        { document / testphase / phase-II }
-                    }
-                    {
-                      \prop_if_in_p:Nn
-                        \g__pdfmanagement_documentproperties_prop
-                        { document / testphase / phase-III }
-                    }
-                    {
-                      \prop_if_in_p:Nn
-                        \g__pdfmanagement_documentproperties_prop
-                        { document / testphase / phase-IV }
-                    }
-                    {
-                      \prop_if_in_p:Nn
-                        \g__pdfmanagement_documentproperties_prop
-                        { document / testphase / phase-V }
-                    }
-                    {
-                      \prop_if_in_p:Nn
-                        \g__pdfmanagement_documentproperties_prop
-                        { document / testphase / phase-VI }
-                    }
-                  }
-              }
-          }
-      }
+    \str_if_eq:enTF
+      { \markdownThemeVersion }
+      { experimental }
       {
         \RequirePackage
           { enumitem }
       }
       {
-        \RequirePackage
-          { paralist }
+        \IfDocumentMetadataTF
+          {
+            \RequirePackage
+              { enumitem }
+          }
+          {
+            \RequirePackage
+              { paralist }
+          }
       }
   }
 \ExplSyntaxOff
@@ -40438,7 +40412,7 @@ end
 \ExplSyntaxOn
 \prop_new:N \g_@@_context_loaded_themes_linenos_prop
 \prop_new:N \g_@@_context_loaded_themes_versions_prop
-\cs_gset:Nn
+\cs_gset:Nn  % noqa: w401
   \@@_load_theme:nnn
   {
 %    \end{macrocode}
