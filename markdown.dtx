@@ -23874,7 +23874,7 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-print("local P = lpeg.P")
+print("local P, Cc = lpeg.P, lpeg.Cc")
 print("local fail = P(false)")
 %    \end{macrocode}
 % \begin{markdown}
@@ -24165,7 +24165,7 @@ end)()
       if node._type == "leaf" then
         local byte, combining_class = table.unpack(node)
         local suffix = serialize_byte_parser(byte)
-          .. " / " .. tostring(combining_class)
+          .. " * Cc(" .. tostring(combining_class) .. ")"
         if subparsers[path] ~= nil then
           subparsers[path] = subparsers[path] .. " + " .. suffix
         else
