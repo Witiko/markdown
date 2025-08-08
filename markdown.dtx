@@ -24101,7 +24101,7 @@ end)()
 %    \end{macrocode}
 % \begin{markdown}
 %
-%#### Canonical Ordering Classes
+%#### Canonical Ordering Classes {#unicode-canonical-ordering-classes}
 % Low-level parsers of UTF-8-encoded Unicode characters from different
 % character classes [@unicode24, Section 3.11] are organized in table
 % \luamdef{unicode_data.ccc} based on the number of bytes they occupy
@@ -24132,7 +24132,7 @@ end)()
   for line in file:lines() do
     local codepoint, combining_class = line:match("^(%x+);[^;]*;%a*;(%d+)")
     combining_class = tonumber(combining_class)
-    if combining_class <= 0 then
+    if combining_class == 0 then
       goto continue
     end
     local code = utf8.char(tonumber(codepoint, 16))
@@ -24609,8 +24609,8 @@ end)()
 % \fi
 % \begin{markdown}
 %
-% The \luamdef{util.casefold} method performs a full case-folding of a string
-% `s` based on the low-level parsers in
+% The \luamdef{util.casefold} method performs a full case-folding of a
+% UTF-8-encoded Unicode string `s` based on the low-level parsers in
 % \luamref{unicode_data.casefold_mapping}, defined in Section
 % <#sec:unicode-case-folding>. Unlike the low-level parsers, the high-level
 % function is invariant to the number of bytes the Unicode characters occupy
@@ -24620,8 +24620,15 @@ end)()
 %  \begin{macrocode}
 util.casefold = (function()
   local fail, any = P(false), P(1)
-  local fold_character, fold_word
-  fold_character = fail
+  local eof = -any
+%    \end{macrocode}
+% \begin{markdown}
+%
+% First, define a parser that will case-fold a character.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local fold_character = fail
   for n = 1, 4 do
     fold_character
       = fold_character
@@ -24630,9 +24637,196 @@ util.casefold = (function()
   fold_character
     = fold_character
     + C(any)
-  fold_word = Ct(fold_character^0)
+%    \end{macrocode}
+% \begin{markdown}
+%
+% First, define a parser that will case-fold a string.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local fold_string = Ct(fold_character^0) * eof
   return function(s)
-    return table.concat(lpeg.match(fold_word, s))
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If the string cannot be decoded with UTF-8, return it unchanged.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    local result = table.concat(lpeg.match(fold_string, s))
+    if result == nil then
+      return s
+    end
+    return result
+  end
+end)()
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The \luamdef{util.canonically_order} method performs a Unicode canonical
+% ordering of a string UTF-8-encoded Unicode `s` based on the low-level parsers
+% in \luamref{unicode_data.ccc}, defined in Section
+% <#sec:unicode-canonical-ordering-classes>. Unlike the low-level parsers, the
+% high-level function is invariant to the number of bytes the Unicode
+% characters occupy after conversion to UTF-8.
+%
+% \end{markdown}
+%  \begin{macrocode}
+util.canonically_order = (function()
+  local fail, any = P(false), P(1)
+  local eof = -any
+  local cont = R("\128\191")
+  local utf8_character
+    = R("\0\127")
+    + R("\194\223") * cont
+    + R("\224\239") * cont * cont
+    + R("\240\244") * cont * cont * cont
+%    \end{macrocode}
+% \begin{markdown}
+%
+% First, define a parser that will determine the combining class of a
+% character.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local classify_character = fail
+  for n = 1, 4 do
+    classify_character
+      = classify_character
+      + unicode_data.ccc[n]
+  end
+  classify_character
+    = classify_character
+    + utf8_character * Cc(0)
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, define a parser that will determine the combining classese of all
+% characters in a string.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local classify_string = Ct(classify_character^0) * eof
+%    \end{macrocode}
+% \begin{markdown}
+%
+% When the function is called, first check whether the string is trivially
+% ordered. If it is, return it without any changes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  return function(s)
+    local s_len = utf8.len(s)
+    if s_len <= 1 then
+      return s
+    end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Otherwise, determine the combining classes of all characters in the string.
+% If the string cannot be decoded with UTF-8, return it unchanged.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    local classes = lpeg.match(classify_string, s)
+    if classes == nil then
+      return s
+    end
+    assert(#classes == s_len)
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Again, check whether the string is trivially ordered. If it is, return it
+% without any changes. Otherwise, construct a list of ranges of non-starter
+% characters that must be ordered.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    local non_starter_ranges = {}
+    local first_non_starter, last_non_starter = nil, nil
+    for i = 1, #classes do
+      if first_non_starter == nil then
+        if classes[i] ~= 0 then
+          first_non_starter, last_non_starter = i, i
+        end
+      else
+        if classes[i] == 0 then
+          table.insert(
+            non_starter_ranges,
+            {first_non_starter, last_non_starter}
+          )
+          first_non_starter, last_non_starter = nil, nil
+        else
+          last_non_starter = i
+        end
+      end
+    end
+    if first_non_starter ~= nil then
+      table.insert(
+        non_starter_ranges,
+        {first_non_starter, last_non_starter}
+      )
+    end
+    if #non_starter_ranges == 0 then
+      return s
+    end
+    local max_range_length = 0
+    for _, range in ipairs(non_starter_ranges) do
+      local range_start, range_end = table.unpack(range)
+      local range_length = range_end - range_start + 1
+      if range_length > max_range_length then
+        max_range_length = range_length
+      end
+    end
+    if max_range_length <= 1 then
+      return s
+    end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Then, construct a buffer of all characters in the string.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    local buffer = {}
+    for _, code in utf8.codes(s) do
+      local char = utf8.char(code)
+      table.insert(buffer, char)
+    end
+    assert(#buffer == s_len)
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, perform a local bubble sort over the ranges of non-starter characters.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    for _, range in ipairs(non_starter_ranges) do
+      local range_start, range_end = table.unpack(range)
+      local range_length = range_end - range_start + 1
+      for _ = 1, range_length - 1 do
+        local swapped = false
+        for i = range_start, range_end - 1 do
+          local j = i + 1
+          if classes[i] > classes[j] then
+            classes[i], classes[j] = classes[j], classes[i]
+            buffer[i], buffer[j] = buffer[j], buffer[i]
+            swapped = true
+          end
+        end
+        if not swapped then
+          break
+        end
+      end
+    end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Finally, concatenate the buffer and return an ordered string.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    return table.concat(buffer, "")
   end
 end)()
 %    \end{macrocode}
