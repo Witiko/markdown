@@ -23883,8 +23883,9 @@ print("-- luacheck: push no max line length")
 %#### Decomposition {#unicode-decomposition}
 % Low-level parsers that decompose UTF-8-encoded Unicode characters using
 % either the canonical or the compatibility decomposition [@unicode24,
-% Section 3.7] are organized in table \luamdef{unicode_data.decomposition}
-% based on the number of bytes they occupy after conversion to UTF-8.
+% Section 3.7] are organized in table
+% \luamdef{unicode_data.decomposition_mapping} based on the number of bytes
+% they occupy after conversion to UTF-8.
 %
 % First, let's read the file `UnicodeData.txt`.
 %
@@ -23909,41 +23910,92 @@ print("-- luacheck: push no max line length")
   for _, decomposition_type in ipairs(decomposition_types) do
     prefix_trees[decomposition_type] = {}
     for char_length = 1, 4 do
-      prefix_trees[decomposition_type][char_length] = {_type = "intermediate"}
+      prefix_trees[decomposition_type][char_length]
+        = {_type = "intermediate"}
     end
   end
   for line in file:lines() do
-    local codepoint, mapping = line:match("^(%x+);[^;]*;%a*;%d+;%a*;([<%a>%x ]*)")
+    local from_codepoint, mapping
+      = line:match("^(%x+);[^;]*;%a*;%d+;%a*;([<%a>%x ]*)")
     if #mapping == 0 then
       goto continue
     end
-    local mapping_codes, decomposition_type = {}, "canonical"
-    for mapping_codepoint in mapping:gmatch("%S+") do
-      assert(#mapping_codepoint > 0)
-      if mapping_codepoint:sub(1, 1) == "<" then
+    local to_codepoints, decomposition_type = {}, "canonical"
+    for raw_codepoint in mapping:gmatch("%S+") do
+      assert(#raw_codepoint > 0)
+      if raw_codepoint:sub(1, 1) == "<" then
         decomposition_type = "compatibility"
       else
-        local mapping_code = utf8.char(tonumber(mapping_codepoint, 16))
-        table.insert(mapping_codes, mapping_code)
+        local codepoint = tonumber(raw_codepoint, 16)
+        table.insert(to_codepoints, codepoint)
       end
     end
-    assert(#mapping_codes > 0)
-    local code = utf8.char(tonumber(codepoint, 16))
-    local node = prefix_trees[decomposition_type][#code]
-    for i = 1, #code do
-      local byte = code:sub(i, i)
-      if i < #code then
-        if node[byte] == nil then
-          node[byte] = {_type = "intermediate"}
+    assert(#to_codepoints > 0)
+    local from_code = utf8.char(tonumber(from_codepoint, 16))
+    local node = prefix_trees[decomposition_type][#from_code]
+    for i = 1, #from_code do
+      local from_byte = from_code:sub(i, i)
+      if i < #from_code then
+        if node[from_byte] == nil then
+          node[from_byte] = {_type = "intermediate"}
         end
-        node = node[byte]
+        node = node[from_byte]
       else
-        table.insert(node, {mapping_codes, _type = "leaf"})
+        table.insert(node, {from_byte, to_codepoints, _type = "leaf"})
       end
     end
     ::continue::
   end
   assert(file:close())
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, we will construct parsers out of the prefix trees.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  print("M.decomposition_mapping = {}")
+  for _, decomposition_type in ipairs(decomposition_types) do
+    print("M.decomposition_mapping." .. decomposition_type .. " = {}")
+    for length, prefix_tree in pairs(prefix_trees[decomposition_type]) do
+      local subparsers = {}
+      depth_first_search(prefix_tree, "", function(node, path)
+        if node._type == "leaf" then
+          local from_byte, to_codepoints = table.unpack(node)
+          local suffix = serialize_byte_parser(from_byte)
+            .. " / " .. serialize_replacement(to_codepoints)
+          if subparsers[path] ~= nil then
+            subparsers[path] = subparsers[path] .. " + " .. suffix
+          else
+            subparsers[path] = suffix
+          end
+        end
+      end, function(_, path)
+        if #path > 0 then
+          local byte = path:sub(#path, #path)
+          local parent_path = path:sub(1, #path-1)
+          local prefix = serialize_byte_parser(byte)
+          local suffix
+          if subparsers[path]:find(" %+ ") then
+            suffix = prefix .. " * (" .. subparsers[path] .. ")"
+          else
+            suffix = prefix .. " * " .. subparsers[path]
+          end
+          if subparsers[parent_path] ~= nil then
+            subparsers[parent_path] = subparsers[parent_path]
+                                   .. " + " .. suffix
+          else
+            subparsers[parent_path] = suffix
+          end
+        else
+          print(
+            "M.decomposition_mapping." .. decomposition_type
+            .. "[" .. length .. "] = " .. (subparsers[path] or "fail")
+          )
+        end
+      end)
+    end
+  end
 end)()
 %    \end{macrocode}
 % \begin{markdown}
@@ -24013,7 +24065,7 @@ end)()
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Next, we will construct a parser out of the prefix trees.
+% Next, we will construct parsers out of the prefix trees.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -24708,23 +24760,14 @@ util.casefold = (function()
 %    \end{macrocode}
 % \begin{markdown}
 %
-% First, define a parser that will case-fold a string.
+% Next, define a parser that will case-fold a string.
 %
 % \end{markdown}
 %  \begin{macrocode}
   local fold_string = Ct(fold_character^0) * eof
   return function(s)
-%    \end{macrocode}
-% \begin{markdown}
-%
-% If the string cannot be decoded with UTF-8, return it unchanged.
-%
-% \end{markdown}
-%  \begin{macrocode}
     local result = table.concat(lpeg.match(fold_string, s))
-    if result == nil then
-      return s
-    end
+    assert(result ~= nil)
     return result
   end
 end)()
@@ -24895,6 +24938,71 @@ util.canonically_order = (function()
 % \end{markdown}
 %  \begin{macrocode}
     return table.concat(buffer, "")
+  end
+end)()
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The \luamdef{util.decompose} method performs either the canonical or the
+% compatibility decomposition of a UTF-8-encoded Unicode string `s` based on
+% the low-level parsers in \luamref{unicode_data.decomposition_mapping},
+% defined in Section <#sec:unicode-decomposition>. Unlike the low-level
+% parsers, the high-level function is invariant to the number of bytes the
+% Unicode characters occupy after conversion to UTF-8.
+%
+% \end{markdown}
+%  \begin{macrocode}
+util.decompose = (function()
+  local fail, any = P(false), P(1)
+  local eof = -any
+  local decomposition_types = {"canonical", "compatibility"}
+%    \end{macrocode}
+% \begin{markdown}
+%    \end{macrocode}
+% \begin{markdown}
+%
+% First, define parsers that will decompose a character.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local decompose_character, decompose_string = {}, {}
+  for _, decomposition_type in ipairs(decomposition_types) do
+    decompose_character[decomposition_type] = fail
+    for n = 1, 4 do
+      decompose_character[decomposition_type]
+        = decompose_character[decomposition_type]
+        + unicode_data.decomposition_mapping[decomposition_type][n]
+    end
+    decompose_character[decomposition_type]
+      = decompose_character[decomposition_type]
+      + C(any)
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, define a parser that will case-fold a string.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    decompose_string[decomposition_type]
+      = Ct(decompose_character[decomposition_type]^0) * eof
+  end
+  return function(s, decomposition_type)
+    assert(
+      decomposition_type == "canonical"
+      or decomposition_type == "compatibility"
+    )
+    local prev_s, next_s = s, s
+    repeat
+      prev_s = next_s
+      next_s = table.concat(lpeg.match(decompose_string["canonical"], prev_s))
+      assert(next_s ~= nil)
+      if decomposition_type == "compatibility" then
+        next_s
+          = table.concat(lpeg.match(decompose_string["compatibility"], next_s))
+        assert(next_s ~= nil)
+      end
+    until prev_s == next_s
+    return util.canonically_order(next_s)
   end
 end)()
 %    \end{macrocode}
