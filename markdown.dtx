@@ -23849,6 +23849,19 @@ local function serialize_byte_parser(byte)
     return 'P("' .. byte .. '")'
   end
 end
+local function serialize_byte_range_parser(start_byte, end_byte)
+  if start_byte == "\\" then
+    start_byte = "\\\\"
+  end
+  if end_byte == "\\" then
+    end_byte = "\\\\"
+  end
+  if start_byte == '"' or end_byte == '"' then
+    return "R('" .. start_byte .. end_byte .. "')"
+  else
+    return 'R("' .. start_byte .. end_byte .. '")'
+  end
+end
 local function serialize_replacement(codepoints)
   local buffer = {'"'}
   for _, codepoint in ipairs(codepoints) do
@@ -23874,13 +23887,13 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-print("local P, Cc = lpeg.P, lpeg.Cc")
+print("local P, R, Cc, C = lpeg.P, lpeg.R, lpeg.Cc, lpeg.C")
 print("local fail = P(false)")
 print("-- luacheck: push no max line length")
 %    \end{macrocode}
 % \begin{markdown}
 %
-%#### Decomposition {#unicode-decomposition}
+%#### Canonical and Compatibility Decomposition {#unicode-decomposition}
 % Low-level parsers that decompose UTF-8-encoded Unicode characters using
 % either the canonical or the compatibility decomposition [@unicode24,
 % Section 3.7] are organized in table
@@ -23997,6 +24010,198 @@ print("-- luacheck: push no max line length")
     end
   end
 end)()
+%    \end{macrocode}
+% \begin{markdown}
+%
+%#### Hangul Syllable Decomposition {#unicode-hangul-decomposition}
+% Low-level parsers that decompose UTF-8-encoded Unicode characters using
+% the Hangul syllable decomposition [@unicode24, Section 3.12.2] are also
+% organized in table \luamdef{unicode_data.decomposition_mapping}, previously
+% defined in Section <#sec:unicode-decomposition> based on the
+% number of bytes they occupy after conversion to UTF-8.
+%
+% First, let's read the file `HangulSyllableType.txt`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+;(function()
+  local pathname = assert(kpse.find_file("HangulSyllableType.txt"),
+    [[Could not locate file "HangulSyllableType.txt"]])
+  local file = assert(io.open(pathname, "r"),
+    [[Could not open file "HangulSyllableType.txt"]])
+%    \end{macrocode}
+% \begin{markdown}
+%
+% In order to minimize the size and speed of the parser, we will first
+% construct prefix trees of UTF-8 encodings for all codepoints of a
+% given Unicode category and code length.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local syllable_types = {"LV", "LVT"}
+  local prefix_trees = {}
+  for _, syllable_type in ipairs(syllable_types) do
+    prefix_trees[syllable_type] = {}
+    for char_length = 1, 4 do
+      prefix_trees[syllable_type][char_length]
+        = {_type = "intermediate"}
+    end
+  end
+  for line in file:lines() do
+    if #line == 0 or line:sub(1, 1) == "#" then
+      goto continue
+    end
+    local codepoint, syllable_type = line:match("^([%x.]+)%s*;%s*(%a*)")
+    assert(codepoint ~= nil)
+    if prefix_trees[syllable_type] == nil then
+      goto continue
+    end
+    local codepoint_start, codepoint_end
+    if codepoint:find("%.%.") then
+      codepoint_start, codepoint_end = codepoint:match("^(%x+)%.%.(%x+)$")
+    else
+      codepoint_start, codepoint_end = codepoint, codepoint
+    end
+    codepoint_start = tonumber(codepoint_start, 16)
+    codepoint_end = tonumber(codepoint_end, 16)
+    local prev_code, prev_leaf_node
+    for codepoint = codepoint_start, codepoint_end do
+      local code = utf8.char(codepoint)
+      local node = prefix_trees[syllable_type][#code]
+      for i = 1, #code do
+        local byte = code:sub(i, i)
+        if i < #code then
+          if node[byte] == nil then
+            node[byte] = {_type = "intermediate"}
+          end
+          node = node[byte]
+        else
+          local leaf_node
+          if (
+                prev_code ~= nil
+                and #prev_code == #code
+                and code:sub(1, #code - 1) == prev_code:sub(1, #code - 1)
+              ) then
+            assert(prev_leaf_node ~= nil)
+            leaf_node = prev_leaf_node
+            leaf_node[2] = byte
+          else
+            leaf_node = {byte, byte, _type = "leaf"}
+            table.insert(node, leaf_node)
+          end
+          prev_code, prev_leaf_node = code, leaf_node
+        end
+      end
+    end
+    ::continue::
+  end
+  assert(file:close())
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, we will define constants and functions with the hangul syllable
+% decomposition algorithm.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  print(string.format("local s_base = %d", tonumber("AC00", 16)))
+  print(string.format("local l_base = %d", tonumber("1100", 16)))
+  print(string.format("local v_base = %d", tonumber("1161", 16)))
+  print(string.format("local t_base = %d", tonumber("11A7", 16)))
+  print(string.format("local l_count = %d", 19))
+  print(string.format("local v_count = %d", 21))
+  print(string.format("local t_count = %d  -- luacheck: ignore", 28))
+  print("local n_count = v_count * t_count")
+  print("local s_count = l_count * n_count  -- luacheck: ignore")
+
+  print("local function hangul_LV(byte)")
+  print("  for _, s in utf8.codes(byte) do  -- luacheck: ignore")
+  print("    local s_index = s - s_base")
+  print("    local l_index = s_index // n_count")
+  print("    local v_index = (s_index % n_count) // t_count")
+  print("    local l_part = l_base + l_index")
+  print("    local v_part = v_base + v_index")
+  print("    return utf8.char(l_part) .. utf8.char(v_part)")
+  print("  end")
+  print("  assert(false)")
+  print("end")
+
+  print("local function hangul_LVT(byte)")
+  print("  for _, s in utf8.codes(byte) do  -- luacheck: ignore")
+  print("    local s_index = s - s_base")
+  print("    local lv_index = (s_index // t_count) * t_count")
+  print("    local t_index = s_index % t_count")
+  print("    local lv_part = s_base + lv_index")
+  print("    local t_part = t_base + t_index")
+  print("    return utf8.char(lv_part) .. utf8.char(t_part)")
+  print("  end")
+  print("  assert(false)")
+  print("end")
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, we will construct parsers out of the prefix trees.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  print("M.decomposition_mapping.hangul = {}")
+  for _, syllable_type in ipairs(syllable_types) do
+    print("M.decomposition_mapping.hangul." .. syllable_type .. " = {}")
+    for length, prefix_tree in pairs(prefix_trees[syllable_type]) do
+      local subparsers = {}
+      depth_first_search(prefix_tree, "", function(node, path)
+        if node._type == "leaf" then
+          local start_byte, end_byte = table.unpack(node)
+          local suffix
+          if start_byte == end_byte then
+            suffix = serialize_byte_parser(start_byte)
+          else
+            assert(start_byte < end_byte)
+            suffix = serialize_byte_range_parser(start_byte, end_byte)
+          end
+          if subparsers[path] ~= nil then
+            subparsers[path] = subparsers[path] .. " + " .. suffix
+          else
+            subparsers[path] = suffix
+          end
+        end
+      end, function(_, path)
+        if #path > 0 then
+          local byte = path:sub(#path, #path)
+          local parent_path = path:sub(1, #path-1)
+          local prefix = serialize_byte_parser(byte)
+          local suffix
+          if subparsers[path]:find(" %+ ") then
+            suffix = prefix .. " * (" .. subparsers[path] .. ")"
+          else
+            suffix = prefix .. " * " .. subparsers[path]
+          end
+          if subparsers[parent_path] ~= nil then
+            subparsers[parent_path] = subparsers[parent_path]
+                                   .. " + " .. suffix
+          else
+            subparsers[parent_path] = suffix
+          end
+        else
+          if subparsers[path] then
+            print(
+              "M.decomposition_mapping.hangul." .. syllable_type
+              .. "[" .. length .. "] = C(" .. subparsers[path] .. ")"
+              .. " / hangul_" .. syllable_type
+            )
+          else
+            print(
+              "M.decomposition_mapping.hangul." .. syllable_type
+              .. "[" .. length .. "] = fail"
+            )
+          end
+        end
+      end)
+    end
+  end
+end)()
+%    \end{macrocode}
+% \begin{markdown}
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -24946,9 +25151,10 @@ end)()
 % The \luamdef{util.decompose} method performs either the canonical or the
 % compatibility decomposition of a UTF-8-encoded Unicode string `s` based on
 % the low-level parsers in \luamref{unicode_data.decomposition_mapping},
-% defined in Section <#sec:unicode-decomposition>. Unlike the low-level
-% parsers, the high-level function is invariant to the number of bytes the
-% Unicode characters occupy after conversion to UTF-8.
+% defined in sections <#sec:unicode-decomposition> and
+% <#sec:unicode-hangul-decomposition>. Unlike the low-level parsers, the
+% high-level function is invariant to the number of bytes the Unicode
+% characters occupy after conversion to UTF-8.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -24965,7 +25171,7 @@ util.decompose = (function()
 %
 % \end{markdown}
 %  \begin{macrocode}
-  local decompose_character, decompose_string = {}, {}
+  local decompose_character = {}
   for _, decomposition_type in ipairs(decomposition_types) do
     decompose_character[decomposition_type] = fail
     for n = 1, 4 do
@@ -24976,6 +25182,20 @@ util.decompose = (function()
     decompose_character[decomposition_type]
       = decompose_character[decomposition_type]
       + C(any)
+  end
+  local hangul = unicode_data.decomposition_mapping.hangul
+  decompose_character.hangul = {}
+  for syllable_type, _ in pairs(hangul) do
+    decompose_character.hangul[syllable_type] = fail
+    for n = 1, 4 do
+      decompose_character.hangul[syllable_type]
+        = decompose_character.hangul[syllable_type]
+        + hangul[syllable_type][n]
+    end
+    decompose_character.hangul[syllable_type]
+      = decompose_character.hangul[syllable_type]
+      + C(any)
+  end
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -24983,8 +25203,21 @@ util.decompose = (function()
 %
 % \end{markdown}
 %  \begin{macrocode}
+  local decompose_string = {}
+  for _, decomposition_type in ipairs(decomposition_types) do
     decompose_string[decomposition_type]
       = Ct(decompose_character[decomposition_type]^0) * eof
+  end
+  decompose_string.hangul = {}
+  for syllable_type, _ in pairs(hangul) do
+    decompose_string.hangul[syllable_type]
+      = Ct(decompose_character.hangul[syllable_type]^0) * eof
+  end
+  local function decompose(s, parser)
+    assert(s ~= nil)
+    local result = table.concat(lpeg.match(parser, s), "")
+    assert(result ~= nil)
+    return result
   end
   return function(s, decomposition_type)
     assert(
@@ -24995,18 +25228,12 @@ util.decompose = (function()
     local next_s = s
     repeat
       prev_s = next_s
-      next_s = table.concat(
-        lpeg.match(decompose_string["canonical"], prev_s),
-        ""
-      )
-      assert(next_s ~= nil)
+      next_s = decompose(prev_s, decompose_string.canonical)
       if decomposition_type == "compatibility" then
-        next_s = table.concat(
-          lpeg.match(decompose_string["compatibility"], next_s),
-          ""
-        )
-        assert(next_s ~= nil)
+        next_s = decompose(next_s, decompose_string.compatibility)
       end
+      next_s = decompose(next_s, decompose_string.hangul.LVT)
+      next_s = decompose(next_s, decompose_string.hangul.LV)
     until prev_s == next_s
     return util.canonically_order(next_s)
   end

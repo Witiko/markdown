@@ -39,7 +39,7 @@ TECHNICAL_DOCUMENTATION_RESOURCES=markdown.bib markdown-figure-block-diagram.tex
   markdownthemewitiko_markdown_techdoc.sty
 RAW_DEPENDENCIES=DEPENDS-raw.txt
 DEPENDENCIES=DEPENDS.txt
-UNICODE_DATA=UnicodeData.txt CaseFolding.txt CompositionExclusions.txt
+UNICODE_DATA=UnicodeData.txt CaseFolding.txt CompositionExclusions.txt HangulSyllableType.txt
 TECHNICAL_DOCUMENTATION=markdown.pdf
 MARKDOWN_USER_MANUAL=markdown.md markdown.css
 HTML_USER_MANUAL=markdown.html markdown.css
