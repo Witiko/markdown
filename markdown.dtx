@@ -1175,7 +1175,7 @@ local md5 = require("md5")
 %
 % \end{markdown}
 %  \begin{macrocode}
-;(function()
+;(function()  -- luacheck: ignore
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -23970,7 +23970,8 @@ print("-- luacheck: push no max line length")
   print("M.decomposition_mapping = {}")
   for _, decomposition_type in ipairs(decomposition_types) do
     print("M.decomposition_mapping." .. decomposition_type .. " = {}")
-    for length, prefix_tree in pairs(prefix_trees[decomposition_type]) do
+    for length, prefix_tree in pairs(prefix_trees[decomposition_type])
+    do
       local subparsers = {}
       depth_first_search(prefix_tree, "", function(node, path)
         if node._type == "leaf" then
@@ -24058,7 +24059,8 @@ end)()
     end
     local codepoint_start, codepoint_end
     if codepoint:find("%.%.") then
-      codepoint_start, codepoint_end = codepoint:match("^(%x+)%.%.(%x+)$")
+      codepoint_start, codepoint_end
+        = codepoint:match("^(%x+)%.%.(%x+)$")
     else
       codepoint_start, codepoint_end = codepoint, codepoint
     end
@@ -24080,7 +24082,8 @@ end)()
           if (
                 prev_code ~= nil
                 and #prev_code == #code
-                and code:sub(1, #code - 1) == prev_code:sub(1, #code - 1)
+                and code:sub(1, #code - 1)
+                  == prev_code:sub(1, #code - 1)
               ) then
             assert(prev_leaf_node ~= nil)
             leaf_node = prev_leaf_node
@@ -24455,7 +24458,8 @@ end)()
     prefix_trees[char_length] = {_type = "intermediate"}
   end
   for line in file:lines() do
-    local codepoint, combining_class = line:match("^(%x+);[^;]*;%a*;(%d+)")
+    local codepoint, combining_class
+      = line:match("^(%x+);[^;]*;%a*;(%d+)")
     combining_class = tonumber(combining_class)
     if combining_class == 0 then
       goto continue

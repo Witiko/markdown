@@ -8,8 +8,7 @@ AUXFILES=markdown.bbl markdown.cb markdown.cb2 markdown.glo markdown.bbl \
   markdown.hd markdown.run.xml markdown.markdown.in markdown.markdown.lua \
   markdown.markdown.out markdown-interfaces.md markdown-miscellanea.md \
   markdown-options.md markdown-tokens.md $(TECHNICAL_DOCUMENTATION_RESOURCES) \
-  $(VERSION_FILE) $(RAW_DEPENDENCIES) markdown-unicode-data-generator.lua \
-  markdown-transcluded.md $(UNICODE_DATA)
+  $(VERSION_FILE) $(RAW_DEPENDENCIES) markdown-transcluded.md $(UNICODE_DATA)
 AUXDIRS=_minted-markdown _markdown_markdown markdown
 TDSARCHIVE=markdown.tds.zip
 CTANARCHIVE=markdown.ctan.zip
@@ -47,6 +46,7 @@ MAN_PAGES=markdown2tex.1
 USER_MANUAL=$(MARKDOWN_USER_MANUAL) $(HTML_USER_MANUAL)
 DOCUMENTATION=$(TECHNICAL_DOCUMENTATION) $(HTML_USER_MANUAL) $(ROOT_README) $(VERSION_FILE) \
   $(CHANGES_FILE) $(DEPENDENCIES)
+GENERATORS=markdown-unicode-data-generator.lua
 INSTALLABLES=markdown.lua markdown-parser.lua markdown-cli.lua markdown2tex.lua \
   markdown-unicode-data.lua \
   markdown.tex markdown.sty t-markdown.tex \
@@ -54,7 +54,7 @@ INSTALLABLES=markdown.lua markdown-parser.lua markdown-cli.lua markdown2tex.lua 
   markdownthemewitiko_markdown_defaults.sty \
   t-markdownthemewitiko_markdown_defaults.tex
 EXTRACTABLES=$(INSTALLABLES) $(MARKDOWN_USER_MANUAL) $(TECHNICAL_DOCUMENTATION_RESOURCES) \
-  $(RAW_DEPENDENCIES) $(MAN_PAGES)
+  $(RAW_DEPENDENCIES) $(MAN_PAGES) $(GENERATORS)
 MAKEABLES=$(TECHNICAL_DOCUMENTATION) $(USER_MANUAL) $(INSTALLABLES) $(EXAMPLES) $(DEPENDENCIES)
 RESOURCES=$(DOCUMENTATION) $(MAN_PAGES) $(EXAMPLES_RESOURCES) $(EXAMPLES_SOURCES) $(EXAMPLES) \
   $(MAKES) $(READMES) $(INSTALLER) $(DTXARCHIVE) $(TESTS)
@@ -276,11 +276,11 @@ clean:
 
 # This pseudo-target removes any makeable files.
 implode: clean
-	rm -f $(MAKEABLES) $(ARCHIVES)
+	rm -f $(MAKEABLES) $(ARCHIVES) $(GENERATORS)
 	$(MAKE) -C examples implode
 
 # This pseudo-target checks that the length of lines in the source files.
-check-line-length: $(INSTALLABLES)
+check-line-length: $(INSTALLABLES) $(GENERATORS)
 	! grep -n -E '^.{73,}$$' $(filter-out markdown-unicode-data.lua,$^)
 
 # This pseudo-target checks for tabs and trailing spaces in the source files.
