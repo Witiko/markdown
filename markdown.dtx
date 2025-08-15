@@ -25213,7 +25213,7 @@ util.decompose = (function()
     decompose_string.hangul[syllable_type]
       = Ct(decompose_character.hangul[syllable_type]^0) * eof
   end
-  local function decompose(s, parser)
+  local function _decompose(s, parser)
     assert(s ~= nil)
     local result = table.concat(lpeg.match(parser, s), "")
     assert(result ~= nil)
@@ -25228,12 +25228,13 @@ util.decompose = (function()
     local next_s = s
     repeat
       prev_s = next_s
-      next_s = decompose(prev_s, decompose_string.canonical)
+      local function decompose(...) next_s = _decompose(next_s, ...) end
+      decompose(decompose_string.canonical)
       if decomposition_type == "compatibility" then
-        next_s = decompose(next_s, decompose_string.compatibility)
+        decompose(decompose_string.compatibility)
       end
-      next_s = decompose(next_s, decompose_string.hangul.LVT)
-      next_s = decompose(next_s, decompose_string.hangul.LV)
+      decompose(decompose_string.hangul.LVT)
+      decompose(decompose_string.hangul.LV)
     until prev_s == next_s
     return util.canonically_order(next_s)
   end
