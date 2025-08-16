@@ -23821,6 +23821,14 @@ end
 %
 % First, let's define a couple helper functions.
 %
+% The function \luamdef{depth_first_search} performs the depth first search
+% algorithm on a tree with nodes being tables with the key `_type` equal to
+% either `intermediate` or `leaf` and with edges labeled with bytes.
+%
+% Since the algorithm is implemented using recursion, it should only be used
+% for the traversal of shallow trees to prevent exceeding the maximum recursion
+% depth (usually 100).
+%
 % \end{markdown}
 %  \begin{macrocode}
 local function depth_first_search(node, path, visit, leave)
@@ -23840,6 +23848,14 @@ local function depth_first_search(node, path, visit, leave)
   end
   leave(node, path)
 end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The function \luamdef{serialize_byte_parser} produces the Lua code for a
+% \acro{PEG} parser that matches a single byte.
+%
+% \end{markdown}
+%  \begin{macrocode}
 local function serialize_byte_parser(byte)
   if byte == '"' then
     return "P('" .. byte .. "')"
@@ -23849,7 +23865,16 @@ local function serialize_byte_parser(byte)
     return 'P("' .. byte .. '")'
   end
 end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The function \luamdef{serialize_byte_parser} produces the Lua code for a
+% \acro{PEG} parser that matches a contiguous range of bytes.
+%
+% \end{markdown}
+%  \begin{macrocode}
 local function serialize_byte_range_parser(start_byte, end_byte)
+  assert(start_byte <= end_byte)
   if start_byte == "\\" then
     start_byte = "\\\\"
   end
@@ -23862,7 +23887,16 @@ local function serialize_byte_range_parser(start_byte, end_byte)
     return 'R("' .. start_byte .. end_byte .. '")'
   end
 end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The function \luamdef{serialize_replacement} produces the Lua code for a
+% string literal with one or more UTF-8-encoded Unicode characters.
+%
+% \end{markdown}
+%  \begin{macrocode}
 local function serialize_replacement(codepoints)
+  assert(#codepoints > 0)
   local buffer = {'"'}
   for _, codepoint in ipairs(codepoints) do
     local code = utf8.char(codepoint)
@@ -23879,6 +23913,44 @@ local function serialize_replacement(codepoints)
   end
   table.insert(buffer, '"')
   return table.concat(buffer)
+end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The function \luamdef{read_decompositions} is an iterator that reads a file
+% `UnicodeData.txt` that has previously been opened for reading and yields
+% all canonical and compatibility decompositions from that file.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function read_decompositions(file)
+  return function()
+    local from_codepoint, mapping
+    for line in file:lines() do
+      from_codepoint, mapping
+        = line:match("^(%x+);[^;]*;%a*;%d+;%a*;([<%a>%x ]*)")
+      assert(from_codepoint ~= nil)
+      if #mapping > 0 then
+        break
+      end
+    end
+    if #mapping == 0 then
+      return nil
+    end
+    from_codepoint = tonumber(from_codepoint, 16)
+    local to_codepoints, decomposition_type = {}, "canonical"
+    for raw_codepoint in mapping:gmatch("%S+") do
+      assert(#raw_codepoint > 0)
+      if raw_codepoint:sub(1, 1) == "<" then
+        decomposition_type = "compatibility"
+      else
+        local codepoint = tonumber(raw_codepoint, 16)
+        table.insert(to_codepoints, codepoint)
+      end
+    end
+    assert(#to_codepoints > 0)
+    return decomposition_type, from_codepoint, to_codepoints
+  end
 end
 %    \end{macrocode}
 % \begin{markdown}
@@ -23914,7 +23986,7 @@ print("-- luacheck: push no max line length")
 %
 % In order to minimize the size and speed of the parser, we will first
 % construct prefix trees of UTF-8 encodings for all codepoints of a
-% given Unicode category and code length.
+% given decomposition type and code length.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -23927,24 +23999,9 @@ print("-- luacheck: push no max line length")
         = {_type = "intermediate"}
     end
   end
-  for line in file:lines() do
-    local from_codepoint, mapping
-      = line:match("^(%x+);[^;]*;%a*;%d+;%a*;([<%a>%x ]*)")
-    if #mapping == 0 then
-      goto continue
-    end
-    local to_codepoints, decomposition_type = {}, "canonical"
-    for raw_codepoint in mapping:gmatch("%S+") do
-      assert(#raw_codepoint > 0)
-      if raw_codepoint:sub(1, 1) == "<" then
-        decomposition_type = "compatibility"
-      else
-        local codepoint = tonumber(raw_codepoint, 16)
-        table.insert(to_codepoints, codepoint)
-      end
-    end
-    assert(#to_codepoints > 0)
-    local from_code = utf8.char(tonumber(from_codepoint, 16))
+  for decomposition_type, from_codepoint, to_codepoints
+      in read_decompositions(file) do
+    local from_code = utf8.char(from_codepoint)
     local node = prefix_trees[decomposition_type][#from_code]
     for i = 1, #from_code do
       local from_byte = from_code:sub(i, i)
@@ -23957,7 +24014,6 @@ print("-- luacheck: push no max line length")
         table.insert(node, {from_byte, to_codepoints, _type = "leaf"})
       end
     end
-    ::continue::
   end
   assert(file:close())
 %    \end{macrocode}
@@ -24035,7 +24091,7 @@ end)()
 %
 % In order to minimize the size and speed of the parser, we will first
 % construct prefix trees of UTF-8 encodings for all codepoints of a
-% given Unicode category and code length.
+% given syllable type and code length.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -24205,6 +24261,216 @@ end)()
 end)()
 %    \end{macrocode}
 % \begin{markdown}
+%
+%#### Canonical Composition {#unicode-canonical-composition}
+% Low-level parsers that map pairs of UTF-8-encoded Unicode characters from
+% a canonical or compatibility decomposition into their primary composites
+% [@unicode24, Section 3.11.6] are organized in table
+% \luamdef{unicode_data.composition_mapping} based on the number of bytes the
+% characters occupy after conversion to UTF-8.
+%
+% First, let's read the file `DerivedNormalizationProps.txt` and record all
+% canonical decomposable characters that are not full composition exclusions.
+%
+% \end{markdown}
+%  \begin{macrocode}
+;(function()
+  local pathname
+    = assert(kpse.find_file("DerivedNormalizationProps.txt"),
+    [[Could not locate file "DerivedNormalizationProps.txt"]])
+  local file = assert(io.open(pathname, "r"),
+    [[Could not open file "DerivedNormalizationProps.txt"]])
+  local full_composition_exclusions = {}
+  for line in file:lines() do
+    if #line == 0 or line:sub(1, 1) == "#" then
+      goto continue
+    end
+    local codepoint, property = line:match("^([%x.]+)%s*;%s*([%a_]+)")
+    assert(codepoint ~= nil)
+    if property ~= "Full_Composition_Exclusion" then
+      goto continue
+    end
+    local codepoint_start, codepoint_end
+    if codepoint:find("%.%.") then
+      codepoint_start, codepoint_end
+        = codepoint:match("^(%x+)%.%.(%x+)$")
+    else
+      codepoint_start, codepoint_end = codepoint, codepoint
+    end
+    codepoint_start = tonumber(codepoint_start, 16)
+    codepoint_end = tonumber(codepoint_end, 16)
+    for codepoint = codepoint_start, codepoint_end do
+      full_composition_exclusions[codepoint] = true
+    end
+    ::continue::
+  end
+  assert(file:close())
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, let's also read the file `UnicodeData.txt`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  pathname = assert(kpse.find_file("UnicodeData.txt"),
+    [[Could not locate file "UnicodeData.txt"]])
+  file = assert(io.open(pathname, "r"),
+    [[Could not open file "UnicodeData.txt"]])
+%    \end{macrocode}
+% \begin{markdown}
+%
+% In order to minimize the size and speed of the parser, we will first
+% construct prefix trees of UTF-8 encodings for all pairs of codepoints
+% of given code lengths.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local prefix_trees = {leaders = {}, both = {}}
+  for first_char_length = 1, 4 do
+    prefix_trees.leaders[first_char_length]
+      = {_type = "intermediate"}
+    prefix_trees.both[first_char_length] = {}
+    for second_char_length = 1, 4 do
+      prefix_trees.both[first_char_length][second_char_length]
+        = {_type = "intermediate"}
+    end
+  end
+  local seen_leader_codes = {}
+  for decomposition_type, to_codepoint, from_codepoints
+      in read_decompositions(file) do
+    if (
+          decomposition_type ~= "canonical"
+          or #from_codepoints ~= 2
+          or full_composition_exclusions[to_codepoint]
+        ) then
+      goto continue
+    end
+    local leader_code = utf8.char(from_codepoints[1])
+    local combining_character_code = utf8.char(from_codepoints[2])
+    local leader_node = prefix_trees.leaders[#leader_code]
+    local both_node
+      = prefix_trees.both[#leader_code][#combining_character_code]
+    for i = 1, #leader_code do
+      local from_byte = leader_code:sub(i, i)
+      if both_node[from_byte] == nil then
+        both_node[from_byte] = {_type = "intermediate"}
+      end
+      both_node = both_node[from_byte]
+      if i < #leader_code then
+        if leader_node[from_byte] == nil then
+          leader_node[from_byte] = {_type = "intermediate"}
+        end
+        leader_node = leader_node[from_byte]
+      elseif seen_leader_codes[leader_code] == nil then
+        seen_leader_codes[leader_code] = true
+        table.insert(leader_node, {from_byte, _type = "leaf"})
+      end
+    end
+    for i = 1, #combining_character_code do
+      local from_byte = combining_character_code:sub(i, i)
+      if i < #combining_character_code then
+        if both_node[from_byte] == nil then
+          both_node[from_byte] = {_type = "intermediate"}
+        end
+        both_node = both_node[from_byte]
+      else
+        table.insert(
+          both_node,
+          {from_byte, to_codepoint, _type = "leaf"}
+        )
+      end
+    end
+    ::continue::
+  end
+  assert(file:close())
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, we will construct parsers out of the prefix trees.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  print("M.composition_mapping = {leaders = {}, both = {}}")
+  for first_char_length = 1, 4 do
+    local prefix_tree = prefix_trees.leaders[first_char_length]
+    local subparsers = {}
+    depth_first_search(prefix_tree, "", function(node, path)
+      if node._type == "leaf" then
+        local from_byte = table.unpack(node)
+        local suffix = serialize_byte_parser(from_byte)
+        if subparsers[path] ~= nil then
+          subparsers[path] = subparsers[path] .. " + " .. suffix
+        else
+          subparsers[path] = suffix
+        end
+      end
+    end, function(_, path)
+      if #path > 0 then
+        local byte = path:sub(#path, #path)
+        local parent_path = path:sub(1, #path-1)
+        local prefix = serialize_byte_parser(byte)
+        local suffix
+        if subparsers[path]:find(" %+ ") then
+          suffix = prefix .. " * (" .. subparsers[path] .. ")"
+        else
+          suffix = prefix .. " * " .. subparsers[path]
+        end
+        if subparsers[parent_path] ~= nil then
+          subparsers[parent_path] = subparsers[parent_path]
+                                 .. " + " .. suffix
+        else
+          subparsers[parent_path] = suffix
+        end
+      else
+        print(
+          "M.composition_mapping.leaders["
+          .. first_char_length .. "] = " .. (subparsers[path] or "fail")
+        )
+      end
+    end)
+    for second_char_length = 1, 4 do
+      prefix_tree
+        = prefix_trees.both[first_char_length][second_char_length]
+      subparsers = {}
+      depth_first_search(prefix_tree, "", function(node, path)
+        if node._type == "leaf" then
+          local from_byte, to_codepoint = table.unpack(node)
+          local suffix = serialize_byte_parser(from_byte)
+            .. " / " .. serialize_replacement({to_codepoint})
+          if subparsers[path] ~= nil then
+            subparsers[path] = subparsers[path] .. " + " .. suffix
+          else
+            subparsers[path] = suffix
+          end
+        end
+      end, function(_, path)
+        if #path > 0 then
+          local byte = path:sub(#path, #path)
+          local parent_path = path:sub(1, #path-1)
+          local prefix = serialize_byte_parser(byte)
+          local suffix
+          if subparsers[path]:find(" %+ ") then
+            suffix = prefix .. " * (" .. subparsers[path] .. ")"
+          else
+            suffix = prefix .. " * " .. subparsers[path]
+          end
+          if subparsers[parent_path] ~= nil then
+            subparsers[parent_path] = subparsers[parent_path]
+                                   .. " + " .. suffix
+          else
+            subparsers[parent_path] = suffix
+          end
+        else
+          print(
+            "M.composition_mapping.both[" .. first_char_length .. "]["
+              .. second_char_length .. "] = "
+              .. (subparsers[path] or "fail")
+          )
+        end
+      end)
+    end
+  end
+end)()
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -24228,7 +24494,7 @@ end)()
 %
 % In order to minimize the size and speed of the parser, we will first
 % construct prefix trees of UTF-8 encodings for all codepoints of a
-% given Unicode category and code length.
+% given code length.
 %
 % \end{markdown}
 %  \begin{macrocode}

@@ -8,7 +8,7 @@ AUXFILES=markdown.bbl markdown.cb markdown.cb2 markdown.glo markdown.bbl \
   markdown.hd markdown.run.xml markdown.markdown.in markdown.markdown.lua \
   markdown.markdown.out markdown-interfaces.md markdown-miscellanea.md \
   markdown-options.md markdown-tokens.md $(TECHNICAL_DOCUMENTATION_RESOURCES) \
-  $(VERSION_FILE) $(RAW_DEPENDENCIES) markdown-transcluded.md $(UNICODE_DATA)
+  $(VERSION_FILE) $(RAW_DEPENDENCIES) markdown-transcluded.md
 AUXDIRS=_minted-markdown _markdown_markdown markdown
 TDSARCHIVE=markdown.tds.zip
 CTANARCHIVE=markdown.ctan.zip
@@ -38,7 +38,8 @@ TECHNICAL_DOCUMENTATION_RESOURCES=markdown.bib markdown-figure-block-diagram.tex
   markdownthemewitiko_markdown_techdoc.sty
 RAW_DEPENDENCIES=DEPENDS-raw.txt
 DEPENDENCIES=DEPENDS.txt
-UNICODE_DATA=UnicodeData.txt CaseFolding.txt CompositionExclusions.txt HangulSyllableType.txt
+UNICODE_DATA=UnicodeData.txt CaseFolding.txt DerivedNormalizationProps.txt \
+  HangulSyllableType.txt
 TECHNICAL_DOCUMENTATION=markdown.pdf
 MARKDOWN_USER_MANUAL=markdown.md markdown.css
 HTML_USER_MANUAL=markdown.html markdown.css
