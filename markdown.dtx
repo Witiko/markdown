@@ -28902,7 +28902,7 @@ function M.writer.new(options)
     local normalized_s = s
     if not options.unicodeNormalization
        or options.unicodeNormalizationForm ~= "nfc" then
-      normalized_s = uni_algos.normalize.NFC(normalized_s)
+      normalized_s = util.normalize(normalized_s, "nfc")
     end
 
     for _, code in utf8.codes(normalized_s) do
@@ -28983,7 +28983,7 @@ function M.writer.new(options)
     local normalized_s = s
     if not options.unicodeNormalization
        or options.unicodeNormalizationForm ~= "nfc" then
-      normalized_s = uni_algos.normalize.NFC(normalized_s)
+      normalized_s = util.normalize(normalized_s, "nfc")
     end
 
     for _, code in utf8.codes(normalized_s) do
@@ -33522,18 +33522,7 @@ end
 %  \begin{macrocode}
       if options.unicodeNormalization then
         local form = options.unicodeNormalizationForm
-        if form == "nfc" then
-          input = uni_algos.normalize.NFC(input)
-        elseif form == "nfd" then
-          input = uni_algos.normalize.NFD(input)
-        elseif form == "nfkc" then
-          input = uni_algos.normalize.NFKC(input)
-        elseif form == "nfkd" then
-          input = uni_algos.normalize.NFKD(input)
-        else
-          return writer.error(
-            format("Unknown normalization form %s.", form))
-        end
+        input = util.normalize(input, form)
       end
 %    \end{macrocode}
 % \begin{markdown}
