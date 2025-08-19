@@ -25278,7 +25278,7 @@ util.casefold = (function()
 %  \begin{macrocode}
     if form == "nfd" or form == "nfkd" then
       result = util.normalize(result, form)
-      result = table.concat(lpeg.match(fold_string, s))
+      result = table.concat(lpeg.match(fold_string, result))
       assert(result ~= nil)
       result = util.normalize(result, form)
     end
