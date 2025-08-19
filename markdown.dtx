@@ -25711,6 +25711,27 @@ end)()
 %    \end{macrocode}
 % \begin{markdown}
 %
+% The \luamdef{util.normalize} method normalizes a UTF-8-encoded canonically
+% ordered Unicode string `s` using the normalization form `form`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+function util.normalize(s, form)
+  if form == "nfd" then
+    return util.decompose(s, "canonical")
+  elseif form == "nfkd" then
+    return util.decompose(s, "compatibility")
+  elseif form == "nfc" then
+    return util.compose(util.decompose(s, "canonical"))
+  elseif form == "nfkc" then
+    return util.compose(util.decompose(s, "compatibility"))
+  else
+    error(string.format('Unexpected normal form "%s"', form))
+  end
+end
+%    \end{macrocode}
+% \begin{markdown}
+%
 %### HTML Entities
 % This section documents the \acro{HTML} entities recognized by the
 % markdown reader.  These functions are encapsulated in the `entities`
