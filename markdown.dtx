@@ -24158,8 +24158,8 @@ end)()
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Next, we will define constants and functions with the hangul syllable
-% decomposition algorithm.
+% Next, we will define constants and functions with the Hangul syllable
+% (de)composition algorithm.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -24169,32 +24169,51 @@ end)()
   print(string.format("local t_base = %d", tonumber("11A7", 16)))
   print(string.format("local l_count = %d", 19))
   print(string.format("local v_count = %d", 21))
-  print(string.format("local t_count = %d  -- luacheck: ignore", 28))
+  print(string.format("local t_count = %d", 28))
   print("local n_count = v_count * t_count")
-  print("local s_count = l_count * n_count  -- luacheck: ignore")
+  print("local s_count = l_count * n_count")
 
-  print("local function hangul_LV(byte)")
-  print("  for _, s in utf8.codes(byte) do  -- luacheck: ignore")
-  print("    local s_index = s - s_base")
-  print("    local l_index = s_index // n_count")
-  print("    local v_index = (s_index % n_count) // t_count")
-  print("    local l_part = l_base + l_index")
-  print("    local v_part = v_base + v_index")
-  print("    return utf8.char(l_part) .. utf8.char(v_part)")
-  print("  end")
-  print("  assert(false)")
+  print("local function hangul_decompose_LV(byte)")
+  print("  local s = utf8.codepoint(byte)")
+  print("  local s_index = s - s_base")
+  print("  local l_index = s_index // n_count")
+  print("  local v_index = (s_index % n_count) // t_count")
+  print("  local l_part = l_base + l_index")
+  print("  local v_part = v_base + v_index")
+  print("  return utf8.char(l_part) .. utf8.char(v_part)")
   print("end")
 
-  print("local function hangul_LVT(byte)")
-  print("  for _, s in utf8.codes(byte) do  -- luacheck: ignore")
-  print("    local s_index = s - s_base")
-  print("    local lv_index = (s_index // t_count) * t_count")
-  print("    local t_index = s_index % t_count")
-  print("    local lv_part = s_base + lv_index")
-  print("    local t_part = t_base + t_index")
-  print("    return utf8.char(lv_part) .. utf8.char(t_part)")
+  print("local function hangul_decompose_LVT(byte)")
+  print("  local s = utf8.codepoint(byte)")
+  print("  local s_index = s - s_base")
+  print("  local lv_index = (s_index // t_count) * t_count")
+  print("  local t_index = s_index % t_count")
+  print("  local lv_part = s_base + lv_index")
+  print("  local t_part = t_base + t_index")
+  print("  return utf8.char(lv_part) .. utf8.char(t_part)")
+  print("end")
+
+  print("function M.hangul_compose(first_byte, second_byte)")
+  print("  local last = utf8.codepoint(first_byte)")
+  print("  local ch = utf8.codepoint(second_byte)")
+  print("  local l_index = last - l_base")
+  print("  if 0 <= l_index and l_index < l_count then")
+  print("    local v_index = ch - v_base")
+  print("    if 0 <= v_index and v_index < v_count then")
+  print("      return utf8.char(")
+  print("        s_base + (l_index * v_count + v_index) * t_count")
+  print("      )")
+  print("    end")
   print("  end")
-  print("  assert(false)")
+  print("  local s_index = last - s_base")
+  print("  if 0 <= s_index and s_index < s_count")
+  print("      and s_index % t_count == 0 then")
+  print("    local t_index = ch - t_base")
+  print("    if 0 < t_index and t_index < t_count then")
+  print("      return utf8.char(last + t_index)")
+  print("    end")
+  print("  end")
+  print("  return nil")
   print("end")
 %    \end{macrocode}
 % \begin{markdown}
@@ -24246,7 +24265,7 @@ end)()
             print(
               "M.decomposition_mapping.hangul." .. syllable_type
               .. "[" .. length .. "] = C(" .. subparsers[path] .. ")"
-              .. " / hangul_" .. syllable_type
+              .. " / hangul_decompose_" .. syllable_type
             )
           else
             print(
@@ -25521,9 +25540,11 @@ end)()
 % The \luamdef{util.compose} method performs the canonical composition of a
 % UTF-8-encoded canonically ordered Unicode string `s` based on the low-level
 % parsers in \luamref{unicode_data.composition_mapping},
-% defined in Section <#sec:unicode-canonical-composition>. Unlike the low-level
-% parsers, this high-level function is invariant to the number of bytes the
-% Unicode characters occupy after conversion to UTF-8.
+% defined in Section <#sec:unicode-canonical-composition>, and definitions
+% from the Hangul syllable (de)composition algorithm, defined in Section
+% <#unicode-hangul-decomposition>. Unlike the low-level parsers, this
+% high-level function is invariant to the number of bytes the Unicode
+% characters occupy after conversion to UTF-8.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -25659,6 +25680,23 @@ util.compose = (function()
         candidate_combining_mark = candidate_combining_mark + 1
       end
       assert(starter <= s_len)
+    end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, iterate over the string once more and compose Hangul syllables.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    for i = 1, s_len - 1 do
+      local last, ch = buffer[i], buffer[i + 1]
+      if last ~= "" and ch ~= "" then
+        local composite = unicode_data.hangul_compose(last, ch)
+        if composite ~= nil then
+          buffer[i] = ""
+          buffer[i + 1] = composite
+        end
+      end
     end
 %    \end{macrocode}
 % \begin{markdown}
