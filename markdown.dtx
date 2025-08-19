@@ -24325,9 +24325,9 @@ end)()
 %
 % \end{markdown}
 %  \begin{macrocode}
-  local prefix_trees = {leaders = {}, both = {}}
+  local prefix_trees = {starters = {}, both = {}}
   for first_char_length = 1, 4 do
-    prefix_trees.leaders[first_char_length]
+    prefix_trees.starters[first_char_length]
       = {_type = "intermediate"}
     prefix_trees.both[first_char_length] = {}
     for second_char_length = 1, 4 do
@@ -24335,7 +24335,7 @@ end)()
         = {_type = "intermediate"}
     end
   end
-  local seen_leader_codes = {}
+  local seen_starter_codes = {}
   for decomposition_type, to_codepoint, from_codepoints
       in read_decompositions(file) do
     if (
@@ -24345,25 +24345,25 @@ end)()
         ) then
       goto continue
     end
-    local leader_code = utf8.char(from_codepoints[1])
+    local starter_code = utf8.char(from_codepoints[1])
     local combining_character_code = utf8.char(from_codepoints[2])
-    local leader_node = prefix_trees.leaders[#leader_code]
+    local starter_node = prefix_trees.starters[#starter_code]
     local both_node
-      = prefix_trees.both[#leader_code][#combining_character_code]
-    for i = 1, #leader_code do
-      local from_byte = leader_code:sub(i, i)
+      = prefix_trees.both[#starter_code][#combining_character_code]
+    for i = 1, #starter_code do
+      local from_byte = starter_code:sub(i, i)
       if both_node[from_byte] == nil then
         both_node[from_byte] = {_type = "intermediate"}
       end
       both_node = both_node[from_byte]
-      if i < #leader_code then
-        if leader_node[from_byte] == nil then
-          leader_node[from_byte] = {_type = "intermediate"}
+      if i < #starter_code then
+        if starter_node[from_byte] == nil then
+          starter_node[from_byte] = {_type = "intermediate"}
         end
-        leader_node = leader_node[from_byte]
-      elseif seen_leader_codes[leader_code] == nil then
-        seen_leader_codes[leader_code] = true
-        table.insert(leader_node, {from_byte, _type = "leaf"})
+        starter_node = starter_node[from_byte]
+      elseif seen_starter_codes[starter_code] == nil then
+        seen_starter_codes[starter_code] = true
+        table.insert(starter_node, {from_byte, _type = "leaf"})
       end
     end
     for i = 1, #combining_character_code do
@@ -24390,9 +24390,9 @@ end)()
 %
 % \end{markdown}
 %  \begin{macrocode}
-  print("M.composition_mapping = {leaders = {}, both = {}}")
+  print("M.composition_mapping = {starters = {}, both = {}}")
   for first_char_length = 1, 4 do
-    local prefix_tree = prefix_trees.leaders[first_char_length]
+    local prefix_tree = prefix_trees.starters[first_char_length]
     local subparsers = {}
     depth_first_search(prefix_tree, "", function(node, path)
       if node._type == "leaf" then
@@ -24423,11 +24423,17 @@ end)()
         end
       else
         print(
-          "M.composition_mapping.leaders["
+          "M.composition_mapping.starters["
           .. first_char_length .. "] = " .. (subparsers[path] or "fail")
         )
       end
     end)
+    print(
+      string.format(
+        "M.composition_mapping.both[%d] = {}",
+        first_char_length
+      )
+    )
     for second_char_length = 1, 4 do
       prefix_tree
         = prefix_trees.both[first_char_length][second_char_length]
@@ -25287,7 +25293,7 @@ util.canonically_order = (function()
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Next, define a parser that will determine the combining classese of all
+% Next, define a parser that will determine the combining classes of all
 % characters in a string.
 %
 % \end{markdown}
@@ -25303,7 +25309,7 @@ util.canonically_order = (function()
 %  \begin{macrocode}
   return function(s)
     local s_len = utf8.len(s)
-    if s_len <= 1 then
+    if s == false or s_len <= 1 then
       return s
     end
 %    \end{macrocode}
@@ -25469,7 +25475,7 @@ util.decompose = (function()
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Next, define a parser that will case-fold a string.
+% Next, define a parser that will decompose a string.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -25507,6 +25513,161 @@ util.decompose = (function()
       decompose(decompose_string.hangul.LV)
     until prev_s == next_s
     return util.canonically_order(next_s)
+  end
+end)()
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The \luamdef{util.compose} method performs the canonical composition of a
+% UTF-8-encoded canonically ordered Unicode string `s` based on the low-level
+% parsers in \luamref{unicode_data.composition_mapping},
+% defined in Section <#sec:unicode-canonical-composition>. Unlike the low-level
+% parsers, this high-level function is invariant to the number of bytes the
+% Unicode characters occupy after conversion to UTF-8.
+%
+% \end{markdown}
+%  \begin{macrocode}
+util.compose = (function()
+  local fail, any = P(false), P(1)
+  local eof = -any
+  local cont = R("\128\191")
+  local utf8_character
+    = R("\0\127")
+    + R("\194\223") * cont
+    + R("\224\239") * cont * cont
+    + R("\240\244") * cont * cont * cont
+%    \end{macrocode}
+% \begin{markdown}
+%
+% First, define a parser that will determine the combining class of a
+% character.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local classify_character = fail
+  for n = 1, 4 do
+    classify_character
+      = classify_character
+      + unicode_data.ccc[n]
+  end
+  classify_character
+    = classify_character
+    + utf8_character * Cc(0)
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, define a parser that will determine the combining classes of all
+% characters in a string.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local classify_string = Ct(classify_character^0) * eof
+%    \end{macrocode}
+% \begin{markdown}
+%    \end{macrocode}
+% \begin{markdown}
+%
+% First, define parsers that will compose a pair of UTF-8-encoded Unicode
+% characters into their primary composite.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local compose_characters = fail
+  for m = 1, 4 do
+    local starter = #unicode_data.composition_mapping.starters[m]
+    local both = fail
+    for n = 1, 4 do
+      both = (
+        both
+        + #unicode_data.composition_mapping.both[m][n]
+        * unicode_data.composition_mapping.both[m][n]
+      )
+    end
+    compose_characters = compose_characters + starter * both
+  end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% When the function is called, first check whether the string is trivially
+% ordered. If it is, return it without any changes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  return function(s)
+    local s_len = utf8.len(s)
+    if s == false or s_len <= 1 then
+      return s
+    end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Otherwise, determine the combining classes of all characters in the string.
+% If the string cannot be decoded with UTF-8, return it unchanged.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    local classes = lpeg.match(classify_string, s)
+    if classes == nil then
+      return s
+    end
+    assert(#classes == s_len)
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Otherwise, construct a buffer of all characters in the string.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    local buffer = {}
+    for _, code in utf8.codes(s) do
+      local char = utf8.char(code)
+      table.insert(buffer, char)
+    end
+    assert(#buffer == s_len)
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Finally, implement the composition algorithm.
+%
+% First, find the first starter character in the string.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    local starter = 1
+    while starter <= s_len and classes[starter] ~= 0 do
+      starter = starter + 1
+    end
+    local candidate_combining_mark = starter + 1
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, apply the composition rules until we reach the end of the string.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    while candidate_combining_mark <= s_len do
+      local L = buffer[starter]
+      local C = buffer[candidate_combining_mark]
+      local P = lpeg.match(compose_characters, L .. C)
+      if P ~= nil then
+        buffer[starter] = P
+        buffer[candidate_combining_mark] = ""
+      else
+        if classes[candidate_combining_mark] == 0 then
+          starter = candidate_combining_mark
+        end
+        candidate_combining_mark = candidate_combining_mark + 1
+      end
+      assert(starter <= s_len)
+    end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Finally, concatenate the buffer and return an ordered string.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    return table.concat(buffer, "")
   end
 end)()
 %    \end{macrocode}
