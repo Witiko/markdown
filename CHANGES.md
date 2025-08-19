@@ -1,10 +1,6 @@
 # Changes
 
-## 3.XX.X (2025-08-XX)
-
-Development:
-
-- Remove dependency on library `lua-uni-algos`. (#569)
+## 3.11.5 (2025-08-19)
 
 Fixes:
 
@@ -18,6 +14,10 @@ Fixes:
   @andreiborisov in #557, fixed by @witiko in #582)
 
   This change improves support for LuaMetaTeX.
+
+Dependencies:
+
+- Remove dependency on library `lua-uni-algos`. (added by @witiko in #569)
 
 Defaults:
 
