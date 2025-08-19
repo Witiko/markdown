@@ -23847,8 +23847,8 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% The function \luamdef{serialize_byte_parser} produces the Lua code for a
-% \acro{PEG} parser that matches a contiguous range of bytes.
+% The function \luamdef{serialize_byte_range_parser} produces the Lua code for
+% a \acro{PEG} parser that matches a contiguous range of bytes.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -24052,7 +24052,7 @@ end)()
 %#### Hangul Syllable Decomposition {#unicode-hangul-decomposition}
 % Low-level parsers that decompose UTF-8-encoded Unicode characters using
 % the Hangul syllable decomposition [@unicode24, Section 3.12.2] are also
-% organized in table \luamdef{unicode_data.decomposition_mapping}, previously
+% organized in table \luamref{unicode_data.decomposition_mapping}, previously
 % defined in Section <#sec:unicode-decomposition> based on the
 % number of bytes they occupy after conversion to UTF-8.
 %
@@ -25189,7 +25189,7 @@ util.warning = (function()
 %</lua,lua-loader>
 %<*lua>
 % \fi
-% \begin{markdown}
+%  \begin{macrocode}
   for _, message in ipairs(early_warnings) do
     warning(message)
   end
@@ -25198,7 +25198,7 @@ util.warning = (function()
 %</lua>
 %<*lua,lua-loader>
 % \fi
-% \begin{markdown}
+%  \begin{macrocode}
   return warning
 end)()
 %    \end{macrocode}
@@ -25452,8 +25452,6 @@ util.decompose = (function()
   local decomposition_types = {"canonical", "compatibility"}
 %    \end{macrocode}
 % \begin{markdown}
-%    \end{macrocode}
-% \begin{markdown}
 %
 % First, define parsers that will decompose a character.
 %
@@ -25535,7 +25533,7 @@ end)()
 % parsers in \luamref{unicode_data.composition_mapping},
 % defined in Section <#sec:unicode-canonical-composition>, and definitions
 % from the Hangul syllable (de)composition algorithm, defined in Section
-% <#unicode-hangul-decomposition>. Unlike the low-level parsers, this
+% <#sec:unicode-hangul-decomposition>. Unlike the low-level parsers, this
 % high-level function is invariant to the number of bytes the Unicode
 % characters occupy after conversion to UTF-8.
 %
@@ -25576,8 +25574,6 @@ util.compose = (function()
 % \end{markdown}
 %  \begin{macrocode}
   local classify_string = Ct(classify_character^0) * eof
-%    \end{macrocode}
-% \begin{markdown}
 %    \end{macrocode}
 % \begin{markdown}
 %
