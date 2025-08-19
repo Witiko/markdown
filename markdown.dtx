@@ -25265,9 +25265,23 @@ util.casefold = (function()
 % \end{markdown}
 %  \begin{macrocode}
   local fold_string = Ct(fold_character^0) * eof
-  return function(s)
+  return function(s, form)
     local result = table.concat(lpeg.match(fold_string, s))
     assert(result ~= nil)
+%    \end{macrocode}
+% \begin{markdown}
+%
+% For NFD and NFKD normalization forms, normalize the case-folded string
+% and then repeat the fold-and-normalize operation.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    if form == "nfd" or form == "nfkd" then
+      result = util.normalize(result, form)
+      result = table.concat(lpeg.match(fold_string, s))
+      assert(result ~= nil)
+      result = util.normalize(result, form)
+    end
     return result
   end
 end)()
@@ -28955,7 +28969,11 @@ function M.writer.new(options)
         end
       else
         -- Case-fold all alphabetic characters.
-        char = util.casefold(char)
+        local form = nil
+        if options.unicodeNormalization then
+          form = options.unicodeNormalizationForm
+        end
+        char = util.casefold(char, form)
         prev_space = false
       end
 
@@ -29032,7 +29050,11 @@ function M.writer.new(options)
         end
       else
         -- Case-fold all alphabetic characters.
-        char = util.casefold(char)
+        local form = nil
+        if options.unicodeNormalization then
+          form = options.unicodeNormalizationForm
+        end
+        char = util.casefold(char, form)
         prev_space = false
       end
 
@@ -31214,7 +31236,11 @@ function M.reader.new(writer, options)
     tag = util.rope_to_string(tag)
     tag = tag:gsub("[ \n\r\t]+", " ")
     tag = tag:gsub("^ ", ""):gsub(" $", "")
-    tag = util.casefold(tag, true, false)
+    local form = nil
+    if options.unicodeNormalization then
+      form = options.unicodeNormalizationForm
+    end
+    tag = util.casefold(tag, form)
     return tag
   end
 %    \end{macrocode}
