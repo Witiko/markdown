@@ -2,6 +2,10 @@
 
 ## 3.XX.X (2025-08-XX)
 
+Development:
+
+- Remove dependency on library `lua-uni-algos`. (#569)
+
 Fixes:
 
 - Correctly regenerate ConTeXT databases in `Dockerfile`. (reported by @witiko
