@@ -2433,7 +2433,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
               \l_tmpa_tl
             \tl_set:Nx
               #2
-              { \the \cs:w \l_tmpa_tl \cs_end: }  % noqa: W200
+              { \the \cs:w \l_tmpa_tl \cs_end: }
           }
           {
             \@@_option_tl_to_csname:nN
@@ -2498,7 +2498,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
 % \end{markdown}
 %  \begin{macrocode}
 \seq_new:N \g_@@_cases_seq
-\cs_new:Nn \@@_camel_case:N  % noqa: w401
+\cs_new:Nn \@@_camel_case:N
   {
     \regex_replace_all:nnN
       { _ ([a-z]) }
@@ -2509,7 +2509,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
       { #1 }
   }
 \seq_gput_right:Nn \g_@@_cases_seq { @@_camel_case:N }
-\cs_new:Nn \@@_snake_case:N  % noqa: w401
+\cs_new:Nn \@@_snake_case:N
   {
     \regex_replace_all:nnN
       { ([a-z])([A-Z]) }
@@ -12009,7 +12009,7 @@ you would include the following code in your plain \TeX{} document:
 %
 % \end{markdown}
 %  \begin{macrocode}
-\prg_new_conditional:Nnn  % noqa: w401
+\prg_new_conditional:Nnn
   \@@_if_option:n
   { TF, T, F }
   {
@@ -21644,7 +21644,7 @@ following text:
 % \end{markdown}
 %  \begin{macrocode}
       % TODO: Use `\regex_if_match` in TeX Live 2025.
-      \regex_match:NVTF  % noqa: w202
+      \regex_match:NVTF
         \c_@@_appending_key_regex
         \l_keys_key_str
         {
@@ -22415,7 +22415,7 @@ following text:
 % \end{markdown}
 %  \begin{macrocode}
       % TODO: Use `\regex_if_match` in TeX Live 2025.
-      \regex_match:NVTF  % noqa: w202
+      \regex_match:NVTF
         \c_@@_appending_key_regex
         \l_keys_key_str
         {
@@ -23603,7 +23603,7 @@ following text:
 %
 % \end{markdown}
 %  \begin{macrocode}
-\cs_new:Nn \@@_caseless:N  % noqa: w401
+\cs_new:Nn \@@_caseless:N
   {
     \regex_replace_all:nnN
       { ([a-z])([A-Z]) }
@@ -39493,7 +39493,7 @@ end
     The~markdown*~LaTeX~environment~has~been~deprecated~and~will~
     be~removed~in~the~next~major~version~of~the~Markdown~package.
   }
-\cs_generate_variant:Nn  % noqa: e405, w402
+\cs_generate_variant:Nn  % noqa: w402
   \@@_setup:n
   { V }
 \ExplSyntaxOff
@@ -39527,7 +39527,7 @@ end
 \ExplSyntaxOn
 \prop_new:N \g_@@_latex_loaded_themes_linenos_prop
 \prop_new:N \g_@@_latex_loaded_themes_versions_prop
-\cs_gset:Nn  % noqa: w401
+\cs_gset:Nn
   \@@_load_theme:nnn
   {
 %    \end{macrocode}
@@ -41620,7 +41620,7 @@ end
 \ExplSyntaxOn
 \prop_new:N \g_@@_context_loaded_themes_linenos_prop
 \prop_new:N \g_@@_context_loaded_themes_versions_prop
-\cs_gset:Nn  % noqa: w401
+\cs_gset:Nn
   \@@_load_theme:nnn
   {
 %    \end{macrocode}
