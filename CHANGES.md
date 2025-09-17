@@ -35,6 +35,10 @@ Continuous integration:
 - Use current pkgcheck. (reported by @manfredlotz via email and by @witiko
   in #580, fixed in #581)
 
+Housekeeping:
+
+- Remove needless ignored issues. (fixed by @witiko in #583)
+
 ## 3.11.4 (2025-06-24)
 
 Documentation:
