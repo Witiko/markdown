@@ -5,13 +5,14 @@
 Tests:
 
 - Enable LuaMetaTeX in ConTeXt tests. (added by @witiko in #557 with major
-  contributions from @josephwright and @gucci-on-fleek)
+  contributions from @josephwright and @gucci-on-fleek in #557,
+  latex3/latex3#1791, latex3/latex3#1797, and elsewhere)
 
 Examples:
 
 - Add example file `examples/context-lmtx.tex` for ConTeXt LMTX.
   (added by @witiko in #557 with major contributions from @josephwright and
-  @gucci-on-fleek)
+  @gucci-on-fleek in #557 and elsewhere)
 
 Housekeeping:
 
