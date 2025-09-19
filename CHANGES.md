@@ -4,6 +4,10 @@
 
 Tests:
 
+- Improve the speed of our tests more by than 3×. (added by @zauguin,
+  @muzimuzhi, @gucci-on-fleek, and @josephwright in latex3/latex3#1791,
+  discussed in #557 and #584)
+
 - Enable LuaMetaTeX in ConTeXt tests. (added by @witiko in #557 with major
   contributions from @josephwright and @gucci-on-fleek in #557,
   latex3/latex3#1791, latex3/latex3#1797, and elsewhere)
