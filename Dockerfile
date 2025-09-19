@@ -299,6 +299,9 @@ then
   tlmgr path add
 fi
 
+# Update the LaTeX3 kernel
+tlmgr update l3kernel
+
 # Uninstall the distribution Markdown package
 rm -rfv ${PREINSTALLED_DIR}/tex/luatex/markdown/
 rm -rfv ${PREINSTALLED_DIR}/scripts/markdown/
