@@ -2,6 +2,21 @@
 
 ## 3.11.6 (2025-09-XX)
 
+Tests:
+
+- Enable LuaMetaTeX in ConTeXt tests. (added by @witiko in #557 with major
+  contributions from @josephwright and @gucci-on-fleek)
+
+Examples:
+
+- Add example file `examples/context-lmtx.tex` for ConTeXt LMTX.
+  (added by @witiko in #557 with major contributions from @josephwright and
+  @gucci-on-fleek)
+
+Housekeeping:
+
+- Remove needless ignored issues. (fixed by @witiko in #583)
+
 ## 3.11.5 (2025-08-19)
 
 Fixes:
@@ -34,10 +49,6 @@ Continuous integration:
 
 - Use current pkgcheck. (reported by @manfredlotz via email and by @witiko
   in #580, fixed in #581)
-
-Housekeeping:
-
-- Remove needless ignored issues. (fixed by @witiko in #583)
 
 ## 3.11.4 (2025-06-24)
 
