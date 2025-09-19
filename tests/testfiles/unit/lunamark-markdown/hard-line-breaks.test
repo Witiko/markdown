@@ -1,4 +1,4 @@
-if: format == 'context-mkiv' or template == 'input'
+if: format == 'context' or template == 'input'
 ---
 <<<
 This test ensures that two and more trailing spaces or tabs produce a
