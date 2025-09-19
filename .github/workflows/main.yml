@@ -125,7 +125,7 @@ jobs:
       - name: Extract TeX files
         run: make base
       - name: Run explcheck
-        run: explcheck *.tex *.sty
+        run: explcheck *.tex *.sty tests/support/*.tex tests/support/*.sty
   markdownlint:
     name: Style check (Markdown)
     runs-on: ubuntu-latest
