@@ -25,7 +25,7 @@ encouraged. 😉
 
  [commonmark]: https://commonmark.org/ "CommonMark: A strongly defined, highly compatible specification of Markdown"
 
-Your first Markdown document
+Your first markdown document
 ----------------------------
 
 Using a text editor, create an empty directory named `workdir/`. In it, create
@@ -74,7 +74,7 @@ Congratulations, you have just typeset your first Markdown document! 🥳
 
  [tex-live]: https://www.tug.org/texlive/ "TeX Live - TeX Users Group"
 
-Use Markdown for continuous integration
+Use markdown for continuous integration
 ---------------------------------------
 
 Can't live without the latest features of the Markdown package in your
@@ -147,8 +147,9 @@ For further information, consult one of the following:
     - [Markdown 2.17.1: What's New, What's Next?][tb135],
     - [Attributes in Markdown][tb136],
     - [Markdown 3 at TUG 2023: Reflections from the Q&A Session][tb138],
-    - [Fast Regression Testing of TeX Packages: Multiprocessing and Batching][tb139], and
-    - [Markdown Themes in Practice][tb140].
+    - [Fast Regression Testing of TeX Packages: Multiprocessing and Batching][tb139],
+    - [Markdown Themes in Practice][tb140], and
+    - Piping YAML files into LaTeX3 key–values ([preprint][tb142-preprint]).
 5. Journal articles published by [CSTUG Bulletin][csbul] (in Czech and Slovak):
     - [Rendering Markdown inside TeX Documents][10.5300/2016-1-4/78],
     - [Markdown 2.8.1: Boldly Unto the Throne of Lightweight Markup in TeX][10.5300/2020-1-2/48],
@@ -185,6 +186,8 @@ For further information, consult one of the following:
  [tb138]: https://www.tug.org/TUGboat/tb44-3/tb138starynovotny-markdown-qa.pdf     "Markdown 3 at TUG 2023: Reflections from the Q&A session"
  [tb139]: https://www.tug.org/TUGboat/tb45-1/tb139starynovotny-testing.pdf         "Fast Regression Testing of TeX Packages: The Unreasonable Effectiveness of Batching"
  [tb140]: https://www.tug.org/TUGboat/tb45-2/tb140starynovotny-markdown-themes.pdf "Markdown Themes in Practice"
+
+ [tb142-preprint]: https://www.overleaf.com/read/gbtmtybxhnjj "Piping YAML files into LaTeX3 key–values"
 
  [tb131-slides]:       https://tug.org/tug2021/assets/pdf/tug2021-novotny-slides.pdf                            "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"
  [tb131-video]:        https://youtu.be/i2GJMnLCZls                                                             "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"
@@ -236,7 +239,7 @@ Acknowledgements
 | [<img width="150" src="https://www.fi.muni.cz/images/fi-logo.png">][fimu] | I gratefully acknowledge the funding from the [Faculty of Informatics][fimu] at the [Masaryk University][mu] in Brno, Czech Republic, for the development of the Markdown package in projects [MUNI/33/12/2015][], [MUNI/33/1784/2020][], [MUNI/33/0776/2021][], [MUNI/33/1654/2022][], and [MUNI/33/1658/2022][]. |
 | [<img width="150" src="https://cdn.overleaf.com/img/ol-brand/overleaf_og_logo.png">][overleaf] | Extensive user documentation for the Markdown package was kindly written by [Lian Tze Lim][liantze] and published by [Overleaf][]. |
 | [<img width="150" src="https://pbs.twimg.com/profile_images/1004769879319334912/6Bh1UthD.jpg">][omedym] | Support for content slicing (Lua options [`shiftHeadings`][option-shift-headings] and [`slice`][option-slice]) and pipe tables (Lua options [`pipeTables`][option-pipe-tables] and [`tableCaptions`][option-table-captions]) was graciously sponsored by [David Vins][dvins] and [Omedym][]. |
-| [<img width="150" src="https://www.guava.blue/wp-content/uploads/2021/01/ISTQB-logo-600x545.png">][istqb] | Fixes for issues [#359][issue-359], [#368][issue-368], [#401][issue-401], [#424][issue-424], [#440][issue-440], [#468][issue-468], [#474][issue-474], and [#487][issue-487] were graciously sponsored by the [International Software Testing Qualifications Board (ISTQB)][istqb]. |
+| [<img width="150" src="https://github.com/istqborg/istqb_product_base/blob/main/img/istqb-logo-default.png">][istqb] | Fixes for issues [#359][issue-359], [#368][issue-368], [#401][issue-401], [#424][issue-424], [#440][issue-440], [#468][issue-468], [#474][issue-474], and [#487][issue-487] were graciously sponsored by the [International Software Testing Qualifications Board (ISTQB)][istqb]. |
 
  [dvins]:  https://github.com/dvins             "David Vins"
  [fimu]:   https://www.fi.muni.cz/index.html.en "Faculty of Informatics, Masaryk University"
@@ -264,7 +267,7 @@ Acknowledgements
  [MUNI/33/1654/2022]: https://www.muni.cz/en/research/projects/69763 "An Implementation of the CommonMark Standard into the Markdown Package for TeX"
  [MUNI/33/1658/2022]: https://www.muni.cz/en/research/projects/69762 "Syntax Extensions of the Markdown Package for TeX"
 
-Contributing to the Development of Markdown
+Contributing to the development of markdown
 -------------------------------------------
 
 Apart from the example markdown documents, tests, and continuous integration,
@@ -301,7 +304,7 @@ reproduced by running the `docker build` command on `Dockerfile` (`docker build
  [literate programming]: https://en.wikipedia.org/wiki/Literate_programming "Literate programming"
  [ltxdockit]:            https://ctan.org/pkg/ltxdockit                     "ltxdockit – Documentation support"
 
-Related Work
+Related work
 ------------
 
 Links to third-party software for the Markdown package are available in the
@@ -314,7 +317,7 @@ You are welcome to use these artworks in your promotional materials, provided
 you comply with the license terms specified for each piece. Typically, proper
 attribution to the artist is required.
 
-Citing Markdown
+Citing markdown
 ---------------
 
 When citing Markdown in academic papers and theses, please use the following
@@ -345,7 +348,7 @@ BibTeX file that is included in your TeX distribution like this:
 
  [tugboat.bib]: http://mirrors.ctan.org/info/digests/tugboat/biblio/tugboat.bib
 
-Notes to Distributors
+Notes to distributors
 ---------------------
 
 The file `markdown2tex.lua` should be installed in the TDS directory

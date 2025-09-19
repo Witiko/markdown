@@ -1,11 +1,147 @@
 # Changes
 
+## 3.11.6 (2025-09-XX)
+
+## 3.11.5 (2025-08-19)
+
+Fixes:
+
+- Correctly regenerate ConTeXT databases in `Dockerfile`. (reported by @witiko
+  in gucci-on-fleek/context-packaging#2 and #575, fixed by @witiko and
+  @gucci-on-fleek in gucci-on-fleek/context-packaging@0459634,
+  gucci-on-fleek/context-packaging@f8ee60e, d4c0054, 6fbd4dc, ccf580b, 850bef8,
+  and 53a3335)
+
+- Only quote `\jobname`-based token lists when the engine would. (reported by
+  @andreiborisov in #557, fixed by @witiko in #582)
+
+  This change improves support for LuaMetaTeX.
+
+Dependencies:
+
+- Remove dependency on library `lua-uni-algos`. (added by @witiko in #569)
+
+Defaults:
+
+- In LaTeX, load enumitem instead of paralist when the user has expressed an
+  intent to use new tag-friendly code by writing `\DocumentMetadata`.
+  (reported by @witiko in #578, fixed by @witiko and @u-fischer in #579)
+
+Continuous integration:
+
+- Rename GitHub Action `teatimeguest/setup-texlive-action@v3` to `TeX-Live/...`.
+  (reported by @pablogonz in #576, fixed by @witiko in 28ba10b5)
+
+- Use current pkgcheck. (reported by @manfredlotz via email and by @witiko
+  in #580, fixed in #581)
+
+Housekeeping:
+
+- Remove needless ignored issues. (fixed by @witiko in #583)
+
+## 3.11.4 (2025-06-24)
+
+Documentation:
+
+- Document the current limitations of the MikTeX distribution and TeX engines
+  other than LuaTeX. (reported by @obskyr in #566 and by @viocha in #573,
+  escalated upstream by @witiko in [miktex/miktex#1630][miktex-1630],
+  documented by @witiko in #574 and [witiko/lt3luabridge#32][lt3luabridge-32])
+
+  These are the current limitations:
+  1. The filenames of your .tex files may not contain spaces, see also #573.
+  2. If `-output-directory` is provided, it may not contain spaces and it won't be
+     automatically detected by MikTeX, see also [miktex/miktex#1630][miktex-1630].
+
+Housekeeping:
+
+- Mark uses of the deprecated conditional functions `\regex_match:*` for
+  removal after we have dropped support for TeX Live 2024 and earlier.
+  (8cd8bb5f)
+
+Deprecation:
+
+- Undeprecate `\markdownOptionOutputDir`.
+  (#566, [miktex/miktex#1630][miktex-1630], #574)
+
+  Due to the lack of support for the automatic detection of `-output-directory`
+  in MikTeX with TeX engines other than LuaTeX (see
+  [miktex/miktex#1630][miktex-1630]), there are still genuine uses of this
+  option. Therefore, it doesn't make sense to deprecate it.
+
+ [miktex-1630]: https://github.com/MiKTeX/miktex/issues/1630
+ [lt3luabridge-32]: https://github.com/Witiko/lt3luabridge/pull/32
+
+## 3.11.3 (2025-05-28)
+
+Fixes:
+
+- Support .tex files with spaces in the filename.
+  (reported by @obskyr in #568, fixed by @witiko in #571)
+
+- Use `status.output_directory` to determine option `outputDir` on MikTeX.
+  (reported by @obskyr in #566, fixed by @gucci-on-fleek, @cfr42, and @witiko
+  on [TeX StackExchange][tse-742209] and in #571)
+
+ [tse-742209]: https://tex.stackexchange.com/questions/742209/
+
+Continuous integration:
+
+- Switch to the GitHub Action `softprops/action-gh-release` for automatic
+  pre-releases. (contributed by @muzimuzhi in expltools#82, 58698ad1)
+
+## 3.11.2 (2025-04-28)
+
+Fixes:
+
+- Fix style issues identified by explcheck's semantic analysis.
+  (expltools#75, #562, #564)
+
+- Make `\markdownInput` handle file names with spaces correctly.
+  (reported by @u-fischer in #563, fixed by @witiko in #565)
+
+## 3.11.1 (2025-03-30)
+
+Development:
+
+- In theme `witiko/diagrams`, add parameter `format` for PlantUML diagrams.
+  (reported by @mrkissinger in #555, fixed by @witiko in 7d58f3d8 and 64c78f17)
+
+  Here is an example LaTeX document using the new parameter:
+
+  ```` tex
+  \documentclass{article}
+  \usepackage[import=witiko/diagrams@v2, relativeReferences]{markdown}
+  \begin{document}
+  \begin{markdown}
+  ``` plantuml {caption="An example UML sequence diagram" format=eps width=7cm #plantuml}
+  @startmindmap
+  + SIR
+  ++ 指標引擎
+  @endmindmap
+  ```
+
+  See the diagram in Figure <#plantuml>.
+  \end{markdown}
+  \end{document}
+  ````
+
+Documentation:
+
+- Add preprint and artwork for an upcoming TUGboat article titled _Piping YAML
+  files into LaTeX3 key–values_. (c684ce2e, 2214706b, 52ccb7a1, 85e96805)
+
+Docker:
+
+- Start building Docker images `witiko/markdown:TL2024-historic`. (bcae00a6)
+- Switch Docker images `witiko/markdown:latest` from TeX Live 2024 to 2025. (bcae00a6)
+
 ## 3.11.0 (2025-02-21)
 
 Development:
 
-- Remove dependency on Selene Unicode and support LuaMetaTeX and ConTeXt
-  standalone. (originally reported by @andreiborisov in #402 and #436,
+- Remove dependency on Selene Unicode and add preliminary support for LuaMetaTeX
+  and ConTeXt standalone. (originally reported by @andreiborisov in #402 and #436,
   and by @witiko in latex3#1518 and [dev-context@ntg.nl][dev-context-msg03280];
   fixed in #551..#553 by @witiko and @lostenderman, and in latex3#1670
   and latex3#1671 by @hanshagen, @josephwright, @Skillmon, and @muzimuzhi)

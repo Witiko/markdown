@@ -709,13 +709,13 @@ abbr {
   date       = {2017-01-19},
   url        = {https://github.com/iainc/Markdown-Content-Blocks},
   urldate    = {2018-01-08}}
-@book{luatex21,
+@book{luatex25,
   author     = {{Lua\TeX{} development team}},
   title      = {Lua\TeX{} reference manual},
-  date       = {2021-07-23},
-  note       = {Version 1.10 (stable)},
-  url        = {https://www.pragma-ade.com/general/manuals/luatex.pdf},
-  urldate    = {2022-09-30}}
+  date       = {2025-02-01},
+  note       = {Version 1.21},
+  url        = {http://mirrors.ctan.org/systems/doc/luatex/luatex.pdf},
+  urldate    = {2025-05-12}}
 @book{latex17,
   author     = {Braams, Johannes and Carlisle, David and Jeffrey, Alan and
                Lamport, Leslie and Mittelbach, Frank and Rowley, Chris and
@@ -825,6 +825,13 @@ abbr {
   date       = {2024-12-25},
   url        = {https://ctan.org/pkg/l3kernel},
   urldate    = {2025-01-06}}
+@online{unicode24,
+  author     = {{Unicode Consortium}},
+  title      = {The Unicode Standard},
+  subtitle   = {Version 16.0 -- Core Specification},
+  date       = {2024-09-10},
+  url        = {https://www.unicode.org/versions/Unicode16.0.0/UnicodeStandard-16.0.pdf},
+  urldate    = {2025-05-07}}
 %</techdoc-bibliography>
 %<@@=markdown>
 %<*themes-witiko-markdown-techdoc>
@@ -1009,9 +1016,21 @@ If you are using an older, incomplete, or atypical \TeX{} distribution, please
 consult the [technical documentation][techdoc] for a detailed list of
 requirements.
 
+You are also advised to use Lua\TeX{} with the Markdown Package for \TeX{}. Using
+pdf\TeX{}, \Hologo{XeTeX} and other \TeX{} engines comes with several limitations:
+
+ 1. The filenames of your .tex files may not contain spaces, see also [#573][issue-573].
+ 2. If `-output-directory` is provided, it may not contain spaces and it won't be
+    automatically detected by Mik\TeX{}, see also [miktex/miktex#1630][issue-1630].[^issue-1630]
+
  [docker]: https://hub.docker.com/r/witiko/markdown/tags (witiko/markdown - Docker Image)
  [tl]: https://www.tug.org/texlive/ (TeX Live - TeX Users Group)
  [mik]: https://miktex.org/ (Home - MiKTeXorg)
+
+ [issue-573]: https://github.com/Witiko/markdown/issues/573 (Compilation fails if the file name contains spaces)
+ [issue-1630]: https://github.com/MiKTeX/miktex/issues/1630 (Environmental variable TEXMF_OUTPUT_DIRECTORY not set by MikTeX binaries)
+
+ [^issue-1630]: To support `-output-directory` in MikTeX with engines other than Lua\TeX{}, you set either the environmental variable `TEXMF_OUTPUT_DIRECTORY` or the \TeX{} macro `\markdownOptionOutputDir` to the same value.
 
 Installation
 ------------
@@ -1156,7 +1175,7 @@ local md5 = require("md5")
 %
 % \end{markdown}
 %  \begin{macrocode}
-;(function()
+;(function()  -- luacheck: ignore
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -1180,29 +1199,8 @@ end)()
 % \begin{markdown}
 %
 % All the abovelisted modules are statically linked into the current version of
-% the Lua\TeX{} engine~[@luatex21, Section 4.3]. Beside these, we also include
+% the Lua\TeX{} engine~[@luatex25, Section 4.3]. Beside these, we also include
 % the following third-party Lua libraries:
-%
-% \pkg{lua-uni-algos}
-%
-%:    A package that implements Unicode case-folding in \TeX{} Live${}\geq{}2020$.
-%
-% \end{markdown}
-% \iffalse
-%</lua,lua-unicode-data-generator>
-%<*depends>
-% \fi
-%  \begin{macrocode}
-hard lua-uni-algos
-%    \end{macrocode}
-% \iffalse
-%</depends>
-%<*lua>
-% \fi
-%  \begin{macrocode}
-local uni_algos = require("lua-uni-algos")
-%    \end{macrocode}
-% \begin{markdown}
 %
 % \pkg{api7/lua-tinyyaml}
 %
@@ -1212,7 +1210,7 @@ local uni_algos = require("lua-uni-algos")
 %
 % \end{markdown}
 % \iffalse
-%</lua>
+%</lua,lua-unicode-data-generator>
 %<*depends>
 % \fi
 %  \begin{macrocode}
@@ -1269,9 +1267,16 @@ hard l3kernel
 %
 % \pkg{lt3luabridge}
 %
-%:    A package that allows us to execute Lua code with LuaTeX as well as
+%:    A package that allows us to execute Lua code with Lua\TeX{} as well as
 %     with other TeX engines that provide the *shell escape* capability,
 %     which allows them to execute code with the system's shell.
+%
+%     Note that this support for \TeX{} engines other than Lua\TeX{} comes with
+%     some limitations with respect to file and directory names. Specifically,
+%     the filenames of your .tex files [may not contain spaces][1]. If
+%     `-output-directory` is provided, it may not contain spaces either.
+%
+% [1]: https://github.com/Witiko/markdown/issues/573 (Compilation fails if the file name contains spaces)
 %
 % \end{markdown}
 % \iffalse
@@ -1299,10 +1304,10 @@ hard lt3luabridge
 %
 %     The plain \TeX{} code makes use of the `isdir` method that was added
 %     to the \pkg{Lua File System} library by the Lua\TeX{} engine
-%     developers~[@luatex21, Section 4.2.4].
+%     developers~[@luatex25, Section 4.2.4].
 %
 % The \pkg{Lua File System} module is statically linked into the Lua\TeX{}
-% engine~[@luatex21, Section 4.3].
+% engine~[@luatex25, Section 4.3].
 %
 % Unless you convert markdown documents to \TeX{} manually using the Lua
 % command-line interface (see Section <#sec:lua-cli-interface>), the plain
@@ -2341,7 +2346,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
             \seq_map_break:
           }
       }
-    \bool_if:nF
+    \bool_if:NF
       \l_tmpa_bool
       {
         \msg_error:nnn
@@ -2393,7 +2398,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
             \seq_map_break:
           }
       }
-    \bool_if:nF
+    \bool_if:NF
       \l_tmpa_bool
       {
         \msg_error:nnn
@@ -2428,7 +2433,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
               \l_tmpa_tl
             \tl_set:Nx
               #2
-              { \the \cs:w \l_tmpa_tl \cs_end: }  % noqa: W200
+              { \the \cs:w \l_tmpa_tl \cs_end: }
           }
           {
             \@@_option_tl_to_csname:nN
@@ -2482,18 +2487,6 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
     \seq_map_inline:Nn
       \l_tmpa_seq
       { #2 }
-  }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% To interrupt the \mref{\@\@_with_various_cases:nn} function
-% prematurely, use the \mdef{\@\@_with_various_cases_break:} function.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\cs_new:Nn \@@_with_various_cases_break:
-  {
-    \seq_map_break:
   }
 %    \end{macrocode}
 % \begin{markdown}
@@ -3034,10 +3027,34 @@ option.
 %<*tex>
 % \fi
 %  \begin{macrocode}
+\str_new:N
+  \g_@@_unquoted_jobname_str
+\str_gset:NV
+  \g_@@_unquoted_jobname_str
+  \c_sys_jobname_str
+\bool_new:N
+  \g_@@_jobname_quoted_bool
+\regex_replace_all:nnNTF
+  { \A ("|') ( .* ) ("|') \Z }
+  { \2 }
+  \g_@@_unquoted_jobname_str
+  {
+    \bool_gset_true:N
+      \g_@@_jobname_quoted_bool
+  }
+  {
+    \bool_gset_false:N
+      \g_@@_jobname_quoted_bool
+  }
 \@@_add_lua_option:nnn
   { cacheDir }
   { path }
-  { \markdownOptionOutputDir / _markdown_\jobname }
+  {
+    \markdownOptionOutputDir
+    / _markdown_
+    \str_use:N
+      \g_@@_unquoted_jobname_str
+  }
 %    \end{macrocode}
 % \iffalse
 %</tex>
@@ -3248,7 +3265,13 @@ defaultOptions.contentBlocksLanguageMap = "markdown-languages.json"
 \@@_add_lua_option:nnn
   { debugExtensionsFileName }
   { path }
-  { \markdownOptionOutputDir / \jobname .debug-extensions.json }
+  {
+    \markdownOptionOutputDir
+    /
+    \str_use:N
+      \g_@@_unquoted_jobname_str
+    .debug-extensions.json
+  }
 %    \end{macrocode}
 % \iffalse
 %</tex>
@@ -11655,7 +11678,8 @@ pdftex --shell-escape document.tex
 % \mref{markdownEnd} macro to produce special effects before and after the
 % markdown block.
 %
-% There are several limitations to the macros you need to be aware of.
+% There are several limitations to the macros you need to be aware of:
+%
 % The first limitation concerns the \mref{markdownEnd} macro, which must be
 % visible directly from the input line buffer (it may not be produced as a
 % result of input expansion). Otherwise, it will not be recognized as the end
@@ -12101,15 +12125,34 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 % from a \TeX{} source. It defaults to `\jobname.markdown.in`.
 %
 % The expansion of this macro must not contain quotation marks (`"`) or
-% backslash symbols (`\`). Mind that \TeX{} engines tend to
-% put quotation marks around `\jobname`, when it contains spaces.
+% backslash symbols (`\`).
 %
 % \end{markdown}
 %  \begin{macrocode}
-\@@_add_plain_tex_option:nnn
+\tl_set:Nn
+  \l_tmpa_tl
+  {
+    \str_use:N
+      \g_@@_unquoted_jobname_str
+    .markdown.in
+  }
+\bool_if:NT
+  \g_@@_jobname_quoted_bool
+  {
+    \tl_put_left:Nn
+      \l_tmpa_tl
+      { " }
+    \tl_put_right:Nn
+      \l_tmpa_tl
+      { " }
+  }
+\cs_generate_variant:Nn
+  \@@_add_plain_tex_option:nnn
+  { nnV }
+\@@_add_plain_tex_option:nnV
   { inputTempFileName }
   { path }
-  { \jobname.markdown.in }
+  \l_tmpa_tl
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -12119,14 +12162,19 @@ For more information, see the examples for the \Opt{finalizeCache} option.
 % option defaults to `.` or, since \TeX{} Live 2024, to the value of the
 % `-output-directory` option of your \TeX{} engine.
 %
+% In Mik\TeX{}, this automatic detection is [currently only supported with
+% Lua\TeX{}][1]. If you need to use Mik\TeX{} and cannot use Lua\TeX{}, you can
+% either a) fix the automatic detection by setting the environmental variable
+% `TEXMF_OUTPUT_DIRECTORY` manually or by setting the
+% \mref{markdownOptionOutputDir} option manually.
+%
 % The path must be set to the same value as the `-output-directory` option of
 % your \TeX{} engine for the package to function correctly. We need this macro
 % to make the Lua implementation aware where it should store the helper files.
 % The same limitations apply here as in the case of the
 % \Opt{inputTempFileName} macro.
 %
-% The \mref{markdownOptionOutputDir} macro has been deprecated and will be
-% removed in the next major version of the Markdown package.
+%  [1]: https://github.com/MiKTeX/miktex/issues/1630 (Environmental variable TEXMF_OUTPUT_DIRECTORY not set by MikTeX binaries)
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -12194,7 +12242,7 @@ document converted to \TeX{}.
 
 The Markdown package provides default definitions for token renderer prototypes
 using the `witiko/markdown/defaults`
-% theme (see Section~<sec:#themes>).
+% theme (see Section~<#sec:themes>).
 % \iffalse
 theme.
 % \fi
@@ -12410,8 +12458,7 @@ A PDF document named `document.pdf` should be produced and contain the text
 % \begin{markdown}
 %
 % Use the \pkg{lt3luabridge} library to determine the default value of the
-% \mref{markdownOptionOutputDir} macro by using the environmental variable
-% `TEXMF_OUTPUT_DIRECTORY` that is available since TeX~Live 2024.
+% \mref{markdownOptionOutputDir} macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -12448,8 +12495,16 @@ A PDF document named `document.pdf` should be produced and contain the text
 % \begin{markdown}
 %
 % Use the \pkg{lt3luabridge} library to determine the default value of the
-% \mref{markdownOptionOutputDir} macro by using the environmental variable
-% `TEXMF_OUTPUT_DIRECTORY` that is available since TeX~Live 2024.
+% \mref{markdownOptionOutputDir} macro by using one of the following:
+%
+% 1. The `status.output_directory` variable~[@luatex25, Section 10.2], which is
+%    available since Lua\TeX{} 1.18.0 from TeX~Live 2024 and in other \TeX{}
+%    distributions like Mik\TeX{} since ca March 2024. We are only able to read
+%    this variable in Lua\TeX{} and not other \TeX{} engines.
+%
+% 2. The `TEXMF_OUTPUT_DIRECTORY` environmental variable, which is available
+%    since \TeX{}~Live 2024. We are only able to read this variable in \TeX{} Live
+%    and not some other \TeX{} distributions like Mik\TeX{}.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -12477,7 +12532,7 @@ A PDF document named `document.pdf` should be produced and contain the text
 % \begin{markdown}
 %
 % Set most catcodes to category 12 (other) to ensure that special characters in
-% `TEXMF_OUTPUT_DIRECTORY` such as backslashes (`\`) are not interpreted as
+% the output directory name such as backslashes (`\`) are not interpreted as
 % control sequences.
 %
 % \end{markdown}
@@ -12487,7 +12542,13 @@ A PDF document named `document.pdf` should be produced and contain the text
               \c_str_cctab
             \luabridge_tl_set:Nn
               \l_tmpa_tl
-              { print(os.getenv("TEXMF_OUTPUT_DIRECTORY") or ".") }
+              {
+                print(
+                  (status.output_directory)
+                  or~os.getenv("TEXMF_OUTPUT_DIRECTORY")
+                  or~"."
+                )
+              }
             \tl_gset:NV
               \markdownOptionOutputDir
               \l_tmpa_tl
@@ -12673,9 +12734,6 @@ A PDF document named `document.pdf` should be produced and contain the text
   { NV }
 \cs_generate_variant:Nn
   \keys_define:nn
-  { nV }
-\cs_generate_variant:Nn
-  \@@_set_option_value:nn
   { nV }
 \prg_generate_conditional_variant:Nnn
   \str_if_eq:nn
@@ -13421,7 +13479,7 @@ options locally.
   \l_@@_current_snippet_tl
 \prg_new_conditional:Nnn
   \@@_if_snippet_exists:n
-  { TF, T, F }
+  { TF, T }
   {
     \tl_set:NV
       \l_@@_current_snippet_tl
@@ -21585,6 +21643,7 @@ following text:
 %
 % \end{markdown}
 %  \begin{macrocode}
+      % TODO: Use `\regex_if_match` in TeX Live 2025.
       \regex_match:NVTF
         \c_@@_appending_key_regex
         \l_keys_key_str
@@ -21697,7 +21756,8 @@ following text:
   \msg_error:nnn
   { nnV }
 \prg_generate_conditional_variant:Nnn
-  \regex_match:Nn
+  % TODO: Use `\regex_if_match` in TeX Live 2025.
+  \regex_match:Nn  % noqa: w202
   { NV }
   { TF }
 \prop_new:N
@@ -21732,7 +21792,8 @@ following text:
         \seq_map_inline:cn
           { #2 }
           {
-            \regex_match:NnT
+            % TODO: Use `\regex_if_match` in TeX Live 2025.
+            \regex_match:NnT  % noqa: w202
               \l_tmpa_regex
               { ##1 }
               {
@@ -22081,9 +22142,6 @@ following text:
         \l_tmpa_tl
     }
   }
-\cs_generate_variant:Nn
-  \keys_define:nn
-  { nV }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \begin{markdown}
@@ -22356,6 +22414,7 @@ following text:
 %
 % \end{markdown}
 %  \begin{macrocode}
+      % TODO: Use `\regex_if_match` in TeX Live 2025.
       \regex_match:NVTF
         \c_@@_appending_key_regex
         \l_keys_key_str
@@ -22610,7 +22669,7 @@ idioms, such as package options and environments.
 The \LaTeX{} interface accepts the same options as the plain \TeX{} interface,
 but now the options are specified as \meta{key}${}={}$\meta{value} pairs and
 they are passed either as package options, in the \mref{markdownSetup} command, or
-as parameters for the \envmref{markdown*} \LaTeX{} environment.
+as parameters for the \envmref{markdown} \LaTeX{} environment.
 
 Using a text editor, create a text document named `document.tex` with the
 following content:
@@ -23696,6 +23755,9 @@ Built-in \Hologo{ConTeXt} themes provided with the Markdown package include:
 % were hidden behind the converter functions exposed by the Lua interface (see
 % Section <#sec:luainterface>).
 %
+% Furthermore, here are some abbreviations that we inherited from the Lunamark
+% library and which are used throughout the Lua implementation.
+%
 % \end{markdown}
 %  \begin{macrocode}
 local upper, format, length =
@@ -23706,11 +23768,1049 @@ local P, R, S, V, C, Cg, Cb, Cmt, Cc, Ct, B, Cs, Cp, any =
 %    \end{macrocode}
 % \begin{markdown}
 %
+%### Unicode Support
+% To start off, we load a Lua file named `markdown-unicode-data.lua` that
+% contains our implementation of various Unicode algorithms.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local early_warnings = {}
+local unicode_data = require("markdown-unicode-data")
+if metadata.version ~= unicode_data.metadata.version then
+  table.insert(
+    early_warnings,
+    "markdown.lua " .. metadata.version .. " used with " ..
+    "markdown-unicode-data.lua " .. unicode_data.metadata.version .. "."
+  )
+end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% In the following subsections, we'll write a second-order file named
+% `markdown-unicode-data-generator.lua`. The code from this file will be
+% executed during the compilation of the Markdown package and the standard
+% output will be stored in a generated file named `markdown-unicode-data.lua`.
+%
+% \end{markdown}
+% \iffalse
+%</lua>
+%<*lua-unicode-data-generator>
+% \fi
+% \begin{markdown}
+%
+% First, let's define a couple helper functions.
+%
+% The function \luamdef{depth_first_search} performs the depth first search
+% algorithm on a tree with nodes being tables with the key `_type` equal to
+% either `intermediate` or `leaf` and with edges labeled with bytes.
+%
+% Since the algorithm is implemented using recursion, it should only be used
+% for the traversal of shallow trees to prevent exceeding the maximum recursion
+% depth (usually 100).
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function depth_first_search(node, path, visit, leave)
+  assert(node._type == "intermediate")
+  visit(node, path)
+  for label, child in pairs(node) do
+    if label == "_type" then
+      goto continue
+    end
+    if child._type == "intermediate" then
+      depth_first_search(child, path .. label, visit, leave)
+    else
+      assert(child._type == "leaf")
+      visit(child, path)
+    end
+    ::continue::
+  end
+  leave(node, path)
+end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The function \luamdef{serialize_byte_parser} produces the Lua code for a
+% \acro{PEG} parser that matches a single byte.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function serialize_byte_parser(byte)
+  if byte == '"' then
+    return "P('" .. byte .. "')"
+  elseif byte == "\\" then
+    return 'P("\\\\")'
+  else
+    return 'P("' .. byte .. '")'
+  end
+end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The function \luamdef{serialize_byte_range_parser} produces the Lua code for
+% a \acro{PEG} parser that matches a contiguous range of bytes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function serialize_byte_range_parser(start_byte, end_byte)
+  assert(start_byte <= end_byte)
+  if start_byte == "\\" then
+    start_byte = "\\\\"
+  end
+  if end_byte == "\\" then
+    end_byte = "\\\\"
+  end
+  if start_byte == '"' or end_byte == '"' then
+    return "R('" .. start_byte .. end_byte .. "')"
+  else
+    return 'R("' .. start_byte .. end_byte .. '")'
+  end
+end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The function \luamdef{serialize_replacement} produces the Lua code for a
+% string literal with one or more UTF-8-encoded Unicode characters.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function serialize_replacement(codepoints)
+  assert(#codepoints > 0)
+  local buffer = {'"'}
+  for _, codepoint in ipairs(codepoints) do
+    local code = utf8.char(codepoint)
+    for i = 1, #code do
+      local byte = code:sub(i, i)
+      if byte == '"' then
+        table.insert(buffer, '\\\"')
+      elseif byte == "\\" then
+        table.insert(buffer, "\\\\")
+      else
+        table.insert(buffer, byte)
+      end
+    end
+  end
+  table.insert(buffer, '"')
+  return table.concat(buffer)
+end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The function \luamdef{read_decompositions} is an iterator that reads a file
+% `UnicodeData.txt` that has previously been opened for reading and yields
+% all canonical and compatibility decompositions from that file.
+%
+% \end{markdown}
+%  \begin{macrocode}
+local function read_decompositions(file)
+  return function()
+    local from_codepoint, mapping
+    for line in file:lines() do
+      from_codepoint, mapping
+        = line:match("^(%x+);[^;]*;%a*;%d+;%a*;([<%a>%x ]*)")
+      assert(from_codepoint ~= nil)
+      if #mapping > 0 then
+        break
+      end
+    end
+    if #mapping == 0 then
+      return nil
+    end
+    from_codepoint = tonumber(from_codepoint, 16)
+    local to_codepoints, decomposition_type = {}, "canonical"
+    for raw_codepoint in mapping:gmatch("%S+") do
+      assert(#raw_codepoint > 0)
+      if raw_codepoint:sub(1, 1) == "<" then
+        decomposition_type = "compatibility"
+      else
+        local codepoint = tonumber(raw_codepoint, 16)
+        table.insert(to_codepoints, codepoint)
+      end
+    end
+    assert(#to_codepoints > 0)
+    return decomposition_type, from_codepoint, to_codepoints
+  end
+end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, let's define some aliases in the generated file.
+%
+% \end{markdown}
+%  \begin{macrocode}
+print("local P, R, Cc, C = lpeg.P, lpeg.R, lpeg.Cc, lpeg.C")
+print("local fail = P(false)")
+print("-- luacheck: push no max line length")
+%    \end{macrocode}
+% \begin{markdown}
+%
+%#### Canonical and Compatibility Decomposition {#unicode-decomposition}
+% Low-level parsers that decompose UTF-8-encoded Unicode characters using
+% either the canonical or the compatibility decomposition [@unicode24,
+% Section 3.7] are organized in table
+% \luamdef{unicode_data.decomposition_mapping} based on the number of bytes
+% they occupy after conversion to UTF-8.
+%
+% First, let's read the file `UnicodeData.txt`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+;(function()
+  local pathname = assert(kpse.find_file("UnicodeData.txt"),
+    [[Could not locate file "UnicodeData.txt"]])
+  local file = assert(io.open(pathname, "r"),
+    [[Could not open file "UnicodeData.txt"]])
+%    \end{macrocode}
+% \begin{markdown}
+%
+% In order to minimize the size and speed of the parser, we will first
+% construct prefix trees of UTF-8 encodings for all codepoints of a
+% given decomposition type and code length.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local decomposition_types = {"canonical", "compatibility"}
+  local prefix_trees = {}
+  for _, decomposition_type in ipairs(decomposition_types) do
+    prefix_trees[decomposition_type] = {}
+    for char_length = 1, 4 do
+      prefix_trees[decomposition_type][char_length]
+        = {_type = "intermediate"}
+    end
+  end
+  for decomposition_type, from_codepoint, to_codepoints
+      in read_decompositions(file) do
+    local from_code = utf8.char(from_codepoint)
+    local node = prefix_trees[decomposition_type][#from_code]
+    for i = 1, #from_code do
+      local from_byte = from_code:sub(i, i)
+      if i < #from_code then
+        if node[from_byte] == nil then
+          node[from_byte] = {_type = "intermediate"}
+        end
+        node = node[from_byte]
+      else
+        table.insert(node, {from_byte, to_codepoints, _type = "leaf"})
+      end
+    end
+  end
+  assert(file:close())
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, we will construct parsers out of the prefix trees.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  print("M.decomposition_mapping = {}")
+  for _, decomposition_type in ipairs(decomposition_types) do
+    print("M.decomposition_mapping." .. decomposition_type .. " = {}")
+    for length, prefix_tree in pairs(prefix_trees[decomposition_type])
+    do
+      local subparsers = {}
+      depth_first_search(prefix_tree, "", function(node, path)
+        if node._type == "leaf" then
+          local from_byte, to_codepoints = table.unpack(node)
+          local suffix = serialize_byte_parser(from_byte)
+            .. " / " .. serialize_replacement(to_codepoints)
+          if subparsers[path] ~= nil then
+            subparsers[path] = subparsers[path] .. " + " .. suffix
+          else
+            subparsers[path] = suffix
+          end
+        end
+      end, function(_, path)
+        if #path > 0 then
+          local byte = path:sub(#path, #path)
+          local parent_path = path:sub(1, #path-1)
+          local prefix = serialize_byte_parser(byte)
+          local suffix
+          if subparsers[path]:find(" %+ ") then
+            suffix = prefix .. " * (" .. subparsers[path] .. ")"
+          else
+            suffix = prefix .. " * " .. subparsers[path]
+          end
+          if subparsers[parent_path] ~= nil then
+            subparsers[parent_path] = subparsers[parent_path]
+                                   .. " + " .. suffix
+          else
+            subparsers[parent_path] = suffix
+          end
+        else
+          print(
+            "M.decomposition_mapping." .. decomposition_type
+            .. "[" .. length .. "] = " .. (subparsers[path] or "fail")
+          )
+        end
+      end)
+    end
+  end
+end)()
+%    \end{macrocode}
+% \begin{markdown}
+%
+%#### Hangul Syllable Decomposition {#unicode-hangul-decomposition}
+% Low-level parsers that decompose UTF-8-encoded Unicode characters using
+% the Hangul syllable decomposition [@unicode24, Section 3.12.2] are also
+% organized in table \luamref{unicode_data.decomposition_mapping}, previously
+% defined in Section <#sec:unicode-decomposition> based on the
+% number of bytes they occupy after conversion to UTF-8.
+%
+% First, let's read the file `HangulSyllableType.txt`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+;(function()
+  local pathname = assert(kpse.find_file("HangulSyllableType.txt"),
+    [[Could not locate file "HangulSyllableType.txt"]])
+  local file = assert(io.open(pathname, "r"),
+    [[Could not open file "HangulSyllableType.txt"]])
+%    \end{macrocode}
+% \begin{markdown}
+%
+% In order to minimize the size and speed of the parser, we will first
+% construct prefix trees of UTF-8 encodings for all codepoints of a
+% given syllable type and code length.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local syllable_types = {"LV", "LVT"}
+  local prefix_trees = {}
+  for _, syllable_type in ipairs(syllable_types) do
+    prefix_trees[syllable_type] = {}
+    for char_length = 1, 4 do
+      prefix_trees[syllable_type][char_length]
+        = {_type = "intermediate"}
+    end
+  end
+  for line in file:lines() do
+    if #line == 0 or line:sub(1, 1) == "#" then
+      goto continue
+    end
+    local codepoint, syllable_type = line:match("^([%x.]+)%s*;%s*(%a*)")
+    assert(codepoint ~= nil)
+    if prefix_trees[syllable_type] == nil then
+      goto continue
+    end
+    local codepoint_start, codepoint_end
+    if codepoint:find("%.%.") then
+      codepoint_start, codepoint_end
+        = codepoint:match("^(%x+)%.%.(%x+)$")
+    else
+      codepoint_start, codepoint_end = codepoint, codepoint
+    end
+    codepoint_start = tonumber(codepoint_start, 16)
+    codepoint_end = tonumber(codepoint_end, 16)
+    local prev_code, prev_leaf_node
+    for codepoint = codepoint_start, codepoint_end do
+      local code = utf8.char(codepoint)
+      local node = prefix_trees[syllable_type][#code]
+      for i = 1, #code do
+        local byte = code:sub(i, i)
+        if i < #code then
+          if node[byte] == nil then
+            node[byte] = {_type = "intermediate"}
+          end
+          node = node[byte]
+        else
+          local leaf_node
+          if (
+                prev_code ~= nil
+                and #prev_code == #code
+                and code:sub(1, #code - 1)
+                  == prev_code:sub(1, #code - 1)
+              ) then
+            assert(prev_leaf_node ~= nil)
+            leaf_node = prev_leaf_node
+            leaf_node[2] = byte
+          else
+            leaf_node = {byte, byte, _type = "leaf"}
+            table.insert(node, leaf_node)
+          end
+          prev_code, prev_leaf_node = code, leaf_node
+        end
+      end
+    end
+    ::continue::
+  end
+  assert(file:close())
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, we will define constants and functions with the Hangul syllable
+% (de)composition algorithm.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  print(string.format("local s_base = %d", tonumber("AC00", 16)))
+  print(string.format("local l_base = %d", tonumber("1100", 16)))
+  print(string.format("local v_base = %d", tonumber("1161", 16)))
+  print(string.format("local t_base = %d", tonumber("11A7", 16)))
+  print(string.format("local l_count = %d", 19))
+  print(string.format("local v_count = %d", 21))
+  print(string.format("local t_count = %d", 28))
+  print("local n_count = v_count * t_count")
+  print("local s_count = l_count * n_count")
+
+  print("local function hangul_decompose_LV(byte)")
+  print("  local s = utf8.codepoint(byte)")
+  print("  local s_index = s - s_base")
+  print("  local l_index = s_index // n_count")
+  print("  local v_index = (s_index % n_count) // t_count")
+  print("  local l_part = l_base + l_index")
+  print("  local v_part = v_base + v_index")
+  print("  return utf8.char(l_part) .. utf8.char(v_part)")
+  print("end")
+
+  print("local function hangul_decompose_LVT(byte)")
+  print("  local s = utf8.codepoint(byte)")
+  print("  local s_index = s - s_base")
+  print("  local lv_index = (s_index // t_count) * t_count")
+  print("  local t_index = s_index % t_count")
+  print("  local lv_part = s_base + lv_index")
+  print("  local t_part = t_base + t_index")
+  print("  return utf8.char(lv_part) .. utf8.char(t_part)")
+  print("end")
+
+  print("function M.hangul_compose(first_byte, second_byte)")
+  print("  local last = utf8.codepoint(first_byte)")
+  print("  local ch = utf8.codepoint(second_byte)")
+  print("  local l_index = last - l_base")
+  print("  if 0 <= l_index and l_index < l_count then")
+  print("    local v_index = ch - v_base")
+  print("    if 0 <= v_index and v_index < v_count then")
+  print("      return utf8.char(")
+  print("        s_base + (l_index * v_count + v_index) * t_count")
+  print("      )")
+  print("    end")
+  print("  end")
+  print("  local s_index = last - s_base")
+  print("  if 0 <= s_index and s_index < s_count")
+  print("      and s_index % t_count == 0 then")
+  print("    local t_index = ch - t_base")
+  print("    if 0 < t_index and t_index < t_count then")
+  print("      return utf8.char(last + t_index)")
+  print("    end")
+  print("  end")
+  print("  return nil")
+  print("end")
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, we will construct parsers out of the prefix trees.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  print("M.decomposition_mapping.hangul = {}")
+  for _, syllable_type in ipairs(syllable_types) do
+    print("M.decomposition_mapping.hangul." .. syllable_type .. " = {}")
+    for length, prefix_tree in pairs(prefix_trees[syllable_type]) do
+      local subparsers = {}
+      depth_first_search(prefix_tree, "", function(node, path)
+        if node._type == "leaf" then
+          local start_byte, end_byte = table.unpack(node)
+          local suffix
+          if start_byte == end_byte then
+            suffix = serialize_byte_parser(start_byte)
+          else
+            assert(start_byte < end_byte)
+            suffix = serialize_byte_range_parser(start_byte, end_byte)
+          end
+          if subparsers[path] ~= nil then
+            subparsers[path] = subparsers[path] .. " + " .. suffix
+          else
+            subparsers[path] = suffix
+          end
+        end
+      end, function(_, path)
+        if #path > 0 then
+          local byte = path:sub(#path, #path)
+          local parent_path = path:sub(1, #path-1)
+          local prefix = serialize_byte_parser(byte)
+          local suffix
+          if subparsers[path]:find(" %+ ") then
+            suffix = prefix .. " * (" .. subparsers[path] .. ")"
+          else
+            suffix = prefix .. " * " .. subparsers[path]
+          end
+          if subparsers[parent_path] ~= nil then
+            subparsers[parent_path] = subparsers[parent_path]
+                                   .. " + " .. suffix
+          else
+            subparsers[parent_path] = suffix
+          end
+        else
+          if subparsers[path] then
+            print(
+              "M.decomposition_mapping.hangul." .. syllable_type
+              .. "[" .. length .. "] = C(" .. subparsers[path] .. ")"
+              .. " / hangul_decompose_" .. syllable_type
+            )
+          else
+            print(
+              "M.decomposition_mapping.hangul." .. syllable_type
+              .. "[" .. length .. "] = fail"
+            )
+          end
+        end
+      end)
+    end
+  end
+end)()
+%    \end{macrocode}
+% \begin{markdown}
+%
+%#### Canonical Composition {#unicode-canonical-composition}
+% Low-level parsers that map pairs of UTF-8-encoded Unicode characters from
+% a canonical or compatibility decomposition into their primary composites
+% [@unicode24, Section 3.11.6] are organized in table
+% \luamdef{unicode_data.composition_mapping} based on the number of bytes the
+% characters occupy after conversion to UTF-8.
+%
+% First, let's read the file `DerivedNormalizationProps.txt` and record all
+% canonical decomposable characters that are not full composition exclusions.
+%
+% \end{markdown}
+%  \begin{macrocode}
+;(function()
+  local pathname
+    = assert(kpse.find_file("DerivedNormalizationProps.txt"),
+    [[Could not locate file "DerivedNormalizationProps.txt"]])
+  local file = assert(io.open(pathname, "r"),
+    [[Could not open file "DerivedNormalizationProps.txt"]])
+  local full_composition_exclusions = {}
+  for line in file:lines() do
+    if #line == 0 or line:sub(1, 1) == "#" then
+      goto continue
+    end
+    local codepoint, property = line:match("^([%x.]+)%s*;%s*([%a_]+)")
+    assert(codepoint ~= nil)
+    if property ~= "Full_Composition_Exclusion" then
+      goto continue
+    end
+    local codepoint_start, codepoint_end
+    if codepoint:find("%.%.") then
+      codepoint_start, codepoint_end
+        = codepoint:match("^(%x+)%.%.(%x+)$")
+    else
+      codepoint_start, codepoint_end = codepoint, codepoint
+    end
+    codepoint_start = tonumber(codepoint_start, 16)
+    codepoint_end = tonumber(codepoint_end, 16)
+    for codepoint = codepoint_start, codepoint_end do
+      full_composition_exclusions[codepoint] = true
+    end
+    ::continue::
+  end
+  assert(file:close())
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, let's also read the file `UnicodeData.txt`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  pathname = assert(kpse.find_file("UnicodeData.txt"),
+    [[Could not locate file "UnicodeData.txt"]])
+  file = assert(io.open(pathname, "r"),
+    [[Could not open file "UnicodeData.txt"]])
+%    \end{macrocode}
+% \begin{markdown}
+%
+% In order to minimize the size and speed of the parser, we will first
+% construct prefix trees of UTF-8 encodings for all pairs of codepoints
+% of given code lengths.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local prefix_trees = {starters = {}, both = {}}
+  for first_char_length = 1, 4 do
+    prefix_trees.starters[first_char_length]
+      = {_type = "intermediate"}
+    prefix_trees.both[first_char_length] = {}
+    for second_char_length = 1, 4 do
+      prefix_trees.both[first_char_length][second_char_length]
+        = {_type = "intermediate"}
+    end
+  end
+  local seen_starter_codes = {}
+  for decomposition_type, to_codepoint, from_codepoints
+      in read_decompositions(file) do
+    if (
+          decomposition_type ~= "canonical"
+          or #from_codepoints ~= 2
+          or full_composition_exclusions[to_codepoint]
+        ) then
+      goto continue
+    end
+    local starter_code = utf8.char(from_codepoints[1])
+    local combining_character_code = utf8.char(from_codepoints[2])
+    local starter_node = prefix_trees.starters[#starter_code]
+    local both_node
+      = prefix_trees.both[#starter_code][#combining_character_code]
+    for i = 1, #starter_code do
+      local from_byte = starter_code:sub(i, i)
+      if both_node[from_byte] == nil then
+        both_node[from_byte] = {_type = "intermediate"}
+      end
+      both_node = both_node[from_byte]
+      if i < #starter_code then
+        if starter_node[from_byte] == nil then
+          starter_node[from_byte] = {_type = "intermediate"}
+        end
+        starter_node = starter_node[from_byte]
+      elseif seen_starter_codes[starter_code] == nil then
+        seen_starter_codes[starter_code] = true
+        table.insert(starter_node, {from_byte, _type = "leaf"})
+      end
+    end
+    for i = 1, #combining_character_code do
+      local from_byte = combining_character_code:sub(i, i)
+      if i < #combining_character_code then
+        if both_node[from_byte] == nil then
+          both_node[from_byte] = {_type = "intermediate"}
+        end
+        both_node = both_node[from_byte]
+      else
+        table.insert(
+          both_node,
+          {from_byte, to_codepoint, _type = "leaf"}
+        )
+      end
+    end
+    ::continue::
+  end
+  assert(file:close())
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, we will construct parsers out of the prefix trees.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  print("M.composition_mapping = {starters = {}, both = {}}")
+  for first_char_length = 1, 4 do
+    local prefix_tree = prefix_trees.starters[first_char_length]
+    local subparsers = {}
+    depth_first_search(prefix_tree, "", function(node, path)
+      if node._type == "leaf" then
+        local from_byte = table.unpack(node)
+        local suffix = serialize_byte_parser(from_byte)
+        if subparsers[path] ~= nil then
+          subparsers[path] = subparsers[path] .. " + " .. suffix
+        else
+          subparsers[path] = suffix
+        end
+      end
+    end, function(_, path)
+      if #path > 0 then
+        local byte = path:sub(#path, #path)
+        local parent_path = path:sub(1, #path-1)
+        local prefix = serialize_byte_parser(byte)
+        local suffix
+        if subparsers[path]:find(" %+ ") then
+          suffix = prefix .. " * (" .. subparsers[path] .. ")"
+        else
+          suffix = prefix .. " * " .. subparsers[path]
+        end
+        if subparsers[parent_path] ~= nil then
+          subparsers[parent_path] = subparsers[parent_path]
+                                 .. " + " .. suffix
+        else
+          subparsers[parent_path] = suffix
+        end
+      else
+        print(
+          "M.composition_mapping.starters["
+          .. first_char_length .. "] = " .. (subparsers[path] or "fail")
+        )
+      end
+    end)
+    print(
+      string.format(
+        "M.composition_mapping.both[%d] = {}",
+        first_char_length
+      )
+    )
+    for second_char_length = 1, 4 do
+      prefix_tree
+        = prefix_trees.both[first_char_length][second_char_length]
+      subparsers = {}
+      depth_first_search(prefix_tree, "", function(node, path)
+        if node._type == "leaf" then
+          local from_byte, to_codepoint = table.unpack(node)
+          local suffix = serialize_byte_parser(from_byte)
+            .. " / " .. serialize_replacement({to_codepoint})
+          if subparsers[path] ~= nil then
+            subparsers[path] = subparsers[path] .. " + " .. suffix
+          else
+            subparsers[path] = suffix
+          end
+        end
+      end, function(_, path)
+        if #path > 0 then
+          local byte = path:sub(#path, #path)
+          local parent_path = path:sub(1, #path-1)
+          local prefix = serialize_byte_parser(byte)
+          local suffix
+          if subparsers[path]:find(" %+ ") then
+            suffix = prefix .. " * (" .. subparsers[path] .. ")"
+          else
+            suffix = prefix .. " * " .. subparsers[path]
+          end
+          if subparsers[parent_path] ~= nil then
+            subparsers[parent_path] = subparsers[parent_path]
+                                   .. " + " .. suffix
+          else
+            subparsers[parent_path] = suffix
+          end
+        else
+          print(
+            "M.composition_mapping.both[" .. first_char_length .. "]["
+              .. second_char_length .. "] = "
+              .. (subparsers[path] or "fail")
+          )
+        end
+      end)
+    end
+  end
+end)()
+%    \end{macrocode}
+% \begin{markdown}
+%
+%#### Case Folding {#unicode-case-folding}
+% Low-level parsers that case-fold UTF-8-encoded Unicode characters using the
+% full mapping (C and F) [@unicode24, Section 3.13.3] are organized in table
+% \luamdef{unicode_data.casefold_mapping} based on the number of bytes they
+% occupy after conversion to UTF-8.
+%
+% First, let's read the file `CaseFolding.txt`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+;(function()
+  local pathname = assert(kpse.find_file("CaseFolding.txt"),
+    [[Could not locate file "CaseFolding.txt"]])
+  local file = assert(io.open(pathname, "r"),
+    [[Could not open file "CaseFolding.txt"]])
+%    \end{macrocode}
+% \begin{markdown}
+%
+% In order to minimize the size and speed of the parser, we will first
+% construct prefix trees of UTF-8 encodings for all codepoints of a
+% given code length.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local prefix_trees = {}
+  for char_length = 1, 4 do
+    prefix_trees[char_length] = {_type = "intermediate"}
+  end
+  for line in file:lines() do
+    if #line == 0 or line:sub(1, 1) == "#" then
+      goto continue
+    end
+    local raw_from_codepoint, status, raw_to_codepoints
+      = line:match("^(%x+); ([CFST]); ([%x ]+);")
+    assert(raw_from_codepoint ~= nil)
+    assert(status ~= nil)
+    assert(raw_to_codepoints ~= nil)
+    if status ~= "C" and status ~= "F" then
+      goto continue
+    end
+    local from_codepoint = tonumber(raw_from_codepoint, 16)
+    local to_codepoints = {}
+    for raw_codepoint in raw_to_codepoints:gmatch('%x+') do
+      local codepoint = tonumber(raw_codepoint, 16)
+      table.insert(to_codepoints, codepoint)
+    end
+    local from_code = utf8.char(from_codepoint)
+    local node = prefix_trees[#from_code]
+    for i = 1, #from_code do
+      local from_byte = from_code:sub(i, i)
+      if i < #from_code then
+        if node[from_byte] == nil then
+          node[from_byte] = {_type = "intermediate"}
+        end
+        node = node[from_byte]
+      else
+        table.insert(node, {from_byte, to_codepoints, _type = "leaf"})
+      end
+    end
+    ::continue::
+  end
+  assert(file:close())
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, we will construct parsers out of the prefix trees.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  print("M.casefold_mapping = {}")
+  for length, prefix_tree in pairs(prefix_trees) do
+    local subparsers = {}
+    depth_first_search(prefix_tree, "", function(node, path)
+      if node._type == "leaf" then
+        local from_byte, to_codepoints = table.unpack(node)
+        local suffix = serialize_byte_parser(from_byte)
+          .. " / " .. serialize_replacement(to_codepoints)
+        if subparsers[path] ~= nil then
+          subparsers[path] = subparsers[path] .. " + " .. suffix
+        else
+          subparsers[path] = suffix
+        end
+      end
+    end, function(_, path)
+      if #path > 0 then
+        local byte = path:sub(#path, #path)
+        local parent_path = path:sub(1, #path-1)
+        local prefix = serialize_byte_parser(byte)
+        local suffix
+        if subparsers[path]:find(" %+ ") then
+          suffix = prefix .. " * (" .. subparsers[path] .. ")"
+        else
+          suffix = prefix .. " * " .. subparsers[path]
+        end
+        if subparsers[parent_path] ~= nil then
+          subparsers[parent_path] = subparsers[parent_path]
+                                 .. " + " .. suffix
+        else
+          subparsers[parent_path] = suffix
+        end
+      else
+        print(
+          "M.casefold_mapping[" .. length .. "] = "
+          .. (subparsers[path] or "fail")
+        )
+      end
+    end)
+  end
+end)()
+%    \end{macrocode}
+% \begin{markdown}
+%
+%#### Character Categories {#unicode-character-classes-and-categories}
+% Low-level parsers of UTF-8-encoded Unicode characters from different
+% general categories [@unicode24, Section 4.5] are organized in table
+% \luamdef{unicode_data.categories} based on the number of bytes they occupy
+% after conversion to UTF-8.
+%
+% First, let's read the file `UnicodeData.txt`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+;(function()
+  local pathname = assert(kpse.find_file("UnicodeData.txt"),
+    [[Could not locate file "UnicodeData.txt"]])
+  local file = assert(io.open(pathname, "r"),
+    [[Could not open file "UnicodeData.txt"]])
+%    \end{macrocode}
+% \begin{markdown}
+%
+% In order to minimize the size and speed of the parser, we will first
+% construct prefix trees of UTF-8 encodings for all codepoints of a
+% given Unicode category and code length.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local categories = {"L", "N", "P", "Pc", "S", "Z"}
+  local prefix_trees = {}
+  for _, category in ipairs(categories) do
+    prefix_trees[category] = {}
+    for char_length = 1, 4 do
+      prefix_trees[category][char_length] = {_type = "intermediate"}
+    end
+  end
+  for line in file:lines() do
+    local codepoint, full_category = line:match("^(%x+);[^;]*;(%a*)")
+    assert(#full_category >= 1)
+    local major_category = full_category:sub(1, 1)
+    for _, category in ipairs({full_category, major_category}) do
+      if prefix_trees[category] == nil then
+        goto continue
+      end
+      local code = utf8.char(tonumber(codepoint, 16))
+      local node = prefix_trees[category][#code]
+      for i = 1, #code do
+        local byte = code:sub(i, i)
+        if i < #code then
+          if node[byte] == nil then
+            node[byte] = {_type = "intermediate"}
+          end
+          node = node[byte]
+        else
+          table.insert(node, {byte, _type = "leaf"})
+        end
+      end
+      ::continue::
+    end
+  end
+  assert(file:close())
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, we will construct parsers out of the prefix trees.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  print("M.categories = {}")
+  for _, category in ipairs(categories) do
+    print("M.categories." .. category .. " = {}")
+    for length, prefix_tree in pairs(prefix_trees[category]) do
+      local subparsers = {}
+      depth_first_search(prefix_tree, "", function(node, path)
+        if node._type == "leaf" then
+          local byte = node[1]
+          local suffix = serialize_byte_parser(byte)
+          if subparsers[path] ~= nil then
+            subparsers[path] = subparsers[path] .. " + " .. suffix
+          else
+            subparsers[path] = suffix
+          end
+        end
+      end, function(_, path)
+        if #path > 0 then
+          local byte = path:sub(#path, #path)
+          local parent_path = path:sub(1, #path-1)
+          local prefix = serialize_byte_parser(byte)
+          local suffix
+          if subparsers[path]:find(" %+ ") then
+            suffix = prefix .. " * (" .. subparsers[path] .. ")"
+          else
+            suffix = prefix .. " * " .. subparsers[path]
+          end
+          if subparsers[parent_path] ~= nil then
+            subparsers[parent_path] = subparsers[parent_path]
+                                   .. " + " .. suffix
+          else
+            subparsers[parent_path] = suffix
+          end
+        else
+          print(
+            "M.categories." .. category .. "[" .. length .. "] = "
+            .. (subparsers[path] or "fail")
+          )
+        end
+      end)
+    end
+  end
+end)()
+%    \end{macrocode}
+% \begin{markdown}
+%
+%#### Canonical Ordering Classes {#unicode-canonical-ordering-classes}
+% Low-level parsers of UTF-8-encoded Unicode characters from different
+% character classes [@unicode24, Section 3.11] are organized in table
+% \luamdef{unicode_data.ccc} based on the number of bytes they occupy
+% after conversion to UTF-8.
+%
+% First, let's read the file `UnicodeData.txt`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+;(function()
+  local pathname = assert(kpse.find_file("UnicodeData.txt"),
+    [[Could not locate file "UnicodeData.txt"]])
+  local file = assert(io.open(pathname, "r"),
+    [[Could not open file "UnicodeData.txt"]])
+%    \end{macrocode}
+% \begin{markdown}
+%
+% In order to minimize the size and speed of the parser, we will first
+% construct prefix trees of UTF-8 encodings for all codepoints of a
+% given Unicode combining class and code length.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local prefix_trees = {}
+  for char_length = 1, 4 do
+    prefix_trees[char_length] = {_type = "intermediate"}
+  end
+  for line in file:lines() do
+    local codepoint, combining_class
+      = line:match("^(%x+);[^;]*;%a*;(%d+)")
+    combining_class = tonumber(combining_class)
+    if combining_class == 0 then
+      goto continue
+    end
+    local code = utf8.char(tonumber(codepoint, 16))
+    local node = prefix_trees[#code]
+    for i = 1, #code do
+      local byte = code:sub(i, i)
+      if i < #code then
+        if node[byte] == nil then
+          node[byte] = {_type = "intermediate"}
+        end
+        node = node[byte]
+      else
+        table.insert(node, {byte, combining_class, _type = "leaf"})
+      end
+    end
+    ::continue::
+  end
+  assert(file:close())
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, we will construct parsers out of the prefix trees.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  print("M.ccc = {}")
+  for length, prefix_tree in pairs(prefix_trees) do
+    local subparsers = {}
+    depth_first_search(prefix_tree, "", function(node, path)
+      if node._type == "leaf" then
+        local byte, combining_class = table.unpack(node)
+        local suffix = serialize_byte_parser(byte)
+          .. " * Cc(" .. tostring(combining_class) .. ")"
+        if subparsers[path] ~= nil then
+          subparsers[path] = subparsers[path] .. " + " .. suffix
+        else
+          subparsers[path] = suffix
+        end
+      end
+    end, function(_, path)
+      if #path > 0 then
+        local byte = path:sub(#path, #path)
+        local parent_path = path:sub(1, #path-1)
+        local prefix = serialize_byte_parser(byte)
+        local suffix
+        if subparsers[path]:find(" %+ ") then
+          suffix = prefix .. " * (" .. subparsers[path] .. ")"
+        else
+          suffix = prefix .. " * " .. subparsers[path]
+        end
+        if subparsers[parent_path] ~= nil then
+          subparsers[parent_path] = subparsers[parent_path]
+                                 .. " + " .. suffix
+        else
+          subparsers[parent_path] = suffix
+        end
+      else
+        print(
+          "M.ccc[" .. length .. "] = " .. (subparsers[path] or "fail")
+        )
+      end
+    end)
+  end
+end)()
+print("-- luacheck: pop")
+print("return M")
+%    \end{macrocode}
+% \iffalse
+%</lua-unicode-data-generator>
+%<*lua>
+% \fi
+% \begin{markdown}
+%
 %### Utility Functions
-% This section documents the utility functions used by the plain \TeX{}
-% writer and the markdown reader. These functions are encapsulated in the
-% `util` object. The functions were originally located in the
-% `lunamark/util.lua` file in the Lunamark Lua module.
+% This section documents the utility functions back in the file
+% `markdown-parser.lua` used by the plain \TeX{} writer and the markdown
+% reader. These functions are encapsulated in the `util` object. The functions
+% were originally located in the `lunamark/util.lua` file in the Lunamark Lua
+% module.
 %
 % \end{markdown}
 % \iffalse
@@ -24080,14 +25180,545 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-function util.warning(s)
-  io.stderr:write("Warning: " .. s .. "\n")
-end
+util.warning = (function()
+  local function warning(s)
+    io.stderr:write("Warning: " .. s .. "\n")
+  end
 %    \end{macrocode}
 % \iffalse
 %</lua,lua-loader>
 %<*lua>
 % \fi
+%  \begin{macrocode}
+  for _, message in ipairs(early_warnings) do
+    warning(message)
+  end
+%    \end{macrocode}
+% \iffalse
+%</lua>
+%<*lua,lua-loader>
+% \fi
+%  \begin{macrocode}
+  return warning
+end)()
+%    \end{macrocode}
+% \iffalse
+%</lua,lua-loader>
+%<*lua>
+% \fi
+% \begin{markdown}
+%
+% The \luamdef{util.casefold} method performs a full case-folding of a
+% UTF-8-encoded Unicode string `s` based on the low-level parsers in
+% \luamref{unicode_data.casefold_mapping}, defined in Section
+% <#sec:unicode-case-folding>. Unlike the low-level parsers, the high-level
+% function is invariant to the number of bytes the Unicode characters occupy
+% after conversion to UTF-8.
+%
+% \end{markdown}
+%  \begin{macrocode}
+util.casefold = (function()
+  local fail, any = P(false), P(1)
+  local eof = -any
+%    \end{macrocode}
+% \begin{markdown}
+%
+% First, define a parser that will case-fold a character.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local fold_character = fail
+  for n = 1, 4 do
+    fold_character
+      = fold_character
+      + unicode_data.casefold_mapping[n]
+  end
+  fold_character
+    = fold_character
+    + C(any)
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, define a parser that will case-fold a string.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local fold_string = Ct(fold_character^0) * eof
+  return function(s, form)
+    local result = table.concat(lpeg.match(fold_string, s))
+    assert(result ~= nil)
+%    \end{macrocode}
+% \begin{markdown}
+%
+% For NFD and NFKD normalization forms, normalize the case-folded string
+% and then repeat the fold-and-normalize operation.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    if form == "nfd" or form == "nfkd" then
+      result = util.normalize(result, form)
+      result = table.concat(lpeg.match(fold_string, result))
+      assert(result ~= nil)
+      result = util.normalize(result, form)
+    end
+    return result
+  end
+end)()
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The \luamdef{util.canonically_order} method performs a Unicode canonical
+% ordering of a string UTF-8-encoded Unicode `s` based on the low-level parsers
+% in \luamref{unicode_data.ccc}, defined in Section
+% <#sec:unicode-canonical-ordering-classes>. Unlike the low-level parsers, the
+% high-level function is invariant to the number of bytes the Unicode
+% characters occupy after conversion to UTF-8.
+%
+% \end{markdown}
+%  \begin{macrocode}
+util.canonically_order = (function()
+  local fail, any = P(false), P(1)
+  local eof = -any
+  local cont = R("\128\191")
+  local utf8_character
+    = R("\0\127")
+    + R("\194\223") * cont
+    + R("\224\239") * cont * cont
+    + R("\240\244") * cont * cont * cont
+%    \end{macrocode}
+% \begin{markdown}
+%
+% First, define a parser that will determine the combining class of a
+% character.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local classify_character = fail
+  for n = 1, 4 do
+    classify_character
+      = classify_character
+      + unicode_data.ccc[n]
+  end
+  classify_character
+    = classify_character
+    + utf8_character * Cc(0)
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, define a parser that will determine the combining classes of all
+% characters in a string.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local classify_string = Ct(classify_character^0) * eof
+%    \end{macrocode}
+% \begin{markdown}
+%
+% When the function is called, first check whether the string is trivially
+% ordered. If it is, return it without any changes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  return function(s)
+    local s_len = utf8.len(s)
+    if s == false or s_len <= 1 then
+      return s
+    end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Otherwise, determine the combining classes of all characters in the string.
+% If the string cannot be decoded with UTF-8, return it unchanged.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    local classes = lpeg.match(classify_string, s)
+    if classes == nil then
+      return s
+    end
+    assert(#classes == s_len)
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Again, check whether the string is trivially ordered. If it is, return it
+% without any changes. Otherwise, construct a list of ranges of non-starter
+% characters that must be ordered.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    local non_starter_ranges = {}
+    local first_non_starter, last_non_starter = nil, nil
+    for i = 1, #classes do
+      if first_non_starter == nil then
+        if classes[i] ~= 0 then
+          first_non_starter, last_non_starter = i, i
+        end
+      else
+        if classes[i] == 0 then
+          table.insert(
+            non_starter_ranges,
+            {first_non_starter, last_non_starter}
+          )
+          first_non_starter, last_non_starter = nil, nil
+        else
+          last_non_starter = i
+        end
+      end
+    end
+    if first_non_starter ~= nil then
+      table.insert(
+        non_starter_ranges,
+        {first_non_starter, last_non_starter}
+      )
+    end
+    if #non_starter_ranges == 0 then
+      return s
+    end
+    local max_range_length = 0
+    for _, range in ipairs(non_starter_ranges) do
+      local range_start, range_end = table.unpack(range)
+      local range_length = range_end - range_start + 1
+      if range_length > max_range_length then
+        max_range_length = range_length
+      end
+    end
+    if max_range_length <= 1 then
+      return s
+    end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Then, construct a buffer of all characters in the string.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    local buffer = {}
+    for _, code in utf8.codes(s) do
+      local char = utf8.char(code)
+      table.insert(buffer, char)
+    end
+    assert(#buffer == s_len)
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, perform a local bubble sort over the ranges of non-starter characters.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    for _, range in ipairs(non_starter_ranges) do
+      local range_start, range_end = table.unpack(range)
+      local range_length = range_end - range_start + 1
+      for _ = 1, range_length - 1 do
+        local swapped = false
+        for i = range_start, range_end - 1 do
+          local j = i + 1
+          if classes[i] > classes[j] then
+            classes[i], classes[j] = classes[j], classes[i]
+            buffer[i], buffer[j] = buffer[j], buffer[i]
+            swapped = true
+          end
+        end
+        if not swapped then
+          break
+        end
+      end
+    end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Finally, concatenate the buffer and return an ordered string.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    return table.concat(buffer, "")
+  end
+end)()
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The \luamdef{util.decompose} method performs either the canonical or the
+% compatibility decomposition of a UTF-8-encoded Unicode string `s` based on
+% the low-level parsers in \luamref{unicode_data.decomposition_mapping},
+% defined in sections <#sec:unicode-decomposition> and
+% <#sec:unicode-hangul-decomposition>. Unlike the low-level parsers, the
+% high-level function is invariant to the number of bytes the Unicode
+% characters occupy after conversion to UTF-8.
+%
+% \end{markdown}
+%  \begin{macrocode}
+util.decompose = (function()
+  local fail, any = P(false), P(1)
+  local eof = -any
+  local decomposition_types = {"canonical", "compatibility"}
+%    \end{macrocode}
+% \begin{markdown}
+%
+% First, define parsers that will decompose a character.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local decompose_character = {}
+  for _, decomposition_type in ipairs(decomposition_types) do
+    decompose_character[decomposition_type] = fail
+    for n = 1, 4 do
+      decompose_character[decomposition_type]
+        = decompose_character[decomposition_type]
+        + unicode_data.decomposition_mapping[decomposition_type][n]
+    end
+    decompose_character[decomposition_type]
+      = decompose_character[decomposition_type]
+      + C(any)
+  end
+  local hangul = unicode_data.decomposition_mapping.hangul
+  decompose_character.hangul = {}
+  for syllable_type, _ in pairs(hangul) do
+    decompose_character.hangul[syllable_type] = fail
+    for n = 1, 4 do
+      decompose_character.hangul[syllable_type]
+        = decompose_character.hangul[syllable_type]
+        + hangul[syllable_type][n]
+    end
+    decompose_character.hangul[syllable_type]
+      = decompose_character.hangul[syllable_type]
+      + C(any)
+  end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, define a parser that will decompose a string.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local decompose_string = {}
+  for _, decomposition_type in ipairs(decomposition_types) do
+    decompose_string[decomposition_type]
+      = Ct(decompose_character[decomposition_type]^0) * eof
+  end
+  decompose_string.hangul = {}
+  for syllable_type, _ in pairs(hangul) do
+    decompose_string.hangul[syllable_type]
+      = Ct(decompose_character.hangul[syllable_type]^0) * eof
+  end
+  local function _decompose(s, parser)
+    assert(s ~= nil)
+    local result = table.concat(lpeg.match(parser, s), "")
+    assert(result ~= nil)
+    return result
+  end
+  return function(s, decomposition_type)
+    assert(
+      decomposition_type == "canonical"
+      or decomposition_type == "compatibility"
+    )
+    local prev_s
+    local next_s = s
+    repeat
+      prev_s = next_s
+      local function decompose(...) next_s = _decompose(next_s, ...) end
+      decompose(decompose_string.canonical)
+      if decomposition_type == "compatibility" then
+        decompose(decompose_string.compatibility)
+      end
+      decompose(decompose_string.hangul.LVT)
+      decompose(decompose_string.hangul.LV)
+    until prev_s == next_s
+    return util.canonically_order(next_s)
+  end
+end)()
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The \luamdef{util.compose} method performs the canonical composition of a
+% UTF-8-encoded canonically ordered Unicode string `s` based on the low-level
+% parsers in \luamref{unicode_data.composition_mapping},
+% defined in Section <#sec:unicode-canonical-composition>, and definitions
+% from the Hangul syllable (de)composition algorithm, defined in Section
+% <#sec:unicode-hangul-decomposition>. Unlike the low-level parsers, this
+% high-level function is invariant to the number of bytes the Unicode
+% characters occupy after conversion to UTF-8.
+%
+% \end{markdown}
+%  \begin{macrocode}
+util.compose = (function()
+  local fail, any = P(false), P(1)
+  local eof = -any
+  local cont = R("\128\191")
+  local utf8_character
+    = R("\0\127")
+    + R("\194\223") * cont
+    + R("\224\239") * cont * cont
+    + R("\240\244") * cont * cont * cont
+%    \end{macrocode}
+% \begin{markdown}
+%
+% First, define a parser that will determine the combining class of a
+% character.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local classify_character = fail
+  for n = 1, 4 do
+    classify_character
+      = classify_character
+      + unicode_data.ccc[n]
+  end
+  classify_character
+    = classify_character
+    + utf8_character * Cc(0)
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, define a parser that will determine the combining classes of all
+% characters in a string.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local classify_string = Ct(classify_character^0) * eof
+%    \end{macrocode}
+% \begin{markdown}
+%
+% First, define parsers that will compose a pair of UTF-8-encoded Unicode
+% characters into their primary composite.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local compose_characters = fail
+  for m = 1, 4 do
+    local starter = #unicode_data.composition_mapping.starters[m]
+    local both = fail
+    for n = 1, 4 do
+      both = (
+        both
+        + #unicode_data.composition_mapping.both[m][n]
+        * unicode_data.composition_mapping.both[m][n]
+      )
+    end
+    compose_characters = compose_characters + starter * both
+  end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% When the function is called, first check whether the string is trivially
+% ordered. If it is, return it without any changes.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  return function(s)
+    local s_len = utf8.len(s)
+    if s == false or s_len <= 1 then
+      return s
+    end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Otherwise, determine the combining classes of all characters in the string.
+% If the string cannot be decoded with UTF-8, return it unchanged.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    local classes = lpeg.match(classify_string, s)
+    if classes == nil then
+      return s
+    end
+    assert(#classes == s_len)
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Otherwise, construct a buffer of all characters in the string.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    local buffer = {}
+    for _, code in utf8.codes(s) do
+      local char = utf8.char(code)
+      table.insert(buffer, char)
+    end
+    assert(#buffer == s_len)
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Finally, implement the composition algorithm.
+%
+% First, find the first starter character in the string.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    local starter = 1
+    while starter <= s_len and classes[starter] ~= 0 do
+      starter = starter + 1
+    end
+    local candidate_combining_mark = starter + 1
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, apply the composition rules until we reach the end of the string.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    while candidate_combining_mark <= s_len do
+      local L = buffer[starter]
+      local C = buffer[candidate_combining_mark]
+      local P = lpeg.match(compose_characters, L .. C)
+      if P ~= nil then
+        buffer[starter] = P
+        buffer[candidate_combining_mark] = ""
+      else
+        if classes[candidate_combining_mark] == 0 then
+          starter = candidate_combining_mark
+        end
+        candidate_combining_mark = candidate_combining_mark + 1
+      end
+      assert(starter <= s_len)
+    end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, iterate over the string once more and compose Hangul syllables.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    for i = 1, s_len - 1 do
+      local last, ch = buffer[i], buffer[i + 1]
+      if last ~= "" and ch ~= "" then
+        local composite = unicode_data.hangul_compose(last, ch)
+        if composite ~= nil then
+          buffer[i] = ""
+          buffer[i + 1] = composite
+        end
+      end
+    end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Finally, concatenate the buffer and return an ordered string.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    return table.concat(buffer, "")
+  end
+end)()
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The \luamdef{util.normalize} method normalizes a UTF-8-encoded canonically
+% ordered Unicode string `s` using the normalization form `form`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+function util.normalize(s, form)
+  if form == "nfd" then
+    return util.decompose(s, "canonical")
+  elseif form == "nfkd" then
+    return util.decompose(s, "compatibility")
+  elseif form == "nfc" then
+    return util.compose(util.decompose(s, "canonical"))
+  elseif form == "nfkc" then
+    return util.compose(util.decompose(s, "compatibility"))
+  else
+    error(string.format('Unexpected normal form "%s"', form))
+  end
+end
+%    \end{macrocode}
 % \begin{markdown}
 %
 %### HTML Entities
@@ -26358,6 +27989,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Slicing
 % Parse the \Opt{slice} option and define \luamdef{writer->slice\_begin},
 % \luamdef{writer->slice\_end}, and \luamdef{writer->is\_writing}. The
 % \luamref{writer->is\_writing} member variable is mutable.
@@ -26397,6 +28029,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Basic Formatter Variables and Functions
 % Define \luamdef{writer->space} as the output format of a space character.
 %
 % \end{markdown}
@@ -26522,6 +28155,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Escaping Special Characters
 % Define tables \luamdef{writer->escaped_uri_chars} and
 % \luamdef{writer->escaped_minimal_strings} containing the mapping from
 % special plain characters and character strings that always need to be
@@ -26636,6 +28270,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatters of Warnings and Errors
 % Define \luamdef{writer->warning} as a function that will transform an input
 % warning `t` with optional more warning text `m` to the output format.
 %
@@ -26662,6 +28297,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatter of Code Spans
 % Define \luamdef{writer->code} as a function that will transform an input
 % inline code span `s` with optional attributes `attributes` to the output
 % format.
@@ -26687,6 +28323,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatter of Hyperlinks
 % Define \luamdef{writer->link} as a function that will transform an input
 % hyperlink to the output format, where `lab` corresponds to the label,
 % `src` to \acro{uri}, `tit` to the title of the link, and `attributes` to
@@ -26715,6 +28352,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatter of Images
 % Define \luamdef{writer->image} as a function that will transform an input
 % image to the output format, where `lab` corresponds to the label, `src`
 % to the \acro{url}, `tit` to the title of the image, and `attributes` to
@@ -26743,6 +28381,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatters of Lists
 % Define \luamdef{writer->bulletlist} as a function that will transform an input
 % bulleted list to the output format, where `items` is an array of the list
 % items and `tight` specifies, whether the list is tight or not.
@@ -26833,6 +28472,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatters of HTML Tags, Elements, and Comments
 % Define \luamdef{writer->inline_html_comment} as a function that will
 % transform the contents of an inline \acro{HTML} comment, to the output
 % format, where `contents` are the contents of the \acro{HTML} comment.
@@ -26875,6 +28515,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatter of Emphasis
 % Define \luamdef{writer->emphasis} as a function that will transform an
 % emphasized span `s` of input text to the output format.
 %
@@ -26887,6 +28528,20 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatter of Strong Emphasis
+% Define \luamdef{writer->strong} as a function that will transform a strongly
+% emphasized span `s` of input text to the output format.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  function self.strong(s)
+    if self.flatten_inlines then return s end
+    return {"\\markdownRendererStrongEmphasis{",s,"}"}
+  end
+%    \end{macrocode}
+% \begin{markdown}
+%
+%#### Formatter of Tickboxes
 % Define \luamdef{writer->tickbox} as a function that will transform a
 % number `f` to the output format.
 %
@@ -26904,18 +28559,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Define \luamdef{writer->strong} as a function that will transform a strongly
-% emphasized span `s` of input text to the output format.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  function self.strong(s)
-    if self.flatten_inlines then return s end
-    return {"\\markdownRendererStrongEmphasis{",s,"}"}
-  end
-%    \end{macrocode}
-% \begin{markdown}
-%
+%#### Formatter of Blockquotes
 % Define \luamdef{writer->blockquote} as a function that will transform an
 % input block quote `s` to the output format.
 %
@@ -26929,6 +28573,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatter of Code Blocks
 % Define \luamdef{writer->verbatim} as a function that will transform an
 % input code block `s` to the output format.
 %
@@ -26943,6 +28588,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatter of Documents
 % Define \luamdef{writer->document} as a function that will transform a
 % document `d` to the output format.
 %
@@ -26977,6 +28623,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatter of Attributes
 % Define \luamdef{writer->attributes} as a function that will transform
 % input attributes `attrs` to the output format.
 %
@@ -27086,6 +28733,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Tracking Active Attributes
 % Define \luamdef{writer->active\_attributes} as a stack of block-level
 % attributes that are currently active. The
 % \luamref{writer->active\_attributes} member variable is mutable.
@@ -27238,6 +28886,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Automatically Generated Identifiers for Headings
 % Create an auto identifier string by stripping and converting characters from string `s`.
 %
 % \end{markdown}
@@ -27249,7 +28898,7 @@ function M.writer.new(options)
     local normalized_s = s
     if not options.unicodeNormalization
        or options.unicodeNormalizationForm ~= "nfc" then
-      normalized_s = uni_algos.normalize.NFC(normalized_s)
+      normalized_s = util.normalize(normalized_s, "nfc")
     end
 
     for _, code in utf8.codes(normalized_s) do
@@ -27295,7 +28944,11 @@ function M.writer.new(options)
         end
       else
         -- Case-fold all alphabetic characters.
-        char = uni_algos.case.casefold(char)
+        local form = nil
+        if options.unicodeNormalization then
+          form = options.unicodeNormalizationForm
+        end
+        char = util.casefold(char, form)
         prev_space = false
       end
 
@@ -27326,7 +28979,7 @@ function M.writer.new(options)
     local normalized_s = s
     if not options.unicodeNormalization
        or options.unicodeNormalizationForm ~= "nfc" then
-      normalized_s = uni_algos.normalize.NFC(normalized_s)
+      normalized_s = util.normalize(normalized_s, "nfc")
     end
 
     for _, code in utf8.codes(normalized_s) do
@@ -27372,7 +29025,11 @@ function M.writer.new(options)
         end
       else
         -- Case-fold all alphabetic characters.
-        char = uni_algos.case.casefold(char)
+        local form = nil
+        if options.unicodeNormalization then
+          form = options.unicodeNormalizationForm
+        end
+        char = util.casefold(char, form)
         prev_space = false
       end
 
@@ -27392,6 +29049,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Formatter of Headings
 % Define \luamdef{writer->heading} as a function that will transform an
 % input heading `s` at level `level` with attributes `attributes` to the
 % output format.
@@ -27479,6 +29137,7 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Managing State and Deferred Writer Calls
 % Define \luamdef{writer->get_state} as a function that returns the current
 % state of the writer, where the state of a writer are its mutable member
 % variables.
@@ -27599,173 +29258,51 @@ parsers.fail                   = P(false)
 parsers.internal_punctuation   = S(":;,.?")
 parsers.ascii_punctuation      = S("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
 
-%    \end{macrocode}
-% \iffalse
-%</lua>
-%<*lua-unicode-data-generator>
-% \fi
-% \begin{markdown}
-%
-%### Unicode data
-% This section documents different Unicode character categories recognized by
-% the markdown reader. The parsers for the different categories are organized
-% in the table \luamdef{parsers.unicode_data} according to the number of bytes
-% occupied after conversion to \acro{utf}8.
-%
-% All code from this section will be executed during the compilation of
-% the Markdown package and the standard output will be stored in a file
-% named `markdown-unicode-data.lua` with the precompiled parser of Unicode
-% punctuation.
-%
-% \end{markdown}
-%  \begin{macrocode}
-;(function()
-  local pathname = assert(kpse.find_file("UnicodeData.txt"),
-    [[Could not locate file "UnicodeData.txt"]])
-  local file = assert(io.open(pathname, "r"),
-    [[Could not open file "UnicodeData.txt"]])
-%    \end{macrocode}
-% \begin{markdown}
-%
-% In order to minimize the size and speed of the parser, we will first
-% construct prefixs tree of UTF-8 encodings for all codepoints of a
-% given Unicode category and code length.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  local categories = {"L", "N", "P", "Pc", "S", "Z"}
-  local prefix_trees = {}
-  for _, category in ipairs(categories) do
-    prefix_trees[category] = {}
-    for char_length = 1, 4 do
-      prefix_trees[category][char_length] = {}
-    end
-  end
-  for line in file:lines() do
-    local codepoint, full_category = line:match("^(%x+);[^;]*;(%a*)")
-    assert(#full_category >= 1)
-    local major_category = full_category:sub(1, 1)
-    for _, category in ipairs({full_category, major_category}) do
-      if prefix_trees[category] == nil then
-        goto continue
-      end
-      local code = utf8.char(tonumber(codepoint, 16))
-      local node = prefix_trees[category][#code]
-      for i = 1, #code do
-        local byte = code:sub(i, i)
-        if i < #code then
-          if node[byte] == nil then
-            node[byte] = {}
-          end
-          node = node[byte]
-        else
-          table.insert(node, byte)
-        end
-      end
-      ::continue::
-    end
-  end
-  assert(file:close())
+parsers.escapable              = parsers.ascii_punctuation
+parsers.anyescaped             = parsers.backslash / ""
+                               * parsers.escapable
+                               + parsers.any
+
+parsers.spacechar              = S("\t ")
+parsers.spacing                = S(" \n\r\t")
+parsers.nonspacechar           = parsers.any - parsers.spacing
+parsers.optionalspace          = parsers.spacechar^0
+
+parsers.normalchar             = parsers.any - (V("SpecialChar")
+                                                + parsers.spacing)
+parsers.eof                    = -parsers.any
+parsers.nonindentspace         = parsers.space^-3 * - parsers.spacechar
+parsers.indent                 = parsers.space^-3 * parsers.tab
+                               + parsers.fourspaces / ""
+parsers.linechar               = P(1 - parsers.newline)
+
+parsers.blankline              = parsers.optionalspace
+                               * parsers.newline / "\n"
+parsers.blanklines             = parsers.blankline^0
+parsers.skipblanklines         = ( parsers.optionalspace
+                                 * parsers.newline)^0
+parsers.indentedline           = parsers.indent    /""
+                               * C( parsers.linechar^1
+                                  * parsers.newline^-1)
+parsers.optionallyindentedline = parsers.indent^-1 /""
+                               * C( parsers.linechar^1
+                                  * parsers.newline^-1)
+parsers.sp                     = parsers.spacing^0
+parsers.spnl                   = parsers.optionalspace
+                               * ( parsers.newline
+                                 * parsers.optionalspace)^-1
+parsers.line                   = parsers.linechar^0 * parsers.newline
+parsers.nonemptyline           = parsers.line - parsers.blankline
 
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Next, we will construct parsers out of the prefix trees.
-%
-% \end{markdown}
-%  \begin{macrocode}
-  local function depth_first_search(node, path, visit, leave)
-    visit(node, path)
-    for label, child in pairs(node) do
-      if type(child) == "table" then
-        depth_first_search(child, path .. label, visit, leave)
-      else
-        visit(child, path)
-      end
-    end
-    leave(node, path)
-  end
-
-  print("M.categories = {}")
-  print("local P = lpeg.P")
-  print("local fail = P(false)")
-  print("-- luacheck: push no max line length")
-  for _, category in ipairs(categories) do
-    print("M.categories." .. category .. " = {}")
-    for length, prefix_tree in pairs(prefix_trees[category]) do
-      local subparsers = {}
-      depth_first_search(prefix_tree, "", function(node, path)
-        if type(node) == "string" then
-          local suffix
-          if node == "]" then
-            suffix = "P('" .. node .. "')"
-          else
-            suffix = "P([[" .. node .. "]])"
-          end
-          if subparsers[path] ~= nil then
-            subparsers[path] = subparsers[path] .. " + " .. suffix
-          else
-            subparsers[path] = suffix
-          end
-        end
-      end, function(_, path)
-        if #path > 0 then
-          local byte = path:sub(#path, #path)
-          local parent_path = path:sub(1, #path-1)
-          local prefix
-          if byte == "]" then
-            prefix = "P('" .. byte .. "')"
-          else
-            prefix = "P([[" .. byte .. "]])"
-          end
-          local suffix
-          if subparsers[path]:find(" %+ ") then
-            suffix = prefix .. " * (" .. subparsers[path] .. ")"
-          else
-            suffix = prefix .. " * " .. subparsers[path]
-          end
-          if subparsers[parent_path] ~= nil then
-            subparsers[parent_path] = subparsers[parent_path]
-                                   .. " + " .. suffix
-          else
-            subparsers[parent_path] = suffix
-          end
-        else
-          print(
-            "M.categories." .. category .. "[" .. length .. "] = "
-            .. (subparsers[path] or "fail")
-          )
-        end
-      end)
-    end
-  end
-  print("-- luacheck: pop")
-end)()
-print("return M")
-%    \end{macrocode}
-% \iffalse
-%</lua-unicode-data-generator>
-%<*lua>
-% \fi
-% \begin{markdown}
-%
-% Back in the Markdown package, we will load the precompiled parsers of
-% Unicode categories.
-%
-% \end{markdown}
-%  \begin{macrocode}
-local unicode_data = require("markdown-unicode-data")
-if metadata.version ~= unicode_data.metadata.version then
-  util.warning(
-    "markdown.lua " .. metadata.version .. " used with " ..
-    "markdown-unicode-data.lua " .. unicode_data.metadata.version .. "."
-  )
-end
-%    \end{macrocode}
-% \begin{markdown}
-%
-% Finally, we define high-level parsers for specific types of characters that
-% are interesting for us.
+%#### Parsers for Unicode Character Classes and Categories
+% We define high-level parsers in table \luamdef{parsers.unicode} based on the
+% low-level parsers in \luamref{unicode_data.categories}, defined in Section
+% <#sec:unicode-character-classes-and-categories>. Unlike the low-level
+% parsers, the high-level parsers are invariant to the number of bytes the
+% Unicode characters occupy after conversion to UTF-8.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -27784,7 +29321,6 @@ for n = 1, 4 do
 % (punctuation) and S (symbol), as mandated by [the CommonMark standard][1].
 %
 % [1]: https://spec.commonmark.org/0.31.2/#unicode-punctuation-character
-%     (CommonMark Spec, Version 0.31.2 (2024-01-28))
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -27849,42 +29385,6 @@ for n = 1, 4 do
     = parsers.unicode.following_whitespace
     + #whitespace_of_length_n
 end
-
-parsers.escapable              = parsers.ascii_punctuation
-parsers.anyescaped             = parsers.backslash / ""
-                               * parsers.escapable
-                               + parsers.any
-
-parsers.spacechar              = S("\t ")
-parsers.spacing                = S(" \n\r\t")
-parsers.nonspacechar           = parsers.any - parsers.spacing
-parsers.optionalspace          = parsers.spacechar^0
-
-parsers.normalchar             = parsers.any - (V("SpecialChar")
-                                                + parsers.spacing)
-parsers.eof                    = -parsers.any
-parsers.nonindentspace         = parsers.space^-3 * - parsers.spacechar
-parsers.indent                 = parsers.space^-3 * parsers.tab
-                               + parsers.fourspaces / ""
-parsers.linechar               = P(1 - parsers.newline)
-
-parsers.blankline              = parsers.optionalspace
-                               * parsers.newline / "\n"
-parsers.blanklines             = parsers.blankline^0
-parsers.skipblanklines         = ( parsers.optionalspace
-                                 * parsers.newline)^0
-parsers.indentedline           = parsers.indent    /""
-                               * C( parsers.linechar^1
-                                  * parsers.newline^-1)
-parsers.optionallyindentedline = parsers.indent^-1 /""
-                               * C( parsers.linechar^1
-                                  * parsers.newline^-1)
-parsers.sp                     = parsers.spacing^0
-parsers.spnl                   = parsers.optionalspace
-                               * ( parsers.newline
-                                 * parsers.optionalspace)^-1
-parsers.line                   = parsers.linechar^0 * parsers.newline
-parsers.nonemptyline           = parsers.line - parsers.blankline
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -29711,7 +31211,11 @@ function M.reader.new(writer, options)
     tag = util.rope_to_string(tag)
     tag = tag:gsub("[ \n\r\t]+", " ")
     tag = tag:gsub("^ ", ""):gsub(" $", "")
-    tag = uni_algos.case.casefold(tag, true, false)
+    local form = nil
+    if options.unicodeNormalization then
+      form = options.unicodeNormalizationForm
+    end
+    tag = util.casefold(tag, form)
     return tag
   end
 %    \end{macrocode}
@@ -32014,18 +33518,7 @@ end
 %  \begin{macrocode}
       if options.unicodeNormalization then
         local form = options.unicodeNormalizationForm
-        if form == "nfc" then
-          input = uni_algos.normalize.NFC(input)
-        elseif form == "nfd" then
-          input = uni_algos.normalize.NFD(input)
-        elseif form == "nfkc" then
-          input = uni_algos.normalize.NFKC(input)
-        elseif form == "nfkd" then
-          input = uni_algos.normalize.NFKD(input)
-        else
-          return writer.error(
-            format("Unknown normalization form %s.", form))
-        end
+        input = util.normalize(input, form)
       end
 %    \end{macrocode}
 % \begin{markdown}
@@ -35729,12 +37222,17 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Store the caption of the diagram.
+% Store the caption and the desired format of the diagram.
 %
 % \end{markdown}
 %  \begin{macrocode}
     \tl_new:N
       \l_@@_diagrams_caption_tl
+    \tl_new:N
+      \l_@@_diagrams_format_tl
+    \tl_set:Nn
+      \l_@@_diagrams_format_tl
+      { pdf }
     \@@_setup:n
       {
         rendererPrototypes = {
@@ -35756,13 +37254,21 @@ end
               {
                 rendererPrototypes = {
                   attributeKeyValue = {
-                    \str_if_eq:nnTF
+                    \str_case:nnF
                       { ##1 }
-                      { caption }
                       {
-                        \tl_set:Nn
-                          \l_@@_diagrams_caption_tl
-                          { ##2 }
+                        { caption }
+                          {
+                            \tl_set:Nn
+                              \l_@@_diagrams_caption_tl
+                              { ##2 }
+                          }
+                        { format }
+                          {
+                            \tl_set:Nn
+                              \l_@@_diagrams_format_tl
+                              { ##2 }
+                          }
                       }
                       {
                         \@@_diagrams_previous_key_value:nn
@@ -35921,22 +37427,76 @@ end
     \cs_set:Nn
       \@@_diagrams_infostrings_current:n
       {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Use the output format provided by the user.
+%
+% \end{markdown}
+%  \begin{macrocode}
         \tl_set:Nn
           \l_tmpa_tl
           { #1 }
-        \regex_replace_once:NnN
+        \regex_replace_once:NxN
           \c_@@_diagrams_filename_suffix_regex
-          { .pdf }
+          {
+            .
+            \tl_use:N
+              \l_@@_diagrams_format_tl
+          }
           \l_tmpa_tl
-        \@@_diagrams_render_diagram:nVnn
+        \tl_set:Nn
+          \l_tmpb_tl
+          { plantuml~-t }
+        \tl_put_right:NV
+          \l_tmpb_tl
+          \l__markdown_diagrams_format_tl
+        \tl_put_right:Nn
+          \l_tmpb_tl
+          { ~#1 }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% For the SVG format, use Inkscape to convert the resulting image to PDF.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        \str_if_eq:VnT
+          \l_@@_diagrams_format_tl
+          { svg }
+          {
+            \tl_put_right:Nn
+              \l_tmpb_tl
+              { ;~inkscape~ }
+            \tl_put_right:NV
+              \l_tmpb_tl
+              \l_tmpa_tl
+            \tl_put_right:Nn
+              \l_tmpb_tl
+              { ~--export-area-drawing~--export-dpi=300~-o~ }
+            \tl_set:Nn
+              \l_tmpa_tl
+              { #1 }
+            \regex_replace_once:NnN
+              \c_@@_diagrams_filename_suffix_regex
+              { .pdf }
+              \l_tmpa_tl
+            \tl_put_right:NV
+              \l_tmpb_tl
+              \l_tmpa_tl
+          }
+        \@@_diagrams_render_diagram:nVVn
           { #1 }
           \l_tmpa_tl
-          { plantuml~-tpdf~#1 }
+          \l_tmpb_tl
           { PlantUML~image }
       }
     \cs_generate_variant:Nn
       \@@_diagrams_render_diagram:nnnn
-      { nVnn }
+      { nVVn }
+    \cs_generate_variant:Nn
+      \regex_replace_once:NnN
+      { NxN }
     \@@_tl_set_from_cs:NNn
       \l_tmpa_tl
       \@@_diagrams_infostrings_current:n
@@ -37660,7 +39220,7 @@ end
 % changes to the markdown document.
 % \end{markdown}
 %  \begin{macrocode}
-      |openin|markdownInputFileStream&1
+      |openin|markdownInputFileStream{&1}%
       |closein|markdownInputFileStream
       |markdownPrepareLuaOptions
       |markdownPrepareInputFilename{&1}%
@@ -37933,7 +39493,7 @@ end
     The~markdown*~LaTeX~environment~has~been~deprecated~and~will~
     be~removed~in~the~next~major~version~of~the~Markdown~package.
   }
-\cs_generate_variant:Nn
+\cs_generate_variant:Nn  % noqa: w402
   \@@_setup:n
   { V }
 \ExplSyntaxOff
@@ -38282,10 +39842,10 @@ end
 % and the current document class is not \pkg{beamer}, use a package that
 % provides support for tight and fancy lists.
 %
-% If either the package \pkg{paralist} or the package \pkg{enumitem} have already
-% been loaded, use them. Otherwise, if the option \Opt{experimental} or any test
-% phase has been enabled, use the package \pkg{enumitem}. Otherwise, use the
-% package \pkg{paralist}.
+% If either the package \pkg{paralist} or the package \pkg{enumitem} have
+% already been loaded, use them. Otherwise, if the option \Opt{experimental}
+% or the command \mref{DocumentMetadata} have been used, use the package
+% \pkg{enumitem}. Otherwise, use the package \pkg{paralist}.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -38329,70 +39889,33 @@ end
         }
       }
   }
+\prg_generate_conditional_variant:Nnn
+  \str_if_eq:nn
+  { en }
+  { TF }
 \bool_if:nT
   {
     \g_@@_tight_or_fancy_lists_bool &&
     ! \g_@@_beamer_paralist_or_enumitem_bool
   }
   {
-    \bool_if:nTF
-      {
-        \bool_lazy_or_p:nn
-          {
-            \str_if_eq_p:en
-              { \markdownThemeVersion }
-              { experimental }
-          }
-          {
-            \bool_lazy_and_p:nn
-              {
-                \prop_if_exist_p:N
-                  \g__pdfmanagement_documentproperties_prop
-              }
-              {
-                \bool_lazy_any_p:n
-                  {
-                    {
-                      \prop_if_in_p:Nn
-                        \g__pdfmanagement_documentproperties_prop
-                        { document / testphase / phase-I }
-                    }
-                    {
-                      \prop_if_in_p:Nn
-                        \g__pdfmanagement_documentproperties_prop
-                        { document / testphase / phase-II }
-                    }
-                    {
-                      \prop_if_in_p:Nn
-                        \g__pdfmanagement_documentproperties_prop
-                        { document / testphase / phase-III }
-                    }
-                    {
-                      \prop_if_in_p:Nn
-                        \g__pdfmanagement_documentproperties_prop
-                        { document / testphase / phase-IV }
-                    }
-                    {
-                      \prop_if_in_p:Nn
-                        \g__pdfmanagement_documentproperties_prop
-                        { document / testphase / phase-V }
-                    }
-                    {
-                      \prop_if_in_p:Nn
-                        \g__pdfmanagement_documentproperties_prop
-                        { document / testphase / phase-VI }
-                    }
-                  }
-              }
-          }
-      }
+    \str_if_eq:enTF
+      { \markdownThemeVersion }
+      { experimental }
       {
         \RequirePackage
           { enumitem }
       }
       {
-        \RequirePackage
-          { paralist }
+        \IfDocumentMetadataTF
+          {
+            \RequirePackage
+              { enumitem }
+          }
+          {
+            \RequirePackage
+              { paralist }
+          }
       }
   }
 \ExplSyntaxOff

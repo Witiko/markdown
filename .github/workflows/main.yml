@@ -44,8 +44,9 @@ jobs:
           repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
           ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
       - name: Install TeX Live
-        uses: teatimeguest/setup-texlive-action@v3
+        uses: TeX-Live/setup-texlive-action@v3
         with:
+          cache: false
           packages: |
             latexmk
             scheme-minimal
@@ -82,8 +83,9 @@ jobs:
           repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
           ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
       - name: Install TeX Live
-        uses: teatimeguest/setup-texlive-action@v3
+        uses: TeX-Live/setup-texlive-action@v3
         with:
+          cache: false
           packages: |
             latexmk
             scheme-minimal
@@ -107,8 +109,9 @@ jobs:
           repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
           ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
       - name: Install TeX Live
-        uses: teatimeguest/setup-texlive-action@v3
+        uses: TeX-Live/setup-texlive-action@v3
         with:
+          cache: false
           packages: |
             expltools
             latexmk
@@ -133,8 +136,9 @@ jobs:
           repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
           ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
       - name: Install TeX Live
-        uses: teatimeguest/setup-texlive-action@v3
+        uses: TeX-Live/setup-texlive-action@v3
         with:
+          cache: false
           packages: |
             latexmk
             scheme-minimal
@@ -205,6 +209,7 @@ jobs:
       matrix:
         texlive:
           - TL2023-historic
+          - TL2024-historic
           - latest
           - latest-minimal
         # Only test latest-minimal TeX Live in pull requests.
@@ -216,6 +221,7 @@ jobs:
           - { texlive: latest-minimal }
     outputs:
       TL2023-historic: ${{ steps.temporary-tags.outputs.TL2023-historic }}
+      TL2024-historic: ${{ steps.temporary-tags.outputs.TL2024-historic }}
       latest: ${{ steps.temporary-tags.outputs.latest }}
       latest-minimal: ${{ steps.temporary-tags.outputs.latest-minimal }}
     runs-on: ubuntu-latest
@@ -255,6 +261,7 @@ jobs:
       matrix:
         texlive:
           - TL2023-historic
+          - TL2024-historic
           - latest
           - latest-minimal
         # Only test latest-minimal TeX Live in pull requests.
@@ -300,6 +307,7 @@ jobs:
       matrix:
         texlive:
           - TL2023-historic
+          - TL2024-historic
           - latest
           - latest-minimal
         is_pr:
@@ -309,10 +317,15 @@ jobs:
         include:
           - { texlive: latest-minimal }
     runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request_target' && github.ref == 'refs/heads/main' && always() && (needs.test.result == 'success' || needs.test.result == 'skipped')
+    if: github.event_name != 'pull_request_target' && github.ref == 'refs/heads/main' && always() && (needs.test.result == 'success' || needs.test.result == 'skipped') && needs.build-docker-image.result == 'success'
     env:
       DOCKER_TEXLIVE_TAG: ${{ matrix.texlive }}
     steps:
+      - name: Update Docker client
+        run: |
+          set -ex
+          sudo apt -qy update
+          sudo apt -qy install --no-install-recommends --only-upgrade docker-ce
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -334,7 +347,7 @@ jobs:
       contents: write
     container:
       image: ghcr.io/witiko/markdown:${{ needs.build-docker-image.outputs.latest }}
-    if: github.event_name != 'pull_request_target' && github.ref == 'refs/heads/main' && always() && (needs.test.result == 'success' || needs.test.result == 'skipped')
+    if: github.event_name != 'pull_request_target' && github.ref == 'refs/heads/main' && always() && (needs.test.result == 'success' || needs.test.result == 'skipped') && needs.build-docker-image.result == 'success'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -373,12 +386,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create a prerelease
-        uses: marvinpinto/action-automatic-releases@latest
+        uses: softprops/action-gh-release@v2
         with:
-          title: The latest version
-          automatic_release_tag: latest
+          name: The latest version
+          tag_name: latest
           prerelease: true
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           files: |
             markdown.tds.zip
             markdown.ctan.zip
@@ -391,7 +404,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    if: github.event_name == 'pull_request_target' && github.event.pull_request.draft == false && always() && (needs.test.result == 'success' || needs.test.result == 'skipped')
+    if: github.event_name == 'pull_request_target' && github.event.pull_request.draft == false && always() && needs.test.result == 'success'
     steps:
       - name: Automatically merge pull request
         uses: pascalgn/automerge-action@v0.16.3

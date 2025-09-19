@@ -101,10 +101,10 @@ This is a task list:
 * [/] Some half-finished task
 * [X] Some finished task
 * An item of an unordered list
-    #. [ ] Some unfinished subtask
-    #. [.] Some half-finished subtask
-    #. [x] Some finished subtask
-    #. An item of an ordered list
+    1. [ ] Some unfinished subtask
+    2. [.] Some half-finished subtask
+    3. [x] Some finished subtask
+    4. An item of an ordered list
 
 This is a definition list:
 
