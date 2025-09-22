@@ -33927,7 +33927,7 @@ M.extensions.content_blocks = function(language_map)
 %  \begin{macrocode}
   local languages_json = (function()
     local base, prev, curr
-    for _, pathname in ipairs(util.find_files(language_map) do
+    for _, pathname in ipairs(util.find_files(language_map)) do
       local file = io.open(pathname, "r")
       if not file then goto continue end
       local input = assert(file:read("*a"))
