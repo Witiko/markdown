@@ -832,6 +832,12 @@ abbr {
   date       = {2024-09-10},
   url        = {https://www.unicode.org/versions/Unicode16.0.0/UnicodeStandard-16.0.pdf},
   urldate    = {2025-05-07}}
+@online{context23,
+  author     = {Hans Hagen},
+  title      = {\Hologo{ConTeXt} Lua Documents},
+  date       = {2023-07-08},
+  url        = {https://www.pragma-ade.nl/general/manuals/cld-mkiv.pdf},
+  urldate    = {2025-09-22}}
 %</techdoc-bibliography>
 %<@@=markdown>
 %<*themes-witiko-markdown-techdoc>
@@ -1173,9 +1179,13 @@ local md5 = require("md5")
 %:    A package that implements the loading of third-party Lua libraries
 %     and looking up files in the \TeX{} directory structure.
 %
+% Only load the package outside the \Hologo{ConTeXt} format, where we can
+% use the resolvers \acro{API} [@context23, Section 11.5].
+%
 % \end{markdown}
 %  \begin{macrocode}
-;(function()  -- luacheck: ignore
+if resolvers == nil then
+  (function()
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -1188,13 +1198,14 @@ local md5 = require("md5")
 %
 % \end{markdown}
 %  \begin{macrocode}
-  local should_initialize = package.loaded.kpse == nil
-                       or tex.initialize ~= nil
-  kpse = require("kpse")
-  if should_initialize then
-    kpse.set_program_name("luatex")
-  end
-end)()
+    local should_initialize = package.loaded.kpse == nil
+                         or tex.initialize ~= nil
+    kpse = require("kpse")
+    if should_initialize then
+      kpse.set_program_name("luatex")
+    end
+  end)()
+end
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -23956,9 +23967,7 @@ print("-- luacheck: push no max line length")
 % \end{markdown}
 %  \begin{macrocode}
 ;(function()
-  local pathname = assert(kpse.find_file("UnicodeData.txt"),
-    [[Could not locate file "UnicodeData.txt"]])
-  local file = assert(io.open(pathname, "r"),
+  local file = assert(io.open("UnicodeData.txt", "r"),
     [[Could not open file "UnicodeData.txt"]])
 %    \end{macrocode}
 % \begin{markdown}
@@ -24061,9 +24070,7 @@ end)()
 % \end{markdown}
 %  \begin{macrocode}
 ;(function()
-  local pathname = assert(kpse.find_file("HangulSyllableType.txt"),
-    [[Could not locate file "HangulSyllableType.txt"]])
-  local file = assert(io.open(pathname, "r"),
+  local file = assert(io.open("HangulSyllableType.txt", "r"),
     [[Could not open file "HangulSyllableType.txt"]])
 %    \end{macrocode}
 % \begin{markdown}
@@ -24273,10 +24280,7 @@ end)()
 % \end{markdown}
 %  \begin{macrocode}
 ;(function()
-  local pathname
-    = assert(kpse.find_file("DerivedNormalizationProps.txt"),
-    [[Could not locate file "DerivedNormalizationProps.txt"]])
-  local file = assert(io.open(pathname, "r"),
+  local file = assert(io.open("DerivedNormalizationProps.txt", "r"),
     [[Could not open file "DerivedNormalizationProps.txt"]])
   local full_composition_exclusions = {}
   for line in file:lines() do
@@ -24310,9 +24314,7 @@ end)()
 %
 % \end{markdown}
 %  \begin{macrocode}
-  pathname = assert(kpse.find_file("UnicodeData.txt"),
-    [[Could not locate file "UnicodeData.txt"]])
-  file = assert(io.open(pathname, "r"),
+  file = assert(io.open("UnicodeData.txt", "r"),
     [[Could not open file "UnicodeData.txt"]])
 %    \end{macrocode}
 % \begin{markdown}
@@ -24489,9 +24491,7 @@ end)()
 % \end{markdown}
 %  \begin{macrocode}
 ;(function()
-  local pathname = assert(kpse.find_file("CaseFolding.txt"),
-    [[Could not locate file "CaseFolding.txt"]])
-  local file = assert(io.open(pathname, "r"),
+  local file = assert(io.open("CaseFolding.txt", "r"),
     [[Could not open file "CaseFolding.txt"]])
 %    \end{macrocode}
 % \begin{markdown}
@@ -24601,9 +24601,7 @@ end)()
 % \end{markdown}
 %  \begin{macrocode}
 ;(function()
-  local pathname = assert(kpse.find_file("UnicodeData.txt"),
-    [[Could not locate file "UnicodeData.txt"]])
-  local file = assert(io.open(pathname, "r"),
+  local file = assert(io.open("UnicodeData.txt", "r"),
     [[Could not open file "UnicodeData.txt"]])
 %    \end{macrocode}
 % \begin{markdown}
@@ -24710,9 +24708,7 @@ end)()
 % \end{markdown}
 %  \begin{macrocode}
 ;(function()
-  local pathname = assert(kpse.find_file("UnicodeData.txt"),
-    [[Could not locate file "UnicodeData.txt"]])
-  local file = assert(io.open(pathname, "r"),
+  local file = assert(io.open("UnicodeData.txt", "r"),
     [[Could not open file "UnicodeData.txt"]])
 %    \end{macrocode}
 % \begin{markdown}
@@ -25716,6 +25712,30 @@ function util.normalize(s, form)
     return util.compose(util.decompose(s, "compatibility"))
   else
     error(string.format('Unexpected normal form "%s"', form))
+  end
+end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The \luamdef{util.find_file} and \luamdef{util.find_files} method find the
+% first or all locations of a file, respectively, according to either the
+% resolvers \acro{API} [@context23, Section 11.5] from the \Hologo{ConTeXt}
+% format or the \pkg{Kpathsea} library.
+%
+% \end{markdown}
+%  \begin{macrocode}
+function util.find_file(filename)
+  if resolvers ~= nil then
+    return resolvers.findfile(filename)
+  else
+    return kpse.find_file(filename)
+  end
+end
+function util.find_files(filename)
+  if resolvers ~= nil then
+    return resolvers.findfiles(filename)
+  else
+    return {kpse.lookup(filename, {all=true})}
   end
 end
 %    \end{macrocode}
@@ -33907,8 +33927,7 @@ M.extensions.content_blocks = function(language_map)
 %  \begin{macrocode}
   local languages_json = (function()
     local base, prev, curr
-    for _, pathname in ipairs{kpse.lookup(language_map,
-                                          {all=true})} do
+    for _, pathname in ipairs(util.find_files(language_map) do
       local file = io.open(pathname, "r")
       if not file then goto continue end
       local input = assert(file:read("*a"))
@@ -36510,7 +36529,7 @@ function M.new(options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-      local pathname = assert(kpse.find_file(filename),
+      local pathname = assert(util.find_file(filename),
         [[Could not locate user-defined syntax extension "]]
         .. filename)
       local input_file = assert(io.open(pathname, "r"),

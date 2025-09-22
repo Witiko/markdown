@@ -1,5 +1,5 @@
 stds.modules = {
-  globals = {"modules", "kpse", "tex"},
+  globals = {"modules", "kpse", "tex", "resolvers"},
 }
 
 std = "max+modules"
