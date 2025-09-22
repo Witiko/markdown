@@ -271,7 +271,7 @@ jobs:
           - { is_pr: true }
         include:
           - { texlive: latest-minimal }
-    runs-on: ${{ github.event_name == 'pull_request_target' && 'self-hosted' || 'ubuntu-latest' }}
+    runs-on: 'ubuntu-latest'
     container:
       image: ghcr.io/witiko/markdown:${{ needs.build-docker-image.outputs[matrix.texlive] }}
     if: ${{ !contains(inputs.runTests, 'false') }}
