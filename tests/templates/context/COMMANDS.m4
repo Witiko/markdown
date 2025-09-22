@@ -1,2 +1,2 @@
-sed -Ei ':a;N;$!ba;s/%\n[ ]*//g' keyval-setup.tex; context --result=OUTPUT_DIRECTORY`___'TEST_BASENAME  --once --luatex --nonstopmode TEST_FILENAME; rename 's/___/\//' OUTPUT_DIRECTORY`___'TEST_BASENAME*
-sed -Ei ':a;N;$!ba;s/%\n[ ]*//g' keyval-setup.tex; context --result=OUTPUT_DIRECTORY`___'TEST_BASENAME  --once          --nonstopmode TEST_FILENAME; rename 's/___/\//' OUTPUT_DIRECTORY`___'TEST_BASENAME*
+sed -Ei -e ':a;N;$!ba;s/%\n *//g' -e 's/ +/ /g' keyval-setup.tex; context --result=OUTPUT_DIRECTORY`___'TEST_BASENAME  --once --luatex --nonstopmode TEST_FILENAME; rename 's/___/\//' OUTPUT_DIRECTORY`___'TEST_BASENAME*
+sed -Ei -e ':a;N;$!ba;s/%\n *//g' -e 's/ +/ /g' keyval-setup.tex; context --result=OUTPUT_DIRECTORY`___'TEST_BASENAME  --once          --nonstopmode TEST_FILENAME; rename 's/___/\//' OUTPUT_DIRECTORY`___'TEST_BASENAME*
