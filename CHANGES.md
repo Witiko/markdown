@@ -35,6 +35,8 @@ Continuous integration:
 - Use current pkgcheck. (reported by @manfredlotz via email and by @witiko
   in #580, fixed in #581)
 
+- Do not use self-hosted runners in pull requests either. (07af69a8)
+
 Housekeeping:
 
 - Remove needless ignored issues. (fixed by @witiko in #583)
