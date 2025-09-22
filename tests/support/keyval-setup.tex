@@ -188,7 +188,6 @@ unprotectedRenderers = {%
     \TYPE{END rawBlock}},
   replacementCharacter = {%
     \TYPE{#0}},
-  % Some parameterless renderers are finished with a pair of curly braces that we should gobble.
   *AttributeContextEnd += {\GOBBLE},
   *(Separator|LineBreak) += {\GOBBLE},
   (ellipsis|nbsp|*Brace|*Sign|ampersand|underscore|hash|circumflex|backslash|tilde|pipe|replacementCharacter) += {\GOBBLE},

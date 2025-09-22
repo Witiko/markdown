@@ -1,0 +1,114 @@
+\enableregime[utf]
+\usetypescript[modern][ec]
+\setupbodyfont[10pt,rm]
+\setupexternalfigures[location={local,global,default}]
+
+% Load the Markdown module.
+\usemodule[t][markdown]
+
+% Set options of the Markdown module.
+\setupmarkdown
+  [
+    contentBlocks = yes,
+    debugExtensions = yes,
+    definitionLists = yes,
+    fancy_lists = yes,
+    fencedCode = yes,
+    hashEnumerators = yes,
+    inlineNotes = yes,
+    lineBlocks = yes,
+    notes = yes,
+    pipeTables = yes,
+    rawAttribute = yes,
+    smartEllipses = yes,
+    strikethrough = yes,
+    subscripts = yes,
+    superscripts = yes,
+    tableCaptions = yes,
+    taskLists = yes,
+    texMathDollars = yes,
+    texMathDoubleBackslash = yes,
+    texMathSingleBackslash = yes,
+  ]
+
+% Set renderers of the Markdown module.
+\definehighlight
+  [markdownRendererEmphasis]
+  [style=\em]
+
+\definehighlight
+  [markdownRendererStrongEmphasis]
+  [style=bold]
+
+\definehighlight
+  [markdownRendererCodeSpan]
+  [style=mono]
+
+\definetyping
+  [latex]
+
+\setuptyping
+  [latex]
+  [option=TEX]
+
+\starttext
+
+% Set and typeset the document metadata using a YAML metadata block.
+\setupyaml
+  [
+    jekyllDataRenderers = {
+      title = {\gdef\doctitle{#1}},
+      author = {\gdef\author{#1}},
+      date = {\gdef\date{#1}},
+    },
+    renderers = {
+      jekyllDataEnd = {%
+        \startalignment[center]
+          \blank[force,2*big]
+            {\tfd \doctitle}
+          \blank[3*medium]
+            {\tfa \author}
+          \blank[2*medium]
+            {\tfa \date}
+          \blank[3*medium]
+        \stopalignment
+      },
+    },
+  ]
+
+\startyaml
+
+title:  An Example *Markdown* Document
+author: Vít Starý Novotný
+date:   `\currentdate`{=tex}
+
+\stopyaml
+
+% Typeset the document `example.md` by letting the Markdown package handle
+% the conversion internally. Optionally, we can specify additional options
+% between the square brackets similarly to the command `\setupmarkdown`.
+% Unlike `\setupmarkdown`, the options will only apply for this document.
+\inputmarkdown[smart_ellipses = yes]{./example.md}
+
+% Typeset the document `example.tex` that we prepared separately using the
+% Lua command-line interface and that contains a plain TeX representation
+% of the document `example.md`.
+\catcode`\%=12\relax
+\catcode`\#=12\relax
+\doiffileelse{./example.tex}{\input example}{}
+\catcode`\%=14\relax
+\catcode`\#=6\relax
+
+% Besides inputting external files, Markdown text can we written directly
+% into a LaTeX document. Markdown text and LaTeX code can be freely combined.
+\startmarkdown
+
+This is a paragraph of *Markdown text* with inline `\LaTeX`{=tex} code.
+
+``` {=tex}
+This is a paragraph of \LaTeX{} code with inline \markinline{*Markdown text*}.
+```
+
+\stopmarkdown
+
+\stoptext

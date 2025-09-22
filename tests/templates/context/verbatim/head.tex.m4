@@ -1,8 +1,4 @@
 % Load the package.
-\startluacode
-local kpse = require("kpse")
-kpse.set_program_name("luatex")
-\stopluacode
 \usemodule[t][markdown]
 
 % Load the support files.
