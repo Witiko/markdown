@@ -12,6 +12,10 @@ Tests:
   contributions from @josephwright and @gucci-on-fleek in #557,
   latex3/latex3#1791, latex3/latex3#1797, and elsewhere)
 
+Continuous integration:
+
+- Do not use self-hosted runners in pull requests either. (07af69a8)
+
 Examples:
 
 - Add example file `examples/context-lmtx.tex` for ConTeXt LMTX.
@@ -54,6 +58,10 @@ Continuous integration:
 
 - Use current pkgcheck. (reported by @manfredlotz via email and by @witiko
   in #580, fixed in #581)
+
+Housekeeping:
+
+- Remove needless ignored issues. (fixed by @witiko in #583)
 
 ## 3.11.4 (2025-06-24)
 
