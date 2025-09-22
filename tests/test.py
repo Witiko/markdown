@@ -17,6 +17,7 @@ from shutil import copyfile, rmtree
 from subprocess import CompletedProcess, run
 import sys
 from tempfile import mkdtemp
+import re
 
 import click
 from git import Repo, InvalidGitRepositoryError
@@ -640,6 +641,11 @@ def read_testfile(testfile: TestFile) -> ReadTestFile:
     return ReadTestFile(yaml_text, setup_text, input_text, expected_output_text)
 
 
+def normalize_test_output_line(line: str) -> str:
+    line = re.sub(r'^\s*just a message\s*>\s*', '', line)  # Remove ConTeXt LMTX log message formatting
+    return line
+
+
 def read_test_output_from_tex_log_file(tex_log_file: Path) -> OutputText:
     input_lines: List[str] = []
     input_line_fragments: List[str] = []
@@ -647,6 +653,7 @@ def read_test_output_from_tex_log_file(tex_log_file: Path) -> OutputText:
     with tex_log_file.open('rt', errors='ignore') as f:
         for line in f:
             line = line.rstrip('\r\n')
+            line = normalize_test_output_line(line)
             if not in_test_output and line.strip() == 'TEST INPUT BEGIN':
                 in_test_output = True
             elif in_test_output and line.strip() == 'TEST INPUT END':
@@ -666,6 +673,7 @@ def split_batch_output_text(output_text: OutputText) -> Iterable[OutputText]:
     input_lines: List[str] = []
     in_test_output = False
     for line in output_text.splitlines():
+        line = normalize_test_output_line(line)
         if not in_test_output and line.strip() == 'BEGIN document':
             in_test_output = True
             input_lines.append(line)
