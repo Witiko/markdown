@@ -2,6 +2,36 @@
 
 ## 3.11.6 (2025-09-XX)
 
+Tests:
+
+- Improve the speed of our tests more by than 3×. (added by @zauguin,
+  @muzimuzhi, @gucci-on-fleek, and @josephwright in latex3/latex3#1791,
+  discussed in #557 and #584)
+
+- Enable LuaMetaTeX in ConTeXt tests. (added by @witiko in #557 with major
+  contributions from @josephwright and @gucci-on-fleek in #557,
+  latex3/latex3#1791, latex3/latex3#1797, and elsewhere)
+
+Documentation:
+
+- Add installation instructions for ConTeXt Standalone to the user manual.
+  (reported by @andreiborisov in #402, added by @witiko and @gucci-on-fleek
+  in #557)
+
+Continuous integration:
+
+- Do not use self-hosted runners in pull requests either. (07af69a8)
+
+Examples:
+
+- Add example file `examples/context-lmtx.tex` for ConTeXt LMTX.
+  (added by @witiko in #557 with major contributions from @josephwright and
+  @gucci-on-fleek in #557 and elsewhere)
+
+Housekeeping:
+
+- Remove needless ignored issues. (fixed by @witiko in #583)
+
 ## 3.11.5 (2025-08-19)
 
 Fixes:
@@ -34,8 +64,6 @@ Continuous integration:
 
 - Use current pkgcheck. (reported by @manfredlotz via email and by @witiko
   in #580, fixed in #581)
-
-- Do not use self-hosted runners in pull requests either. (07af69a8)
 
 Housekeeping:
 

@@ -15,10 +15,10 @@ CTANARCHIVE=markdown.ctan.zip
 DISTARCHIVE=markdown.zip
 ARCHIVES=$(TDSARCHIVE) $(CTANARCHIVE) $(DISTARCHIVE)
 EXAMPLES_RESOURCES=examples/example.md examples/scientists.csv
-EXAMPLES_SOURCES=examples/context-mkiv.tex \
+EXAMPLES_SOURCES=examples/context-mkiv.tex examples/context-lmtx.tex \
   examples/latex-pdftex.tex examples/latex-xetex.tex examples/latex-luatex.tex \
   examples/optex.tex
-EXAMPLES=examples/context-mkiv.pdf \
+EXAMPLES=examples/context-mkiv.pdf examples/context-lmtx.pdf \
   examples/latex-pdftex.pdf examples/latex-xetex.pdf examples/latex-luatex.pdf \
   examples/latex-tex4ht.html examples/latex-tex4ht.css \
   examples/optex.pdf
@@ -41,6 +41,7 @@ DEPENDENCIES=DEPENDS.txt
 UNICODE_DATA=UnicodeData.txt CaseFolding.txt DerivedNormalizationProps.txt \
   HangulSyllableType.txt
 TECHNICAL_DOCUMENTATION=markdown.pdf
+MARKDOWN_USER_MANUAL_INPUTS=markdown-interfaces.md markdown-options.md markdown-tokens.md
 MARKDOWN_USER_MANUAL=markdown.md markdown.css
 HTML_USER_MANUAL=markdown.html markdown.css
 MAN_PAGES=markdown2tex.1
@@ -187,14 +188,21 @@ examples/example.tex: force
 	fi
 
 # These targets convert the markdown user manual to an HTML page.
-markdown-transcluded.md: markdown.md markdown-interfaces.md markdown-options.md markdown-tokens.md
-	awk '{ \
-	    filename = gensub(/^\/(.*\.md)$$/, "\\1", "g"); \
-	    if(filename != $$0) \
+markdown-transcluded.md: markdown.md $(MARKDOWN_USER_MANUAL_INPUTS) $(DEPENDENCIES)
+	transclude() { \
+	  awk '{ \
+	    filename = gensub(/^\/(.*\.(md|txt))$$/, "\\1", "g"); \
+	    if(filename != $$0 && filename != "nested.md") \
 	        system("cat " filename); \
 	    else \
 	        print($$0); \
-	}' <$< >$@
+	  }'; \
+	}; \
+	for FILE in $(MARKDOWN_USER_MANUAL_INPUTS); \
+	do \
+		transclude < "$$FILE" | sponge "$$FILE"; \
+	done; \
+	transclude <"$<" >"$@"
 	rm $^
 
 %.html: %-transcluded.md %.css

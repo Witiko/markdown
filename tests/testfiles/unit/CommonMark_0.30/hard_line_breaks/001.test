@@ -1,4 +1,4 @@
-if: format == 'context-mkiv' or template == 'input'
+if: format == 'context' or template == 'input'
 ---
 
 %   ---RESULT--- "example": 633,

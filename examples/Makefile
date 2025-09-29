@@ -37,9 +37,13 @@ OUTPUT=\
 all: $(OUTPUT)
 	$(MAKE) clean
 
-# This target typesets the ConTeXt example using the Mark IV format.
+# This target typesets the ConTeXt example using the MkIV format.
 context-mkiv.pdf: context-mkiv.tex example.tex
 	context --luatex context-mkiv.tex
+
+# This target typesets the ConTeXt example using the LMTX format.
+context-lmtx.pdf: context-lmtx.tex example.tex
+	context context-lmtx.tex
 
 # This target typesets the LaTeX example using the pdfTeX engine.
 latex-pdftex.pdf: latex-pdftex.tex example.tex
