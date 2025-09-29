@@ -605,7 +605,7 @@ def get_commands(tex_format: str) -> Tuple[Command, ...]:
     )
     for command in commands_text.splitlines():
         command = command.strip()
-        if command:
+        if command and not command.startswith('#'):
             commands.append(command)
     return tuple(commands)
 
