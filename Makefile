@@ -6,9 +6,9 @@ SHELL=/bin/bash
 
 AUXFILES=markdown.bbl markdown.cb markdown.cb2 markdown.glo markdown.bbl \
   markdown.hd markdown.run.xml markdown.markdown.in markdown.markdown.lua \
-  markdown.markdown.out markdown-interfaces.md markdown-miscellanea.md \
-  markdown-options.md markdown-tokens.md $(TECHNICAL_DOCUMENTATION_RESOURCES) \
-  $(VERSION_FILE) $(RAW_DEPENDENCIES) markdown-transcluded.md
+  markdown.markdown.out $(MARKDOWN_USER_MANUAL_INPUTS) \
+  $(TECHNICAL_DOCUMENTATION_RESOURCES) $(VERSION_FILE) $(RAW_DEPENDENCIES) \
+  markdown-transcluded.md markdown.md $(MARKDOWN_USER_MANUAL_INPUTS)
 AUXDIRS=_minted-markdown _markdown_markdown markdown
 TDSARCHIVE=markdown.tds.zip
 CTANARCHIVE=markdown.ctan.zip
@@ -203,7 +203,6 @@ markdown-transcluded.md: markdown.md $(MARKDOWN_USER_MANUAL_INPUTS) $(DEPENDENCI
 		transclude < "$$FILE" | sponge "$$FILE"; \
 	done; \
 	transclude <"$<" >"$@"
-	rm $^
 
 %.html: %-transcluded.md %.css
 	sed -e 's#\\markdownVersion{}#$(VERSION)#g' \
