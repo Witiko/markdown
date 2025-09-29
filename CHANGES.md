@@ -21,6 +21,10 @@ Documentation:
 Continuous integration:
 
 - Do not use self-hosted runners in pull requests either. (07af69a8)
+- Remove TeX Live 2023 and 2024 from the continuous integration. (5cb59800)
+
+  This is because we can't typeset the ConTeXt LMTX example document with
+  earlier TeX Live versions. TeX Live 2023 and 2024 are still supported.
 
 Examples:
 
