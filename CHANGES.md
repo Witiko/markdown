@@ -12,6 +12,12 @@ Tests:
   contributions from @josephwright and @gucci-on-fleek in #557,
   latex3/latex3#1791, latex3/latex3#1797, and elsewhere)
 
+Documentation:
+
+- Add installation instructions for ConTeXt Standalone to the user manual.
+  (reported by @andreiborisov in #402, added by @witiko and @gucci-on-fleek
+  in #557)
+
 Continuous integration:
 
 - Do not use self-hosted runners in pull requests either. (07af69a8)
