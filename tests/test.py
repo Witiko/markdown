@@ -37,7 +37,7 @@ UPDATE_TESTS: bool = False
 FAIL_FAST: bool = True
 
 NUM_PROCESSES: int = cpu_count()
-MIN_NUM_BATCHES: int = 37  # Using a smaller value will increase batch size, speed, and memory footprint.
+MIN_NUM_BATCHES: int = 43  # Using a smaller value will increase batch size, speed, and memory footprint.
 # If `NUM_PROCESSES` > `MIN_NUM_BATCHES`, we will decrease the batch size and create `NUM_PROCESSES` batches.
 
 MAX_TESTFILE_NAMES_SHOWN: int = 5
