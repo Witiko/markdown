@@ -1092,10 +1092,11 @@ placed:
 * `⟨TEXMF⟩/tex/context/third/markdown/t-markdown.tex`
 * `⟨TEXMF⟩/tex/context/third/markdown/t-markdownthemewitiko_markdown_defaults.tex`
 
-where `⟨TEXMF⟩` corresponds to a root of your \TeX{} distribution, such as
-`/usr/share/texmf` and `~/texmf` on UN\*X systems or
-`C:\Users\`\meta{Your username}`\texmf` on Windows systems. When in doubt,
-consult the manual of your \TeX{} distribution.
+`⟨TEXMF⟩` corresponds to a root directory of one of your \TeX{} directory
+structure (TDS) trees. You may list the locations of all TDS trees using a command
+such as `kpsewhich -var-value=TEXMF` (in \TeX{} Live) or `mtxrun --resolve-path
+TEXMF` (in \Hologo{ConTeXt} Standalone). For more information, consult the
+manual of your \TeX{} distribution.
 
 ### Portable Installation
 
@@ -1118,6 +1119,46 @@ This is where the individual files should be placed:
 * `./t-markdownthemewitiko_markdown_defaults.tex`
 
 The file `markdown.tex` *must* be placed in a directory named `markdown`.
+
+### Installing Dependencies (\Hologo{ConTeXt} Standalone)
+
+The Markdown package has a number of external dependencies. Here are the
+package names of these dependencies in the \TeX{} Live distribution:
+
+```
+/DEPENDS.txt
+```
+
+Some TeX distributions, such as \TeX{} Live installed with a scheme smaller
+than `scheme-full` or \Hologo{ConTeXt} Standalone, may lack some or all of
+these dependencies. To complete the installation of the Markdown package with
+such distributions, you should follow these steps:
+
+1. For each package that is a hard dependency of the Markdown package (i.e. has
+   the prefix `hard` in the above list), download an archive from the web address
+   `https://mirror.ctan.org/systems/texlive/tlnet/archive/⟨package name⟩.tar.xz`.
+
+2. Unpack the downloaded package archives to the directory `⟨TEXMF⟩`.
+
+   `⟨TEXMF⟩` corresponds to a root directory of one of your \TeX{} directory
+   structure (TDS) trees. You may list the locations of all TDS trees using a
+   command such as `kpsewhich -var-value=TEXMF` (in \TeX{} Live) or `mtxrun
+   --resolve-path TEXMF` (in \Hologo{ConTeXt} Standalone). For more
+   information, consult the manual of your \TeX{} distribution.
+
+   To unpack the package archive, you would use a command such as `tar xJf
+   ⟨package name⟩.tar.xz -C ⟨TEXMF⟩` on GNU/Linux and other Un*x systems.
+
+   Some package archives may contain extra top-level directories such as
+   `texmf-dist` and `tlpkg`. For these packages, you should only extract the
+   contents of the directory `texmf-dist` to `⟨TEXMF⟩`. Here, you might use a
+   command such as `tar xJf ⟨package name⟩.tar.xz -C ⟨TEXMF⟩ --wildcards
+   'texmf-dist/*' --strip-components=1` on GNU/Linux and other Un*x systems.
+
+3. Run a command such as `texhash` (in \TeX{} Live) or `mtxrun --generate` and
+   `mtxrun --luatex --generate` (in \Hologo{ConTeXt} Standalone) to make the
+   installed packages visible to \TeX{}. For more information, consult the
+   manual of your \TeX{} distribution.
 
 %</manual>
 %<*lua>
