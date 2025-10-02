@@ -1,5 +1,11 @@
 # Changes
 
+## 3.12.0 (2025-10-XX)
+
+Development:
+
+- Upgrade from Unicode 16 to Unicode 17. (#585)
+
 ## 3.11.6 (2025-09-29)
 
 Tests:

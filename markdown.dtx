@@ -39520,16 +39520,14 @@ end
     \@@_if_option:nTF
       { experimental }
       {
-        \msg_error:nnn
+        \msg_error:nn
           { markdown }
           { latex-markdown-star-deprecated }
-          { #1 }
       }
       {
-        \msg_warning:nnn
+        \msg_warning:nn
           { markdown }
           { latex-markdown-star-deprecated }
-          { #1 }
       }
     \@@_setup:n
       { #1 }
@@ -39625,10 +39623,9 @@ end
               }
           }
           {
-            \msg_error:nnn
+            \msg_error:nn
               { markdown }
               { latex-theme-after-preamble }
-              { #1 }
           }
 %    \end{macrocode}
 % \begin{markdown}
