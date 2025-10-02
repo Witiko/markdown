@@ -135,7 +135,7 @@ $(GITHUB_PAGES): $(HTML_USER_MANUAL)
 
 # This target downloads Unicode Character Database files.
 $(UNICODE_DATA):
-	wget https://www.unicode.org/Public/16.0.0/ucd/$@
+	wget https://www.unicode.org/Public/17.0.0/ucd/$@
 
 # This target extracts the source files out of the DTX archive.
 $(EXTRACTABLES): $(INSTALLER) $(DTXARCHIVE) $(UNICODE_DATA)
