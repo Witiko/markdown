@@ -6,6 +6,10 @@ Development:
 
 - Upgrade from Unicode 16 to Unicode 17. (#585)
 
+Docker:
+
+- Start building Docker images `witiko/markdown:latest-context`. (#402, #586)
+
 ## 3.11.6 (2025-09-29)
 
 Tests:
