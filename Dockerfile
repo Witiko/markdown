@@ -45,13 +45,6 @@ ARG DEV_DEPENDENCIES="\
     vim \
 "
 
-ARG TEXLIVE_DEPENDENCIES="\
-    l3kernel \
-    latex \
-    latexmk \
-    luatex \
-"
-
 ARG BINARY_DIR=/usr/local/bin
 ARG BUILD_DIR=/git-repo
 ARG INSTALL_DIR=/usr/local/texlive/texmf-local
@@ -61,12 +54,11 @@ ARG FROM_IMAGE=texlive/texlive
 ARG TEXLIVE_TAG=latest
 ARG DEV_IMAGE=false
 
-FROM $FROM_IMAGE:$TEXLIVE_TAG as build
+FROM $FROM_IMAGE:latest as build
 
 ARG DEPENDENCIES
 ARG BUILD_DEPENDENCIES
 ARG PRODUCTION_DEPENDENCIES
-ARG TEXLIVE_DEPENDENCIES
 
 ARG BINARY_DIR
 ARG BUILD_DIR
@@ -119,13 +111,6 @@ then
 elif echo ${TEXLIVE_TAG} | grep -q pretest
 then
   retry -t 30 -d 60 tlmgr update --self --all --repository ftp://ftp.cstug.cz/pub/tex/local/tlpretest/
-fi
-
-# Install basic TeX Live dependencies
-if echo ${TEXLIVE_TAG} | grep -q latest-minimal
-then
-  retry -t 30 -d 60 tlmgr install ${TEXLIVE_DEPENDENCIES}
-  tlmgr path add
 fi
 
 # Uninstall the distribution Markdown package
@@ -181,12 +166,6 @@ popd
 mkdir -p ${INSTALL_DIR}/scripts/lua-tinyyaml/
 wget https://mirrors.ctan.org/macros/luatex/generic/lua-tinyyaml/tinyyaml.lua \
       -O ${INSTALL_DIR}/scripts/lua-tinyyaml/tinyyaml.lua
-
-# Generate the ConTeXt file database
-if echo ${TEXLIVE_TAG} | { ! grep -q latest-minimal; }
-then
-  mtxrun --generate
-fi
 
 # Reindex the TeX directory structure
 texhash
@@ -293,7 +272,7 @@ then
 fi
 
 # Install TeX Live dependencies
-if echo ${TEXLIVE_TAG} | grep -q latest-minimal
+if [ ${TEXLIVE_TAG} != latest ]
 then
   retry -t 30 -d 60 tlmgr install $(awk '{ print $2 }' ${BUILD_DIR}/DEPENDS.txt ${BUILD_DIR}/tests/DEPENDS.txt | sort -u)
   tlmgr path add
@@ -333,13 +312,13 @@ ln -s ${INSTALL_DIR}/scripts/markdown/markdown-cli.lua       ${BINARY_DIR}/markd
 ln -s ${INSTALL_DIR}/scripts/markdown/markdown2tex.lua       ${BINARY_DIR}/markdown2tex
 
 # Generate the ConTeXt file database
-if echo ${TEXLIVE_TAG} | grep -q latest-minimal
+if [ ${TEXLIVE_TAG} != latest ]
 then
   # A temporary fix for ConTeXt, see <https://gitlab.com/islandoftex/images/texlive/-/issues/30>.
   sed -i '/package.loaded\["data-ini"\]/a if os.selfpath then environment.ownbin=lfs.symlinktarget(os.selfpath..io.fileseparator..os.selfname);environment.ownpath=environment.ownbin:match("^.*"..io.fileseparator) else environment.ownpath=kpse.new("luatex"):var_value("SELFAUTOLOC");environment.ownbin=environment.ownpath..io.fileseparator..(arg[-2] or arg[-1] or arg[0] or "luatex"):match("[^"..io.fileseparator.."]*$") end' /usr/bin/mtxrun.lua || true
 fi
 mtxrun --generate
-if echo ${TEXLIVE_TAG} | grep -q latest-minimal
+if [ ${TEXLIVE_TAG} != latest ]
 then
   texlua /usr/bin/mtxrun.lua --luatex --generate
   context --make

@@ -209,6 +209,7 @@ jobs:
       matrix:
         texlive:
           - latest
+          - latest-context
           - latest-minimal
         # Only test latest-minimal TeX Live in pull requests.
         is_pr:
@@ -219,6 +220,7 @@ jobs:
           - { texlive: latest-minimal }
     outputs:
       latest: ${{ steps.temporary-tags.outputs.latest }}
+      latest-context: ${{ steps.temporary-tags.outputs.latest-context }}
       latest-minimal: ${{ steps.temporary-tags.outputs.latest-minimal }}
     runs-on: ubuntu-latest
     permissions:
@@ -257,6 +259,7 @@ jobs:
       matrix:
         texlive:
           - latest
+          - latest-context
           - latest-minimal
         # Only test latest-minimal TeX Live in pull requests.
         is_pr:
@@ -301,6 +304,7 @@ jobs:
       matrix:
         texlive:
           - latest
+          - latest-context
           - latest-minimal
         is_pr:
           - ${{ github.event_name == 'pull_request_target' }}
