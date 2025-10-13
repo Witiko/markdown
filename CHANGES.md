@@ -5,6 +5,10 @@
 Development:
 
 - Upgrade from Unicode 16 to Unicode 17. (#585)
+- Produce [warning renderers][warning-renderer] for undefined and multiply defined
+  references to notes, full links, and collapsed links. (#518, #587)
+
+ [warning-renderer]: https://witiko.github.io/markdown/#warning-and-error-renderers
 
 Docker:
 

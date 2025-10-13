@@ -31670,6 +31670,10 @@ function M.reader.new(writer, options)
           value.content = ''
           value.is_active = false
         end
+        if value.warning ~= nil then
+          content[#content + 1] = value.warning
+          value.warning = nil
+        end
       end
 
       if next(content_part) ~= nil then
@@ -32483,6 +32487,9 @@ function M.reader.new(writer, options)
       local parsed_ref = self.parser_functions.parse_blocks_nested(r)
       render_link_or_image(t, opening_index, closing_index,
                            closing_index, parsed_ref)
+    else
+      local text = string.format("Undefined note `[^%s]`", content)
+      t[opening_index].warning = writer.warning(text)
     end
   end
 
@@ -32511,6 +32518,10 @@ function M.reader.new(writer, options)
         = join_attributes(r.attributes, inline_content.attributes)
       render_link_or_image(t, opening_index, next_link_closing_index,
                            closing_index, r)
+    else
+      local text = string.format("Undefined link `[...][%s]`",
+                                 next_link_content)
+      t[opening_index].warning = writer.warning(text)
     end
   end
 
@@ -32538,6 +32549,9 @@ function M.reader.new(writer, options)
         = join_attributes(r.attributes, inline_content.attributes)
       render_link_or_image(t, opening_index, next_link_closing_index,
                            closing_index, r)
+    else
+      local text = string.format("Undefined link `[%s][]`", content)
+      t[opening_index].warning = writer.warning(text)
     end
   end
 
