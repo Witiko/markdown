@@ -31951,14 +31951,18 @@ function M.reader.new(writer, options)
   function self.register_link(_, tag, url, title,
                               attributes)
     local normalized_tag = self.normalize_tag(tag)
-      if references[normalized_tag] == nil then
-        references[normalized_tag] = {
-          url = url,
-          title = title,
-          attributes = attributes
-        }
-      end
-    return ""
+    if references[normalized_tag] == nil then
+      references[normalized_tag] = {
+        url = url,
+        title = title,
+        attributes = attributes
+      }
+      return ""
+    else
+      local text
+        = string.format("Multiply defined link `[%s]: ...`", tag)
+      return writer.warning(text)
+    end
   end
 
 %    \end{macrocode}
@@ -35403,8 +35407,12 @@ M.extensions.notes = function(notes, inline_notes)
           local normalized_tag = self.normalize_tag(ref)
           if rawnotes[normalized_tag] == nil then
             rawnotes[normalized_tag] = rawnote
+            return ""
+          else
+            local text
+              = string.format("Multiply defined note `[^%s]: ...`", ref)
+            return writer.warning(text)
           end
-          return ""
         end
 
         local NoteRef = RawNoteRef / lookup_note
