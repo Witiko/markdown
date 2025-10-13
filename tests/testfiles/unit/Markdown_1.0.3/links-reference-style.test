@@ -88,6 +88,10 @@ BEGIN link
 - title: 
 END link
 paragraphSeparator
+BEGIN warning
+- text: Undefined link reference "four"
+- more: Look for the text `[four][]`.
+END warning
 paragraphSeparator
 inputVerbatim: 1d6cdc132aafa7c2999b741379103fae.verbatim
 paragraphSeparator
@@ -111,6 +115,10 @@ BEGIN link
 - title: 
 END link
 paragraphSeparator
+BEGIN warning
+- text: Undefined link reference "that"
+- more: Look for the text `[that][]`.
+END warning
 paragraphSeparator
 paragraphSeparator
 BEGIN link

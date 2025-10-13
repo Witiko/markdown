@@ -10,6 +10,10 @@
 [baz]: /url
 >>>
 BEGIN document
+BEGIN warning
+- text: Undefined link reference "bar"
+- more: Look for the text `[...][bar]`.
+END warning
 BEGIN link
 - label: bar
 - URI: /url
