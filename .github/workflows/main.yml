@@ -151,7 +151,7 @@ jobs:
       - name: Extract user manual
         run: make markdown-transcluded.md
       - name: Run MarkdownLint
-        uses: nosborn/github-action-markdown-cli@v3.3.0
+        uses: nosborn/github-action-markdown-cli@v3.5.0
         with:
           files: .
           config_file: .markdownlint.yaml
