@@ -355,22 +355,22 @@ jobs:
           chown -R root:root .
           make dist gh-pages
       - name: Upload artifact markdown.tds.zip
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: markdown.tds.zip
           path: markdown.tds.zip
       - name: Upload artifact markdown.ctan.zip
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: markdown.ctan.zip
           path: markdown.ctan.zip
       - name: Upload artifact markdown.zip
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: markdown.zip
           path: markdown.zip
       - name: Upload artifact markdown.pdf
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: markdown.pdf
           path: markdown.pdf
