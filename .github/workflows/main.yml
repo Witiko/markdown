@@ -403,6 +403,6 @@ jobs:
     if: github.event_name == 'pull_request_target' && github.event.pull_request.draft == false && always() && needs.test.result == 'success'
     steps:
       - name: Automatically merge pull request
-        uses: pascalgn/automerge-action@v0.16.3
+        uses: pascalgn/automerge-action@v0.16.4
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
