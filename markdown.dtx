@@ -31658,6 +31658,15 @@ function M.reader.new(writer, options)
           content[#content + 1] = value.rendered
           value.rendered = nil
         else
+          if value.warning ~= nil then
+            if next(content_part) ~= nil then
+              content[#content + 1] = parse_content_part(content_part)
+            end
+            content_part = {}
+
+            content[#content + 1] = value.warning
+            value.warning = nil
+          end
           if value.type == "delimiter"
               and value.element == "emphasis" then
             if value.is_active then
@@ -31669,10 +31678,6 @@ function M.reader.new(writer, options)
           end
           value.content = ''
           value.is_active = false
-        end
-        if value.warning ~= nil then
-          content[#content + 1] = value.warning
-          value.warning = nil
         end
       end
 
@@ -32492,11 +32497,6 @@ function M.reader.new(writer, options)
       local parsed_ref = self.parser_functions.parse_blocks_nested(r)
       render_link_or_image(t, opening_index, closing_index,
                            closing_index, parsed_ref)
-    else
-      local text = string.format('Undefined note reference "%s"',
-                                 content)
-      local more = string.format("Look for the text `[^%s]`.", content)
-      t[opening_index].warning = writer.warning(text, more)
     end
   end
 
@@ -35405,7 +35405,11 @@ M.extensions.notes = function(notes, inline_notes)
               return writer.note(
                 self.parser_functions.parse_blocks_nested(found))
             else
-              return {"[",
+              local text = string.format('Undefined note reference "%s"',
+                                         ref)
+              local more = string.format("Look for the text `[^%s]`.", ref)
+
+              return {writer.warning(text, more), "[",
                 self.parser_functions.parse_inlines("^" .. ref), "]"}
             end
           end)

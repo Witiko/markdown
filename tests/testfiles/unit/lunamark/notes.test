@@ -31,11 +31,11 @@ note: Here is the note. It can go anywhere after the note(softLineBreak)referenc
 note: Here's the long note. This one contains multiple blocks.(paragraphSeparator)Subsequent blocks are indented to show that they belong to the(softLineBreak)note (as with list items).(interblockSeparator)(inputVerbatim: d7e2fce05047ab761601314db74235b9.verbatim)(interblockSeparator)If you want, you can indent every line, but you can also be(softLineBreak)lazy and just indent the first line of each block.
 softLineBreak
 emphasis: not
+softLineBreak
 BEGIN warning
 - text: Undefined note reference "my note"
 - more: Look for the text `[(circumflex)my note]`.
 END warning
-softLineBreak
 circumflex
 paragraphSeparator
 paragraphSeparator
