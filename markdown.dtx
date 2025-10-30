@@ -35405,10 +35405,10 @@ M.extensions.notes = function(notes, inline_notes)
               return writer.note(
                 self.parser_functions.parse_blocks_nested(found))
             else
-              local text = string.format('Undefined note reference "%s"',
-                                         ref)
-              local more = string.format("Look for the text `[^%s]`.", ref)
-
+              local text = string.format(
+                'Undefined note reference "%s"', ref)
+              local more = string.format(
+                "Look for the text `[^%s]`.", ref)
               return {writer.warning(text, more), "[",
                 self.parser_functions.parse_inlines("^" .. ref), "]"}
             end
