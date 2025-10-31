@@ -20,14 +20,14 @@ BEGIN link
 - URI: foo.jpg
 - title: 
 END link
-BEGIN warning
-- text: Undefined link reference "ref"
-- more: Look for the text `[...][ref]`.
-END warning
 leftBrace
 hash
 rightBrace
 softLineBreak
+BEGIN warning
+- text: Undefined link reference "ref"
+- more: Look for the text `[...][ref]`.
+END warning
 leftBrace
 rightBrace
 softLineBreak
@@ -44,14 +44,14 @@ BEGIN image
 - URI: foo.jpg
 - title: 
 END image
-BEGIN warning
-- text: Undefined link reference "ref"
-- more: Look for the text `[...][ref]`.
-END warning
 leftBrace
 hash
 rightBrace
 softLineBreak
+BEGIN warning
+- text: Undefined link reference "ref"
+- more: Look for the text `[...][ref]`.
+END warning
 leftBrace
 rightBrace
 paragraphSeparator
