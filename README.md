@@ -149,7 +149,7 @@ For further information, consult one of the following:
     - [Markdown 3 at TUG 2023: Reflections from the Q&A Session][tb138],
     - [Fast Regression Testing of TeX Packages: Multiprocessing and Batching][tb139],
     - [Markdown Themes in Practice][tb140], and
-    - Piping YAML files into LaTeX3 key–values ([preprint][tb142-preprint]).
+    - [Piping YAML files into LaTeX3 key–values][tb142].
 5. Journal articles published by [CSTUG Bulletin][csbul] (in Czech and Slovak):
     - [Rendering Markdown inside TeX Documents][10.5300/2016-1-4/78],
     - [Markdown 2.8.1: Boldly Unto the Throne of Lightweight Markup in TeX][10.5300/2020-1-2/48],
@@ -186,8 +186,7 @@ For further information, consult one of the following:
  [tb138]: https://www.tug.org/TUGboat/tb44-3/tb138starynovotny-markdown-qa.pdf     "Markdown 3 at TUG 2023: Reflections from the Q&A session"
  [tb139]: https://www.tug.org/TUGboat/tb45-1/tb139starynovotny-testing.pdf         "Fast Regression Testing of TeX Packages: The Unreasonable Effectiveness of Batching"
  [tb140]: https://www.tug.org/TUGboat/tb45-2/tb140starynovotny-markdown-themes.pdf "Markdown Themes in Practice"
-
- [tb142-preprint]: https://www.overleaf.com/read/gbtmtybxhnjj "Piping YAML files into LaTeX3 key–values"
+ [tb142]: https://www.tug.org/TUGboat/tb46-1/tb142starynovotny-piping-yaml.pdf     "Piping YAML files into LaTeX3 key–values"
 
  [tb131-slides]:       https://tug.org/tug2021/assets/pdf/tug2021-novotny-slides.pdf                            "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"
  [tb131-video]:        https://youtu.be/i2GJMnLCZls                                                             "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"
@@ -236,10 +235,10 @@ Acknowledgements
 
 | Logo          | Acknowledgement |
 | ------------- | --------------- |
-| [<img width="150" src="https://www.fi.muni.cz/images/fi-logo.png">][fimu] | I gratefully acknowledge the funding from the [Faculty of Informatics][fimu] at the [Masaryk University][mu] in Brno, Czech Republic, for the development of the Markdown package in projects [MUNI/33/12/2015][], [MUNI/33/1784/2020][], [MUNI/33/0776/2021][], [MUNI/33/1654/2022][], and [MUNI/33/1658/2022][]. |
-| [<img width="150" src="https://cdn.overleaf.com/img/ol-brand/overleaf_og_logo.png">][overleaf] | Extensive user documentation for the Markdown package was kindly written by [Lian Tze Lim][liantze] and published by [Overleaf][]. |
-| [<img width="150" src="https://pbs.twimg.com/profile_images/1004769879319334912/6Bh1UthD.jpg">][omedym] | Support for content slicing (Lua options [`shiftHeadings`][option-shift-headings] and [`slice`][option-slice]) and pipe tables (Lua options [`pipeTables`][option-pipe-tables] and [`tableCaptions`][option-table-captions]) was graciously sponsored by [David Vins][dvins] and [Omedym][]. |
-| [<img width="150" src="https://github.com/istqborg/istqb_product_base/blob/main/img/istqb-logo-default.png">][istqb] | Fixes for issues [#359][issue-359], [#368][issue-368], [#401][issue-401], [#424][issue-424], [#440][issue-440], [#468][issue-468], [#474][issue-474], and [#487][issue-487] were graciously sponsored by the [International Software Testing Qualifications Board (ISTQB)][istqb]. |
+| [<img width="150" src="https://www.fi.muni.cz/images/fi-logo.png" alt="Logo of the Faculty of Informatics, Masaryk University, Czech Republic">][fimu] | I gratefully acknowledge the funding from the [Faculty of Informatics][fimu] at the [Masaryk University][mu] in Brno, Czech Republic, for the development of the Markdown package in projects [MUNI/33/12/2015][], [MUNI/33/1784/2020][], [MUNI/33/0776/2021][], [MUNI/33/1654/2022][], and [MUNI/33/1658/2022][]. |
+| [<img width="150" src="https://cdn.overleaf.com/img/ol-brand/overleaf_og_logo.png" alt="Overleaf logo">][overleaf] | Extensive user documentation for the Markdown package was kindly written by [Lian Tze Lim][liantze] and published by [Overleaf][]. |
+| [<img width="150" src="https://pbs.twimg.com/profile_images/1004769879319334912/6Bh1UthD.jpg" alt="Omedym logo">][omedym] | Support for content slicing (Lua options [`shiftHeadings`][option-shift-headings] and [`slice`][option-slice]) and pipe tables (Lua options [`pipeTables`][option-pipe-tables] and [`tableCaptions`][option-table-captions]) was graciously sponsored by [David Vins][dvins] and [Omedym][]. |
+| [<img width="150" src="https://github.com/istqborg/istqb_product_base/blob/main/img/istqb-logo-default.png" alt="ISTQB logo">][istqb] | Fixes for issues [#359][issue-359], [#368][issue-368], [#401][issue-401], [#424][issue-424], [#440][issue-440], [#468][issue-468], [#474][issue-474], and [#487][issue-487] were graciously sponsored by the [International Software Testing Qualifications Board (ISTQB)][istqb]. |
 
  [dvins]:  https://github.com/dvins             "David Vins"
  [fimu]:   https://www.fi.muni.cz/index.html.en "Faculty of Informatics, Masaryk University"
