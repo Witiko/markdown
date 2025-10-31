@@ -10,4 +10,8 @@
 [foo!]: /url
 >>>
 BEGIN document
+BEGIN warning
+- text: Undefined link reference "foo(backslash)!"
+- more: Look for the text `[...][foo(backslash)!]`.
+END warning
 END document

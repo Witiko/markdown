@@ -12,6 +12,10 @@
 [bar][foo]
 >>>
 BEGIN document
+BEGIN warning
+- text: Multiply defined link reference "foo"
+- more: Look for the text `[foo]: ...`.
+END warning
 BEGIN link
 - label: bar
 - URI: /url1

@@ -31658,6 +31658,15 @@ function M.reader.new(writer, options)
           content[#content + 1] = value.rendered
           value.rendered = nil
         else
+          if value.warning ~= nil then
+            if next(content_part) ~= nil then
+              content[#content + 1] = parse_content_part(content_part)
+            end
+            content_part = {}
+
+            content[#content + 1] = value.warning
+            value.warning = nil
+          end
           if value.type == "delimiter"
               and value.element == "emphasis" then
             if value.is_active then
@@ -31947,14 +31956,19 @@ function M.reader.new(writer, options)
   function self.register_link(_, tag, url, title,
                               attributes)
     local normalized_tag = self.normalize_tag(tag)
-      if references[normalized_tag] == nil then
-        references[normalized_tag] = {
-          url = url,
-          title = title,
-          attributes = attributes
-        }
-      end
-    return ""
+    if references[normalized_tag] == nil then
+      references[normalized_tag] = {
+        url = url,
+        title = title,
+        attributes = attributes
+      }
+      return ""
+    else
+      local text
+        = string.format('Multiply defined link reference "%s"', tag)
+      local more = string.format("Look for the text `[%s]: ...`.", tag)
+      return writer.warning(text, more)
+    end
   end
 
 %    \end{macrocode}
@@ -32511,6 +32525,12 @@ function M.reader.new(writer, options)
         = join_attributes(r.attributes, inline_content.attributes)
       render_link_or_image(t, opening_index, next_link_closing_index,
                            closing_index, r)
+    else
+      local text = string.format('Undefined link reference "%s"',
+                                 next_link_content)
+      local more = string.format("Look for the text `[...][%s]`.",
+                                 next_link_content)
+      t[opening_index].warning = writer.warning(text, more)
     end
   end
 
@@ -32538,6 +32558,12 @@ function M.reader.new(writer, options)
         = join_attributes(r.attributes, inline_content.attributes)
       render_link_or_image(t, opening_index, next_link_closing_index,
                            closing_index, r)
+    else
+      local text = string.format('Undefined link reference "%s"',
+                                 content)
+      local more = string.format("Look for the text `[%s][]`.",
+                                 content)
+      t[opening_index].warning = writer.warning(text, more)
     end
   end
 
@@ -35379,7 +35405,11 @@ M.extensions.notes = function(notes, inline_notes)
               return writer.note(
                 self.parser_functions.parse_blocks_nested(found))
             else
-              return {"[",
+              local text = string.format(
+                'Undefined note reference "%s"', ref)
+              local more = string.format(
+                "Look for the text `[^%s]`.", ref)
+              return {writer.warning(text, more), "[",
                 self.parser_functions.parse_inlines("^" .. ref), "]"}
             end
           end)
@@ -35389,8 +35419,15 @@ M.extensions.notes = function(notes, inline_notes)
           local normalized_tag = self.normalize_tag(ref)
           if rawnotes[normalized_tag] == nil then
             rawnotes[normalized_tag] = rawnote
+            return ""
+          else
+            local text
+              = string.format('Multiply defined note reference "%s"',
+                              ref)
+            local more
+              = string.format("Look for the text `[^%s]: ...`.", ref)
+            return writer.warning(text, more)
           end
-          return ""
         end
 
         local NoteRef = RawNoteRef / lookup_note

@@ -24,6 +24,10 @@ leftBrace
 hash
 rightBrace
 softLineBreak
+BEGIN warning
+- text: Undefined link reference "ref"
+- more: Look for the text `[...][ref]`.
+END warning
 leftBrace
 rightBrace
 softLineBreak
@@ -44,6 +48,10 @@ leftBrace
 hash
 rightBrace
 softLineBreak
+BEGIN warning
+- text: Undefined link reference "ref"
+- more: Look for the text `[...][ref]`.
+END warning
 leftBrace
 rightBrace
 paragraphSeparator

@@ -23,6 +23,8 @@ The following is not a note as label cannot contain brackets: [^a [a] a].
 
 [^a [a] a]: This is not a note.
 
+[^longnote]: This note is multiply defined.
+
 >>>
 BEGIN document
 note: Here is the note. It can go anywhere after the note(softLineBreak)reference. It need not be placed at the end of the document.
@@ -30,10 +32,18 @@ note: Here's the long note. This one contains multiple blocks.(paragraphSeparato
 softLineBreak
 emphasis: not
 softLineBreak
+BEGIN warning
+- text: Undefined note reference "my note"
+- more: Look for the text `[(circumflex)my note]`.
+END warning
 circumflex
 paragraphSeparator
 paragraphSeparator
 circumflex
 paragraphSeparator
 circumflex
+BEGIN warning
+- text: Multiply defined note reference "longnote"
+- more: Look for the text `[(circumflex)longnote]: ...`.
+END warning
 END document

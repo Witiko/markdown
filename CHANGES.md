@@ -1,10 +1,46 @@
 # Changes
 
-## 3.12.0 (2025-10-XX)
+## 3.12.0 (2025-10-31)
 
 Development:
 
 - Upgrade from Unicode 16 to Unicode 17. (#585)
+
+- Produce [warning renderers][warning-renderer] for undefined and multiply defined
+  references to notes, full links, and collapsed links. (requested by @witiko
+  in #518, added by @witiko and @lostenderman in #587)
+
+  Here is how you might make the warnings part of the output in LaTeX by
+  redefining the warning renderer:
+
+  ``` tex
+  \documentclass{article}
+  \usepackage[notes]{markdown}
+  \usepackage[english]{babel}
+  \usepackage[autostyle,english=american]{csquotes}
+  \MakeOuterQuote{"}
+  \usepackage{todonotes}
+  \markdownSetup
+    {
+      renderers = {
+        warning = \todo{#1},
+      },
+    }
+  \begin{document}
+  \begin{markdown}
+
+  Here is an undefined note.[^note]
+
+   [foo]: https://example.bar/
+   [foo]: https://example.baz/
+
+  \end{markdown}
+  \end{document}
+  ```
+
+  By default, warnings are logged using the `\msg_warning:` class of expl3 functions.
+
+ [warning-renderer]: https://witiko.github.io/markdown/#warning-and-error-renderers
 
 Docker:
 
