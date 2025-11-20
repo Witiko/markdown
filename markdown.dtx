@@ -2763,40 +2763,6 @@ defaultOptions.experimental = false
 
 % \end{markdown}
 % \iffalse
-
-##### Lua Module Example {.unnumbered}
-
-Using a text editor, create a text document named `document.tex` with the
-following content:
-``` tex
-\input markdown
-\begingroup
-\catcode`\%=12
-\catcode`\#=12
-\directlua{
-  local markdown = require("markdown")
-  local convert1 = markdown.new({})
-  local convert2 = markdown.new({singletonCache=false})
-  local convert3 = markdown.new({singletonCache=true})
-  local newline = [[^^J^^J]]
-  tex.print(tostring(convert1) .. ", ")
-  tex.print(tostring(convert2) .. ", ")
-  tex.print(tostring(convert3))
-}
-\endgroup
-\bye
-```````
-Then, invoke LuaTeX from the terminal:
-``` sh
-luatex document.tex
-```````
-A PDF document named `document.pdf` should be produced and contain the following text:
-
-> function: 0x1a4a038, function: 0x1a52b18, function: 0x1a4a038
-
-As you can see, the caching causes `convert1` and `convert3` to be the same
-conversion function.
-
 %</manual-options>
 %<*tex>
 % \fi
