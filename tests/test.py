@@ -404,23 +404,22 @@ class BatchResult:
     def subresults(self) -> Tuple[TestSubResult, ...]:
         subresult_list: List[TestSubResult] = []
 
-        if len(self.actual_output_texts) == len(self):  # If all testfiles produced output, return subresults.
+        if len(self) == len(self.actual_output_texts):  # If all testfiles produced output, return subresults.
             for testfile_number, testfile in enumerate(self.testfile_batch):
                 subresult = TestSubResult(self, testfile_number)
                 subresult_list.append(subresult)
         else:
-            assert len(self.actual_output_texts) > len(self)
+            assert len(self) > len(self.actual_output_texts)
             if len(self) > 1:  # If some testfiles did not produce output and the batch is larger than one, bisect the batch.
-                assert len(self.actual_output_texts) > 1
                 assert self.actual_output_text is not None
                 # First, persistently store the raw batch output.
-                actual_output_fd, actual_output_file = mkstemp(prefix='bisect', text=True)
+                actual_output_fd, actual_output_file = mkstemp(prefix='bisect', suffix='.log', text=True)
                 with os.fdopen(actual_output_fd, 'wt') as f:
                     f.write(self.actual_output_text)
                 LOGGER.warning(
                     f'Bisecting batch {format_testfiles(self.testfile_batch)} because '
-                    f'only {len(self)} out of {len(self.actual_output_texts)} testfiles produced output '
-                    f'(see also the file {actual_output_file} with the raw batch log):'
+                    f'only {len(self.actual_output_texts)} out of {len(self)} testfiles produced output '
+                    f'(see also the file {actual_output_file} with the raw batch file):'
                 )
                 # Then, bisect the batch.
                 read_testfile_results, *remaining_parameters = self.test_parameters
