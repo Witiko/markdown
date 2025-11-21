@@ -11,6 +11,6 @@
 \catcode"7E=12%  Tildes (U+007E)
 
 % Perform the test.
-\inputmarkdown[snippet=testsnippet]{TEST_INPUT_FILENAME}
+\inputmarkdown{TEST_INPUT_FILENAME}
 
 \endgroup

@@ -5,12 +5,14 @@
 Tests:
 
 - Persistently store the raw batch output for failed batches. (#592, #600,
-  7f489b7b..a6d939ee)
+  7f489b7b..f6f32afa, #601)
+- Only execute the snippet `witiko/markdown/test/latex/snippet` once every
+  batch to improve speed and reduce memory footprint. (f6f32afa, #601)
 
 Continuous integration:
 
 - Upload failed batches and batch bisection logs as artifacts. (#592, #600,
-  7f489b7b..a6d939ee)
+  7f489b7b..15500163)
 
 ## 3.12.0 (2025-10-31)
 

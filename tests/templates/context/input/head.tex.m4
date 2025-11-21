@@ -6,7 +6,8 @@
   eagerCache = false,
   import = {
     witiko/markdown/test = snippet as testsnippet,
-  }
+  },
+  snippet = testsnippet,
 ]
 
 \starttext

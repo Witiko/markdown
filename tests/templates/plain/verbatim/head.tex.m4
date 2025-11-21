@@ -6,5 +6,6 @@
   outputDir = OUTPUT_DIRECTORY,
   import = {
     witiko/markdown/test = snippet as testSnippet,
-  }
+  },
+  snippet = testSnippet,
 }
