@@ -11,12 +11,13 @@ import logging
 from logging import getLogger
 from math import ceil
 from multiprocessing import Pool, cpu_count
+import os
 from pathlib import Path
 from typing import Dict, Iterable, Iterator, List, NamedTuple, Optional, Set, Tuple, TypeVar
 from shutil import copyfile, rmtree
 from subprocess import CompletedProcess, run
 import sys
-from tempfile import mkdtemp
+from tempfile import mkdtemp, mkstemp
 import re
 
 import click
@@ -407,52 +408,70 @@ class BatchResult:
             for testfile_number, testfile in enumerate(self.testfile_batch):
                 subresult = TestSubResult(self, testfile_number)
                 subresult_list.append(subresult)
-        elif len(self) > 1:  # If some testfiles did not produce output and the batch is larger than one, bisect the batch.
-            read_testfile_results, *remaining_parameters = self.test_parameters
-            pivot = len(self) // 2
-            first_testfile_subbatch = self.testfile_batch[:pivot]
-            second_testfile_subbatch = self.testfile_batch[pivot:]
-            LOGGER.warning(f'Bisecting batch {format_testfiles(self.testfile_batch)} due to an error:')
-            LOGGER.warning(f'- First subbatch: {format_testfiles(first_testfile_subbatch)}')
-            first_read_testfile_results = read_testfile_results[:pivot]
-            second_read_testfile_results = read_testfile_results[pivot:]
-            first_test_parameters = TestParameters(first_read_testfile_results, *remaining_parameters)
-            second_test_parameters = TestParameters(second_read_testfile_results, *remaining_parameters)
-            first_subresults = self.__class__.run_test_batch_with_parameters(
-                first_testfile_subbatch, first_test_parameters, self.fail_fast)
-            if self.fail_fast and not all(first_subresults):
-                second_subresults = [TestSubResult(self, testfile_number) for testfile_number in range(pivot, len(self))]
-            else:
-                LOGGER.warning(f'- Second subbatch: {format_testfiles(second_testfile_subbatch)}')
-                second_subresults = self.__class__.run_test_batch_with_parameters(
-                    second_testfile_subbatch, second_test_parameters, self.fail_fast)
-            subresult_list = list(chain(first_subresults, second_subresults))
-        else:  # If some testfiles did not produce output and the batch contains a single testfile, return the result.
-            testfile_number = 0
-            subresult = TestSubResult(self, testfile_number)
-            subresult_list.append(subresult)
+        else:
+            assert len(self.actual_output_texts) > len(self)
+            if len(self) > 1:  # If some testfiles did not produce output and the batch is larger than one, bisect the batch.
+                assert len(self.actual_output_texts) > 1
+                assert self.actual_output_text is not None
+                # First, persistently store the raw batch output.
+                actual_output_fd, actual_output_file = mkstemp(prefix='bisect', text=True)
+                with os.fdopen(actual_output_fd, 'wt') as f:
+                    f.write(self.actual_output_text)
+                LOGGER.warning(
+                    f'Bisecting batch {format_testfiles(self.testfile_batch)} because '
+                    f'only {len(self)} out of {len(self.actual_output_texts)} testfiles produced output '
+                    f'(see also the file {actual_output_file} with the raw batch log):'
+                )
+                # Then, bisect the batch.
+                read_testfile_results, *remaining_parameters = self.test_parameters
+                pivot = len(self) // 2
+                first_testfile_subbatch = self.testfile_batch[:pivot]
+                second_testfile_subbatch = self.testfile_batch[pivot:]
+                LOGGER.warning(f'- First subbatch: {format_testfiles(first_testfile_subbatch)}')
+                first_read_testfile_results = read_testfile_results[:pivot]
+                second_read_testfile_results = read_testfile_results[pivot:]
+                first_test_parameters = TestParameters(first_read_testfile_results, *remaining_parameters)
+                second_test_parameters = TestParameters(second_read_testfile_results, *remaining_parameters)
+                first_subresults = self.__class__.run_test_batch_with_parameters(
+                    first_testfile_subbatch, first_test_parameters, self.fail_fast)
+                if self.fail_fast and not all(first_subresults):
+                    second_subresults = [TestSubResult(self, testfile_number) for testfile_number in range(pivot, len(self))]
+                else:
+                    LOGGER.warning(f'- Second subbatch: {format_testfiles(second_testfile_subbatch)}')
+                    second_subresults = self.__class__.run_test_batch_with_parameters(
+                        second_testfile_subbatch, second_test_parameters, self.fail_fast)
+                subresult_list = list(chain(first_subresults, second_subresults))
+            else:  # If some testfiles did not produce output and the batch contains a single testfile, return the result.
+                testfile_number = 0
+                subresult = TestSubResult(self, testfile_number)
+                subresult_list.append(subresult)
 
         subresults = tuple(subresult_list)
         return subresults
 
     @cached_property
-    def actual_output_texts(self) -> Tuple[OutputText, ...]:
+    def actual_output_text(self) -> Optional[OutputText]:
         try:
             actual_output_file = self.output_directory / TEST_ACTUAL_OUTPUT_FILENAME
             with actual_output_file.open('rt') as f:
-                actual_output_text = f.read()
-            actual_output_texts = split_batch_output_text(actual_output_text)
-            actual_output_texts = tuple(actual_output_texts)
-            for actual_output_text_number, actual_output_text in enumerate(actual_output_texts):
-                actual_output_filename = TEST_ACTUAL_OUTPUT_FILENAME_FORMAT.format(actual_output_text_number)
-                actual_output_file = self.output_directory / actual_output_filename
-                with actual_output_file.open('wt') as f:
-                    for line in actual_output_text.splitlines():
-                        print(line, file=f)
-            assert len(actual_output_texts) <= len(self)
-            return actual_output_texts
+                return f.read()
         except IOError:
+            return None  # We have already deleted temporary directory, or no output was produced due to an error.
+
+    @cached_property
+    def actual_output_texts(self) -> Tuple[OutputText, ...]:
+        if self.actual_output_text is None:
             return tuple()  # We have already deleted temporary directory, or no output was produced due to an error.
+        actual_output_texts = split_batch_output_text(self.actual_output_text)
+        actual_output_texts = tuple(actual_output_texts)
+        for actual_output_text_number, actual_output_text in enumerate(actual_output_texts):
+            actual_output_filename = TEST_ACTUAL_OUTPUT_FILENAME_FORMAT.format(actual_output_text_number)
+            actual_output_file = self.output_directory / actual_output_filename
+            with actual_output_file.open('wt') as f:
+                for line in actual_output_text.splitlines():
+                    print(line, file=f)
+        assert len(actual_output_texts) <= len(self)
+        return actual_output_texts
 
     def __len__(self) -> int:
         return len(self.testfile_batch)
