@@ -411,11 +411,11 @@ class BatchResult:
         else:
             assert len(self) > len(self.actual_output_texts)
             if len(self) > 1:  # If some testfiles did not produce output and the batch is larger than one, bisect the batch.
-                assert self.actual_output_text is not None
                 # First, persistently store the raw batch output.
+                assert self.output_text_bytes is not None
                 actual_output_fd, actual_output_file = mkstemp(prefix='bisect', suffix='.log', text=True)
-                with os.fdopen(actual_output_fd, 'wt') as f:
-                    f.write(self.actual_output_text)
+                with os.fdopen(actual_output_fd, 'wb') as f:
+                    f.write(self.output_text_bytes)
                 LOGGER.warning(
                     f'Bisecting batch {format_testfiles(self.testfile_batch)} because '
                     f'only {len(self.actual_output_texts)} out of {len(self)} testfiles produced output '
@@ -447,6 +447,15 @@ class BatchResult:
 
         subresults = tuple(subresult_list)
         return subresults
+
+    @cached_property
+    def output_text_bytes(self) -> Optional[bytes]:
+        try:
+            output_file = self.output_directory / TEST_OUTPUT_FILENAME
+            with output_file.open('rb') as f:
+                return f.read()
+        except IOError:
+            return None  # We have already deleted temporary directory, or no output was produced due to an error.
 
     @cached_property
     def actual_output_text(self) -> Optional[OutputText]:
