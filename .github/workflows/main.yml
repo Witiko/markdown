@@ -298,14 +298,14 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v5
         with:
-          name: failed-batches.zip
+          name: failed-batches-${{ matrix.texlive }}.zip
           path: /tmp/batch*/
           if-no-files-found: ignore
       - name: Upload batch bisection logs
         if: always()
         uses: actions/upload-artifact@v5
         with:
-          name: bisection-logs.zip
+          name: bisection-logs-${{ matrix.texlive }}.zip
           path: /tmp/bisect*.log
           if-no-files-found: ignore
   publish-docker-image:
