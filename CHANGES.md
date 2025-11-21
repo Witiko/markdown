@@ -1,5 +1,11 @@
 # Changes
 
+## 3.12.1 (2025-11-30)
+
+Continuous integration:
+
+- Fix needless batch bisections. (#592, 7f489b7b, ac2d047f)
+
 ## 3.12.0 (2025-10-31)
 
 Development:
