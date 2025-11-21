@@ -5,12 +5,12 @@
 Tests:
 
 - Persistently store the raw batch output for failed batches. (#592, #600,
-  7f489b7b..cff23f62)
+  7f489b7b..a6d939ee)
 
 Continuous integration:
 
 - Upload failed batches and batch bisection logs as artifacts. (#592, #600,
-  7f489b7b..cff23f62)
+  7f489b7b..a6d939ee)
 
 ## 3.12.0 (2025-10-31)
 
