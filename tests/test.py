@@ -419,7 +419,7 @@ class BatchResult:
                 LOGGER.warning(
                     f'Bisecting batch {format_testfiles(self.testfile_batch)} because '
                     f'only {len(self.actual_output_texts)} out of {len(self)} testfiles produced output '
-                    f'(see also the file {actual_output_file} with the raw batch file):'
+                    f'(see also the file {actual_output_file} with the raw batch output):'
                 )
                 # Then, bisect the batch.
                 read_testfile_results, *remaining_parameters = self.test_parameters
@@ -488,7 +488,7 @@ class BatchResult:
         read_testfile_results, tex_format, template, command = test_parameters
 
         # Create a temporary directory.
-        temporary_directory = Path(mkdtemp())
+        temporary_directory = Path(mkdtemp(prefix='batch'))
         output_directory = temporary_directory / OUTPUT_DIRECTORY
         output_directory.mkdir()
 

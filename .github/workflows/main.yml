@@ -294,6 +294,20 @@ jobs:
       - name: Run tests
         if: github.event_name == 'pull_request_target' && matrix.texlive == 'latest-minimal' || matrix.texlive != 'latest-minimal'
         run: make FAIL_FAST=${{ github.event_name == 'pull_request_target' }} test
+      - name: Upload failed batches
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: failed-batches.zip
+          path: /tmp/batch*/
+          if-no-files-found: ignore
+      - name: Upload batch bisection logs
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: bisection-logs.zip
+          path: /tmp/bisect*.log
+          if-no-files-found: ignore
   publish-docker-image:
     name: Publish Docker image
     needs:
