@@ -2,9 +2,15 @@
 
 ## 3.12.1 (2025-11-30)
 
+Tests:
+
+- Persistently store the raw batch output for failed batches. (#592,
+  7f489b7b..661cc55e)
+
 Continuous integration:
 
-- Fix needless batch bisections. (#592, 7f489b7b, ac2d047f)
+- Upload failed batches and batch bisection logs as artifacts. (#592,
+  7f489b7b..661cc55e)
 
 ## 3.12.0 (2025-10-31)
 
