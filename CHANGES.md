@@ -6,8 +6,12 @@ Tests:
 
 - Persistently store the raw batch output for failed batches. (#592, #600,
   7f489b7b..f6f32afa, #601)
+
 - Only execute the snippet `witiko/markdown/test/latex/snippet` once every
-  batch to improve speed and reduce memory footprint. (f6f32afa, #601)
+  batch to improve speed and reduce memory footprint. (#601)
+
+  This speeds up the regression tests on the free GitHub-hosted runners
+  up to 3× from ca 133 minutes to just ca 47 minutes.
 
 Continuous integration:
 
