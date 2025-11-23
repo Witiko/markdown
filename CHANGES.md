@@ -1,5 +1,15 @@
 # Changes
 
+## 3.12.2 (2025-12-XX)
+
+Defaults:
+
+- In LaTeX, fix header attribute `{-}` for chapters and parts. (reported by
+  @MacLotsen in #602, fixed by @witiko in e588d205)
+
+- In LaTeX, reset category codes before using `\maketitle`. (reported by
+  @MacLotsen in #603, fixed by @witiko in 00068c87)
+
 ## 3.12.1 (2025-11-22)
 
 Tests:
