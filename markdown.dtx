@@ -41201,13 +41201,19 @@ end
 % the `\maketitle` macro to typeset the title page of a document
 % at the end of \acro{yaml} metadata. If we are in the preamble, we will wait
 % macro until after the beginning of the document. Otherwise, we will use
-% the `\maketitle` macro straight away.
+% the `\maketitle` macro straight away, temporarily resetting the category
+% codes of the percent sign and the hash sign back to comment and parameter,
+% respectively.
 %
 % \end{markdown}
 %  \begin{macrocode}
+      \char_set_catcode_comment:N \%
+      \char_set_catcode_parameter:N \#
       \AddToHook
         { begindocument / end }
         { \maketitle }
+      \char_set_catcode_other:N \%
+      \char_set_catcode_other:N \#
     },
   }
 %    \end{macrocode}
