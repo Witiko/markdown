@@ -10,6 +10,10 @@ Defaults:
 - In LaTeX, reset category codes before using `\maketitle`. (reported by
   @MacLotsen in #603, fixed by @witiko in 00068c87)
 
+Continuous integration:
+
+- Bump `actions/checkout` from 5 to 6. (added by @dependabot in #604)
+
 ## 3.12.1 (2025-11-22)
 
 Tests:
