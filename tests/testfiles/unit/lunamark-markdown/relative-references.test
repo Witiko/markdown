@@ -1,12 +1,18 @@
 \markdownSetup{relativeReferences=true}
 <<<
 This test ensures that the Lua `relativeReferences` option correctly propagates
-through the plain TeX interface.
+through the plain TeX interface and the `htmlOverLinks` option is disabled by
+default.
 
 Here is a <#relative-reference> and <?here=is> another <./one>.
+
+Here is a HTML <tag> that is misrecognized as a relative reference, since
+the option `htmlOverLinks` has not been enabled.
 >>>
 BEGIN document
 codeSpan: relativeReferences
+softLineBreak
+codeSpan: htmlOverLinks
 softLineBreak
 paragraphSeparator
 BEGIN link
@@ -24,4 +30,12 @@ BEGIN link
 - URI: ./one
 - title: 
 END link
+paragraphSeparator
+BEGIN link
+- label: tag
+- URI: tag
+- title:
+END link
+softLineBreak
+codeSpan: htmlOverLinks
 END document
