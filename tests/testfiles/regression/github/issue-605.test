@@ -1,0 +1,16 @@
+\markdownSetup{fencedDivs=true}
+<<<
+::::: зміна {.зміна #зміна зміна=зміна}
+зміна
+:::::
+>>>
+BEGIN document
+BEGIN fencedDivAttributeContext
+attributeIdentifier: зміна
+attributeClassName: зміна
+BEGIN attributeKeyValue
+- key: зміна
+- value: зміна
+END attributeKeyValue
+END fencedDivAttributeContext
+END document
