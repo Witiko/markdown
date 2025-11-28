@@ -1,0 +1,26 @@
+\markdownSetup{blankBeforeHtmlBlock=true}
+<<<
+This test ensures that the Lua `blankBeforeHtmlBlock` option correctly propagates
+through the plain TeX interface.
+
+The following comment is understood as raw (inline) HTML by CommonMark: <!-- foo -->
+
+The following comment is also understood as raw (inline) HTML by CommonMark:
+<!-- foo -->
+
+The following comment is understood as an HTML block by CommonMark:
+
+<!-- foo -->
+>>>
+BEGIN document
+codeSpan: blankBeforeHtmlBlock
+softLineBreak
+paragraphSeparator
+inlineHtmlComment:  foo 
+paragraphSeparator
+softLineBreak
+inlineHtmlComment:  foo 
+interblockSeparator
+interblockSeparator
+inputBlockHtmlElement: 0bd4d7739263f98a4f1bf580ac0bf3c1.verbatim
+END document
