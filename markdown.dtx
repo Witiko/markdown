@@ -2219,6 +2219,9 @@ package.
 % \fi
 %  \begin{macrocode}
 local defaultOptions = {}
+local experimentalOptions = {}
+setmetatable(experimentalOptions, { __index = function (_, key)
+  return defaultOptions[key] end })
 %    \end{macrocode}
 % \begingroup
 % \markdownSetup{snippet=lua-options}
@@ -2699,10 +2702,14 @@ defaultOptions.eagerCache = true
      :  Experimental features that are planned to be the new default in the
         next major release of the Markdown package will be enabled.
 
-        At the moment, this just means that the version `experimental` of the
-        theme `witiko/markdown/defaults` will be loaded and warnings for
-        hard-deprecated features will become errors. However, the effects may
-        extend to other areas in the future as well.
+        At the moment, this has the following effects:
+
+        1. The version `experimental` of the theme `witiko/markdown/defaults`
+           will be loaded.
+        2. Warnings for hard-deprecated features will become errors.
+        3. The experimental option \Opt{htmlOverLinks} will be enabled.
+
+        In the future, the effects may extend to other areas as well.
 
 :    false
 
@@ -7167,16 +7174,17 @@ defaultOptions.headerAttributes = false
 %
 :    true
 
-     :  Enable the recognition of inline HTML tags, block HTML elements,
-        HTML comments, HTML instructions, and entities in the input. Inline
-        HTML tags, block HTML elements and HTML comments will be rendered, HTML
-        instructions will be ignored, and HTML entities will be replaced with
-        the corresponding Unicode codepoints.
+     :  Enable the recognition of inline \acro{HTML} tags, block \acro{HTML}
+        elements, \acro{HTML} comments, \acro{HTML} instructions, and entities
+        in the input. Inline \acro{HTML} tags, block \acro{HTML} elements and
+        \acro{HTML} comments will be rendered, \acro{HTML} instructions will be
+        ignored, and \acro{HTML} entities will be replaced with the
+        corresponding Unicode codepoints.
 
 :    false
 
-     :  Disable the recognition of HTML markup. Any HTML markup in the input
-        will be rendered as plain text.
+     :  Disable the recognition of \acro{HTML} markup. Any \acro{HTML} markup
+        in the input will be rendered as plain text.
 
 % \end{markdown}
 % \iffalse
@@ -7417,6 +7425,56 @@ following text:
 % \fi
 %  \begin{macrocode}
 defaultOptions.html = true
+%    \end{macrocode}
+% \iffalse
+%</lua,lua-cli,lua-loader>
+%<*manual-options>
+
+#### Option `htmlOverLinks`
+
+`htmlOverLinks` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{html}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  When the option \Opt{HTML} is enabled and a text can be understood
+        either as a hyperlink or \acro{HTML}, interpret is as \acro{HTML}.
+
+        This is especially relevant whej the option \Opt{relativeReferences}
+        is enabled, since it makes e.g. `</foo>` a valid hyperlink.
+
+:    false
+
+     :  When the option \Opt{HTML} is enabled and a text can be understood
+        either as a hyperlink or \acro{HTML}, interpret is as a hyperlink.
+
+This is an experimental option. Whenever the option \Opt{experimental} is
+enabled and this option is unspecified, it will be enabled. Like other
+experimental options, this option will be enabled by default in the next
+major release of the Markdown package.
+
+% \end{markdown}
+% \iffalse
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { htmlOverLinks }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli,lua-loader>
+% \fi
+%  \begin{macrocode}
+defaultOptions.htmlOverLinks = false
+experimentalOptions.htmlOverLinks = true
 %    \end{macrocode}
 % \iffalse
 %</lua,lua-cli,lua-loader>
@@ -36274,6 +36332,10 @@ function M.new(options)
   options = options or {}
   setmetatable(options, { __index = function (_, key)
     return defaultOptions[key] end })
+  if options.experimental then
+    setmetatable(options, { __index = function (_, key)
+      return experimentalOptions[key] end })
+  end
 %    \end{macrocode}
 % \begin{markdown}
 %
