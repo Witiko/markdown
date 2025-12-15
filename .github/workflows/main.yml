@@ -296,14 +296,14 @@ jobs:
         run: make FAIL_FAST=${{ github.event_name == 'pull_request_target' }} test
       - name: Upload failed batches
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: failed-batches-${{ matrix.texlive }}
           path: /tmp/batch*/
           if-no-files-found: ignore
       - name: Upload batch bisection logs
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: bisection-logs-${{ matrix.texlive }}
           path: /tmp/bisect*.log
@@ -369,22 +369,22 @@ jobs:
           chown -R root:root .
           make dist gh-pages
       - name: Upload artifact markdown.tds.zip
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: markdown.tds.zip
           path: markdown.tds.zip
       - name: Upload artifact markdown.ctan.zip
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: markdown.ctan.zip
           path: markdown.ctan.zip
       - name: Upload artifact markdown.zip
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: markdown.zip
           path: markdown.zip
       - name: Upload artifact markdown.pdf
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: markdown.pdf
           path: markdown.pdf
