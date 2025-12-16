@@ -49,7 +49,6 @@ Development:
   which the `texlive/texlive` Docker images are currently based on.
 
  [bugs-debian-1123051]: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1123051
-                       ( Make `-Tpdf` available in forky (testing), not just stable (trixie) and unstable (sid))
 
 Defaults:
 
