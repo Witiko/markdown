@@ -34836,9 +34836,14 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
 % \end{markdown}
 %  \begin{macrocode}
       local fenced_div_infostring
-                             = C((parsers.linechar
-                                - ( parsers.spacechar^1
-                                  * parsers.colon^1))^1)
+                             = Ct(parsers.attributes)
+                             + (
+                               C( parsers.attribute_classname
+                                - parsers.colon)^1
+                               / function (infostring)
+                                 return {"." .. infostring}
+                               end
+                             )
 
       local fenced_div_begin = parsers.nonindentspace
                              * parsers.colon^3
@@ -34941,15 +34946,6 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
                           * blank^0
 
       local FencedDiv = fenced_div_begin
-                      / function (infostring)
-                          local attr
-                            = lpeg.match(Ct(parsers.attributes),
-                                         infostring)
-                          if attr == nil then
-                            attr = {"." .. infostring}
-                          end
-                          return attr
-                        end
                       / writer.div_begin
                       * increment_div_level()
                       * parsers.skipblanklines
