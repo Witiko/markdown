@@ -29340,6 +29340,7 @@ parsers.unicode = {}
 parsers.unicode.preceding_punctuation = parsers.fail
 parsers.unicode.following_punctuation = parsers.fail
 parsers.unicode.following_alpha = parsers.fail
+parsers.unicode.following_numeric = parsers.fail
 parsers.unicode.following_word = parsers.fail
 parsers.unicode.preceding_whitespace = parsers.fail
 parsers.unicode.following_whitespace = parsers.fail
@@ -29379,6 +29380,19 @@ for n = 1, 4 do
 %    \end{macrocode}
 % \begin{markdown}
 %
+% For numeric characters, accept any characters from Unicode category
+% N (number), similar to the character class `%n` from the Lua library Selene
+% Unicode.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local numeric_of_length_n = unicode_data.categories.N[n]
+  parsers.unicode.following_numeric
+    = parsers.unicode.following_numeric
+    + numeric_of_length_n
+%    \end{macrocode}
+% \begin{markdown}
+%
 % For word characters, accept any characters from Unicode categories
 % L (letter), N (number), and Pc (connector punctuation), similar to the
 % character class `%w` from the Lua library Selene Unicode.
@@ -29386,8 +29400,8 @@ for n = 1, 4 do
 % \end{markdown}
 %  \begin{macrocode}
   local word_of_length_n
-    = unicode_data.categories.L[n]
-    + unicode_data.categories.N[n]
+    = alpha_of_length_n
+    + numeric_of_length_n
     + unicode_data.categories.Pc[n]
   parsers.unicode.following_word
     = parsers.unicode.following_word
