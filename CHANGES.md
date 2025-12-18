@@ -2,6 +2,54 @@
 
 ## 3.12.2 (2025-12-XX)
 
+Development:
+
+- In theme `witiko/diagrams`, add parameter `format` for GraphViz diagrams.
+  (reported by @witiko in #611, fixed by @witiko in #612)
+
+  Here is an example LaTeX document using the new parameter:
+
+  ```` tex
+  \documentclass{article}
+  \usepackage[import=witiko/diagrams@v2, relativeReferences]{markdown}
+  \begin{document}
+  \begin{markdown}
+  ``` dot {caption="An example directed graph" format=svg width=12cm #dot}
+  digraph tree {
+    margin = 0;
+    rankdir = "LR";
+
+    latex -> pmml;
+    latex -> cmml;
+    pmml -> slt;
+    cmml -> opt;
+    cmml -> prefix;
+    cmml -> infix;
+    pmml -> mterms [style=dashed];
+    cmml -> mterms;
+
+    latex [label = "LaTeX"];
+    pmml [label = "Presentation MathML"];
+    cmml [label = "Content MathML"];
+    slt [label = "Symbol Layout Tree"];
+    opt [label = "Operator Tree"];
+    prefix [label = "Prefix"];
+    infix [label = "Infix"];
+    mterms [label = "M-Terms"];
+  }
+  ```
+
+  See the diagram in Figure <#dot>.
+  \end{markdown}
+  \end{document}
+  ````
+
+  This can be used to circumvent missing support for PDF output in some
+  distributions of GraphViz, [notably Debian Forky][bugs-debian-1123051],
+  which the `texlive/texlive` Docker images are currently based on.
+
+ [bugs-debian-1123051]: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1123051
+
 Defaults:
 
 - In LaTeX, fix header attribute `{-}` for chapters and parts. (reported by
