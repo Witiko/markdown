@@ -1,6 +1,11 @@
 # Changes
 
-## 3.12.2 (2025-12-XX)
+## 3.13.0 (2025-12-XX)
+
+Fixes:
+
+- Support Unicode in attributes. (reported by @andreiborisov in #605,
+  fixed by @witiko in #608)
 
 Development:
 
