@@ -13,7 +13,6 @@
 :::::
 >>>
 BEGIN document
-interblockSeparator
 BEGIN fencedDivAttributeContext
 attributeClassName: зміна
 END fencedDivAttributeContext
