@@ -1,10 +1,23 @@
 \markdownSetup{fencedDivs=true}
 <<<
+::::: зміна
+зміна
+:::::
+
+::::: {.зміна #зміна зміна=зміна}
+зміна
+:::::
+
 ::::: зміна {.зміна #зміна зміна=зміна}
 зміна
 :::::
 >>>
 BEGIN document
+interblockSeparator
+BEGIN fencedDivAttributeContext
+attributeClassName: зміна
+END fencedDivAttributeContext
+interblockSeparator
 BEGIN fencedDivAttributeContext
 attributeIdentifier: зміна
 attributeClassName: зміна
@@ -13,4 +26,10 @@ BEGIN attributeKeyValue
 - value: зміна
 END attributeKeyValue
 END fencedDivAttributeContext
+interblockSeparator
+leftBrace
+hash
+rightBrace
+softLineBreak
+softLineBreak
 END document
