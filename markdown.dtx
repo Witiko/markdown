@@ -7442,15 +7442,15 @@ defaultOptions.html = true
 :    true
 
      :  When the option \Opt{HTML} is enabled and a text can be understood
-        either as a hyperlink or \acro{HTML}, interpret is as \acro{HTML}.
+        either as a hyperlink or \acro{HTML}, interpret it as \acro{HTML}.
 
-        This is especially relevant whej the option \Opt{relativeReferences}
+        This is especially relevant when the option \Opt{relativeReferences}
         is enabled, since it makes e.g. `</foo>` a valid hyperlink.
 
 :    false
 
      :  When the option \Opt{HTML} is enabled and a text can be understood
-        either as a hyperlink or \acro{HTML}, interpret is as a hyperlink.
+        either as a hyperlink or \acro{HTML}, interpret it as a hyperlink.
 
 This is an experimental option. Whenever the option \Opt{experimental} is
 enabled and this option is unspecified, it will be enabled. Like other
@@ -33194,6 +33194,14 @@ end
         .. [[or "instead of", not "]]
         .. pos .. [["]])
       local rule = walkable_syntax[lhs]
+      if type(pattern) == "string" then
+        for i, current_rhs in ipairs(rule) do
+          if current_rhs == pattern then
+            table.remove(rule, i)
+            break
+          end
+        end
+      end
       local index = nil
       for current_index, current_rhs in ipairs(rule) do
         if type(current_rhs) == "string" and current_rhs == rhs then
@@ -33223,6 +33231,11 @@ end
       else
         table.insert(rule, index, accountable_pattern)
       end
+    end
+    if options.htmlOverLinks
+      or ( options.experimental 
+       and experimentalOptions.htmlOverLinks) then
+      self.insert_pattern("Inline before AutoLinkUrl", "InlineHtml")
     end
 %    \end{macrocode}
 % \begin{markdown}
