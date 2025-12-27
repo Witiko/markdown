@@ -34,7 +34,7 @@ paragraphSeparator
 BEGIN link
 - label: tag
 - URI: tag
-- title:
+- title: 
 END link
 softLineBreak
 codeSpan: htmlOverLinks
