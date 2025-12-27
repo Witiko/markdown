@@ -32708,6 +32708,10 @@ function M.reader.new(writer, options)
     parsers.html_interrupting = parsers.fail
   end
 
+  if options.blankBeforeHtmlBlock then
+    parsers.html_interrupting = parsers.fail
+  end
+
   parsers.ListStarter = parsers.starter
 
   parsers.EndlineExceptions

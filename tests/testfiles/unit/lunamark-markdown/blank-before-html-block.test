@@ -20,7 +20,7 @@ inlineHtmlComment:  foo
 paragraphSeparator
 softLineBreak
 inlineHtmlComment:  foo 
-interblockSeparator
+paragraphSeparator
 interblockSeparator
 inputBlockHtmlElement: 0bd4d7739263f98a4f1bf580ac0bf3c1.verbatim
 END document
