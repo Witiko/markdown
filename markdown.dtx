@@ -33194,14 +33194,6 @@ end
         .. [[or "instead of", not "]]
         .. pos .. [["]])
       local rule = walkable_syntax[lhs]
-      if type(pattern) == "string" then
-        for i, current_rhs in ipairs(rule) do
-          if current_rhs == pattern then
-            table.remove(rule, i)
-            break
-          end
-        end
-      end
       local index = nil
       for current_index, current_rhs in ipairs(rule) do
         if type(current_rhs) == "string" and current_rhs == rhs then
@@ -33231,6 +33223,8 @@ end
       else
         table.insert(rule, index, accountable_pattern)
       end
+      -- TODO: Remove all occurrences of `pattern` after `index`
+      --       to improve speed?
     end
     if options.htmlOverLinks
       or ( options.experimental
