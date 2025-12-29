@@ -33226,9 +33226,7 @@ end
       -- TODO: Remove all occurrences of `pattern` after `index`
       --       to improve speed?
     end
-    if options.htmlOverLinks
-      or ( options.experimental
-       and experimentalOptions.htmlOverLinks) then
+    if options.htmlOverLinks then
       self.insert_pattern("Inline before AutoLinkUrl", "InlineHtml")
     end
 %    \end{macrocode}
