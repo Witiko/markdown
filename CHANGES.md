@@ -1,6 +1,6 @@
 # Changes
 
-## 3.13.0 (2025-12-XX)
+## 3.13.0 (2025-12-29)
 
 Fixes:
 
@@ -8,6 +8,14 @@ Fixes:
   fixed by @witiko in #608)
 
 Development:
+
+- Add a new Lua option `blankBeforeHtmlBlock` that causes the parser to require
+  a blank line between a paragraph and the following CommonMark HTML block.
+  (discussed with @u-fischer in #598, added by @witiko and @lostenderman in #608)
+
+  Enabling this option breaks CommonMark compliance but makes it easier to write
+  raw HTML such as inline HTML comments without producing HTML blocks by
+  accident.
 
 - In theme `witiko/diagrams`, add parameter `format` for GraphViz diagrams.
   (reported by @witiko in #611, fixed by @witiko in #612)
