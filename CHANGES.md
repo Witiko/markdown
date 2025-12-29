@@ -1,6 +1,6 @@
 # Changes
 
-## 3.13.0 (2025-12-XX)
+## 3.13.0 (2025-12-29)
 
 Fixes:
 
@@ -8,6 +8,17 @@ Fixes:
   fixed by @witiko in #608)
 
 Development:
+
+- Add a new Lua option `htmlOverLinks` that causes HTML tags to be recognized
+  as tags rather than hyperlinks when the Lua option `relativeReferences` has
+  been enabled. (discussed with @u-fischer in #597, added by @witiko and
+  @lostenderman in #607)
+
+  The option `htmlOverLinks` is an experimental option: Whenever the option
+  `experimental` is enabled and `htmlOverLinks` is unspecified, it will also be
+  enabled. Like other experimental options, `htmlOverLinks` will be enabled by
+  default in the next major release of the Markdown package and likely
+  soft-deprecated.
 
 - In theme `witiko/diagrams`, add parameter `format` for GraphViz diagrams.
   (reported by @witiko in #611, fixed by @witiko in #612)
