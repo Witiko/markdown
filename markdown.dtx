@@ -13130,16 +13130,19 @@ Built-in plain \TeX{} themes provided with the Markdown package include:
      `dot`, `mermaid`, and `plantuml` as figures with diagrams produced with
      the command `dot` from Graphviz tools, the command `mmdc` from the npm
      package `@mermaid-js/mermaid-cli`, and the command `plantuml` from the
-     package PlantUML, respectively. The key-value attribute `caption` can be
-     used to specify the caption of the figure. The remaining attributes are
-     treated as image attributes.
+     package PlantUML, respectively.
+
+     The key-value attribute `caption` can be used to specify the caption of
+     the figure and for the infostrings `dot` and `plantuml`, the key-value
+     attribute `format` can be used to specify the output image format. The
+     remaining attributes are treated as image attributes.
 
 %    ```` tex
 %    \documentclass{article}
 %    \usepackage[import=witiko/diagrams@v2, relativeReferences]{markdown}
 %    \begin{document}
 %    \begin{markdown}
-%    ``` dot {caption="An example directed graph" width=12cm #dot}
+%    ``` dot {caption="An example directed graph" format=svg width=12cm #dot}
 %    digraph tree {
 %      margin = 0;
 %      rankdir = "LR";
@@ -13210,7 +13213,7 @@ Built-in plain \TeX{} themes provided with the Markdown package include:
 %    figures <#fig:witiko-diagrams-dot>, <#fig:witiko-diagrams-mermaid>, and
 %    <#fig:witiko-diagrams-plantuml>.
 %
-%    ``` dot {caption="An example directed graph" #fig:witiko-diagrams-dot}
+%    ``` dot {caption="An example directed graph" format=svg #fig:witiko-diagrams-dot}
 %    digraph tree {
 %      margin = 0;
 %      rankdir = "LR";
@@ -29395,6 +29398,7 @@ parsers.unicode = {}
 parsers.unicode.preceding_punctuation = parsers.fail
 parsers.unicode.following_punctuation = parsers.fail
 parsers.unicode.following_alpha = parsers.fail
+parsers.unicode.following_numeric = parsers.fail
 parsers.unicode.following_word = parsers.fail
 parsers.unicode.preceding_whitespace = parsers.fail
 parsers.unicode.following_whitespace = parsers.fail
@@ -29434,6 +29438,19 @@ for n = 1, 4 do
 %    \end{macrocode}
 % \begin{markdown}
 %
+% For numeric characters, accept any characters from Unicode category
+% N (number), similar to the character class `%n` from the Lua library Selene
+% Unicode.
+%
+% \end{markdown}
+%  \begin{macrocode}
+  local numeric_of_length_n = unicode_data.categories.N[n]
+  parsers.unicode.following_numeric
+    = parsers.unicode.following_numeric
+    + numeric_of_length_n
+%    \end{macrocode}
+% \begin{markdown}
+%
 % For word characters, accept any characters from Unicode categories
 % L (letter), N (number), and Pc (connector punctuation), similar to the
 % character class `%w` from the Lua library Selene Unicode.
@@ -29441,8 +29458,8 @@ for n = 1, 4 do
 % \end{markdown}
 %  \begin{macrocode}
   local word_of_length_n
-    = unicode_data.categories.L[n]
-    + unicode_data.categories.N[n]
+    = alpha_of_length_n
+    + numeric_of_length_n
     + unicode_data.categories.Pc[n]
   parsers.unicode.following_word
     = parsers.unicode.following_word
@@ -30394,8 +30411,12 @@ parsers.commented_line = Cg(Cc(""), "backslashes")
 parsers.chunk = parsers.line * (parsers.optionallyindentedline
                                        - parsers.blankline)^0
 
-parsers.attribute_key_char = parsers.alphanumeric + S("-_:.")
-parsers.attribute_raw_char = parsers.alphanumeric + S("-_")
+parsers.attribute_key_char = parsers.unicode.following_alpha
+                           + parsers.unicode.following_numeric
+                           + S("-_:.")
+parsers.attribute_raw_char = parsers.unicode.following_alpha
+                           + parsers.unicode.following_numeric
+                           + S("-_")
 parsers.attribute_key = (parsers.attribute_key_char
                         - parsers.dash - parsers.digit)
                       * parsers.attribute_key_char^0
@@ -30410,7 +30431,7 @@ parsers.attribute_value = ( (parsers.dquote / "")
                           - parsers.rbrace
                           - parsers.space)^0
 parsers.attribute_identifier = parsers.attribute_key_char^1
-parsers.attribute_classname = parsers.letter
+parsers.attribute_classname = parsers.unicode.following_alpha
                             * parsers.attribute_key_char^0
 parsers.attribute_raw = parsers.attribute_raw_char^1
 
@@ -34882,9 +34903,14 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
 % \end{markdown}
 %  \begin{macrocode}
       local fenced_div_infostring
-                             = C((parsers.linechar
-                                - ( parsers.spacechar^1
-                                  * parsers.colon^1))^1)
+                             = Ct(parsers.attributes)
+                             + (
+                               C( parsers.attribute_classname
+                                - parsers.colon)^1
+                               / function (infostring)
+                                 return {"." .. infostring}
+                               end
+                             )
 
       local fenced_div_begin = parsers.nonindentspace
                              * parsers.colon^3
@@ -34987,15 +35013,6 @@ M.extensions.fenced_divs = function(blank_before_div_fence)
                           * blank^0
 
       local FencedDiv = fenced_div_begin
-                      / function (infostring)
-                          local attr
-                            = lpeg.match(Ct(parsers.attributes),
-                                         infostring)
-                          if attr == nil then
-                            attr = {"." .. infostring}
-                          end
-                          return attr
-                        end
                       / writer.div_begin
                       * increment_div_level()
                       * parsers.skipblanklines
@@ -37504,12 +37521,51 @@ end
     \cs_set:Nn
       \@@_diagrams_infostrings_current:n
       {
-        \@@_diagrams_render_diagram:nnnn
+        \tl_set:Nn
+          \l_tmpb_tl
+          { dot~-T }
+        \tl_put_right:NV
+          \l_tmpb_tl
+          \l_@@_diagrams_format_tl
+        \tl_put_right:Nn
+          \l_tmpb_tl
+          { ~-o~#1. }
+        \tl_put_right:NV
+          \l_tmpb_tl
+          \l_@@_diagrams_format_tl
+        \tl_put_right:Nn
+          \l_tmpb_tl
+          { ~#1 }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% For the SVG format, use Inkscape to convert the resulting image to PDF.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        \str_if_eq:VnT
+          \l_@@_diagrams_format_tl
+          { svg }
+          {
+            \tl_put_right:Nn
+              \l_tmpb_tl
+              { ;~inkscape~#1. }
+            \tl_put_right:NV
+              \l_tmpb_tl
+              \l_@@_diagrams_format_tl
+            \tl_put_right:Nn
+              \l_tmpb_tl
+              { ~--export-area-drawing~--export-dpi=300~-o~#1.pdf }
+          }
+        \@@_diagrams_render_diagram:nnVn
           { #1 }
           { #1.pdf }
-          { dot~-Tpdf~-o~#1.pdf~#1 }
+          \l_tmpb_tl
           { Graphviz~image }
       }
+    \cs_generate_variant:Nn
+      \@@_diagrams_render_diagram:nnnn
+      { nnVn }
     \@@_tl_set_from_cs:NNn
       \l_tmpa_tl
       \@@_diagrams_infostrings_current:n
