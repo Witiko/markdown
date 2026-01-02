@@ -68,7 +68,9 @@ hours) and use its [LaTeXMK][] tool:
 A PDF document named `workdir/document.pdf` should be produced and contain the
 following output:
 
- ![banner](markdown.png "An example LaTeX document using the Markdown package")
+ ![banner][]
+
+ [banner]: https://github.com/Witiko/markdown/blob/main/markdown.png?raw=true "An example LaTeX document using the Markdown package"
 
 Congratulations, you have just typeset your first Markdown document! 🥳
 
@@ -80,7 +82,7 @@ Use markdown for continuous integration
 Can't live without the latest features of the Markdown package in your
 continuous integration pipelines? It's ok, you can use
 [our official Docker image][docker-witiko/markdown] as a drop-in replacement
-for [the `texlive/texlive:latest` Docker image][docker-texlive/texlive]!
+for [the `texlive/texlive` Docker image][docker-texlive/texlive]!
 The following example shows a [GitHub Actions][github-actions] pipeline, which
 will automatically typeset and prerelease a PDF document:
 
@@ -127,8 +129,8 @@ For further information, consult one of the following:
    `markdown.md` and the CSS stylesheet `markdown.css`.
 2. The technical documentation for either [the released version][techdoc-tex-live]
    or [the latest development version][techdoc-latest], which can be typeset by
-   running the [LaTeXMK][] tool on the `markdown.dtx` file (`latexmk
-   markdown.dtx`) after [installing the Markdown package][install].
+   running the [LaTeXMK][] tool on the `markdown.dtx` file
+   (`latexmk markdown.dtx`) after [installing the Markdown package][install].
    [LaTeXMK][] should be included in your TeX distribution.
    The typeset documentation will reside in the file `markdown.pdf`.
 3. Tutorials and example documents by [Lian Tze Lim][liantze] at [Overleaf][]:
@@ -238,7 +240,7 @@ Acknowledgements
 | [<img width="150" src="https://www.fi.muni.cz/images/fi-logo.png" alt="Logo of the Faculty of Informatics, Masaryk University, Czech Republic">][fimu] | I gratefully acknowledge the funding from the [Faculty of Informatics][fimu] at the [Masaryk University][mu] in Brno, Czech Republic, for the development of the Markdown package in projects [MUNI/33/12/2015][], [MUNI/33/1784/2020][], [MUNI/33/0776/2021][], [MUNI/33/1654/2022][], and [MUNI/33/1658/2022][]. |
 | [<img width="150" src="https://cdn.overleaf.com/img/ol-brand/overleaf_og_logo.png" alt="Overleaf logo">][overleaf] | Extensive user documentation for the Markdown package was kindly written by [Lian Tze Lim][liantze] and published by [Overleaf][]. |
 | [<img width="150" src="https://pbs.twimg.com/profile_images/1004769879319334912/6Bh1UthD.jpg" alt="Omedym logo">][omedym] | Support for content slicing (Lua options [`shiftHeadings`][option-shift-headings] and [`slice`][option-slice]) and pipe tables (Lua options [`pipeTables`][option-pipe-tables] and [`tableCaptions`][option-table-captions]) was graciously sponsored by [David Vins][dvins] and [Omedym][]. |
-| [<img width="150" src="https://github.com/istqborg/istqb_product_base/blob/main/img/istqb-logo-default.png" alt="ISTQB logo">][istqb] | Fixes for issues [#359][issue-359], [#368][issue-368], [#401][issue-401], [#424][issue-424], [#440][issue-440], [#468][issue-468], [#474][issue-474], and [#487][issue-487] were graciously sponsored by the [International Software Testing Qualifications Board (ISTQB)][istqb]. |
+| [<img width="150" src="https://github.com/istqborg/istqb_product_base/blob/main/img/istqb-logo-default.png" alt="ISTQB logo">][istqb] | Fixes for issues [\#359][issue-359], [\#368][issue-368], [\#401][issue-401], [\#424][issue-424], [\#440][issue-440], [\#468][issue-468], [\#474][issue-474], and [\#487][issue-487] were graciously sponsored by the [International Software Testing Qualifications Board (ISTQB)][istqb]. |
 
  [dvins]:  https://github.com/dvins             "David Vins"
  [fimu]:   https://www.fi.muni.cz/index.html.en "Faculty of Informatics, Masaryk University"
