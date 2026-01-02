@@ -3611,12 +3611,13 @@ defaultOptions.frozenCacheFileName = "frozenCache.tex"
      :  Enable the Pandoc [auto identifiers syntax extension][pandoc-auto-identifiers]:
 
         ``` md
-        The following heading received the identifier `sesame-street`:
+        The following heading received the identifier
+        `sesame-street`:
 
         # 123 Sesame Street
         ``````
 
-     false
+:    false
 
      :  Disable the Pandoc auto identifiers syntax extension.
 
@@ -3658,7 +3659,7 @@ defaultOptions.autoIdentifiers = false
 
      :  Require a blank line between a paragraph and the following blockquote.
 
-     false
+:    false
 
      :  Do not require a blank line between a paragraph and the following
         blockquote.
@@ -3878,7 +3879,7 @@ defaultOptions.blankBeforeBlockquote = false
      :  Require a blank line between a paragraph and the following fenced code
         block.
 
-     false
+:    false
 
      :  Do not require a blank line between a paragraph and the following
         fenced code block.
@@ -4128,7 +4129,7 @@ defaultOptions.blankBeforeCodeFence = false
 
      :  Require a blank line before the closing fence of a fenced div.
 
-     false
+:    false
 
      :  Do not require a blank line before the closing fence of a fenced div.
 
@@ -4210,7 +4211,7 @@ defaultOptions.blankBeforeDivFence = false
 
      :  Require a blank line between a paragraph and the following header.
 
-     false
+:    false
 
      :  Do not require a blank line between a paragraph and the following
         header.
@@ -4445,7 +4446,7 @@ defaultOptions.blankBeforeHeading = false
      :  Require a blank line between a paragraph and the following [CommonMark
         HTML block][html-block].
 
-     false
+:    false
 
      :  Do not require a blank line between a paragraph and the following
         CommonMark HTML block.
@@ -4487,7 +4488,7 @@ defaultOptions.blankBeforeHtmlBlock = false
 
      :  Require a blank line between a paragraph and the following list.
 
-     false
+:    false
 
      :  Do not require a blank line between a paragraph and the following
         list.
@@ -4802,7 +4803,7 @@ defaultOptions.bracketedSpans = false
 
      :  A blank line separates block quotes.
 
-     false
+:    false
 
      :  Blank lines in the middle of a block quote are ignored.
 
@@ -5032,7 +5033,7 @@ defaultOptions.breakableBlockquotes = true
         and postnotes of citations produced via the pandoc citation syntax
         extension.
 
-     false
+:    false
 
      :  Do not replace regular spaces with non-breaking spaces inside the
         prenotes and postnotes of citations produced via the pandoc citation
@@ -5443,25 +5444,25 @@ defaultOptions.codeSpans = true
 %
 :    true
 
-     :  Enable the
-%       iA\\,Writer content blocks syntax extension~[@sotkov17]:
-%       \iffalse
-        iA\\,Writer content blocks syntax extension:
-%       \fi
+     :   Enable the
+%        iA\\,Writer content blocks syntax extension~[@sotkov17]:
+%        \iffalse
+         iA\\,Writer content blocks syntax extension:
+%        \fi
 
-        ``` md
-        http://example.com/minard.jpg (Napoleon's
-          disastrous Russian campaign of 1812)
-        /Flowchart.png "Engineering Flowchart"
-        /Savings Account.csv 'Recent Transactions'
-        /Example.swift
-        /Lorem Ipsum.txt
-        ``````
+         ``` md
+         http://example.com/minard.jpg (Napoleon's disastrous
+           Russian campaign of 1812)
+         /Flowchart.png "Engineering Flowchart"
+         /Savings Account.csv 'Recent Transactions'
+         /Example.swift
+         /Lorem Ipsum.txt
+         ``````
 
 :    false
 
-     :  Disable the
-        iA\\,Writer content blocks syntax extension.
+     :   Disable the
+         iA\\,Writer content blocks syntax extension.
 
 % \end{markdown}
 % \iffalse
@@ -5799,7 +5800,8 @@ local strike_through = {
       lpeg.V("Inline"), doubleslashes, doubleslashes
     ) / function(s) return {"\\st{", s, "}"} end
 
-    reader.insert_pattern("Inline after LinkAndEmph", read_strike_through,
+    reader.insert_pattern("Inline after LinkAndEmph",
+                          read_strike_through,
                           "StrikeThrough")
     reader.add_special_character("/")
   end
@@ -6042,13 +6044,6 @@ defaultOptions.definitionLists = false
 %
 % \Optitem[false]{ensureJekyllData}{\opt{true}, \opt{false}}
 %
-:    false
-
-     :  When the \Opt{jekyllData} and \Opt{expectJekyllData} options are
-        enabled, then a markdown document may begin directly with \acro{yaml}
-        metadata and may contain nothing but \acro{yaml} metadata. Otherwise,
-        the markdown document is processed as markdown text.
-
 :    true
 
      :  When the \Opt{jekyllData} and \Opt{expectJekyllData} options are
@@ -6056,6 +6051,21 @@ defaultOptions.definitionLists = false
         metadata and must contain nothing but \acro{yaml} metadata. Otherwise,
         an error is produced.
 
+:    false
+
+     :  When the \Opt{jekyllData} and \Opt{expectJekyllData} options are
+        enabled, then a markdown document may begin directly with \acro{yaml}
+        metadata and may contain nothing but \acro{yaml} metadata. Otherwise,
+        the markdown document is processed as markdown text.
+
+% See also the plain \TeX{} macros \mdef{yamlBegin}, \mref{yamlEnd}, and
+% \mdef{yamlInput} in Section <#sec:tex-typesetting>, the \LaTeX{} environment
+% \envmdef{yaml} in Section <#sec:latex-typesetting>, and the \Hologo{ConTeXt}
+% macros \mref{startyaml}, \mref{stopyaml}, and \mref{inputyaml} in Section
+% <#sec:context-typesetting> to see how the options \Opt{jekyllData},
+% \Opt{expectJekyllData}, and \Opt{ensureJekyllData} can be used together to
+% implement high-level interfaces for processing \acro{yaml} documents.
+%
 % \end{markdown}
 % \iffalse
 %</manual-options>
@@ -6087,6 +6097,33 @@ defaultOptions.ensureJekyllData = false
 %
 % \Optitem[false]{expectJekyllData}{\opt{true}, \opt{false}}
 %
+:    true
+
+     :  When the \Opt{jekyllData} option is enabled, then a markdown document may
+        begin directly with \acro{yaml} metadata and may contain nothing but
+        \acro{yaml} metadata.
+
+        ~~~~~ latex
+        \documentclass{article}
+        \usepackage[jekyllData, expectJekyllData]{markdown}
+        \begin{document}
+        \begin{markdown}
+        - this
+        - is
+        - YAML
+        ...
+        - followed
+        - by
+        - Markdown
+        \end{markdown}
+        \begin{markdown}
+        - this
+        - is
+        - YAML
+        \end{markdown}
+        \end{document}
+        ~~~~~~~~~~~
+
 :    false
 
      :  When the \Opt{jekyllData} option is enabled, then a markdown document
@@ -6116,33 +6153,14 @@ defaultOptions.ensureJekyllData = false
         \end{document}
         ~~~~~~~~~~~
 
-:    true
-
-     :  When the \Opt{jekyllData} option is enabled, then a markdown document may
-        begin directly with \acro{yaml} metadata and may contain nothing but
-        \acro{yaml} metadata.
-
-        ~~~~~ latex
-        \documentclass{article}
-        \usepackage[jekyllData, expectJekyllData]{markdown}
-        \begin{document}
-        \begin{markdown}
-        - this
-        - is
-        - YAML
-        ...
-        - followed
-        - by
-        - Markdown
-        \end{markdown}
-        \begin{markdown}
-        - this
-        - is
-        - YAML
-        \end{markdown}
-        \end{document}
-        ~~~~~~~~~~~
-
+% See also the plain \TeX{} macros \mdef{yamlBegin}, \mref{yamlEnd}, and
+% \mdef{yamlInput} in Section <#sec:tex-typesetting>, the \LaTeX{} environment
+% \envmdef{yaml} in Section <#sec:latex-typesetting>, and the \Hologo{ConTeXt}
+% macros \mref{startyaml}, \mref{stopyaml}, and \mref{inputyaml} in Section
+% <#sec:context-typesetting> to see how the options \Opt{jekyllData},
+% \Opt{expectJekyllData}, and \Opt{ensureJekyllData} can be used together to
+% implement high-level interfaces for processing \acro{yaml} documents.
+%
 % \markdownEnd
 % \iffalse
 
@@ -6234,7 +6252,8 @@ defaultOptions.expectJekyllData = false
 %          lpeg.V("Inline"), doubleslashes, doubleslashes
 %        ) / function(s) return {"\\st{", s, "}"} end
 %
-%        reader.insert_pattern("Inline after LinkAndEmph", read_strike_through,
+%        reader.insert_pattern("Inline after LinkAndEmph",
+                               read_strike_through,
 %                              "StrikeThrough")
 %        reader.add_special_character("/")
 %      end
@@ -6299,7 +6318,8 @@ local strike_through = {
       lpeg.V("Inline"), doubleslashes, doubleslashes
     ) / function(s) return {"\\st{", s, "}"} end
 
-    reader.insert_pattern("Inline after LinkAndEmph", read_strike_through,
+    reader.insert_pattern("Inline after LinkAndEmph",
+                          read_strike_through,
                           "StrikeThrough")
     reader.add_special_character("/")
   end
@@ -7039,12 +7059,13 @@ defaultOptions.frozenCacheCounter = 0
      :  Enable the Pandoc [GitHub-flavored auto identifiers syntax extension][pandoc-gfm-auto-identifiers]:
 
         ``` md
-        The following heading received the identifier `123-sesame-street`:
+        The following heading received the identifier
+        `123-sesame-street`:
 
         # 123 Sesame Street
         ``````
 
-     false
+:    false
 
      :  Disable the Pandoc GitHub-flavored auto identifiers syntax extension.
 
@@ -7948,7 +7969,7 @@ defaultOptions.inlineCodeAttributes = false
      :  Enable the Pandoc [inline note syntax extension][pandoc-inline-notes]:
 
         ``` md
-        Here is an inline note.^[Inlines notes are easier to
+        Here is an inline note.^[Inline notes are easier to
         write, since you don't have to pick an identifier and
         move down to type the note.]
         ``````
@@ -7971,7 +7992,7 @@ following content:
 \usepackage[inlineNotes]{markdown}
 \begin{document}
 \begin{markdown}
-Here is an inline note.^[Inlines notes are easier to
+Here is an inline note.^[Inline notes are easier to
 write, since you don't have to pick an identifier and
 move down to type the note.]
 \end{markdown}
@@ -7984,7 +8005,7 @@ lualatex document.tex
 A PDF document named `document.pdf` should be produced and contain the
 following text:
 
-> Here is an inline note.^[Inlines notes are easier to
+> Here is an inline note.^[Inline notes are easier to
 > write, since you don't have to pick an identifier and
 > move down to type the note.]
 
@@ -7997,7 +8018,7 @@ following content:
 \setupmarkdown[inlineNotes = yes]
 \starttext
 \startmarkdown
-Here is an inline note.^[Inlines notes are easier to
+Here is an inline note.^[Inline notes are easier to
 write, since you don't have to pick an identifier and
 move down to type the note.]
 \stopmarkdown
@@ -8010,7 +8031,7 @@ context --luatex document.tex
 A PDF document named `document.pdf` should be produced and contain the
 following text:
 
-> Here is an inline note.^[Inlines notes are easier to
+> Here is an inline note.^[Inline notes are easier to
 > write, since you don't have to pick an identifier and
 > move down to type the note.]
 
@@ -8070,6 +8091,14 @@ defaultOptions.inlineNotes = false
 
  [pandoc-yaml-metadata-block]: https://pandoc.org/MANUAL.html#extension-yaml_metadata_block
 
+% See also the plain \TeX{} macros \mdef{yamlBegin}, \mref{yamlEnd}, and
+% \mdef{yamlInput} in Section <#sec:tex-typesetting>, the \LaTeX{} environment
+% \envmdef{yaml} in Section <#sec:latex-typesetting>, and the \Hologo{ConTeXt}
+% macros \mref{startyaml}, \mref{stopyaml}, and \mref{inputyaml} in Section
+% <#sec:context-typesetting> to see how the options \Opt{jekyllData},
+% \Opt{expectJekyllData}, and \Opt{ensureJekyllData} can be used together to
+% implement high-level interfaces for processing \acro{yaml} documents.
+%
 % \end{markdown}
 % \iffalse
 
@@ -8215,10 +8244,10 @@ defaultOptions.jekyllData = false
         extension][pandoc-link-attributes]:
 
         ``` md
-        An inline ![image](foo.jpg){#id .class width=30 height=20px}
+        An inline ![image](foo.jpg){#id .class height=20px}
         and a reference ![image][ref] with attributes.
 
-        [ref]: foo.jpg "optional title" {#id .class key=val key2=val2}
+        [ref]: foo.jpg "optional title" {#id .class key=val}
         ``````
 
 :    false
@@ -8845,7 +8874,7 @@ defaultOptions.preserveTabs = true
         The \Opt{rawAttribute} option is a good alternative to the \Opt{hybrid}
         option. Unlike the \Opt{hybrid} option, which affects the entire
         document, the \Opt{rawAttribute} option allows you to isolate the parts
-        of your documents that use TeX:
+        of your documents that use \TeX.
 
 :    false
 
@@ -9002,9 +9031,7 @@ defaultOptions.relativeReferences = false
 %
 :    All headings will be shifted by \meta{shift amount}, which can be both
      positive and negative. Headings will not be shifted beyond level 6 or
-     below level 1. Instead, those headings will be shifted to level 6, when
-     \meta{shift amount} is positive, and to level 1, when \meta{shift amount}
-     is negative.
+     below level 1.
 
 % \end{markdown}
 % \iffalse
@@ -10117,25 +10144,25 @@ defaultOptions.superscripts = false
 %
 :    true
 
-     :  Enable the assignment of HTML attributes to
-%       table captions (see the \Opt{tableCaptions} option).
-%       \iffalse
-        [table captions](#table-captions).
-%       \fi
+     :    Enable the assignment of HTML attributes to
+%         table captions (see the \Opt{tableCaptions} option):
+%         \iffalse
+          [table captions](#table-captions):
+%         \fi
 
-        ``` md
-        | Right | Left | Default | Center |
-        |------:|:-----|---------|:------:|
-        |   12  |  12  |    12   |    12  |
-        |  123  |  123 |   123   |   123  |
-        |    1  |    1 |     1   |     1  |
+          ``` md
+          | Right | Left | Default | Center |
+          |------:|:-----|---------|:------:|
+          |   12  |  12  |    12   |    12  |
+          |  123  |  123 |   123   |   123  |
+          |    1  |    1 |     1   |     1  |
 
-          : Demonstration of pipe table syntax. {#example-table}
-        ```
+            : Demonstration of pipe table syntax. {#example-table}
+          ```
 
 :    false
 
-     :  Disable the assignment of HTML attributes to table captions.
+     :    Disable the assignment of HTML attributes to table captions.
 
 % \end{markdown}
 % \iffalse
@@ -10241,26 +10268,27 @@ defaultOptions.tableAttributes = false
 %
 :    true
 
-     :  Enable the Pandoc [table caption syntax
-        extension][pandoc-table-captions] for
-%       pipe tables (see the \Opt{pipeTables} option).
-%       \iffalse
-        [pipe tables](#pipe-tables).
-%       \fi
+     :    Enable the Pandoc [table caption syntax
+          extension][pandoc-table-captions] for
+%         pipe tables (see the \Opt{pipeTables} option):
+%         \iffalse
+          [pipe tables](#pipe-tables):
+%         \fi
 
-        ``` md
-        | Right | Left | Default | Center |
-        |------:|:-----|---------|:------:|
-        |   12  |  12  |    12   |    12  |
-        |  123  |  123 |   123   |   123  |
-        |    1  |    1 |     1   |     1  |
 
-          : Demonstration of pipe table syntax.
-        ``````
+          ``` md
+          | Right | Left | Default | Center |
+          |------:|:-----|---------|:------:|
+          |   12  |  12  |    12   |    12  |
+          |  123  |  123 |   123   |   123  |
+          |    1  |    1 |     1   |     1  |
+
+            : Demonstration of pipe table syntax.
+          ``````
 
 :    false
 
-     :  Disable the Pandoc table caption syntax extension.
+     :    Disable the Pandoc table caption syntax extension.
 
  [pandoc-table-captions]: https://pandoc.org/MANUAL.html#extension-table_captions
 
@@ -10370,14 +10398,19 @@ defaultOptions.tableCaptions = false
 %
 :    true
 
-     :  Enable the Pandoc [task list syntax
-        extension][pandoc-task-lists]:
+     :  Enable the Pandoc [task list syntax extension][pandoc-task-lists]:
 
 
         ``` md
         - [ ] an unticked task list item
-        - [/] a half-checked task list item
         - [X] a ticked task list item
+        ``````
+
+        Our implementation also supports half-ticked task list items:
+
+        ``` md
+        - [/] a half-checked task list item
+        - [.] another half-checked task list item
         ``````
 
 :    false
@@ -11529,24 +11562,32 @@ defaultOptions.underscores = true
 markdown2tex \- convert .md files to .tex
 .SH SYNOPSIS
 %    \end{macrocode}
+% \iffalse
 %</lua-cli-manpage>
 %<*lua-cli>
+% \fi
 %  \begin{macrocode}
 local HELP_STRING = "Usage: " .. [[
 %    \end{macrocode}
+% \iffalse
 %</lua-cli>
 %<*lua-cli,lua-cli-manpage>
+% \fi
 %  \begin{macrocode}
 markdown2tex [OPTIONS] -- [INPUT_FILE] [OUTPUT_FILE]
 
 %    \end{macrocode}
+% \iffalse
 %</lua-cli,lua-cli-manpage>
 %<*lua-cli-manpage>
+% \fi
 %  \begin{macrocode}
 .SH DESCRIPTION
-%  \end{macrocode}
+%    \end{macrocode}
+% \iffalse
 %</lua-cli-manpage>
 %<*lua-cli,lua-cli-manpage>
+% \fi
 %  \begin{macrocode}
 OPTIONS are documented in Section 2.2.1 of the Markdown Package User
 Manual (https://ctan.org/pkg/markdown).
@@ -11554,9 +11595,11 @@ Manual (https://ctan.org/pkg/markdown).
 When OUTPUT_FILE is unspecified, the result of the conversion will be
 written to the standard output. When INPUT_FILE is also unspecified, the
 result of the conversion will be read from the standard input.
-%  \end{macrocode}
+%    \end{macrocode}
+% \iffalse
 %</lua-cli,lua-cli-manpage>
 %<*lua-cli>
+% \fi
 %  \begin{macrocode}
 
 Report bugs to: witiko@mail.muni.cz
@@ -22971,7 +23014,7 @@ pdflatex --shell-escape document.tex
 % \end{markdown}
 % \begin{markdown}
 %
-%### Typesetting Markdown
+%### Typesetting Markdown and YAML {#latex-typesetting}
 %
 % The interface exposes the \envmdef{markdown}, \envmdef{markdown*}, and
 % \envmdef{yaml} \LaTeX{} environments, and redefines the \mref{markinline},
@@ -23615,7 +23658,7 @@ following text:
 % \noindent It is expected that the special plain \TeX{} characters have the
 % expected category codes, when `\input`ting the file.
 %
-%### Typesetting Markdown and YAML
+%### Typesetting Markdown and YAML {#context-typesetting}
 %
 % The interface exposes the \mdef{startmarkdown}, \mdef{stopmarkdown},
 % \mdef{startyaml}, \mdef{stopyaml}, \mdef{inputmarkdown}, and \mdef{inputyaml}
