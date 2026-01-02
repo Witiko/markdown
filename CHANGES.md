@@ -9,6 +9,36 @@ Fixes:
 
 Development:
 
+- Add `\mmdcCommand` macro for configuring the command used to render Mermaid
+  diagrams. (suggested by @TheManchineel in #613, added by @witiko in #614)
+
+  For example, you can use different icon packs as follows:
+
+  ```` tex
+  \documentclass{article}
+  \def\mmdcCommand{mmdc --iconPacks '@iconify-json/logos'}
+  \usepackage[import=witiko/diagrams@v2]{markdown}
+  \begin{document}
+  \begin{markdown}
+
+  ``` mermaid
+  architecture-beta
+      group api(logos:aws-lambda)[API]
+
+      service db(logos:aws-aurora)[Database] in api
+      service disk1(logos:aws-glacier)[Storage] in api
+      service disk2(logos:aws-s3)[Storage] in api
+      service server(logos:aws-ec2)[Server] in api
+
+      db:L -- R:server
+      disk1:T -- B:server
+      disk2:T -- B:db
+  ```
+
+  \end{markdown}
+  \end{document}
+  ````
+
 - Add a new Lua option `htmlOverLinks` that causes HTML tags to be recognized
   as tags rather than hyperlinks when the Lua option `relativeReferences` has
   been enabled. (discussed with @u-fischer in #597, added by @witiko and
