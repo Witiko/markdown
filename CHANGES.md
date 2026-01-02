@@ -1,6 +1,6 @@
 # Changes
 
-## 3.13.0 (2025-12-29)
+## 3.13.0 (2025-01-02)
 
 Fixes:
 
@@ -17,8 +17,15 @@ Development:
   The option `htmlOverLinks` is an experimental option: Whenever the option
   `experimental` is enabled and `htmlOverLinks` is unspecified, it will also be
   enabled. Like other experimental options, `htmlOverLinks` will be enabled by
-  default in the next major release of the Markdown package and likely
-  soft-deprecated.
+  default in the next major release of the Markdown package and soft-deprecated.
+
+- Add a new Lua option `blankBeforeHtmlBlock` that causes the parser to require
+  a blank line between a paragraph and the following CommonMark HTML block.
+  (discussed with @u-fischer in #598, added by @witiko and @lostenderman in #608)
+
+  Enabling this option breaks CommonMark compliance but makes it easier to write
+  raw HTML such as inline HTML comments without producing HTML blocks by
+  accident.
 
 - In theme `witiko/diagrams`, add parameter `format` for GraphViz diagrams.
   (reported by @witiko in #611, fixed by @witiko in #612)

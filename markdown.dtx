@@ -4385,6 +4385,49 @@ defaultOptions.blankBeforeHeading = false
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
 
+#### Option `blankBeforeHtmlBlock`
+
+`blankBeforeHtmlBlock` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{blankBeforeHtmlBlock}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  Require a blank line between a paragraph and the following [CommonMark
+        HTML block][html-block].
+
+     false
+
+     :  Do not require a blank line between a paragraph and the following
+        CommonMark HTML block.
+
+ [html-block]: https://spec.commonmark.org/0.31.2/#html-blocks
+
+% \end{markdown}
+% \iffalse
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_lua_option:nnn
+  { blankBeforeHtmlBlock }
+  { boolean }
+  { false }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli,lua-loader>
+% \fi
+%  \begin{macrocode}
+defaultOptions.blankBeforeHtmlBlock = false
+%    \end{macrocode}
+% \iffalse
+%</lua,lua-cli,lua-loader>
+%<*manual-options>
+
 #### Option `blankBeforeList`
 
 `blankBeforeList` (default value: `false`)
@@ -7454,8 +7497,8 @@ defaultOptions.html = true
 
 This is an experimental option. Whenever the option \Opt{experimental} is
 enabled and this option is unspecified, it will be enabled. Like other
-experimental options, this option will be enabled by default in the next
-major release of the Markdown package.
+experimental options, this option will be enabled by default and
+soft-deprecated in the next major release of the Markdown package.
 
 % \end{markdown}
 % \iffalse
@@ -32741,6 +32784,10 @@ function M.reader.new(writer, options)
         - parsers.html_close_special_tag
         - parsers.html_empty_special_tag)
   else
+    parsers.html_interrupting = parsers.fail
+  end
+
+  if options.blankBeforeHtmlBlock then
     parsers.html_interrupting = parsers.fail
   end
 
