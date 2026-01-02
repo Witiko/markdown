@@ -2304,13 +2304,13 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
       { #1 }
   }
 \cs_new:Nn
-  \@@_add_experimental_option:nnnn
+  \@@_add_experimental_option:nn
   {
     \seq_gput_right:cn
       { g_@@_ #1 _options_seq }
       { #2 }
     \seq_gput_right:cn
-      { g_@@_ #1 _experimental_options_seq }
+      { g_@@_experimental_ #1 _options_seq }
       { #2 }
     \prop_gput:cnn
       { g_@@_ #1 _option_types_prop }
