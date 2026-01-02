@@ -9,6 +9,16 @@ Fixes:
 
 Development:
 
+- Add a new Lua option `htmlOverLinks` that causes HTML tags to be recognized
+  as tags rather than hyperlinks when the Lua option `relativeReferences` has
+  been enabled. (discussed with @u-fischer in #597, added by @witiko and
+  @lostenderman in #607)
+
+  The option `htmlOverLinks` is an experimental option: Whenever the option
+  `experimental` is enabled and `htmlOverLinks` is unspecified, it will also be
+  enabled. Like other experimental options, `htmlOverLinks` will be enabled by
+  default in the next major release of the Markdown package and soft-deprecated.
+
 - Add a new Lua option `blankBeforeHtmlBlock` that causes the parser to require
   a blank line between a paragraph and the following CommonMark HTML block.
   (discussed with @u-fischer in #598, added by @witiko and @lostenderman in #608)

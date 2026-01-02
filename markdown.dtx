@@ -2202,7 +2202,8 @@ pdftex document.tex
 %### Options {#lua-options}
 %
 % The Lua interface recognizes the following options. When unspecified, the
-% value of a key is taken from the \luamdef{defaultOptions} table.
+% value of a key is taken from the \luamdef{defaultOptions} and
+% \luamdef{experimentalOptions} tables.
 %
 % \end{markdown}
 % \iffalse
@@ -2219,6 +2220,9 @@ package.
 % \fi
 %  \begin{macrocode}
 local defaultOptions = {}
+local experimentalOptions = {}
+setmetatable(experimentalOptions, { __index = function (_, key)
+  return defaultOptions[key] end })
 %    \end{macrocode}
 % \begingroup
 % \markdownSetup{snippet=lua-options}
@@ -2247,14 +2251,17 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
 %    \end{macrocode}
 % \begin{markdown}
 %
-% To enable the reflection of default Lua options and their types, we will
-% maintain the \mdef{g_\@\@_default_lua_options_prop} and
-% \mdef{g_\@\@_lua_option_types_prop} property lists, respectively.
+% To enable the reflection of default/experimental Lua options and their types,
+% we will maintain the \mdef{g_\@\@_default_lua_options_prop},
+% \mdef{g_\@\@_experimental_lua_options_seq} and
+% \mdef{g_\@\@_lua_option_types_prop} property lists and sequences,
+% respectively.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \prop_new:N \g_@@_lua_option_types_prop
 \prop_new:N \g_@@_default_lua_options_prop
+\seq_new:N \g_@@_experimental_lua_options_seq
 \seq_new:N \g_@@_option_layers_seq
 \tl_const:Nn \c_@@_option_layer_lua_tl { lua }
 \seq_gput_right:NV
@@ -2289,6 +2296,30 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
 \cs_generate_variant:Nn
   \@@_add_option:nnnn
   { Vnnn }
+\cs_new:Nn
+  \@@_add_experimental_lua_option:n
+  {
+    \@@_add_experimental_option:Vn
+      \c_@@_option_layer_lua_tl
+      { #1 }
+  }
+\cs_new:Nn
+  \@@_add_experimental_option:nn
+  {
+    \seq_gput_right:cn
+      { g_@@_ #1 _options_seq }
+      { #2 }
+    \seq_gput_right:cn
+      { g_@@_experimental_ #1 _options_seq }
+      { #2 }
+    \prop_gput:cnn
+      { g_@@_ #1 _option_types_prop }
+      { #2 }
+      { boolean }
+  }
+\cs_generate_variant:Nn
+  \@@_add_experimental_option:nn
+  { Vn }
 \tl_const:Nn \c_@@_option_value_true_tl  { true  }
 \tl_const:Nn \c_@@_option_value_false_tl { false }
 \cs_new:Nn \@@_typecheck_option:n
@@ -2306,19 +2337,19 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
               \l_tmpa_tl
             \bool_if:nF
               {
-                \str_if_eq_p:VV
-                  \l_tmpa_tl
+                \str_if_eq_p:eV
+                  { \l_tmpa_tl }
                   \c_@@_option_value_true_tl ||
-                \str_if_eq_p:VV
-                  \l_tmpa_tl
+                \str_if_eq_p:eV
+                  { \l_tmpa_tl }
                   \c_@@_option_value_false_tl
               }
               {
-                \msg_error:nnnV
+                \msg_error:nnne
                   { markdown }
                   { failed-typecheck-for-boolean-option }
                   { #1 }
-                  \l_tmpa_tl
+                  { \l_tmpa_tl }
               }
           }
       }
@@ -2335,7 +2366,11 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
   { Vn }
 \cs_generate_variant:Nn
   \msg_error:nnnn
-  { nnnV }
+  { nnne }
+\prg_generate_conditional_variant:Nnn
+  \str_if_eq:nn
+  { eV }
+  { p }
 \seq_new:N
   \g_@@_option_types_seq
 \tl_const:Nn
@@ -2432,6 +2467,9 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
   {
     Option~#1~is~undefined.
   }
+\cs_generate_variant:Nn
+  \msg_error:nnnn
+  { nnnV }
 \cs_new:Nn
   \@@_get_default_option_value:nN
   {
@@ -2440,6 +2478,17 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
     \seq_map_inline:Nn
       \g_@@_option_layers_seq
       {
+        \seq_if_in:cnT
+          { g__markdown_experimental_ ##1 _options_seq }
+          { #1 }
+          {
+            \@@_get_option_value:nN
+              { experimental }
+              #2
+            \bool_set_true:N
+              \l_tmpa_bool
+            \seq_map_break:
+          }
         \prop_get:cnNT
           { g_@@_default_ ##1 _options_prop }
           { #1 }
@@ -2699,10 +2748,14 @@ defaultOptions.eagerCache = true
      :  Experimental features that are planned to be the new default in the
         next major release of the Markdown package will be enabled.
 
-        At the moment, this just means that the version `experimental` of the
-        theme `witiko/markdown/defaults` will be loaded and warnings for
-        hard-deprecated features will become errors. However, the effects may
-        extend to other areas in the future as well.
+        At the moment, this has the following effects:
+
+        1. The version `experimental` of the theme `witiko/markdown/defaults`
+           will be loaded.
+        2. Warnings for hard-deprecated features will become errors.
+        3. The experimental option \Opt{htmlOverLinks} will be enabled.
+
+        In the future, the effects may extend to other areas as well.
 
 :    false
 
@@ -7210,16 +7263,17 @@ defaultOptions.headerAttributes = false
 %
 :    true
 
-     :  Enable the recognition of inline HTML tags, block HTML elements,
-        HTML comments, HTML instructions, and entities in the input. Inline
-        HTML tags, block HTML elements and HTML comments will be rendered, HTML
-        instructions will be ignored, and HTML entities will be replaced with
-        the corresponding Unicode codepoints.
+     :  Enable the recognition of inline \acro{HTML} tags, block \acro{HTML}
+        elements, \acro{HTML} comments, \acro{HTML} instructions, and entities
+        in the input. Inline \acro{HTML} tags, block \acro{HTML} elements and
+        \acro{HTML} comments will be rendered, \acro{HTML} instructions will be
+        ignored, and \acro{HTML} entities will be replaced with the
+        corresponding Unicode codepoints.
 
 :    false
 
-     :  Disable the recognition of HTML markup. Any HTML markup in the input
-        will be rendered as plain text.
+     :  Disable the recognition of \acro{HTML} markup. Any \acro{HTML} markup
+        in the input will be rendered as plain text.
 
 % \end{markdown}
 % \iffalse
@@ -7460,6 +7514,54 @@ following text:
 % \fi
 %  \begin{macrocode}
 defaultOptions.html = true
+%    \end{macrocode}
+% \iffalse
+%</lua,lua-cli,lua-loader>
+%<*manual-options>
+
+#### Option `htmlOverLinks`
+
+`htmlOverLinks` (default value: `false`)
+
+% \fi
+% \begin{markdown}
+%
+% \Optitem[false]{html}{\opt{true}, \opt{false}}
+%
+:    true
+
+     :  When the option \Opt{HTML} is enabled and a text can be understood
+        either as a hyperlink or \acro{HTML}, interpret it as \acro{HTML}.
+
+        This is especially relevant when the option \Opt{relativeReferences}
+        is enabled, since it makes e.g. `</foo>` a valid hyperlink.
+
+:    false
+
+     :  When the option \Opt{HTML} is enabled and a text can be understood
+        either as a hyperlink or \acro{HTML}, interpret it as a hyperlink.
+
+This is an experimental option. Whenever the option \Opt{experimental} is
+enabled and this option is unspecified, it will be enabled. Like other
+experimental options, this option will be enabled by default and
+soft-deprecated in the next major release of the Markdown package.
+
+% \end{markdown}
+% \iffalse
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\@@_add_experimental_lua_option:n
+  { htmlOverLinks }
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli,lua-loader>
+% \fi
+%  \begin{macrocode}
+defaultOptions.htmlOverLinks = false
+experimentalOptions.htmlOverLinks = true
 %    \end{macrocode}
 % \iffalse
 %</lua,lua-cli,lua-loader>
@@ -11965,14 +12067,18 @@ pdftex --shell-escape document.tex
 %    \end{macrocode}
 % \begin{markdown}
 %
-% To enable the reflection of default plain \TeX{} options and their types, we
-% will maintain the \mdef{g_\@\@_default_plain_tex_options_prop} and
-% \mdef{g_\@\@_plain_tex_option_types_prop} property lists, respectively.
+% To enable the reflection of default/experimental plain \TeX{} options and
+% their types, we will maintain the
+% \mdef{g_\@\@_default_plain_tex_options_prop},
+% \mdef{g_\@\@_experimental_plain_tex_options_seq} and
+% \mdef{g_\@\@_plain_tex_option_types_prop} property lists and sequences,
+% respectively.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \prop_new:N \g_@@_plain_tex_option_types_prop
 \prop_new:N \g_@@_default_plain_tex_options_prop
+\seq_new:N \g_@@_experimental_plain_tex_options_seq
 \seq_gput_right:NV
   \g_@@_option_layers_seq
   \c_@@_option_layer_plain_tex_tl
@@ -12518,16 +12624,53 @@ A PDF document named `document.pdf` should be produced and contain the text
 %    \end{macrocode}
 % \begin{markdown}
 %
+% For experimental options, redirect the option command to the option command
+% \mdef{markdownOptionExperimental}.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \bool_set_false:N
+      \l_tmpa_bool
+    \seq_map_inline:Nn
+      \g_@@_option_layers_seq
+      {
+        \seq_if_in:cnT
+          { g_@@_experimental_ ##1 _options_seq }
+          { #1 }
+          {
+            \bool_set_true:N
+              \l_tmpa_bool
+            \seq_map_break:
+          }
+      }
+    \bool_if:NTF
+      \l_tmpa_bool
+      {
+        \_@@_option_tl_to_csname:nN
+          { #1 }
+          \l_tmpa_tl
+        \cs_if_exist:cF
+          { \l_tmpa_tl }
+          {
+            \cs_gset:cpn
+              { \l_tmpa_tl }
+              { \markdownOptionExperimental }
+          }
+      }
+      {
+%    \end{macrocode}
+% \begin{markdown}
+%
 % Use the \pkg{lt3luabridge} library to determine the default value of the
 % \mref{markdownOptionOutputDir} macro.
 %
 % \end{markdown}
 %  \begin{macrocode}
-    \str_if_eq:nnTF
-      { #1 }
-      { outputDir }
-      { \@@_define_option_command_output_dir: }
-      {
+        \str_if_eq:nnTF
+          { #1 }
+          { outputDir }
+          { \@@_define_option_command_output_dir: }
+          {
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -12535,18 +12678,19 @@ A PDF document named `document.pdf` should be produced and contain the text
 %
 % \end{markdown}
 %  \begin{macrocode}
-        \@@_option_tl_to_csname:nN
-          { #1 }
-          \l_tmpa_tl
-        \cs_if_exist:cF
-          { \l_tmpa_tl }
-          {
-            \@@_get_default_option_value:nN
+            \@@_option_tl_to_csname:nN
               { #1 }
               \l_tmpa_tl
-            \@@_set_option_value:nV
-              { #1 }
-              \l_tmpa_tl
+            \cs_if_exist:cF
+              { \l_tmpa_tl }
+              {
+                \@@_get_default_option_value:nN
+                  { #1 }
+                  \l_tmpa_tl
+                \@@_set_option_value:nV
+                  { #1 }
+                  \l_tmpa_tl
+              }
           }
       }
   }
@@ -33233,6 +33377,11 @@ end
       else
         table.insert(rule, index, accountable_pattern)
       end
+      -- TODO: Remove all occurrences of `pattern` after `index`
+      --       to improve speed?
+    end
+    if options.htmlOverLinks then
+      self.insert_pattern("Inline before AutoLinkUrl", "InlineHtml")
     end
 %    \end{macrocode}
 % \begin{markdown}
@@ -36331,13 +36480,18 @@ function M.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Make the `options` table inherit from the \luamref{defaultOptions} table.
+% Make the `options` table inherit from the \luamref{defaultOptions} and
+% \luamref{experimentalOptions} tables.
 %
 % \end{markdown}
 %  \begin{macrocode}
   options = options or {}
   setmetatable(options, { __index = function (_, key)
     return defaultOptions[key] end })
+  if options.experimental then
+    setmetatable(options, { __index = function (_, key)
+      return experimentalOptions[key] end })
+  end
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -36458,13 +36612,18 @@ function M.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Make the `options` table inherit from the \luamref{defaultOptions} table.
+% Make the `options` table inherit from the \luamref{defaultOptions} and
+% \luamref{experimentalOptions} tables.
 %
 % \end{markdown}
 %  \begin{macrocode}
   options = options or {}
   setmetatable(options, { __index = function (_, key)
     return defaultOptions[key] end })
+  if options.experimental then
+    setmetatable(options, { __index = function (_, key)
+      return experimentalOptions[key] end })
+  end
 %    \end{macrocode}
 % \begin{markdown}
 %
