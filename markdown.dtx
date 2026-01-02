@@ -2367,6 +2367,10 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
 \cs_generate_variant:Nn
   \msg_error:nnnn
   { nnne }
+\prg_generate_conditional_variant:Nnn
+  \str_if_eq:nn
+  { eV }
+  { p }
 \seq_new:N
   \g_@@_option_types_seq
 \tl_const:Nn
