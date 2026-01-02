@@ -691,7 +691,7 @@ abbr {
 }
 @online{starynovotny25,
   author     = {Starý Novotný, Vít},
-  title      = {Routing YAML metadata to expl3 key–values},
+  title      = {Routing \acro{YAML} metadata to expl3 key–values},
   titleaddon = {Markdown Enhancement Proposal},
   url        = {https://github.com/witiko/markdown/discussions/517},
   date       = {2024-10-14},
@@ -4444,12 +4444,12 @@ defaultOptions.blankBeforeHeading = false
 :    true
 
      :  Require a blank line between a paragraph and the following [CommonMark
-        HTML block][html-block].
+        \acro{HTML} block][html-block].
 
 :    false
 
      :  Do not require a blank line between a paragraph and the following
-        CommonMark HTML block.
+        CommonMark \acro{HTML} block.
 
  [html-block]: https://spec.commonmark.org/0.31.2/#html-blocks
 
@@ -7236,7 +7236,7 @@ defaultOptions.hashEnumerators = false
 %
 :    true
 
-     :  Enable the assignment of HTML attributes to headings:
+     :  Enable the assignment of \acro{HTML} attributes to headings:
 
         ``` md
         # My first heading {#foo}
@@ -7249,7 +7249,7 @@ defaultOptions.hashEnumerators = false
 
 :    false
 
-     :  Disable the assignment of HTML attributes to headings.
+     :  Disable the assignment of \acro{HTML} attributes to headings.
 
 % \end{markdown}
 % \iffalse
@@ -10144,7 +10144,7 @@ defaultOptions.superscripts = false
 %
 :    true
 
-     :    Enable the assignment of HTML attributes to
+     :    Enable the assignment of \acro{HTML} attributes to
 %         table captions (see the \Opt{tableCaptions} option):
 %         \iffalse
           [table captions](#table-captions):
@@ -10162,7 +10162,7 @@ defaultOptions.superscripts = false
 
 :    false
 
-     :    Disable the assignment of HTML attributes to table captions.
+     :    Disable the assignment of \acro{HTML} attributes to table captions.
 
 % \end{markdown}
 % \iffalse
@@ -14080,16 +14080,16 @@ options for markdown attributes on different elements is enabled:
 - \Opt{linkAttributes}
 
 \mdef{markdownRendererAttributeIdentifier} represents the \meta{identifier} of
-a markdown element (`id="`\meta{identifier}`"` in HTML and `#`\meta{identifier}
+a markdown element (`id="`\meta{identifier}`"` in \acro{HTML} and `#`\meta{identifier}
 in markdown attributes). The macro receives a single attribute that corresponds
 to the \meta{identifier}.
 
 \mdef{markdownRendererAttributeClassName} represents the \meta{class name} of a
-markdown element (`class="`\meta{class name} ...`"` in HTML and
+markdown element (`class="`\meta{class name} ...`"` in \acro{HTML} and
 `.`\meta{class name} in markdown attributes).  The macro receives a single
 attribute that corresponds to the \meta{class name}.
 
-\mdef{markdownRendererAttributeKeyValue} represents a HTML attribute in the form
+\mdef{markdownRendererAttributeKeyValue} represents an \acro{HTML} attribute in the form
 \meta{key}`=`\meta{value} that is neither an identifier nor a class name.
 The macro receives two attributes that correspond to the \meta{key} and the
 \meta{value}, respectively.
@@ -17298,9 +17298,9 @@ following content:
 }
 \begin{document}
 \begin{markdown}
-A useful use of inline HTML comments are side notes.
-<!-- Side notes are displayed in the horizontal margins next to the relevant
-passages, which makes them *easier for the reader to find* than notes. -->
+A useful use of inline HTML comments are side notes. <!-- Side notes
+are displayed in the horizontal margins next to the relevant passages,
+which makes them *easier for the reader to find* than notes. -->
 \end{markdown}
 \end{document}
 ```````
@@ -17312,7 +17312,7 @@ lualatex document.tex
 A PDF document named `document.pdf` should be produced and contain the
 following body text:
 
-> A useful use of HTML comments are side notes.
+> A useful use of \acro{HTML} comments are side notes.
 
 The horizontal margins should contain the following text:
 
@@ -40666,8 +40666,8 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% If we are using [\TeX{}4ht][1], we will pass HTML elements to the
-% output HTML document unchanged.
+% If we are using [\TeX{}4ht][1], we will pass \acro{HTML} elements to the
+% output \acro{HTML} document unchanged.
 %
 %  [1]: https://tug.org/tex4ht/
 %
@@ -40966,7 +40966,7 @@ end
 %
 %#### HTML elements
 % If the \Opt{html} option is enabled and we are using [\TeX{}4ht][1], we will
-% pass HTML elements to the output HTML document unchanged.
+% pass \acro{HTML} elements to the output \acro{HTML} document unchanged.
 %
 %  [1]: https://tug.org/tex4ht/
 %
@@ -41752,8 +41752,8 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% If we are using [\TeX{}4ht][1], we will pass HTML elements to the
-% output HTML document unchanged.
+% If we are using [\TeX{}4ht][1], we will pass \acro{HTML} elements to the
+% output \acro{HTML} document unchanged.
 %
 %  [1]: https://tug.org/tex4ht/
 %
@@ -41798,8 +41798,8 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% If we are using [\TeX{}4ht][1], we will pass HTML elements to the
-% output HTML document unchanged.
+% If we are using [\TeX{}4ht][1], we will pass \acro{HTML} elements to the
+% output \acro{HTML} document unchanged.
 %
 %  [1]: https://tug.org/tex4ht/
 %
