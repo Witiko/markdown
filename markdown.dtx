@@ -2202,7 +2202,8 @@ pdftex document.tex
 %### Options {#lua-options}
 %
 % The Lua interface recognizes the following options. When unspecified, the
-% value of a key is taken from the \luamdef{defaultOptions} table.
+% value of a key is taken from the \luamdef{defaultOptions} and
+% \luamdef{experimentalOptions} tables.
 %
 % \end{markdown}
 % \iffalse
@@ -36475,7 +36476,8 @@ function M.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Make the `options` table inherit from the \luamref{defaultOptions} table.
+% Make the `options` table inherit from the \luamref{defaultOptions} and
+% \luamref{experimentalOptions} tables.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -36606,13 +36608,18 @@ function M.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Make the `options` table inherit from the \luamref{defaultOptions} table.
+% Make the `options` table inherit from the \luamref{defaultOptions} and
+% \luamref{experimentalOptions} tables.
 %
 % \end{markdown}
 %  \begin{macrocode}
   options = options or {}
   setmetatable(options, { __index = function (_, key)
     return defaultOptions[key] end })
+  if options.experimental then
+    setmetatable(options, { __index = function (_, key)
+      return experimentalOptions[key] end })
+  end
 %    \end{macrocode}
 % \begin{markdown}
 %
