@@ -37717,17 +37717,36 @@ end
 % \begin{markdown}
 %
 % Typeset fenced code with infostring `mermaid` using the command `mmdc` from
-% the npm package `@mermaid-js/mermaid-cli`.
+% the npm package `@mermaid-js/mermaid-cli`. The exact command can be
+% configured by redefining or appending to the
+% \mdef{g_@@_diagrams_mmdc_command_tl} token list or by redefining the
+% \mdef{mmdcCommand} macro. Unlike the token list, the macro can be redefined
+% even before loading the Markdown package.
 %
 % \end{markdown}
 %  \begin{macrocode}
+    \tl_new:N
+      \g_@@_diagrams_mmdc_command_tl
+    \tl_gset:Nn
+      \g_@@_diagrams_mmdc_command_tl
+      { mmdc }
+    \cs_if_free:NT
+      \mmdcCommand
+      {
+        \cs_new:Npn
+          \mmdcCommand
+          {
+            \tl_use:N
+              \g_@@_diagrams_mmdc_command_tl
+          }
+      }
     \cs_set:Nn
       \@@_diagrams_infostrings_current:n
       {
         \@@_diagrams_render_diagram:nnnn
           { #1 }
           { #1.pdf }
-          { mmdc~--pdfFit~-i~#1~-o~#1.pdf }
+          { \mmdcCommand{}~--pdfFit~-i~#1~-o~#1.pdf }
           { Mermaid~image }
       }
     \@@_tl_set_from_cs:NNn
