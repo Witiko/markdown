@@ -37743,10 +37743,16 @@ end
     \cs_set:Nn
       \@@_diagrams_infostrings_current:n
       {
-        \@@_diagrams_render_diagram:nnnn
+        \tl_set:Nx
+          \l_tmpb_tl
+          { \mmdcCommand }
+        \tl_put_right:Nn
+          \l_tmpb_tl
+          { ~--pdfFit~-i~#1~-o~#1.pdf }
+        \@@_diagrams_render_diagram:nnVn
           { #1 }
           { #1.pdf }
-          { \mmdcCommand{}~--pdfFit~-i~#1~-o~#1.pdf }
+          \l_tmpb_tl
           { Mermaid~image }
       }
     \@@_tl_set_from_cs:NNn
