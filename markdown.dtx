@@ -4455,6 +4455,43 @@ defaultOptions.blankBeforeHeading = false
 
 % \end{markdown}
 % \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[blankBeforeHtmlBlock]{markdown}
+\usepackage{marginnote}
+\markdownSetup{
+  renderers = {
+    inlineHtmlComment = {\marginnote{#1}},
+  },
+}
+\begin{document}
+\begin{markdown}
+A useful use of inline HTML comments are side notes.
+<!-- Side notes are displayed in the horizontal margins next to the relevant
+passages, which makes them *easier for the reader to find* than notes. -->
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following body text:
+
+> A useful use of \acro{HTML} comments are side notes.
+
+The horizontal margins should contain the following text:
+
+> Side notes are displayed in the horizontal margins next to the relevant
+> passages, which makes them *easier for the reader to find* than notes.
+
 %</manual-options>
 %<*tex>
 % \fi
@@ -17289,7 +17326,7 @@ Using a text editor, create a text document named `document.tex` with the
 following content:
 ``` tex
 \documentclass{article}
-\usepackage{markdown}
+\usepackage[blankBeforeHtmlBlock]{markdown}
 \usepackage{marginnote}
 \markdownSetup{
   renderers = {
@@ -17298,9 +17335,9 @@ following content:
 }
 \begin{document}
 \begin{markdown}
-A useful use of inline HTML comments are side notes. <!-- Side notes
-are displayed in the horizontal margins next to the relevant passages,
-which makes them *easier for the reader to find* than notes. -->
+A useful use of inline HTML comments are side notes.
+<!-- Side notes are displayed in the horizontal margins next to the relevant
+passages, which makes them *easier for the reader to find* than notes. -->
 \end{markdown}
 \end{document}
 ```````
