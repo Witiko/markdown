@@ -21730,6 +21730,8 @@ following text:
 \tl_new:N
   \l_@@_renderer_definition_tl
 \bool_new:N
+  \g_@@_prepending_renderer_bool
+\bool_new:N
   \g_@@_appending_renderer_bool
 \bool_new:N
   \g_@@_unprotected_renderer_bool
@@ -21746,16 +21748,28 @@ following text:
             { \cP\#0 }
             { #1 }
             \l_@@_renderer_definition_tl
-          \bool_if:NT
-            \g_@@_appending_renderer_bool
+          \bool_if:nT
+            {
+              \g_@@_prepending_renderer_bool ||
+              \g_@@_appending_renderer_bool
+            }
             {
               \@@_tl_set_from_cs:NNn
                 \l_tmpa_tl
                 #2
                 { #3 }
-              \tl_put_left:NV
-                \l_@@_renderer_definition_tl
-                \l_tmpa_tl
+              \bool_if:NTF
+                \g_@@_prepending_renderer_bool
+                {
+                  \tl_put_right:NV
+                    \l_@@_renderer_definition_tl
+                    \l_tmpa_tl
+                }
+                {
+                  \tl_put_left:NV
+                    \l_@@_renderer_definition_tl
+                    \l_tmpa_tl
+                }
             }
           \bool_if:NTF
             \g_@@_unprotected_renderer_bool
@@ -21889,8 +21903,14 @@ following text:
 \seq_new:N
   \l_@@_renderer_glob_results_seq
 \regex_const:Nn
+  \c_@@_prepending_key_regex
+  { \^$ }
+\regex_const:Nn
   \c_@@_appending_key_regex
-  { \s*+$ }
+  { [\$+]$ }
+\regex_const:Nn
+  \c_@@_prepending_or_appending_key_regex
+  { [\^\$+]$ }
 \keys_define:nn
   { markdown/options/renderers }
   {
@@ -21899,14 +21919,15 @@ following text:
 % \begin{markdown}
 %
 % Besides defining renderers at once, we can also define them incrementally
-% using the appending operator (`+=`). This can be especially useful in
-% defining rules for processing different \acro{HTML} class names and
-% identifiers:
+% using the prepending (`^=`) and appending (`$=` or `+=`) operators. This
+% can be especially useful in defining rules for processing different
+% \acro{HTML} class names and identifiers:
 % ``` tex
 % \markdownSetup{
 %   renderers = {
 %     \% Start with empty renderers.
-%     headerAttributeContextBegin = {},
+%     headerAttributeContextBegin = \begingroup,
+%     headerAttributeContextEnd = \endgroup,
 %     attributeClassName = {},
 %     attributeIdentifier = {},
 %     \% Define the processing of a single specific HTML class name.
@@ -21932,17 +21953,31 @@ following text:
 % \end{markdown}
 %  \begin{macrocode}
       % TODO: Use `\regex_if_match` in TeX Live 2025.
-      \regex_match:NVTF
+      \regex_match:NVT
+        \c_@@_prepending_key_regex
+        \l_keys_key_str
+        {
+          \bool_gset_true:N
+            \g_@@_prepending_renderer_bool
+        }
+      % TODO: Use `\regex_if_match` in TeX Live 2025.
+      \regex_match:NVT
         \c_@@_appending_key_regex
         \l_keys_key_str
         {
           \bool_gset_true:N
             \g_@@_appending_renderer_bool
+        }
+      % TODO: Use `\regex_if_match` in TeX Live 2025.
+      \regex_match:NVTF
+        \c_@@_prepending_or_appending_key_regex
+        \l_keys_key_str
+        {
           \tl_set:NV
             \l_tmpa_tl
             \l_keys_key_str
           \regex_replace_once:NnN
-            \c_@@_appending_key_regex
+            \c_@@_prepending_or_appending_key_regex
             { }
             \l_tmpa_tl
           \tl_set:Nx
@@ -21954,6 +21989,8 @@ following text:
           \keys_set:nV
             { markdown/options/renderers }
             \l_tmpb_tl
+          \bool_gset_false:N
+            \g_@@_prepending_renderer_bool
           \bool_gset_false:N
             \g_@@_appending_renderer_bool
         }
@@ -22047,7 +22084,7 @@ following text:
   % TODO: Use `\regex_if_match` in TeX Live 2025.
   \regex_match:Nn  % noqa: w202
   { NV }
-  { TF }
+  { T, TF }
 \prop_new:N
   \g_@@_glob_cache_prop
 \tl_new:N
@@ -22569,6 +22606,8 @@ following text:
 \tl_new:N
   \l_@@_renderer_prototype_definition_tl
 \bool_new:N
+  \g_@@_prepending_renderer_prototype_bool
+\bool_new:N
   \g_@@_appending_renderer_prototype_bool
 \bool_new:N
   \g_@@_unprotected_renderer_prototype_bool
@@ -22585,16 +22624,28 @@ following text:
             { \cP\#0 }
             { #1 }
             \l_@@_renderer_prototype_definition_tl
-          \bool_if:NT
-            \g_@@_appending_renderer_prototype_bool
+          \bool_if:nT
+            {
+              \g_@@_prepending_renderer_prototype_bool ||
+              \g_@@_appending_renderer_prototype_bool
+            }
             {
               \@@_tl_set_from_cs:NNn
                 \l_tmpa_tl
                 #2
                 { #3 }
-              \tl_put_left:NV
-                \l_@@_renderer_prototype_definition_tl
-                \l_tmpa_tl
+              \bool_if:NTF
+                \g_@@_prepending_renderer_prototype_bool
+                {
+                  \tl_put_right:NV
+                    \l_@@_renderer_prototype_definition_tl
+                    \l_tmpa_tl
+                }
+                {
+                  \tl_put_left:NV
+                    \l_@@_renderer_prototype_definition_tl
+                    \l_tmpa_tl
+                }
             }
           \bool_if:NTF
             \g_@@_unprotected_renderer_prototype_bool
@@ -22670,14 +22721,15 @@ following text:
 % \begin{markdown}
 %
 % Besides defining renderer prototypes at once, we can also define them
-% incrementally using the appending operator (`+=`). This can be especially
-% useful in defining rules for processing different \acro{HTML} class names
-% and identifiers:
+% incrementally using the prepending (`^=`) and appending (`$=` or `+=`)
+% operators. This can be especially useful in defining rules for processing
+% different \acro{HTML} class names and identifiers:
 % ``` tex
 % \markdownSetup{
 %   rendererPrototypes = {
 %     \% Start with empty renderer prototypes.
-%     headerAttributeContextBegin = {},
+%     headerAttributeContextBegin = \begingroup,
+%     headerAttributeContextEnd = \endgroup,
 %     attributeClassName = {},
 %     attributeIdentifier = {},
 %     \% Define the processing of a single specific HTML class name.
@@ -22703,17 +22755,31 @@ following text:
 % \end{markdown}
 %  \begin{macrocode}
       % TODO: Use `\regex_if_match` in TeX Live 2025.
-      \regex_match:NVTF
+      \regex_match:NVT
+        \c_@@_prepending_key_regex
+        \l_keys_key_str
+        {
+          \bool_gset_true:N
+            \g_@@_prepending_renderer_prototype_bool
+        }
+      % TODO: Use `\regex_if_match` in TeX Live 2025.
+      \regex_match:NVT
         \c_@@_appending_key_regex
         \l_keys_key_str
         {
           \bool_gset_true:N
             \g_@@_appending_renderer_prototype_bool
+        }
+      % TODO: Use `\regex_if_match` in TeX Live 2025.
+      \regex_match:NVTF
+        \c_@@_prepending_or_appending_key_regex
+        \l_keys_key_str
+        {
           \tl_set:NV
             \l_tmpa_tl
             \l_keys_key_str
           \regex_replace_once:NnN
-            \c_@@_appending_key_regex
+            \c_@@_prepending_or_appending_key_regex
             { }
             \l_tmpa_tl
           \tl_set:Nx
@@ -22725,6 +22791,8 @@ following text:
           \keys_set:nV
             { markdown/options/renderer-prototypes }
             \l_tmpb_tl
+          \bool_gset_false:N
+            \g_@@_prepending_renderer_prototype_bool
           \bool_gset_false:N
             \g_@@_appending_renderer_prototype_bool
         }

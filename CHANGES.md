@@ -1,5 +1,13 @@
 # Changes
 
+## 3.14.0 (2026-01-XX)
+
+Development:
+
+- Support the new prepending (`^=`) and the appending (`$=`) operators for
+  renderers and renderer prototypes. (proposed by @witiko in #232, added by
+  @witiko in #617)
+
 ## 3.13.0 (2026-01-02)
 
 Fixes:

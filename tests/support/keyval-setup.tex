@@ -81,10 +81,14 @@ unprotectedRenderers = {%
   codeSpan = {%
     \TYPE{#0: #1}},
   (link|image) = {%
-    \TYPE{BEGIN #0}%
-    \TYPE{- label:  #1}%
-    \TYPE{- URI:    #3}%
-    \TYPE{- title:  #4}%
+    \TYPE{- URI:    #3}},
+  (link|image) ^= {%
+    \TYPE{- label:  #1}},
+  (link|image) ^= {%
+    \TYPE{BEGIN #0}},
+  (link|image) $= {%
+    \TYPE{- title:  #4}},
+  (link|image) $= {%
     \TYPE{END #0}},
   contentBlock(|OnlineImage) = {%
     \TYPE{BEGIN #0}%
