@@ -21968,11 +21968,10 @@ following text:
           \bool_gset_true:N
             \g_@@_appending_renderer_bool
         }
-      \bool_if:nTF
-        {
-          \g_@@_prepending_renderer_bool ||
-          \g_@@_appending_renderer_bool
-        }
+      % TODO: Use `\regex_if_match` in TeX Live 2025.
+      \regex_match:NVTF
+        \c_@@_prepending_or_appending_key_regex
+        \l_keys_key_str
         {
           \tl_set:NV
             \l_tmpa_tl
@@ -22085,7 +22084,7 @@ following text:
   % TODO: Use `\regex_if_match` in TeX Live 2025.
   \regex_match:Nn  % noqa: w202
   { NV }
-  { T }
+  { T, TF }
 \prop_new:N
   \g_@@_glob_cache_prop
 \tl_new:N
@@ -22771,11 +22770,10 @@ following text:
           \bool_gset_true:N
             \g_@@_appending_renderer_prototype_bool
         }
-      \bool_if:nTF
-        {
-          \g_@@_prepending_renderer_prototype_bool ||
-          \g_@@_appending_renderer_prototype_bool
-        }
+      % TODO: Use `\regex_if_match` in TeX Live 2025.
+      \regex_match:NVTF
+        \c_@@_prepending_or_appending_key_regex
+        \l_keys_key_str
         {
           \tl_set:NV
             \l_tmpa_tl
