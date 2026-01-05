@@ -21907,7 +21907,10 @@ following text:
   { \^$ }
 \regex_const:Nn
   \c_@@_appending_key_regex
-  { [\$\+]$ }
+  { [\$+]$ }
+\regex_const:Nn
+  \c_@@_prepending_or_appending_key_regex
+  { [\^\$+]$ }
 \keys_define:nn
   { markdown/options/renderers }
   {
@@ -21950,7 +21953,7 @@ following text:
 % \end{markdown}
 %  \begin{macrocode}
       % TODO: Use `\regex_if_match` in TeX Live 2025.
-      \regex_match:NVTF
+      \regex_match:NVT
         \c_@@_prepending_key_regex
         \l_keys_key_str
         {
@@ -21958,7 +21961,7 @@ following text:
             \g_@@_prepending_renderer_bool
         }
       % TODO: Use `\regex_if_match` in TeX Live 2025.
-      \regex_match:NVTF
+      \regex_match:NVT
         \c_@@_appending_key_regex
         \l_keys_key_str
         {
@@ -21975,7 +21978,7 @@ following text:
             \l_tmpa_tl
             \l_keys_key_str
           \regex_replace_once:NnN
-            \c_@@_appending_key_regex
+            \c_@@_prepending_or_appending_key_regex
             { }
             \l_tmpa_tl
           \tl_set:Nx
@@ -22082,7 +22085,7 @@ following text:
   % TODO: Use `\regex_if_match` in TeX Live 2025.
   \regex_match:Nn  % noqa: w202
   { NV }
-  { TF }
+  { T }
 \prop_new:N
   \g_@@_glob_cache_prop
 \tl_new:N
@@ -22753,7 +22756,7 @@ following text:
 % \end{markdown}
 %  \begin{macrocode}
       % TODO: Use `\regex_if_match` in TeX Live 2025.
-      \regex_match:NVTF
+      \regex_match:NVT
         \c_@@_prepending_key_regex
         \l_keys_key_str
         {
@@ -22761,7 +22764,7 @@ following text:
             \g_@@_prepending_renderer_prototype_bool
         }
       % TODO: Use `\regex_if_match` in TeX Live 2025.
-      \regex_match:NVTF
+      \regex_match:NVT
         \c_@@_appending_key_regex
         \l_keys_key_str
         {
@@ -22778,7 +22781,7 @@ following text:
             \l_tmpa_tl
             \l_keys_key_str
           \regex_replace_once:NnN
-            \c_@@_appending_key_regex
+            \c_@@_prepending_or_appending_key_regex
             { }
             \l_tmpa_tl
           \tl_set:Nx
