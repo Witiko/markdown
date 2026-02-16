@@ -12874,6 +12874,32 @@ A PDF document named `document.pdf` should be produced and contain the text
           { #2 }
       }
   }
+\cs_new:Nn
+  \@@_prepend_option_value:nn
+  {
+    \@@_get_option_value:nN
+      { #1 }
+      \l_tmpa_clist
+    \clist_put_left:Nn
+      \l_tmpa_clist
+      { #2 }
+    \@@_set_option_value:nV
+      { #1 }
+      \l_tmpa_clist
+  }
+\cs_new:Nn
+  \@@_append_option_value:nn
+  {
+    \@@_get_option_value:nN
+      { #1 }
+      \l_tmpa_clist
+    \clist_put_right:Nn
+      \l_tmpa_clist
+      { #2 }
+    \@@_set_option_value:nV
+      { #1 }
+      \l_tmpa_clist
+  }
 \cs_generate_variant:Nn
   \@@_set_option_value:nn
   { nV }
@@ -12956,7 +12982,7 @@ A PDF document named `document.pdf` should be produced and contain the text
 %    \end{macrocode}
 % \begin{markdown}
 %
-% For options of type `clist`, we assume that \meta{key} is a regular English
+% For comma-list options, we assume that \meta{key} is a regular English
 % noun in plural (such as `extensions`) and we also define the
 % \meta{singular key}`=`\meta{value} interface, where \meta{singular key} is
 % \meta{key} after stripping the trailing -s (such as `extension`). Rather
@@ -12998,20 +13024,69 @@ A PDF document named `document.pdf` should be produced and contain the text
           \l_tmpa_tl
           {
             .code:n = {
-              \@@_get_option_value:nN
+              \@@_append_option_value:nn
                 { #2 }
-                \l_tmpa_tl
-              \clist_set:NV
-                \l_tmpa_clist
-                { \l_tmpa_tl , { ##1 } }
-              \@@_set_option_value:nV
-                { #2 }
-                \l_tmpa_clist
+                { ##1 }
             }
           }
         \keys_define:nV
           { markdown/options }
           \l_tmpa_tl
+%    \end{macrocode}
+% \begin{markdown}
+%
+% To achieve parity with token renderers and renderer prototypes (see sections
+% <#sec:plain-tex-renderers> and <#sec:plain-tex-renderer-prototypes>,
+% respectively) the syntax
+% \meta{key}`+=`\meta{value} and
+% \meta{key}`$=`\meta{value} with the same appending semantics as
+% \meta{singular key}`=`\meta{value} is also supported.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        \keys_define:nn
+          { markdown/options }
+          {
+            #3~+ .code:n = {
+              \@@_append_option_value:nn
+                { #2 }
+                { ##1 }
+            },
+            #3 + .code:n = {
+              \@@_append_option_value:nn
+                { #2 }
+                { ##1 }
+            },
+            #3~$ .code:n = {
+              \@@_append_option_value:nn
+                { #2 }
+                { ##1 }
+            },
+            #3 $ .code:n = {
+              \@@_append_option_value:nn
+                { #2 }
+                { ##1 }
+            },
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Furthermore, similar to token renderers and renderer prototypes, the syntax
+% \meta{key}`^=`\meta{value} is also supported. This syntax prepends
+% \meta{value} to the current value as the leftmost item in the list.
+%
+% \end{markdown}
+%  \begin{macrocode}
+            #3~^ .code:n = {
+              \@@_prepend_option_value:nn
+                { #2 }
+                { ##1 }
+            },
+            #3 ^ .code:n = {
+              \@@_prepend_option_value:nn
+                { #2 }
+                { ##1 }
+            }
+          }
       }
   }
 \cs_generate_variant:Nn
