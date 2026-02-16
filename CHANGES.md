@@ -1,15 +1,45 @@
 # Changes
 
-## 3.14.0 (2026-01-XX)
+## 3.14.0 (2026-02-XX)
 
-Development:
+### Enhancements
+
+This version of the Markdown package has made the following new enhancements:
 
 - Support the new prepending (`^=`) and the appending (`$=`) operators for
-  renderers and renderer prototypes. (proposed by @witiko in #232, added by
-  @witiko in #617)
+  renderers and renderer prototypes. (#232, #617)
+
 - Support the prepending and appending operators (`^=`, `+=`, and `$=`) for
-  comma-list options like `extensions`. (proposed by @witiko in #232, added by
-  @witiko in #621)
+  comma-list options like `extensions`. (#232, #621)
+
+- In theme `witiko/diagrams`, add parameter `command` for Mermaid diagrams.
+  (#616, #622)
+
+  For example, you can use different icon packs as follows:
+
+  ```` tex
+  \documentclass{article}
+  \usepackage[import=witiko/diagrams@v2]{markdown}
+  \begin{document}
+  \begin{markdown}
+
+  ``` mermaid {command = "mmdc --iconPacks '@iconify-json/logos'"}
+  architecture-beta
+      group api(logos:aws-lambda)[API]
+
+      service db(logos:aws-aurora)[Database] in api
+      service disk1(logos:aws-glacier)[Storage] in api
+      service disk2(logos:aws-s3)[Storage] in api
+      service server(logos:aws-ec2)[Server] in api
+
+      db:L -- R:server
+      disk1:T -- B:server
+      disk2:T -- B:db
+  ```
+
+  \end{markdown}
+  \end{document}
+  ````
 
 ## 3.13.0 (2026-01-02)
 
