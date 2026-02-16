@@ -37731,7 +37731,8 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Store the caption and the desired format of the diagram.
+% Store the caption, the desired format, and the command to produce the
+% diagram.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -37742,6 +37743,8 @@ end
     \tl_set:Nn
       \l_@@_diagrams_format_tl
       { pdf }
+    \tl_new:N
+      \l_@@_diagrams_command_tl
     \@@_setup:n
       {
         rendererPrototypes = {
@@ -37776,6 +37779,12 @@ end
                           {
                             \tl_set:Nn
                               \l_@@_diagrams_format_tl
+                              { ##2 }
+                          }
+                        { command }
+                          {
+                            \tl_set:Nn
+                              \l_@@_diagrams_command_tl
                               { ##2 }
                           }
                       }
@@ -37942,9 +37951,13 @@ end
 % Typeset fenced code with infostring `mermaid` using the command `mmdc` from
 % the npm package `@mermaid-js/mermaid-cli`. The exact command can be
 % configured by redefining or appending to the
-% \mdef{g_@@_diagrams_mmdc_command_tl} token list or by redefining the
-% \mdef{mmdcCommand} macro. Unlike the token list, the macro can be redefined
-% even before loading the Markdown package.
+% \mdef{g_@@_diagrams_mmdc_command_tl} token list, by redefining the
+% \mdef{mmdcCommand} macro, or using the \acro{HTML} attribute `command`
+% on the fenced code.
+%
+% Unlike the token list, the macro can be redefined even before loading the
+% Markdown package. Unlike the token list and the macro, the \acro{HTML}
+% attribute is local to a single fenced code.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -37952,7 +37965,15 @@ end
       \g_@@_diagrams_mmdc_command_tl
     \tl_gset:Nn
       \g_@@_diagrams_mmdc_command_tl
-      { mmdc }
+      {
+        \tl_if_empty:NTF
+          \l_@@_diagrams_command_tl
+          { mmdc }
+          {
+            \tl_use:N
+              \l_@@_diagrams_command_tl
+          }
+      }
     \cs_if_free:NT
       \mmdcCommand
       {
