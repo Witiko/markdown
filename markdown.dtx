@@ -3598,6 +3598,77 @@ defaultOptions.frozenCacheFileName = "frozenCache.tex"
 % \end{markdown}
 % \iffalse
 
+#### Option `acronyms`
+
+`acronyms` (default value: `{}`)
+
+% \fi
+% \begin{markdown}
+% \Valitem[\{\}]{acronyms}{acronyms}
+%
+:    Acronyms, initialisms, and other all-caps sequences that will be
+     recognized in markdown text and formatted with the acronym token renderer.
+% \end{markdown}
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+```` tex
+\documentclass{article}
+\usepackage{markdown}
+\markdownSetup {
+  % Format the following words as acronyms.
+  acronyms = {HTML, YAML},
+  renderers = {
+    % Format acronyms as small caps.
+    acronym = \textsc{\MakeLowercase{#1}},
+  },
+}
+\begin{document}
+\begin{markdown}
+
+HTML and YAML are two staples of modern tooling that often get mentioned
+in the same breath, even though they live in very different layers of the stack.
+
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex --shell-escape document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> <abbr>HTML</abbr> and <abbr>YAML</abbr> are two staples of modern tooling
+> that often get mentioned in the same breath, even though they live in very
+> different layers of the stack.
+
+%</manual-options>
+%<*tex>
+% \fi
+%  \begin{macrocode}
+\cs_generate_variant:Nn
+  \@@_add_lua_option:nnn
+  { nnV }
+\@@_add_lua_option:nnV
+  { acronyms }
+  { clist }
+  \c_empty_clist
+%    \end{macrocode}
+% \iffalse
+%</tex>
+%<*lua,lua-cli,lua-loader>
+% \fi
+%  \begin{macrocode}
+defaultOptions.acronyms = {}
+%    \end{macrocode}
+% \iffalse
+%</lua,lua-cli,lua-loader>
+%<*manual-options>
+
 #### Option `autoIdentifiers`
 
 `autoIdentifiers` (default value: `false`)
@@ -6389,9 +6460,6 @@ following text:
 %<*tex>
 % \fi
 %  \begin{macrocode}
-\cs_generate_variant:Nn
-  \@@_add_lua_option:nnn
-  { nnV }
 \@@_add_lua_option:nnV
   { extensions }
   { clist }
