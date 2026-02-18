@@ -40601,7 +40601,7 @@ end
 %  \begin{macrocode}
       \regex_replace_all:nnN
         { [^\d a-z]+ }
-        { \c{textsc} \cB\{ \c{MakeLowercase} \cB\{ \0 \cE\} \cE\} }
+        { \c{ textsc } \cB\{ \c{ MakeLowercase } \cB\{ \0 \cE\} \cE\} }
         \l_tmpa_tl
 %    \end{macrocode}
 % \begin{markdown}
@@ -40616,7 +40616,7 @@ end
         {
           \regex_replace_all:nnN
             { \d+ }
-            { \c{oldstylenums} \cB\{ \0 \cE\} }
+            { \c{ oldstylenums } \cB\{ \0 \cE\} }
             \l_tmpa_tl
         }
       \tl_use:N
