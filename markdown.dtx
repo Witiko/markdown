@@ -40578,7 +40578,8 @@ end
 %
 %#### Acronyms
 %
-% Render acronyms, initialisms, and other all-caps sequences using small caps.
+% If the \Opt{acronyms} option is non-empty, render acronyms, initialisms, and
+% other all-caps sequences using small caps.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -40636,8 +40637,26 @@ end
               { \c{ oldstylenums } \cB\{ \0 \cE\} }
               \l_tmpa_tl
           }
-        \tl_use:N
-          \l_tmpa_tl
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If the package \pkg{microtype} is loaded, letter-space the small caps.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        \@ifpackageloaded
+          { microtype }
+          {
+            \textls
+              {
+                \tl_use:N
+                  \l_tmpa_tl
+              }
+          }
+          {
+            \tl_use:N
+              \l_tmpa_tl
+          }
       \group_end:
     },
   },
