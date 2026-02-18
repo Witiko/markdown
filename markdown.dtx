@@ -42372,8 +42372,7 @@ end
   \l_@@_bracketed_span_identifiers_seq
 \markdownSetup {
   rendererPrototypes = {
-    bracketedSpanAttributeContextBegin = {
-      \group_begin:
+    bracketedSpanAttributeContextBegin $= {
       \markdownSetup {
         rendererPrototypes = {
           attributeIdentifier = {
@@ -42384,11 +42383,43 @@ end
         },
       }
     },
-    bracketedSpanAttributeContextEnd = {
+    bracketedSpanAttributeContextEnd ^= {
       \seq_map_inline:Nn
         \l_@@_bracketed_span_identifiers_seq
         { \label { ##1 } }
-      \group_end:
+    },
+  },
+}
+%    \end{macrocode}
+% \begin{markdown}
+%
+% We will also allow acronyms to be manually marked up using the \acro{HTML}
+% class `acronym`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\markdownSetup {
+  rendererPrototypes = {
+    bracketedSpanAttributeContextBegin += {
+      \markdownSetup {
+        rendererPrototypes = {
+          attributeClassName = {
+            \str_if_eq:nnT
+              { ##1 }
+              { acronym }
+              {
+                \markdownSetup {
+                  rendererPrototypes = {
+                    bracketedSpan = {
+                      \markdownRendererAcronym
+                        { ####1 }
+                    }
+                  }
+                }
+              }
+          },
+        },
+      }
     },
   },
 }
