@@ -35,7 +35,7 @@
 \def\inline#1{% Inline code
   \textcolor{spot}{\text{\texttt{#1}}}}
 \newcommand\acro[1]{% An acronym
-  \textsc{\MakeLowercase{#1}}}
+  \markdownRendererAcronymPrototype{#1}}
 
 % Set up index.
 \DisableCrossrefs
@@ -1185,7 +1185,7 @@ such distributions, you should follow these steps:
 % \pkg{LPeg${}\geq{}$0.10}
 %
 %:    A pattern-matching library for the writing of recursive descent parsers
-%     via the Parsing Expression Grammars (\acro{peg}s). It is used by the
+%     via the Parsing Expression Grammars ([PEG]{.acronym}s). It is used by the
 %     \pkg{Lunamark} library to parse the markdown input.
 %     \pkg{LPeg${}\geq{}$0.10} is included in Lua\TeX${}\geq{}$0.72.0 (\TeX
 %     Live${}\geq{}2013$).
@@ -1202,7 +1202,7 @@ local lpeg = require("lpeg")
 %
 % \pkg{MD5}
 %
-%:    A library that provides \acro{md5} crypto functions. It is used by the
+%:    A library that provides [MD5]{.acronym} crypto functions. It is used by the
 %     \pkg{Lunamark} library to compute the digest of the input for caching
 %     purposes. \pkg{MD5} is included in all releases of Lua\TeX{} (\TeX
 %     Live${}\geq{}2008$).
@@ -1227,7 +1227,7 @@ local md5 = require("md5")
 %     and looking up files in the \TeX{} directory structure.
 %
 % Only load the package outside the \Hologo{ConTeXt} format, where we can
-% use the resolvers \acro{API} [@context23, Section 11.5].
+% use the resolvers [API]{.acronym} [@context23, Section 11.5].
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -1262,8 +1262,8 @@ end
 %
 % \pkg{api7/lua-tinyyaml}
 %
-%:    A library that provides a regex-based recursive descent \acro{yaml}
-%     (subset) parser that is used to read \acro{yaml} metadata when the
+%:    A library that provides a regex-based recursive descent [YAML]{.acronym}
+%     (subset) parser that is used to read [YAML]{.acronym} metadata when the
 %     \Opt{jekyllData} option is enabled.
 %
 % \end{markdown}
@@ -1354,7 +1354,7 @@ hard lt3luabridge
 %
 % \pkg{Lua File System}
 %
-%:    A library that provides access to the filesystem via \acro{os}-specific
+%:    A library that provides access to the filesystem via [OS]{.acronym}-specific
 %     syscalls. It is used by the plain \TeX{} code to create the cache
 %     directory specified by the \Opt{cacheDir} option before interfacing with
 %     the \pkg{Lunamark} library. \pkg{Lua File System} is included in all
@@ -1463,7 +1463,7 @@ soft fancyvrb
 % \pkg{csvsimple}
 %
 %:    A package that provides the `\csvautotabular` macro for typesetting
-%     \acro{csv} files in the default renderer prototypes for iA\\,Writer
+%     [CSV]{.acronym} files in the default renderer prototypes for iA\\,Writer
 %     content blocks.
 %
 % \end{markdown}
@@ -1539,7 +1539,7 @@ soft ltxcmds
 %
 % \pkg{luaxml}
 %
-%:    A package that is used to convert \acro{HTML} to \LaTeX{} in the default
+%:    A package that is used to convert [HTML]{.acronym} to \LaTeX{} in the default
 %     renderer prototypes for content blocks, raw blocks, and inline raw spans.
 %
 % \end{markdown}
@@ -1575,7 +1575,7 @@ soft verse
 % \pkg{m-database}
 %
 %:    A module that provides the default token renderer prototype for
-%     iA\\,Writer content blocks with the \acro{csv} filename extension (see
+%     iA\\,Writer content blocks with the [CSV]{.acronym} filename extension (see
 %     Section <#sec:texrendererprototypes>).
 %
 % Feedback
@@ -1937,7 +1937,7 @@ module and a command-line interface (CLI).
 % \fi
 % \begin{markdown}
 %
-% The Lua interface provides the conversion from \acro{utf}-\oldstylenums8
+% The Lua interface provides the conversion from [UTF]{.acronym}-\oldstylenums8
 % encoded markdown to plain \TeX{}. This interface is used by the plain \TeX{}
 % implementation (see Section <#sec:teximplementation>) and will be of
 % interest to the developers of other packages and Lua modules.
@@ -1978,10 +1978,10 @@ local M = {metadata = metadata}
 % exposes the \luamdef{reader} object, which performs the lexical and
 % syntactic analysis of markdown text and which exposes the
 % \luamdef{reader->insert_pattern} and \luamdef{reader->add_special_character}
-% methods for extending the \acro{peg} grammar of markdown.
+% methods for extending the [PEG]{.acronym} grammar of markdown.
 %
 % The read-only \luamdef{walkable_syntax} hash table stores those rules of the
-% \acro{peg} grammar of markdown that can be represented as an ordered choice
+% [PEG]{.acronym} grammar of markdown that can be represented as an ordered choice
 % of terminal symbols. These rules can be modified by user-defined syntax
 % extensions.
 %
@@ -2022,12 +2022,12 @@ local walkable_syntax = {
 %    \end{macrocode}
 % \begin{markdown}
 %
-% The \luamref{reader->insert_pattern} method inserts a \acro{peg} pattern into
+% The \luamref{reader->insert_pattern} method inserts a [PEG]{.acronym} pattern into
 % the grammar of markdown. The method receives two mandatory arguments: a
 % selector string in the form `"`\meta{left-hand side terminal symbol}
 % \meta{`before`, `after`, or `instead of`} \meta{right-hand side terminal
-% symbol}`"` and a \acro{peg} pattern to insert, and an optional third argument
-% with a name of the \acro{peg} pattern for debugging purposes (see the
+% symbol}`"` and a [PEG]{.acronym} pattern to insert, and an optional third argument
+% with a name of the [PEG]{.acronym} pattern for debugging purposes (see the
 % \Opt{debugExtensions} option). The name does not need to be unique and shall
 % not be interpreted by the Markdown package; you can treat it as a comment.
 %
@@ -3153,7 +3153,7 @@ defaultOptions.cacheDir = "."
 %
 % \Valitem[markdown-languages.json]{contentBlocksLanguageMap}{filename}
 %
-:    The filename of the \acro{JSON} file that maps filename extensions to
+:    The filename of the [JSON]{.acronym} file that maps filename extensions to
      programming language names in the iA\\,Writer content blocks when the
      \Opt{contentBlocks} option is enabled.
 %    See Section <#sec:texcontentblockrenderers> for more information.
@@ -3316,9 +3316,9 @@ defaultOptions.contentBlocksLanguageMap = "markdown-languages.json"
 %
 % \Valitem[debug-extensions.json]{debugExtensionsFileName}{filename}
 %
-:    The filename of the \acro{JSON} file that will be produced when the
+:    The filename of the [JSON]{.acronym} file that will be produced when the
      \Opt{debugExtensions} option is enabled. This file will contain the
-     extensible subset of the \acro{peg} grammar of markdown
+     extensible subset of the [PEG]{.acronym} grammar of markdown
 %    (see the \luamref{walkable_syntax} hash table)
      after built-in syntax extensions
 %    (see Section <#sec:lua-built-in-extensions>)
@@ -4521,12 +4521,12 @@ defaultOptions.blankBeforeHeading = false
 :    true
 
      :  Require a blank line between a paragraph and the following [CommonMark
-        \acro{HTML} block][html-block].
+        [HTML]{.acronym} block][html-block].
 
 :    false
 
      :  Do not require a blank line between a paragraph and the following
-        CommonMark \acro{HTML} block.
+        CommonMark [HTML]{.acronym} block.
 
  [html-block]: https://spec.commonmark.org/0.31.2/#html-blocks
 
@@ -4562,7 +4562,7 @@ lualatex document.tex
 A PDF document named `document.pdf` should be produced and contain the
 following body text:
 
-> A useful use of \acro{HTML} comments are side notes.
+> A useful use of [HTML]{.acronym} comments are side notes.
 
 The horizontal margins should contain the following text:
 
@@ -5867,8 +5867,8 @@ defaultOptions.contentLevel = "block"
 %
 :    true
 
-     :   Produce a \acro{JSON} file that will contain the
-         extensible subset of the \acro{peg} grammar of markdown
+     :   Produce a [JSON]{.acronym} file that will contain the
+         extensible subset of the [PEG]{.acronym} grammar of markdown
 %        (see the \luamref{walkable_syntax} hash table)
          after built-in syntax extensions
 %        (see Section <#sec:lua-built-in-extensions>)
@@ -5882,12 +5882,12 @@ defaultOptions.contentLevel = "block"
          (see option \Opt{extensions})
 %        \fi
          have been applied. This helps you to see how the different
-         extensions interact. The name of the produced \acro{JSON} file is
+         extensions interact. The name of the produced [JSON]{.acronym} file is
          controlled by the \Opt{debugExtensionsFileName} option.
 
 :    false
 
-     :  Do not produce a \acro{JSON} file with the \acro{peg} grammar of
+     :  Do not produce a [JSON]{.acronym} file with the [PEG]{.acronym} grammar of
         markdown.
 
 % \end{markdown}
@@ -6161,15 +6161,15 @@ defaultOptions.definitionLists = false
 :    true
 
      :  When the \Opt{jekyllData} and \Opt{expectJekyllData} options are
-        enabled, then a markdown document must begin directly with \acro{yaml}
-        metadata and must contain nothing but \acro{yaml} metadata. Otherwise,
+        enabled, then a markdown document must begin directly with [YAML]{.acronym}
+        metadata and must contain nothing but [YAML]{.acronym} metadata. Otherwise,
         an error is produced.
 
 :    false
 
      :  When the \Opt{jekyllData} and \Opt{expectJekyllData} options are
-        enabled, then a markdown document may begin directly with \acro{yaml}
-        metadata and may contain nothing but \acro{yaml} metadata. Otherwise,
+        enabled, then a markdown document may begin directly with [YAML]{.acronym}
+        metadata and may contain nothing but [YAML]{.acronym} metadata. Otherwise,
         the markdown document is processed as markdown text.
 
 % See also the plain \TeX{} macros \mref{yamlBegin}, \mref{yamlEnd}, and
@@ -6178,7 +6178,7 @@ defaultOptions.definitionLists = false
 % macros \mref{startyaml}, \mref{stopyaml}, and \mref{inputyaml} in Section
 % <#sec:context-typesetting> to see how the options \Opt{jekyllData},
 % \Opt{expectJekyllData}, and \Opt{ensureJekyllData} can be used together to
-% implement high-level interfaces for processing \acro{yaml} documents.
+% implement high-level interfaces for processing [YAML]{.acronym} documents.
 %
 % \end{markdown}
 % \iffalse
@@ -6214,8 +6214,8 @@ defaultOptions.ensureJekyllData = false
 :    true
 
      :  When the \Opt{jekyllData} option is enabled, then a markdown document may
-        begin directly with \acro{yaml} metadata and may contain nothing but
-        \acro{yaml} metadata.
+        begin directly with [YAML]{.acronym} metadata and may contain nothing but
+        [YAML]{.acronym} metadata.
 
         ~~~~~ latex
         \documentclass{article}
@@ -6241,7 +6241,7 @@ defaultOptions.ensureJekyllData = false
 :    false
 
      :  When the \Opt{jekyllData} option is enabled, then a markdown document
-        may begin with \acro{yaml} metadata if and only if the metadata begin
+        may begin with [YAML]{.acronym} metadata if and only if the metadata begin
         with the end-of-directives marker (`---`) and they end with either the
         end-of-directives or the end-of-document marker (`...`):
 
@@ -6273,7 +6273,7 @@ defaultOptions.ensureJekyllData = false
 % macros \mref{startyaml}, \mref{stopyaml}, and \mref{inputyaml} in Section
 % <#sec:context-typesetting> to see how the options \Opt{jekyllData},
 % \Opt{expectJekyllData}, and \Opt{ensureJekyllData} can be used together to
-% implement high-level interfaces for processing \acro{yaml} documents.
+% implement high-level interfaces for processing [YAML]{.acronym} documents.
 %
 % \markdownEnd
 % \iffalse
@@ -7347,7 +7347,7 @@ defaultOptions.hashEnumerators = false
 %
 :    true
 
-     :  Enable the assignment of \acro{HTML} attributes to headings:
+     :  Enable the assignment of [HTML]{.acronym} attributes to headings:
 
         ``` md
         # My first heading {#foo}
@@ -7360,7 +7360,7 @@ defaultOptions.hashEnumerators = false
 
 :    false
 
-     :  Disable the assignment of \acro{HTML} attributes to headings.
+     :  Disable the assignment of [HTML]{.acronym} attributes to headings.
 
 % \end{markdown}
 % \iffalse
@@ -7395,16 +7395,16 @@ defaultOptions.headerAttributes = false
 %
 :    true
 
-     :  Enable the recognition of inline \acro{HTML} tags, block \acro{HTML}
-        elements, \acro{HTML} comments, \acro{HTML} instructions, and entities
-        in the input. Inline \acro{HTML} tags, block \acro{HTML} elements and
-        \acro{HTML} comments will be rendered, \acro{HTML} instructions will be
-        ignored, and \acro{HTML} entities will be replaced with the
+     :  Enable the recognition of inline [HTML]{.acronym} tags, block [HTML]{.acronym}
+        elements, [HTML]{.acronym} comments, [HTML]{.acronym} instructions, and entities
+        in the input. Inline [HTML]{.acronym} tags, block [HTML]{.acronym} elements and
+        [HTML]{.acronym} comments will be rendered, [HTML]{.acronym} instructions will be
+        ignored, and [HTML]{.acronym} entities will be replaced with the
         corresponding Unicode codepoints.
 
 :    false
 
-     :  Disable the recognition of \acro{HTML} markup. Any \acro{HTML} markup
+     :  Disable the recognition of [HTML]{.acronym} markup. Any [HTML]{.acronym} markup
         in the input will be rendered as plain text.
 
 % \end{markdown}
@@ -7663,7 +7663,7 @@ defaultOptions.html = true
 :    true
 
      :  When the option \Opt{HTML} is enabled and a text can be understood
-        either as a hyperlink or \acro{HTML}, interpret it as \acro{HTML}.
+        either as a hyperlink or [HTML]{.acronym}, interpret it as [HTML]{.acronym}.
 
         This is especially relevant when the option \Opt{relativeReferences}
         is enabled, since it makes e.g. `</foo>` a valid hyperlink.
@@ -7671,7 +7671,7 @@ defaultOptions.html = true
 :    false
 
      :  When the option \Opt{HTML} is enabled and a text can be understood
-        either as a hyperlink or \acro{HTML}, interpret it as a hyperlink.
+        either as a hyperlink or [HTML]{.acronym}, interpret it as a hyperlink.
 
 This is an experimental option. Whenever the option \Opt{experimental} is
 enabled and this option is unspecified, it will be enabled. Like other
@@ -8177,9 +8177,9 @@ defaultOptions.inlineNotes = false
 %
 :    true
 
-     :  Enable the Pandoc [\acro{yaml} metadata block syntax
+     :  Enable the Pandoc [[YAML]{.acronym} metadata block syntax
         extension][pandoc-yaml-metadata-block] for entering
-        metadata in \acro{yaml}:
+        metadata in [YAML]{.acronym}:
 
         ~~~~~~ yaml
         ---
@@ -8197,8 +8197,8 @@ defaultOptions.inlineNotes = false
 
 :    false
 
-     :  Disable the Pandoc \acro{yaml} metadata block syntax extension
-        for entering metadata in \acro{yaml}.
+     :  Disable the Pandoc [YAML]{.acronym} metadata block syntax extension
+        for entering metadata in [YAML]{.acronym}.
 
  [pandoc-yaml-metadata-block]: https://pandoc.org/MANUAL.html#extension-yaml_metadata_block
 
@@ -8208,7 +8208,7 @@ defaultOptions.inlineNotes = false
 % macros \mref{startyaml}, \mref{stopyaml}, and \mref{inputyaml} in Section
 % <#sec:context-typesetting> to see how the options \Opt{jekyllData},
 % \Opt{expectJekyllData}, and \Opt{ensureJekyllData} can be used together to
-% implement high-level interfaces for processing \acro{yaml} documents.
+% implement high-level interfaces for processing [YAML]{.acronym} documents.
 %
 % \end{markdown}
 % \iffalse
@@ -8813,7 +8813,7 @@ defaultOptions.notes = false
 %
 :    true
 
-     :  Enable the \acro{PHP} Markdown pipe table syntax extension:
+     :  Enable the [PHP]{.acronym} Markdown pipe table syntax extension:
 
         ``` md
         | Right | Left | Default | Center |
@@ -8825,7 +8825,7 @@ defaultOptions.notes = false
 
 :    false
 
-     :  Disable the \acro{PHP} Markdown pipe table syntax extension.
+     :  Disable the [PHP]{.acronym} Markdown pipe table syntax extension.
 
 % \end{markdown}
 % \iffalse
@@ -9288,13 +9288,13 @@ defaultOptions.shiftHeadings = 0
 %      \iffalse
        a [section](#header-attributes)
 %      \fi
-%      or a fenced div (see the \Opt{fencedDivs} option) with the \acro{HTML}
+%      or a fenced div (see the \Opt{fencedDivs} option) with the [HTML]{.acronym}
 %      attribute `#`\meta{identifier}.
 %      \iffalse
        or a [fenced div](#fenced-divs)
-       with the \acro{HTML} attribute `#`\meta{identifier}.
+       with the [HTML]{.acronym} attribute `#`\meta{identifier}.
 %      \fi
-     - `$`\meta{identifier} selects the end of a section with the \acro{HTML}
+     - `$`\meta{identifier} selects the end of a section with the [HTML]{.acronym}
        attribute `#`\meta{identifier}.
      - \meta{identifier} corresponds to `^`\meta{identifier} for the first
        selector and to `$`\meta{identifier} for the second selector.
@@ -9302,7 +9302,7 @@ defaultOptions.shiftHeadings = 0
      Specifying only a single selector, \meta{identifier}, is equivalent
      to specifying the two selectors \meta{identifier} \meta{identifier},
      which is equivalent to `^`\meta{identifier} `$`\meta{identifier}, i.e.
-     the entire section with the \acro{HTML} attribute `#`\meta{identifier} will be
+     the entire section with the [HTML]{.acronym} attribute `#`\meta{identifier} will be
      selected.
 
 % \end{markdown}
@@ -10255,7 +10255,7 @@ defaultOptions.superscripts = false
 %
 :    true
 
-     :    Enable the assignment of \acro{HTML} attributes to
+     :    Enable the assignment of [HTML]{.acronym} attributes to
 %         table captions (see the \Opt{tableCaptions} option):
 %         \iffalse
           [table captions](#table-captions):
@@ -10273,7 +10273,7 @@ defaultOptions.superscripts = false
 
 :    false
 
-     :    Disable the assignment of \acro{HTML} attributes to table captions.
+     :    Disable the assignment of [HTML]{.acronym} attributes to table captions.
 
 % \end{markdown}
 % \iffalse
@@ -12037,7 +12037,7 @@ pdftex --shell-escape document.tex
 % \bye
 % ```````
 %
-% The \mref{yamlBegin} macro marks the beginning of an \acro{YAML} document
+% The \mref{yamlBegin} macro marks the beginning of an [YAML]{.acronym} document
 % fragment and the \mref{yamlEnd} macro marks its end.
 %
 % \end{markdown}
@@ -12131,11 +12131,11 @@ pdftex --shell-escape document.tex
 % \bye
 % ```````
 %
-% You can use the \mref{yamlInput} macro to include \acro{YAML} documents.
+% You can use the \mref{yamlInput} macro to include [YAML]{.acronym} documents.
 % similarly to how you might use the \mref{input} \TeX{} primitive to include
 % \TeX{} documents. The \mref{yamlInput} macro accepts a single parameter with
-% the filename of a \acro{YAML} document and expands to the result of the
-% conversion of the input \acro{YAML} document to plain \TeX{}.
+% the filename of a [YAML]{.acronym} document and expands to the result of the
+% conversion of the input [YAML]{.acronym} document to plain \TeX{}.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -14341,16 +14341,16 @@ options for markdown attributes on different elements is enabled:
 - \Opt{linkAttributes}
 
 \mdef{markdownRendererAttributeIdentifier} represents the \meta{identifier} of
-a markdown element (`id="`\meta{identifier}`"` in \acro{HTML} and `#`\meta{identifier}
+a markdown element (`id="`\meta{identifier}`"` in [HTML]{.acronym} and `#`\meta{identifier}
 in markdown attributes). The macro receives a single attribute that corresponds
 to the \meta{identifier}.
 
 \mdef{markdownRendererAttributeClassName} represents the \meta{class name} of a
-markdown element (`class="`\meta{class name} ...`"` in \acro{HTML} and
+markdown element (`class="`\meta{class name} ...`"` in [HTML]{.acronym} and
 `.`\meta{class name} in markdown attributes).  The macro receives a single
 attribute that corresponds to the \meta{class name}.
 
-\mdef{markdownRendererAttributeKeyValue} represents an \acro{HTML} attribute in the form
+\mdef{markdownRendererAttributeKeyValue} represents an [HTML]{.acronym} attribute in the form
 \meta{key}`=`\meta{value} that is neither an identifier nor a class name.
 The macro receives two attributes that correspond to the \meta{key} and the
 \meta{value}, respectively.
@@ -15803,8 +15803,8 @@ following text:
 
 The \mdef{markdownRendererContentBlock} macro represents an iA\\,Writer content
 block. It receives four arguments: the local file or online image filename
-extension cast to the lower case, the fully escaped \acro{uri} that can be
-directly typeset, the raw \acro{uri} that can be used outside typesetting,
+extension cast to the lower case, the fully escaped [URI]{.acronym} that can be
+directly typeset, the raw [URI]{.acronym} that can be used outside typesetting,
 and the title of the content block.
 
 % \end{markdown}
@@ -15882,8 +15882,8 @@ record $(k, v)$, then a non-online-image content block with the filename
 extension $s, s$`:lower()`${}=k$ is considered to be in a known programming
 language $v$.
 The macro receives five arguments: the local file name extension $s$ cast to
-the lower case, the language $v$, the fully escaped \acro{uri} that can be
-directly typeset, the raw \acro{uri} that can be used outside typesetting,
+the lower case, the language $v$, the fully escaped [URI]{.acronym} that can be
+directly typeset, the raw [URI]{.acronym} that can be used outside typesetting,
 and the title of the content block.
 
 Note that you will need to place place a `markdown-languages.json` file
@@ -17605,9 +17605,9 @@ following text:
 #### Inline HTML Comment Renderer
 
 The \mdef{markdownRendererInlineHtmlComment} macro represents the contents of an
-inline \acro{HTML} comment. This macro will only be produced, when the
+inline [HTML]{.acronym} comment. This macro will only be produced, when the
 \Opt{html} option is enabled. The macro receives a single argument that
-corresponds to the contents of the \acro{HTML} comment.
+corresponds to the contents of the [HTML]{.acronym} comment.
 
 % \end{markdown}
 %
@@ -17642,7 +17642,7 @@ lualatex document.tex
 A PDF document named `document.pdf` should be produced and contain the
 following body text:
 
-> A useful use of \acro{HTML} comments are side notes.
+> A useful use of [HTML]{.acronym} comments are side notes.
 
 The horizontal margins should contain the following text:
 
@@ -17680,14 +17680,14 @@ The horizontal margins should contain the following text:
 #### HTML Tag and Element Renderers
 
 The \mdef{markdownRendererInlineHtmlTag} macro represents an opening, closing,
-or empty inline \acro{HTML} tag. This macro will only be produced, when the
+or empty inline [HTML]{.acronym} tag. This macro will only be produced, when the
 \Opt{html} option is enabled. The macro receives a single argument that
-corresponds to the contents of the \acro{HTML} tag.
+corresponds to the contents of the [HTML]{.acronym} tag.
 
 The \mdef{markdownRendererInputBlockHtmlElement} macro represents a block
-\acro{HTML} element. This macro will only be produced, when the \Opt{html}
+[HTML]{.acronym} element. This macro will only be produced, when the \Opt{html}
 option is enabled. The macro receives a single argument that filename of a file
-containing the contents of the \acro{HTML} element.
+containing the contents of the [HTML]{.acronym} element.
 
 % \end{markdown}
 %
@@ -17770,8 +17770,8 @@ following body text:
 
 #### Image Renderer
 The \mdef{markdownRendererImage} macro represents an image. It receives
-four arguments: the label, the fully escaped \acro{uri} that can be directly
-typeset, the raw \acro{uri} that can be used outside typesetting, and the
+four arguments: the label, the fully escaped [URI]{.acronym} that can be directly
+typeset, the raw [URI]{.acronym} that can be used outside typesetting, and the
 title of the link.
 
 % \end{markdown}
@@ -18514,8 +18514,8 @@ following text:
 
 #### Link Renderer
 The \mdef{markdownRendererLink} macro represents a hyperlink. It receives
-four arguments: the label, the fully escaped \acro{uri} that can be directly
-typeset, the raw \acro{uri} that can be used outside typesetting, and the
+four arguments: the label, the fully escaped [URI]{.acronym} that can be directly
+typeset, the raw [URI]{.acronym} that can be used outside typesetting, and the
 title of the link.
 
 % \end{markdown}
@@ -21400,7 +21400,7 @@ receive four parameters:
 #### YAML Metadata Renderers {#yamlmetadatarenderers}
 
 The \mdef{markdownRendererJekyllDataBegin} macro represents the beginning of a
-\acro{yaml} document. This macro will only be produced when the \Opt{jekyllData}
+[YAML]{.acronym} document. This macro will only be produced when the \Opt{jekyllData}
 option is enabled. The macro receives no arguments.
 
 % \end{markdown}
@@ -21435,7 +21435,7 @@ option is enabled. The macro receives no arguments.
 % \begin{markdown}
 
 The \mdef{markdownRendererJekyllDataEnd} macro represents the end of a
-\acro{yaml} document. This macro will only be produced when the
+[YAML]{.acronym} document. This macro will only be produced when the
 \Opt{jekyllData} option is enabled. The macro receives no arguments.
 
 % \end{markdown}
@@ -21470,10 +21470,10 @@ The \mdef{markdownRendererJekyllDataEnd} macro represents the end of a
 % \begin{markdown}
 
 The \mdef{markdownRendererJekyllDataMappingBegin} macro represents the
-beginning of a mapping in a \acro{yaml} document. This macro will only be
+beginning of a mapping in a [YAML]{.acronym} document. This macro will only be
 produced when the \Opt{jekyllData} option is enabled. The macro receives two
 arguments: the scalar key in the parent structure, cast to a string following
-\acro{yaml} serialization rules, and the number of items in the mapping.
+[YAML]{.acronym} serialization rules, and the number of items in the mapping.
 
 % \end{markdown}
 %
@@ -21507,7 +21507,7 @@ arguments: the scalar key in the parent structure, cast to a string following
 % \begin{markdown}
 
 The \mdef{markdownRendererJekyllDataMappingEnd} macro represents the
-end of a mapping in a \acro{yaml} document. This macro will only be produced
+end of a mapping in a [YAML]{.acronym} document. This macro will only be produced
 when the \Opt{jekyllData} option is enabled. The macro receives no arguments.
 
 % \end{markdown}
@@ -21542,10 +21542,10 @@ when the \Opt{jekyllData} option is enabled. The macro receives no arguments.
 % \begin{markdown}
 
 The \mdef{markdownRendererJekyllDataSequenceBegin} macro represents the
-beginning of a sequence in a \acro{yaml} document. This macro will only be
+beginning of a sequence in a [YAML]{.acronym} document. This macro will only be
 produced when the \Opt{jekyllData} option is enabled. The macro receives two
 arguments: the scalar key in the parent structure, cast to a string following
-\acro{yaml} serialization rules, and the number of items in the sequence.
+[YAML]{.acronym} serialization rules, and the number of items in the sequence.
 
 % \end{markdown}
 %
@@ -21579,7 +21579,7 @@ arguments: the scalar key in the parent structure, cast to a string following
 % \begin{markdown}
 
 The \mdef{markdownRendererJekyllDataSequenceEnd} macro represents the
-end of a sequence in a \acro{yaml} document. This macro will only be produced
+end of a sequence in a [YAML]{.acronym} document. This macro will only be produced
 when the \Opt{jekyllData} option is enabled. The macro receives no arguments.
 
 % \end{markdown}
@@ -21614,10 +21614,10 @@ when the \Opt{jekyllData} option is enabled. The macro receives no arguments.
 % \begin{markdown}
 
 The \mdef{markdownRendererJekyllDataBoolean} macro represents a boolean scalar
-value in a \acro{yaml} document. This macro will only be produced when the
+value in a [YAML]{.acronym} document. This macro will only be produced when the
 \Opt{jekyllData} option is enabled. The macro receives two arguments: the
 scalar key in the parent structure, and the scalar value, both cast to a string
-following \acro{yaml} serialization rules.
+following [YAML]{.acronym} serialization rules.
 
 % \end{markdown}
 %
@@ -21651,10 +21651,10 @@ following \acro{yaml} serialization rules.
 % \begin{markdown}
 
 The \mdef{markdownRendererJekyllDataNumber} macro represents a numeric scalar
-value in a \acro{yaml} document. This macro will only be produced when the
+value in a [YAML]{.acronym} document. This macro will only be produced when the
 \Opt{jekyllData} option is enabled. The macro receives two arguments: the
 scalar key in the parent structure, and the scalar value, both cast to a string
-following \acro{yaml} serialization rules.
+following [YAML]{.acronym} serialization rules.
 
 % \end{markdown}
 %
@@ -21689,9 +21689,9 @@ following \acro{yaml} serialization rules.
 
 The \mdef{markdownRendererJekyllDataTypographicString} and
 \mdef{markdownRendererJekyllDataProgrammaticString} macros represent string
-scalar values in a \acro{yaml} document. This macro will only be produced when
+scalar values in a [YAML]{.acronym} document. This macro will only be produced when
 the \Opt{jekyllData} option is enabled. The macro receives two arguments: the
-scalar key in the parent structure, cast to a string following \acro{yaml}
+scalar key in the parent structure, cast to a string following [YAML]{.acronym}
 serialization rules, and the scalar value.
 
 For each string scalar value, both macros are produced. Whereas
@@ -21834,13 +21834,13 @@ removed in Markdown 4.0.0.
 % \begin{markdown}
 
 The \mdef{markdownRendererJekyllDataEmpty} macro represents an empty scalar
-value in a \acro{yaml} document. This macro will only be produced when the
+value in a [YAML]{.acronym} document. This macro will only be produced when the
 \Opt{jekyllData} option is enabled. The macro receives one argument: the
-scalar key in the parent structure, cast to a string following \acro{yaml}
+scalar key in the parent structure, cast to a string following [YAML]{.acronym}
 serialization rules.
 
 % See also Section <#sec:expl3yamlmetadata> for the description of the
-% high-level expl3 interface that you can also use to react to \acro{yaml}
+% high-level expl3 interface that you can also use to react to [YAML]{.acronym}
 % metadata.
 %
 % \end{markdown}
@@ -22214,7 +22214,7 @@ following text:
 % Besides defining renderers at once, we can also define them incrementally
 % using the prepending (`^=`) and appending (`$=` or `+=`) operators. This
 % can be especially useful in defining rules for processing different
-% \acro{HTML} class names and identifiers:
+% [HTML]{.acronym} class names and identifiers:
 % ``` tex
 % \markdownSetup{
 %   renderers = {
@@ -22575,7 +22575,7 @@ following text:
 
 #### YAML Metadata Renderer Prototypes {#expl3yamlmetadata}
 
-For simple \acro{YAML} metadata, a simple high-level interface is provided
+For simple [YAML]{.acronym} metadata, a simple high-level interface is provided
 that can be programmed by setting the expl3 key--values [@latex25] for the
 module `markdown/jekyllData`.
 
@@ -22764,8 +22764,8 @@ following text:
 %    \end{macrocode}
 % \begin{markdown}
 %
-% For complex \acro{YAML} metadata, the option `jekyllDataKeyValue`=\meta{module}
-% [@starynovotny25] can be used to route the processing of all \acro{YAML}
+% For complex [YAML]{.acronym} metadata, the option `jekyllDataKeyValue`=\meta{module}
+% [@starynovotny25] can be used to route the processing of all [YAML]{.acronym}
 % metadata in the current \TeX{} group to the key--values from \meta{module}.
 %
 % \end{markdown}
@@ -23016,7 +23016,7 @@ following text:
 % Besides defining renderer prototypes at once, we can also define them
 % incrementally using the prepending (`^=`) and appending (`$=` or `+=`)
 % operators. This can be especially useful in defining rules for processing
-% different \acro{HTML} class names and identifiers:
+% different [HTML]{.acronym} class names and identifiers:
 % ``` tex
 % \markdownSetup{
 %   rendererPrototypes = {
@@ -23588,11 +23588,11 @@ pdflatex --shell-escape document.tex
 % ```````
 %
 % The \mref{yamlInput} macro accepts a single mandatory parameter containing
-% the filename of a \acro{YAML} document and expands to the result of the
-% conversion of the input \acro{YAML} document to plain \TeX{}.  Unlike the
+% the filename of a [YAML]{.acronym} document and expands to the result of the
+% conversion of the input [YAML]{.acronym} document to plain \TeX{}.  Unlike the
 % \mref{yamlInput} macro provided by the plain \TeX{} interface, this macro
 % also accepts \LaTeX{} interface options (see Section <#sec:latex-options>)
-% as its optional argument. These options will only influence this \acro{YAML}
+% as its optional argument. These options will only influence this [YAML]{.acronym}
 % document.
 %
 % The following example \LaTeX{} code showcases the usage of the
@@ -24106,7 +24106,7 @@ following text:
 %
 % You may prepend your own code to the \mref{startyaml} macro and append your
 % own code to the \mref{stopyaml} macro to produce special effects before and
-% after the \acro{YAML} document.
+% after the [YAML]{.acronym} document.
 %
 % The macros \mref{startyaml} and \mref{stopyaml} are subject to the same
 % limitations as the \mref{markdownBegin} and \mref{markdownEnd} macros.
@@ -24183,7 +24183,7 @@ following text:
 %
 % Furthermore, the \mref{inputyaml} macro also accepts \Hologo{ConTeXt}
 % interface options (see Section <#sec:context-options>) as its optional
-% argument. These options will only influence this \acro{YAML} document.
+% argument. These options will only influence this [YAML]{.acronym} document.
 %
 % The following example \Hologo{ConTeXt} code showcases the usage of the
 % \mref{inputyaml} macro:
@@ -24399,7 +24399,7 @@ Built-in \Hologo{ConTeXt} themes provided with the Markdown package include:
 % \luamref{writer} and \luamref{reader} objects.
 %
 % The Lunamark Lua module implements writers for the conversion to various
-% other formats, such as DocBook, Groff, or \acro{HTML}. These were stripped
+% other formats, such as DocBook, Groff, or [HTML]{.acronym}. These were stripped
 % from the module and the remaining markdown reader and plain \TeX{} writer
 % were hidden behind the converter functions exposed by the Lua interface (see
 % Section <#sec:luainterface>).
@@ -24480,7 +24480,7 @@ end
 % \begin{markdown}
 %
 % The function \luamdef{serialize_byte_parser} produces the Lua code for a
-% \acro{PEG} parser that matches a single byte.
+% [PEG]{.acronym} parser that matches a single byte.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -24497,7 +24497,7 @@ end
 % \begin{markdown}
 %
 % The function \luamdef{serialize_byte_range_parser} produces the Lua code for
-% a \acro{PEG} parser that matches a contiguous range of bytes.
+% a [PEG]{.acronym} parser that matches a contiguous range of bytes.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -25537,7 +25537,7 @@ end
 % \begin{markdown}
 %
 % The \luamdef{util.encode_json_string} method encodes a string `s` in
-% \acro{JSON}.
+% [JSON]{.acronym}.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -26357,7 +26357,7 @@ end
 %
 % The \luamdef{util.find_file} and \luamdef{util.find_files} method find the
 % first or all locations of a file, respectively, according to either the
-% resolvers \acro{API} [@context23, Section 11.5] from the \Hologo{ConTeXt}
+% resolvers [API]{.acronym} [@context23, Section 11.5] from the \Hologo{ConTeXt}
 % format or the \pkg{Kpathsea} library.
 %
 % \end{markdown}
@@ -26380,7 +26380,7 @@ end
 % \begin{markdown}
 %
 %### HTML Entities
-% This section documents the \acro{HTML} entities recognized by the
+% This section documents the [HTML]{.acronym} entities recognized by the
 % markdown reader.  These functions are encapsulated in the `entities`
 % object. The functions were originally located in the
 % `lunamark/entities.lua` file in the Lunamark Lua module.
@@ -28520,7 +28520,7 @@ local character_entities = {
 % \begin{markdown}
 %
 % Given a string `s` of decimal digits, the \luamdef{entities.dec_entity}
-% returns the corresponding \acro{utf}8-encoded Unicode codepoint.
+% returns the corresponding [UTF]{.acronym}8-encoded Unicode codepoint.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -28536,7 +28536,7 @@ end
 %
 % Given a string `s` of hexadecimal digits, the
 % \luamdef{entities.hex_entity} returns the corresponding
-% \acro{utf}8-encoded Unicode codepoint.
+% [UTF]{.acronym}8-encoded Unicode codepoint.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -28552,7 +28552,7 @@ end
 %
 % Given a captured character `x` and a string `s` of hexadecimal digits, the
 % \luamdef{entities.hex_entity_with_x_char} returns the corresponding
-% \acro{utf}8-encoded Unicode codepoint or fallback with the `x` character.
+% [UTF]{.acronym}8-encoded Unicode codepoint or fallback with the `x` character.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -28568,7 +28568,7 @@ end
 %
 % Given a character entity name `s` (like `ouml`), the
 % \luamdef{entities.char_entity} returns the corresponding
-% \acro{utf}8-encoded Unicode codepoint.
+% [UTF]{.acronym}8-encoded Unicode codepoint.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -28907,7 +28907,7 @@ function M.writer.new(options)
 %   is enabled, the text string should be kept as-is.
 % - \luamdef{writer->math} transforms a math span.
 % - \luamdef{writer->identifier} transforms an input programmatic identifier.
-% - \luamdef{writer->uri} transforms an input \acro{uri}.
+% - \luamdef{writer->uri} transforms an input [URI]{.acronym}.
 % - \luamdef{writer->infostring} transforms a fence code infostring.
 %
 % \end{markdown}
@@ -28984,7 +28984,7 @@ function M.writer.new(options)
 %#### Formatter of Hyperlinks
 % Define \luamdef{writer->link} as a function that will transform an input
 % hyperlink to the output format, where `lab` corresponds to the label,
-% `src` to \acro{uri}, `tit` to the title of the link, and `attributes` to
+% `src` to [URI]{.acronym}, `tit` to the title of the link, and `attributes` to
 % optional attributes.
 %
 % \end{markdown}
@@ -29013,7 +29013,7 @@ function M.writer.new(options)
 %#### Formatter of Images
 % Define \luamdef{writer->image} as a function that will transform an input
 % image to the output format, where `lab` corresponds to the label, `src`
-% to the \acro{url}, `tit` to the title of the image, and `attributes` to
+% to the [URL]{.acronym}, `tit` to the title of the image, and `attributes` to
 % optional attributes.
 %
 % \end{markdown}
@@ -29132,8 +29132,8 @@ function M.writer.new(options)
 %
 %#### Formatters of HTML Tags, Elements, and Comments
 % Define \luamdef{writer->inline_html_comment} as a function that will
-% transform the contents of an inline \acro{HTML} comment, to the output
-% format, where `contents` are the contents of the \acro{HTML} comment.
+% transform the contents of an inline [HTML]{.acronym} comment, to the output
+% format, where `contents` are the contents of the [HTML]{.acronym} comment.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -29145,9 +29145,9 @@ function M.writer.new(options)
 % \begin{markdown}
 %
 % Define \luamdef{writer->inline_html_tag} as a function that will
-% transform the contents of an opening, closing, or empty inline \acro{HTML}
+% transform the contents of an opening, closing, or empty inline [HTML]{.acronym}
 % tag to the output format, where `contents` are the contents of the
-% \acro{HTML} tag.
+% [HTML]{.acronym} tag.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -29160,8 +29160,8 @@ function M.writer.new(options)
 % \begin{markdown}
 %
 % Define \luamdef{writer->block_html_element} as a function that will
-% transform the contents of a block \acro{HTML} element to the output format,
-% where `s` are the contents of the \acro{HTML} element.
+% transform the contents of a block [HTML]{.acronym} element to the output format,
+% where `s` are the contents of the [HTML]{.acronym} element.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -29849,7 +29849,7 @@ end
 % \begin{markdown}
 %
 %### Parsers
-% The \luamdef{parsers} hash table stores \acro{peg} patterns that are
+% The \luamdef{parsers} hash table stores [PEG]{.acronym} patterns that are
 % static and can be reused between different \luamref{reader} objects.
 %
 % \end{markdown}
@@ -31849,7 +31849,7 @@ function M.reader.new(writer, options)
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Create a \luamdef{reader->parsers} hash table that stores \acro{peg} patterns
+% Create a \luamdef{reader->parsers} hash table that stores [PEG]{.acronym} patterns
 % that depend on the received `options`. Make \luamref{reader->parsers} inherit
 % from the global \luamref{parsers} table.
 %
@@ -33736,7 +33736,7 @@ end
 %
 %#### Syntax Specification
 % Define \luamdef{reader->finalize_grammar} as a function that constructs the
-% \acro{peg} grammar of markdown, applies syntax extensions `extensions` and
+% [PEG]{.acronym} grammar of markdown, applies syntax extensions `extensions` and
 % returns a conversion function that takes a markdown string and turns it into
 % a plain \TeX{} output.
 %
@@ -33748,8 +33748,8 @@ end
 %
 % Create a local writable copy of the global read-only
 % \luamref{walkable_syntax} hash table. This table can be used by user-defined
-% syntax extensions to insert new \acro{peg} patterns into existing rules
-% of the \acro{peg} grammar of markdown using
+% syntax extensions to insert new [PEG]{.acronym} patterns into existing rules
+% of the [PEG]{.acronym} grammar of markdown using
 % the \luamref{reader->insert_pattern} method. Furthermore, built-in syntax
 % extensions can use this table to override existing rules using the
 % \luamref{reader->update_rule} method.
@@ -33828,7 +33828,7 @@ end
 % \begin{markdown}
 %
 % Create a local \luamdef{syntax} hash table that stores those rules of the
-% \acro{peg} grammar of markdown that can't be represented as an ordered choice
+% [PEG]{.acronym} grammar of markdown that can't be represented as an ordered choice
 % of terminal symbols.
 %
 % \end{markdown}
@@ -33921,9 +33921,9 @@ end
 %
 % Define \luamref{reader->update_rule} as a function that receives two
 % arguments: a left-hand side terminal symbol and a function that accepts
-% the current \acro{peg} pattern in \luamref{walkable_syntax}`[`left-hand side
+% the current [PEG]{.acronym} pattern in \luamref{walkable_syntax}`[`left-hand side
 % terminal symbol`]` if defined or `nil` otherwise and returns a
-% \acro{peg} pattern that will (re)define \luamref{walkable_syntax}`[`left-hand
+% [PEG]{.acronym} pattern that will (re)define \luamref{walkable_syntax}`[`left-hand
 % side terminal symbol`]`.
 %
 % \end{markdown}
@@ -33950,7 +33950,7 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Instead of a function, a \acro{peg} pattern `pattern` may also be
+% Instead of a function, a [PEG]{.acronym} pattern `pattern` may also be
 % supplied with roughly the same effect as supplying the following
 % function, which will define \luamref{walkable_syntax}`[`left-hand
 % side terminal symbol`]` unless it has been previously defined.
@@ -33980,7 +33980,7 @@ end
 %
 % Define a hash table of all characters with special meaning and add method
 % \luamref{reader->add_special_character} that extends the hash table and
-% updates the \acro{peg} grammar of markdown.
+% updates the [PEG]{.acronym} grammar of markdown.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -34037,7 +34037,7 @@ end
 % \begin{markdown}
 %
 % If the \Opt{debugExtensions} option is enabled, serialize
-% \luamref{walkable_syntax} to a \acro{JSON} for debugging purposes.
+% \luamref{walkable_syntax} to a [JSON]{.acronym} for debugging purposes.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -34096,7 +34096,7 @@ end
 % \begin{markdown}
 %
 % Materialize \luamref{walkable_syntax} and merge it into \luamref{syntax} to
-% produce the complete \acro{peg} grammar of markdown. Whenever a rule exists
+% produce the complete [PEG]{.acronym} grammar of markdown. Whenever a rule exists
 % in both \luamref{walkable_syntax} and \luamref{syntax}, the rule from
 % \luamref{walkable_syntax} overrides the rule from \luamref{syntax}.
 %
@@ -34112,8 +34112,8 @@ end
 % Although the interface of the \luamref{reader->insert_pattern} method does
 % not document this (see Section <#sec:lua-user-extensions>), we allow the
 % \luamref{reader->insert_pattern} and \luamref{reader->update_rule}
-% methods to insert not just \acro{peg} patterns, but also rule names that
-% reference the \acro{peg} grammar of Markdown.
+% methods to insert not just [PEG]{.acronym} patterns, but also rule names that
+% reference the [PEG]{.acronym} grammar of Markdown.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -34233,7 +34233,7 @@ end
       end
 %    \end{macrocode}
 % \begin{markdown}
-% Since the Lua converter expects \acro{unix} line endings, normalize the
+% Since the Lua converter expects [UNIX]{.acronym} line endings, normalize the
 % input. Also add a line ending at the end of the file in case the input file
 % has none.
 % \end{markdown}
@@ -34599,7 +34599,7 @@ end
 %
 % The \luamdef{extensions.content_blocks} function implements the iA\\,Writer
 % content blocks syntax extension. The `language_map` parameter specifies
-% the filename of the \acro{JSON} file that maps filename extensions to
+% the filename of the [JSON]{.acronym} file that maps filename extensions to
 % programming language names.
 %
 % \end{markdown}
@@ -34646,7 +34646,7 @@ M.extensions.content_blocks = function(language_map)
 %
 % Define \luamdef{writer->contentblock} as a function that will transform an
 % input iA\\,Writer content block to the output format, where `src`
-% corresponds to the \acro{uri} prefix, `suf` to the \acro{uri} extension,
+% corresponds to the [URI]{.acronym} prefix, `suf` to the [URI]{.acronym} extension,
 % `type` to the type of the content block (`localfile` or `onlineimage`),
 % and `tit` to the title of the content block.
 %
@@ -36096,7 +36096,7 @@ end
 %
 %#### Pipe Tables
 %
-% The \luamdef{extensions.pipe_table} function implements the \acro{PHP}
+% The \luamdef{extensions.pipe_table} function implements the [PHP]{.acronym}
 % Markdown table syntax extension (also known as pipe tables in Pandoc). When
 % the `table_captions` parameter is `true`, the function also implements the
 % Pandoc table caption syntax extension for table captions. When the
@@ -36699,13 +36699,13 @@ end
 %#### YAML Metadata
 %
 % The \luamdef{extensions.jekyll_data} function implements the Pandoc
-% \acro{yaml} metadata block syntax extension. When the
+% [YAML]{.acronym} metadata block syntax extension. When the
 % `expect_jekyll_data` parameter is `true`, then a markdown document
-% may begin directly with \acro{yaml} metadata and may contain nothing
-% but \acro{yaml} metadata. When both `expect_jekyll_data` and
+% may begin directly with [YAML]{.acronym} metadata and may contain nothing
+% but [YAML]{.acronym} metadata. When both `expect_jekyll_data` and
 % `ensure_jekyll_data` parameters are `true`, then a a markdown document must
-% begin directly with \acro{yaml} metadata and must contain nothing but
-% \acro{yaml} metadata.
+% begin directly with [YAML]{.acronym} metadata and must contain nothing but
+% [YAML]{.acronym} metadata.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -36718,10 +36718,10 @@ M.extensions.jekyll_data = function(expect_jekyll_data,
 % \begin{markdown}
 %
 % Define \luamdef{writer->jekyllData} as a function that will transform an
-% input \acro{yaml} table `d` to the output format. The table is the value for
+% input [YAML]{.acronym} table `d` to the output format. The table is the value for
 % the key `p` in the parent table; if `p` is nil, then the table has no parent.
 % All scalar keys and values encountered in the table will be cast to a string
-% following \acro{yaml} serialization rules. String values will also be
+% following [YAML]{.acronym} serialization rules. String values will also be
 % transformed using the function `t` for the typographic output format used by
 % the \mref{markdownRendererJekyllDataTypographicString} macro.
 %
@@ -38170,11 +38170,11 @@ end
 % the npm package `@mermaid-js/mermaid-cli`. The exact command can be
 % configured by redefining or appending to the
 % \mdef{g_@@_diagrams_mmdc_command_tl} token list, by redefining the
-% \mdef{mmdcCommand} macro, or using the \acro{HTML} attribute `command`
+% \mdef{mmdcCommand} macro, or using the [HTML]{.acronym} attribute `command`
 % on the fenced code.
 %
 % Unlike the token list, the macro can be redefined even before loading the
-% Markdown package. Unlike the token list and the macro, the \acro{HTML}
+% Markdown package. Unlike the token list and the macro, the [HTML]{.acronym}
 % attribute is local to a single fenced code.
 %
 % \end{markdown}
@@ -38748,27 +38748,27 @@ end
 %
 %#### Simple YAML Metadata Renderer Prototypes
 % In this section, we implement the simple high-level interface for processing
-% simple \acro{YAML} metadata using the key--value `markdown/jekyllData`. See
+% simple [YAML]{.acronym} metadata using the key--value `markdown/jekyllData`. See
 % also Section <#sec:expl3yamlmetadata>.
 %
 % To keep track of the current type of structure we inhabit when we are
-% traversing a \acro{yaml} document, we will maintain the
+% traversing a [YAML]{.acronym} document, we will maintain the
 % \mdef{g_\@\@_jekyll_data_datatypes_seq} stack. At every step of the traversal,
 % the stack will contain one of the following constants at any position $p$:
 %
 % \mdef{c_\@\@_jekyll_data_sequence_tl}
 %
-%:    The currently traversed branch of the \acro{yaml} document contains a sequence
+%:    The currently traversed branch of the [YAML]{.acronym} document contains a sequence
 %     at depth $p$.
 %
 % \mdef{c_\@\@_jekyll_data_mapping_tl}
 %
-%:    The currently traversed branch of the \acro{yaml} document contains a mapping
+%:    The currently traversed branch of the [YAML]{.acronym} document contains a mapping
 %     at depth $p$.
 %
 % \mdef{c_\@\@_jekyll_data_scalar_tl}
 %
-%:    The currently traversed branch of the \acro{yaml} document contains a scalar
+%:    The currently traversed branch of the [YAML]{.acronym} document contains a scalar
 %     value at depth $p$.
 %
 % \end{markdown}
@@ -38781,7 +38781,7 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% To keep track of our current place when we are traversing a \acro{yaml}
+% To keep track of our current place when we are traversing a [YAML]{.acronym}
 % document, we will maintain the
 % \mdef{g_\@\@_jekyll_data_wildcard_absolute_address_seq} stack of keys using
 % the \mdef{\@\@_jekyll_data_push_address_segment:n} macro.
@@ -38836,7 +38836,7 @@ end
 %     delimited by slashes. Allows the users to react to complex
 %     context-sensitive structures with ease.
 %
-%:    For example, the `name` key in the following \acro{yaml} document
+%:    For example, the `name` key in the following [YAML]{.acronym} document
 %     would correspond to the `/*/person/name` absolute wildcard:
 %     ``` yaml
 %     [{person: {name: Elon, surname: Musk}}]
@@ -38847,7 +38847,7 @@ end
 %:    A *relative wildcard*: The rightmost segment of the wildcard. Allows the
 %     users to react to simple context-free structures.
 %
-%:    For example, the `name` key in the following \acro{yaml} document
+%:    For example, the `name` key in the following [YAML]{.acronym} document
 %     would correspond to the `name` relative wildcard:
 %     ``` yaml
 %     [{person: {name: Elon, surname: Musk}}]
@@ -38941,7 +38941,7 @@ end
 % \begin{markdown}
 %
 % Finally, we will register our macros as token renderer prototypes
-% to be able to react to the traversal of a \acro{yaml} document.
+% to be able to react to the traversal of a [YAML]{.acronym} document.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -38992,7 +38992,7 @@ end
 %
 %#### Complex YAML Metadata Renderer Prototypes
 % In this section, we implement the high-level interface for routing complex
-% \acro{YAML} metadata to expl3 key--values using the option
+% [YAML]{.acronym} metadata to expl3 key--values using the option
 % `jekyllDataKeyValue`=\meta{module}. See also Section <#sec:expl3yamlmetadata>.
 %
 % \end{markdown}
@@ -39011,7 +39011,7 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% When no \meta{module} has been provided, assume that the \acro{YAML} metadata
+% When no \meta{module} has been provided, assume that the [YAML]{.acronym} metadata
 % specify absolute paths to key--values.
 %
 % \end{markdown}
@@ -39063,7 +39063,7 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% For every \acro{YAML} key `path.to.`\meta{key} with a value of type
+% For every [YAML]{.acronym} key `path.to.`\meta{key} with a value of type
 % \meta{non-string type}, set the key \meta{non-string type} of the key–value
 % \meta{module}`/path/to/`\meta{key} if it is known and the key \meta{key} of
 % the key–value \meta{module}`/path/to` otherwise. \meta{Non-string type} is
@@ -39169,7 +39169,7 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% For every \acro{YAML} key `path.to.`\meta{key} with a value of type `string`,
+% For every [YAML]{.acronym} key `path.to.`\meta{key} with a value of type `string`,
 % set the keys `typographicString` and `programmaticString` of the key–value
 % \meta{module}`/path/to/`\meta{key} if they are known with the typographic and
 % programmatic strings of the value, respectively.  Furthermore, set the key
@@ -40675,7 +40675,7 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Render all characters that are neither digits nor \acro{ASCII} lower case
+% Render all characters that are neither digits nor [ASCII]{.acronym} lower case
 % characters in small caps. Ideally, we would also be able to exclude Unicode
 % lower-case characters but that doesn't seem possible with expl3 at the
 % moment [@latex26, Chapter 34 (The l3unicode module)].
@@ -41172,8 +41172,8 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% If we are using [\TeX{}4ht][1], we will pass \acro{HTML} elements to the
-% output \acro{HTML} document unchanged.
+% If we are using [\TeX{}4ht][1], we will pass [HTML]{.acronym} elements to the
+% output [HTML]{.acronym} document unchanged.
 %
 %  [1]: https://tug.org/tex4ht/
 %
@@ -41226,7 +41226,7 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% If \acro{HTML} identifiers appear after a heading, we make them
+% If [HTML]{.acronym} identifiers appear after a heading, we make them
 % produce `\label` macros.
 %
 % \end{markdown}
@@ -41261,7 +41261,7 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% If the `unnumbered` \acro{HTML} class (or the `{-}` shorthand) appears after
+% If the `unnumbered` [HTML]{.acronym} class (or the `{-}` shorthand) appears after
 % a heading the heading and all its subheadings will be unnumbered.
 %
 % \end{markdown}
@@ -41494,7 +41494,7 @@ end
 %
 %#### HTML elements
 % If the \Opt{html} option is enabled and we are using [\TeX{}4ht][1], we will
-% pass \acro{HTML} elements to the output \acro{HTML} document unchanged.
+% pass [HTML]{.acronym} elements to the output [HTML]{.acronym} document unchanged.
 %
 %  [1]: https://tug.org/tex4ht/
 %
@@ -42030,7 +42030,7 @@ end
 %
 %#### YAML Metadata {#latex-yaml-metadata}
 %
-% The default setup of \acro{yaml} metadata will invoke the `\title`,
+% The default setup of [YAML]{.acronym} metadata will invoke the `\title`,
 % `\author`, and `\date` macros when scalar values for keys that
 % correspond to the `title`, `author`, and `date` relative wildcards are
 % encountered, respectively.
@@ -42057,7 +42057,7 @@ end
 %
 % To complement the default setup of our key--values, we will use
 % the `\maketitle` macro to typeset the title page of a document
-% at the end of \acro{yaml} metadata. If we are in the preamble, we will wait
+% at the end of [YAML]{.acronym} metadata. If we are in the preamble, we will wait
 % macro until after the beginning of the document. Otherwise, we will use
 % the `\maketitle` macro straight away, temporarily resetting the category
 % codes of the percent sign and the hash sign back to comment and parameter,
@@ -42280,8 +42280,8 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% If we are using [\TeX{}4ht][1], we will pass \acro{HTML} elements to the
-% output \acro{HTML} document unchanged.
+% If we are using [\TeX{}4ht][1], we will pass [HTML]{.acronym} elements to the
+% output [HTML]{.acronym} document unchanged.
 %
 %  [1]: https://tug.org/tex4ht/
 %
@@ -42326,8 +42326,8 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% If we are using [\TeX{}4ht][1], we will pass \acro{HTML} elements to the
-% output \acro{HTML} document unchanged.
+% If we are using [\TeX{}4ht][1], we will pass [HTML]{.acronym} elements to the
+% output [HTML]{.acronym} document unchanged.
 %
 %  [1]: https://tug.org/tex4ht/
 %
@@ -42393,7 +42393,7 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% We will also allow acronyms to be manually marked up using the \acro{HTML}
+% We will also allow acronyms to be manually marked up using the [HTML]{.acronym}
 % class `acronym`.
 %
 % \end{markdown}
