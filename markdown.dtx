@@ -3607,7 +3607,7 @@ defaultOptions.frozenCacheFileName = "frozenCache.tex"
 % \Valitem[\{\}]{acronyms}{acronyms}
 %
 :    Acronyms, initialisms, and other all-caps sequences that will be
-     recognized in markdown text and formatted with the acronym token renderer.
+     recognized in markdown text and formatted accordingly.
 % \end{markdown}
 % \iffalse
 
@@ -14238,6 +14238,81 @@ In this section, I will describe the individual token renderers.
 % \end{markdown}
 %  \begin{macrocode}
 \prop_new:N \g_@@_renderer_arities_prop
+\ExplSyntaxOff
+%    \end{macrocode}
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
+#### Acronym Renderers
+The following macro is only produced when the option \Opt{acronyms} is
+non-empty.
+
+\mdef{markdownRendererAcronym} represents an acronym, initialism, or another
+all-caps sequence. The macro receives a single attribute that corresponds
+to the sequence.
+
+% \end{markdown}
+%
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+```` tex
+\documentclass{article}
+\usepackage{markdown}
+\markdownSetup {
+  % Format the following words as acronyms.
+  acronyms = {HTML, YAML},
+  renderers = {
+    % Format acronyms as small caps.
+    acronym = \textsc{\MakeLowercase{#1}},
+  },
+}
+\begin{document}
+\begin{markdown}
+
+HTML and YAML are two staples of modern tooling that often get mentioned
+in the same breath, even though they live in very different layers of the stack.
+
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex --shell-escape document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> <abbr>HTML</abbr> and <abbr>YAML</abbr> are two staples of modern tooling
+> that often get mentioned in the same breath, even though they live in very
+> different layers of the stack.
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererAcronym
+  {
+    \markdownRendererAcronymPrototype
+  }
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { acronym }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { acronym }
+  { 1 }
 \ExplSyntaxOff
 %    \end{macrocode}
 %
