@@ -15,6 +15,6 @@ BEGIN attributeKeyValue
 - key: key
 - value: val
 END attributeKeyValue
-emphasis: some text
+bracketedSpan: This is (emphasis: some text)
 END bracketedSpanAttributeContext
 END document

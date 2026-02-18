@@ -14650,7 +14650,76 @@ following text:
 %
 % \begin{markdown}
 
-#### Bracketed Spans Attribute Context Renderers
+#### Bracketed Spans
+The following macros are only produced, when the \Opt{bracketedSpans} option is
+enabled.
+
+The \mdef{markdownRendererBracketedSpan} macro represents an inline bracketed
+span. It receives a single argument that corresponds to the inline bracketed
+span.
+
+% \end{markdown}
+%
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage[bracketedSpans]{markdown}
+\markdownSetup{
+  renderers = {
+    bracketedSpan = {(#1)},
+  },
+}
+\begin{document}
+\begin{markdown}
+
+[foo [bar]{#identifier}]{key=value} [baz]{.class_name}
+
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following text:
+
+> (foo (bar)) (baz)
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererBracketedSpan
+  {
+    \markdownRendererBracketedSpanPrototype
+  }
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { bracketedSpan }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { bracketedSpan }
+  { 1 }
+\ExplSyntaxOff
+%    \end{macrocode}
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
+#### Bracketed Span Attribute Context Renderers
 The following macros are only produced, when the \Opt{bracketedSpans} option is
 enabled.
 
@@ -34278,7 +34347,7 @@ M.extensions.bracketed_spans = function()
         if self.flatten_inlines then return s end
         return {"\\markdownRendererBracketedSpanAttributeContextBegin",
                 self.attributes(attr),
-                s,
+                "\\markdownRendererBracketedSpan{",s,"}",
                 "\\markdownRendererBracketedSpanAttributeContextEnd{}"}
       end
     end, extend_reader = function(self)
