@@ -40597,7 +40597,7 @@ end
         \markdownSetup {
           rendererPrototypes = {
             acronym = { ##1 },
-          },
+          }
         }
         \tl_set:Nn
           \l_tmpa_tl
@@ -41344,6 +41344,28 @@ end
     headingFive = {\paragraph{#1}},
     headingSix = {\subparagraph{#1}}}}
 }%
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Prevent acronyms in headings.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\markdownSetup {
+  rendererPrototypes = {
+    heading* ^= {
+      \group_begin:
+        \markdownSetup {
+          rendererPrototypes = {
+            acronym = { ##1 },
+          }
+        }
+    },
+    heading* $= {
+      \group_end:
+    }
+\ExplSyntaxOff
 %    \end{macrocode}
 % \begin{markdown}
 %
