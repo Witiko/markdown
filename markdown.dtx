@@ -825,6 +825,12 @@ abbr {
   date       = {2024-12-25},
   url        = {https://ctan.org/pkg/l3kernel},
   urldate    = {2025-01-06}}
+@online{latex26,
+  author     = {{\LaTeX{} Project}},
+  title      = {The \LaTeX3 Interfaces},
+  date       = {2026-01-19},
+  url        = {https://mirrors.ctan.org/macros/latex/required/l3kernel/interface3.pdf},
+  urldate    = {2026-02-18}}
 @online{unicode24,
   author     = {{Unicode Consortium}},
   title      = {The Unicode Standard},
@@ -40570,9 +40576,60 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
+%#### Acronyms
+%
+% Render acronyms, initialisms, and other all-caps sequences using small caps.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\markdownSetup {
+  rendererPrototypes = {
+    acronym = {
+      \tl_set:Nn
+        \l_tmpa_tl
+        { #1 }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Render all characters that are neither digits nor \acro{ASCII} lower case
+% characters in small caps. Ideally, we would also be able to exclude Unicode
+% lower-case characters but that doesn't seem possible with expl3 at the
+% moment [@latex26, Chapter 34 (The l3unicode module)].
+%
+% \end{markdown}
+%  \begin{macrocode}
+      \regex_replace_all:nnN
+        { [^\d a-z]+ }
+        { \c{textsc} \cB\{ \c{MakeLowercase} \cB\{ \0 \cE\} \cE\} }
+        \l_tmpa_tl
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Furthermore, if the current typeface supports it, render all digits using
+% old-style numerals.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      \cs_if_exist:NT
+        \oldstylenums
+        {
+          \regex_replace_all:nnN
+            { \d+ }
+            { \c{oldstylenums} \cB\{ \0 \cE\} }
+            \l_tmpa_tl
+        }
+      \tl_use:N
+        \l_tmpa_tl
+    },
+  },
+}
+%    \end{macrocode}
+% \begin{markdown}
+%
 %#### Lists
 %
-% If either the \Opt{tightLists} or the \Opt{fancyLists} Lua option is enabled
+% If either the \Opt{tightLists} or the \Opt{fancyLists} option is enabled
 % and the current document class is not \pkg{beamer}, use a package that
 % provides support for tight and fancy lists.
 %
@@ -40583,7 +40640,6 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\ExplSyntaxOn
 \bool_new:N
   \g_@@_tight_or_fancy_lists_bool
 \bool_gset_false:N
