@@ -34447,6 +34447,7 @@ M.extensions.acronyms = function(acronyms)
       local Acronym = subparsers[""]
                     * #(
                       - parsers.normalchar
+                      + parsers.unicode.following_punctuation
                       + parsers.eof)
                     / writer.acronym
       self.insert_pattern("Inline before Str", Acronym, "Acronym")
