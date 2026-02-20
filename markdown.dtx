@@ -24443,7 +24443,7 @@ end
 % \end{markdown}
 % \iffalse
 %</lua>
-%<*lua-unicode-data-generator>
+%<*lua,lua-unicode-data-generator>
 % \fi
 % \begin{markdown}
 %
@@ -24466,17 +24466,36 @@ local function depth_first_search(node, path, visit, leave)
     if label == "_type" then
       goto continue
     end
-    if child._type == "intermediate" then
-      depth_first_search(child, path .. label, visit, leave)
-    else
-      assert(child._type == "leaf")
-      visit(child, path)
+    if child._type ~= "intermediate" then
+      goto continue
     end
+    depth_first_search(child, path .. label, visit, leave)
+    ::continue::
+  end
+  for label, child in pairs(node) do
+    if label == "_type" then
+      goto continue
+    end
+    if child._type ~= "leaf" then
+      goto continue
+    end
+    visit(child, path)
     ::continue::
   end
   leave(node, path)
 end
 %    \end{macrocode}
+% \begin{markdown}
+%
+% This function is defined in the file `markdown-parser.lua` as well, so that
+% it can be used to define the \luamref{extensions.acronyms} built-in syntax
+% extension.
+%
+% \end{markdown}
+% \iffalse
+%</lua,lua-unicode-data-generator>
+%<*lua-unicode-data-generator>
+% \fi
 % \begin{markdown}
 %
 % The function \luamdef{serialize_byte_parser} produces the Lua code for a
@@ -29910,6 +29929,7 @@ parsers.doubletildes           = P("~~")
 parsers.fourspaces             = P("    ")
 
 parsers.any                    = P(1)
+parsers.eof                    = P(-1)
 parsers.succeed                = P(true)
 parsers.fail                   = P(false)
 
@@ -29928,7 +29948,6 @@ parsers.optionalspace          = parsers.spacechar^0
 
 parsers.normalchar             = parsers.any - (V("SpecialChar")
                                                 + parsers.spacing)
-parsers.eof                    = -parsers.any
 parsers.nonindentspace         = parsers.space^-3 * - parsers.spacechar
 parsers.indent                 = parsers.space^-3 * parsers.tab
                                + parsers.fourspaces / ""
@@ -34224,7 +34243,9 @@ end
     return function(input)
 %    \end{macrocode}
 % \begin{markdown}
-% Unicode-normalize the input.
+%
+% Normalize the input.
+%
 % \end{markdown}
 %  \begin{macrocode}
       if options.unicodeNormalization then
@@ -34323,6 +34344,115 @@ end
 M.extensions = {}
 %    \end{macrocode}
 % \begin{markdown}
+%
+%#### Acronyms
+%
+% The \luamdef{extensions.acronyms} function recognizes acronyms, initialisms,
+% and other all-caps sequences in markdown text.
+%
+% \end{markdown}
+%  \begin{macrocode}
+M.extensions.acronyms = function(acronyms)
+  assert(#acronyms > 0)
+  return {
+    name = "built-in acronyms syntax extension",
+    extend_writer = function(self)
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Define \luamdef{writer->acronym} as a function that will transform an input
+% acronym, initialism, or another all-caps sequence to the output format.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      function self.acronym(s)
+        if self.flatten_inlines then return s end
+        return {"\\markdownRendererAcronym{",s,"}"}
+      end
+    end, extend_reader = function(self)
+      local parsers = self.parsers
+      local options = self.options
+      local writer = self.writer
+%    \end{macrocode}
+% \begin{markdown}
+%
+% In order to minimize the size and speed of the parser, we will first
+% construct prefix trees of all registered acronyms, initialisms, and other
+% all-caps sequences.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      local prefix_tree = {_type = "intermediate"}
+      for _, acronym in ipairs(acronyms) do
+        local node = prefix_tree
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Normalize each acronym, initialism, or another all-caps sequence.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        if options.unicodeNormalization then
+          local form = options.unicodeNormalizationForm
+          acronym = util.normalize(acronym, form)
+        end
+        for i = 1, #acronym do
+          local acronym_byte = acronym:sub(i, i)
+          if i < #acronym then
+            if node[acronym_byte] == nil then
+              node[acronym_byte] = {_type = "intermediate"}
+            end
+            node = node[acronym_byte]
+          else
+            table.insert(node, {acronym_byte, _type = "leaf"})
+          end
+        end
+      end
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Next, we will construct a parser out of the prefix tree.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      local subparsers = {}
+      depth_first_search(prefix_tree, "", function(node, path)
+        if node._type == "leaf" then
+          local acronym_byte = table.unpack(node)
+          if subparsers[path] == nil then
+            subparsers[path] = parsers.fail
+          end
+          subparsers[path] = subparsers[path] + P(acronym_byte)
+        end
+      end, function(_, path)
+        if #path > 0 then
+          local byte = path:sub(#path, #path)
+          local parent_path = path:sub(1, #path-1)
+          local prefix = P(byte)
+          local suffix = prefix * subparsers[path]
+          if subparsers[parent_path] == nil then
+            subparsers[parent_path] = parsers.fail
+          end
+          subparsers[parent_path] = subparsers[parent_path] + suffix
+        end
+      end)
+      assert(subparsers[""] ~= nil)
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Only match acronyms at word boundaries.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      local Acronym = subparsers[""]
+                    * #(
+                      - parsers.normalchar
+                      + parsers.eof)
+                    / writer.acronym
+      self.insert_pattern("Inline before Str", Acronym, "Acronym")
+    end
+  }
+end
 %
 %#### Bracketed Spans
 %
@@ -37104,6 +37234,11 @@ function M.new(options)
 % \end{markdown}
 %  \begin{macrocode}
   local extensions = {}
+
+  if #options.acronyms > 0 then
+    local acronyms_extension = M.extensions.acronyms(options.acronyms)
+    table.insert(extensions, acronyms_extension)
+  end
 
   if options.bracketedSpans then
     local bracketed_spans_extension = M.extensions.bracketed_spans()
