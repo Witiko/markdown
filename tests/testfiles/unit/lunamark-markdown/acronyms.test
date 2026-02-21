@@ -1,0 +1,59 @@
+\markdownSetup{
+  acronyms += API,
+  acronyms += HTML,
+  acronyms += HTML5,
+  acronyms += XHTML,
+  acronyms += YAML,
+  acronyms += HTTP/3,
+  acronyms += UTF-8 BOM,
+  unicodeNormalization,
+  unicodeNormalizationForm = nfkc,
+  acronyms += ①,
+}
+<<<
+This test ensures that the Lua `acronyms`, `unicodeNormalization`, and
+`unicodeNormalizationForm` options correctly propagate through the plain TeX
+interface.
+
+Here are some random acronyms in markdown text: HTML, YAML.
+
+Acronyms are only matched at word boundaries: HTML works but APIs doesn't.
+
+The longest acronym is always matched (HTML, XHTML, HTML5).
+
+Acronyms may appear in [HTML links](https://foo.bar/) but not `HTML code spans`.
+
+Acronyms may contain non-word characters: HTTP/3, UTF-8 BOM.
+
+Both the markdown text and the registered acronyms are normalized using Unicode
+normalization, if enabled, resulting in non-exact matches: １.
+>>>
+BEGIN document
+codeSpan: acronyms
+codeSpan: unicodeNormalization
+softLineBreak
+codeSpan: unicodeNormalizationForm
+softLineBreak
+paragraphSeparator
+acronym: HTML
+acronym: YAML
+paragraphSeparator
+acronym: HTML
+paragraphSeparator
+acronym: HTML
+acronym: XHTML
+acronym: HTML5
+paragraphSeparator
+BEGIN link
+- label: (acronym: HTML) links
+- URI: https://foo.bar/
+- title: 
+END link
+codeSpan: HTML code spans
+paragraphSeparator
+acronym: HTTP/3
+acronym: UTF-8 BOM
+paragraphSeparator
+softLineBreak
+acronym: 1
+END document

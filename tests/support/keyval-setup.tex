@@ -1,4 +1,6 @@
 unprotectedRenderers = {%
+  acronym = {%
+    \TYPE{#0: #1}},
   attributeIdentifier = {%
     \TYPE{#0: #1}},
   attributeClassName = {%
@@ -8,6 +10,8 @@ unprotectedRenderers = {%
     \TYPE{- key:   #1}%
     \TYPE{- value: #2}%
     \TYPE{END #0}},
+  bracketedSpan = {%
+    \TYPE{#0: #1}},
   fencedCodeAttributeContextBegin = {%
     \TYPE{BEGIN fencedCodeAttributeContext}},
   fencedCodeAttributeContextEnd = {%
