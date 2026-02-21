@@ -34,6 +34,9 @@ codeSpan: unicodeNormalizationForm
 softLineBreak
 paragraphSeparator
 acronym: HTML
+acronym: YAML
+paragraphSeparator
+acronym: HTML
 paragraphSeparator
 acronym: HTML
 acronym: XHTML
