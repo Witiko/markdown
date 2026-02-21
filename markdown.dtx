@@ -29984,10 +29984,12 @@ parsers.nonemptyline           = parsers.line - parsers.blankline
 % \end{markdown}
 %  \begin{macrocode}
 parsers.unicode = {}
+parsers.unicode.preceding_punctuation = parsers.fail
 parsers.unicode.punctuation = parsers.fail
 parsers.unicode.alpha = parsers.fail
 parsers.unicode.numeric = parsers.fail
 parsers.unicode.word = parsers.fail
+parsers.unicode.preceding_whitespace = parsers.fail
 parsers.unicode.whitespace = parsers.fail
 for n = 1, 4 do
 %    \end{macrocode}
@@ -30003,6 +30005,9 @@ for n = 1, 4 do
   local punctuation_of_length_n
     = unicode_data.categories.P[n]
     + unicode_data.categories.S[n]
+   parsers.unicode.preceding_punctuation
+    = parsers.unicode.preceding_punctuation
+    + B(punctuation_of_length_n)
    parsers.unicode.punctuation
     = parsers.unicode.punctuation
     + punctuation_of_length_n
@@ -30064,6 +30069,9 @@ for n = 1, 4 do
       = whitespace_of_length_n
       + R("\t\r")
   end
+  parsers.unicode.preceding_whitespace
+    = parsers.unicode.preceding_whitespace
+    + B(whitespace_of_length_n)
   parsers.unicode.whitespace
     = parsers.unicode.whitespace
     + whitespace_of_length_n
@@ -32481,8 +32489,8 @@ function M.reader.new(writer, options)
 
   parsers.left_flanking_delimiter_run = function(character)
     return  (B( parsers.any)
-              * ( B(parsers.unicode.punctuation)
-                + B(parsers.unicode.whitespace))
+              * ( parsers.unicode.preceding_punctuation
+                + parsers.unicode.preceding_whitespace)
              + -B(parsers.any))
             * parsers.delimiter_run(character)
             * #parsers.unicode.punctuation
@@ -32493,14 +32501,14 @@ function M.reader.new(writer, options)
   end
 
   parsers.right_flanking_delimiter_run = function(character)
-    return  B(parsers.unicode.punctuation)
+    return  parsers.unicode.preceding_punctuation
           * parsers.delimiter_run(character)
           * ( #parsers.unicode.punctuation
             + #parsers.unicode.whitespace
             + parsers.eof)
           + (B(parsers.any)
-            * -( B(parsers.unicode.punctuation)
-               + B(parsers.unicode.whitespace)))
+            * -( parsers.unicode.preceding_punctuation
+               + parsers.unicode.preceding_whitespace))
           * parsers.delimiter_run(character)
   end
 
@@ -32508,7 +32516,7 @@ function M.reader.new(writer, options)
     parsers.emph_start
       = parsers.left_flanking_delimiter_run(parsers.asterisk)
       + ( -#parsers.right_flanking_delimiter_run(parsers.underscore)
-        + ( B(parsers.unicode.punctuation)
+        + ( parsers.unicode.preceding_punctuation
           * #parsers.right_flanking_delimiter_run(parsers.underscore)))
       * parsers.left_flanking_delimiter_run(parsers.underscore)
 
