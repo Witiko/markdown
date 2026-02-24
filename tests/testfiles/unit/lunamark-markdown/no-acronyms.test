@@ -28,4 +28,5 @@ END link
 codeSpan: HTML code spans
 paragraphSeparator
 paragraphSeparator
+softLineBreak
 END document
