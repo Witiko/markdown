@@ -7,7 +7,7 @@ Acronyms are only matched at word boundaries: HTML works but APIs doesn't.
 
 The longest acronym is always matched (HTML, XHTML, HTML5).
 
-Acronyms may appear in [HTML links](https://foo.bar/) but not `HTML code spans`.
+Acronyms may appear [in HTML links](https://foo.bar/) but not `HTML code spans`.
 
 Acronyms may contain non-word characters: HTTP/3, UTF-8 BOM.
 
@@ -21,7 +21,7 @@ paragraphSeparator
 paragraphSeparator
 paragraphSeparator
 BEGIN link
-- label: HTML links
+- label: in HTML links
 - URI: https://foo.bar/
 - title: 
 END link
