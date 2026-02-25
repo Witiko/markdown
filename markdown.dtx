@@ -41105,6 +41105,23 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
+% If the package \pkg{glossaries} is loaded with the option `acronym`, use the
+% built-in snippet \LaTeX{} `witiko/markdown/glossaries/import-acronyms`.
+% \end{markdown}
+%  \begin{macrocode}
+\@ifpackageloaded
+  { glossaries }
+  {
+    \ifglsacronym
+      \markdownSetup {
+        snippet = witiko/markdown/glossaries/import-acronyms,
+      }
+    \fi
+  }
+  { }
+%    \end{macrocode}
+% \begin{markdown}
+%
 %#### Lists
 %
 % If either the \Opt{tightLists} or the \Opt{fancyLists} option is enabled
