@@ -13885,46 +13885,9 @@ options locally.
           { empty-snippet-name }
           { #1 }
       }
-%    \end{macrocode}
-% \begin{markdown}
-%
-% If the provided snippet name starts with a slash (`/`), consider it as
-% *absolute* and take the rest of the name as the full name of the defined
-% snippet, regardless of the currently processed theme.
-%
-% \end{markdown}
-%  \begin{macrocode}
-    \str_if_eq:enTF
-      {
-        \tl_head:n
-          { #1 }
-      }
-      { / }
-      {
-        \tl_set:Ne
-          \l_tmpa_tl
-          {
-            \tl_tail:n
-              { #1 }
-          }
-      }
-      {
-%    \end{macrocode}
-% \begin{markdown}
-%
-% Otherwise, consider the provided snippet name as *relative* and
-% prepend the name of the currently processed theme to it, if any.
-% The result is then the full name of the defined snippet.
-%
-% \end{markdown}
-%  \begin{macrocode}
-        \tl_set:NV
-          \l_tmpa_tl
-          \g_@@_current_theme_tl
-        \tl_put_right:Nn
-          \l_tmpa_tl
-          { #1 }
-      }
+    \@@_resolve_snippet_name:nN
+      { #1 }
+      \l_tmpa_tl
     \@@_if_snippet_exists:nT
       { #1 }
       {
@@ -13954,10 +13917,6 @@ options locally.
   { markdown }
   { redefined-snippet }
   { Redefined~snippet~#1 }
-\prg_generate_conditional_variant:Nnn
-  \str_if_eq:nn
-  { en }
-  { TF }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -13972,12 +13931,9 @@ options locally.
   \@@_if_snippet_exists:n
   { TF, T }
   {
-    \tl_set:NV
-      \l_@@_current_snippet_tl
-      \g_@@_current_theme_tl
-    \tl_put_right:Nn
-      \l_@@_current_snippet_tl
+    \@@_resolve_snippet_name:nN
       { #1 }
+      \l_@@_current_snippet_tl
     \prop_if_in:NVTF
       \g_@@_snippets_prop
       \l_@@_current_snippet_tl
@@ -13987,17 +13943,9 @@ options locally.
 \cs_gset_eq:NN
   \markdownIfSnippetExists
   \@@_if_snippet_exists:nTF
-%    \end{macrocode}
-% \begin{markdown}
-%
-% The option with key `snippet` invokes a snippet named \meta{value}.
-%
-% \end{markdown}
-%  \begin{macrocode}
-\keys_define:nn
-  { markdown/options }
+\cs_new:Nn
+  \@@_resolve_snippet_name:nN
   {
-    snippet .code:n = {
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -14015,7 +13963,7 @@ options locally.
       { / }
       {
         \tl_set:Ne
-          \l_tmpa_tl
+          #2
           {
             \tl_tail:n
               { #1 }
@@ -14032,12 +13980,31 @@ options locally.
 % \end{markdown}
 %  \begin{macrocode}
         \tl_set:NV
-          \l_tmpa_tl
+          #2
           \g_@@_current_theme_tl
         \tl_put_right:Nn
-          \l_tmpa_tl
+          #2
           { #1 }
       }
+  }
+\prg_generate_conditional_variant:Nnn
+  \str_if_eq:nn
+  { en }
+  { TF }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The option with key `snippet` invokes a snippet named \meta{value}.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\keys_define:nn
+  { markdown/options }
+  {
+    snippet .code:n = {
+      \@@_resolve_snippet_name:nN
+        { #1 }
+        \l_tmpa_tl
       \@@_if_snippet_exists:nTF
         { #1 }
         {
