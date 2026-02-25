@@ -104,6 +104,13 @@ This version of the Markdown package has made the following new enhancements:
   \end{document}
   ```
 
+  Compile the above example document `⟨filename⟩.tex` with the following commands:
+  ```
+  lualatex ⟨filename⟩.tex
+  makeglossaries ⟨filename⟩
+  lualatex ⟨filename⟩.tex
+  ```
+
  [matrix-615]: https://matrix.to/#/!pznomuvubVyxElflTe:matrix.org/$PSrg2dlpGUMastZzUGOpm08HfM3wHpQryZCIyepuZoA?via=matrix.org&via=im.f3l.de
 
 ## 3.13.0 (2026-01-02)
