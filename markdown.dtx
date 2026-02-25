@@ -13885,12 +13885,46 @@ options locally.
           { empty-snippet-name }
           { #1 }
       }
-    \tl_set:NV
-      \l_tmpa_tl
-      \g_@@_current_theme_tl
-    \tl_put_right:Nn
-      \l_tmpa_tl
-      { #1 }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If the provided snippet name starts with a slash (`/`), consider it as
+% *absolute* and take the rest of the name as the full name of the defined
+% snippet, regardless of the currently processed theme.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \str_if_eq:enTF
+      {
+        \tl_head:n
+          { #1 }
+      }
+      { / }
+      {
+        \tl_set:Ne
+          \l_tmpa_tl
+          {
+            \tl_tail:n
+              { #1 }
+          }
+      }
+      {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Otherwise, consider the provided snippet name as *relative* and
+% prepend the name of the currently processed theme to it, if any.
+% The result is then the full name of the defined snippet.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        \tl_set:NV
+          \l_tmpa_tl
+          \g_@@_current_theme_tl
+        \tl_put_right:Nn
+          \l_tmpa_tl
+          { #1 }
+      }
     \@@_if_snippet_exists:nT
       { #1 }
       {
@@ -13960,12 +13994,46 @@ options locally.
   { markdown/options }
   {
     snippet .code:n = {
-      \tl_set:NV
-        \l_tmpa_tl
-        \g_@@_current_theme_tl
-      \tl_put_right:Nn
-        \l_tmpa_tl
-        { #1 }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If the provided snippet name starts with a slash (`/`), consider it as
+% *absolute* and take the rest of the name as the full name of the defined
+% snippet, regardless of the currently processed theme.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \str_if_eq:enTF
+      {
+        \tl_head:n
+          { #1 }
+      }
+      { / }
+      {
+        \tl_set:Ne
+          \l_tmpa_tl
+          {
+            \tl_tail:n
+              { #1 }
+          }
+      }
+      {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Otherwise, consider the provided snippet name as *relative* and
+% prepend the name of the currently processed theme to it, if any.
+% The result is then the full name of the defined snippet.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        \tl_set:NV
+          \l_tmpa_tl
+          \g_@@_current_theme_tl
+        \tl_put_right:Nn
+          \l_tmpa_tl
+          { #1 }
+      }
       \@@_if_snippet_exists:nTF
         { #1 }
         {
@@ -41114,7 +41182,7 @@ end
   {
     \ifglsacronym
       \markdownSetup {
-        snippet = witiko/markdown/glossaries/import-acronyms,
+        snippet = /witiko/markdown/glossaries/import-acronyms,
       }
     \fi
   }
