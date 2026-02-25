@@ -24042,6 +24042,8 @@ Built-in \LaTeX{} snippets provided with the Markdown package include:
      to recognize these acronyms in running text and link them to the
      corresponding glossary entries.
 
+%    This snippet is provided by the theme `witiko/glossaries@v1`.
+
 % \end{markdown}
 % \iffalse
 
@@ -24058,6 +24060,7 @@ following content:
 \newacronym{yaml}{YAML}{yet another markup language}
 \usepackage{markdown}
 \markdownSetup{
+   import = witiko/glossaries@v1,
   snippet = witiko/glossaries/import-acronyms,
 }
 \begin{document}
@@ -40873,8 +40876,50 @@ end
   \g_@@_latex_built_in_themes_prop
   { witiko / graphicx / http }
   \l_tmpa_tl
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The `witiko/glossaries` theme first checks that the version is either `v1` or
+% `latest`, issuing a warning for the latter.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\prop_gput:Nnn
+  \g_@@_latex_built_in_themes_prop
+  { witiko / glossaries }
+  {
+    \str_case:enF
+      { \markdownThemeVersion }
+      {
+        { latest }
+          {
+            \msg_warning:nnnn
+              { markdown }
+              { pin-theme-version }
+              { witiko/glossaries }
+              { v1 }
+          }
+        { v1 }
+          { }
+      }
+      {
+        \msg_error:nnnen
+          { markdown }
+          { unknown-theme-version }
+          { witiko/glossaries }
+          { \markdownThemeVersion }
+          { v1 }
+      }
+  }
 \ExplSyntaxOff
 %    \end{macrocode}
+% \begin{markdown}
+%
+% In Section <#sec:latex-snippets-implementation>, we'll continue the
+% implementation of the theme by defining the snippet
+% `witiko/glossaries/import-acronyms`.
+%
+% \end{markdown}
 % \iffalse
 %</latex>
 %<*themes-witiko-markdown-defaults-latex>
@@ -40906,15 +40951,18 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\markdownSetupSnippet
-  { witiko/glossaries/import-acronyms }
+\prop_get:NnN
+  \g_@@_latex_built_in_themes_prop
+  { witiko / glossaries }
+  \l_tmpa_tl
+\tl_put_right:Nn
+  \l_tmpa_tl
   {
-    code = {
-      \cs_new:Nn
-        \@@_register_acronym:n
-          {
-            \@@_setup:n
-              {
+    \cs_new:Nn
+      \@@_register_acronym:n
+        {
+          \@@_setup:n
+            {
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -40923,16 +40971,16 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-                acronyms += {{ #1 }},  % noqa: s204
-              }
-          }
-      \cs_generate_variant:Nn
-        \@@_register_acronym:n
-        { V }
-      \prop_new:N
-        \g_@@_acronyms_to_labels_prop
-      \tl_new:N
-        \l_@@_acronym_short_tl
+              acronyms += {{ #1 }},  % noqa: s204
+            }
+        }
+    \cs_generate_variant:Nn
+      \@@_register_acronym:n
+      { V }
+    \prop_new:N
+      \g_@@_acronyms_to_labels_prop
+    \tl_new:N
+      \l_@@_acronym_short_tl
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -40944,39 +40992,34 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-      \cs_new:Nn
-        \@@_register_acronym_label:n
-        {
-          \tl_set:Nx
-            \l_@@_acronym_short_tl
-            { \glsentryshort { #1 } }
-          \@@_register_acronym:V
-            \l_@@_acronym_short_tl
-          \prop_gput:NVn
-            \g_@@_acronyms_to_labels_prop
-            \l_@@_acronym_short_tl
-            { #1 }
-        }
-      \cs_generate_variant:Nn
-        \@@_register_acronym_label:n
-        { V }
+    \cs_new:Nn
+      \@@_register_acronym_label:n
+      {
+        \tl_set:Nx
+          \l_@@_acronym_short_tl
+          { \glsentryshort { #1 } }
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Import all acronyms from the \pkg{glossaries} package and register them
-% with the \Opt{acronyms} option.
+% Be idempotent and only import each acronym once.
 %
 % \end{markdown}
 %  \begin{macrocode}
-      \tl_new:N
-        \l_@@_acronym_label_tl
-      \forglsentries
-        [ acronym ]
-        \l_@@_acronym_label_tl
-        {
-          \@@_register_acronym_label:V
-            \l_@@_acronym_label_tl
-        }
+        \prop_if_in:NVF
+          \g_@@_acronyms_to_labels_prop
+          \l_@@_acronym_short_tl
+          {
+            \@@_register_acronym:V
+              \l_@@_acronym_short_tl
+            \prop_gput:NVn
+              \g_@@_acronyms_to_labels_prop
+              \l_@@_acronym_short_tl
+              { #1 }
+          }
+      }
+    \cs_generate_variant:Nn
+      \@@_register_acronym_label:n
+      { V }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -40985,14 +41028,16 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-      \cs_new:Nn
-        \@@_print_acronym:n
-        {
-          \prop_get:NnNTF
-            \g_@@_acronyms_to_labels_prop
-            { #1 }
-            \l_@@_acronym_label_tl
-            {
+    \tl_new:N
+      \l_@@_acronym_label_tl
+    \cs_new:Nn
+      \@@_print_acronym:n
+      {
+        \prop_get:NnNTF
+          \g_@@_acronyms_to_labels_prop
+          { #1 }
+          \l_@@_acronym_label_tl
+          {
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -41001,16 +41046,16 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-              \group_begin:
-                \cs_set_eq:NN
-                  \acronymfont
-                  \markdownRendererAcronymPrototype
-                \exp_args:NV
-                  \acrshort
-                  \l_@@_acronym_label_tl
-              \group_end:
-            }
-            {
+            \group_begin:
+              \cs_set_eq:NN
+                \acronymfont
+                \markdownRendererAcronymPrototype
+              \exp_args:NV
+                \acrshort
+                \l_@@_acronym_label_tl
+            \group_end:
+          }
+          {
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -41018,17 +41063,45 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-              \markdownRendererAcronymPrototype
-                { #1 }
+            \markdownRendererAcronymPrototype
+              { #1 }
+          }
+      }
+      \cs_generate_variant:Nn
+        \@@_print_acronym:n
+        { x }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% In the snippet `witiko/glossaries/import-acronyms`, first import all acronyms
+% from the \pkg{glossaries} package and register them with the \Opt{acronyms}
+% option.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \markdownSetupSnippet
+      { import-acronyms }
+      {
+        code = {
+          \forglsentries
+            [ acronym ]
+            \l_@@_acronym_label_tl
+            {
+              \@@_register_acronym_label:V
+                \l_@@_acronym_label_tl
             }
-        }
-        \cs_generate_variant:Nn
-          \@@_print_acronym:n
-          { x }
-        \@@_setup:n
-          {
-            renderers = {
-              acronym = {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Then, redefine the corresponding token renderers to format acronyms that appear
+% in the markdown text.
+%
+% \end{markdown}
+%  \begin{macrocode}
+            \@@_setup:n
+              {
+                renderers = {
+                  acronym = {
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -41036,20 +41109,25 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-                \group_begin:
-                  \markdownSetup {
-                    unprotectedRenderers = {
-                      acronym = { ##1 },
-                    }
+                    \group_begin:
+                      \markdownSetup {
+                        unprotectedRenderers = {
+                          acronym = { ##1 },
+                        }
+                      }
+                      \@@_print_acronym:x
+                        { #1 }
+                    \group_end:
                   }
-                  \@@_print_acronym:x
-                    { #1 }
-                \group_end:
+                }
               }
-            }
-          }
-    }
+        }
+      }
   }
+\prop_gput:NnV
+  \g_@@_latex_built_in_themes_prop
+  { witiko / glossaries }
+  \l_tmpa_tl
 \ExplSyntaxOff
 %    \end{macrocode}
 % \begin{markdown}
@@ -41179,6 +41257,7 @@ end
       \printacronyms
         {
           \markdownSetup {
+             import =  witiko/glossaries@v1,
             snippet = /witiko/glossaries/import-acronyms,
           }
         }
