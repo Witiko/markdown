@@ -856,6 +856,7 @@ abbr {
     ASCII,
     CSV,
     HTML,
+    HTTP, HTTPS,
     JSON,
     MD5,
     OS,
@@ -13513,10 +13514,12 @@ Built-in plain \TeX{} themes provided with the Markdown package include:
 
 %    ```` tex
 %    \documentclass{article}
-%    \usepackage[import=witiko/diagrams@v2, relativeReferences]{markdown}
+%    \usepackage[relativeReferences, texComments]{markdown}
+%    \markdownSetup{import=witiko/diagrams@v2}
 %    \begin{document}
 %    \begin{markdown}
-%    ``` dot {caption="An example directed graph" format=svg width=12cm #dot}
+%    ``` dot {caption="An example directed graph" %
+              format=svg width=12cm #dot}
 %    digraph tree {
 %      margin = 0;
 %      rankdir = "LR";
@@ -13541,7 +13544,8 @@ Built-in plain \TeX{} themes provided with the Markdown package include:
 %    }
 %    ```
 %
-%    ``` mermaid {caption="An example mindmap" width=9cm #mermaid}
+%    ``` mermaid {caption="An example mindmap" %
+                  width=9cm #mermaid}
 %    mindmap
 %        root )base-idea(
 %            sub<br/>idea 1
@@ -13554,7 +13558,8 @@ Built-in plain \TeX{} themes provided with the Markdown package include:
 %                ((?))
 %    ```
 %
-%    ``` plantuml {caption="An example UML sequence diagram" width=7cm #plantuml}
+%    ``` plantuml {caption="An example UML sequence diagram" %
+                   width=7cm #plantuml}
 %    @startuml
 %    ' Define participants (actors)
 %    participant "Client" as C
@@ -13742,12 +13747,22 @@ A PDF document named `document.pdf` should be produced and contain
 three diagrams.
 
 % \fi
+% \begin{markdown}
+
+\pkg{witiko/glossaries}
+
+:    A theme that defines snippets with integrations for the \LaTeX{} package
+%    \pkg{glossaries}. See Section <#sec:latexsnippets> for more details.
+% \iffalse
+     \pkg{glossaries}.
+% \fi
+% \end{markdown}
 % \markdownBegin
 
 \pkg{witiko/graphicx/http}
 
 :    A theme that adds support for downloading images whose URL has the
-     http or https protocol.
+     HTTP or HTTPS protocol.
 %    ``` tex
 %    \documentclass{article}
 %    \usepackage[import=witiko/graphicx/http]{markdown}
@@ -23867,7 +23882,7 @@ document:
 #### Themes {#latexthemes}
 % \fi
 
-% In Section~\ref{sec:themes}, we described the concept of themes.
+% In Section <#sec:themes>, we described the concept of themes.
 In \LaTeX{}, we expand on the concept of
 % themes\iffalse
 [themes](#themes)
@@ -24016,15 +24031,15 @@ Built-in \LaTeX{} themes provided with the Markdown package include:
 #### Snippets {#latexsnippets}
 % \fi
 
-% In Section~\ref{sec:snippets}, we described the concept of snippets.
+% In Section <#sec:snippets>, we described the concept of snippets.
 
 Built-in \LaTeX{} snippets provided with the Markdown package include:
 
 \pkg{witiko/glossaries/import-acronyms}
 
-:    Imports all acronyms from the package \pkg{glossaries}, appends them to
-     the \Opt{acronyms} option and updates the corresponding renderers to
-     recognize these acronyms in running text and link them to the
+:    Imports all acronyms from the \LaTeX{} package \pkg{glossaries}, appends
+     them to the \Opt{acronyms} option and updates the corresponding renderers
+     to recognize these acronyms in running text and link them to the
      corresponding glossary entries.
 
 % \end{markdown}
@@ -24414,7 +24429,7 @@ following text:
 #### Themes {#contextthemes}
 % \fi
 %
-% In Section~\ref{sec:themes}, we described the concept of themes.
+% In Section <#sec:themes>, we described the concept of themes.
 In \Hologo{ConTeXt}, we expand on the concept of
 % themes\iffalse
 [themes](#themes)
