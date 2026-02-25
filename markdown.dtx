@@ -24020,7 +24020,7 @@ Built-in \LaTeX{} themes provided with the Markdown package include:
 
 Built-in \LaTeX{} snippets provided with the Markdown package include:
 
-\pkg{witiko/markdown/glossaries/import-acronyms}
+\pkg{witiko/glossaries/import-acronyms}
 
 :    Imports all acronyms from the package \pkg{glossaries}, appends them to
      the \Opt{acronyms} option and updates the corresponding renderers to
@@ -24041,7 +24041,10 @@ following content:
 \makeglossaries
 \newacronym{html}{HTML}{hypertext markup language}
 \newacronym{yaml}{YAML}{yet another markup language}
-\usepackage[snippet=witiko/markdown/glossaries/import-acronyms]{markdown}
+\usepackage{markdown}
+\markdownSetup{
+  snippet = witiko/glossaries/import-acronyms,
+}
 \begin{document}
 \begin{markdown}
 
@@ -40877,13 +40880,13 @@ end
 %### Snippets {#latex-snippets-implementation}
 %
 % This section defines the built-in \LaTeX{} snippet
-% `witiko/markdown/glossaries/import-acronyms`.
+% `witiko/glossaries/import-acronyms`.
 %
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
 \markdownSetupSnippet
-  { witiko/markdown/glossaries/import-acronyms }
+  { witiko/glossaries/import-acronyms }
   {
     code = {
       \cs_new:Nn
@@ -41145,7 +41148,7 @@ end
 % \begin{markdown}
 %
 % If the package \pkg{glossaries} is loaded with the option `acronym`, use the
-% built-in snippet \LaTeX{} `witiko/markdown/glossaries/import-acronyms`.
+% built-in snippet \LaTeX{} `witiko/glossaries/import-acronyms`.
 % \end{markdown}
 %  \begin{macrocode}
 \@ifpackageloaded
@@ -41153,7 +41156,7 @@ end
   {
     \ifglsacronym
       \markdownSetup {
-        snippet = /witiko/markdown/glossaries/import-acronyms,
+        snippet = /witiko/glossaries/import-acronyms,
       }
     \fi
   }
