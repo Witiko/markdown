@@ -13844,8 +13844,8 @@ following text, where the middot (`·`) denotes a non-breaking space:
      prototypes for plain \TeX{}. This theme is loaded automatically together
      with the package and explicitly loading it has no effect.
 
-% Please, see Section <#sec:themes-implementation> for implementation
-% details of the built-in plain \TeX{} themes.
+% See Section <#sec:themes-implementation> for implementation details of the
+% built-in plain \TeX{} themes.
 %
 %### Snippets {#snippets}
 % \iffalse
@@ -23963,17 +23963,74 @@ Built-in \LaTeX{} themes provided with the Markdown package include:
   }
 \ExplSyntaxOff
 %    \end{macrocode}
+% \begin{markdown}
+%
+% See Section <#sec:latex-themes-implementation> for implementation details of
+% the built-in \LaTeX{} themes.
+
+%### Snippets {#latexsnippets}
+% \iffalse
+#### Snippets {#latexsnippets}
+
+% In Section~\ref{sec:snippets}, we described the concept of snippets.
+
+Built-in \LaTeX{} snippets provided with the Markdown package include:
+
+\pkg{witiko/markdown/glossaries/import-acronyms}
+
+:    Imports all acronyms from the package \pkg{glossaries}, appends them to
+     the \Opt{acronyms} option and updates the corresponding renderers to
+     recognize these acronyms in running text and link them to the
+     corresponding glossary entries.
+
+% \end{markdown}
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+```` tex
+\documentclass{article}
+\usepackage{microtype, hyperref}
+\usepackage[acronym]{glossaries}
+\makeglossaries
+\newacronym{html}{HTML}{hypertext markup language}
+\newacronym{yaml}{YAML}{yet another markup language}
+\usepackage[snippet=witiko/markdown/glossaries/import-acronyms]{markdown}
+\begin{document}
+\begin{markdown}
+
+HTML and YAML are two staples of modern tooling that often get mentioned
+in the same breath, even though they live in very different layers of the stack.
+
+\end{markdown}
+\printacronyms
+\end{document}
+````
+Next, invoke LuaTeX and the `makeglossaries` command from the terminal:
+``` sh
+lualatex document.tex
+makeglossaries document
+lualatex document.tex
+``````
+
+A PDF document named `document.pdf` should be produced and contain the
+following text followed by a list of acronyms with HTML and YAML being
+correctly linked to the corresponding list entries.
+
+% \fi
+%    \end{macrocode}
 % \iffalse
 %</latex>
 %<*context>
 % \fi
 % \begin{markdown}
 %
-% Please, see Section <#sec:latex-themes-implementation> for implementation
-% details of the built-in \LaTeX{} themes.
+% See Section <#sec:latex-snippets-implementation> for implementation details of
+% the built-in \LaTeX{} snippets.
 %
 % \Hologo{ConTeXt} Interface {#contextinterface}
-%----------------------------
+%-----------------------------------------------
 %
 % \end{markdown}
 % \iffalse
@@ -24382,8 +24439,8 @@ Built-in \Hologo{ConTeXt} themes provided with the Markdown package include:
 % \fi
 % \begin{markdown}
 %
-% Please, see Section <#sec:context-themes-implementation> for implementation
-% details of the built-in \Hologo{ConTeXt} themes.
+% See Section <#sec:context-themes-implementation> for implementation details
+% of the built-in \Hologo{ConTeXt} themes.
 %
 % Implementation {#implementation}
 %================
@@ -40770,6 +40827,143 @@ end
 % Next, the \LaTeX{} theme overrides some of the plain \TeX{} definitions.
 % See Section <#sec:latex-token-renderer-prototypes> for the actual
 % definitions.
+%
+%### Snippets {#latex-snippets-implementation}
+%
+% This section defines the built-in \LaTeX{} snippet
+% `witiko/markdown/glossaries/import-acronyms`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\ExplSyntaxOn
+\markdownSetupSnippet
+  { witiko/markdown/glossaries/import-acronyms }
+  {
+    \cs_new:Nn
+      \@@_example_register_acronym:n
+        {
+          \@@_setup:n
+            {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% When we register an acronym with the \Opt{acronyms} option, enclose it in an
+% extra set of braces in case the acronym contained a comma.
+%
+% \end{markdown}
+%  \begin{macrocode}
+              acronyms += {{ #1 }},
+            }
+        }
+    \cs_generate_variant:Nn
+      \@@_register_acronym:n
+      { V }
+    \prop_new:N
+      \g_@@_acronyms_to_labels_prop
+    \tl_new:N
+      \l_@@_acronym_short_tl
+%    \end{macrocode}
+% \begin{markdown}
+%
+% When we import an acronym from the \pkg{glossaries} package, we receive
+% a \meta{label}, which doesn't correspond to an acronym. Therefore, we
+% register the short form of the corresponding acronym instead and keep
+% a mapping from these short forms back to the labels when we need to display
+% an acronym in the markdown text.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \cs_new:Nn
+      \@@_register_acronym_label:n
+      {
+        \tl_set:Nx
+          \l_@@_acronym_short_tl
+          { \glsentryshort { #1 } }
+        \@@_register_acronym:V
+          \l_@@_acronym_short_tl
+        \prop_gput:NVn
+          \g_@@_acronyms_to_labels_prop
+          \l_@@_acronym_short_tl
+          { #1 }
+      }
+    \cs_generate_variant:Nn
+      \@@_register_acronym_label:n
+      { V }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Import all acronyms from the \pkg{glossaries} package and register them
+% with the \Opt{acronyms} option.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \tl_new:N
+      \l_@@_acronym_label_tl
+    \forglsentries
+      [ acronym ]
+      \l_@@_acronym_label_tl
+      {
+        \@@_register_acronym_label:V
+          \l_@@_acronym_label_tl
+      }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% When we need to diplay an acronym in the markdown text, first consult our
+% mapping to see if it has been imported from the \pkg{glossaries} package.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \cs_new:Nn
+      \@@_print_acronym:n
+      {
+        \prop_get:NnNTF
+          \g_@@_acronyms_to_labels_prop
+          { #1 }
+          \l_@@_acronym_label_tl
+          {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If it has, retrieve the \meta{label} and display the acronym using the
+% \pkg{glossaries} package, linking it to the corresponding glossary entry.
+%
+% \end{markdown}
+%  \begin{macrocode}
+            \group_begin:
+              \cs_set_eq:NN
+                \acronymfont
+                \markdownRendererAcronymPrototype
+              \exp_args:NV
+                \acrshort
+                \l_@@_acronym_label_tl
+            \group_end:
+          }
+          {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Otherwise, just format the acronym using the current renderer prototype.
+%
+% \end{markdown}
+%  \begin{macrocode}
+            \markdownRendererAcronymPrototype
+              { #1 }
+          }
+      }
+      \@@_setup:n
+        {
+          renderers = {
+            acronym = {
+              \@@_print_acronym:n
+                { #1 }
+            }
+          }
+        }
+  }
+\ExplSyntaxOff
+%    \end{macrocode}
+% \begin{markdown}
 %
 %### Options
 % The supplied package options are processed using the \mref{markdownSetup} macro.
