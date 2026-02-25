@@ -13954,6 +13954,10 @@ options locally.
   { markdown }
   { redefined-snippet }
   { Redefined~snippet~#1 }
+\prg_generate_conditional_variant:Nnn
+  \str_if_eq:nn
+  { en }
+  { TF }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -41242,10 +41246,6 @@ end
         }
       }
   }
-\prg_generate_conditional_variant:Nnn
-  \str_if_eq:nn
-  { en }
-  { TF }
 \bool_if:nT
   {
     \g_@@_tight_or_fancy_lists_bool &&
