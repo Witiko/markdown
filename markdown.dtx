@@ -40842,11 +40842,12 @@ end
 \markdownSetupSnippet
   { witiko/markdown/glossaries/import-acronyms }
   {
-    \cs_new:Nn
-      \@@_example_register_acronym:n
-        {
-          \@@_setup:n
-            {
+    code = {
+      \cs_new:Nn
+        \@@_example_register_acronym:n
+          {
+            \@@_setup:n
+              {
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -40855,16 +40856,16 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-              acronyms += {{ #1 }},  % noqa: s204
-            }
-        }
-    \cs_generate_variant:Nn
-      \@@_register_acronym:n
-      { V }
-    \prop_new:N
-      \g_@@_acronyms_to_labels_prop
-    \tl_new:N
-      \l_@@_acronym_short_tl
+                acronyms += {{ #1 }},  % noqa: s204
+              }
+          }
+      \cs_generate_variant:Nn
+        \@@_register_acronym:n
+        { V }
+      \prop_new:N
+        \g_@@_acronyms_to_labels_prop
+      \tl_new:N
+        \l_@@_acronym_short_tl
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -40876,22 +40877,22 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-    \cs_new:Nn
-      \@@_register_acronym_label:n
-      {
-        \tl_set:Nx
-          \l_@@_acronym_short_tl
-          { \glsentryshort { #1 } }
-        \@@_register_acronym:V
-          \l_@@_acronym_short_tl
-        \prop_gput:NVn
-          \g_@@_acronyms_to_labels_prop
-          \l_@@_acronym_short_tl
-          { #1 }
-      }
-    \cs_generate_variant:Nn
-      \@@_register_acronym_label:n
-      { V }
+      \cs_new:Nn
+        \@@_register_acronym_label:n
+        {
+          \tl_set:Nx
+            \l_@@_acronym_short_tl
+            { \glsentryshort { #1 } }
+          \@@_register_acronym:V
+            \l_@@_acronym_short_tl
+          \prop_gput:NVn
+            \g_@@_acronyms_to_labels_prop
+            \l_@@_acronym_short_tl
+            { #1 }
+        }
+      \cs_generate_variant:Nn
+        \@@_register_acronym_label:n
+        { V }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -40900,15 +40901,15 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-    \tl_new:N
-      \l_@@_acronym_label_tl
-    \forglsentries
-      [ acronym ]
-      \l_@@_acronym_label_tl
-      {
-        \@@_register_acronym_label:V
-          \l_@@_acronym_label_tl
-      }
+      \tl_new:N
+        \l_@@_acronym_label_tl
+      \forglsentries
+        [ acronym ]
+        \l_@@_acronym_label_tl
+        {
+          \@@_register_acronym_label:V
+            \l_@@_acronym_label_tl
+        }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -40917,14 +40918,14 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-    \cs_new:Nn
-      \@@_print_acronym:n
-      {
-        \prop_get:NnNTF
-          \g_@@_acronyms_to_labels_prop
-          { #1 }
-          \l_@@_acronym_label_tl
-          {
+      \cs_new:Nn
+        \@@_print_acronym:n
+        {
+          \prop_get:NnNTF
+            \g_@@_acronyms_to_labels_prop
+            { #1 }
+            \l_@@_acronym_label_tl
+            {
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -40933,16 +40934,16 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-            \group_begin:
-              \cs_set_eq:NN
-                \acronymfont
-                \markdownRendererAcronymPrototype
-              \exp_args:NV
-                \acrshort
-                \l_@@_acronym_label_tl
-            \group_end:
-          }
-          {
+              \group_begin:
+                \cs_set_eq:NN
+                  \acronymfont
+                  \markdownRendererAcronymPrototype
+                \exp_args:NV
+                  \acrshort
+                  \l_@@_acronym_label_tl
+              \group_end:
+            }
+            {
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -40950,19 +40951,20 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-            \markdownRendererAcronymPrototype
-              { #1 }
-          }
-      }
-      \@@_setup:n
-        {
-          renderers = {
-            acronym = {
-              \@@_print_acronym:n
+              \markdownRendererAcronymPrototype
                 { #1 }
             }
-          }
         }
+        \@@_setup:n
+          {
+            renderers = {
+              acronym = {
+                \@@_print_acronym:n
+                  { #1 }
+              }
+            }
+          }
+    }
   }
 \ExplSyntaxOff
 %    \end{macrocode}
