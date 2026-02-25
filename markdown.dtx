@@ -41154,11 +41154,13 @@ end
 \@ifpackageloaded
   { glossaries }
   {
-    \ifglsacronym
-      \markdownSetup {
-        snippet = /witiko/glossaries/import-acronyms,
-      }
-    \fi
+    \cs_if_exist:NT
+      \printacronyms
+        {
+          \markdownSetup {
+            snippet = /witiko/glossaries/import-acronyms,
+          }
+        }
   }
   { }
 %    \end{macrocode}
