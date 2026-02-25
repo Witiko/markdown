@@ -40825,6 +40825,10 @@ end
 %  \begin{macrocode}
 \markdownLoadPlainTeXTheme
 %    \end{macrocode}
+% \iffalse
+%</themes-witiko-markdown-defaults-latex>
+%<*latex>
+% \fi
 % \begin{markdown}
 %
 % Next, the \LaTeX{} theme overrides some of the plain \TeX{} definitions.
@@ -40844,7 +40848,7 @@ end
   {
     code = {
       \cs_new:Nn
-        \@@_example_register_acronym:n
+        \@@_register_acronym:n
           {
             \@@_setup:n
               {
@@ -40955,12 +40959,29 @@ end
                 { #1 }
             }
         }
+        \cs_generate_variant:Nn
+          \@@_print_acronym:n
+          { x }
         \@@_setup:n
           {
             renderers = {
               acronym = {
-                \@@_print_acronym:n
-                  { #1 }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Fold nested acronyms.
+%
+% \end{markdown}
+%  \begin{macrocode}
+                \group_begin:
+                  \markdownSetup {
+                    unprotectedRenderers = {
+                      acronym = { ##1 },
+                    }
+                  }
+                  \@@_print_acronym:x
+                    { #1 }
+                \group_end:
               }
             }
           }
@@ -40974,10 +40995,6 @@ end
 % The supplied package options are processed using the \mref{markdownSetup} macro.
 %
 % \end{markdown}
-% \iffalse
-%</themes-witiko-markdown-defaults-latex>
-%<*latex>
-% \fi
 %  \begin{macrocode}
 \DeclareOption*{%
   \expandafter\markdownSetup\expandafter{\CurrentOption}}%
@@ -41020,7 +41037,7 @@ end
 %  \begin{macrocode}
       \group_begin:
         \markdownSetup {
-          rendererPrototypes = {
+          unprotectedRenderers = {
             acronym = { ##1 },
           }
         }
