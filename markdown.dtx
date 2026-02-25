@@ -38140,14 +38140,11 @@ end
       {
         { latest }
           {
-            \markdownWarning
-              {
-                Write~"witiko/diagrams@v2"~to~pin~version~"v2"~of~the~
-                theme~"witiko/diagrams".~This~will~keep~your~documents~
-                from~suddenly~breaking~when~we~have~released~future~
-                versions~of~the~theme~with~backwards-incompatible~
-                syntax~and~behavior.
-              }
+            \msg_warning:nnnn
+              { markdown }
+              { pin-theme-version }
+              { witiko/diagrams }
+              { v2 }
             \markdownSetup
               {
                 import = witiko/diagrams/v2,
@@ -38174,12 +38171,21 @@ end
           { unknown-theme-version }
           { witiko/diagrams }
           { \markdownThemeVersion }
-          { v1 }
+          { v1~and~v2 }
       }
   }
 \cs_generate_variant:Nn
   \msg_error:nnnnn
   { nnnen }
+\msg_new:nnn
+  { markdown }
+  { pin-theme-version }
+  {
+    Write~"#1@#2"~to~pin~version~"#2"~of~the~theme~"#1".
+    This~will~keep~your~documents~from~suddenly~breaking
+    when~we~have~released~future~versions~of~the~theme
+    with~backwards-incompatible~syntax~and~behavior.
+  }
 \msg_new:nnnn
   { markdown }
   { unknown-theme-version }
