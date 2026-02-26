@@ -105,12 +105,9 @@ ANOTHER_EOF
 fi
 
 # Update packages in non-historic TeX Live versions
-if echo ${TEXLIVE_TAG} | grep -q latest
+if echo ${TEXLIVE_TAG} | grep -qE 'latest|pretest'
 then
   retry -t 30 -d 60 tlmgr update --self --all
-elif echo ${TEXLIVE_TAG} | grep -q pretest
-then
-  retry -t 30 -d 60 tlmgr update --self --all --repository ftp://ftp.cstug.cz/pub/tex/local/tlpretest/
 fi
 
 # Uninstall the distribution Markdown package
