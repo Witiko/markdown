@@ -41201,9 +41201,21 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
+\int_new:N
+  \g_@@_heading_nesting_depth
 \markdownSetup {
   rendererPrototypes = {
     acronym = {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Prevent acronyms in headings.
+%
+% \end{markdown}
+%  \begin{macrocode}
+      \int_if_zero:nTF
+        { \g_@@_heading_nesting_depth }
+        {
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -41211,15 +41223,15 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-      \group_begin:
-        \markdownSetup {
-          unprotectedRenderers = {
-            acronym = { ##1 },
-          }
-        }
-        \tl_set:Nn
-          \l_tmpa_tl
-          { #1 }
+          \group_begin:
+            \markdownSetup {
+              unprotectedRenderers = {
+                acronym = { ##1 },
+              }
+            }
+            \tl_set:Nn
+              \l_tmpa_tl
+              { #1 }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -41230,14 +41242,14 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-        \regex_replace_all:nnN
-          { [^\d a-z]+ }
-          {
-            \c{ textsc } \cB\{
-              \c{ MakeLowercase } \cB\{ \0 \cE\}
-            \cE\}
-          }
-          \l_tmpa_tl
+            \regex_replace_all:nnN
+              { [^\d a-z]+ }
+              {
+                \c{ textsc } \cB\{
+                  \c{ MakeLowercase } \cB\{ \0 \cE\}
+                \cE\}
+              }
+              \l_tmpa_tl
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -41246,14 +41258,14 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-        \cs_if_exist:NT
-          \oldstylenums
-          {
-            \regex_replace_all:nnN
-              { \d+ }
-              { \c{ oldstylenums } \cB\{ \0 \cE\} }
-              \l_tmpa_tl
-          }
+            \cs_if_exist:NT
+              \oldstylenums
+              {
+                \regex_replace_all:nnN
+                  { \d+ }
+                  { \c{ oldstylenums } \cB\{ \0 \cE\} }
+                  \l_tmpa_tl
+              }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -41261,20 +41273,29 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-        \@ifpackageloaded
-          { microtype }
-          {
-            \textls
+            \@ifpackageloaded
+              { microtype }
+              {
+                \textls
+                  {
+                    \tl_use:N
+                      \l_tmpa_tl
+                  }
+              }
               {
                 \tl_use:N
                   \l_tmpa_tl
               }
-          }
-          {
-            \tl_use:N
-              \l_tmpa_tl
-          }
-      \group_end:
+          \group_end:
+        }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Prevent acronyms in headings.
+%
+% \end{markdown}
+%  \begin{macrocode}
+        { #1 }
     },
   },
 }
@@ -42007,15 +42028,12 @@ end
 \markdownSetup {
   rendererPrototypes = {
     heading* ^= {
-      \group_begin:
-        \markdownSetup {
-          rendererPrototypes = {
-            acronym = { ##1 },
-          }
-        }
+      \int_gincr:N
+        \g_markdown_heading_nesting_depth
     },
     heading* $= {
-      \group_end:
+      \int_gdecr:N
+        \g_markdown_heading_nesting_depth
     }
   }
 }
