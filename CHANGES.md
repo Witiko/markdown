@@ -43,7 +43,7 @@ This version of the Markdown package has made the following new enhancements:
 
 - Recognize acronyms, initialisms, and other all-caps sequences. (suggested by
   @witiko, @michal-h21, and @TeXhackse in #615 and at [matrix.org][matrix-615],
-  implemented in #623 and e2747530..b1060ce4)
+  implemented in #623 and e2747530..3e14fa11)
 
   For example, you can automatically format acronyms in your LaTeX documents as
   follows:
