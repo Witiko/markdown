@@ -6,7 +6,7 @@
 
 This version of the Markdown package has made the following new enhancements:
 
-- Support the new prepending (`^=`) and the appending (`$=`) operators for
+- Support the new prepending (`^=`) and appending (`$=`) operators for
   renderers and renderer prototypes. (#232, #617)
 
 - Support the prepending and appending operators (`^=`, `+=`, and `$=`) for
