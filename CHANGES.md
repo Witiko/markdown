@@ -41,6 +41,111 @@ This version of the Markdown package has made the following new enhancements:
   \end{document}
   ````
 
+- Recognize acronyms, initialisms, and other all-caps sequences. (suggested by
+  @witiko, @michal-h21, and @TeXhackse in #615 and at [matrix.org][matrix-615],
+  implemented in #623)
+
+  For example, you can automatically format acronyms in your LaTeX documents as
+  follows:
+
+  ``` tex
+  \documentclass{article}
+  \usepackage[plain]{markdown}
+  \markdownSetup {
+    % Format the following words as acronyms.
+    acronyms = {HTML, YAML},  % We can also easily fill this list from e.g. YAML and other external sources.
+    renderers = {
+      % Format acronyms as small caps.
+      acronym = \textsc{\MakeLowercase{#1}},
+      % Don't format acronyms in headings.
+      heading* ^= \begingroup \markdownSetup { renderers = { acronym = ##1 } },
+      heading* += \endgroup,
+    },
+  }
+  \begin{document}
+  \begin{markdown}
+
+  HTML and YAML are two staples of modern tooling that often get mentioned
+  in the same breath, even though they live in very different layers of the stack.
+
+  \end{markdown}
+  \end{document}
+  ```
+
+  The default definitions for LaTeX also provide support for explicit markup
+  for acronyms, as well as an integration with the `glossaries` package:
+
+  ``` tex
+  \documentclass{article}
+  \usepackage{microtype, hyperref}
+  \usepackage[acronym]{glossaries}
+  \makeglossaries
+  \newacronym{html}{HTML}{hypertext markup language}
+  \newacronym{yaml}{YAML}{yet another markup language}
+  \usepackage[bracketed_spans]{markdown}
+  \begin{document}
+  \begin{markdown}
+
+  HTML and YAML are two staples of modern tooling that often get mentioned
+  in the same breath, even though they live in very different layers of the stack.
+
+  You may also use explicit markup: [HTML]{.acronym}. This works even if the
+  acronym hasn't been registered with the glossaries package: [JSON]{.acronym}.
+
+  \end{markdown}
+  \printacronyms
+  \end{document}
+  ```
+
+  Compile the above example document `⟨filename⟩.tex` with the following commands:
+  ```
+  lualatex ⟨filename⟩.tex
+  makeglossaries ⟨filename⟩
+  lualatex ⟨filename⟩.tex
+  ```
+
+  If you are not using the default definitions for LaTeX (for example, when
+  loading the package with the `plain` or `noDefaults` options), you can import
+  the `glossaries` acronyms manually as follows:
+
+  ``` tex
+  \markdownSetup {
+     import = witiko/glossaries@v1,
+    snippet = witiko/glossaries/import-acronyms,
+  }
+  ```
+
+- Allow absolute snippet names in `\markdownSetupSnippet { ... }` and
+  `\markdownSetup { snippet = ... }`. (#623)
+
+  Absolute snippet names are prefixed with a slash (`/`). The leading slash is
+  stripped, and the remaining name is used as-is. In contrast, relative snippet
+  names are prefixed with the name of the currently processed theme, if any.
+
+  For consistency, a leading slash may also be used in
+  `\markdownSetup { theme = ... }` and `{ import = ... }`. Theme names,
+  however, are currently always absolute, so the slash is only a syntactic
+  normalization and has no semantic effect.
+
+  For example, the following code also imports the `glossaries` acronyms:
+
+  ```tex
+  \markdownSetup {
+    import  = /witiko/glossaries@v1,
+    snippet = /witiko/glossaries/import-acronyms,
+  }
+  ```
+
+  The slash before `witiko/glossaries/import-acronyms` ensures that the correct
+  snippet is loaded even when used from within another theme. Without the
+  leading slash, the snippet name would instead be resolved as
+  `⟨current theme name⟩/witiko/glossaries/import-acronyms`.
+
+  By contrast, the slash before `witiko/glossaries@v1` is optional and provided
+  only for consistency.
+
+ [matrix-615]: https://matrix.to/#/!pznomuvubVyxElflTe:matrix.org/$PSrg2dlpGUMastZzUGOpm08HfM3wHpQryZCIyepuZoA?via=matrix.org&via=im.f3l.de
+
 ## 3.13.0 (2026-01-02)
 
 Fixes:

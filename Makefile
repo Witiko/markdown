@@ -215,7 +215,6 @@ markdown-transcluded.md: markdown.md $(MARKDOWN_USER_MANUAL_INPUTS) $(DEPENDENCI
 	    -e 's#\\\(Opt\|pkg\){\([^}]*\)}#<code><strong>\2</strong></code>#g' \
 	    -e 's#\\,# #g' \
 	    -e 's#\\meta{\([^}]*\)}#\&LeftAngleBracket;*\1*\&RightAngleBracket;#g' \
-	    -e 's#\\acro{\([^}]*\)}#<abbr>\1</abbr>#g' \
 	    -e 's#😉#<i class="em em-wink"></i>#g' \
 	    -e 's#\\\(\(env\|lua\)\?m\(def\|ref\)\?\){\([^}]*\)}#<code>\4</code>#g' \
 	    -e 's#</code><code>##g' \
