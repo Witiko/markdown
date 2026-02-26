@@ -208,6 +208,7 @@ jobs:
       fail-fast: true
       matrix:
         texlive:
+          - pretest
           - latest
           - latest-context
           - latest-minimal
@@ -219,6 +220,7 @@ jobs:
         include:
           - { texlive: latest-minimal }
     outputs:
+      pretest: ${{ steps.temporary-tags.outputs.pretest }}
       latest: ${{ steps.temporary-tags.outputs.latest }}
       latest-context: ${{ steps.temporary-tags.outputs.latest-context }}
       latest-minimal: ${{ steps.temporary-tags.outputs.latest-minimal }}
@@ -258,6 +260,7 @@ jobs:
       fail-fast: true
       matrix:
         texlive:
+          - pretest
           - latest
           - latest-context
           - latest-minimal
