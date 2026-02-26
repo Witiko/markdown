@@ -34615,9 +34615,10 @@ M.extensions.acronyms = function(acronyms)
 %
 % \end{markdown}
 %  \begin{macrocode}
-      local Acronym = C( parsers.unicode.punctuation
+      local Acronym = ( parsers.unicode.punctuation
                       - V("SpecialChar")
                       + parsers.unicode.whitespace)^0
+                    / writer.string
                     * (
                       subparsers[""]
                       * #(-parsers.normalchar
