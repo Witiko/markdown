@@ -303,7 +303,7 @@ jobs:
           Hello \markdownRendererEmphasis{Markdown}! \markdownRendererInlineMath{a_x + b_x = c_x}\markdownRendererDocumentEnd'  # Check that the output is correct.
           grep 'real\s*0m[01]' stderr  # Check that the command finishes in less than a second.
       - name: Run tests
-        if: github.event_name == 'pull_request_target' || matrix.texlive != 'latest-minimal' #&& matrix.texlive != 'pretest-minimal'
+        if: github.event_name == 'pull_request_target' || matrix.texlive != 'latest-minimal' && matrix.texlive != 'pretest-minimal'
         run: make FAIL_FAST=${{ github.event_name == 'pull_request_target' }} test
       - name: Upload failed batches
         if: always()
