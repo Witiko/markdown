@@ -208,8 +208,7 @@ jobs:
       fail-fast: true
       matrix:
         texlive:
-          #- pretest  # Full pretest images aren't getting built for some reason.
-                      # See <https://gitlab.com/islandoftex/images/texlive/-/jobs/13277362199>.
+          - pretest
           - pretest-context
           - pretest-minimal
           - latest
@@ -227,7 +226,7 @@ jobs:
       latest: ${{ steps.temporary-tags.outputs.latest }}
       latest-context: ${{ steps.temporary-tags.outputs.latest-context }}
       latest-minimal: ${{ steps.temporary-tags.outputs.latest-minimal }}
-      #pretest: ${{ steps.temporary-tags.outputs.pretest }}
+      pretest: ${{ steps.temporary-tags.outputs.pretest }}
       pretest-context: ${{ steps.temporary-tags.outputs.pretest-context }}
       pretest-minimal: ${{ steps.temporary-tags.outputs.pretest-minimal }}
     runs-on: ubuntu-latest
@@ -269,16 +268,17 @@ jobs:
           - latest
           - latest-context
           - latest-minimal
-          #- pretest
+          - pretest
           - pretest-context
           - pretest-minimal
-        # Only test latest-minimal TeX Live in pull requests.
+        # In pull requests, only test latest-minimal and pretest-minimal.
         is_pr:
           - ${{ github.event_name == 'pull_request_target' }}
         exclude:
-          - { is_pr: true }
+          - is_pr: true
         include:
-          - { texlive: latest-minimal }
+          - texlive: latest-minimal
+          - texlive: pretest-minimal
     runs-on: 'ubuntu-latest'
     container:
       image: ghcr.io/witiko/markdown:${{ needs.build-docker-image.outputs[matrix.texlive] }}
