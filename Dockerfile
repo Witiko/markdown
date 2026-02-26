@@ -85,7 +85,7 @@ set -o xtrace
 # Install OS dependencies
 apt-get -qy update
 apt-get -qy install --no-install-recommends ${DEPENDENCIES} ${BUILD_DEPENDENCIES}
-if [ ${DEV_IMAGE} = false ] && echo ${TEXLIVE_TAG} | { ! grep -q latest-minimal; }
+if [ ${DEV_IMAGE} = false ] && echo ${TEXLIVE_TAG} | { ! grep -q -- -minimal; }
 then
   apt-get -qy install --no-install-recommends ${PRODUCTION_DEPENDENCIES}
   npm install -g @mermaid-js/mermaid-cli
@@ -171,7 +171,7 @@ wget https://mirrors.ctan.org/macros/luatex/generic/lua-tinyyaml/tinyyaml.lua \
 texhash
 
 # Produce the complete distribution archive of the Markdown package
-if [ ${DEV_IMAGE} = false ] && echo ${TEXLIVE_TAG} | { ! grep -q latest-minimal; }
+if [ ${DEV_IMAGE} = false ] && echo ${TEXLIVE_TAG} | { ! grep -q -- -minimal; }
 then
   # Install the current pkgcheck
   git clone https://codeberg.org/ManfredLotz/pkgcheck.git
@@ -239,7 +239,7 @@ apt-get -qy install --no-install-recommends ${DEPENDENCIES}
 if [ ${DEV_IMAGE} = true ]
 then
   apt-get -qy install --no-install-recommends ${DEV_DEPENDENCIES}
-elif echo ${TEXLIVE_TAG} | { ! grep -q latest-minimal; }
+elif echo ${TEXLIVE_TAG} | { ! grep -q -- -minimal; }
 then
   apt-get -qy install --no-install-recommends ${PRODUCTION_DEPENDENCIES}
   npm install -g @mermaid-js/mermaid-cli

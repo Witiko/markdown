@@ -208,22 +208,28 @@ jobs:
       fail-fast: true
       matrix:
         texlive:
-          - pretest
+          #- pretest  # Full pretest images aren't getting built for some reason.
+                      # See <https://gitlab.com/islandoftex/images/texlive/-/jobs/13277362199>.
+          - pretest-context
+          - pretest-minimal
           - latest
           - latest-context
           - latest-minimal
-        # Only test latest-minimal TeX Live in pull requests.
+        # In pull requests, only test latest-minimal and pretest-minimal.
         is_pr:
           - ${{ github.event_name == 'pull_request_target' }}
         exclude:
-          - { is_pr: true }
+          - is_pr: true
         include:
-          - { texlive: latest-minimal }
+          - texlive: latest-minimal
+          - texlive: pretest-minimal
     outputs:
-      pretest: ${{ steps.temporary-tags.outputs.pretest }}
       latest: ${{ steps.temporary-tags.outputs.latest }}
       latest-context: ${{ steps.temporary-tags.outputs.latest-context }}
       latest-minimal: ${{ steps.temporary-tags.outputs.latest-minimal }}
+      #pretest: ${{ steps.temporary-tags.outputs.pretest }}
+      pretest-context: ${{ steps.temporary-tags.outputs.pretest-context }}
+      pretest-minimal: ${{ steps.temporary-tags.outputs.pretest-minimal }}
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -260,10 +266,12 @@ jobs:
       fail-fast: true
       matrix:
         texlive:
-          - pretest
           - latest
           - latest-context
           - latest-minimal
+          #- pretest
+          - pretest-context
+          - pretest-minimal
         # Only test latest-minimal TeX Live in pull requests.
         is_pr:
           - ${{ github.event_name == 'pull_request_target' }}
@@ -295,7 +303,7 @@ jobs:
           Hello \markdownRendererEmphasis{Markdown}! \markdownRendererInlineMath{a_x + b_x = c_x}\markdownRendererDocumentEnd'  # Check that the output is correct.
           grep 'real\s*0m[01]' stderr  # Check that the command finishes in less than a second.
       - name: Run tests
-        if: github.event_name == 'pull_request_target' && matrix.texlive == 'latest-minimal' || matrix.texlive != 'latest-minimal'
+        if: github.event_name == 'pull_request_target' || matrix.texlive != 'latest-minimal' #&& matrix.texlive != 'pretest-minimal'
         run: make FAIL_FAST=${{ github.event_name == 'pull_request_target' }} test
       - name: Upload failed batches
         if: always()
@@ -326,9 +334,9 @@ jobs:
         is_pr:
           - ${{ github.event_name == 'pull_request_target' }}
         exclude:
-          - { is_pr: true }
+          - is_pr: true
         include:
-          - { texlive: latest-minimal }
+          - texlive: latest-minimal
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request_target' && github.ref == 'refs/heads/main' && always() && (needs.test.result == 'success' || needs.test.result == 'skipped') && needs.build-docker-image.result == 'success'
     env:
