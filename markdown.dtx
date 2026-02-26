@@ -13398,6 +13398,30 @@ a specific look and other high-level goals without low-level programming.
 %    \end{macrocode}
 % \begin{markdown}
 %
+% Next, we strip a leading slash, if present, for consistency with snippets,
+% where a leading slash distinguishes absolute snippet names from relative
+% ones. Theme names, however, are currently always absolute, so stripping the
+% slash is only a syntactic normalization and has no semantic effect.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \str_if_eq:enT
+      {
+        \tl_head:V
+          \g_@@_current_theme_tl
+      }
+      { / }
+      {
+        \tl_gset:Ne
+          \g_@@_current_theme_tl
+          {
+            \tl_tail:V
+              \g_@@_current_theme_tl
+          }
+      }
+%    \end{macrocode}
+% \begin{markdown}
+%
 % Next, we munge the theme name.
 %
 % \end{markdown}
@@ -13479,6 +13503,10 @@ a specific look and other high-level goals without low-level programming.
 \cs_generate_variant:Nn
   \cs_gset:Npn
   { Npe }
+\prg_generate_conditional_variant:Nnn
+  \str_if_eq:nn
+  { en }
+  { T }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -41257,7 +41285,7 @@ end
       \@gls@do@acronymsdef
       {
         \markdownSetup {
-           import =  witiko/glossaries@v1,
+           import = /witiko/glossaries@v1,
           snippet = /witiko/glossaries/import-acronyms,
         }
       }
