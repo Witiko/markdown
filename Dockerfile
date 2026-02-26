@@ -260,18 +260,20 @@ apt-get -qy autoremove --purge
 rm -rfv ${AUXILIARY_FILES}
 
 # Update packages in non-historic TeX Live versions
-if echo ${TEXLIVE_TAG} | grep -q latest
+if echo ${TEXLIVE_TAG} | grep -q pretest
 then
-  retry -t 30 -d 60 tlmgr update --self --all
-elif echo ${TEXLIVE_TAG} | grep -q pretest
+  REPOSITORY='--repository ftp://ftp.cstug.cz/pub/tex/local/tlpretest/'
+end
+if echo ${TEXLIVE_TAG} | grep -qE 'latest|pretest'
 then
-  retry -t 30 -d 60 tlmgr update --self --all --repository ftp://ftp.cstug.cz/pub/tex/local/tlpretest/
+  retry -t 30 -d 60 tlmgr update --self --all $REPOSITORY
 fi
 
 # Install TeX Live dependencies
+DEPENDS=$(awk '{ print $2 }' ${BUILD_DIR}/DEPENDS.txt ${BUILD_DIR}/tests/DEPENDS.txt | sort -u)
 if [ ${TEXLIVE_TAG} != latest ]
 then
-  retry -t 30 -d 60 tlmgr install $(awk '{ print $2 }' ${BUILD_DIR}/DEPENDS.txt ${BUILD_DIR}/tests/DEPENDS.txt | sort -u)
+  retry -t 30 -d 60 tlmgr install $DEPENDS $REPOSITORY
   tlmgr path add
 fi
 
