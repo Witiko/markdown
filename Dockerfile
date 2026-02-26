@@ -51,10 +51,11 @@ ARG INSTALL_DIR=/usr/local/texlive/texmf-local
 ARG PREINSTALLED_DIR=/usr/local/texlive/*/texmf-dist
 
 ARG FROM_IMAGE=texlive/texlive
+ARG TEXLIVE_BUILD_TAG=latest
 ARG TEXLIVE_TAG=latest
 ARG DEV_IMAGE=false
 
-FROM $FROM_IMAGE:latest as build
+FROM $FROM_IMAGE:$TEXLIVE_BUILD_TAG as build
 
 ARG DEPENDENCIES
 ARG BUILD_DEPENDENCIES
@@ -65,6 +66,7 @@ ARG BUILD_DIR
 ARG INSTALL_DIR
 ARG PREINSTALLED_DIR
 
+ARG TEXLIVE_BUILD_TAG
 ARG TEXLIVE_TAG
 ARG DEV_IMAGE
 
@@ -105,9 +107,15 @@ ANOTHER_EOF
 fi
 
 # Update packages in non-historic TeX Live versions
-if echo ${TEXLIVE_TAG} | grep -qE 'latest|pretest'
+if echo ${TEXLIVE_BUILD_TAG} | grep -q pretest
 then
-  retry -t 30 -d 60 tlmgr update --self --all
+  REPOSITORY='--repository ftp://ftp.cstug.cz/pub/tex/local/tlpretest/'
+else
+  REPOSITORY=''
+fi
+if echo ${TEXLIVE_BUILD_TAG} | grep -qE 'latest|pretest'
+then
+  retry -t 30 -d 60 tlmgr update --self --all $REPOSITORY
 fi
 
 # Uninstall the distribution Markdown package
