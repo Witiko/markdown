@@ -1,0 +1,226 @@
+\markdownSetup {
+  acronyms = API,
+  autoIdentifiers,
+  bracketedSpans,
+  citations,
+  contentBlocks,
+  definitionLists,
+  fencedDivs,
+  hashEnumerators,
+  headerAttributes,
+  inlineNotes,
+  lineBlocks,
+  linkAttributes,
+  mark,
+  notes,
+  pipeTables,
+  relativeReferences,
+  strikeThrough,
+  subscripts,
+  superscripts,
+  tableAttributes,
+  tableCaptions,
+  texComments,
+  texMathDollars,
+}
+<<<
+# API
+## api {#API}
+### API {#API}
+
+> API
+
+[API]{.API}
+![API](API.jpg "API"){#API}
+_API_
+*API*
+@API
+^[API]
+==API==
+~~API~~
+<#API>
+API~API~API^API^API
+$API$
+$$API$$
+
+| API   | Left | Default | Center |
+|------:|:-----|---------|:------:|
+|   12  |  API |    12   |    12  |
+|  123  |  123 |   API   |   123  |
+|    1  |    1 |     1   |   API  |
+
+  : API {key=API API=value}
+
+| API
+| API
+  API
+| API
+
+/API.bara
+
+- API
+
+1. API
+
+#. API
+
+API
+
+:    API
+
+:::: API
+
+API
+
+::::::::
+>>>
+BEGIN document
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: api
+headingOne: (acronym: API)
+END headerAttributeContext
+interblockSeparator
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: API
+headingTwo: api
+END headerAttributeContext
+interblockSeparator
+BEGIN section
+BEGIN headerAttributeContext
+attributeIdentifier: API
+headingThree: (acronym: API)
+END headerAttributeContext
+interblockSeparator
+blockQuoteBegin
+acronym: API
+blockQuoteEnd
+interblockSeparator
+BEGIN bracketedSpanAttributeContext
+attributeClassName: API
+bracketedSpan: (acronym: API)
+END bracketedSpanAttributeContext
+softLineBreak
+BEGIN imageAttributeContext
+attributeIdentifier: API
+BEGIN image
+- label: (acronym: API)
+- URI: API.jpg
+- title: API
+END image
+END imageAttributeContext
+softLineBreak
+emphasis: (acronym: API)
+softLineBreak
+emphasis: (acronym: API)
+softLineBreak
+BEGIN textCites
+BEGIN textCite
+- suppressAuthor: false
+- prenote: 
+- postnote: 
+- name: (acronym: API)
+END textCite
+END textCites
+softLineBreak
+note: (acronym: API)
+softLineBreak
+mark: (acronym: API)
+softLineBreak
+strikeThrough: (acronym: API)
+softLineBreak
+BEGIN link
+- label: (hash)API
+- URI: #API
+- title: 
+END link
+softLineBreak
+subscript: (acronym: API)
+superscript: (acronym: API)
+softLineBreak
+inlineMath: (acronym: API)
+softLineBreak
+displayMath: (acronym: API)
+interblockSeparator
+BEGIN tableAttributeContext
+BEGIN attributeKeyValue
+- key: API
+- value: value
+END attributeKeyValue
+BEGIN attributeKeyValue
+- key: key
+- value: API
+END attributeKeyValue
+BEGIN table (4 rows, 4 columns)
+- caption: (acronym: API)
+- alignment of column 1: r
+- alignment of column 2: l
+- alignment of column 3: d
+- alignment of column 4: c
+- row 1, column 1: (acronym: API)
+- row 1, column 2: Left
+- row 1, column 3: Default
+- row 1, column 4: Center
+- row 2, column 1: 12
+- row 2, column 2: (acronym: API)
+- row 2, column 3: 12
+- row 2, column 4: 12
+- row 3, column 1: 123
+- row 3, column 2: 123
+- row 3, column 3: (acronym: API)
+- row 3, column 4: 123
+- row 4, column 1: 1
+- row 4, column 2: 1
+- row 4, column 3: 1
+- row 4, column 4: (acronym: API)
+END table
+END tableAttributeContext
+interblockSeparator
+lineBlockBegin
+acronym: API
+hardLineBreak
+acronym: API
+hardLineBreak
+acronym: API
+hardLineBreak
+acronym: API
+lineBlockEnd
+interblockSeparator
+BEGIN contentBlock
+- suffix: bara
+- URI: API.bara
+- title: 
+END contentBlock
+interblockSeparator
+ulBeginTight
+ulItem
+acronym: API
+ulItemEnd
+ulEndTight
+interblockSeparator
+olBegin
+olItemWithNumber: 1
+acronym: API
+olItemEnd
+olItemWithNumber: 2
+acronym: API
+olItemEnd
+olEnd
+interblockSeparator
+dlBegin
+dlItem: (acronym: API)
+dlDefinitionBegin
+acronym: API
+dlDefinitionEnd
+dlItemEnd
+dlEnd
+interblockSeparator
+BEGIN fencedDivAttributeContext
+attributeClassName: API
+acronym: API
+END fencedDivAttributeContext
+END section
+END section
+END section
+END document
