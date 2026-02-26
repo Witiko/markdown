@@ -270,7 +270,7 @@ then
 fi
 
 # Install TeX Live dependencies
-DEPENDS=$(awk '{ print $2 }' ${BUILD_DIR}/DEPENDS.txt ${BUILD_DIR}/tests/DEPENDS.txt | sort -u)
+DEPENDS="$(awk '{ print $2 }' ${BUILD_DIR}/DEPENDS.txt ${BUILD_DIR}/tests/DEPENDS.txt | sort -u)"
 if [ ${TEXLIVE_TAG} != latest ]
 then
   retry -t 30 -d 60 tlmgr install $DEPENDS $REPOSITORY
