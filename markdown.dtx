@@ -41254,13 +41254,13 @@ end
   { glossaries }
   {
     \cs_if_exist:NT
-      \printacronyms
-        {
-          \markdownSetup {
-             import =  witiko/glossaries@v1,
-            snippet = /witiko/glossaries/import-acronyms,
-          }
+      \@gls@do@acronymsdef
+      {
+        \markdownSetup {
+           import =  witiko/glossaries@v1,
+          snippet = /witiko/glossaries/import-acronyms,
         }
+      }
   }
   { }
 %    \end{macrocode}
