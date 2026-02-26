@@ -42029,11 +42029,11 @@ end
   rendererPrototypes = {
     heading* ^= {
       \int_gincr:N
-        \g_markdown_heading_nesting_depth_int
+        \g_@@_heading_nesting_depth_int
     },
     heading* $= {
       \int_gdecr:N
-        \g_markdown_heading_nesting_depth_int
+        \g_@@_heading_nesting_depth_int
     }
   }
 }
