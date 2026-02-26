@@ -1,8 +1,6 @@
 # Changes
 
-## 3.14.1 (2026-XX-XX)
-
-## 3.14.0 (2026-02-26)
+## 3.14.0 (2026-02-XX)
 
 ### Enhancements
 
@@ -59,9 +57,6 @@ This version of the Markdown package has made the following new enhancements:
     renderers = {
       % Format acronyms as small caps.
       acronym = \textsc{\MakeLowercase{#1}},
-      % Don't format acronyms in headings.
-      heading* ^= \begingroup \markdownSetup { renderers = { acronym = ##1 } },
-      heading* += \endgroup,
     },
   }
   \begin{document}
