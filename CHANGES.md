@@ -129,7 +129,7 @@ This version of the Markdown package has made the following new enhancements:
 
   For example, the following code also imports the `glossaries` acronyms:
 
-  ```tex
+  ``` tex
   \markdownSetup {
     import  = /witiko/glossaries@v1,
     snippet = /witiko/glossaries/import-acronyms,
@@ -142,7 +142,15 @@ This version of the Markdown package has made the following new enhancements:
   `⟨current theme name⟩/witiko/glossaries/import-acronyms`.
 
   By contrast, the slash before `witiko/glossaries@v1` is optional and provided
-  only for consistency.
+  only for consistency. Therefore, the following code would have the same
+  effect:
+
+  ``` tex
+  \markdownSetup {
+    import  =  witiko/glossaries@v1,
+    snippet = /witiko/glossaries/import-acronyms,
+  }
+  ```
 
  [matrix-615]: https://matrix.to/#/!pznomuvubVyxElflTe:matrix.org/$PSrg2dlpGUMastZzUGOpm08HfM3wHpQryZCIyepuZoA?via=matrix.org&via=im.f3l.de
 
