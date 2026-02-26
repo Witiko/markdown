@@ -263,7 +263,7 @@ rm -rfv ${AUXILIARY_FILES}
 if echo ${TEXLIVE_TAG} | grep -q pretest
 then
   REPOSITORY='--repository ftp://ftp.cstug.cz/pub/tex/local/tlpretest/'
-end
+fi
 if echo ${TEXLIVE_TAG} | grep -qE 'latest|pretest'
 then
   retry -t 30 -d 60 tlmgr update --self --all $REPOSITORY
