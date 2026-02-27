@@ -205,7 +205,7 @@ jobs:
             echo is_pretest=true
           else
             echo is_pretest=false
-          end >> "$GITHUB_OUTPUT"
+          fi >> "$GITHUB_OUTPUT"
   build-docker-image:
     name: Build Docker image
     needs:
