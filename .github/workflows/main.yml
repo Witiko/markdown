@@ -259,9 +259,6 @@ jobs:
     env:
       DOCKER_TEXLIVE_TAG: ${{ matrix.texlive }}
     steps:
-      - name: Debug check-pretest
-        run: |
-          echo ${{ needs.check-pretest.outputs.is-pretest }}
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
