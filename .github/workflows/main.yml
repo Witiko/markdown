@@ -197,8 +197,11 @@ jobs:
   check-pretest:
     name: Check whether the TeX Live pretest is underway
     runs-on: ubuntu-latest
+    outputs:
+      is_pretest: ${{ steps.check-pretest.is_pretest }}
     steps:
       - name: Check whether the TeX Live pretest is underway
+        id: check-pretest
         run: |
           if [ "$(date -u +%m)" = 02 ]
           then
