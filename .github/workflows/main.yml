@@ -194,6 +194,18 @@ jobs:
           pip install pytype libcst==1.2.0
       - name: Run Pytype
         run: pytype tests/test.py
+  check-pretest:
+    name: Check whether the TeX Live pretest is underway
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check whether the TeX Live pretest is underway
+        run: |
+          if [ "$(date -u +%m)" = 02 ]
+          then
+            echo is_pretest=true
+          else
+            echo is_pretest=false
+          end >> "$GITHUB_OUTPUT"
   build-docker-image:
     name: Build Docker image
     needs:
@@ -204,6 +216,7 @@ jobs:
       - explcheck
       - markdownlint
       - pytype
+      - check-pretest
     strategy:
       fail-fast: true
       matrix:
@@ -217,7 +230,7 @@ jobs:
         is_pr:
           - ${{ github.event_name == 'pull_request_target' }}
         is_pretest:
-          - ${{ format('{0:MM}', github.run_started_at) == '02' }}
+          - ${{ needs.check-pretest.is_pretest == 'true' }}
         exclude:
           # In pull requests, only build latest-minimal.
           - is_pr: true
@@ -269,6 +282,7 @@ jobs:
     name: Test Docker image
     needs:
       - build-docker-image
+      - check-pretest
     strategy:
       fail-fast: true
       matrix:
@@ -282,7 +296,7 @@ jobs:
         is_pr:
           - ${{ github.event_name == 'pull_request_target' }}
         is_pretest:
-          - ${{ format('{0:MM}', github.run_started_at) == '02' }}
+          - ${{ needs.check-pretest.is_pretest == 'true' }}
         exclude:
           # In pull requests, only test latest-minimal.
           - is_pr: true
