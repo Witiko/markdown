@@ -198,16 +198,16 @@ jobs:
     name: Check whether the TeX Live pretest is underway
     runs-on: ubuntu-latest
     outputs:
-      is_pretest: ${{ steps.check-pretest.is_pretest }}
+      is-pretest: ${{ steps.check-pretest.outputs.is-pretest }}
     steps:
       - name: Check whether the TeX Live pretest is underway
         id: check-pretest
         run: |
           if [ "$(date -u +%m)" = 02 ]
           then
-            echo is_pretest=true
+            echo is-pretest=true
           else
-            echo is_pretest=false
+            echo is-pretest=false
           fi | tee -a "$GITHUB_OUTPUT"
   build-docker-image:
     name: Build Docker image
@@ -230,19 +230,19 @@ jobs:
           - latest
           - latest-context
           - latest-minimal
-        is_pr:
+        is-pr:
           - ${{ github.event_name == 'pull_request_target' }}
-        is_pretest:
-          - ${{ needs.check-pretest.is_pretest == 'true' }}
+        is-pretest:
+          - ${{ needs.check-pretest.outputs.is-pretest == 'true' }}
         exclude:
           # In pull requests, only build latest-minimal.
-          - is_pr: true
+          - is-pr: true
           # Only build pretest images during the pretest period.
-          - is_pretest: false
+          - is-pretest: false
             texlive: pretest
-          - is_pretest: false
+          - is-pretest: false
             texlive: pretest-context
-          - is_pretest: false
+          - is-pretest: false
             texlive: pretest-minimal
         include:
           - texlive: latest-minimal
@@ -261,7 +261,7 @@ jobs:
     steps:
       - name: Debug check-pretest
         run: |
-          echo ${{ needs.check-pretest.is_pretest }}
+          echo ${{ needs.check-pretest.outputs.is-pretest }}
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
@@ -299,19 +299,19 @@ jobs:
           - pretest
           - pretest-context
           - pretest-minimal
-        is_pr:
+        is-pr:
           - ${{ github.event_name == 'pull_request_target' }}
-        is_pretest:
-          - ${{ needs.check-pretest.is_pretest == 'true' }}
+        is-pretest:
+          - ${{ needs.check-pretest.outputs.is-pretest == 'true' }}
         exclude:
           # In pull requests, only test latest-minimal.
-          - is_pr: true
+          - is-pr: true
           # Only test pretest images during the pretest period.
-          - is_pretest: false
+          - is-pretest: false
             texlive: pretest
-          - is_pretest: false
+          - is-pretest: false
             texlive: pretest-context
-          - is_pretest: false
+          - is-pretest: false
             texlive: pretest-minimal
         include:
           - texlive: latest-minimal
