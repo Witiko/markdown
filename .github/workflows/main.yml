@@ -214,14 +214,22 @@ jobs:
           - latest
           - latest-context
           - latest-minimal
-        # In pull requests, only test latest-minimal and pretest-minimal.
         is_pr:
           - ${{ github.event_name == 'pull_request_target' }}
+        is_pretest:
+          - ${{ format('{0:MM}', github.run_started_at) == '02' }}
         exclude:
+          # In pull requests, only build latest-minimal.
           - is_pr: true
+          # Only build pretest images during the pretest period.
+          - is_pretest: false
+            texlive: pretest
+          - is_pretest: false
+            texlive: pretest-context
+          - is_pretest: false
+            texlive: pretest-minimal
         include:
           - texlive: latest-minimal
-          - texlive: pretest-minimal
     outputs:
       latest: ${{ steps.temporary-tags.outputs.latest }}
       latest-context: ${{ steps.temporary-tags.outputs.latest-context }}
@@ -271,14 +279,22 @@ jobs:
           - pretest
           - pretest-context
           - pretest-minimal
-        # In pull requests, only test latest-minimal and pretest-minimal.
         is_pr:
           - ${{ github.event_name == 'pull_request_target' }}
+        is_pretest:
+          - ${{ format('{0:MM}', github.run_started_at) == '02' }}
         exclude:
+          # In pull requests, only test latest-minimal.
           - is_pr: true
+          # Only test pretest images during the pretest period.
+          - is_pretest: false
+            texlive: pretest
+          - is_pretest: false
+            texlive: pretest-context
+          - is_pretest: false
+            texlive: pretest-minimal
         include:
           - texlive: latest-minimal
-          - texlive: pretest-minimal
     runs-on: 'ubuntu-latest'
     container:
       image: ghcr.io/witiko/markdown:${{ needs.build-docker-image.outputs[matrix.texlive] }}
@@ -334,6 +350,7 @@ jobs:
         is_pr:
           - ${{ github.event_name == 'pull_request_target' }}
         exclude:
+          # In pull requests, only publish latest-minimal.
           - is_pr: true
         include:
           - texlive: latest-minimal
