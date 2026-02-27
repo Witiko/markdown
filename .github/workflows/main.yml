@@ -205,7 +205,7 @@ jobs:
             echo is_pretest=true
           else
             echo is_pretest=false
-          fi >> "$GITHUB_OUTPUT"
+          fi | tee -a "$GITHUB_OUTPUT"
   build-docker-image:
     name: Build Docker image
     needs:
@@ -256,6 +256,9 @@ jobs:
     env:
       DOCKER_TEXLIVE_TAG: ${{ matrix.texlive }}
     steps:
+      - name: Debug check-pretest
+        run: |
+          echo ${{ needs.check-pretest.is_pretest }}
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
