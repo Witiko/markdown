@@ -29641,7 +29641,8 @@ function M.writer.new(options)
   function self.block_html_instruction_element(s)
     if not self.is_writing then return "" end
     local name = util.cache(options.cacheDir, s, nil, nil, ".verbatim")
-    return {"\\markdownRendererInputBlockHtmlInstructionElement{",name,"}"}
+    return {
+      "\\markdownRendererInputBlockHtmlInstructionElement{",name,"}"}
   end
 %    \end{macrocode}
 % \begin{markdown}
@@ -29655,7 +29656,8 @@ function M.writer.new(options)
   function self.block_html_declaration_element(s)
     if not self.is_writing then return "" end
     local name = util.cache(options.cacheDir, s, nil, nil, ".verbatim")
-    return {"\\markdownRendererInputBlockHtmlDeclarationElement{",name,"}"}
+    return {
+      "\\markdownRendererInputBlockHtmlDeclarationElement{",name,"}"}
   end
 %    \end{macrocode}
 % \begin{markdown}
