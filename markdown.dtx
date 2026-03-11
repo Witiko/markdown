@@ -7674,43 +7674,26 @@ defaultOptions.html = true
 %</lua,lua-cli,lua-loader>
 %<*manual-options>
 
-#### Option `parseHtmlBlocks`
+#### Option `htmlOutput`
 
-`parseHtmlBlocks` (default value: `false`)
+`htmlOutput` (default value: `basic`)
 
 % \fi
 % \begin{markdown}
 %
-% \Optitem[false]{parseHtmlBlocks}{\opt{true}, \opt{false}}
+% \Optitem[basic]{htmlOutput}{\opt{basic}, \opt{commonmark}}
 %
-:    true
+:    basic
 
-     :  When the \Opt{html} option is enabled, produce individual renderers
-        for each [CommonMark HTML block type][html-blocks] instead of the
-        generic \Mdef{markdownRendererInputBlockHtmlElement} renderer.
-        The individual block renderers are
-        \Mdef{markdownRendererInputBlockHtmlCommentElement},
-        \Mdef{markdownRendererInputBlockHtmlInstructionElement},
-        \Mdef{markdownRendererInputBlockHtmlDeclarationElement},
-        \Mdef{markdownRendererInputBlockHtmlCdataElement},
-        \Mdef{markdownRendererInputBlockHtmlSpecialElement},
-        \Mdef{markdownRendererInputBlockHtmlRegularElement}, and
-        \Mdef{markdownRendererInputBlockHtmlAnyElement}.
-        In addition, inline HTML is split into individual renderers:
-        \Mdef{markdownRendererInlineHtmlInstruction},
-        \Mdef{markdownRendererInlineHtmlDeclaration},
-        \Mdef{markdownRendererInlineHtmlCdataSection},
-        \Mdef{markdownRendererInlineHtmlOpenTag},
-        \Mdef{markdownRendererInlineHtmlCloseTag}, and
-        \Mdef{markdownRendererInlineHtmlEmptyTag}.
-
-:    false
-
-     :  Use the generic \Mdef{markdownRendererInputBlockHtmlElement} and
-        \Mdef{markdownRendererInlineHtmlTag} renderers for all block and
+     :  Use the generic \mref{markdownRendererInputBlockHtmlElement} and
+        \mref{markdownRendererInlineHtmlTag} renderers for all block and
         inline HTML respectively.
 
- [html-blocks]: https://spec.commonmark.org/0.31.2/#html-blocks
+:    commonmark
+
+     :  When the \Opt{html} option is enabled, produce individual renderers
+        for each [CommonMark HTML block type][html-blocks] and individual
+        renderers for different [inline HTML construct types][raw-html].
 
 % \end{markdown}
 % \iffalse
@@ -7719,16 +7702,16 @@ defaultOptions.html = true
 % \fi
 %  \begin{macrocode}
 \@@_add_lua_option:nnn
-  { parseHtmlBlocks }
-  { boolean }
-  { false }
+  { htmlOutput }
+  { string }
+  { basic }
 %    \end{macrocode}
 % \iffalse
 %</tex>
 %<*lua,lua-cli,lua-loader>
 % \fi
 %  \begin{macrocode}
-defaultOptions.parseHtmlBlocks = false
+defaultOptions.htmlOutput = "basic"
 %    \end{macrocode}
 % \iffalse
 %</lua,lua-cli,lua-loader>
@@ -17854,9 +17837,9 @@ HTML element. This macro will only be produced, when the \Opt{html}
 option is enabled. The macro receives a single argument that filename of a file
 containing the contents of the HTML element.
 
-When the \Opt{parseHtmlBlocks} option is enabled, the following renderers are
-produced instead of \mdef{markdownRendererInputBlockHtmlElement} to
-distinguish the different [CommonMark HTML block types][html-blocks]:
+When the \Opt{htmlOutput} option is set to \opt{commonmark}, the following
+renderers are produced instead of \mref{markdownRendererInputBlockHtmlElement}
+to distinguish the different [CommonMark HTML block types][html-blocks]:
 
 - \mdef{markdownRendererInputBlockHtmlCommentElement} -- HTML comment block
   (type~2).
@@ -17875,11 +17858,11 @@ distinguish the different [CommonMark HTML block types][html-blocks]:
 
 Each of these macros receives a single argument that is the filename of a file
 containing the contents of the HTML block. Their default prototypes fall back
-to \mdef{markdownRendererInputBlockHtmlElementPrototype}.
+to \mref{markdownRendererInputBlockHtmlElementPrototype}.
 
-When the \Opt{parseHtmlBlocks} option is enabled, the following renderers are
-produced instead of \mdef{markdownRendererInlineHtmlTag} to distinguish
-different inline HTML construct types:
+When the \Opt{htmlOutput} option is set to \opt{commonmark}, the following
+renderers are produced instead of \mref{markdownRendererInlineHtmlTag} to
+distinguish different [inline HTML construct types][raw-html]:
 
 - \mdef{markdownRendererInlineHtmlInstruction} -- processing instruction.
 - \mdef{markdownRendererInlineHtmlDeclaration} -- declaration.
@@ -17889,9 +17872,10 @@ different inline HTML construct types:
 - \mdef{markdownRendererInlineHtmlEmptyTag} -- self-closing (empty) tag.
 
 Each of these macros receives a single argument with the tag contents. Their
-default prototypes fall back to \mdef{markdownRendererInlineHtmlTagPrototype}.
+default prototypes fall back to \mref{markdownRendererInlineHtmlTagPrototype}.
 
  [html-blocks]: https://spec.commonmark.org/0.31.2/#html-blocks
+ [raw-html]: https://spec.commonmark.org/0.31.2/#raw-html
 
 % \end{markdown}
 %
@@ -34075,22 +34059,22 @@ end
   parsers.EscapedChar = parsers.backslash
                       * C(parsers.escapable) / writer.string
 
-  if options.parseHtmlBlocks then
+  if options.htmlOutput == "commonmark" then
     parsers.InlineHtml
       = Cs(parsers.html_inline_comment)
-          / writer.inline_html_comment
+      / writer.inline_html_comment
       + Cs(parsers.html_any_empty_inline_tag)
-          / writer.inline_html_empty_tag
+      / writer.inline_html_empty_tag
       + Cs(parsers.html_inline_instruction)
-          / writer.inline_html_instruction
+      / writer.inline_html_instruction
       + Cs(parsers.html_inline_cdatasection)
-          / writer.inline_html_cdata_section
+      / writer.inline_html_cdata_section
       + Cs(parsers.html_inline_declaration)
-          / writer.inline_html_declaration
+      / writer.inline_html_declaration
       + Cs(parsers.html_any_open_inline_tag)
-          / writer.inline_html_open_tag
+      / writer.inline_html_open_tag
       + Cs(parsers.html_any_close_tag)
-          / writer.inline_html_close_tag
+      / writer.inline_html_close_tag
   else
     parsers.InlineHtml = Cs(parsers.html_inline_comment)
                        / writer.inline_html_comment
@@ -34100,7 +34084,7 @@ end
                            + parsers.html_inline_declaration
                            + parsers.html_any_open_inline_tag
                            + parsers.html_any_close_tag)
-                         / writer.inline_html_tag
+                       / writer.inline_html_tag
   end
 
   parsers.HtmlEntity = parsers.html_entities / writer.string
@@ -34111,22 +34095,22 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-  if options.parseHtmlBlocks then
+  if options.htmlOutput == "commonmark" then
     parsers.DisplayHtml
       = Cs(parsers.check_trail * parsers.html_comment)
-          / writer.block_html_comment_element
+      / writer.block_html_comment_element
       + Cs(parsers.check_trail * parsers.html_special_block)
-          / writer.block_html_special_element
+      / writer.block_html_special_element
       + Cs(parsers.check_trail * parsers.html_block)
-          / writer.block_html_regular_element
+      / writer.block_html_regular_element
       + Cs(parsers.check_trail * parsers.html_any_block)
-          / writer.block_html_any_element
+      / writer.block_html_any_element
       + Cs(parsers.check_trail * parsers.html_instruction)
-          / writer.block_html_instruction_element
+      / writer.block_html_instruction_element
       + Cs(parsers.check_trail * parsers.html_cdatasection)
-          / writer.block_html_cdata_element
+      / writer.block_html_cdata_element
       + Cs(parsers.check_trail * parsers.html_declaration)
-          / writer.block_html_declaration_element
+      / writer.block_html_declaration_element
   else
     parsers.DisplayHtml = Cs(parsers.check_trail
                             * ( parsers.html_comment
@@ -34136,7 +34120,7 @@ end
                               + parsers.html_instruction
                               + parsers.html_cdatasection
                               + parsers.html_declaration))
-                          / writer.block_html_element
+                        / writer.block_html_element
   end
 
   parsers.indented_non_blank_line = parsers.indentedline

@@ -1,8 +1,6 @@
-if: format != 'context'
----
-\markdownSetup{parseHtmlBlocks=true}
+\markdownSetup{htmlOutput=commonmark}
 <<<
-This test ensures that the `parseHtmlBlocks` option produces individual
+This test ensures that the `htmlOutput` option produces individual
 renderers for each CommonMark HTML block type.
 
 <!-- block comment -->
@@ -16,7 +14,7 @@ hello
 foo <b>bar</b> baz
 >>>
 BEGIN document
-codeSpan: parseHtmlBlocks
+codeSpan: htmlOutput
 softLineBreak
 interblockSeparator
 inputBlockHtmlCommentElement: b3ffb66dd7e08481fe6b45f4a11c8552.verbatim

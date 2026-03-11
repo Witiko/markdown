@@ -61,4 +61,4 @@ _minted-markdown/
 t-markdown.tex
 markdownthemewitiko_*.sty
 libraries/markdown-tinyyaml.lua
-venv/
+tests/test-virtualenv
