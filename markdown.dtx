@@ -7685,7 +7685,8 @@ defaultOptions.html = true
 %
 :    basic
 
-     :  Use the generic \mref{markdownRendererInputBlockHtmlElement} and
+     :  Use the generic \mref{markdownRendererInputBlockHtmlElement},
+        \mref{markdownRendererInlineHtmlComment}, and
         \mref{markdownRendererInlineHtmlTag} renderers for all block and
         inline HTML respectively.
 
@@ -7694,6 +7695,9 @@ defaultOptions.html = true
      :  When the \Opt{html} option is enabled, produce individual renderers
         for each [CommonMark HTML block type][html-blocks] and individual
         renderers for different [inline HTML construct types][raw-html].
+
+ [html-blocks]: https://spec.commonmark.org/0.31.2/#html-blocks
+ [raw-html]: https://spec.commonmark.org/0.31.2/#raw-html
 
 % \end{markdown}
 % \iffalse
@@ -17825,7 +17829,7 @@ The horizontal margins should contain the following text:
 %
 % \begin{markdown}
 
-#### HTML Tag and Element Renderers
+#### Basic HTML Tag and Element Renderers
 
 The \mdef{markdownRendererInlineHtmlTag} macro represents an opening, closing,
 or empty inline HTML tag. This macro will only be produced, when the
@@ -17836,6 +17840,8 @@ The \mdef{markdownRendererInputBlockHtmlElement} macro represents a block
 HTML element. This macro will only be produced, when the \Opt{html}
 option is enabled. The macro receives a single argument that filename of a file
 containing the contents of the HTML element.
+
+#### CommonMark Block HTML Element Renderers
 
 When the \Opt{htmlOutput} option is set to \opt{commonmark}, the following
 renderers are produced instead of \mref{markdownRendererInputBlockHtmlElement}
@@ -17860,6 +17866,10 @@ Each of these macros receives a single argument that is the filename of a file
 containing the contents of the HTML block. Their default prototypes fall back
 to \mref{markdownRendererInputBlockHtmlElementPrototype}.
 
+ [html-blocks]: https://spec.commonmark.org/0.31.2/#html-blocks
+
+#### CommonMark Inline HTML Renderers
+
 When the \Opt{htmlOutput} option is set to \opt{commonmark}, the following
 renderers are produced instead of \mref{markdownRendererInlineHtmlTag} to
 distinguish different [inline HTML construct types][raw-html]:
@@ -17874,7 +17884,6 @@ distinguish different [inline HTML construct types][raw-html]:
 Each of these macros receives a single argument with the tag contents. Their
 default prototypes fall back to \mref{markdownRendererInlineHtmlTagPrototype}.
 
- [html-blocks]: https://spec.commonmark.org/0.31.2/#html-blocks
  [raw-html]: https://spec.commonmark.org/0.31.2/#raw-html
 
 % \end{markdown}
@@ -34078,7 +34087,7 @@ end
   else
     parsers.InlineHtml = Cs(parsers.html_inline_comment)
                        / writer.inline_html_comment
-                       + Cs(parsers.html_any_empty_inline_tag
+                       + Cs( parsers.html_any_empty_inline_tag
                            + parsers.html_inline_instruction
                            + parsers.html_inline_cdatasection
                            + parsers.html_inline_declaration
@@ -34112,7 +34121,7 @@ end
       + Cs(parsers.check_trail * parsers.html_declaration)
       / writer.block_html_declaration_element
   else
-    parsers.DisplayHtml = Cs(parsers.check_trail
+    parsers.DisplayHtml = Cs( parsers.check_trail
                             * ( parsers.html_comment
                               + parsers.html_special_block
                               + parsers.html_block
