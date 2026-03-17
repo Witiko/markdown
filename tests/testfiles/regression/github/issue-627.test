@@ -20,7 +20,6 @@ hardLineBreak
 hardLineBreak
 lineBlockEnd
 interblockSeparator
-interblockSeparator
 BEGIN table (4 rows, 4 columns)
 - caption: 
 - alignment of column 1: r
