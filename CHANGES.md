@@ -10,6 +10,8 @@ continuous integration:
 - Bump `crazy-max/ghaction-github-pages` from 4 to 5 (added by @dependabot in #632)
 - Bump `actions/upload-artifact` from 6 to 7 (added by @dependabot in #633)
 - Bump `docker/login-action` from 3 to 4 (added by @dependabot in #634)
+- Migrate from deprecated `TeX-Live/setup-texlive-action@v3` to
+  `zauguin/install-texlive@v4`. (#636, 3c4c6bb0)
 
 ## 3.14.0 (2026-02-26)
 
