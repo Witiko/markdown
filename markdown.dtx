@@ -43,9 +43,33 @@
 \usepackage[columns=1, totoc]{idxlayout}
 \makeindex
 
+\ExplSyntaxOn
+\seq_new:N
+  \g__markdown_techdoc_seen_options_seq
 \newcommand\mdef[1]{% A TeX macro definition
   \index{#1@\cs{#1}|textit}%
-  \phantomsection\label{macro:#1}\textcolor{spot}{\cs{#1}}}
+  \phantomsection
+  \label{macro:#1}
+  \__markdown_csname_to_option_str:nNT
+    { #1 }
+    \l_tmpa_tl
+    {
+      \seq_if_in:NVF
+        \g__markdown_techdoc_seen_options_seq
+        \l_tmpa_tl
+        {
+          % For `\mdef{markdownOption...}`, also do `\label{opt:...}`, unless
+          % such label was previously defined by `\Optitem` or `\Valitem`.
+          \tl_put_left:Nn
+            \l_tmpa_tl
+            { opt: }
+          \exp_args:NV
+            \label
+            \l_tmpa_tl
+        }
+    }
+  \textcolor{spot}{\cs{#1}}}
+\ExplSyntaxOff
 \newcommand\mref[1]{% A TeX macro reference
   \index{#1@\cs{#1}}%
   \hyperref[macro:#1]{\textcolor{spot}{\cs{#1}}}}
@@ -64,12 +88,28 @@
   \index{#1@\texttt{#1}}%
   \hyperref[lua:#1]{\inline{#1}}}
 
+\ExplSyntaxOn
 \newcommand\Optitem[2][]{\penalty -1000\relax % An option item definition
   \index{#2@\texttt{#2}|textit}%
-  \phantomsection\label{opt:#2}\optitem[#1]{#2}}
+  \phantomsection\label{opt:#2}%
+  \str_set:Nn
+    \l_tmpa_str
+    { #2 }
+  \seq_gput_right:NV
+    \g__markdown_techdoc_seen_options_seq
+    \l_tmpa_str
+  \optitem[#1]{#2}}
 \newcommand\Valitem[2][]{\penalty -1000\relax % A value item definition
   \index{#2@\texttt{#2}}%
-  \phantomsection\label{opt:#2}\valitem[#1]{#2}}
+  \phantomsection\label{opt:#2}%
+  \str_set:Nn
+    \l_tmpa_str
+    { #2 }
+  \seq_gput_right:NV
+    \g__markdown_techdoc_seen_options_seq
+    \l_tmpa_str
+  \valitem[#1]{#2}}
+\ExplSyntaxOff
 \newcommand\Opt[1]{% An option / value item reference
   \index{#1@\texttt{#1}}%
   \hyperref[opt:#1]{\inline{#1}}}
@@ -2587,6 +2627,40 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
         \tl_head:f { \l_tmpa_tl }
         \tl_tail:n { #1 }
       }
+  }
+\regex_const:Nn
+  \c_@@_option_regex
+  { ^markdownOption }
+\prg_new_conditional:Nnn
+  \@@_csname_to_option_str:nN
+  { T }
+  {
+    \tl_if_regex_match:nNTF
+      { #1 }
+      \c_@@_option_regex
+      {
+        \tl_set:Nn
+          \l_tmpa_tl
+          { #1 }
+        \tl_regex_replace_once:NNn
+          \l_tmpa_tl
+          \c_@@_option_regex
+          { }
+        \tl_set:Nn
+          \l_tmpb_tl
+          {
+            \str_lowercase:f
+              { \l_tmpa_tl }
+          }
+        \str_set:Nx
+          #2
+          {
+            \tl_head:f { \l_tmpb_tl }
+            \tl_tail:V \l_tmpa_tl
+          }
+        \prg_return_true:
+      }
+      { \prg_return_false: }
   }
 %    \end{macrocode}
 % \begin{markdown}
@@ -7685,7 +7759,7 @@ defaultOptions.html = true
 %
 :    true
 
-     :  When the option \Opt{HTML} is enabled and a text can be understood
+     :  When the option \Opt{html} is enabled and a text can be understood
         either as a hyperlink or HTML, interpret it as HTML.
 
         This is especially relevant when the option \Opt{relativeReferences}
@@ -7693,7 +7767,7 @@ defaultOptions.html = true
 
 :    false
 
-     :  When the option \Opt{HTML} is enabled and a text can be understood
+     :  When the option \Opt{html} is enabled and a text can be understood
         either as a hyperlink or HTML, interpret it as a hyperlink.
 
 This is an experimental option. Whenever the option \Opt{experimental} is
@@ -11999,7 +12073,7 @@ pdftex --shell-escape document.tex
 %### Typesetting Markdown and YAML {#tex-typesetting}
 %
 % The interface exposes the \mdef{markdownBegin}, \mdef{markdownEnd},
-% \mdef{yamlBegin}, \mref{yamlEnd}, \mdef{markinline}, \mdef{markdownInput},
+% \mdef{yamlBegin}, \mdef{yamlEnd}, \mdef{markinline}, \mdef{markdownInput},
 % \mdef{yamlInput}, and \mdef{markdownEscape} macros.
 %
 %#### Typesetting Markdown and YAML directly
@@ -12131,7 +12205,7 @@ pdftex --shell-escape document.tex
 %#### Typesetting Markdown and YAML from external documents
 %
 % You can use the \mref{markdownInput} macro to include markdown documents,
-% similarly to how you might use the \mref{input} \TeX{} primitive to include
+% similarly to how you might use the `\input` \TeX{} primitive to include
 % \TeX{} documents. The \mref{markdownInput} macro accepts a single parameter
 % with the filename of a markdown document and expands to the result of the
 % conversion of the input markdown document to plain \TeX{}.
@@ -12155,7 +12229,7 @@ pdftex --shell-escape document.tex
 % ```````
 %
 % You can use the \mref{yamlInput} macro to include YAML documents.
-% similarly to how you might use the \mref{input} \TeX{} primitive to include
+% similarly to how you might use the `\input` \TeX{} primitive to include
 % \TeX{} documents. The \mref{yamlInput} macro accepts a single parameter with
 % the filename of a YAML document and expands to the result of the
 % conversion of the input YAML document to plain \TeX{}.
@@ -12748,7 +12822,7 @@ A PDF document named `document.pdf` should be produced and contain the text
 %
 % The command also defines macros and key--values that map
 % directly to the options recognized by the Lua interface, such as
-% \mdef{markdownOptionHybrid} for the \Opt{hybrid} Lua option (see Section
+% `\markdownOptionHybrid` for the \Opt{hybrid} Lua option (see Section
 % <#sec:lua-options>), which are not processed by the plain \TeX{}
 % implementation, only passed along to Lua.
 %
@@ -17168,7 +17242,7 @@ following text:
 % \begin{markdown}
 
 #### Fenced Div Attribute Context Renderers
-The following macros are only produced, when the \Opt{fencedDiv} option is
+The following macros are only produced, when the \Opt{fencedDivs} option is
 enabled.
 
 The \mdef{markdownRendererFencedDivAttributeContextBegin} and
@@ -21854,10 +21928,10 @@ for identifiers and other programmatic text that won't be typeset by \TeX{}.
 % \begin{markdown}
 
 Before Markdown 3.7.0, the \mref{markdownRendererJekyllDataTypographicString}
-macro was named \mref{markdownRendererJekyllDataString} and the
+macro was named \mdef{markdownRendererJekyllDataString} and the
 \mref{markdownRendererJekyllDataProgrammaticString} macro was not produced.
-The \mref{markdownRendererJekyllDataString} has been deprecated and will be
-removed in Markdown 4.0.0.
+The \mref{markdownRendererJekyllDataString} macro has been deprecated and will
+be removed in Markdown 4.0.0.
 
 % \end{markdown}
 %
@@ -23071,7 +23145,7 @@ following text:
 % Unless the token renderer prototype macro has already been defined or unless,
 % it has been deprecated, we provide an empty definition.
 %
-% The \mref{markdownRendererJekyllDataStringPrototype} macro has been
+% The \mdef{markdownRendererJekyllDataStringPrototype} macro has been
 % deprecated and will be removed in Markdown 4.0.0.
 %
 % \end{markdown}
@@ -23572,7 +23646,7 @@ pdflatex --shell-escape document.tex
 %
 % This is because the implementation looks for the literal string
 % `\end{markdown}` to stop scanning the markdown text. However, you can work
-% around this limitation by using the \mref{markdown} and \mref{markdownEnd}
+% around this limitation by using the \mdef{markdown} and \mref{markdownEnd}
 % macros directly in the definition as follows:
 %
 % \markdownEnd
@@ -23659,7 +23733,7 @@ pdflatex --shell-escape document.tex
 %
 % You can't directly extend the \envmref{yaml} \LaTeX{} environment by using it
 % in other environments. However, you can work around this limitation by using
-% the \mref{yaml} and \mref{yamlEnd} macros directly in the definition,
+% the \mdef{yaml} and \mref{yamlEnd} macros directly in the definition,
 % similarly to the \mref{markdown} and \mref{markdownEnd} macros described
 % previously. Unlike with the \mref{markdown} and \mref{markdownEnd} macros,
 % The \mref{yamlEnd} macro _must_ be used in or after the replacement after-text.
@@ -34109,7 +34183,7 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Define \luamref{reader->update_rule} as a function that receives two
+% Define \luamdef{reader->update_rule} as a function that receives two
 % arguments: a left-hand side terminal symbol and a function that accepts
 % the current PEG pattern in \luamref{walkable_syntax}`[`left-hand side
 % terminal symbol`]` if defined or `nil` otherwise and returns a
@@ -37331,7 +37405,7 @@ function M.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 % Besides the canonical output of the conversion, which may contain cached
-% files behind \mref{input}, also return a function that always produces
+% files behind `\input`, also return a function that always produces
 % a flat output regardless of caching as the second return value.
 % \end{markdown}
 %  \begin{macrocode}
@@ -40262,8 +40336,8 @@ end
 % \begin{markdown}
 %
 % If the file does not exist in the current directory, we will search for it in
-% the directories specified in \mref{l_file_search_path_seq}. On \LaTeX, this
-% also includes the directories specified in \mref{input@path}.
+% the directories specified in `\l_file_search_path_seq`. On \LaTeX, this
+% also includes the directories specified in `\input@path`.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -41330,7 +41404,7 @@ end
 %
 % If either the package \pkg{paralist} or the package \pkg{enumitem} have
 % already been loaded, use them. Otherwise, if the option \Opt{experimental}
-% or the command \mref{DocumentMetadata} have been used, use the package
+% or the command `\DocumentMetadata` have been used, use the package
 % \pkg{enumitem}. Otherwise, use the package \pkg{paralist}.
 %
 % \end{markdown}
