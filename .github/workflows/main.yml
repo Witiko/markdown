@@ -44,9 +44,9 @@ jobs:
           repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
           ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
       - name: Install TeX Live
-        uses: TeX-Live/setup-texlive-action@v3
+        uses: zauguin/install-texlive@v4
         with:
-          cache: false
+          cache_version: ${{ github.run_id }}
           packages: |
             latexmk
             scheme-minimal
@@ -83,9 +83,9 @@ jobs:
           repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
           ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
       - name: Install TeX Live
-        uses: TeX-Live/setup-texlive-action@v3
+        uses: zauguin/install-texlive@v4
         with:
-          cache: false
+          cache_version: ${{ github.run_id }}
           packages: |
             latexmk
             scheme-minimal
@@ -109,9 +109,9 @@ jobs:
           repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
           ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
       - name: Install TeX Live
-        uses: TeX-Live/setup-texlive-action@v3
+        uses: zauguin/install-texlive@v4
         with:
-          cache: false
+          cache_version: ${{ github.run_id }}
           packages: |
             expltools
             latexmk
@@ -136,9 +136,9 @@ jobs:
           repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
           ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
       - name: Install TeX Live
-        uses: TeX-Live/setup-texlive-action@v3
+        uses: zauguin/install-texlive@v4
         with:
-          cache: false
+          cache_version: ${{ github.run_id }}
           packages: |
             latexmk
             scheme-minimal
