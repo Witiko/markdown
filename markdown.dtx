@@ -31136,13 +31136,13 @@ parsers.commented_line = Cg(Cc(""), "backslashes")
                           * Cs(parsers.commented_line_letter
                             - parsers.newline)^1  -- initial
                           * Cg(Cc(""), "backslashes")
-                          * Cg(Cc(true), "pure_comment"))
+                          * Cg(Cc(false), "pure_comment"))
                          + #( parsers.backslash
                             * (parsers.backslash + parsers.newline))
                          * Cg((parsers.backslash  -- even backslash
                               * ( parsers.backslash
                                 + #parsers.newline))^1, "backslashes")
-                         * Cg(Cc(true), "pure_comment")
+                         * Cg(Cc(false), "pure_comment")
                          + (parsers.backslash
                            * (#parsers.percent
                              * Cb("backslashes")
@@ -31155,7 +31155,7 @@ parsers.commented_line = Cg(Cc(""), "backslashes")
                              * Cc("\\")
                              * C(parsers.commented_line_letter))
                            * Cg(Cc(""), "backslashes")
-                           * Cg(Cc(true), "pure_comment")))^0
+                           * Cg(Cc(false), "pure_comment")))^0
                        * (#parsers.percent
                          * Cb("backslashes")
                          / function(backslashes)
@@ -31165,9 +31165,9 @@ parsers.commented_line = Cg(Cc(""), "backslashes")
                             * parsers.percent  -- comment
                             * parsers.line
                             * #parsers.blankline) -- blank line
-                            / function(is_pure)
-                               return is_pure and "" or "\n"
-                             end
+                           / function(is_pure)
+                             return is_pure and "" or "\n"
+                           end
                            + parsers.percent  -- comment
                            * parsers.line
                            * parsers.optionalspace)  -- leading spaces
