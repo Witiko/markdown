@@ -31129,17 +31129,20 @@ parsers.commented_line_letter  = parsers.linechar
                                - parsers.backslash
                                - parsers.percent
 parsers.commented_line = Cg(Cc(""), "backslashes")
+                       * Cg(Cc(true), "pure_comment")
                        * ((#(parsers.commented_line_letter
                             - parsers.newline)
                           * Cb("backslashes")
                           * Cs(parsers.commented_line_letter
                             - parsers.newline)^1  -- initial
-                          * Cg(Cc(""), "backslashes"))
+                          * Cg(Cc(""), "backslashes")
+                          * Cg(Cc(true), "pure_comment"))
                          + #( parsers.backslash
                             * (parsers.backslash + parsers.newline))
                          * Cg((parsers.backslash  -- even backslash
                               * ( parsers.backslash
                                 + #parsers.newline))^1, "backslashes")
+                         * Cg(Cc(true), "pure_comment")
                          + (parsers.backslash
                            * (#parsers.percent
                              * Cb("backslashes")
@@ -31151,16 +31154,20 @@ parsers.commented_line = Cg(Cc(""), "backslashes")
                              * Cb("backslashes")
                              * Cc("\\")
                              * C(parsers.commented_line_letter))
-                           * Cg(Cc(""), "backslashes")))^0
+                           * Cg(Cc(""), "backslashes")
+                           * Cg(Cc(true), "pure_comment")))^0
                        * (#parsers.percent
                          * Cb("backslashes")
                          / function(backslashes)
                            return string.rep("\\", #backslashes / 2)
                          end
-                         * ((parsers.percent  -- comment
+                         * ((Cb("pure_comment")
+                            * parsers.percent  -- comment
                             * parsers.line
                             * #parsers.blankline) -- blank line
-                           / "\n"
+                            / function(is_pure)
+                               return is_pure and "" or "\n"
+                             end
                            + parsers.percent  -- comment
                            * parsers.line
                            * parsers.optionalspace)  -- leading spaces
