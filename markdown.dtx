@@ -33565,7 +33565,8 @@ function M.reader.new(writer, options)
                      + parsers.spacechar^1
                      * -parsers.newline / self.expandtabs
                      + parsers.spacechar^1
-                     + (parsers.spacechar + parsers.html_space_entity_char)^1
+                     + ( parsers.spacechar
+                       + parsers.html_space_entity_char)^1
                      * parsers.endline / writer.soft_line_break
 
   parsers.NonbreakingEndline
