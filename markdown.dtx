@@ -14686,7 +14686,7 @@ following body text:
 
 > A useful use of HTML comments are side notes.
 >
-> **<b>**_Hello,_ world!**</b><br/>**
+> **&lt;b&gt;**_Hello,_ world!**&lt;/b&gt;&lt;br/&gt;**
 >
 >     <div>_Hello,_ world!</div>
 
@@ -18094,7 +18094,7 @@ following content:
 }
 \begin{document}
 \begin{markdown}
-<b>Hello, world!</b><br/>
+<b>_Hello,_ world!</b><br/>
 \end{markdown}
 \end{document}
 ```````
@@ -18106,7 +18106,7 @@ lualatex document.tex
 A PDF document named `document.pdf` should be produced and contain the
 following body text:
 
-> _<b>_*Hello,* world!**</b>**`<br/>`
+> _&lt;b&gt;_*Hello,* world!**&lt;/b&gt;**`<br/>`
 
 %</manual-tokens>
 %<*tex>
