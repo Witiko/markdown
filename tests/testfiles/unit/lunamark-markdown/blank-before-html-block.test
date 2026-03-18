@@ -16,10 +16,10 @@ BEGIN document
 codeSpan: blankBeforeHtmlBlock
 softLineBreak
 paragraphSeparator
-inlineHtmlComment:  foo 
+inlineHtmlComment: foo
 paragraphSeparator
 softLineBreak
-inlineHtmlComment:  foo 
+inlineHtmlComment: foo
 paragraphSeparator
 interblockSeparator
 inputBlockHtmlElement: 0bd4d7739263f98a4f1bf580ac0bf3c1.verbatim

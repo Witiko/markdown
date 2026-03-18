@@ -32022,8 +32022,10 @@ parsers.nested_breaking_blank = parsers.newline
                               * parsers.blankline
 
 parsers.html_comment_start = P("<!--")
+                           * parsers.optionalspace
 
-parsers.html_comment_end = P("-->")
+parsers.html_comment_end = parsers.optionalspace
+                         * P("-->")
 
 parsers.html_comment
   = Cs( parsers.html_comment_start
