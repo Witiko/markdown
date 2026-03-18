@@ -2,6 +2,15 @@
 
 ## 3.14.1 (2026-03-XX)
 
+### Fixes
+
+This version of the Markdown package has fixed the following issues:
+
+- Do not consume blank lines following a line from a line block. (#627, #629)
+
+  This prevents bad interactions between a preceding line block and a following
+  pipe table when the `lineBlocks` and `pipeTables` options are enabled.
+
 ### Continuous integration
 
 This version of the Markdown package has made the following changes to our
