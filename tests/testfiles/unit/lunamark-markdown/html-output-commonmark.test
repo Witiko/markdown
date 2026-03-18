@@ -1,7 +1,9 @@
 \markdownSetup{htmlOutput=commonmark}
 <<<
-This test ensures that the `htmlOutput` option produces individual
-renderers for each CommonMark HTML block type.
+This test ensures that the `htmlOutput` option correctly propagates through the
+plain TeX interface and that, when set to `commonmark`, it produces individual
+renderers for each top-level non-terminal element of CommonMark's grammar for
+HTML blocks and raw HTML.
 
 <!-- block comment -->
 
@@ -11,10 +13,12 @@ renderers for each CommonMark HTML block type.
 hello
 </div>
 
-foo <b>bar</b> baz
+foo <b>bar</b> baz<br/> <!-- bam -->
 >>>
 BEGIN document
 codeSpan: htmlOutput
+softLineBreak
+codeSpan: commonmark
 softLineBreak
 interblockSeparator
 inputBlockHtmlCommentElement: b3ffb66dd7e08481fe6b45f4a11c8552.verbatim
@@ -25,4 +29,6 @@ inputBlockHtmlRegularElement: 5ed18adb8bdfa2141d18971defaa62ac.verbatim
 interblockSeparator
 inlineHtmlOpenTag: <b>
 inlineHtmlCloseTag: </b>
+inlineHtmlEmptyTag: <br/>
+inlineHtmlComment: bam
 END document
