@@ -2,6 +2,9 @@
 
 ## 3.14.1 (2026-03-XX)
 
+- Replace `mtxrun --luatex --generate` with `context --generate
+  --luatex`
+
 ### Continuous integration
 
 This version of the Markdown package has made the following changes to our
