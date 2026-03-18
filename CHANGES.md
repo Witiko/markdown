@@ -13,7 +13,7 @@ continuous integration:
 - Migrate from deprecated `TeX-Live/setup-texlive-action@v3` to
   `zauguin/install-texlive@v4`. (#636, 3c4c6bb0)
 - Test the package on both TeX Live 2025 and 2026.
-  (#631, ff23b28..81928d7, 1a98fa99, a3c8e8a2)
+  (#631, ff23b28..81928d7, 1a98fa99..c7ef926a)
 
 ## 3.14.0 (2026-02-26)
 
