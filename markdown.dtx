@@ -7694,7 +7694,7 @@ defaultOptions.html = true
 
 :    commonmark
 
-     :  When the \Opt{html} option is enabled, produce individual renderers
+     :  When the \Opt{html} option is enabled, produce fine-grained renderers
         for each top-level non-terminal element of CommonMark's grammar for
 %       \iffalse
         [HTML blocks][html-blocks] and [raw HTML][raw-html].
@@ -16081,10 +16081,11 @@ following text:
 
 #### CommonMark Block HTML Renderers {#commonmark-block-html-renderers}
 
-When the \Opt{htmlOutput} option is set to \opt{commonmark}, the following
-renderers are produced instead of \mref{markdownRendererInputBlockHtmlElement}
-distinguish different top-level non-terminal elements of CommonMark's grammar
-for [raw HTML][html-blocks]:
+When the \Opt{html} option is enabled and \Opt{htmlOutput} is set to
+\opt{commonmark}, the following fine-grained renderers are produced instead of
+\mref{markdownRendererInputBlockHtmlElement} to distinguish between different
+top-level non-terminal elements of CommonMark's grammar for [raw
+HTML][html-blocks]:
 
 - \mdef{markdownRendererInputBlockHtmlCommentElement} -- HTML comment block
   (type~2).
@@ -16252,10 +16253,10 @@ The horizontal margins should contain the following text:
 
 #### CommonMark Raw HTML Renderers {#commonmark-raw-html-renderers}
 
-When the \Opt{htmlOutput} option is set to \opt{commonmark}, the following
-renderers are produced instead of \mref{markdownRendererInlineHtmlTag} to
-distinguish different top-level non-terminal elements of CommonMark's grammar
-for [raw HTML][raw-html]:
+When the \Opt{html} option is enabled and \Opt{htmlOutput} is set to
+\opt{commonmark}, the following renderers are produced instead of
+\mref{markdownRendererInlineHtmlTag} to distinguish between different top-level
+non-terminal elements of CommonMark's grammar for [raw HTML][raw-html]:
 
 - \mdef{markdownRendererInlineHtmlInstruction} -- processing instruction.
 - \mdef{markdownRendererInlineHtmlDeclaration} -- declaration.

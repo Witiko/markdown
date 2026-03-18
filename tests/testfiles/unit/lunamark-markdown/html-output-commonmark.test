@@ -1,7 +1,7 @@
 \markdownSetup{htmlOutput=commonmark}
 <<<
 This test ensures that the `htmlOutput` option correctly propagates through the
-plain TeX interface and that, when set to `commonmark`, it produces individual
+plain TeX interface and that, when set to `commonmark`, it produces fine-grained
 renderers for each top-level non-terminal element of CommonMark's grammar for
 HTML blocks and raw HTML.
 
