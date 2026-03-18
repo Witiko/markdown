@@ -279,9 +279,9 @@ then
   retry -t 30 -d 60 tlmgr update --self --all $REPOSITORY
 fi
 
-# Install TeX Live dependencies
+# Install TeX Live dependencies in non-full TeX Live versions
 DEPENDS="$(awk '{ print $2 }' ${BUILD_DIR}/DEPENDS.txt ${BUILD_DIR}/tests/DEPENDS.txt | sort -u)"
-if [ ${TEXLIVE_TAG} != latest ]
+if echo ${TEXLIVE_TAG} | { ! grep -qE '^(latest|pretest)$|-historic$'; }
 then
   retry -t 30 -d 60 tlmgr install $DEPENDS $REPOSITORY
   tlmgr path add
