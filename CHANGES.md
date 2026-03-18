@@ -2,6 +2,13 @@
 
 ## 3.14.1 (2026-03-XX)
 
+### Fixes
+
+This version of the Markdown package has fixed the following issues:
+
+- Collapse spaces at the end of a line, even if these spaces originate from
+  HTML entities. (reported by @jonathan-gruber-jg in #618, fixed in #624)
+
 ### Continuous integration
 
 This version of the Markdown package has made the following changes to our
