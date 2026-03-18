@@ -12,7 +12,7 @@ continuous integration:
 - Bump `docker/login-action` from 3 to 4 (added by @dependabot in #634)
 - Migrate from deprecated `TeX-Live/setup-texlive-action@v3` to
   `zauguin/install-texlive@v4`. (#636, 3c4c6bb0)
-- Test the package on both TeX Live 2025 and 2026. (1a98fa99)
+- Test the package on both TeX Live 2025 and 2026. (#631, ff23b28..81928d7, 1a98fa99)
 
 ## 3.14.0 (2026-02-26)
 
