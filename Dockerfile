@@ -320,14 +320,14 @@ set -o xtrace
 ln -s ${INSTALL_DIR}/scripts/markdown/markdown-cli.lua       ${BINARY_DIR}/markdown-cli
 ln -s ${INSTALL_DIR}/scripts/markdown/markdown2tex.lua       ${BINARY_DIR}/markdown2tex
 
-# Generate the ConTeXt file database
-if [ ${TEXLIVE_TAG} != latest ]
+# Generate the ConTeXt file database in non-full TeX Live versions
+if echo ${TEXLIVE_TAG} | { ! grep -qE '^(latest|pretest)$|-historic$'; }
 then
   # A temporary fix for ConTeXt, see <https://gitlab.com/islandoftex/images/texlive/-/issues/30>.
   sed -i '/package.loaded\["data-ini"\]/a if os.selfpath then environment.ownbin=lfs.symlinktarget(os.selfpath..io.fileseparator..os.selfname);environment.ownpath=environment.ownbin:match("^.*"..io.fileseparator) else environment.ownpath=kpse.new("luatex"):var_value("SELFAUTOLOC");environment.ownbin=environment.ownpath..io.fileseparator..(arg[-2] or arg[-1] or arg[0] or "luatex"):match("[^"..io.fileseparator.."]*$") end' /usr/bin/mtxrun.lua || true
 fi
 mtxrun --generate
-if [ ${TEXLIVE_TAG} != latest ]
+if echo ${TEXLIVE_TAG} | { ! grep -qE '^(latest|pretest)$|-historic$'; }
 then
   texlua /usr/bin/mtxrun.lua --luatex --generate
   context --make
