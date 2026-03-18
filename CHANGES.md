@@ -2,9 +2,6 @@
 
 ## 3.14.1 (2026-03-XX)
 
-- Replace `mtxrun --luatex --generate` with `context --generate
-  --luatex`
-
 ### Continuous integration
 
 This version of the Markdown package has made the following changes to our
@@ -17,6 +14,13 @@ continuous integration:
   `zauguin/install-texlive@v4`. (#636, 3c4c6bb0)
 - Test the package on both TeX Live 2025 and 2026.
   (#631, ff23b28..81928d7, 1a98fa99..c7ef926a)
+
+### Miscellaneous
+
+This version of the Markdown package has made the following other changes:
+
+- Replace `mtxrun --luatex --generate` with `context --generate --luatex`
+  in the user manual and `Dockerfile`. (@hanshagen and @gucci-on-fleek in #637)
 
 ## 3.14.0 (2026-02-26)
 
