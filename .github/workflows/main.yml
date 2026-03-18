@@ -224,6 +224,7 @@ jobs:
       fail-fast: true
       matrix:
         texlive:
+          - TL2025-historic
           - pretest
           - pretest-context
           - pretest-minimal
@@ -247,6 +248,7 @@ jobs:
         include:
           - texlive: latest-minimal
     outputs:
+      TL2025-historic: ${{ steps.temporary-tags.outputs.TL2025-historic }}
       latest: ${{ steps.temporary-tags.outputs.latest }}
       latest-context: ${{ steps.temporary-tags.outputs.latest-context }}
       latest-minimal: ${{ steps.temporary-tags.outputs.latest-minimal }}
@@ -290,6 +292,7 @@ jobs:
       fail-fast: true
       matrix:
         texlive:
+          - TL2025-historic
           - latest
           - latest-context
           - latest-minimal
@@ -361,6 +364,7 @@ jobs:
       fail-fast: true
       matrix:
         texlive:
+          - TL2025-historic
           - latest
           - latest-context
           - latest-minimal
