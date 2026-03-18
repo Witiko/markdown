@@ -1,5 +1,16 @@
 # Changes
 
+## 3.15.0 (2026-03-XX)
+
+### Development
+
+This version of the Markdown package has added the following new features:
+
+- Add a new `htmlOutput` option to produce fine-grained HTML renderers based on
+  CommonMark's grammar. (suggested by @u-fischer and @Witiko in #597 and #606,
+  contributed by @herley-shaori in #635)
+- Strip leading and trailins spaces for `inlineHtmlComment` renderers. (#635)
+
 ## 3.14.1 (2026-03-XX)
 
 ### Continuous integration
