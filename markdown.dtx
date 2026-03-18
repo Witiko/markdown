@@ -16079,6 +16079,321 @@ following text:
 %
 % \begin{markdown}
 
+#### CommonMark Block HTML Renderers {#commonmark-block-html-renderers}
+
+When the \Opt{htmlOutput} option is set to \opt{commonmark}, the following
+renderers are produced instead of \mref{markdownRendererInputBlockHtmlElement}
+distinguish different top-level non-terminal elements of CommonMark's grammar
+for [raw HTML][html-blocks]:
+
+- \mdef{markdownRendererInputBlockHtmlCommentElement} -- HTML comment block
+  (type~2).
+- \mdef{markdownRendererInputBlockHtmlInstructionElement} -- processing
+  instruction block (type~3).
+- \mdef{markdownRendererInputBlockHtmlDeclarationElement} -- declaration
+  block (type~4).
+- \mdef{markdownRendererInputBlockHtmlCdataElement} -- CDATA section block
+  (type~5).
+- \mdef{markdownRendererInputBlockHtmlSpecialElement} -- special element
+  block such as `<script>`, `<pre>`, `<style>`, or `<textarea>` (type~1).
+- \mdef{markdownRendererInputBlockHtmlRegularElement} -- regular block-level
+  element block such as `<div>` or `<table>` (type~6).
+- \mdef{markdownRendererInputBlockHtmlAnyElement} -- any other complete HTML
+  tag on its own line (type~7).
+
+Each of these macros receives a single argument that is the filename of a file
+containing the corresponding HTML text. Their prototypes fall back on
+\mref{markdownRendererInputBlockHtmlElementPrototype}.
+
+ [html-blocks]: https://spec.commonmark.org/0.31.2/#html-blocks
+
+% \end{markdown}
+%
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage{markdown}
+\usepackage{marginnote}
+\usepackage{verbatim}
+\markdownSetup{
+  htmlOutput = commonmark,
+  renderers = {
+    inputBlockHtmlComment = {\marginnote{\input{#1}}},
+  },
+}
+\begin{document}
+\begin{markdown}
+A useful use of inline HTML comments are side notes.
+
+<!-- Side notes are displayed in the horizontal margins next to the relevant
+passages, which makes them *easier for the reader to find* than notes. -->
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following body text:
+
+> A useful use of HTML comments are side notes.
+
+The horizontal margins should contain the following text:
+
+> Side notes are displayed in the horizontal margins next to the relevant
+> passages, which makes them *easier for the reader to find* than notes.
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererInputBlockHtmlCommentElement
+  {
+    \markdownRendererInputBlockHtmlCommentElementPrototype
+  }
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { inputBlockHtmlCommentElement }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { inputBlockHtmlCommentElement }
+  { 1 }
+\cs_gset_protected:Npn
+  \markdownRendererInputBlockHtmlInstructionElement
+  {
+    \markdownRendererInputBlockHtmlInstructionElementPrototype
+  }
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { inputBlockHtmlInstructionElement }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { inputBlockHtmlInstructionElement }
+  { 1 }
+\cs_gset_protected:Npn
+  \markdownRendererInputBlockHtmlDeclarationElement
+  {
+    \markdownRendererInputBlockHtmlDeclarationElementPrototype
+  }
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { inputBlockHtmlDeclarationElement }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { inputBlockHtmlDeclarationElement }
+  { 1 }
+\cs_gset_protected:Npn
+  \markdownRendererInputBlockHtmlCdataElement
+  {
+    \markdownRendererInputBlockHtmlCdataElementPrototype
+  }
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { inputBlockHtmlCdataElement }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { inputBlockHtmlCdataElement }
+  { 1 }
+\cs_gset_protected:Npn
+  \markdownRendererInputBlockHtmlSpecialElement
+  {
+    \markdownRendererInputBlockHtmlSpecialElementPrototype
+  }
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { inputBlockHtmlSpecialElement }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { inputBlockHtmlSpecialElement }
+  { 1 }
+\cs_gset_protected:Npn
+  \markdownRendererInputBlockHtmlRegularElement
+  {
+    \markdownRendererInputBlockHtmlRegularElementPrototype
+  }
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { inputBlockHtmlRegularElement }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { inputBlockHtmlRegularElement }
+  { 1 }
+\cs_gset_protected:Npn
+  \markdownRendererInputBlockHtmlAnyElement
+  {
+    \markdownRendererInputBlockHtmlAnyElementPrototype
+  }
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { inputBlockHtmlAnyElement }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { inputBlockHtmlAnyElement }
+  { 1 }
+\ExplSyntaxOff
+%    \end{macrocode}
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
+#### CommonMark Raw HTML Renderers {#commonmark-raw-html-renderers}
+
+When the \Opt{htmlOutput} option is set to \opt{commonmark}, the following
+renderers are produced instead of \mref{markdownRendererInlineHtmlTag} to
+distinguish different top-level non-terminal elements of CommonMark's grammar
+for [raw HTML][raw-html]:
+
+- \mdef{markdownRendererInlineHtmlInstruction} -- processing instruction.
+- \mdef{markdownRendererInlineHtmlDeclaration} -- declaration.
+- \mdef{markdownRendererInlineHtmlCdataSection} -- CDATA section.
+- \mdef{markdownRendererInlineHtmlOpenTag} -- opening tag.
+- \mdef{markdownRendererInlineHtmlCloseTag} -- closing tag.
+- \mdef{markdownRendererInlineHtmlEmptyTag} -- self-closing (empty) tag.
+
+Each of these macros receives a single argument with the HTML text. Their
+prototypes fall back on \mref{markdownRendererInlineHtmlTagPrototype}.
+
+ [raw-html]: https://spec.commonmark.org/0.31.2/#raw-html
+
+% \end{markdown}
+%
+% \iffalse
+
+##### \LaTeX{} Example {.unnumbered}
+
+Using a text editor, create a text document named `document.tex` with the
+following content:
+``` tex
+\documentclass{article}
+\usepackage{markdown}
+\usepackage{marginnote}
+\usepackage{verbatim}
+\markdownSetup{
+  htmlOutput = commonmark,
+  renderers = {
+    inlineHtmlOpenTag = {\textit{#1}},
+    inlineHtmlCloseTag = {\textbf{#1}},
+    inlineHtmlEmptyTag = {\texttt{#1}},
+  },
+}
+\begin{document}
+\begin{markdown}
+<b>_Hello,_ world!</b><br/>
+\end{markdown}
+\end{document}
+```````
+Next, invoke LuaTeX from the terminal:
+``` sh
+lualatex document.tex
+lualatex document.tex
+``````
+A PDF document named `document.pdf` should be produced and contain the
+following body text:
+
+> _&lt;b&gt;_*Hello,* world!**&lt;/b&gt;**`<br/>`
+
+%</manual-tokens>
+%<*tex>
+% \fi
+%
+%  \begin{macrocode}
+\ExplSyntaxOn
+\cs_gset_protected:Npn
+  \markdownRendererInlineHtmlInstruction
+  {
+    \markdownRendererInlineHtmlInstructionPrototype
+  }
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { inlineHtmlInstruction }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { inlineHtmlInstruction }
+  { 1 }
+\cs_gset_protected:Npn
+  \markdownRendererInlineHtmlDeclaration
+  {
+    \markdownRendererInlineHtmlDeclarationPrototype
+  }
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { inlineHtmlDeclaration }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { inlineHtmlDeclaration }
+  { 1 }
+\cs_gset_protected:Npn
+  \markdownRendererInlineHtmlCdataSection
+  {
+    \markdownRendererInlineHtmlCdataSectionPrototype
+  }
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { inlineHtmlCdataSection }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { inlineHtmlCdataSection }
+  { 1 }
+\cs_gset_protected:Npn
+  \markdownRendererInlineHtmlOpenTag
+  {
+    \markdownRendererInlineHtmlOpenTagPrototype
+  }
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { inlineHtmlOpenTag }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { inlineHtmlOpenTag }
+  { 1 }
+\cs_gset_protected:Npn
+  \markdownRendererInlineHtmlCloseTag
+  {
+    \markdownRendererInlineHtmlCloseTagPrototype
+  }
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { inlineHtmlCloseTag }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { inlineHtmlCloseTag }
+  { 1 }
+\cs_gset_protected:Npn
+  \markdownRendererInlineHtmlEmptyTag
+  {
+    \markdownRendererInlineHtmlEmptyTagPrototype
+  }
+\seq_gput_right:Nn
+  \g_@@_renderers_seq
+  { inlineHtmlEmptyTag }
+\prop_gput:Nnn
+  \g_@@_renderer_arities_prop
+  { inlineHtmlEmptyTag }
+  { 1 }
+\ExplSyntaxOff
+%    \end{macrocode}
+%
+% \iffalse
+%</tex>
+%<*manual-tokens>
+% \fi
+%
+% \begin{markdown}
+
 #### Content Block Renderers {#texcontentblockrenderers}
 
 The \mdef{markdownRendererContentBlock} macro represents an iA\\,Writer content
@@ -17871,321 +18186,6 @@ following text:
 \prop_gput:Nnn
   \g_@@_renderer_arities_prop
   { headingSix }
-  { 1 }
-\ExplSyntaxOff
-%    \end{macrocode}
-%
-% \iffalse
-%</tex>
-%<*manual-tokens>
-% \fi
-%
-% \begin{markdown}
-
-#### CommonMark Block HTML Renderers {#commonmark-block-html-renderers}
-
-When the \Opt{htmlOutput} option is set to \opt{commonmark}, the following
-renderers are produced instead of \mref{markdownRendererInputBlockHtmlElement}
-distinguish different top-level non-terminal elements of CommonMark's grammar
-for [raw HTML][html-blocks]:
-
-- \mdef{markdownRendererInputBlockHtmlCommentElement} -- HTML comment block
-  (type~2).
-- \mdef{markdownRendererInputBlockHtmlInstructionElement} -- processing
-  instruction block (type~3).
-- \mdef{markdownRendererInputBlockHtmlDeclarationElement} -- declaration
-  block (type~4).
-- \mdef{markdownRendererInputBlockHtmlCdataElement} -- CDATA section block
-  (type~5).
-- \mdef{markdownRendererInputBlockHtmlSpecialElement} -- special element
-  block such as `<script>`, `<pre>`, `<style>`, or `<textarea>` (type~1).
-- \mdef{markdownRendererInputBlockHtmlRegularElement} -- regular block-level
-  element block such as `<div>` or `<table>` (type~6).
-- \mdef{markdownRendererInputBlockHtmlAnyElement} -- any other complete HTML
-  tag on its own line (type~7).
-
-Each of these macros receives a single argument that is the filename of a file
-containing the corresponding HTML text. Their prototypes fall back on
-\mref{markdownRendererInputBlockHtmlElementPrototype}.
-
- [html-blocks]: https://spec.commonmark.org/0.31.2/#html-blocks
-
-% \end{markdown}
-%
-% \iffalse
-
-##### \LaTeX{} Example {.unnumbered}
-
-Using a text editor, create a text document named `document.tex` with the
-following content:
-``` tex
-\documentclass{article}
-\usepackage{markdown}
-\usepackage{marginnote}
-\usepackage{verbatim}
-\markdownSetup{
-  htmlOutput = commonmark,
-  renderers = {
-    inputBlockHtmlComment = {\marginnote{\input{#1}}},
-  },
-}
-\begin{document}
-\begin{markdown}
-A useful use of inline HTML comments are side notes.
-
-<!-- Side notes are displayed in the horizontal margins next to the relevant
-passages, which makes them *easier for the reader to find* than notes. -->
-\end{markdown}
-\end{document}
-```````
-Next, invoke LuaTeX from the terminal:
-``` sh
-lualatex document.tex
-lualatex document.tex
-``````
-A PDF document named `document.pdf` should be produced and contain the
-following body text:
-
-> A useful use of HTML comments are side notes.
-
-The horizontal margins should contain the following text:
-
-> Side notes are displayed in the horizontal margins next to the relevant
-> passages, which makes them *easier for the reader to find* than notes.
-
-%</manual-tokens>
-%<*tex>
-% \fi
-%
-%  \begin{macrocode}
-\ExplSyntaxOn
-\cs_gset_protected:Npn
-  \markdownRendererInputBlockHtmlCommentElement
-  {
-    \markdownRendererInputBlockHtmlCommentElementPrototype
-  }
-\seq_gput_right:Nn
-  \g_@@_renderers_seq
-  { inputBlockHtmlCommentElement }
-\prop_gput:Nnn
-  \g_@@_renderer_arities_prop
-  { inputBlockHtmlCommentElement }
-  { 1 }
-\cs_gset_protected:Npn
-  \markdownRendererInputBlockHtmlInstructionElement
-  {
-    \markdownRendererInputBlockHtmlInstructionElementPrototype
-  }
-\seq_gput_right:Nn
-  \g_@@_renderers_seq
-  { inputBlockHtmlInstructionElement }
-\prop_gput:Nnn
-  \g_@@_renderer_arities_prop
-  { inputBlockHtmlInstructionElement }
-  { 1 }
-\cs_gset_protected:Npn
-  \markdownRendererInputBlockHtmlDeclarationElement
-  {
-    \markdownRendererInputBlockHtmlDeclarationElementPrototype
-  }
-\seq_gput_right:Nn
-  \g_@@_renderers_seq
-  { inputBlockHtmlDeclarationElement }
-\prop_gput:Nnn
-  \g_@@_renderer_arities_prop
-  { inputBlockHtmlDeclarationElement }
-  { 1 }
-\cs_gset_protected:Npn
-  \markdownRendererInputBlockHtmlCdataElement
-  {
-    \markdownRendererInputBlockHtmlCdataElementPrototype
-  }
-\seq_gput_right:Nn
-  \g_@@_renderers_seq
-  { inputBlockHtmlCdataElement }
-\prop_gput:Nnn
-  \g_@@_renderer_arities_prop
-  { inputBlockHtmlCdataElement }
-  { 1 }
-\cs_gset_protected:Npn
-  \markdownRendererInputBlockHtmlSpecialElement
-  {
-    \markdownRendererInputBlockHtmlSpecialElementPrototype
-  }
-\seq_gput_right:Nn
-  \g_@@_renderers_seq
-  { inputBlockHtmlSpecialElement }
-\prop_gput:Nnn
-  \g_@@_renderer_arities_prop
-  { inputBlockHtmlSpecialElement }
-  { 1 }
-\cs_gset_protected:Npn
-  \markdownRendererInputBlockHtmlRegularElement
-  {
-    \markdownRendererInputBlockHtmlRegularElementPrototype
-  }
-\seq_gput_right:Nn
-  \g_@@_renderers_seq
-  { inputBlockHtmlRegularElement }
-\prop_gput:Nnn
-  \g_@@_renderer_arities_prop
-  { inputBlockHtmlRegularElement }
-  { 1 }
-\cs_gset_protected:Npn
-  \markdownRendererInputBlockHtmlAnyElement
-  {
-    \markdownRendererInputBlockHtmlAnyElementPrototype
-  }
-\seq_gput_right:Nn
-  \g_@@_renderers_seq
-  { inputBlockHtmlAnyElement }
-\prop_gput:Nnn
-  \g_@@_renderer_arities_prop
-  { inputBlockHtmlAnyElement }
-  { 1 }
-\ExplSyntaxOff
-%    \end{macrocode}
-%
-% \iffalse
-%</tex>
-%<*manual-tokens>
-% \fi
-%
-% \begin{markdown}
-
-#### CommonMark Raw HTML Renderers {#commonmark-raw-html-renderers}
-
-When the \Opt{htmlOutput} option is set to \opt{commonmark}, the following
-renderers are produced instead of \mref{markdownRendererInlineHtmlTag} to
-distinguish different top-level non-terminal elements of CommonMark's grammar
-for [raw HTML][raw-html]:
-
-- \mdef{markdownRendererInlineHtmlInstruction} -- processing instruction.
-- \mdef{markdownRendererInlineHtmlDeclaration} -- declaration.
-- \mdef{markdownRendererInlineHtmlCdataSection} -- CDATA section.
-- \mdef{markdownRendererInlineHtmlOpenTag} -- opening tag.
-- \mdef{markdownRendererInlineHtmlCloseTag} -- closing tag.
-- \mdef{markdownRendererInlineHtmlEmptyTag} -- self-closing (empty) tag.
-
-Each of these macros receives a single argument with the HTML text. Their
-prototypes fall back on \mref{markdownRendererInlineHtmlTagPrototype}.
-
- [raw-html]: https://spec.commonmark.org/0.31.2/#raw-html
-
-% \end{markdown}
-%
-% \iffalse
-
-##### \LaTeX{} Example {.unnumbered}
-
-Using a text editor, create a text document named `document.tex` with the
-following content:
-``` tex
-\documentclass{article}
-\usepackage{markdown}
-\usepackage{marginnote}
-\usepackage{verbatim}
-\markdownSetup{
-  htmlOutput = commonmark,
-  renderers = {
-    inlineHtmlOpenTag = {\textit{#1}},
-    inlineHtmlCloseTag = {\textbf{#1}},
-    inlineHtmlEmptyTag = {\texttt{#1}},
-  },
-}
-\begin{document}
-\begin{markdown}
-<b>_Hello,_ world!</b><br/>
-\end{markdown}
-\end{document}
-```````
-Next, invoke LuaTeX from the terminal:
-``` sh
-lualatex document.tex
-lualatex document.tex
-``````
-A PDF document named `document.pdf` should be produced and contain the
-following body text:
-
-> _&lt;b&gt;_*Hello,* world!**&lt;/b&gt;**`<br/>`
-
-%</manual-tokens>
-%<*tex>
-% \fi
-%
-%  \begin{macrocode}
-\ExplSyntaxOn
-\cs_gset_protected:Npn
-  \markdownRendererInlineHtmlInstruction
-  {
-    \markdownRendererInlineHtmlInstructionPrototype
-  }
-\seq_gput_right:Nn
-  \g_@@_renderers_seq
-  { inlineHtmlInstruction }
-\prop_gput:Nnn
-  \g_@@_renderer_arities_prop
-  { inlineHtmlInstruction }
-  { 1 }
-\cs_gset_protected:Npn
-  \markdownRendererInlineHtmlDeclaration
-  {
-    \markdownRendererInlineHtmlDeclarationPrototype
-  }
-\seq_gput_right:Nn
-  \g_@@_renderers_seq
-  { inlineHtmlDeclaration }
-\prop_gput:Nnn
-  \g_@@_renderer_arities_prop
-  { inlineHtmlDeclaration }
-  { 1 }
-\cs_gset_protected:Npn
-  \markdownRendererInlineHtmlCdataSection
-  {
-    \markdownRendererInlineHtmlCdataSectionPrototype
-  }
-\seq_gput_right:Nn
-  \g_@@_renderers_seq
-  { inlineHtmlCdataSection }
-\prop_gput:Nnn
-  \g_@@_renderer_arities_prop
-  { inlineHtmlCdataSection }
-  { 1 }
-\cs_gset_protected:Npn
-  \markdownRendererInlineHtmlOpenTag
-  {
-    \markdownRendererInlineHtmlOpenTagPrototype
-  }
-\seq_gput_right:Nn
-  \g_@@_renderers_seq
-  { inlineHtmlOpenTag }
-\prop_gput:Nnn
-  \g_@@_renderer_arities_prop
-  { inlineHtmlOpenTag }
-  { 1 }
-\cs_gset_protected:Npn
-  \markdownRendererInlineHtmlCloseTag
-  {
-    \markdownRendererInlineHtmlCloseTagPrototype
-  }
-\seq_gput_right:Nn
-  \g_@@_renderers_seq
-  { inlineHtmlCloseTag }
-\prop_gput:Nnn
-  \g_@@_renderer_arities_prop
-  { inlineHtmlCloseTag }
-  { 1 }
-\cs_gset_protected:Npn
-  \markdownRendererInlineHtmlEmptyTag
-  {
-    \markdownRendererInlineHtmlEmptyTagPrototype
-  }
-\seq_gput_right:Nn
-  \g_@@_renderers_seq
-  { inlineHtmlEmptyTag }
-\prop_gput:Nnn
-  \g_@@_renderer_arities_prop
-  { inlineHtmlEmptyTag }
   { 1 }
 \ExplSyntaxOff
 %    \end{macrocode}
