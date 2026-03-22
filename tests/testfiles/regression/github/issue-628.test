@@ -1,0 +1,16 @@
+\markdownSetup {
+  texComments = true
+}
+<<<
+foo
+% bar
+
+- baz
+>>>
+BEGIN document
+interblockSeparator
+ulBeginTight
+ulItem
+ulItemEnd
+ulEndTight
+END document
