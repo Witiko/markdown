@@ -329,7 +329,7 @@ fi
 mtxrun --generate
 if echo ${TEXLIVE_TAG} | { ! grep -qE '^(latest|pretest)$|-historic$'; }
 then
-  texlua /usr/bin/mtxrun.lua --luatex --generate
+  context --generate --luatex
   context --make
   context --luatex --make
 fi

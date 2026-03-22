@@ -15,6 +15,13 @@ continuous integration:
 - Test the package on both TeX Live 2025 and 2026.
   (#631, ff23b28..81928d7, 1a98fa99..c7ef926a)
 
+### Miscellaneous
+
+This version of the Markdown package has made the following other changes:
+
+- Replace `mtxrun --luatex --generate` with `context --generate --luatex`
+  in the user manual and `Dockerfile`. (@hanshagen and @gucci-on-fleek in #637)
+
 ## 3.14.0 (2026-02-26)
 
 ### Enhancements
