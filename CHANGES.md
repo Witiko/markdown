@@ -2,6 +2,16 @@
 
 ## 3.14.1 (2026-03-XX)
 
+### Fixes
+
+This version of the Markdown package has fixed the following issues:
+
+- Distinguish pure comment lines from partial comment lines. (#628, #630)
+
+  This prevents pure comment lines from being treated as extra blank lines
+  for the purpose of distinguishing between inter-block and paragraph
+  separators.
+
 ### Continuous integration
 
 This version of the Markdown package has made the following changes to our
