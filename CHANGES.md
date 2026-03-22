@@ -6,9 +6,9 @@
 
 This version of the Markdown package has fixed the following issues:
 
-- Distunguish pure comment lines from partial comment lines. (#628, #630)
+- Distinguish pure comment lines from partial comment lines. (#628, #630)
 
-  This prevents pure comment lines from neing treated as extra blank lines
+  This prevents pure comment lines from being treated as extra blank lines
   for the purpose of distinguishing between inter-block and paragraph
   separators.
 
