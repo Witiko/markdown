@@ -6,6 +6,11 @@
 
 This version of the Markdown package has fixed the following issues:
 
+- Do not consume blank lines following a line from a line block. (#627, #629)
+
+  This prevents bad interactions between a preceding line block and a following
+  pipe table when the `lineBlocks` and `pipeTables` options are enabled.
+
 - Distinguish pure comment lines from partial comment lines. (#628, #630)
 
   This prevents pure comment lines from being treated as extra blank lines
