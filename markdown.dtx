@@ -31335,6 +31335,10 @@ parsers.html_entities
   = parsers.hexentity / entities.hex_entity_with_x_char
   + parsers.decentity / entities.dec_entity
   + parsers.tagentity / entities.char_entity
+parsers.html_space_entity_char
+  = Cmt(parsers.html_entities, function(_, i, entity)
+     return entity == " " and i or nil
+    end)
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -31913,7 +31917,7 @@ parsers.link_text  = parsers.lbracket
                         + ( parsers.backslash
                           * ( parsers.lbracket
                             + parsers.rbracket)
-                          + V("NoSoftLineBreakSpace")
+                          + V("Space")
                           + V("NoSoftLineBreakEndline")
                           + (parsers.any
                             - ( parsers.newline
@@ -31934,7 +31938,7 @@ parsers.link_label_body = -#(parsers.sp * parsers.rbracket)
                             + ( parsers.backslash
                               * ( parsers.lbracket
                                 + parsers.rbracket)
-                              + V("NoSoftLineBreakSpace")
+                              + V("Space")
                               + V("NoSoftLineBreakEndline")
                               + (parsers.any
                                 - ( parsers.newline
@@ -31968,7 +31972,7 @@ parsers.url         = parsers.less * Cs((parsers.anyescaped
 -- quoted text:
 parsers.title_s     = parsers.squote
                     * Cs((parsers.html_entities
-                         + V("NoSoftLineBreakSpace")
+                         + V("Space")
                          + V("NoSoftLineBreakEndline")
                          + ( parsers.anyescaped
                            - parsers.newline
@@ -31978,7 +31982,7 @@ parsers.title_s     = parsers.squote
 
 parsers.title_d     = parsers.dquote
                     * Cs((parsers.html_entities
-                         + V("NoSoftLineBreakSpace")
+                         + V("Space")
                          + V("NoSoftLineBreakEndline")
                          + ( parsers.anyescaped
                            - parsers.newline
@@ -31988,7 +31992,7 @@ parsers.title_d     = parsers.dquote
 
 parsers.title_p     = parsers.lparent
                     * Cs((parsers.html_entities
-                         + V("NoSoftLineBreakSpace")
+                         + V("Space")
                          + V("NoSoftLineBreakEndline")
                          + ( parsers.anyescaped
                            - parsers.newline
@@ -33642,18 +33646,9 @@ function M.reader.new(writer, options)
                      + parsers.spacechar^1
                      * -parsers.newline / self.expandtabs
                      + parsers.spacechar^1
-
-  parsers.NoSoftLineBreakSpace
-                     = parsers.spacechar^2 * parsers.endline
-                                           / writer.hard_line_break
-                     + parsers.spacechar^1
-                     * parsers.endline^-1
-                     * parsers.eof / self.expandtabs
-                     + parsers.spacechar^1 * parsers.endline
-                                           / writer.soft_line_break
-                     + parsers.spacechar^1
-                     * -parsers.newline / self.expandtabs
-                     + parsers.spacechar^1
+                     + ( parsers.spacechar
+                       + parsers.html_space_entity_char)^1
+                     * parsers.endline / writer.soft_line_break
 
   parsers.NonbreakingEndline
                     = parsers.endline
@@ -34165,8 +34160,6 @@ end
 
         Str                = parsers.Str,
         Space              = parsers.Space,
-        NoSoftLineBreakSpace
-                           = parsers.NoSoftLineBreakSpace,
         OptionalIndent     = parsers.OptionalIndent,
         Endline            = parsers.Endline,
         EndlineNoSub       = parsers.EndlineNoSub,

@@ -6,6 +6,9 @@
 
 This version of the Markdown package has fixed the following issues:
 
+- Collapse spaces at the end of a line, even if these spaces originate from
+  HTML entities. (reported by @jonathan-gruber-jg in #618, fixed in #624)
+
 - Do not consume blank lines following a line from a line block. (#627, #629)
 
   This prevents bad interactions between a preceding line block and a following
