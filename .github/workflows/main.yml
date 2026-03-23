@@ -44,9 +44,9 @@ jobs:
           repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
           ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
       - name: Install TeX Live
-        uses: TeX-Live/setup-texlive-action@v3
+        uses: zauguin/install-texlive@v4
         with:
-          cache: false
+          cache_version: ${{ github.run_id }}
           packages: |
             latexmk
             scheme-minimal
@@ -83,9 +83,9 @@ jobs:
           repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
           ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
       - name: Install TeX Live
-        uses: TeX-Live/setup-texlive-action@v3
+        uses: zauguin/install-texlive@v4
         with:
-          cache: false
+          cache_version: ${{ github.run_id }}
           packages: |
             latexmk
             scheme-minimal
@@ -109,9 +109,9 @@ jobs:
           repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
           ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
       - name: Install TeX Live
-        uses: TeX-Live/setup-texlive-action@v3
+        uses: zauguin/install-texlive@v4
         with:
-          cache: false
+          cache_version: ${{ github.run_id }}
           packages: |
             expltools
             latexmk
@@ -136,9 +136,9 @@ jobs:
           repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
           ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
       - name: Install TeX Live
-        uses: TeX-Live/setup-texlive-action@v3
+        uses: zauguin/install-texlive@v4
         with:
-          cache: false
+          cache_version: ${{ github.run_id }}
           packages: |
             latexmk
             scheme-minimal
@@ -194,6 +194,21 @@ jobs:
           pip install pytype libcst==1.2.0
       - name: Run Pytype
         run: pytype tests/test.py
+  check-pretest:
+    name: Check whether the TeX Live pretest is underway
+    runs-on: ubuntu-latest
+    outputs:
+      is-pretest: ${{ steps.check-pretest.outputs.is-pretest }}
+    steps:
+      - name: Check whether the TeX Live pretest is underway
+        id: check-pretest
+        run: |
+          if [ "$(date -u +%m)" = 02 ]
+          then
+            echo is-pretest=true
+          else
+            echo is-pretest=false
+          fi | tee -a "$GITHUB_OUTPUT"
   build-docker-image:
     name: Build Docker image
     needs:
@@ -204,24 +219,42 @@ jobs:
       - explcheck
       - markdownlint
       - pytype
+      - check-pretest
     strategy:
       fail-fast: true
       matrix:
         texlive:
+          - TL2025-historic
+          - pretest
+          - pretest-context
+          - pretest-minimal
           - latest
           - latest-context
           - latest-minimal
-        # Only test latest-minimal TeX Live in pull requests.
-        is_pr:
+        is-pr:
           - ${{ github.event_name == 'pull_request_target' }}
+        is-pretest:
+          - ${{ needs.check-pretest.outputs.is-pretest == 'true' }}
         exclude:
-          - { is_pr: true }
+          # In pull requests, only build latest-minimal.
+          - is-pr: true
+          # Only build pretest images during the pretest period.
+          - is-pretest: false
+            texlive: pretest
+          - is-pretest: false
+            texlive: pretest-context
+          - is-pretest: false
+            texlive: pretest-minimal
         include:
-          - { texlive: latest-minimal }
+          - texlive: latest-minimal
     outputs:
+      TL2025-historic: ${{ steps.temporary-tags.outputs.TL2025-historic }}
       latest: ${{ steps.temporary-tags.outputs.latest }}
       latest-context: ${{ steps.temporary-tags.outputs.latest-context }}
       latest-minimal: ${{ steps.temporary-tags.outputs.latest-minimal }}
+      pretest: ${{ steps.temporary-tags.outputs.pretest }}
+      pretest-context: ${{ steps.temporary-tags.outputs.pretest-context }}
+      pretest-minimal: ${{ steps.temporary-tags.outputs.pretest-minimal }}
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -237,7 +270,7 @@ jobs:
       - name: Build Docker image
         run: make docker-image
       - name: Login to GitHub Packages
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -254,20 +287,34 @@ jobs:
     name: Test Docker image
     needs:
       - build-docker-image
+      - check-pretest
     strategy:
       fail-fast: true
       matrix:
         texlive:
+          - TL2025-historic
           - latest
           - latest-context
           - latest-minimal
-        # Only test latest-minimal TeX Live in pull requests.
-        is_pr:
+          - pretest
+          - pretest-context
+          - pretest-minimal
+        is-pr:
           - ${{ github.event_name == 'pull_request_target' }}
+        is-pretest:
+          - ${{ needs.check-pretest.outputs.is-pretest == 'true' }}
         exclude:
-          - { is_pr: true }
+          # In pull requests, only test latest-minimal.
+          - is-pr: true
+          # Only test pretest images during the pretest period.
+          - is-pretest: false
+            texlive: pretest
+          - is-pretest: false
+            texlive: pretest-context
+          - is-pretest: false
+            texlive: pretest-minimal
         include:
-          - { texlive: latest-minimal }
+          - texlive: latest-minimal
     runs-on: 'ubuntu-latest'
     container:
       image: ghcr.io/witiko/markdown:${{ needs.build-docker-image.outputs[matrix.texlive] }}
@@ -292,18 +339,18 @@ jobs:
           Hello \markdownRendererEmphasis{Markdown}! \markdownRendererInlineMath{a_x + b_x = c_x}\markdownRendererDocumentEnd'  # Check that the output is correct.
           grep 'real\s*0m[01]' stderr  # Check that the command finishes in less than a second.
       - name: Run tests
-        if: github.event_name == 'pull_request_target' && matrix.texlive == 'latest-minimal' || matrix.texlive != 'latest-minimal'
+        if: github.event_name == 'pull_request_target' || matrix.texlive != 'latest-minimal' && matrix.texlive != 'pretest-minimal'
         run: make FAIL_FAST=${{ github.event_name == 'pull_request_target' }} test
       - name: Upload failed batches
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: failed-batches-${{ matrix.texlive }}
           path: /tmp/batch*/
           if-no-files-found: ignore
       - name: Upload batch bisection logs
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: bisection-logs-${{ matrix.texlive }}
           path: /tmp/bisect*.log
@@ -317,15 +364,17 @@ jobs:
       fail-fast: true
       matrix:
         texlive:
+          - TL2025-historic
           - latest
           - latest-context
           - latest-minimal
         is_pr:
           - ${{ github.event_name == 'pull_request_target' }}
         exclude:
-          - { is_pr: true }
+          # In pull requests, only publish latest-minimal.
+          - is_pr: true
         include:
-          - { texlive: latest-minimal }
+          - texlive: latest-minimal
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request_target' && github.ref == 'refs/heads/main' && always() && (needs.test.result == 'success' || needs.test.result == 'skipped') && needs.build-docker-image.result == 'success'
     env:
@@ -341,7 +390,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Login to Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
@@ -369,27 +418,27 @@ jobs:
           chown -R root:root .
           make dist gh-pages
       - name: Upload artifact markdown.tds.zip
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: markdown.tds.zip
           path: markdown.tds.zip
       - name: Upload artifact markdown.ctan.zip
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: markdown.ctan.zip
           path: markdown.ctan.zip
       - name: Upload artifact markdown.zip
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: markdown.zip
           path: markdown.zip
       - name: Upload artifact markdown.pdf
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: markdown.pdf
           path: markdown.pdf
       - name: Publish user manual
-        uses: crazy-max/ghaction-github-pages@v4
+        uses: crazy-max/ghaction-github-pages@v5
         with:
           target_branch: gh-pages
           build_dir: gh-pages

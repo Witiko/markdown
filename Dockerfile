@@ -51,10 +51,11 @@ ARG INSTALL_DIR=/usr/local/texlive/texmf-local
 ARG PREINSTALLED_DIR=/usr/local/texlive/*/texmf-dist
 
 ARG FROM_IMAGE=texlive/texlive
+ARG TEXLIVE_BUILD_TAG=latest
 ARG TEXLIVE_TAG=latest
 ARG DEV_IMAGE=false
 
-FROM $FROM_IMAGE:latest as build
+FROM $FROM_IMAGE:$TEXLIVE_BUILD_TAG as build
 
 ARG DEPENDENCIES
 ARG BUILD_DEPENDENCIES
@@ -65,6 +66,7 @@ ARG BUILD_DIR
 ARG INSTALL_DIR
 ARG PREINSTALLED_DIR
 
+ARG TEXLIVE_BUILD_TAG
 ARG TEXLIVE_TAG
 ARG DEV_IMAGE
 
@@ -85,7 +87,7 @@ set -o xtrace
 # Install OS dependencies
 apt-get -qy update
 apt-get -qy install --no-install-recommends ${DEPENDENCIES} ${BUILD_DEPENDENCIES}
-if [ ${DEV_IMAGE} = false ] && echo ${TEXLIVE_TAG} | { ! grep -q latest-minimal; }
+if [ ${DEV_IMAGE} = false ] && echo ${TEXLIVE_TAG} | { ! grep -q -- -minimal; }
 then
   apt-get -qy install --no-install-recommends ${PRODUCTION_DEPENDENCIES}
   npm install -g @mermaid-js/mermaid-cli
@@ -105,12 +107,15 @@ ANOTHER_EOF
 fi
 
 # Update packages in non-historic TeX Live versions
-if echo ${TEXLIVE_TAG} | grep -q latest
+if echo ${TEXLIVE_BUILD_TAG} | grep -q pretest
 then
-  retry -t 30 -d 60 tlmgr update --self --all
-elif echo ${TEXLIVE_TAG} | grep -q pretest
+  REPOSITORY='--repository ftp://ftp.cstug.cz/pub/tex/local/tlpretest/'
+else
+  REPOSITORY=''
+fi
+if echo ${TEXLIVE_BUILD_TAG} | grep -qE 'latest|pretest'
 then
-  retry -t 30 -d 60 tlmgr update --self --all --repository ftp://ftp.cstug.cz/pub/tex/local/tlpretest/
+  retry -t 30 -d 60 tlmgr update --self --all $REPOSITORY
 fi
 
 # Uninstall the distribution Markdown package
@@ -171,7 +176,7 @@ wget https://mirrors.ctan.org/macros/luatex/generic/lua-tinyyaml/tinyyaml.lua \
 texhash
 
 # Produce the complete distribution archive of the Markdown package
-if [ ${DEV_IMAGE} = false ] && echo ${TEXLIVE_TAG} | { ! grep -q latest-minimal; }
+if [ ${DEV_IMAGE} = false ] && echo ${TEXLIVE_TAG} | { ! grep -q -- -minimal; }
 then
   # Install the current pkgcheck
   git clone https://codeberg.org/ManfredLotz/pkgcheck.git
@@ -239,7 +244,7 @@ apt-get -qy install --no-install-recommends ${DEPENDENCIES}
 if [ ${DEV_IMAGE} = true ]
 then
   apt-get -qy install --no-install-recommends ${DEV_DEPENDENCIES}
-elif echo ${TEXLIVE_TAG} | { ! grep -q latest-minimal; }
+elif echo ${TEXLIVE_TAG} | { ! grep -q -- -minimal; }
 then
   apt-get -qy install --no-install-recommends ${PRODUCTION_DEPENDENCIES}
   npm install -g @mermaid-js/mermaid-cli
@@ -263,18 +268,22 @@ apt-get -qy autoremove --purge
 rm -rfv ${AUXILIARY_FILES}
 
 # Update packages in non-historic TeX Live versions
-if echo ${TEXLIVE_TAG} | grep -q latest
+if echo ${TEXLIVE_TAG} | grep -q pretest
 then
-  retry -t 30 -d 60 tlmgr update --self --all
-elif echo ${TEXLIVE_TAG} | grep -q pretest
+  REPOSITORY='--repository ftp://ftp.cstug.cz/pub/tex/local/tlpretest/'
+else
+  REPOSITORY=''
+fi
+if echo ${TEXLIVE_TAG} | grep -qE 'latest|pretest'
 then
-  retry -t 30 -d 60 tlmgr update --self --all --repository ftp://ftp.cstug.cz/pub/tex/local/tlpretest/
+  retry -t 30 -d 60 tlmgr update --self --all $REPOSITORY
 fi
 
-# Install TeX Live dependencies
-if [ ${TEXLIVE_TAG} != latest ]
+# Install TeX Live dependencies in non-full TeX Live versions
+DEPENDS="$(awk '{ print $2 }' ${BUILD_DIR}/DEPENDS.txt ${BUILD_DIR}/tests/DEPENDS.txt | sort -u)"
+if echo ${TEXLIVE_TAG} | { ! grep -qE '^(latest|pretest)$|-historic$'; }
 then
-  retry -t 30 -d 60 tlmgr install $(awk '{ print $2 }' ${BUILD_DIR}/DEPENDS.txt ${BUILD_DIR}/tests/DEPENDS.txt | sort -u)
+  retry -t 30 -d 60 tlmgr install $DEPENDS $REPOSITORY
   tlmgr path add
 fi
 
@@ -311,16 +320,16 @@ set -o xtrace
 ln -s ${INSTALL_DIR}/scripts/markdown/markdown-cli.lua       ${BINARY_DIR}/markdown-cli
 ln -s ${INSTALL_DIR}/scripts/markdown/markdown2tex.lua       ${BINARY_DIR}/markdown2tex
 
-# Generate the ConTeXt file database
-if [ ${TEXLIVE_TAG} != latest ]
+# Generate the ConTeXt file database in non-full TeX Live versions
+if echo ${TEXLIVE_TAG} | { ! grep -qE '^(latest|pretest)$|-historic$'; }
 then
   # A temporary fix for ConTeXt, see <https://gitlab.com/islandoftex/images/texlive/-/issues/30>.
   sed -i '/package.loaded\["data-ini"\]/a if os.selfpath then environment.ownbin=lfs.symlinktarget(os.selfpath..io.fileseparator..os.selfname);environment.ownpath=environment.ownbin:match("^.*"..io.fileseparator) else environment.ownpath=kpse.new("luatex"):var_value("SELFAUTOLOC");environment.ownbin=environment.ownpath..io.fileseparator..(arg[-2] or arg[-1] or arg[0] or "luatex"):match("[^"..io.fileseparator.."]*$") end' /usr/bin/mtxrun.lua || true
 fi
 mtxrun --generate
-if [ ${TEXLIVE_TAG} != latest ]
+if echo ${TEXLIVE_TAG} | { ! grep -qE '^(latest|pretest)$|-historic$'; }
 then
-  texlua /usr/bin/mtxrun.lua --luatex --generate
+  context --generate --luatex
   context --make
   context --luatex --make
 fi

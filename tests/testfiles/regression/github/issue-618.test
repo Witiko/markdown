@@ -1,0 +1,17 @@
+<<<
+_A&#32;
+B_
+
+_A 
+B_
+
+_A
+B_
+>>>
+BEGIN document
+emphasis: A(softLineBreak)B
+paragraphSeparator
+emphasis: A(softLineBreak)B
+paragraphSeparator
+emphasis: A(softLineBreak)B
+END document
