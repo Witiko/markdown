@@ -120,7 +120,7 @@ BEGIN textCite
 - suppressAuthor: false
 - prenote: 
 - postnote: 
-- name: (acronym: API)
+- name: API
 END textCite
 END textCites
 softLineBreak
