@@ -29293,7 +29293,7 @@ function M.writer.new(options)
     table.insert(buf, {"\\markdownRendererImage{",lab,"}",
                        "{",self.string(src),"}",
                        "{",self.uri(src),"}",
-                       "{",self.string(tit or ""),"}"})
+                       "{",tit,"}"})
     if attributes ~= nil then
       table.insert(buf,
                    "\\markdownRendererImageAttributeContextEnd{}")
@@ -32304,9 +32304,25 @@ function M.reader.new(writer, options)
                      function()
                        return parsers.inlines_nbsp
                      end, false)
+
   self.create_parser("parse_inlines_no_link_or_emphasis",
                     function()
                       return parsers.inlines_no_link_or_emphasis
+                    end, false)
+
+  self.create_parser("parse_inlines_identity",
+                    function()
+                      return parsers.inlines_identity
+                    end, false)
+
+  self.create_parser("parse_inlines_string",
+                    function()
+                      return parsers.inlines_string
+                    end, false)
+
+  self.create_parser("parse_inlines_math",
+                    function()
+                      return parsers.inlines_math
                     end, false)
 %    \end{macrocode}
 % \begin{markdown}
@@ -33233,8 +33249,9 @@ function M.reader.new(writer, options)
       end
 
       if (t[opening_index].element == "image") then
-        rendered = writer.image(mapped, reference.url, reference.title,
-                                reference.attributes)
+        rendered = writer.image(mapped, reference.url,
+          self.parser_functions.parse_inlines_string(reference.title),
+          reference.attributes)
       end
 
       if (t[opening_index].element == "note") then
@@ -34471,6 +34488,18 @@ end
     inlines_nbsp_t.Space = parsers.NonbreakingSpace
     parsers.inlines_nbsp = Ct(inlines_nbsp_t)
 
+    local inlines_identity_t = util.table_copy(inlines_t)
+    inlines_identity_t.Str = parsers.any / function(s) return s end
+    parsers.inlines_identity = Ct(inlines_identity_t)
+
+    local inlines_string_t = util.table_copy(inlines_t)
+    inlines_string_t.Str = parsers.any / writer.string
+    parsers.inlines_string = Ct(inlines_string_t)
+
+    local inlines_math_t = util.table_copy(inlines_t)
+    inlines_math_t.Str = parsers.any / writer.math
+    parsers.inlines_math = Ct(inlines_math_t)
+
     local inlines_no_link_or_emphasis_t = util.table_copy(inlines_t)
     inlines_no_link_or_emphasis_t.LinkAndEmph = parsers.fail
     inlines_no_link_or_emphasis_t.EndlineExceptions
@@ -34689,9 +34718,11 @@ M.extensions.acronyms = function(acronyms)
 %
 % \end{markdown}
 %  \begin{macrocode}
-      local Acronym = C( parsers.unicode.punctuation
+      local Acronym = ( parsers.unicode.punctuation
                       - V("SpecialChar")
-                      + parsers.unicode.whitespace)^0
+                      + parsers.unicode.whitespace
+                      - V("EndlineExceptions"))^0
+                    / writer.string
                     * (
                       subparsers[""]
                       * #(-parsers.normalchar
@@ -36795,9 +36826,9 @@ M.extensions.subscripts = function()
 %
 % \end{markdown}
 %  \begin{macrocode}
-      function self.subscript(s)
+      function self.subscript(s, parsed)
         if self.flatten_inlines then return s end
-        return {"\\markdownRendererSubscript{",s,"}"}
+        return {"\\markdownRendererSubscript{",parsed,"}"}
       end
     end, extend_reader = function(self)
       local parsers = self.parsers
@@ -36805,7 +36836,11 @@ M.extensions.subscripts = function()
 
       local Subscript = (
         parsers.between(parsers.Str, parsers.tilde, parsers.tilde)
-      ) / writer.subscript
+      ) / function(s)
+            return writer.subscript(
+              s, self.parser_functions.parse_inlines_identity(s[1])
+            )
+          end
 
       self.insert_pattern("Inline after LinkAndEmph",
                           Subscript, "Subscript")
@@ -36836,9 +36871,9 @@ M.extensions.superscripts = function()
 %
 % \end{markdown}
 %  \begin{macrocode}
-      function self.superscript(s)
+      function self.superscript(s, parsed)
         if self.flatten_inlines then return s end
-        return {"\\markdownRendererSuperscript{",s,"}"}
+        return {"\\markdownRendererSuperscript{",parsed,"}"}
       end
     end, extend_reader = function(self)
       local parsers = self.parsers
@@ -36847,7 +36882,11 @@ M.extensions.superscripts = function()
       local Superscript = (
         parsers.between(parsers.Str, parsers.circumflex,
                         parsers.circumflex)
-      ) / writer.superscript
+      ) / function(s)
+            return writer.superscript(
+              s, self.parser_functions.parse_inlines_identity(s[1])
+            )
+          end
 
       self.insert_pattern("Inline after LinkAndEmph",
                           Superscript, "Superscript")
@@ -36880,9 +36919,9 @@ M.extensions.tex_math = function(tex_math_dollars,
 %
 % \end{markdown}
 %  \begin{macrocode}
-      function self.display_math(s)
+      function self.display_math(s, parsed)
         if self.flatten_inlines then return s end
-        return {"\\markdownRendererDisplayMath{",self.math(s),"}"}
+        return {"\\markdownRendererDisplayMath{",parsed,"}"}
       end
 %    \end{macrocode}
 % \begin{markdown}
@@ -36892,9 +36931,9 @@ M.extensions.tex_math = function(tex_math_dollars,
 %
 % \end{markdown}
 %  \begin{macrocode}
-      function self.inline_math(s)
+      function self.inline_math(s, parsed)
         if self.flatten_inlines then return s end
-        return {"\\markdownRendererInlineMath{",self.math(s),"}"}
+        return {"\\markdownRendererInlineMath{",parsed,"}"}
       end
     end, extend_reader = function(self)
       local parsers = self.parsers
@@ -37053,8 +37092,18 @@ M.extensions.tex_math = function(tex_math_dollars,
         inline_math = inline_math + inline_math_single
       end
 
-      local TexMath = display_math / writer.display_math
-                    + inline_math / writer.inline_math
+      local TexMath = display_math
+                    / function(s)
+                        return writer.display_math(
+                          s, self.parser_functions.parse_inlines_math(s)
+                        )
+                      end
+                    + inline_math
+                    / function(s)
+                        return writer.inline_math(
+                          s, self.parser_functions.parse_inlines_math(s)
+                        )
+                      end
 
       self.insert_pattern("Inline after LinkAndEmph",
                           TexMath, "TexMath")
