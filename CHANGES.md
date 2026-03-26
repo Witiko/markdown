@@ -23,6 +23,9 @@ This version of the Markdown package has fixed the following issues:
 - Strip trailing spaces from table captions with attributes. (reported by
   @lostenderman in #638, fixed in #639)
 
+- Fix acronyms breaking various elements. (reported in #625, fixed by
+  @lostenderman in #626)
+
 ### Continuous integration
 
 This version of the Markdown package has made the following changes to our
