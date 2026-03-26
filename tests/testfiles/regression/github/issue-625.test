@@ -34,6 +34,7 @@
 ![API](API.jpg "API"){#API}
 _API_
 *API*
+.API
 @API
 ^[API]
 ==API==
@@ -107,13 +108,15 @@ attributeIdentifier: API
 BEGIN image
 - label: (acronym: API)
 - URI: API.jpg
-- title: API
+- title: (acronym: API)
 END image
 END imageAttributeContext
 softLineBreak
 emphasis: (acronym: API)
 softLineBreak
 emphasis: (acronym: API)
+softLineBreak
+acronym: API
 softLineBreak
 BEGIN textCites
 BEGIN textCite
@@ -136,8 +139,11 @@ BEGIN link
 - title: 
 END link
 softLineBreak
+acronym: API
 subscript: (acronym: API)
+acronym: API
 superscript: (acronym: API)
+acronym: API
 softLineBreak
 inlineMath: (acronym: API)
 softLineBreak
@@ -181,7 +187,6 @@ lineBlockBegin
 acronym: API
 hardLineBreak
 acronym: API
-hardLineBreak
 acronym: API
 hardLineBreak
 acronym: API
