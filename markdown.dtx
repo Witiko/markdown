@@ -36652,6 +36652,7 @@ M.extensions.pipe_tables = function(table_captions, table_attributes)
                                 / writer.space))
                              * (parsers.linechar
                                - parsers.lbrace)^0)^1)
+                             / strip_trailing_spaces
                              / self.parser_functions.parse_inlines)
                         * (parsers.newline
                           + ( Ct(parsers.attributes)
