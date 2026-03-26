@@ -20,6 +20,9 @@ This version of the Markdown package has fixed the following issues:
   for the purpose of distinguishing between inter-block and paragraph
   separators.
 
+- Strip trailing spaces from table captions with attributes. (reported by
+  @lostenderman in #638, fixed in #639)
+
 ### Continuous integration
 
 This version of the Markdown package has made the following changes to our
