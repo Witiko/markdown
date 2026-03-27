@@ -9,18 +9,66 @@ This version of the Markdown package has added the following new features:
 - Add a new `htmlOutput` option to produce fine-grained HTML renderers based on
   CommonMark's grammar. (suggested by @u-fischer and @Witiko in #597 and #606,
   contributed by @herley-shaori in #635)
-- Strip leading and trailing spaces for `inlineHtmlComment` renderers. (#635)
 
-## 3.14.1 (2026-03-XX)
+### Fixes
+
+This version of the Markdown package has fixed the following issues:
+
+- Strip leading and trailing spaces for `inlineHtmlComment` renderers. (#635)
 
 ### Continuous integration
 
 This version of the Markdown package has made the following changes to our
 continuous integration:
 
-- Bump `crazy-max/ghaction-github-pages` from 4 to 5 (added by @dependabot in #632)
-- Bump `actions/upload-artifact` from 6 to 7 (added by @dependabot in #633)
-- Bump `docker/login-action` from 3 to 4 (added by @dependabot in #634)
+- Disable caching in the `zauguin/install-texlive` action.
+  (added by @zauguin in zauguin/install-texlive#128 and 9c4245d3)
+
+## 3.14.1 (2026-03-27)
+
+### Fixes
+
+This version of the Markdown package has fixed the following issues:
+
+- Collapse spaces at the end of a line, even if these spaces originate from
+  HTML entities. (reported by @jonathan-gruber-jg in #618, fixed in #624)
+
+- Do not consume blank lines following a line from a line block. (#627, #629)
+
+  This prevents bad interactions between a preceding line block and a following
+  pipe table when the `lineBlocks` and `pipeTables` options are enabled.
+
+- Distinguish pure comment lines from partial comment lines. (#628, #630)
+
+  This prevents pure comment lines from being treated as extra blank lines
+  for the purpose of distinguishing between inter-block and paragraph
+  separators.
+
+- Strip trailing spaces from table captions with attributes. (reported by
+  @lostenderman in #638, fixed in #639)
+
+- Fix acronyms breaking various elements. (reported in #625, fixed by
+  @lostenderman in #626)
+
+### Continuous integration
+
+This version of the Markdown package has made the following changes to our
+continuous integration:
+
+- Bump `crazy-max/ghaction-github-pages` from 4 to 5. (added by @dependabot in #632)
+- Bump `actions/upload-artifact` from 6 to 7. (added by @dependabot in #633)
+- Bump `docker/login-action` from 3 to 4. (added by @dependabot in #634)
+- Migrate from deprecated `TeX-Live/setup-texlive-action@v3` to
+  `zauguin/install-texlive@v4`. (#636, 3c4c6bb0)
+- Test the package on both TeX Live 2025 and 2026.
+  (#631, ff23b28..81928d7, 1a98fa99..c7ef926a)
+
+### Miscellaneous
+
+This version of the Markdown package has made the following other changes:
+
+- Replace `mtxrun --luatex --generate` with `context --generate --luatex`
+  in the user manual and `Dockerfile`. (@hanshagen and @gucci-on-fleek in #637)
 
 ## 3.14.0 (2026-02-26)
 

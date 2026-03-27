@@ -43,9 +43,33 @@
 \usepackage[columns=1, totoc]{idxlayout}
 \makeindex
 
+\ExplSyntaxOn
+\seq_new:N
+  \g__markdown_techdoc_seen_options_seq
 \newcommand\mdef[1]{% A TeX macro definition
   \index{#1@\cs{#1}|textit}%
-  \phantomsection\label{macro:#1}\textcolor{spot}{\cs{#1}}}
+  \phantomsection
+  \label{macro:#1}
+  \__markdown_csname_to_option_str:nNT
+    { #1 }
+    \l_tmpa_tl
+    {
+      \seq_if_in:NVF
+        \g__markdown_techdoc_seen_options_seq
+        \l_tmpa_tl
+        {
+          % For `\mdef{markdownOption...}`, also do `\label{opt:...}`, unless
+          % such label was previously defined by `\Optitem` or `\Valitem`.
+          \tl_put_left:Nn
+            \l_tmpa_tl
+            { opt: }
+          \exp_args:NV
+            \label
+            \l_tmpa_tl
+        }
+    }
+  \textcolor{spot}{\cs{#1}}}
+\ExplSyntaxOff
 \newcommand\mref[1]{% A TeX macro reference
   \index{#1@\cs{#1}}%
   \hyperref[macro:#1]{\textcolor{spot}{\cs{#1}}}}
@@ -64,12 +88,28 @@
   \index{#1@\texttt{#1}}%
   \hyperref[lua:#1]{\inline{#1}}}
 
+\ExplSyntaxOn
 \newcommand\Optitem[2][]{\penalty -1000\relax % An option item definition
   \index{#2@\texttt{#2}|textit}%
-  \phantomsection\label{opt:#2}\optitem[#1]{#2}}
+  \phantomsection\label{opt:#2}%
+  \str_set:Nn
+    \l_tmpa_str
+    { #2 }
+  \seq_gput_right:NV
+    \g__markdown_techdoc_seen_options_seq
+    \l_tmpa_str
+  \optitem[#1]{#2}}
 \newcommand\Valitem[2][]{\penalty -1000\relax % A value item definition
   \index{#2@\texttt{#2}}%
-  \phantomsection\label{opt:#2}\valitem[#1]{#2}}
+  \phantomsection\label{opt:#2}%
+  \str_set:Nn
+    \l_tmpa_str
+    { #2 }
+  \seq_gput_right:NV
+    \g__markdown_techdoc_seen_options_seq
+    \l_tmpa_str
+  \valitem[#1]{#2}}
+\ExplSyntaxOff
 \newcommand\Opt[1]{% An option / value item reference
   \index{#1@\texttt{#1}}%
   \hyperref[opt:#1]{\inline{#1}}}
@@ -1185,7 +1225,7 @@ such distributions, you should follow these steps:
    'texmf-dist/*' --strip-components=1` on GNU/Linux and other Un*x systems.
 
 3. Run a command such as `texhash` (in \TeX{} Live) or `mtxrun --generate` and
-   `mtxrun --luatex --generate` (in \Hologo{ConTeXt} Standalone) to make the
+   `context --generate --luatex` (in \Hologo{ConTeXt} Standalone) to make the
    installed packages visible to \TeX{}. For more information, consult the
    manual of your \TeX{} distribution.
 
@@ -2587,6 +2627,40 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
         \tl_head:f { \l_tmpa_tl }
         \tl_tail:n { #1 }
       }
+  }
+\regex_const:Nn
+  \c_@@_option_regex
+  { ^markdownOption }
+\prg_new_conditional:Nnn
+  \@@_csname_to_option_str:nN
+  { T }
+  {
+    \tl_if_regex_match:nNTF
+      { #1 }
+      \c_@@_option_regex
+      {
+        \tl_set:Nn
+          \l_tmpa_tl
+          { #1 }
+        \tl_regex_replace_once:NNn
+          \l_tmpa_tl
+          \c_@@_option_regex
+          { }
+        \tl_set:Nn
+          \l_tmpb_tl
+          {
+            \str_lowercase:f
+              { \l_tmpa_tl }
+          }
+        \str_set:Nx
+          #2
+          {
+            \tl_head:f { \l_tmpb_tl }
+            \tl_tail:V \l_tmpa_tl
+          }
+        \prg_return_true:
+      }
+      { \prg_return_false: }
   }
 %    \end{macrocode}
 % \begin{markdown}
@@ -7739,7 +7813,7 @@ defaultOptions.htmlOutput = "basic"
 %
 :    true
 
-     :  When the option \Opt{HTML} is enabled and a text can be understood
+     :  When the option \Opt{html} is enabled and a text can be understood
         either as a hyperlink or HTML, interpret it as HTML.
 
         This is especially relevant when the option \Opt{relativeReferences}
@@ -7747,7 +7821,7 @@ defaultOptions.htmlOutput = "basic"
 
 :    false
 
-     :  When the option \Opt{HTML} is enabled and a text can be understood
+     :  When the option \Opt{html} is enabled and a text can be understood
         either as a hyperlink or HTML, interpret it as a hyperlink.
 
 This is an experimental option. Whenever the option \Opt{experimental} is
@@ -12053,7 +12127,7 @@ pdftex --shell-escape document.tex
 %### Typesetting Markdown and YAML {#tex-typesetting}
 %
 % The interface exposes the \mdef{markdownBegin}, \mdef{markdownEnd},
-% \mdef{yamlBegin}, \mref{yamlEnd}, \mdef{markinline}, \mdef{markdownInput},
+% \mdef{yamlBegin}, \mdef{yamlEnd}, \mdef{markinline}, \mdef{markdownInput},
 % \mdef{yamlInput}, and \mdef{markdownEscape} macros.
 %
 %#### Typesetting Markdown and YAML directly
@@ -12185,7 +12259,7 @@ pdftex --shell-escape document.tex
 %#### Typesetting Markdown and YAML from external documents
 %
 % You can use the \mref{markdownInput} macro to include markdown documents,
-% similarly to how you might use the \mref{input} \TeX{} primitive to include
+% similarly to how you might use the `\input` \TeX{} primitive to include
 % \TeX{} documents. The \mref{markdownInput} macro accepts a single parameter
 % with the filename of a markdown document and expands to the result of the
 % conversion of the input markdown document to plain \TeX{}.
@@ -12209,7 +12283,7 @@ pdftex --shell-escape document.tex
 % ```````
 %
 % You can use the \mref{yamlInput} macro to include YAML documents.
-% similarly to how you might use the \mref{input} \TeX{} primitive to include
+% similarly to how you might use the `\input` \TeX{} primitive to include
 % \TeX{} documents. The \mref{yamlInput} macro accepts a single parameter with
 % the filename of a YAML document and expands to the result of the
 % conversion of the input YAML document to plain \TeX{}.
@@ -12802,7 +12876,7 @@ A PDF document named `document.pdf` should be produced and contain the text
 %
 % The command also defines macros and key--values that map
 % directly to the options recognized by the Lua interface, such as
-% \mdef{markdownOptionHybrid} for the \Opt{hybrid} Lua option (see Section
+% `\markdownOptionHybrid` for the \Opt{hybrid} Lua option (see Section
 % <#sec:lua-options>), which are not processed by the plain \TeX{}
 % implementation, only passed along to Lua.
 %
@@ -17659,7 +17733,7 @@ following text:
 % \begin{markdown}
 
 #### Fenced Div Attribute Context Renderers
-The following macros are only produced, when the \Opt{fencedDiv} option is
+The following macros are only produced, when the \Opt{fencedDivs} option is
 enabled.
 
 The \mdef{markdownRendererFencedDivAttributeContextBegin} and
@@ -21404,7 +21478,7 @@ following content:
 \input markdown
 \def\markdownOptionTexMathDollars{true}
 \def\markdownRendererInlineMath#1{$#1\dots$}
-\def\markdownRendererDisplayMath#1{$$#1\nonumber$$}
+\def\markdownRendererDisplayMath#1{$$#1$$}
 \markdownBegin
 $E=mc^2$
 
@@ -21421,7 +21495,7 @@ following text:
 
 > $E=mc^2\dots$
 >
-> $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx\nonumber$$
+> $$\hat{f} \left ( \xi  \right )= \int_{-\infty}^{\infty} f\left ( x  \right ) e^{-i2\pi \xi x} dx$$
 
 ##### \LaTeX{} Example {.unnumbered}
 
@@ -22179,10 +22253,10 @@ for identifiers and other programmatic text that won't be typeset by \TeX{}.
 % \begin{markdown}
 
 Before Markdown 3.7.0, the \mref{markdownRendererJekyllDataTypographicString}
-macro was named \mref{markdownRendererJekyllDataString} and the
+macro was named \mdef{markdownRendererJekyllDataString} and the
 \mref{markdownRendererJekyllDataProgrammaticString} macro was not produced.
-The \mref{markdownRendererJekyllDataString} has been deprecated and will be
-removed in Markdown 4.0.0.
+The \mref{markdownRendererJekyllDataString} macro has been deprecated and will
+be removed in Markdown 4.0.0.
 
 % \end{markdown}
 %
@@ -23396,7 +23470,7 @@ following text:
 % Unless the token renderer prototype macro has already been defined or unless,
 % it has been deprecated, we provide an empty definition.
 %
-% The \mref{markdownRendererJekyllDataStringPrototype} macro has been
+% The \mdef{markdownRendererJekyllDataStringPrototype} macro has been
 % deprecated and will be removed in Markdown 4.0.0.
 %
 % \end{markdown}
@@ -23897,7 +23971,7 @@ pdflatex --shell-escape document.tex
 %
 % This is because the implementation looks for the literal string
 % `\end{markdown}` to stop scanning the markdown text. However, you can work
-% around this limitation by using the \mref{markdown} and \mref{markdownEnd}
+% around this limitation by using the \mdef{markdown} and \mref{markdownEnd}
 % macros directly in the definition as follows:
 %
 % \markdownEnd
@@ -23984,7 +24058,7 @@ pdflatex --shell-escape document.tex
 %
 % You can't directly extend the \envmref{yaml} \LaTeX{} environment by using it
 % in other environments. However, you can work around this limitation by using
-% the \mref{yaml} and \mref{yamlEnd} macros directly in the definition,
+% the \mdef{yaml} and \mref{yamlEnd} macros directly in the definition,
 % similarly to the \mref{markdown} and \mref{markdownEnd} macros described
 % previously. Unlike with the \mref{markdown} and \mref{markdownEnd} macros,
 % The \mref{yamlEnd} macro _must_ be used in or after the replacement after-text.
@@ -29544,7 +29618,7 @@ function M.writer.new(options)
     table.insert(buf, {"\\markdownRendererImage{",lab,"}",
                        "{",self.string(src),"}",
                        "{",self.uri(src),"}",
-                       "{",self.string(tit or ""),"}"})
+                       "{",tit,"}"})
     if attributes ~= nil then
       table.insert(buf,
                    "\\markdownRendererImageAttributeContextEnd{}")
@@ -31639,17 +31713,20 @@ parsers.commented_line_letter  = parsers.linechar
                                - parsers.backslash
                                - parsers.percent
 parsers.commented_line = Cg(Cc(""), "backslashes")
+                       * Cg(Cc(true), "pure_comment")
                        * ((#(parsers.commented_line_letter
                             - parsers.newline)
                           * Cb("backslashes")
                           * Cs(parsers.commented_line_letter
                             - parsers.newline)^1  -- initial
-                          * Cg(Cc(""), "backslashes"))
+                          * Cg(Cc(""), "backslashes")
+                          * Cg(Cc(false), "pure_comment"))
                          + #( parsers.backslash
                             * (parsers.backslash + parsers.newline))
                          * Cg((parsers.backslash  -- even backslash
                               * ( parsers.backslash
                                 + #parsers.newline))^1, "backslashes")
+                         * Cg(Cc(false), "pure_comment")
                          + (parsers.backslash
                            * (#parsers.percent
                              * Cb("backslashes")
@@ -31661,16 +31738,20 @@ parsers.commented_line = Cg(Cc(""), "backslashes")
                              * Cb("backslashes")
                              * Cc("\\")
                              * C(parsers.commented_line_letter))
-                           * Cg(Cc(""), "backslashes")))^0
+                           * Cg(Cc(""), "backslashes")
+                           * Cg(Cc(false), "pure_comment")))^0
                        * (#parsers.percent
                          * Cb("backslashes")
                          / function(backslashes)
                            return string.rep("\\", #backslashes / 2)
                          end
-                         * ((parsers.percent  -- comment
+                         * ((Cb("pure_comment")
+                            * parsers.percent  -- comment
                             * parsers.line
                             * #parsers.blankline) -- blank line
-                           / "\n"
+                           / function(is_pure)
+                             return is_pure and "" or "\n"
+                           end
                            + parsers.percent  -- comment
                            * parsers.line
                            * parsers.optionalspace)  -- leading spaces
@@ -31764,6 +31845,10 @@ parsers.html_entities
   = parsers.hexentity / entities.hex_entity_with_x_char
   + parsers.decentity / entities.dec_entity
   + parsers.tagentity / entities.char_entity
+parsers.html_space_entity_char
+  = Cmt(parsers.html_entities, function(_, i, entity)
+     return entity == " " and i or nil
+    end)
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -32344,7 +32429,7 @@ parsers.link_text  = parsers.lbracket
                         + ( parsers.backslash
                           * ( parsers.lbracket
                             + parsers.rbracket)
-                          + V("NoSoftLineBreakSpace")
+                          + V("Space")
                           + V("NoSoftLineBreakEndline")
                           + (parsers.any
                             - ( parsers.newline
@@ -32365,7 +32450,7 @@ parsers.link_label_body = -#(parsers.sp * parsers.rbracket)
                             + ( parsers.backslash
                               * ( parsers.lbracket
                                 + parsers.rbracket)
-                              + V("NoSoftLineBreakSpace")
+                              + V("Space")
                               + V("NoSoftLineBreakEndline")
                               + (parsers.any
                                 - ( parsers.newline
@@ -32399,7 +32484,7 @@ parsers.url         = parsers.less * Cs((parsers.anyescaped
 -- quoted text:
 parsers.title_s     = parsers.squote
                     * Cs((parsers.html_entities
-                         + V("NoSoftLineBreakSpace")
+                         + V("Space")
                          + V("NoSoftLineBreakEndline")
                          + ( parsers.anyescaped
                            - parsers.newline
@@ -32409,7 +32494,7 @@ parsers.title_s     = parsers.squote
 
 parsers.title_d     = parsers.dquote
                     * Cs((parsers.html_entities
-                         + V("NoSoftLineBreakSpace")
+                         + V("Space")
                          + V("NoSoftLineBreakEndline")
                          + ( parsers.anyescaped
                            - parsers.newline
@@ -32419,7 +32504,7 @@ parsers.title_d     = parsers.dquote
 
 parsers.title_p     = parsers.lparent
                     * Cs((parsers.html_entities
-                         + V("NoSoftLineBreakSpace")
+                         + V("Space")
                          + V("NoSoftLineBreakEndline")
                          + ( parsers.anyescaped
                            - parsers.newline
@@ -32731,9 +32816,25 @@ function M.reader.new(writer, options)
                      function()
                        return parsers.inlines_nbsp
                      end, false)
+
   self.create_parser("parse_inlines_no_link_or_emphasis",
                     function()
                       return parsers.inlines_no_link_or_emphasis
+                    end, false)
+
+  self.create_parser("parse_inlines_identity",
+                    function()
+                      return parsers.inlines_identity
+                    end, false)
+
+  self.create_parser("parse_inlines_string",
+                    function()
+                      return parsers.inlines_string
+                    end, false)
+
+  self.create_parser("parse_inlines_math",
+                    function()
+                      return parsers.inlines_math
                     end, false)
 %    \end{macrocode}
 % \begin{markdown}
@@ -33660,8 +33761,9 @@ function M.reader.new(writer, options)
       end
 
       if (t[opening_index].element == "image") then
-        rendered = writer.image(mapped, reference.url, reference.title,
-                                reference.attributes)
+        rendered = writer.image(mapped, reference.url,
+          self.parser_functions.parse_inlines_string(reference.title),
+          reference.attributes)
       end
 
       if (t[opening_index].element == "note") then
@@ -34073,18 +34175,9 @@ function M.reader.new(writer, options)
                      + parsers.spacechar^1
                      * -parsers.newline / self.expandtabs
                      + parsers.spacechar^1
-
-  parsers.NoSoftLineBreakSpace
-                     = parsers.spacechar^2 * parsers.endline
-                                           / writer.hard_line_break
-                     + parsers.spacechar^1
-                     * parsers.endline^-1
-                     * parsers.eof / self.expandtabs
-                     + parsers.spacechar^1 * parsers.endline
-                                           / writer.soft_line_break
-                     + parsers.spacechar^1
-                     * -parsers.newline / self.expandtabs
-                     + parsers.spacechar^1
+                     + ( parsers.spacechar
+                       + parsers.html_space_entity_char)^1
+                     * parsers.endline / writer.soft_line_break
 
   parsers.NonbreakingEndline
                     = parsers.endline
@@ -34632,8 +34725,6 @@ end
 
         Str                = parsers.Str,
         Space              = parsers.Space,
-        NoSoftLineBreakSpace
-                           = parsers.NoSoftLineBreakSpace,
         OptionalIndent     = parsers.OptionalIndent,
         Endline            = parsers.Endline,
         EndlineNoSub       = parsers.EndlineNoSub,
@@ -34657,7 +34748,7 @@ end
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Define \luamref{reader->update_rule} as a function that receives two
+% Define \luamdef{reader->update_rule} as a function that receives two
 % arguments: a left-hand side terminal symbol and a function that accepts
 % the current PEG pattern in \luamref{walkable_syntax}`[`left-hand side
 % terminal symbol`]` if defined or `nil` otherwise and returns a
@@ -34945,6 +35036,18 @@ end
     inlines_nbsp_t.Space = parsers.NonbreakingSpace
     parsers.inlines_nbsp = Ct(inlines_nbsp_t)
 
+    local inlines_identity_t = util.table_copy(inlines_t)
+    inlines_identity_t.Str = parsers.any / function(s) return s end
+    parsers.inlines_identity = Ct(inlines_identity_t)
+
+    local inlines_string_t = util.table_copy(inlines_t)
+    inlines_string_t.Str = parsers.any / writer.string
+    parsers.inlines_string = Ct(inlines_string_t)
+
+    local inlines_math_t = util.table_copy(inlines_t)
+    inlines_math_t.Str = parsers.any / writer.math
+    parsers.inlines_math = Ct(inlines_math_t)
+
     local inlines_no_link_or_emphasis_t = util.table_copy(inlines_t)
     inlines_no_link_or_emphasis_t.LinkAndEmph = parsers.fail
     inlines_no_link_or_emphasis_t.EndlineExceptions
@@ -35163,9 +35266,11 @@ M.extensions.acronyms = function(acronyms)
 %
 % \end{markdown}
 %  \begin{macrocode}
-      local Acronym = C( parsers.unicode.punctuation
+      local Acronym = ( parsers.unicode.punctuation
                       - V("SpecialChar")
-                      + parsers.unicode.whitespace)^0
+                      + parsers.unicode.whitespace
+                      - V("EndlineExceptions"))^0
+                    / writer.string
                     * (
                       subparsers[""]
                       * #(-parsers.normalchar
@@ -36664,8 +36769,7 @@ M.extensions.line_blocks = function()
                    * (parsers.space^1/" ")
                    * parsers.linechar^1
                    * (parsers.newline/"")
-                   )^0
-                 * (parsers.blankline/"")^0)
+                   )^0)
              / self.parser_functions.parse_inlines)^1)
         / writer.lineblock
 
@@ -37127,6 +37231,7 @@ M.extensions.pipe_tables = function(table_captions, table_attributes)
                                 / writer.space))
                              * (parsers.linechar
                                - parsers.lbrace)^0)^1)
+                             / strip_trailing_spaces
                              / self.parser_functions.parse_inlines)
                         * (parsers.newline
                           + ( Ct(parsers.attributes)
@@ -37269,9 +37374,9 @@ M.extensions.subscripts = function()
 %
 % \end{markdown}
 %  \begin{macrocode}
-      function self.subscript(s)
+      function self.subscript(s, parsed)
         if self.flatten_inlines then return s end
-        return {"\\markdownRendererSubscript{",s,"}"}
+        return {"\\markdownRendererSubscript{",parsed,"}"}
       end
     end, extend_reader = function(self)
       local parsers = self.parsers
@@ -37279,7 +37384,11 @@ M.extensions.subscripts = function()
 
       local Subscript = (
         parsers.between(parsers.Str, parsers.tilde, parsers.tilde)
-      ) / writer.subscript
+      ) / function(s)
+            return writer.subscript(
+              s, self.parser_functions.parse_inlines_identity(s[1])
+            )
+          end
 
       self.insert_pattern("Inline after LinkAndEmph",
                           Subscript, "Subscript")
@@ -37310,9 +37419,9 @@ M.extensions.superscripts = function()
 %
 % \end{markdown}
 %  \begin{macrocode}
-      function self.superscript(s)
+      function self.superscript(s, parsed)
         if self.flatten_inlines then return s end
-        return {"\\markdownRendererSuperscript{",s,"}"}
+        return {"\\markdownRendererSuperscript{",parsed,"}"}
       end
     end, extend_reader = function(self)
       local parsers = self.parsers
@@ -37321,7 +37430,11 @@ M.extensions.superscripts = function()
       local Superscript = (
         parsers.between(parsers.Str, parsers.circumflex,
                         parsers.circumflex)
-      ) / writer.superscript
+      ) / function(s)
+            return writer.superscript(
+              s, self.parser_functions.parse_inlines_identity(s[1])
+            )
+          end
 
       self.insert_pattern("Inline after LinkAndEmph",
                           Superscript, "Superscript")
@@ -37354,9 +37467,9 @@ M.extensions.tex_math = function(tex_math_dollars,
 %
 % \end{markdown}
 %  \begin{macrocode}
-      function self.display_math(s)
+      function self.display_math(s, parsed)
         if self.flatten_inlines then return s end
-        return {"\\markdownRendererDisplayMath{",self.math(s),"}"}
+        return {"\\markdownRendererDisplayMath{",parsed,"}"}
       end
 %    \end{macrocode}
 % \begin{markdown}
@@ -37366,9 +37479,9 @@ M.extensions.tex_math = function(tex_math_dollars,
 %
 % \end{markdown}
 %  \begin{macrocode}
-      function self.inline_math(s)
+      function self.inline_math(s, parsed)
         if self.flatten_inlines then return s end
-        return {"\\markdownRendererInlineMath{",self.math(s),"}"}
+        return {"\\markdownRendererInlineMath{",parsed,"}"}
       end
     end, extend_reader = function(self)
       local parsers = self.parsers
@@ -37527,8 +37640,18 @@ M.extensions.tex_math = function(tex_math_dollars,
         inline_math = inline_math + inline_math_single
       end
 
-      local TexMath = display_math / writer.display_math
-                    + inline_math / writer.inline_math
+      local TexMath = display_math
+                    / function(s)
+                        return writer.display_math(
+                          s, self.parser_functions.parse_inlines_math(s)
+                        )
+                      end
+                    + inline_math
+                    / function(s)
+                        return writer.inline_math(
+                          s, self.parser_functions.parse_inlines_math(s)
+                        )
+                      end
 
       self.insert_pattern("Inline after LinkAndEmph",
                           TexMath, "TexMath")
@@ -37879,7 +38002,7 @@ function M.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 % Besides the canonical output of the conversion, which may contain cached
-% files behind \mref{input}, also return a function that always produces
+% files behind `\input`, also return a function that always produces
 % a flat output regardless of caching as the second return value.
 % \end{markdown}
 %  \begin{macrocode}
@@ -40810,8 +40933,8 @@ end
 % \begin{markdown}
 %
 % If the file does not exist in the current directory, we will search for it in
-% the directories specified in \mref{l_file_search_path_seq}. On \LaTeX, this
-% also includes the directories specified in \mref{input@path}.
+% the directories specified in `\l_file_search_path_seq`. On \LaTeX, this
+% also includes the directories specified in `\input@path`.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -41878,7 +42001,7 @@ end
 %
 % If either the package \pkg{paralist} or the package \pkg{enumitem} have
 % already been loaded, use them. Otherwise, if the option \Opt{experimental}
-% or the command \mref{DocumentMetadata} have been used, use the package
+% or the command `\DocumentMetadata` have been used, use the package
 % \pkg{enumitem}. Otherwise, use the package \pkg{paralist}.
 %
 % \end{markdown}
