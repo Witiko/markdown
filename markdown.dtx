@@ -14735,6 +14735,7 @@ following content:
 \usepackage{marginnote}
 \usepackage{verbatim}
 \markdownSetup{
+  blankBeforeHtmlBlock = true,
   renderers = {
     inlineHtmlComment = {\marginnote{#1}},
     inlineHtmlTag = {\textbf{#1}},
@@ -14743,9 +14744,9 @@ following content:
 }
 \begin{document}
 \begin{markdown}
-A useful use of inline HTML comments are side notes. <!-- Side notes are displayed
-in the horizontal margins next to the relevant passages, which makes them *easier
-for the reader to find* than notes. -->
+A useful use of inline HTML comments are side notes.
+<!-- Side notes are displayed in the horizontal margins next to the relevant
+passages, which makes them *easier for the reader to find* than notes. -->
 
 <b>_Hello,_ world!</b><br/>
 
