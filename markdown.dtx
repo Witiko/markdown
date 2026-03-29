@@ -7494,17 +7494,17 @@ defaultOptions.headerAttributes = false
 %
 :    true
 
-     :  Enable the recognition of inline HTML tags, block HTML
-        elements, HTML comments, HTML instructions, and entities
-        in the input. Inline HTML tags, block HTML elements and
-        HTML comments will be rendered, HTML instructions will be
-        ignored, and HTML entities will be replaced with the
-        corresponding Unicode codepoints.
+     :  Enable the recognition of HTML entities, inline HTML tags,
+        and block HTML elements, comments, declarations, processing
+        instructions, and CDATA sections in the input.
+
+        HTML entities will be replaced with the corresponding Unicode
+        codepoints and other HTML content will be ignored by default.
 
 :    false
 
-     :  Disable the recognition of HTML markup. Any HTML markup
-        in the input will be rendered as plain text.
+     :  Disable the recognition of HTML markup. Any recognized HTML
+        content in the input will be rendered as plain text.
 
 % \end{markdown}
 % \iffalse
