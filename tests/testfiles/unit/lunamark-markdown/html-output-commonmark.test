@@ -22,11 +22,11 @@ codeSpan: commonmark
 softLineBreak
 softLineBreak
 interblockSeparator
-inputBlockHtmlCommentElement: b3ffb66dd7e08481fe6b45f4a11c8552.verbatim
+inputBlockHtmlComment: b3ffb66dd7e08481fe6b45f4a11c8552.verbatim
 interblockSeparator
-inputBlockHtmlSpecialElement: dba3735d95b8e26c1629e504c873955b.verbatim
+inputBlockHtmlCdataElement: dba3735d95b8e26c1629e504c873955b.verbatim
 interblockSeparator
-inputBlockHtmlRegularElement: 5ed18adb8bdfa2141d18971defaa62ac.verbatim
+inputBlockHtmlPcdataElement: 5ed18adb8bdfa2141d18971defaa62ac.verbatim
 interblockSeparator
 inlineHtmlOpenTag: <b>
 inlineHtmlCloseTag: </b>
