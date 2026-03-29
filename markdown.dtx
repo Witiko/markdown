@@ -16169,8 +16169,8 @@ HTML][html-blocks]:
    on a line of its own
 2. \mdef{markdownRendererInputBlockHtmlComment} -- A comment that starts
    on a line of its own
-3. \mdef{markdownRendererInputBlockHtmlInstruction} -- A processing instruction
-   that starts on a line of its own
+3. \mdef{markdownRendererInputBlockHtmlProcessingInstruction} -- A processing
+   instruction that starts on a line of its own
 4. \mdef{markdownRendererInputBlockHtmlDeclaration} -- A declaration that starts
    on a line of its own
 5. \mdef{markdownRendererInputBlockHtmlCdataSection} -- A CDATA section that
@@ -16260,16 +16260,16 @@ The horizontal margins should contain the following text:
   { inputBlockHtmlComment }
   { 1 }
 \cs_gset_protected:Npn
-  \markdownRendererInputBlockHtmlInstruction
+  \markdownRendererInputBlockHtmlProcessingInstruction
   {
-    \markdownRendererInputBlockHtmlInstructionPrototype
+    \markdownRendererInputBlockHtmlProcessingInstructionPrototype
   }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
-  { inputBlockHtmlInstruction }
+  { inputBlockHtmlProcessingInstruction }
 \prop_gput:Nnn
   \g_@@_renderer_arities_prop
-  { inputBlockHtmlInstruction }
+  { inputBlockHtmlProcessingInstruction }
   { 1 }
 \cs_gset_protected:Npn
   \markdownRendererInputBlockHtmlDeclaration
@@ -16336,7 +16336,8 @@ When the \Opt{html} option is enabled and \Opt{htmlOutput} is set to
 \mref{markdownRendererInlineHtmlTag} to distinguish between different top-level
 non-terminal elements of CommonMark's grammar for [raw HTML][raw-html]:
 
-- \mdef{markdownRendererInlineHtmlInstruction} -- A processing instruction
+- \mdef{markdownRendererInlineHtmlProcessingInstruction} -- A processing
+  instruction
 - \mdef{markdownRendererInlineHtmlDeclaration} -- A declaration
 - \mdef{markdownRendererInlineHtmlCdataSection} -- A CDATA section
 - \mdef{markdownRendererInlineHtmlOpenTag} -- An opening tag
@@ -16391,16 +16392,16 @@ following body text:
 %  \begin{macrocode}
 \ExplSyntaxOn
 \cs_gset_protected:Npn
-  \markdownRendererInlineHtmlInstruction
+  \markdownRendererInlineHtmlProcessingInstruction
   {
-    \markdownRendererInlineHtmlInstructionPrototype
+    \markdownRendererInlineHtmlProcessingInstructionPrototype
   }
 \seq_gput_right:Nn
   \g_@@_renderers_seq
-  { inlineHtmlInstruction }
+  { inlineHtmlProcessingInstruction }
 \prop_gput:Nnn
   \g_@@_renderer_arities_prop
-  { inlineHtmlInstruction }
+  { inlineHtmlProcessingInstruction }
   { 1 }
 \cs_gset_protected:Npn
   \markdownRendererInlineHtmlDeclaration
@@ -29794,17 +29795,17 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Define \luamdef{writer->block_html_instruction} as a function that
+% Define \luamdef{writer->block_html_processing_instruction} as a function that
 % transforms the contents of a block HTML processing instruction (CommonMark
 % HTML block type~3) to the output format.
 %
 % \end{markdown}
 %  \begin{macrocode}
-  function self.block_html_instruction(s)
+  function self.block_html_processing_instruction(s)
     if not self.is_writing then return "" end
     local name = util.cache(options.cacheDir, s, nil, nil, ".verbatim")
     return {
-      "\\markdownRendererInputBlockHtmlInstruction{",name,"}"}
+      "\\markdownRendererInputBlockHtmlProcessingInstruction{",name,"}"}
   end
 %    \end{macrocode}
 % \begin{markdown}
@@ -29866,15 +29867,15 @@ function M.writer.new(options)
 %    \end{macrocode}
 % \begin{markdown}
 %
-% Define \luamdef{writer->inline_html_instruction} as a function that
-% transforms the contents of an inline HTML processing instruction to the
+% Define \luamdef{writer->inline_html_processing_instruction} as a function
+% that transforms the contents of an inline HTML processing instruction to the
 % output format.
 %
 % \end{markdown}
 %  \begin{macrocode}
-  function self.inline_html_instruction(contents)
+  function self.inline_html_processing_instruction(contents)
     if self.flatten_inlines then return contents end
-    return {"\\markdownRendererInlineHtmlInstruction{",
+    return {"\\markdownRendererInlineHtmlProcessingInstruction{",
             self.string(contents),"}"}
   end
 %    \end{macrocode}
@@ -34250,7 +34251,7 @@ end
       + Cs(parsers.html_any_empty_inline_tag)
       / writer.inline_html_empty_tag
       + Cs(parsers.html_inline_instruction)
-      / writer.inline_html_instruction
+      / writer.inline_html_processing_instruction
       + Cs(parsers.html_inline_cdatasection)
       / writer.inline_html_cdata_section
       + Cs(parsers.html_inline_declaration)
@@ -34290,7 +34291,7 @@ end
       + Cs(parsers.check_trail * parsers.html_any_block)
       / writer.block_html_standalone_tag
       + Cs(parsers.check_trail * parsers.html_instruction)
-      / writer.block_html_instruction
+      / writer.block_html_processing_instruction
       + Cs(parsers.check_trail * parsers.html_cdatasection)
       / writer.block_html_cdata_section
       + Cs(parsers.check_trail * parsers.html_declaration)
