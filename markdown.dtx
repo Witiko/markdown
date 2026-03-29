@@ -29857,7 +29857,7 @@ function M.writer.new(options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  function self.block_html_standalone_tag(s)
+  function self.block_html_standalone_tag(contents)
     if self.flatten_inlines then return contents end
     return {"\\markdownRendererBlockHtmlStandaloneTag{",
             self.string(contents),"}"}
