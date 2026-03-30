@@ -2,6 +2,13 @@
 
 ## 3.15.0 (2026-03-XX)
 
+### Fixes
+
+This version of the Markdown package has fixed the following issues:
+
+- Specify `.value_required:n = { true }` for all options that require values.
+  (discovered by @michal-h21 in #615, fixed in #640)
+
 ### Continuous integration
 
 This version of the Markdown package has made the following changes to our
