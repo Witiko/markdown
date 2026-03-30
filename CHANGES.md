@@ -8,7 +8,7 @@ This version of the Markdown package has added the following new features:
 
 - Add a new `htmlOutput` option to produce fine-grained HTML renderers based on
   CommonMark's grammar. (suggested by @u-fischer and @Witiko in #597 and #606,
-  contributed by @herley-shaori in #635)
+  contributed by @herley-shaori in #635 with a review by @lostenderman)
 
 ### Fixes
 
