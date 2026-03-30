@@ -15,6 +15,8 @@ This version of the Markdown package has added the following new features:
 This version of the Markdown package has fixed the following issues:
 
 - Strip leading and trailing spaces for `inlineHtmlComment` renderers. (#635)
+- Specify `.value_required:n = { true }` for all options that require values.
+  (discovered by @michal-h21 in #615, fixed in #640)
 
 ### Continuous integration
 

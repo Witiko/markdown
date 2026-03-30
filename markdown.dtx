@@ -13192,6 +13192,7 @@ A PDF document named `document.pdf` should be produced and contain the text
                 { #2 }
                 \l_tmpa_tl
             },
+            #3 .value_required:n = { false },
             #3 .default:n = { true },
           }
       }
@@ -13199,6 +13200,7 @@ A PDF document named `document.pdf` should be produced and contain the text
         \keys_define:nn
           { markdown/options }
           {
+            #3 .value_required:n = { true },
             #3 .code:n = {
               \@@_set_option_value:nn
                 { #2 }
@@ -13247,8 +13249,14 @@ A PDF document named `document.pdf` should be produced and contain the text
           }
         \tl_reverse:N
           \l_tmpa_tl
+        \tl_set_eq:NN
+          \l_tmpb_tl
+          \l_tmpa_tl
         \tl_put_right:Nn
           \l_tmpa_tl
+          { .value_required:n = { true } }
+        \tl_put_right:Nn
+          \l_tmpb_tl
           {
             .code:n = {
               \@@_append_option_value:nn
@@ -13259,6 +13267,9 @@ A PDF document named `document.pdf` should be produced and contain the text
         \keys_define:nV
           { markdown/options }
           \l_tmpa_tl
+        \keys_define:nV
+          { markdown/options }
+          \l_tmpb_tl
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -13274,21 +13285,25 @@ A PDF document named `document.pdf` should be produced and contain the text
         \keys_define:nn
           { markdown/options }
           {
+            #3~+ .value_required:n = { true },
             #3~+ .code:n = {
               \@@_append_option_value:nn
                 { #2 }
                 { ##1 }
             },
+            #3 + .value_required:n = { true },
             #3 + .code:n = {
               \@@_append_option_value:nn
                 { #2 }
                 { ##1 }
             },
+            #3~$ .value_required:n = { true },
             #3~$ .code:n = {
               \@@_append_option_value:nn
                 { #2 }
                 { ##1 }
             },
+            #3 $ .value_required:n = { true },
             #3 $ .code:n = {
               \@@_append_option_value:nn
                 { #2 }
@@ -13303,16 +13318,18 @@ A PDF document named `document.pdf` should be produced and contain the text
 %
 % \end{markdown}
 %  \begin{macrocode}
+            #3~^ .value_required:n = { true },
             #3~^ .code:n = {
               \@@_prepend_option_value:nn
                 { #2 }
                 { ##1 }
             },
+            #3 ^ .value_required:n = { true },
             #3 ^ .code:n = {
               \@@_prepend_option_value:nn
                 { #2 }
                 { ##1 }
-            }
+            },
           }
       }
   }
@@ -13403,10 +13420,12 @@ a specific look and other high-level goals without low-level programming.
 \keys_define:nn
   { markdown/options }
   {
+    theme .value_required:n = { true },
     theme .code:n = {
       \@@_set_theme:n
         { #1 }
     },
+    import .value_required:n = { true },
     import .code:n = {
       \tl_set:Nn
         \l_tmpa_tl
@@ -14181,6 +14200,7 @@ options locally.
 \keys_define:nn
   { markdown/options }
   {
+    snippet .value_required:n = { true },
     snippet .code:n = {
       \@@_resolve_snippet_name:nN
         { #1 }
@@ -14201,7 +14221,7 @@ options locally.
             { undefined-snippet }
             \l_tmpa_tl
         }
-    }
+    },
   }
 \msg_new:nnn
   { markdown }
@@ -14340,6 +14360,7 @@ variant of the `import` \LaTeX{} option:
 %
 % \end{markdown}
 %  \begin{macrocode}
+    unknown .value_required:n = { false },
     unknown .default:n = {},
     unknown .code:n = {
 %    \end{macrocode}
@@ -22541,6 +22562,7 @@ following text:
     \keys_define:nn
       { markdown/options/renderers }
       {
+        #1 .value_required:n = { true },
         #1 .code:n = {
           \tl_set:Nn
             \l_@@_renderer_definition_tl
@@ -22667,6 +22689,7 @@ following text:
 \keys_define:nn
   { markdown/options }
   {
+    renderers .value_required:n = { true },
     renderers .code:n = {
       \bool_gset_false:N
         \g_@@_unprotected_renderer_bool
@@ -22674,6 +22697,7 @@ following text:
         { markdown/options/renderers }
         { #1 }
     },
+    unprotectedRenderers .value_required:n = { true },
     unprotectedRenderers .code:n = {
       \bool_gset_true:N
         \g_@@_unprotected_renderer_bool
@@ -22715,6 +22739,7 @@ following text:
 \keys_define:nn
   { markdown/options/renderers }
   {
+    unknown .value_required:n = { true },
     unknown .code:n = {
 %    \end{macrocode}
 % \begin{markdown}
@@ -23222,6 +23247,7 @@ following text:
     \keys_define:nn
       { markdown/options }
       {
+        #1 .value_required:n = { true },
         #1 .code:n = {
           \tl_set:Nn
             \l_tmpa_tl
@@ -23250,6 +23276,7 @@ following text:
 \keys_define:nn
   { markdown/options/jekyll-data-renderers }
   {
+    unknown .value_required:n = { true },
     unknown .code:n = {
       \tl_set_eq:NN
         \l_tmpa_tl
@@ -23417,6 +23444,7 @@ following text:
     \keys_define:nn
       { markdown/options/renderer-prototypes }
       {
+        #1 .value_required:n = { true },
         #1 .code:n = {
           \tl_set:Nn
             \l_@@_renderer_prototype_definition_tl
@@ -23517,6 +23545,7 @@ following text:
 \keys_define:nn
   { markdown/options/renderer-prototypes }
   {
+    unknown .value_required:n = { true },
     unknown .code:n = {
 %    \end{macrocode}
 % \begin{markdown}
@@ -23681,6 +23710,7 @@ following text:
     \keys_define:nn
       { markdown/options }
       {
+        #1 .value_required:n = { true },
         #1 .code:n = {
           \bool_gset_false:N
             \g_@@_unprotected_renderer_prototype_bool
@@ -23696,6 +23726,7 @@ following text:
     \keys_define:nn
       { markdown/options }
       {
+        #1 .value_required:n = { true },
         #1 .code:n = {
           \bool_gset_true:N
             \g_@@_unprotected_renderer_prototype_bool
@@ -23796,6 +23827,7 @@ following text:
 \keys_define:nn
   { markdown/options }
   {
+    code .value_required:n = { true },
     code .code:n = { #1 },
   }
 \ExplSyntaxOff
@@ -40008,6 +40040,7 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
+        #1 .value_required:n = { false },
         #1 .default:n = { },
       }
   }
@@ -43300,14 +43333,17 @@ end
 \keys_define:nn
   { markdown / jekyllData }
   {
+    author .value_required:n = { true },
     author .code:n = {
       \author
         { #1 }
     },
+    date .value_required:n = { true },
     date .code:n = {
       \date
         { #1 }
     },
+    title .value_required:n = { true },
     title .code:n = {
       \title
         { #1 }
