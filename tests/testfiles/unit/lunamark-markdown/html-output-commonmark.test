@@ -5,6 +5,12 @@ plain TeX interface and that, when set to `commonmark`, it produces fine-grained
 renderers for each top-level non-terminal element of CommonMark's grammar for
 HTML blocks and raw HTML.
 
+<!doctype html>
+
+<?php echo "foo"; ?>
+
+<![CDATA[ bar ]]>
+
 <!-- block comment -->
 
 <script>alert('hi')</script>
@@ -23,6 +29,12 @@ softLineBreak
 codeSpan: commonmark
 softLineBreak
 softLineBreak
+interblockSeparator
+inputBlockHtmlDeclaration: ???.verbatim
+interblockSeparator
+inputBlockHtmlProcessingInstruction: ???.verbatim
+interblockSeparator
+inputBlockHtmlCdataSection: ???.verbatim
 interblockSeparator
 inputBlockHtmlComment: b3ffb66dd7e08481fe6b45f4a11c8552.verbatim
 interblockSeparator

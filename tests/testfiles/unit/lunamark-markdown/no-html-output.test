@@ -1,6 +1,12 @@
 <<<
 This test ensures that the `htmlOutput` option is set to `basic` by default.
 
+<!doctype html>
+
+<?php echo "foo"; ?>
+
+<![CDATA[ bar ]]>
+
 <!-- block comment -->
 
 <script>alert('hi')</script>
@@ -16,6 +22,12 @@ foo <b>bar</b> baz<br/> <!-- bam --> <!doctype html> <?php echo "foo"; ?> <![CDA
 BEGIN document
 codeSpan: htmlOutput
 codeSpan: basic
+interblockSeparator
+inputBlockHtmlElement: ???.verbatim
+interblockSeparator
+inputBlockHtmlElement: ???.verbatim
+interblockSeparator
+inputBlockHtmlElement: ???.verbatim
 interblockSeparator
 inputBlockHtmlElement: b3ffb66dd7e08481fe6b45f4a11c8552.verbatim
 interblockSeparator
