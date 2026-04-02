@@ -15,7 +15,7 @@ hello
 
 <br/>
 
-foo <b>bar</b> baz<br/> <!-- bam -->
+foo <b>bar</b> baz<br/> <!-- bam --> <!doctype html> <?php echo "foo"; ?> <![CDATA[ bar ]]>
 >>>
 BEGIN document
 codeSpan: htmlOutput
@@ -36,4 +36,7 @@ inlineHtmlOpenTag: <b>
 inlineHtmlCloseTag: </b>
 inlineHtmlEmptyTag: <br/>
 inlineHtmlComment: bam
+inlineHtmlDeclaration: <!doctype html>
+inlineHtmlProcessingInstruction: <?php echo "foo"; ?>
+inlineHtmlCdataSection: <![CDATA[ bar ]]>
 END document
