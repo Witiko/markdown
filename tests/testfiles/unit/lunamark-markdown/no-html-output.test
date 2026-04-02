@@ -7,7 +7,9 @@ This test ensures that the `htmlOutput` option is set to `basic` by default.
 
 <![CDATA[ bar ]]>
 
-<!-- block comment -->
+<!-- block comment with _inline_
+
+and block content -->
 
 <script>alert('hi')</script>
 
@@ -29,7 +31,7 @@ inputBlockHtmlElement: 920f924dc2e12672f4e76ec835e1a2b3.verbatim
 interblockSeparator
 inputBlockHtmlElement: 606597886a603f11f1b2565e22989bc1.verbatim
 interblockSeparator
-inputBlockHtmlElement: b3ffb66dd7e08481fe6b45f4a11c8552.verbatim
+inputBlockHtmlElement: ???.verbatim
 interblockSeparator
 inputBlockHtmlElement: dba3735d95b8e26c1629e504c873955b.verbatim
 interblockSeparator
