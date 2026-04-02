@@ -38,7 +38,7 @@ inputBlockHtmlProcessingInstruction: 920f924dc2e12672f4e76ec835e1a2b3.verbatim
 interblockSeparator
 inputBlockHtmlCdataSection: 606597886a603f11f1b2565e22989bc1.verbatim
 interblockSeparator
-blockHtmlComment: block comment with (emph: inline)(paragraphSeparator)and block content
+blockHtmlComment: block comment with (emphasis: inline)(paragraphSeparator)and block content
 interblockSeparator
 inputBlockHtmlCdataElement: dba3735d95b8e26c1629e504c873955b.verbatim
 interblockSeparator
