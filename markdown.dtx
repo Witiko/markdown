@@ -32150,7 +32150,6 @@ parsers.html_comment_end = parsers.optionalspace
 parsers.html_comment
   = parsers.html_comment_start
   * parsers.html_until_end(parsers.html_comment_end)
-  / self.parser_functions.parse_blocks_nested
 
 parsers.html_inline_comment = (parsers.html_comment_start / "")
                             * -P(">") * -P("->")
@@ -34318,6 +34317,7 @@ end
   if options.htmlOutput == "commonmark" then
     parsers.DisplayHtml
       = parsers.check_trail * parsers.html_comment
+      / self.parser_functions.parse_blocks_nested
       / writer.block_html_comment
       + Cs(parsers.check_trail * parsers.html_special_block)
       / writer.block_html_cdata_element
