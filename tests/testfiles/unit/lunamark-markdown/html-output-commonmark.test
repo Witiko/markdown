@@ -1,0 +1,56 @@
+\markdownSetup{htmlOutput=commonmark}
+<<<
+This test ensures that the `htmlOutput` option correctly propagates through the
+plain TeX interface and that, when set to `commonmark`, it produces fine-grained
+renderers for each top-level non-terminal element of CommonMark's grammar for
+HTML blocks and raw HTML.
+
+<!doctype html>
+
+<?php echo "foo"; ?>
+
+<![CDATA[ bar ]]>
+
+<!-- block comment with _inline_
+
+and block content -->
+
+<script>alert('hi')</script>
+
+<div>
+hello
+</div>
+
+<br/>
+
+foo <b>bar</b> baz<br/> <!-- bam --> <!doctype html> <?php echo "foo"; ?> <![CDATA[ bar ]]>
+>>>
+BEGIN document
+codeSpan: htmlOutput
+softLineBreak
+codeSpan: commonmark
+softLineBreak
+softLineBreak
+interblockSeparator
+inputBlockHtmlDeclaration: f45451f4d07ca1f5bab9ed278e880c5f.verbatim
+interblockSeparator
+inputBlockHtmlProcessingInstruction: 920f924dc2e12672f4e76ec835e1a2b3.verbatim
+interblockSeparator
+inputBlockHtmlCdataSection: 606597886a603f11f1b2565e22989bc1.verbatim
+interblockSeparator
+blockHtmlComment: block comment with (emphasis: inline)(paragraphSeparator)and block content
+interblockSeparator
+inputBlockHtmlCdataElement: dba3735d95b8e26c1629e504c873955b.verbatim
+interblockSeparator
+inputBlockHtmlPcdataElement: 5ed18adb8bdfa2141d18971defaa62ac.verbatim
+interblockSeparator
+blockHtmlStandaloneTag: <br/>
+interblockSeparator
+inlineHtmlOpenTag: <b>
+inlineHtmlCloseTag: </b>
+inlineHtmlEmptyTag: <br/>
+inlineHtmlComment: bam
+inlineHtmlDeclaration: <!doctype html>
+inlineHtmlProcessingInstruction: <?php echo "foo"; ?>
+inlineHtmlCdataSection: <![CDATA[ bar ]]>
+END document
