@@ -12,6 +12,8 @@ coarse-grained renderers for display and inline HTML.
 hello
 </div>
 
+<br/>
+
 foo <b>bar</b> baz<br/> <!-- bam -->
 >>>
 BEGIN document
@@ -25,6 +27,8 @@ interblockSeparator
 inputBlockHtmlElement: dba3735d95b8e26c1629e504c873955b.verbatim
 interblockSeparator
 inputBlockHtmlElement: 5ed18adb8bdfa2141d18971defaa62ac.verbatim
+interblockSeparator
+inputBlockHtmlElement: ???.verbatim
 interblockSeparator
 inlineHtmlTag: <b>
 inlineHtmlTag: </b>
