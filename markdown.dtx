@@ -32056,7 +32056,8 @@ parsers.html_until_end = function(end_marker)
           * #parsers.blankline
           + parsers.check_minimal_indent_and_any_trail)
       + parsers.linechar - end_marker)^0)
-    * parsers.linechar^0 * parsers.newline^-1
+    * (C(parsers.linechar^0 * parsers.newline^-1)
+      / remove_trailing_blank_lines)
   )
 end
 
