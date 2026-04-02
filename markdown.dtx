@@ -4642,12 +4642,12 @@ following content:
 \usepackage{marginnote}
 \markdownSetup{
   renderers = {
-    inlineHtmlComment = {\marginnote{#1}},
+    inlineHtmlComment = \marginnote{#1},
   },
 }
 \begin{document}
 \begin{markdown}
-A useful use of inline HTML comments are side notes.
+A useful use of block HTML comments are side notes.
 <!-- Side notes are displayed in the horizontal margins next to the relevant
 passages, which makes them *easier for the reader to find* than notes. -->
 \end{markdown}
@@ -14753,14 +14753,13 @@ following content:
 ``` tex
 \documentclass{article}
 \usepackage{markdown}
-\usepackage{marginnote}
+\usepackage[blankBeforeHtmlBlock]{marginnote}
 \usepackage{verbatim}
 \markdownSetup{
-  blankBeforeHtmlBlock = true,
   renderers = {
-    inlineHtmlComment = {\marginnote{#1}},
-    inlineHtmlTag = {\textbf{#1}},
-    inputBlockHtmlElement = {\verbatiminput{#1}},
+    inlineHtmlComment = \marginnote{#1},
+    inlineHtmlTag = \textbf{#1},
+    inputBlockHtmlElement = \verbatiminput{#1},
   },
 }
 \begin{document}
@@ -14785,7 +14784,7 @@ following body text:
 
 > A useful use of HTML comments are side notes.
 >
-> **&lt;b&gt;**_Hello,_ world!**&lt;/b&gt;&lt;br/&gt;**
+> **&lt;b&gt;**<i>Hello,</i> world!**&lt;/b&gt;&lt;br/&gt;**
 >
 >     <div>_Hello,_ world!</div>
 
@@ -16229,7 +16228,7 @@ following content:
 }
 \begin{document}
 \begin{markdown}
-A useful use of inline HTML comments are side notes.
+A useful use of block HTML comments are side notes.
 
 <!-- Side notes are displayed in the horizontal margins next to the relevant
 passages, which makes them *easier for the reader to find* than notes. -->
