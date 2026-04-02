@@ -130,7 +130,7 @@ unprotectedRenderers = {%
     \TYPE{#0: #1}},
   blockQuote(Begin|End) = {%
     \TYPE{#0}},
-  blockHtmlStandaloneTag = {%
+  blockHtml(Comment|StandaloneTag) = {%
     \TYPE{#0: #1}},
   lineBlock(Begin|End) = {%
     \TYPE{#0}},
@@ -157,7 +157,7 @@ unprotectedRenderers = {%
     \TYPE{#0: #1}},
   inputBlockHtmlElement = {%
     \TYPE{#0: \NORMALIZEPATH{#1}}},
-  inputBlockHtml(CdataElement|Comment|ProcessingInstruction|Declaration|CdataSection|PcdataElement) = {%
+  inputBlockHtml(CdataElement|ProcessingInstruction|Declaration|CdataSection|PcdataElement) = {%
     \TYPE{#0: \NORMALIZEPATH{#1}}},
   (ticked|halfTicked|unticked)Box = {%
     \TYPE{#0}},
