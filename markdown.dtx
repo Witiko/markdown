@@ -29819,7 +29819,7 @@ function M.writer.new(options)
 %
 % \end{markdown}
 %  \begin{macrocode}
-  function self.block_html_comment(s)
+  function self.block_html_comment(contents)
     if self.flatten_inlines then return contents end
     return {"\\markdownRendererBlockHtmlComment{",contents,"}"}
   end
