@@ -16201,9 +16201,10 @@ HTML][html-blocks]:
 7. \mdef{markdownRendererBlockHtmlStandaloneTag} -- A non-CDATA HTML tag
    on a line of its own
 
-Each of these macros receives a single argument that is the filename of a file
-containing the corresponding HTML text. Their prototypes fall back on
-\mref{markdownRendererInputBlockHtmlElementPrototype}.
+Each of these macros receive a single argument. For all macros except 2 and 7,
+it is the filename of a file containing the corresponding HTML text. In
+contrast, macros 2 and 7 receive the text within the HTML comment and the HTML
+text, respectively.
 
  [html-blocks]: https://spec.commonmark.org/0.31.2/#html-blocks
 
@@ -16365,8 +16366,7 @@ non-terminal elements of CommonMark's grammar for [raw HTML][raw-html]:
 - \mdef{markdownRendererInlineHtmlCloseTag} -- A closing tag
 - \mdef{markdownRendererInlineHtmlEmptyTag} -- An empty tag
 
-Each of these macros receives a single argument with the HTML text. Their
-prototypes fall back on \mref{markdownRendererInlineHtmlTagPrototype}.
+Each of these macros receives a single argument with the HTML text.
 
  [raw-html]: https://spec.commonmark.org/0.31.2/#raw-html
 
@@ -39726,6 +39726,70 @@ end
 \ExplSyntaxOff
 \def\markdownRendererErrorPrototype#1#2#3#4{%
   \markdownError{#2}{#4}}%
+%    \end{macrocode}
+% \begin{markdown}
+%
+#### CommonMark Raw HTML Renderers
+%
+% The CommonMark raw HTML renderer prototypes (see Section
+% <#sec:commonmark-raw-html-renderers>) fall back on
+% \mref{markdownRendererInlineHtmlTagPrototype}.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\def\markdownRendererInlineHtmlProcessingInstructionPrototype{%
+  \markdownRendererInlineHtmlTagPrototype}%
+\def\markdownRendererInlineHtmlDeclarationPrototype{%
+  \markdownRendererInlineHtmlTagPrototype}%
+\def\markdownRendererInlineHtmlCdataSectionPrototype{%
+  \markdownRendererInlineHtmlTagPrototype}%
+\def\markdownRendererInlineHtmlOpenTagPrototype{%
+  \markdownRendererInlineHtmlTagPrototype}%
+\def\markdownRendererInlineHtmlCloseTagPrototype{%
+  \markdownRendererInlineHtmlTagPrototype}%
+\def\markdownRendererInlineHtmlEmptyTagPrototype{%
+  \markdownRendererInlineHtmlTagPrototype}%
+%    \end{macrocode}
+% \begin{markdown}
+%
+#### CommonMark Block HTML Renderers
+%
+% Most CommonMark block HTML renderer prototypes (see Section
+% <#sec:commonmark-block-html-renderers>) fall back onto
+% the renderer prototype for generic block HTML elements.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\def\markdownRendererInputBlockHtmlCdataElementPrototype{%
+  \markdownRendererInputBlockHtmlElementPrototype}%
+\def\markdownRendererInputBlockHtmlProcessingInstructionPrototype{%
+  \markdownRendererInputBlockHtmlElementPrototype}%
+\def\markdownRendererInputBlockHtmlDeclarationPrototype{%
+  \markdownRendererInputBlockHtmlElementPrototype}%
+\def\markdownRendererInputBlockHtmlCdataSectionPrototype{%
+  \markdownRendererInputBlockHtmlElementPrototype}%
+\def\markdownRendererInputBlockHtmlPcdataSectionPrototype{%
+  \markdownRendererInputBlockHtmlElementPrototype}%
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The block comment HTML renderer (type 2) falls back on
+% the renderer prototype for inline HTML elements.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\def\markdownRendererBlockHtmlCommentPrototype{%
+  \markdownRendererInlineHtmlCommentPrototype}%
+%    \end{macrocode}
+% \begin{markdown}
+%
+% The standalone HTML tag renderer (type 7) falls back on
+% the renderer prototype for generic inline HTML tags.
+%
+% \end{markdown}
+%  \begin{macrocode}
+\def\markdownRendererBlockHtmlStandaloneTagPrototype{%
+  \markdownRendererInlineHtmlTagPrototype}%
 %    \end{macrocode}
 % \begin{markdown}
 %
