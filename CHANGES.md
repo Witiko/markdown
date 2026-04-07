@@ -26,6 +26,7 @@ continuous integration:
 
 - Disable caching in the `zauguin/install-texlive` action.
   (added by @zauguin in zauguin/install-texlive#128 and 9c4245d3)
+- Update the `zauguin/install-texlive` action to v4.3. (e3db1102)
 
 ## 3.14.1 (2026-03-27)
 
