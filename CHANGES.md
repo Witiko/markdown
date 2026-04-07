@@ -1,6 +1,6 @@
 # Changes
 
-## 3.15.0 (2026-03-XX)
+## 3.15.0 (2026-04-XX)
 
 ### Development
 
@@ -18,6 +18,7 @@ This version of the Markdown package has fixed the following issues:
 - Strip leading and trailing spaces for `inlineHtmlComment` renderers. (#635)
 - Specify `.value_required:n = { true }` for all options that require values.
   (discovered by @michal-h21 in #615, fixed in #640)
+- Parse the content of inline HTML comments. (described in #641, fixed in #642)
 
 ### Continuous integration
 

@@ -1,0 +1,7 @@
+<<<
+foo <!-- bar
+_baz_ -->
+>>>
+BEGIN document
+inlineHtmlComment: bar(softLineBreak)(emphasis: baz)
+END document
