@@ -32155,8 +32155,7 @@ parsers.html_comment
 
 parsers.html_inline_comment = (parsers.html_comment_start / "")
                             * -P(">") * -P("->")
-                            * Cs(( V("NoSoftLineBreakEndline")
-                                 + parsers.any
+                            * Cs(( parsers.any
                                  - parsers.nested_breaking_blank
                                  - parsers.html_comment_end)^0)
                             * (parsers.html_comment_end / "")
@@ -32357,8 +32356,7 @@ parsers.html_any_block  = parsers.html_any_block_opening
 
 parsers.html_inline_comment_full  = parsers.html_comment_start
                                   * -P(">") * -P("->")
-                                  * Cs(( V("NoSoftLineBreakEndline")
-                                       + parsers.any - P("--")
+                                  * Cs(( parsers.any - P("--")
                                        - parsers.nested_breaking_blank
                                        - parsers.html_comment_end)^0)
                                   * parsers.html_comment_end
@@ -34283,6 +34281,7 @@ end
   if options.htmlOutput == "commonmark" then
     parsers.InlineHtml
       = Cs(parsers.html_inline_comment)
+      / self.parser_functions.parse_inlines_no_html
       / writer.inline_html_comment
       + Cs(parsers.html_any_empty_inline_tag)
       / writer.inline_html_empty_tag
@@ -34298,6 +34297,7 @@ end
       / writer.inline_html_close_tag
   else
     parsers.InlineHtml = Cs(parsers.html_inline_comment)
+                       / self.parser_functions.parse_inlines_no_html
                        / writer.inline_html_comment
                        + Cs( parsers.html_any_empty_inline_tag
                            + parsers.html_inline_instruction
