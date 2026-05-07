@@ -2,9 +2,18 @@
 
 ## 3.15.1 (2026-05-XX)
 
+### Fixes
+
+This version of the Markdown package has fixed the following issues:
+
+- Define unexpandable functions as protected.
+  ([witiko/expltools#201][expltools-201], #644)
+
+ [witiko/expltools#201]: https://github.com/witiko/expltools/pull/201
+
 ### Defaults
 
-This version  of the Markdown package has made the following changes to the
+This version of the Markdown package has made the following changes to the
 default renderer and renderer prototype definitions.
 
 - Render bracketed spans by default. (8c3b0716)
