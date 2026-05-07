@@ -1,5 +1,17 @@
 # Changes
 
+## 3.15.1 (2026-05-XX)
+
+### Defaults
+
+This version  of the Markdown package has made the following changes to the
+default renderer and renderer prototype definitions.
+
+- Render bracketed spans by default. (8c3b0716)
+
+  Previously, bracketed span contents were consumed by the default renderer
+  prototype.
+
 ## 3.15.0 (2026-04-08)
 
 ### Development
