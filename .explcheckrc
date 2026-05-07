@@ -1,4 +1,4 @@
-[options]
+[defaults]
 max_line_length = 72
 warnings_are_errors = true
 ignored_issues = ["w429"]
