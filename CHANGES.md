@@ -9,7 +9,7 @@ This version of the Markdown package has fixed the following issues:
 - Define unexpandable functions as protected.
   ([witiko/expltools#201][expltools-201], #644)
 
- [witiko/expltools#201]: https://github.com/witiko/expltools/pull/201
+ [expltools-201]: https://github.com/witiko/expltools/pull/201
 
 ### Defaults
 
