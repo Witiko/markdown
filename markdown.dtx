@@ -2338,7 +2338,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
 \seq_gput_right:NV
   \g_@@_option_layers_seq
   \c_@@_option_layer_lua_tl
-\cs_new:Nn
+\cs_new_protected:Nn
   \@@_add_lua_option:nnn
   {
     \@@_add_option:Vnnn
@@ -2347,7 +2347,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
       { #2 }
       { #3 }
   }
-\cs_new:Nn
+\cs_new_protected:Nn
   \@@_add_option:nnnn
   {
     \seq_gput_right:cn
@@ -2367,14 +2367,14 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
 \cs_generate_variant:Nn
   \@@_add_option:nnnn
   { Vnnn }
-\cs_new:Nn
+\cs_new_protected:Nn
   \@@_add_experimental_lua_option:n
   {
     \@@_add_experimental_option:Vn
       \c_@@_option_layer_lua_tl
       { #1 }
   }
-\cs_new:Nn
+\cs_new_protected:Nn
   \@@_add_experimental_option:nn
   {
     \seq_gput_right:cn
@@ -2393,7 +2393,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
   { Vn }
 \tl_const:Nn \c_@@_option_value_true_tl  { true  }
 \tl_const:Nn \c_@@_option_value_false_tl { false }
-\cs_new:Nn \@@_typecheck_option:n
+\cs_new_protected:Nn \@@_typecheck_option:n
   {
     \@@_get_option_type:nN
       { #1 }
@@ -2486,7 +2486,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
 \seq_gput_right:NV
   \g_@@_option_types_seq
   \c_@@_option_type_string_tl
-\cs_new:Nn
+\cs_new_protected:Nn
   \@@_get_option_type:nN
   {
     \bool_set_false:N
@@ -2541,7 +2541,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
 \cs_generate_variant:Nn
   \msg_error:nnnn
   { nnnV }
-\cs_new:Nn
+\cs_new_protected:Nn
   \@@_get_default_option_value:nN
   {
     \bool_set_false:N
@@ -2579,7 +2579,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
           { #1 }
       }
   }
-\cs_new:Nn
+\cs_new_protected:Nn
   \@@_get_option_value:nN
   {
     \@@_option_tl_to_csname:nN
@@ -2617,7 +2617,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
           }
       }
   }
-\cs_new:Nn \@@_option_tl_to_csname:nN
+\cs_new_protected:Nn \@@_option_tl_to_csname:nN
   {
     \tl_set:Nn
       \l_tmpa_tl
@@ -2633,7 +2633,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
 \regex_const:Nn
   \c_@@_option_regex
   { ^markdownOption }
-\prg_new_conditional:Nnn
+\prg_new_protected_conditional:Nnn
   \@@_csname_to_option_str:nN
   { T }
   {
@@ -2674,7 +2674,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
 %
 % \end{markdown}
 %  \begin{macrocode}
-\cs_new:Nn \@@_with_various_cases:nn
+\cs_new_protected:Nn \@@_with_various_cases:nn
   {
     \seq_clear:N
       \l_tmpa_seq
@@ -2704,7 +2704,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
 % \end{markdown}
 %  \begin{macrocode}
 \seq_new:N \g_@@_cases_seq
-\cs_new:Nn \@@_camel_case:N
+\cs_new_protected:Nn \@@_camel_case:N
   {
     \regex_replace_all:nnN
       { _ ([a-z]) }
@@ -2715,7 +2715,7 @@ interfaces and all the way up to the \LaTeX{} and \Hologo{ConTeXt} interfaces.
       { #1 }
   }
 \seq_gput_right:Nn \g_@@_cases_seq { @@_camel_case:N }
-\cs_new:Nn \@@_snake_case:N
+\cs_new_protected:Nn \@@_snake_case:N
   {
     \regex_replace_all:nnN
       { ([a-z])([A-Z]) }
@@ -12387,7 +12387,7 @@ pdftex --shell-escape document.tex
 \seq_gput_right:NV
   \g_@@_option_layers_seq
   \c_@@_option_layer_plain_tex_tl
-\cs_new:Nn
+\cs_new_protected:Nn
   \@@_add_plain_tex_option:nnn
   {
     \@@_add_option:Vnnn
@@ -12433,7 +12433,7 @@ following code in your plain \TeX{} document:
 %
 % \end{markdown}
 %  \begin{macrocode}
-\cs_new:Nn
+\cs_new_protected:Nn
   \@@_setup:n
   {
     \keys_set:nn
@@ -12481,7 +12481,7 @@ you would include the following code in your plain \TeX{} document:
 %
 % \end{markdown}
 %  \begin{macrocode}
-\prg_new_conditional:Nnn
+\prg_new_protected_conditional:Nnn
   \@@_if_option:n
   { TF, T, F }
   {
@@ -12890,7 +12890,7 @@ A PDF document named `document.pdf` should be produced and contain the text
 %
 % \end{markdown}
 %  \begin{macrocode}
-\cs_new:Nn
+\cs_new_protected:Nn
   \@@_define_option_commands_and_keyvals:
   {
     \seq_map_inline:Nn
@@ -12923,7 +12923,7 @@ A PDF document named `document.pdf` should be produced and contain the text
           }
       }
   }
-\cs_new:Nn
+\cs_new_protected:Nn
   \@@_define_option_command:n
   {
 %    \end{macrocode}
@@ -13071,7 +13071,7 @@ A PDF document named `document.pdf` should be produced and contain the text
           }
       }
   }
-\cs_new:Nn
+\cs_new_protected:Nn
   \@@_set_option_value:nn
   {
     \@@_define_option:n
@@ -13099,7 +13099,7 @@ A PDF document named `document.pdf` should be produced and contain the text
           { #2 }
       }
   }
-\cs_new:Nn
+\cs_new_protected:Nn
   \@@_prepend_option_value:nn
   {
     \@@_get_option_value:nN
@@ -13112,7 +13112,7 @@ A PDF document named `document.pdf` should be produced and contain the text
       { #1 }
       \l_tmpa_clist
   }
-\cs_new:Nn
+\cs_new_protected:Nn
   \@@_append_option_value:nn
   {
     \@@_get_option_value:nN
@@ -13128,7 +13128,7 @@ A PDF document named `document.pdf` should be produced and contain the text
 \cs_generate_variant:Nn
   \@@_set_option_value:nn
   { nV }
-\cs_new:Nn
+\cs_new_protected:Nn
   \@@_define_option:n
   {
     \@@_option_tl_to_csname:nN
@@ -13152,7 +13152,7 @@ A PDF document named `document.pdf` should be produced and contain the text
           }
       }
   }
-\cs_new:Nn
+\cs_new_protected:Nn
   \@@_define_option_keyval:nnn
   {
     \prop_get:cnN
@@ -13478,7 +13478,7 @@ a specific look and other high-level goals without low-level programming.
 \seq_gput_right:NV
   \g_@@_theme_versions_seq
   \g_@@_current_theme_tl
-\cs_new:Nn
+\cs_new_protected:Nn
   \@@_set_theme:n
   {
 %    \end{macrocode}
@@ -14071,7 +14071,7 @@ options locally.
 %  \begin{macrocode}
 \prop_new:N
   \g_@@_snippets_prop
-\cs_new:Nn
+\cs_new_protected:Nn
   \@@_setup_snippet:nn
   {
     \tl_if_empty:nT
@@ -14124,7 +14124,7 @@ options locally.
 %  \begin{macrocode}
 \tl_new:N
   \l_@@_current_snippet_tl
-\prg_new_conditional:Nnn
+\prg_new_protected_conditional:Nnn
   \@@_if_snippet_exists:n
   { TF, T }
   {
@@ -14140,7 +14140,7 @@ options locally.
 \cs_gset_eq:NN
   \markdownIfSnippetExists
   \@@_if_snippet_exists:nTF
-\cs_new:Nn
+\cs_new_protected:Nn
   \@@_resolve_snippet_name:nN
   {
 %    \end{macrocode}
@@ -22510,7 +22510,7 @@ following text:
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\cs_new:Nn \@@_define_renderers:
+\cs_new_protected:Nn \@@_define_renderers:
   {
     \seq_map_inline:Nn
       \g_@@_renderers_seq
@@ -22519,7 +22519,7 @@ following text:
           { ##1 }
       }
   }
-\cs_new:Nn \@@_define_renderer:n
+\cs_new_protected:Nn \@@_define_renderer:n
   {
     \@@_renderer_tl_to_csname:nN
       { #1 }
@@ -22533,7 +22533,7 @@ following text:
       { \l_tmpa_tl }
       \l_tmpb_tl
   }
-\cs_new:Nn \@@_renderer_tl_to_csname:nN
+\cs_new_protected:Nn \@@_renderer_tl_to_csname:nN
   {
     \tl_set:Nn
       \l_tmpa_tl
@@ -22554,7 +22554,7 @@ following text:
   \g_@@_appending_renderer_bool
 \bool_new:N
   \g_@@_unprotected_renderer_bool
-\cs_new:Nn \@@_define_renderer:nNn
+\cs_new_protected:Nn \@@_define_renderer:nNn
   {
     \keys_define:nn
       { markdown/options/renderers }
@@ -22912,7 +22912,7 @@ following text:
   \g_@@_glob_cache_prop
 \tl_new:N
   \l_@@_current_glob_tl
-\cs_new:Nn
+\cs_new_protected:Nn
   \@@_glob_seq:nnN
   {
     \tl_set:Nn
@@ -23391,7 +23391,7 @@ following text:
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\cs_new:Nn \@@_define_renderer_prototypes:
+\cs_new_protected:Nn \@@_define_renderer_prototypes:
   {
     \seq_map_inline:Nn
       \g_@@_renderers_seq
@@ -23400,7 +23400,7 @@ following text:
           { ##1 }
       }
   }
-\cs_new:Nn \@@_define_renderer_prototype:n
+\cs_new_protected:Nn \@@_define_renderer_prototype:n
   {
     \@@_renderer_prototype_tl_to_csname:nN
       { #1 }
@@ -23414,7 +23414,7 @@ following text:
       { \l_tmpa_tl }
       \l_tmpb_tl
   }
-\cs_new:Nn \@@_renderer_prototype_tl_to_csname:nN
+\cs_new_protected:Nn \@@_renderer_prototype_tl_to_csname:nN
   {
     \tl_set:Nn
       \l_tmpa_tl
@@ -23436,7 +23436,7 @@ following text:
   \g_@@_appending_renderer_prototype_bool
 \bool_new:N
   \g_@@_unprotected_renderer_prototype_bool
-\cs_new:Nn \@@_define_renderer_prototype:nNn
+\cs_new_protected:Nn \@@_define_renderer_prototype:nNn
   {
     \keys_define:nn
       { markdown/options/renderer-prototypes }
@@ -24827,7 +24827,7 @@ following text:
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\cs_new:Npn
+\cs_new_protected:Npn
   \setupmarkdown
   [ #1 ]
   {
@@ -24855,7 +24855,7 @@ following text:
 %
 % \end{markdown}
 %  \begin{macrocode}
-\cs_new:Nn \@@_caseless:N
+\cs_new_protected:Nn \@@_caseless:N
   {
     \regex_replace_all:nnN
       { ([a-z])([A-Z]) }
@@ -38513,7 +38513,7 @@ end
 \cs_if_free:NT
   \markdownInfo
   {
-    \cs_new:Npn
+    \cs_new_protected:Npn
       \markdownInfo #1
       {
         \msg_info:nne
@@ -38525,7 +38525,7 @@ end
 \cs_if_free:NT
   \markdownWarning
   {
-    \cs_new:Npn
+    \cs_new_protected:Npn
       \markdownWarning #1
       {
         \msg_warning:nne
@@ -38537,7 +38537,7 @@ end
 \cs_if_free:NT
   \markdownError
   {
-    \cs_new:Npn
+    \cs_new_protected:Npn
       \markdownError #1 #2
       {
         \msg_error:nnee
@@ -38580,7 +38580,7 @@ end
 \ExplSyntaxOn
 \prop_new:N \g_@@_plain_tex_loaded_themes_linenos_prop
 \prop_new:N \g_@@_plain_tex_loaded_themes_versions_prop
-\cs_new:Nn
+\cs_new_protected:Nn
   \@@_plain_tex_load_theme:nnn
   {
     \prop_get:NnNTF
@@ -38700,7 +38700,7 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\cs_new:Npn
+\cs_new_protected:Npn
   \markdownLoadPlainTeXTheme
   {
 %    \end{macrocode}
@@ -39666,13 +39666,13 @@ end
 \def\markdownRendererDisplayMathPrototype#1{$$#1$$}%
 \def\markdownRendererInlineMathPrototype#1{$#1$}%
 \ExplSyntaxOn
-\cs_gset:Npn
+\cs_gset_protected:Npn
   \markdownRendererHeaderAttributeContextBeginPrototype
   {
     \group_begin:
     \color_group_begin:
   }
-\cs_gset:Npn
+\cs_gset_protected:Npn
   \markdownRendererHeaderAttributeContextEndPrototype
   {
     \color_group_end:
@@ -39703,7 +39703,7 @@ end
 \def\markdownRendererSectionBeginPrototype{}%
 \def\markdownRendererSectionEndPrototype{}%
 \ExplSyntaxOn
-\cs_gset:Npn
+\cs_gset_protected:Npn
   \markdownRendererWarningPrototype
   #1#2#3#4
   {
@@ -39955,13 +39955,13 @@ end
 %  \begin{macrocode}
 \tl_new:N  \g_@@_jekyll_data_wildcard_absolute_address_tl
 \tl_new:N  \g_@@_jekyll_data_wildcard_relative_address_tl
-\cs_new:Nn \@@_jekyll_data_concatenate_address:NN
+\cs_new_protected:Nn \@@_jekyll_data_concatenate_address:NN
   {
     \seq_pop_left:NN #1 \l_tmpa_tl
     \tl_set:Nx #2 { / \seq_use:Nn #1 { / } }
     \seq_put_left:NV #1 \l_tmpa_tl
   }
-\cs_new:Nn \@@_jekyll_data_update_address_tls:
+\cs_new_protected:Nn \@@_jekyll_data_update_address_tls:
   {
     \@@_jekyll_data_concatenate_address:NN
       \g_@@_jekyll_data_wildcard_absolute_address_seq
@@ -39979,7 +39979,7 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\cs_new:Nn \@@_jekyll_data_push:nN
+\cs_new_protected:Nn \@@_jekyll_data_push:nN
   {
     \@@_jekyll_data_push_address_segment:n
       { #1 }
@@ -39988,7 +39988,7 @@ end
      #2
     \@@_jekyll_data_update_address_tls:
   }
-\cs_new:Nn \@@_jekyll_data_pop:
+\cs_new_protected:Nn \@@_jekyll_data_pop:
   {
     \seq_pop_right:NN
       \g_@@_jekyll_data_wildcard_absolute_address_seq
@@ -40008,7 +40008,7 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\cs_new:Nn \@@_jekyll_data_set_keyval_known:nn
+\cs_new_protected:Nn \@@_jekyll_data_set_keyval_known:nn
   {
     \keys_set_known:nn
       { markdown/jekyllData }
@@ -40017,7 +40017,7 @@ end
 \cs_generate_variant:Nn
   \@@_jekyll_data_set_keyval_known:nn
   { Vn }
-\cs_new:Nn \@@_jekyll_data_set_keyvals_known:nn
+\cs_new_protected:Nn \@@_jekyll_data_set_keyvals_known:nn
   {
     \@@_jekyll_data_push:nN
       { #1 }
@@ -40038,33 +40038,45 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-\def\markdownRendererJekyllDataSequenceBeginPrototype#1#2{
-  \@@_jekyll_data_push:nN
-    { #1 }
-    \c_@@_jekyll_data_sequence_tl
-}
-\def\markdownRendererJekyllDataMappingBeginPrototype#1#2{
-  \@@_jekyll_data_push:nN
-    { #1 }
-    \c_@@_jekyll_data_mapping_tl
-}
-\def\markdownRendererJekyllDataSequenceEndPrototype{
-  \@@_jekyll_data_pop:
-}
-\def\markdownRendererJekyllDataMappingEndPrototype{
-  \@@_jekyll_data_pop:
-}
-\def\markdownRendererJekyllDataBooleanPrototype#1#2{
-  \@@_jekyll_data_set_keyvals_known:nn
-    { #1 }
-    { #2 }
-}
+\cs_gset_protected:Npn
+  \markdownRendererJekyllDataSequenceBeginPrototype #1#2
+  {
+    \@@_jekyll_data_push:nN
+      { #1 }
+      \c_@@_jekyll_data_sequence_tl
+  }
+\cs_gset_protected:Npn
+  \markdownRendererJekyllDataMappingBeginPrototype #1#2
+  {
+    \@@_jekyll_data_push:nN
+      { #1 }
+      \c_@@_jekyll_data_mapping_tl
+  }
+\cs_gset_protected:Npn
+  \markdownRendererJekyllDataSequenceEndPrototype
+  {
+    \@@_jekyll_data_pop:
+  }
+\cs_gset_protected:Npn
+  \markdownRendererJekyllDataMappingEndPrototype
+  {
+    \@@_jekyll_data_pop:
+  }
+\cs_gset_protected:Npn
+  \markdownRendererJekyllDataBooleanPrototype #1#2
+  {
+    \@@_jekyll_data_set_keyvals_known:nn
+      { #1 }
+      { #2 }
+  }
 \def\markdownRendererJekyllDataEmptyPrototype#1{}
-\def\markdownRendererJekyllDataNumberPrototype#1#2{
-  \@@_jekyll_data_set_keyvals_known:nn
-    { #1 }
-    { #2 }
-}
+\cs_gset_protected:Npn
+  \markdownRendererJekyllDataNumberPrototype #1#2
+  {
+    \@@_jekyll_data_set_keyvals_known:nn
+      { #1 }
+      { #2 }
+  }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -40074,11 +40086,13 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \def\markdownRendererJekyllDataProgrammaticStringPrototype#1#2{}
-\def\markdownRendererJekyllDataTypographicStringPrototype#1#2{
-  \@@_jekyll_data_set_keyvals_known:nn
-    { #1 }
-    { #2 }
-}
+\cs_gset_protected:Npn
+  \markdownRendererJekyllDataTypographicStringPrototype #1#2
+  {
+    \@@_jekyll_data_set_keyvals_known:nn
+      { #1 }
+      { #2 }
+  }
 \ExplSyntaxOff
 %    \end{macrocode}
 % \begin{markdown}
@@ -40117,7 +40131,7 @@ end
   \l_@@_jekyll_data_current_position_seq
 \tl_new:N
   \l_@@_jekyll_data_current_position_tl
-\cs_new:Nn
+\cs_new_protected:Nn
   \@@_route_jekyll_data_to_key_values:n
   {
     \markdownSetup
@@ -40343,14 +40357,14 @@ end
         },
       }
   }
-\cs_new:Nn
+\cs_new_protected:Nn
   \@@_keys_set:nn
   {
     \keys_set:nn
       { }
       { { #1 } = { #2 } }
   }
-\cs_new:Nn
+\cs_new_protected:Nn
   \@@_keys_set_known:nn
   {
     \keys_set_known:nn
@@ -40423,7 +40437,7 @@ end
 %  \begin{macrocode}
 \ExplSyntaxOn
 \tl_new:N \g_@@_formatted_lua_options_tl
-\cs_new:Nn \@@_format_lua_options:
+\cs_new_protected:Nn \@@_format_lua_options:
   {
     \tl_gclear:N
       \g_@@_formatted_lua_options_tl
@@ -40431,7 +40445,7 @@ end
       \g_@@_lua_options_seq
       \@@_format_lua_option:n
   }
-\cs_new:Nn \@@_format_lua_option:n
+\cs_new_protected:Nn \@@_format_lua_option:n
   {
     \@@_typecheck_option:n
       { #1 }
@@ -40525,7 +40539,7 @@ end
     }
 \sys_if_engine_luatex:TF
   {
-    \cs_new:Nn
+    \cs_new_protected:Nn
       \@@_lua_escape:nN
       {
         \tl_set:Nx
@@ -40540,7 +40554,7 @@ end
     \regex_const:Nn
       \c_@@_lua_escape_regex
       { [\\"'] }
-    \cs_new:Nn
+    \cs_new_protected:Nn
       \@@_lua_escape:nN
       {
         \tl_set:Nn
@@ -40567,7 +40581,7 @@ end
 %  \begin{macrocode}
 \tl_new:N
   \markdownInputFilename
-\cs_new:Npn
+\cs_new_protected:Npn
   \markdownPrepareInputFilename
   #1
   {
@@ -40839,7 +40853,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\cs_new:Npn
+\cs_new_protected:Npn
   \markdownLuaExecute
   #1
   {
@@ -40905,7 +40919,7 @@ end
 \tl_gset:Nn
   \g_@@_after_markinline_tl
   { \unskip }
-\cs_new:Npn
+\cs_new_protected:Npn
   \markinline
   {
 %    \end{macrocode}
@@ -41024,7 +41038,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\cs_new:Npn
+\cs_new_protected:Npn
   \markdownInput
   #1
   {
@@ -41195,7 +41209,7 @@ end
 \cs_gset_eq:NN
   \markinlinePlainTeX
   \markinline
-\cs_gset:Npn
+\cs_gset_protected:Npn
   \markinline
   {
     \peek_regex_replace_once:nn
@@ -41431,7 +41445,7 @@ end
 \ExplSyntaxOn
 \prop_new:N \g_@@_latex_loaded_themes_linenos_prop
 \prop_new:N \g_@@_latex_loaded_themes_versions_prop
-\cs_gset:Nn
+\cs_gset_protected:Nn
   \@@_load_theme:nnn
   {
 %    \end{macrocode}
@@ -42761,13 +42775,15 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
-\def\markdownLATEXStrongEmphasis#1{
-  \str_if_in:NnTF
-    \f@series
-    { b }
-    { \textnormal{#1} }
-    { \textbf{#1} }
-}
+\cs_new_protected:Npn
+  \markdownLATEXStrongEmphasis #1
+  {
+    \str_if_in:NnTF
+      \f@series
+      { b }
+      { \textnormal{#1} }
+      { \textbf{#1} }
+  }
 \ExplSyntaxOff
 \markdownSetup{rendererPrototypes={strongEmphasis={%
   \protect\markdownLATEXStrongEmphasis{#1}}}}
@@ -43179,46 +43195,48 @@ end
           { #1 } { #2 } { #3 } { #4 }
       }
   }
-\def\markdownLaTeXRendererAutolink#1#2{
+\cs_new_protected:Npn
+  \markdownLaTeXRendererAutolink #1#2
+  {
 %    \end{macrocode}
 % \begin{markdown}
 % If the URL begins with a hash sign, then we assume that it is a relative
 % reference. Otherwise, we assume that it is an absolute URL.
 % \end{markdown}
 %  \begin{macrocode}
-  \tl_set:Nn
-    \l_tmpa_tl
-    { #2 }
-  \tl_trim_spaces:N
-    \l_tmpa_tl
-  \tl_set:Nx
-    \l_tmpb_tl
-    {
-      \tl_range:Nnn
-        \l_tmpa_tl
-        { 1 }
-        { 1 }
-    }
-  \str_if_eq:NNTF
-    \l_tmpb_tl
-    \c_hash_str
-    {
-      \tl_set:Nx
-        \l_tmpb_tl
-        {
-          \tl_range:Nnn
-            \l_tmpa_tl
-            { 2 }
-            { -1 }
-        }
-      \exp_args:NV
-        \ref
-        \l_tmpb_tl
-    }
-    {
-      \url { #2 }
-    }
-}
+    \tl_set:Nn
+      \l_tmpa_tl
+      { #2 }
+    \tl_trim_spaces:N
+      \l_tmpa_tl
+    \tl_set:Nx
+      \l_tmpb_tl
+      {
+        \tl_range:Nnn
+          \l_tmpa_tl
+          { 1 }
+          { 1 }
+      }
+    \str_if_eq:NNTF
+      \l_tmpb_tl
+      \c_hash_str
+      {
+        \tl_set:Nx
+          \l_tmpb_tl
+          {
+            \tl_range:Nnn
+              \l_tmpa_tl
+              { 2 }
+              { -1 }
+          }
+        \exp_args:NV
+          \ref
+          \l_tmpb_tl
+      }
+      {
+        \url { #2 }
+      }
+  }
 \ExplSyntaxOff
 \def\markdownLaTeXRendererDirectOrIndirectLink#1#2#3#4{%
   #1\footnote{\ifx\empty#4\empty\else#4: \fi\url{#3}}}
@@ -43939,7 +43957,7 @@ end
 \ExplSyntaxOn
 \prop_new:N \g_@@_context_loaded_themes_linenos_prop
 \prop_new:N \g_@@_context_loaded_themes_versions_prop
-\cs_gset:Nn
+\cs_gset_protected:Nn
   \@@_load_theme:nnn
   {
 %    \end{macrocode}
