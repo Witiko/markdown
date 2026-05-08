@@ -21,6 +21,13 @@ default renderer and renderer prototype definitions.
   Previously, bracketed span contents were consumed by the default renderer
   prototype.
 
+### Continuous integration
+
+This version of the Markdown package has made the following changes to our
+continuous integration:
+
+- Bump `softprops/action-gh-release` from 2 to 3. (added by @dependabot in #643)
+
 ## 3.15.0 (2026-04-08)
 
 ### Development
