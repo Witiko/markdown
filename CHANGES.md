@@ -1,6 +1,6 @@
 # Changes
 
-## 3.15.1 (2026-05-XX)
+## 3.15.1 (2026-06-11)
 
 ### Fixes
 
@@ -20,6 +20,44 @@ default renderer and renderer prototype definitions.
 
   Previously, bracketed span contents were consumed by the default renderer
   prototype.
+
+- In LaTeX, format `[...]{.acronym}`s throughout the document. (#645)
+
+  After this change, explicitly listed acronyms using the HTML class `acronym`
+  will be recorded in the auxiliary file, so that they are applied throughout
+  the document in the next compilation run.
+
+  For example, assume the following LaTeX example document:
+
+  ``` tex
+  \documentclass{article}
+  \usepackage[plain]{markdown}
+  \markdownSetup {
+    acronyms = {HTML, YAML},
+  }
+  \begin{document}
+  \begin{markdown}
+
+  HTML, JSON, and YAML are two staples of modern tooling that often get mentioned
+  in the same breath, even though they live in very different layers of the stack.
+
+  Here, the author has explicitly marked up [JSON]{.acronym}.
+
+  \end{markdown}
+
+  \begin{markdown}
+
+  In the following compilation runs, the previous occurrence of JSON will also
+  be correctly formatted as an acronym.
+
+  \end{markdown}
+  \end{document}
+  ```
+
+  During the first compilation run, only HTML and YAML are formatted as acronyms
+  in the first paragraph, not JSON, which is only formatted as an acronym in the
+  second and third paragraphs. However, in the following compilation runs, JSON
+  is formatted as an acronym throughout.
 
 ### Continuous integration
 
