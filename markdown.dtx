@@ -41992,6 +41992,60 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
+\prop_new_linked:N
+  \g_@@_recorded_acronyms_prop
+\bool_new:N
+  \g_@@_record_acronyms_bool
+\bool_gset_false:N
+  \g_@@_record_acronyms_bool
+\cs_new:Nn
+  \@@_record_acronym:n
+  {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% For explicitly listed acronyms using the HTML class `acronym` that only contain
+% simple text and not control sequences, record them in the auxiliary file, so
+% that they are applied throughout the document in the next compilation run.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \bool_if:nT
+      {
+        \g_@@_record_acronyms_bool &&
+        ! \prop_if_in_p:Nn
+          \g_@@_recorded_acronyms_prop
+          { #1 }
+      }
+      {
+        \regex_if_match:nnF
+          { \cC. }
+          { #1 }
+          {
+            \prop_gput:Nnn
+              \g_@@_recorded_acronyms_prop
+              { #1 }
+              { true }
+            \tl_gput_right:Nn
+              \markdownOptionAcronyms
+              { , { #1 } }
+            \immediate
+              \write
+              \@auxout
+              {
+                \exp_not:N
+                  \ExplSyntaxOn
+                \exp_not:N
+                  \tl_gput_right:Nn
+                \exp_not:N
+                  \markdownOptionAcronyms
+                { , { #1 } }
+                \exp_not:N
+                  \ExplSyntaxOff
+              }
+          }
+      }
+  }
 \int_new:N
   \g_@@_heading_nesting_depth_int
 \markdownSetup {
@@ -42017,9 +42071,15 @@ end
           \group_begin:
             \markdownSetup {
               unprotectedRenderers = {
-                acronym = { ##1 },
-              }
+                acronym = {
+                  ##1
+                  \@@_record_acronym:n
+                    { ##1 }
+                },
             }
+          }
+            \@@_record_acronym:n
+              { #1 }
             \tl_set:Nn
               \l_tmpa_tl
               { #1 }
@@ -43793,6 +43853,8 @@ end
                 \markdownSetup {
                   rendererPrototypes = {
                     bracketedSpan = {
+                      \bool_set_true:N
+                        \g__markdown_record_acronyms_bool
                       \markdownRendererAcronym
                         { ####1 }
                     }
