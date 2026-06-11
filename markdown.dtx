@@ -41992,6 +41992,70 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 \ExplSyntaxOn
+\prop_new_linked:N
+  \g_@@_recorded_acronyms_prop
+\bool_new:N
+  \g_@@_record_acronyms_bool
+\bool_gset_false:N
+  \g_@@_record_acronyms_bool
+\cs_new_protected:Nn
+  \@@_record_acronym:n
+  {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% For explicitly listed acronyms using the HTML class `acronym` that only contain
+% simple text and not control sequences after cleaning up any potential nested acronyms,
+% record them in the auxiliary file, so that they are applied throughout the
+% document in the next compilation run.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \bool_if:NT
+      \g_@@_record_acronyms_bool
+      {
+        \tl_set:Nn
+          \l_tmpa_tl
+          { #1 }
+        \regex_replace_all:nnN
+          { \c { markdownRendererAcronym } | \cB\{ | \cE\} }
+          { }
+          \l_tmpa_tl
+        \prop_if_in:NVF
+          \g_@@_recorded_acronyms_prop
+          \l_tmpa_tl
+          {
+            \regex_if_match:nVF
+              { \cC. }
+              \l_tmpa_tl
+              {
+                \prop_gput:NVn
+                  \g_@@_recorded_acronyms_prop
+                  \l_tmpa_tl
+                  { true }
+                \tl_gput_right:Nx
+                  \markdownOptionAcronyms
+                  { , { \tl_use:N \l_tmpa_tl } }
+                \tl_set:Nn
+                  \l_tmpb_tl
+                  {
+                    \ExplSyntaxOn
+                      \tl_gput_right:Nn
+                      \markdownOptionAcronyms
+                  }
+                \tl_gput_right:Nx
+                  \l_tmpb_tl
+                  { { , { \tl_use:N \l_tmpa_tl } } }
+                \tl_gput_right:Nx
+                  \l_tmpb_tl
+                  { \ExplSyntaxOff }
+                \iow_now:NV
+                  \@auxout
+                  \l_tmpb_tl
+              }
+          }
+      }
+  }
 \int_new:N
   \g_@@_heading_nesting_depth_int
 \markdownSetup {
@@ -42018,8 +42082,10 @@ end
             \markdownSetup {
               unprotectedRenderers = {
                 acronym = { ##1 },
-              }
             }
+          }
+            \@@_record_acronym:n
+              { #1 }
             \tl_set:Nn
               \l_tmpa_tl
               { #1 }
@@ -43793,6 +43859,8 @@ end
                 \markdownSetup {
                   rendererPrototypes = {
                     bracketedSpan = {
+                      \bool_set_true:N
+                        \g__markdown_record_acronyms_bool
                       \markdownRendererAcronym
                         { ####1 }
                     }
