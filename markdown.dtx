@@ -42011,48 +42011,48 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-    \tl_set:Nn
-      \l_tmpa_tl
-      { #1 }
-    \regex_replace_all:nnN
-      { \c { markdownRendererAcronym } | \cB\{ | \cE\} }
-      { }
-      \l_tmpa_tl
-    \bool_if:nT
+    \bool_if:NT
+      \g_@@_record_acronyms_bool
       {
-        \g_@@_record_acronyms_bool &&
-        ! \prop_if_in_p:NV
+        \tl_set:Nn
+          \l_tmpa_tl
+          { #1 }
+        \regex_replace_all:nnN
+          { \c { markdownRendererAcronym } | \cB\{ | \cE\} }
+          { }
+          \l_tmpa_tl
+        \prop_if_in:NVF
           \g_@@_recorded_acronyms_prop
           \l_tmpa_tl
-      }
-      {
-        \regex_if_match:nVF
-          { \cC. }
-          \l_tmpa_tl
           {
-            \prop_gput:NVn
-              \g_@@_recorded_acronyms_prop
+            \regex_if_match:nVF
+              { \cC. }
               \l_tmpa_tl
-              { true }
-            \tl_gput_right:Nx
-              \markdownOptionAcronyms
-              { , { \tl_use:N \l_tmpa_tl } }
-            \tl_set:Nn
-              \l_tmpb_tl
               {
-                \ExplSyntaxOn
-                  \tl_gput_right:Nn
+                \prop_gput:NVn
+                  \g_@@_recorded_acronyms_prop
+                  \l_tmpa_tl
+                  { true }
+                \tl_gput_right:Nx
                   \markdownOptionAcronyms
+                  { , { \tl_use:N \l_tmpa_tl } }
+                \tl_set:Nn
+                  \l_tmpb_tl
+                  {
+                    \ExplSyntaxOn
+                      \tl_gput_right:Nn
+                      \markdownOptionAcronyms
+                  }
+                \tl_gput_right:Nx
+                  \l_tmpb_tl
+                  { { , { \tl_use:N \l_tmpa_tl } } }
+                \tl_gput_right:Nx
+                  \l_tmpb_tl
+                  { \ExplSyntaxOff }
+                \iow_now:NV
+                  \@auxout
+                  \l_tmpb_tl
               }
-            \tl_gput_right:Nx
-              \l_tmpb_tl
-              { { , { \tl_use:N \l_tmpa_tl } } }
-            \tl_gput_right:Nx
-              \l_tmpb_tl
-              { \ExplSyntaxOff }
-            \iow_now:NV
-              \@auxout
-              \l_tmpb_tl
           }
       }
   }
