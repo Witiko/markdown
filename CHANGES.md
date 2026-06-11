@@ -31,7 +31,7 @@ default renderer and renderer prototype definitions.
 
   ``` tex
   \documentclass{article}
-  \usepackage[plain]{markdown}
+  \usepackage[bracketed_spans]{markdown}
   \markdownSetup {
     acronyms = {HTML, YAML},
   }
