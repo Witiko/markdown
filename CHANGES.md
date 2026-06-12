@@ -1,5 +1,23 @@
 # Changes
 
+## 3.16.0 (2026-06-13)
+
+### Development
+
+This version of the Markdown package has added the following new features:
+
+- Allow delimiters other than `{` and `}` after `\markinline`. (#646)
+
+  This allows potentially unbalanced braces to appear in the markdown text:
+
+  ``` tex
+  \documentclass{article}
+  \usepackage[bracketed_spans]{markdown}
+  \begin{document}
+  \markinline|[JSON]{.acronym}|,
+  \end{document}
+  ```
+
 ## 3.15.1 (2026-06-11)
 
 ### Fixes

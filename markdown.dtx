@@ -12246,10 +12246,15 @@ pdftex --shell-escape document.tex
 % \input markdown
 % \markdownSetup{contentLevel=inline}
 % \markdownBegin
-% _Hello_ **world** ...
+% _Hello_ **world**
 % \markdownEnd
 % \bye
 % ```````
+%
+% Besides \mref{markinline}`{`\meta{markdown text}`}`, any other
+% delimiter such as `|`\meta{markdown text}`|` can also be used.
+% This allows potentially unbalanced braces to appear in
+% \meta{markdown text}.
 %
 % The \mref{markinline} macro is subject to the same limitations as the
 % \mref{markdownBegin} and \mref{markdownEnd} macros.
@@ -40960,8 +40965,44 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-    \peek_regex_replace_once:nnF
-      { { (.*?) } }
+    \peek_after:Nw
+      \@@_inline_read_markdown_text:
+  }
+\cs_new_protected:Nn
+  \@@_inline_read_markdown_text:
+  {
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Allow both `{`\meta{markdown text}`}` but also any other
+% delimiter such as `|`\meta{markdown text}`|`.
+%
+% \end{markdown}
+%  \begin{macrocode}
+    \token_if_group_begin:NTF
+      \l_peek_token
+      {
+        \regex_set:Nn
+          \l_tmpa_regex
+          { { (.*?) } }
+      }
+      {
+        \tl_set:Nx
+          \l_tmpa_tl
+          {
+            \text_purify:n
+              { \l_peek_token }
+          }
+        \regex_set:Nn
+          \l_tmpa_regex
+          {
+            \u { l_tmpa_tl }
+            (.*?)
+            \u { l_tmpa_tl }
+          }
+      }
+    \peek_regex_replace_once:NnF
+      \l_tmpa_regex
       {
 %    \end{macrocode}
 % \begin{markdown}
@@ -42080,8 +42121,8 @@ end
             \markdownSetup {
               unprotectedRenderers = {
                 acronym = { ##1 },
+              }
             }
-          }
             \@@_record_acronym:n
               { #1 }
             \tl_set:Nn
