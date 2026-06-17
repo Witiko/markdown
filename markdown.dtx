@@ -40979,8 +40979,14 @@ end
 %
 % \end{markdown}
 %  \begin{macrocode}
-    \token_if_group_begin:NTF
-      \l_peek_token
+    \bool_if:nTF
+      {
+        \token_if_group_begin_p:N
+          \l_peek_token ||
+        \token_if_eq_charcode_p:NN
+          \l_peek_token
+          \c_group_begin_token
+      }
       {
         \regex_set:Nn
           \l_tmpa_regex
