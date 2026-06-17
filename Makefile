@@ -63,6 +63,7 @@ RESOURCES=$(DOCUMENTATION) $(MAN_PAGES) $(EXAMPLES_RESOURCES) $(EXAMPLES_SOURCES
 EVERYTHING=$(RESOURCES) $(INSTALLABLES)
 GITHUB_PAGES=gh-pages
 
+NO_DOCUMENTATION ?= false
 ifeq ($(NO_DOCUMENTATION), true)
   EXAMPLES=
   TECHNICAL_DOCUMENTATION=
@@ -106,6 +107,7 @@ docker-image:
 	                               --build-arg TEXLIVE_BUILD_TAG=$(DOCKER_TEXLIVE_BUILD_TAG) \
 	                               --build-arg TEXLIVE_TAG=$(DOCKER_TEXLIVE_TAG) \
 	                               --build-arg DEV_IMAGE=$(DOCKER_DEV_IMAGE) \
+	                               --build-arg NO_DOCUMENTATION=$(NO_DOCUMENTATION) \
 	                               -t $(DOCKER_TEMPORARY_IMAGE):$(DOCKER_TEMPORARY_TAG) .
 
 # This pseudo-targed pushes the built witiko/markdown Docker image to

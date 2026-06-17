@@ -17,6 +17,11 @@ on:
         required: true
         default: true
         type: boolean
+      buildDocumentation:
+        description: Build documentation and examples
+        required: true
+        default: true
+        type: boolean
   schedule:
     - cron: '30 4 * * MON'
 env:
@@ -268,7 +273,7 @@ jobs:
           ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
       - name: Build Docker image
-        run: make docker-image
+        run: make NO_DOCUMENTATION=${{ contains(inputs.buildDocumentation, 'true') && 'false' || 'true' }} docker-image
       - name: Login to GitHub Packages
         uses: docker/login-action@v4
         with:

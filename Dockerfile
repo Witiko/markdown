@@ -55,6 +55,7 @@ ARG FROM_IMAGE=texlive/texlive
 ARG TEXLIVE_BUILD_TAG=latest
 ARG TEXLIVE_TAG=latest
 ARG DEV_IMAGE=false
+ARG NO_DOCUMENTATION=false
 
 FROM $FROM_IMAGE:$TEXLIVE_BUILD_TAG as build
 
@@ -70,6 +71,7 @@ ARG PREINSTALLED_DIR
 ARG TEXLIVE_BUILD_TAG
 ARG TEXLIVE_TAG
 ARG DEV_IMAGE
+ARG NO_DOCUMENTATION
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TERM=xterm
@@ -200,7 +202,7 @@ wget https://mirrors.ctan.org/macros/luatex/generic/lua-tinyyaml/tinyyaml.lua \
 texhash
 
 # Produce the complete distribution archive of the Markdown package
-if [ ${DEV_IMAGE} = false ] && echo ${TEXLIVE_TAG} | { ! grep -q -- -minimal; }
+if [ ${NO_DOCUMENTATION} = false ] && [ ${DEV_IMAGE} = false ] && echo ${TEXLIVE_TAG} | { ! grep -q -- -minimal; }
 then
   # Install the current pkgcheck
   git clone https://codeberg.org/ManfredLotz/pkgcheck.git
