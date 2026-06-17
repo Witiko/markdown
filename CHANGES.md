@@ -1,6 +1,6 @@
 # Changes
 
-## 3.16.0 (2026-06-16)
+## 3.16.0 (2026-06-17)
 
 ### Development
 
@@ -17,6 +17,13 @@ This version of the Markdown package has added the following new features:
   \markinline|[JSON]{.acronym}|,
   \end{document}
   ```
+
+### Continuous integration
+
+This version of the Markdown package has made the following changes to our
+continuous integration:
+
+- Fix @mermaid-js/mermaid-cli not downloading chrome-headless-shell. (b5cc155e)
 
 ## 3.15.1 (2026-06-11)
 
