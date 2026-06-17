@@ -6,7 +6,7 @@
 
 This version of the Markdown package has added the following new features:
 
-- Allow delimiters other than `{` and `}` after `\markinline`. (#646)
+- Allow delimiters other than `{` and `}` after `\markinline`. (#646, d17a31f6)
 
   This allows potentially unbalanced braces to appear in the markdown text:
 
