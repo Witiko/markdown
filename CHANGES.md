@@ -14,7 +14,7 @@ This version of the Markdown package has added the following new features:
   \documentclass{article}
   \usepackage[bracketed_spans]{markdown}
   \begin{document}
-  \markinline|[JSON]{.acronym}|,
+  \markinline|[JSON]{.acronym}|
   \end{document}
   ```
 
