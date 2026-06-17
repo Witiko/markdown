@@ -25,6 +25,12 @@ continuous integration:
 
 - Fix @mermaid-js/mermaid-cli not downloading chrome-headless-shell. (b5cc155e)
 
+- In `workflows/main.yml`, add `buildDocumentation` dispatch input. (effc46de)
+
+  This allows running the pipeline without building the documentation and
+  example documents, which is helpful in quickly building a Docker image,
+  especially if building the documentation and example documents fails.
+
 ## 3.15.1 (2026-06-11)
 
 ### Fixes
