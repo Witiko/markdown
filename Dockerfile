@@ -37,6 +37,7 @@ ARG PRODUCTION_DEPENDENCIES="\
     npm \
     pandoc \
     plantuml \
+    unzip \
     wget \
 "
 
@@ -90,8 +91,31 @@ apt-get -qy install --no-install-recommends ${DEPENDENCIES} ${BUILD_DEPENDENCIES
 if [ ${DEV_IMAGE} = false ] && echo ${TEXLIVE_TAG} | { ! grep -q -- -minimal; }
 then
   apt-get -qy install --no-install-recommends ${PRODUCTION_DEPENDENCIES}
-  npm install -g @mermaid-js/mermaid-cli
-  mv /root/.cache/puppeteer /puppeteer_cache
+  mkdir -p /puppeteer_cache
+  PUPPETEER_SKIP_DOWNLOAD=true npm install -g @mermaid-js/mermaid-cli
+
+  PUPPETEER_CACHE_DIR=/puppeteer_cache \
+  PUPPETEER_MODULE="$(npm root -g)/@mermaid-js/mermaid-cli/node_modules/puppeteer" \
+    node <<-'ANOTHER_EOF' > /tmp/puppeteer-executable-path
+const puppeteer = require(process.env.PUPPETEER_MODULE);
+console.log(puppeteer.executablePath({headless: "shell"}));
+ANOTHER_EOF
+
+  PUPPETEER_EXECUTABLE_PATH="$(cat /tmp/puppeteer-executable-path)"
+  PUPPETEER_BUILD_ID="$(printf '%s\n' "${PUPPETEER_EXECUTABLE_PATH}" \
+    | sed -E 's@.*/chrome-headless-shell/linux-([^/]+)/.*@\1@')"
+
+  rm -rf "/puppeteer_cache/chrome-headless-shell/linux-${PUPPETEER_BUILD_ID}"
+  mkdir -p "/puppeteer_cache/chrome-headless-shell/linux-${PUPPETEER_BUILD_ID}"
+
+  wget -O /tmp/chrome-headless-shell-linux64.zip \
+    "https://storage.googleapis.com/chrome-for-testing-public/${PUPPETEER_BUILD_ID}/linux64/chrome-headless-shell-linux64.zip"
+  unzip -q /tmp/chrome-headless-shell-linux64.zip \
+    -d "/puppeteer_cache/chrome-headless-shell/linux-${PUPPETEER_BUILD_ID}"
+  rm /tmp/chrome-headless-shell-linux64.zip
+
+  test -x "${PUPPETEER_EXECUTABLE_PATH}"
+  echo "Installed ${PUPPETEER_EXECUTABLE_PATH}"
   cat > /.puppeteerrc.json <<-'ANOTHER_EOF'
 {
   "args": ["--no-sandbox"],
@@ -247,8 +271,31 @@ then
 elif echo ${TEXLIVE_TAG} | { ! grep -q -- -minimal; }
 then
   apt-get -qy install --no-install-recommends ${PRODUCTION_DEPENDENCIES}
-  npm install -g @mermaid-js/mermaid-cli
-  mv /root/.cache/puppeteer /puppeteer_cache
+  mkdir -p /puppeteer_cache
+  PUPPETEER_SKIP_DOWNLOAD=true npm install -g @mermaid-js/mermaid-cli
+
+  PUPPETEER_CACHE_DIR=/puppeteer_cache \
+  PUPPETEER_MODULE="$(npm root -g)/@mermaid-js/mermaid-cli/node_modules/puppeteer" \
+    node <<-'ANOTHER_EOF' > /tmp/puppeteer-executable-path
+const puppeteer = require(process.env.PUPPETEER_MODULE);
+console.log(puppeteer.executablePath({headless: "shell"}));
+ANOTHER_EOF
+
+  PUPPETEER_EXECUTABLE_PATH="$(cat /tmp/puppeteer-executable-path)"
+  PUPPETEER_BUILD_ID="$(printf '%s\n' "${PUPPETEER_EXECUTABLE_PATH}" \
+    | sed -E 's@.*/chrome-headless-shell/linux-([^/]+)/.*@\1@')"
+
+  rm -rf "/puppeteer_cache/chrome-headless-shell/linux-${PUPPETEER_BUILD_ID}"
+  mkdir -p "/puppeteer_cache/chrome-headless-shell/linux-${PUPPETEER_BUILD_ID}"
+
+  wget -O /tmp/chrome-headless-shell-linux64.zip \
+    "https://storage.googleapis.com/chrome-for-testing-public/${PUPPETEER_BUILD_ID}/linux64/chrome-headless-shell-linux64.zip"
+  unzip -q /tmp/chrome-headless-shell-linux64.zip \
+    -d "/puppeteer_cache/chrome-headless-shell/linux-${PUPPETEER_BUILD_ID}"
+  rm /tmp/chrome-headless-shell-linux64.zip
+
+  test -x "${PUPPETEER_EXECUTABLE_PATH}"
+  echo "Installed ${PUPPETEER_EXECUTABLE_PATH}"
   cat > /.puppeteerrc.json <<-'ANOTHER_EOF'
 {
   "args": ["--no-sandbox"],
