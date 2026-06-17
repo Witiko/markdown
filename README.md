@@ -167,6 +167,7 @@ For further information, consult one of the following:
     - [Markdown 3: What's New, What's Next?][tb137-video] ([mirror][tb137-video-mirror], [slides][tb137-slides]),
     - An Implementation of the CommonMark Standard and new Syntax Extensions to the Markdown Package for TeX ([slides][gencur-defense-slides]), and
     - [Markdown Themes in Practice][tb140-video] ([preprint][tb140-preprint], [slides][tb140-slides])
+    - No more backtracking: Abbreviations in the Markdown package for TeX ([preprint][tb146-preprint], [slides][tb146-slides])
 7. Theses:
     - [Generic TeX Writer for the Pandoc Document Converter][thesis-umhg5]
     - [An implementation of the CommonMark standard into the Markdown package for TeX][thesis-r7z7l]
@@ -204,6 +205,8 @@ For further information, consult one of the following:
  [tb140-preprint]:     https://www.tug.org/tug2024/preprints/starynovotny-markdown-themes.pdf                   "Markdown Themes in Practice"
  [tb140-video]:        https://youtu.be/d7vTW7PR0B4?t=5h3m10s                                                   "Markdown Themes in Practice"
  [tb140-slides]:       https://www.tug.org/tug2024/slides/starynovotny-markdown-themes.pdf                      "Markdown Themes in Practice"
+ [tb146-preprint]:     https://www.tug.org/tug2026/preprints/starynovotny-markdown-abbrev.pdf                   "No more backtracking: Abbreviations in the Markdown package for TeX"
+ [tb146-slides]:       https://docs.google.com/presentation/d/14EwnvO28mDjdkV4MiHs_HX-gYCezYw1pzmGzOfurID0/edit "No more backtracking: Abbreviations in the Markdown package for TeX"
 
  [10.5300/2016-1-4/78]:  https://www.doi.org/10.5300/2016-1-4/78  "Rendering Markdown inside TeX Documents"
  [10.5300/2020-1-2/48]:  https://www.doi.org/10.5300/2020-1-2/48  "Markdown 2.8.1: Boldly Unto the Throne of Lightweight Markup in TeX"
