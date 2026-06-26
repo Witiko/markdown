@@ -4,7 +4,7 @@
 
 This artwork was created by <https://www.quickcartoons.com/> in March 2025.
 
-It is to appear in the TUGboat article [_Piping YAML files into LaTeX3 key–values_][tb142] later this year.
+It first appeared in the TUGboat article [_Piping YAML files into LaTeX3 key–values_][tb142], published in April 2025.
 
 ## License terms
 
@@ -16,5 +16,5 @@ A suggested attribution is:
 
 > Illustration by <https://www.quickcartoons.com/>.
 
- [tb142]: https://www.overleaf.com/read/gbtmtybxhnjj#fdfc31
+ [tb142]: https://www.tug.org/TUGboat/tb46-1/tb142starynovotny-piping-yaml.pdf
  [cc-by]: https://creativecommons.org/licenses/by/4.0/legalcode
