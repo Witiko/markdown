@@ -23,14 +23,20 @@ This version of the Markdown package has added the following new features:
 This version of the Markdown package has made the following changes to our
 continuous integration:
 
-- Fix @mermaid-js/mermaid-cli not downloading chrome-headless-shell. (b5cc155e)
+- Fix @mermaid-js/mermaid-cli not downloading chrome-headless-shell.
+  (b5cc155e, bea4e55a)
 
-- In `workflows/main.yml`, add `buildDocumentation` dispatch input. (effc46de,
-  8b6a4d20)
+- In `workflows/main.yml`, add `buildDocumentation` dispatch input.
+  (effc46de, 8b6a4d20, d68f3ef5)
 
   This allows running the pipeline without building the documentation and
   example documents, which is helpful in quickly building a Docker image,
   especially if building the documentation and example documents fails.
+
+- Always install current `pkgcheck` in `Dockerfile`. (3229482d)
+
+  Previously, we would only install `pkgcheck` if we were typesetting
+  documentation and examples.
 
 ## 3.15.1 (2026-06-11)
 
