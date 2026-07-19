@@ -100,7 +100,13 @@ then
   PUPPETEER_MODULE="$(npm root -g)/@mermaid-js/mermaid-cli/node_modules/puppeteer" \
     node <<-'ANOTHER_EOF' > /tmp/puppeteer-executable-path
 const puppeteer = require(process.env.PUPPETEER_MODULE);
-console.log(puppeteer.executablePath({headless: "shell"}));
+
+(async () => {
+  console.log(await puppeteer.executablePath({headless: "shell"}));
+})().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});
 ANOTHER_EOF
 
   PUPPETEER_EXECUTABLE_PATH="$(cat /tmp/puppeteer-executable-path)"
@@ -280,7 +286,13 @@ then
   PUPPETEER_MODULE="$(npm root -g)/@mermaid-js/mermaid-cli/node_modules/puppeteer" \
     node <<-'ANOTHER_EOF' > /tmp/puppeteer-executable-path
 const puppeteer = require(process.env.PUPPETEER_MODULE);
-console.log(puppeteer.executablePath({headless: "shell"}));
+
+(async () => {
+  console.log(await puppeteer.executablePath({headless: "shell"}));
+})().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});
 ANOTHER_EOF
 
   PUPPETEER_EXECUTABLE_PATH="$(cat /tmp/puppeteer-executable-path)"
