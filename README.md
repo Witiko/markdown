@@ -152,7 +152,7 @@ For further information, consult one of the following:
     - [Fast Regression Testing of TeX Packages: Multiprocessing and Batching][tb139],
     - [Markdown Themes in Practice][tb140],
     - [Piping YAML files into LaTeX3 key–values][tb142], and
-    - No more backtracking: Abbreviations in the Markdown package for TeX ([preprint][tb146-preprint]).
+    - [No more backtracking: Abbreviations in the Markdown package for TeX][tb146] ([preprint][tb146-preprint]).
 5. Journal articles published by [CSTUG Bulletin][csbul] (in Czech and Slovak):
     - [Rendering Markdown inside TeX Documents][10.5300/2016-1-4/78],
     - [Markdown 2.8.1: Boldly Unto the Throne of Lightweight Markup in TeX][10.5300/2020-1-2/48],
@@ -191,6 +191,7 @@ For further information, consult one of the following:
  [tb139]: https://www.tug.org/TUGboat/tb45-1/tb139starynovotny-testing.pdf         "Fast Regression Testing of TeX Packages: The Unreasonable Effectiveness of Batching"
  [tb140]: https://www.tug.org/TUGboat/tb45-2/tb140starynovotny-markdown-themes.pdf "Markdown Themes in Practice"
  [tb142]: https://www.tug.org/TUGboat/tb46-1/tb142starynovotny-piping-yaml.pdf     "Piping YAML files into LaTeX3 key–values"
+ [tb146]: https://tug.org/members/TUGboat/tb47-2/tb146starynovotny-markdown-abbrev.pdf "No more backtracking: Abbreviations in the Markdown package for TeX"
 
  [tb131-slides]:       https://tug.org/tug2021/assets/pdf/tug2021-novotny-slides.pdf                            "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"
  [tb131-video]:        https://youtu.be/i2GJMnLCZls                                                             "Markdown 2.10.0: LaTeX Themes & Snippets, Two Flavors of Comments, and LuaMetaTeX"
