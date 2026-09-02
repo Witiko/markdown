@@ -416,10 +416,13 @@ class BatchResult:
                 actual_output_fd, actual_output_file = mkstemp(prefix='bisect', suffix='.log', text=True)
                 with os.fdopen(actual_output_fd, 'wb') as f:
                     f.write(self.output_text_bytes)
+                if len(self.actual_output_texts) > 0:
+                    num_nonempty_outputs = f'only {len(self.actual_output_texts)} out of {len(self)} testfiles'
+                else:
+                    num_nonempty_outputs = f'none of the {len(self)} testfiles'
                 LOGGER.warning(
-                    f'Bisecting batch {format_testfiles(self.testfile_batch)} because '
-                    f'only {len(self.actual_output_texts)} out of {len(self)} testfiles produced output '
-                    f'(see also the file {actual_output_file} with the raw batch output):'
+                    f'Bisecting batch {format_testfiles(self.testfile_batch)} because {num_nonempty_outputs} '
+                    f'produced output (see also the file {actual_output_file} with the raw batch output):'
                 )
                 # Then, bisect the batch.
                 read_testfile_results, *remaining_parameters = self.test_parameters
