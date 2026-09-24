@@ -1,5 +1,14 @@
 # Changes
 
+## 3.16.2 (2026-10-XX)
+
+### Documentation
+
+This version of the Markdown package has made the following improvements to the
+documentation:
+
+- Bump GitHub Actions in `README.md`. (38ad058c)
+
 ## 3.16.1 (2026-09-24)
 
 ### Documentation
