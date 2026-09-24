@@ -1,5 +1,34 @@
 # Changes
 
+## 3.16.1 (2026-09-XX)
+
+### Documentation
+
+This version of the Markdown package has made the following improvements to the
+documentation:
+
+- Add TUG 2026 artwork by <https://www.quickcartoons.com/> to directory
+  `artwork/2026-06-26-wolf-hawaiian-shirt/`. (fdbedceb)
+
+  You are welcome to use these artworks in your promotional materials, provided
+  you comply with the license terms specified for each piece. Typically, proper
+  attribution to the artist is required.
+
+### Continuous integration
+
+This version of the Markdown package has made the following changes to our
+continuous integration:
+
+- Add a missing `await` for puppeteer in `Dockerfile`. (bea4e55a)
+
+- In `workflows/main.yml`, correctly handle `null` workflow dispatch inputs.
+  (d68f3ef5)
+
+- Always install current `pkgcheck` in `Dockerfile`. (3229482d)
+
+  Previously, we would only install `pkgcheck` if we were typesetting
+  documentation and examples.
+
 ## 3.16.0 (2026-06-17)
 
 ### Development
@@ -24,19 +53,14 @@ This version of the Markdown package has made the following changes to our
 continuous integration:
 
 - Fix @mermaid-js/mermaid-cli not downloading chrome-headless-shell.
-  (b5cc155e, bea4e55a)
+  (b5cc155e)
 
 - In `workflows/main.yml`, add `buildDocumentation` dispatch input.
-  (effc46de, 8b6a4d20, d68f3ef5)
+  (effc46de, 8b6a4d20)
 
   This allows running the pipeline without building the documentation and
   example documents, which is helpful in quickly building a Docker image,
   especially if building the documentation and example documents fails.
-
-- Always install current `pkgcheck` in `Dockerfile`. (3229482d)
-
-  Previously, we would only install `pkgcheck` if we were typesetting
-  documentation and examples.
 
 ## 3.15.1 (2026-06-11)
 
