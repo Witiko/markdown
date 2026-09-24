@@ -96,16 +96,16 @@ jobs:
     container:
       image: witiko/markdown:latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - run: latexmk -lualatex document.tex
-      - uses: marvinpinto/action-automatic-releases@latest
+      - uses: softprops/action-gh-release@v3
         permissions:
           contents: write
         with:
-          title: The latest typeset book
-          automatic_release_tag: latest
+          name: The latest typeset book
+          tag_name: latest
           prerelease: true
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           files: document.pdf
 ```
 
