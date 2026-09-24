@@ -14,6 +14,11 @@ documentation:
   you comply with the license terms specified for each piece. Typically, proper
   attribution to the artist is required.
 
+- Document the earliest supported LaTeX3 version.
+  ([witiko/expltools#231][expltools-231], e0dc8d1f)
+
+ [expltools-231]: https://github.com/witiko/expltools/pull/231
+
 ### Continuous integration
 
 This version of the Markdown package has made the following changes to our
