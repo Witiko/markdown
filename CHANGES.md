@@ -1,6 +1,6 @@
 # Changes
 
-## 3.16.1 (2026-09-XX)
+## 3.16.1 (2026-09-24)
 
 ### Documentation
 
@@ -33,6 +33,8 @@ continuous integration:
 
   Previously, we would only install `pkgcheck` if we were typesetting
   documentation and examples.
+
+- Bump `softprops/action-gh-release` from 6 to 7. (added by @dependabot in #647)
 
 ## 3.16.0 (2026-06-17)
 
