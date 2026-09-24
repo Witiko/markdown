@@ -1352,9 +1352,9 @@ hard lua-tinyyaml
 % \pkg{expl3}
 %
 %:    A package that enables the expl3 language [@latex25] from the \LaTeX3
-%     kernel in \TeX{} Live${}\leq{}2019$. It is used to implement reflection
-%     capabilities that allow us to enumerate and inspect high-level concepts
-%     such as options, renderers, and renderer prototypes.
+%     kernel. It is used to implement reflection capabilities that allow us to
+%     enumerate and inspect high-level concepts such as options, renderers, and
+%     renderer prototypes.
 %
 % \end{markdown}
 % \iffalse
@@ -1382,6 +1382,19 @@ hard l3kernel
 %    \end{macrocode}
 % \iffalse
 %</context,tex>
+%<*latex>
+% \fi
+% \begin{markdown}
+%
+% A fairly recent version of \pkg{expl3} from \TeX Live${}\geq{}2025$ is required:
+%
+% \end{markdown}
+%  \begin{macrocode}
+\NeedsTeXFormat{LaTeX2e}[2025-01-18]
+\RequirePackage{expl3}[2025-01-18]
+%    \end{macrocode}
+% \iffalse
+%</latex>
 %<*tex>
 % \fi
 % \begin{markdown}
@@ -1443,7 +1456,7 @@ hard lt3luabridge
 % \end{markdown}
 % \iffalse
 %</tex>
-%<*latex>
+%<*depends>
 % \fi
 % \begin{markdown}
 %
@@ -1452,18 +1465,6 @@ hard lt3luabridge
 % The \LaTeX{} part of the package requires that the \Hologo{LaTeX2e} format is
 % loaded, a \TeX{} engine that extends \Hologo{eTeX}, and all the plain \TeX{}
 % prerequisites (see Section <#sec:tex-prerequisites>).
-% \end{markdown}
-% \iffalse
-% \fi
-%  \begin{macrocode}
-\NeedsTeXFormat{LaTeX2e}
-\RequirePackage{expl3}
-%    \end{macrocode}
-% \iffalse
-%</latex>
-%<*depends>
-% \fi
-% \begin{markdown}
 %
 % The following packages are soft prerequisites. They are only used to provide
 % default token renderer prototypes (see sections
