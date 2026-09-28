@@ -20,6 +20,8 @@ continuous integration:
 - Prevent several workflows running for the same pull request / Git ref.
   (11cc3c0b)
 
+- Never prematurely stop matrix jobs just because one failed. (97070998)
+
 ## 3.16.1 (2026-09-24)
 
 ### Documentation
