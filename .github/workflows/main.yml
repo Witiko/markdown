@@ -24,6 +24,9 @@ on:
         type: boolean
   schedule:
     - cron: '30 4 * * MON'
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 env:
   DEBIAN_FRONTEND: noninteractive
   DOCKER_DEV_IMAGE: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.draft == true }}
