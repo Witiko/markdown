@@ -229,7 +229,7 @@ jobs:
       - pytype
       - check-pretest
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         texlive:
           - TL2025-historic
@@ -297,7 +297,7 @@ jobs:
       - build-docker-image
       - check-pretest
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         texlive:
           - TL2025-historic
@@ -369,7 +369,7 @@ jobs:
       - build-docker-image
       - test
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         texlive:
           - TL2025-historic
