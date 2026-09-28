@@ -9,6 +9,9 @@ documentation:
 
 - Bump GitHub Actions in `README.md`. (38ad058c)
 
+- Update the earliest supported LaTeX3 version from `2025-01-18` to
+  `2025-05-14`. (82d3854c)
+
 ## 3.16.1 (2026-09-24)
 
 ### Documentation
