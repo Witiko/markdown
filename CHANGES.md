@@ -12,6 +12,14 @@ documentation:
 - Update the earliest supported LaTeX3 version from `2025-01-18` to
   `2025-05-14`. (82d3854c)
 
+### Continuous integration
+
+This version of the Markdown package has made the following changes to our
+continuous integration:
+
+- Prevent several workflows running for the same pull request / Git ref.
+  (11cc3c0b)
+
 ## 3.16.1 (2026-09-24)
 
 ### Documentation
