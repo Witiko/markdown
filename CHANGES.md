@@ -22,6 +22,9 @@ continuous integration:
 
 - Never prematurely stop matrix jobs just because one failed. (97070998)
 
+- Fix the reading of the `buildDocumentation` workflow dispatch input.
+  (e738723f)
+
 ## 3.16.1 (2026-09-24)
 
 ### Documentation
