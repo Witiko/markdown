@@ -39057,26 +39057,67 @@ end
         },
       }
     \cs_new:Nn
-      \@@_diagrams_render_diagram:nnnn
+      \@@_diagrams_render_diagram:nnnnn
       {
         \@@_if_option:nF
           { frozenCache }
           {
-            \sys_shell_now:n
+%    \end{macrocode}
+% \begin{markdown}
+%
+% If possible, determine the version of the command used to produce the diagram
+% and extract the major version number to
+% \mref{l_markdown_diagrams_command_version_tl}. Otherwise, clear the variable.
+%
+% \end{markdown}
+%  \begin{macrocode}
+            \tl_clear:N
+              \l_markdown_diagrams_command_version_tl
+            \tl_if_empty:nF
+              { #3 }
+              {
+                \sys_get_shell:xnN
+                  { #3 }
+                  { }
+                  \l_tmpa_tl
+                \regex_extract_once:nVNT
+                  { ^ \s* \d+ }
+                  \l_tmpa_tl
+                  \l_tmpa_seq
+                  {
+                    \tl_set:Nx
+                      \l_markdown_diagrams_command_version_tl
+                      {
+                        \seq_item:Nn
+                          \l_tmpa_seq
+                          { 1 }
+                      }
+                  }
+              }
+            \tl_set:Nn
+              \l_tmpa_tl
               {
                 if~!~test~-e~#2.source~
                 ||~!~diff~#1~#2.source;
                 then~
-                  (#3);
+              }
+            \tl_put_right:Nx
+              \l_tmpa_tl
+              { (#4); }
+            \tl_put_right:Nn
+              \l_tmpa_tl
+              {
                   cp~#1~#2.source;
                 fi
               }
+            \sys_shell_now:V
+              \l_tmpa_tl
           }
           \exp_args:NNnV
             \exp_last_unbraced:No
             \markdownRendererImage
               {
-                { #4 }
+                { #5 }
                 { #2 }
                 { #2 }
               }
@@ -39089,10 +39130,16 @@ end
 % code with a given infostring should be processed and routed to the token
 % renderer prototype(s) for images.
 %
+% The token list \mdef{l_markdown_diagrams_command_version_tl} should be used to
+% store and pass around the version of the command used to produce the diagram,
+% if necessary.
+%
 % \end{markdown}
 %  \begin{macrocode}
     \prop_new:N
       \g_markdown_diagrams_infostrings_prop
+    \tl_new:N
+      \l_markdown_diagrams_command_version_tl
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -39181,15 +39228,16 @@ end
               \l_tmpb_tl
               { ~--export-area-drawing~--export-dpi=300~-o~#1.pdf }
           }
-        \@@_diagrams_render_diagram:nnVn
+        \@@_diagrams_render_diagram:nnnVn
           { #1 }
           { #1.pdf }
+          { }
           \l_tmpb_tl
           { Graphviz~image }
       }
     \cs_generate_variant:Nn
-      \@@_diagrams_render_diagram:nnnn
-      { nnVn }
+      \@@_diagrams_render_diagram:nnnnn
+      { nnnVn }
     \@@_tl_set_from_cs:NNn
       \l_tmpa_tl
       \@@_diagrams_infostrings_current:n
@@ -39245,13 +39293,42 @@ end
           { \mmdcCommand }
         \tl_put_right:Nn
           \l_tmpb_tl
-          { ~-i~#1~-o~#1.pdf }
-        \@@_diagrams_render_diagram:nnVn
+          { ~ }
+        \@@_diagrams_render_diagram:nnxxn
           { #1 }
           { #1.pdf }
-          \l_tmpb_tl
+          {
+            \tl_use:N
+              \l_tmpb_tl
+            --version
+          }
+          {
+            \tl_use:N
+              \l_tmpb_tl
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Do not pass the removed `--pdfFit` option to `mmdc`${}\geq{}$10.0.0, where
+% its previous semantics are now the default.
+%
+% \end{markdown}
+%  \begin{macrocode}
+            \tl_if_empty:NF
+              \l_markdown_diagrams_command_version_tl
+              {
+                \int_compare:VNnT
+                  \l_markdown_diagrams_command_version_tl
+                  <
+                  { 10 }
+                  { --pdfFit~ }
+              }
+            -i~#1~-o~#1.pdf
+          }
           { Mermaid~image }
       }
+    \cs_generate_variant:Nn
+      \@@_diagrams_render_diagram:nnnnn
+      { nnxxn }
     \@@_tl_set_from_cs:NNn
       \l_tmpa_tl
       \@@_diagrams_infostrings_current:n
@@ -39332,18 +39409,29 @@ end
               \l_tmpb_tl
               \l_tmpa_tl
           }
-        \@@_diagrams_render_diagram:nVVn
+        \@@_diagrams_render_diagram:nVnVn
           { #1 }
           \l_tmpa_tl
+          { }
           \l_tmpb_tl
           { PlantUML~image }
       }
     \cs_generate_variant:Nn
-      \@@_diagrams_render_diagram:nnnn
-      { nVVn }
+      \@@_diagrams_render_diagram:nnnnn
+      { nVnVn }
     \cs_generate_variant:Nn
       \regex_replace_once:NnN
       { NxN }
+    \cs_generate_variant:Nn
+      \sys_get_shell:nnN
+      { xnN }
+    \cs_generate_variant:Nn
+      \sys_shell_now:n
+      { V }
+    \prg_generate_conditional_variant:Nnn
+      \int_compare:nNn
+      { VNn }
+      { T }
     \@@_tl_set_from_cs:NNn
       \l_tmpa_tl
       \@@_diagrams_infostrings_current:n
