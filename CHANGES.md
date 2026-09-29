@@ -1,6 +1,6 @@
 # Changes
 
-## 3.16.2 (2026-10-XX)
+## 3.16.2 (2026-09-29)
 
 ### Fixes
 
@@ -8,7 +8,7 @@ This version of the Markdown package has fixed the following issues:
 
 - In the `witiko/diagrams@v2` built-in theme, do not pass the removed
   `--pdfFit` option to the `mmdc` commands >= 10.0.0, where its previous
-  semantics are now the default. (da48ca6f)
+  semantics are now the default. (da48ca6f, 07737d8c)
 
 - Fix option `frozenCache` not rendering diagrams in the built-in
   `witiko/diagrams@v2` theme. (5a5e325d)
