@@ -119,7 +119,7 @@ ANOTHER_EOF
   rm -rf "/puppeteer_cache/chrome-headless-shell/linux-${PUPPETEER_BUILD_ID}"
   mkdir -p "/puppeteer_cache/chrome-headless-shell/linux-${PUPPETEER_BUILD_ID}"
 
-  wget -O /tmp/chrome-headless-shell-linux64.zip \
+  retry -t 30 -d 60 wget -O /tmp/chrome-headless-shell-linux64.zip \
     "https://storage.googleapis.com/chrome-for-testing-public/${PUPPETEER_BUILD_ID}/linux64/chrome-headless-shell-linux64.zip"
   unzip -q /tmp/chrome-headless-shell-linux64.zip \
     -d "/puppeteer_cache/chrome-headless-shell/linux-${PUPPETEER_BUILD_ID}"
@@ -204,7 +204,7 @@ popd
 
 # Install the current tinyyaml package
 mkdir -p ${INSTALL_DIR}/scripts/lua-tinyyaml/
-wget https://mirrors.ctan.org/macros/luatex/generic/lua-tinyyaml/tinyyaml.lua \
+retry -t 30 -d 60 wget https://mirrors.ctan.org/macros/luatex/generic/lua-tinyyaml/tinyyaml.lua \
       -O ${INSTALL_DIR}/scripts/lua-tinyyaml/tinyyaml.lua
 
 # Reindex the TeX directory structure
@@ -306,7 +306,7 @@ ANOTHER_EOF
   rm -rf "/puppeteer_cache/chrome-headless-shell/linux-${PUPPETEER_BUILD_ID}"
   mkdir -p "/puppeteer_cache/chrome-headless-shell/linux-${PUPPETEER_BUILD_ID}"
 
-  wget -O /tmp/chrome-headless-shell-linux64.zip \
+  retry -t 30 -d 60 wget -O /tmp/chrome-headless-shell-linux64.zip \
     "https://storage.googleapis.com/chrome-for-testing-public/${PUPPETEER_BUILD_ID}/linux64/chrome-headless-shell-linux64.zip"
   unzip -q /tmp/chrome-headless-shell-linux64.zip \
     -d "/puppeteer_cache/chrome-headless-shell/linux-${PUPPETEER_BUILD_ID}"
