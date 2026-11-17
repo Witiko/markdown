@@ -2,6 +2,18 @@
 
 ## 3.16.3 (202X-XX-XX)
 
+### Defaults
+
+This version of the Markdown package has made the following changes to the
+default renderer and renderer prototype definitions:
+
+- Act as though `enumitem` is always loaded with tagging. (#649, #651)
+
+  Since LaTeX2e 2026-06-01, LaTeX has emulated the `enumitem` interfaces
+  when tagging is enabled and tagging also prevents us from loading that
+  package. Therefore, when tagging is enabled, we'll assume that all
+  enumitem's interfaces are available to us and hope for the best.
+
 ### Continuous integration
 
 This version of the Markdown package has made the following changes to our
