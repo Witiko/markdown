@@ -27,6 +27,9 @@ ARG DEPENDENCIES="\
 "
 
 ARG BUILD_DEPENDENCIES="\
+    build-essential \
+    musl-tools \
+    rustup \
     wget \
 "
 
@@ -210,10 +213,10 @@ texhash
 # Install the current pkgcheck
 git clone https://codeberg.org/ManfredLotz/pkgcheck.git
 pushd pkgcheck
-  wget https://codeberg.org/ManfredLotz/pkgcheck/releases/download/"$(git describe --tags --abbrev=0)"/pkgcheck-x86_64-unknown-linux-musl \
-        -O ${BINARY_DIR}/pkgcheck
-  chmod +x ${BINARY_DIR}/pkgcheck
-  hash -r
+  rustup toolchain install stable
+  rustup target add x86_64-unknown-linux-musl
+  cargo build --release --target x86_64-unknown-linux-musl
+  install -Dm755 target/x86_64-unknown-linux-musl/release/pkgcheck ${BINARY_DIR}/pkgcheck
 popd
 
 # Produce the complete distribution archive of the Markdown package
