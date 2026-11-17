@@ -2,6 +2,16 @@
 
 ## 3.16.3 (202X-XX-XX)
 
+### Continuous integration
+
+This version of the Markdown package has made the following changes to our
+continuous integration:
+
+- Build current pkgcheck in `Dockerfile`. (#650)
+
+  The recent Docker builds have been failing due to pkgcheck's Git tag no
+  longer matching the latest release name and failing to download.
+
 ## 3.16.2 (2026-09-29)
 
 ### Fixes
