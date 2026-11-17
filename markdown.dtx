@@ -852,12 +852,6 @@ abbr {
   date       = {2024-10-13},
   urldate    = {2024-10-21},
   url        = {https://github.com/Witiko/markdown/discussions/514}}
-@book{latex24,
-  author     = {Frank Mittelbach and Ulrike Fischer and {\LaTeX{} Project}},
-  title      = {The \texttt{documentmetadata-support} code},
-  date       = {2024-06-01},
-  url        = {https://mirrors.ctan.org/macros/latex/required/latex-lab/documentmetadata-support-code.pdf},
-  urldate    = {2024-10-21}}
 @online{latex25,
   author     = {{\LaTeX{} Project}},
   title      = {l3kernel},
@@ -871,6 +865,14 @@ abbr {
   date       = {2026-01-19},
   url        = {https://mirrors.ctan.org/macros/latex/required/l3kernel/interface3.pdf},
   urldate    = {2026-02-18}}
+@online{latex26a,
+  author     = {{\LaTeX{} Project}},
+  title      = {\LaTeX{} News},
+  subtitle   = {Issue 43},
+  titleaddon = {\LaTeX{} release 2026-06-01},
+  date       = {2026-06},
+  url        = {https://www.latex-project.org/news/latex2e-news/ltnews43.pdf},
+  urldate    = {2026-11-17}}
 @online{unicode24,
   author     = {{Unicode Consortium}},
   title      = {The Unicode Standard},
@@ -1505,9 +1507,14 @@ soft graphics
 %
 %     The package \pkg{paralist} will be used unless the option
 %     \Opt{experimental} has been enabled, in which case, the package
-%     \pkg{enumitem} will be used. Furthermore, enabling any test phase
-%     [@latex24] will also cause \pkg{enumitem} to be used. In a future
-%     major version, \pkg{enumitem} will replace \pkg{paralist} altogether.
+%     \pkg{enumitem} will be used. Furthermore, enabling tagging causes
+%     LaTeX to emulate most interfaces of \pkg{enumitem} [@latex26a], so
+%     neither package is going to be loaded.
+%
+%     In a future major version, \pkg{enumitem} will replace \pkg{paralist}
+%     altogether unless the emulation of \pkg{enumitem} becomes the default
+%     in \LaTeX{} even without tagging, in which case both dependencies will
+%     disappear.
 %
 % \end{markdown}
 %  \begin{macrocode}
@@ -42368,6 +42375,30 @@ end
         }
       }
   }
+\bool_new:N
+  \g_@@_paralist_bool
+\@ifpackageloaded
+  { paralist }
+  {
+    \bool_gset_true:N
+      \g_@@_paralist_bool
+  }
+  {
+    \bool_gset_false:N
+      \g_@@_paralist_bool
+  }
+\bool_new:N
+  \g_@@_enumitem_bool
+\@ifpackageloaded
+  { enumitem }
+  {
+    \bool_gset_true:N
+      \g_@@_enumitem_bool
+  }
+  {
+    \bool_gset_false:N
+      \g_@@_enumitem_bool
+  }
 \bool_if:nT
   {
     \g_@@_tight_or_fancy_lists_bool &&
@@ -42380,16 +42411,30 @@ end
       {
         \RequirePackage
           { enumitem }
+        \bool_gset_true:N
+          \g_@@_enumitem_bool
       }
       {
         \IfDocumentMetadataTF
           {
-            \RequirePackage
-              { enumitem }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Since \LaTeXe{} 2026-06-01, the \pkg{enumitem} package can't be loaded and
+% its interfaces are emulated when tagging is used. [@latex26a] Therefore,
+% there is no need to (or point in) trying to load the package and we can just
+% act as though it has already been loaded.
+%
+% \end{markdown}
+%  \begin{macrocode}
+            \bool_gset_true:N
+              \g_@@_enumitem_bool
           }
           {
             \RequirePackage
               { paralist }
+            \bool_gset_true:N
+              \g__markdown_paralist_bool
           }
       }
   }
@@ -42444,7 +42489,7 @@ end
   \l_@@_latex_fancy_list_item_label_number_style_tl
 \tl_new:N
   \l_@@_latex_fancy_list_item_label_delimiter_style_tl
-\@ifpackageloaded { enumitem } {
+\bool_if:NTF \g_@@_enumitem_bool {
   \markdownSetup { rendererPrototypes = {
 %    \end{macrocode}
 % \begin{markdown}
@@ -42534,7 +42579,7 @@ end
 % \end{markdown}
 %  \begin{macrocode}
 }
-{ \@ifpackageloaded { paralist } {
+{ \bool_if:NTF \g_@@_paralist_bool {
   \markdownSetup { rendererPrototypes = {
 %    \end{macrocode}
 % \begin{markdown}
