@@ -1,5 +1,14 @@
 # Changes
 
+## 3.16.4 (2026-11-XX)
+
+### Continuous integration
+
+This version of the Markdown package has made the following changes to our
+continuous integration:
+
+- Use the development version of `l3kernel`. (0d4fdbb1)
+
 ## 3.16.3 (2026-11-17)
 
 ### Defaults
