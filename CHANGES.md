@@ -1,5 +1,18 @@
 # Changes
 
+## 3.16.4 (2026-11-24)
+
+### Fixes
+
+This version of the Markdown package has fixed the following issues:
+
+- Add support for the new `.append_method:n` expl3 key property.
+  (latex3/latex3#1976, #652)
+
+  This fixes redefinitions of token renderers and renderer prototypes, which
+  would otherwise fail with the error "The key does not accept addition of
+  values" since version 2026-10-28 of expl3.
+
 ## 3.16.3 (2026-11-17)
 
 ### Defaults
