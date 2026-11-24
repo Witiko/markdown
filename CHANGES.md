@@ -1,6 +1,6 @@
 # Changes
 
-## 3.16.4 (2026-11-24)
+## 3.16.4 (2026-11-XX)
 
 ### Fixes
 
@@ -12,6 +12,13 @@ This version of the Markdown package has fixed the following issues:
   This fixes redefinitions of token renderers and renderer prototypes, which
   would otherwise fail with the error "The key does not accept addition of
   values" since version 2026-10-28 of expl3.
+
+### Continuous integration
+
+This version of the Markdown package has made the following changes to our
+continuous integration:
+
+- Use the development version of `l3kernel`. (0d4fdbb1)
 
 ## 3.16.3 (2026-11-17)
 
