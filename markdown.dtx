@@ -13295,7 +13295,7 @@ A PDF document named `document.pdf` should be produced and contain the text
 % \end{markdown}
 %  \begin{macrocode}
         % TODO: Remove the condition and the F-branch in TeX Live 2027.
-        \IfExplAtLeastTF
+        \@@_if_expl_at_least:nTF
           { 2026-10-28 }
           {
             \keys_define:nn
@@ -13364,6 +13364,17 @@ A PDF document named `document.pdf` should be produced and contain the text
             },
           }
       }
+  }
+\prg_new_conditional:Nnn
+  \@@_if_expl_at_least:n
+  { T, TF }
+  {
+    \str_compare:nNnTF
+      { \ExplLoaderFileDate }
+      <
+      { #1 }
+      { \prg_return_true: }
+      { \prg_return_false: }
   }
 \cs_generate_variant:Nn
   \clist_set:Nn
@@ -22926,7 +22937,7 @@ following text:
     },
   }
 % TODO: Remove the condition in TeX Live 2027.
-\IfExplAtLeastT
+\@@_if_expl_at_least:nT
   { 2026-10-28 }
   {
     \keys_define:nn
@@ -23750,7 +23761,7 @@ following text:
     },
   }
 % TODO: Remove the condition in TeX Live 2027.
-\IfExplAtLeastT
+\@@_if_expl_at_least:nT
   { 2026-10-28 }
   {
     \keys_define:nn
