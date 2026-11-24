@@ -345,7 +345,7 @@ then
 fi
 
 # Install TeX Live dependencies in non-full TeX Live versions
-DEPENDS="$(awk '{ print $2 }' ${BUILD_DIR}/DEPENDS.txt ${BUILD_DIR}/tests/DEPENDS.txt | sort -u)"
+DEPENDS="$(awk '{ print $2 }' ${BUILD_DIR}/DEPENDS.txt ${BUILD_DIR}/tests/DEPENDS.txt | sed 's/^l3kernel$/l3kernel-dev/' | sort -u)"
 if echo ${TEXLIVE_TAG} | { ! grep -qE '^(latest|pretest)$|-historic$'; }
 then
   retry -t 30 -d 60 tlmgr install $DEPENDS $REPOSITORY
