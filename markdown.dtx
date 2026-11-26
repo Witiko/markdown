@@ -23051,17 +23051,17 @@ following text:
                       }
                   }
                 \__keys_execute:Nno #1
-                  { \l__keys_module_str / unknown } \l_keys_value_tl
+                  { \l__keys_module_str / unknown } { \l_keys_value_tl }
               }
               {
                 \str_if_eq:NNTF #1 \c__keys_code_root_str
                   {
                     \msg_error:nnee { keys } { unknown }
-                      \l_keys_path_str \l__keys_module_str
+                      { \l_keys_path_str } { \l__keys_module_str }
                   }
                   {
                     \msg_error:nnee { keys } { augmented-key-invalid }
-                      \l_keys_key_str
+                      { \l_keys_key_str }
                       { \exp_not:V \l_keys_value_tl }
                   }
               }
