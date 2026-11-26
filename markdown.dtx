@@ -723,20 +723,6 @@ abbr {
 \endgroup
 %</techdoc-block-diagram>
 %<*techdoc-bibliography>
-@online{starynovotny24,
-  author     = {Starý Novotný, Vít and Enrico Gregorio and Max Chernoff and P. Spratte, Jonathan},
-  title      = {Convert control sequence with a variable number of undelimited parameters into a token list},
-  url        = {https://tex.stackexchange.com/q/716362/70941},
-  urldate    = {2024-04-28},
-}
-@online{starynovotny25,
-  author     = {Starý Novotný, Vít},
-  title      = {Routing \acro{YAML} metadata to expl3 key–values},
-  titleaddon = {Markdown Enhancement Proposal},
-  url        = {https://github.com/witiko/markdown/discussions/517},
-  date       = {2024-10-14},
-  urldate    = {2025-01-06},
-}
 @book{tantau21,
   author     = {Till Tantau and Joseph Wright and Vedran Miletić},
   title      = {The Beamer class},
@@ -845,13 +831,33 @@ abbr {
   year       = {2010},
   pages      = {196-205},
   doi        = {10.1109/ICPC.2010.41}}
-@online{novotny24,
+@online{starynovotny24,
   author     = {Starý Novotný, Vít},
   title      = {Versioned Themes},
   titleaddon = {Markdown Enhancement Proposal},
   date       = {2024-10-13},
   urldate    = {2024-10-21},
   url        = {https://github.com/Witiko/markdown/discussions/514}}
+@online{starynovotny24a,
+  author     = {Starý Novotný, Vít and Enrico Gregorio and Max Chernoff and P. Spratte, Jonathan},
+  title      = {Convert control sequence with a variable number of undelimited parameters into a token list},
+  url        = {https://tex.stackexchange.com/q/716362/70941},
+  urldate    = {2024-04-28},
+}
+@online{starynovotny25,
+  author     = {Starý Novotný, Vít},
+  title      = {Routing \acro{YAML} metadata to expl3 key–values},
+  titleaddon = {Markdown Enhancement Proposal},
+  url        = {https://github.com/witiko/markdown/discussions/517},
+  date       = {2024-10-14},
+  urldate    = {2025-01-06},
+}
+@online{starynovotny26,
+  author     = {Starý Novotný, Vít},
+  title      = {In l3keys, \textt{unknown} keys don't support \texttt{.append_method:n}},
+  date       = {2026-11-24},
+  url        = {https://github.com/latex3/latex3/issues/1997},
+  urldate    = {2026-11-26}}
 @online{latex25,
   author     = {{\LaTeX{} Project}},
   title      = {l3kernel},
@@ -13294,21 +13300,41 @@ A PDF document named `document.pdf` should be produced and contain the text
 %
 % \end{markdown}
 %  \begin{macrocode}
+        % TODO: Remove the condition and the F-branch in TeX Live 2027.
+        \@@_if_expl_at_least:nTF
+          { 2026-10-28 }
+          {
+            \keys_define:nn
+              { markdown/options }
+              {
+                #3 .append_method:n = {
+                  \@@_append_option_value:nn
+                    { #2 }
+                    { ##1 }
+                },
+              }
+          }
+          {
+            \keys_define:nn
+              { markdown/options }
+              {
+                #3~+ .value_required:n = { true },
+                #3~+ .code:n = {
+                  \@@_append_option_value:nn
+                    { #2 }
+                    { ##1 }
+                },
+                #3 + .value_required:n = { true },
+                #3 + .code:n = {
+                  \@@_append_option_value:nn
+                    { #2 }
+                    { ##1 }
+                },
+              }
+          }
         \keys_define:nn
           { markdown/options }
           {
-            #3~+ .value_required:n = { true },
-            #3~+ .code:n = {
-              \@@_append_option_value:nn
-                { #2 }
-                { ##1 }
-            },
-            #3 + .value_required:n = { true },
-            #3 + .code:n = {
-              \@@_append_option_value:nn
-                { #2 }
-                { ##1 }
-            },
             #3~$ .value_required:n = { true },
             #3~$ .code:n = {
               \@@_append_option_value:nn
@@ -13345,6 +13371,40 @@ A PDF document named `document.pdf` should be produced and contain the text
           }
       }
   }
+\prg_new_conditional:Nnn
+  \@@_if_expl_at_least:n
+  { p, T, TF }
+  {
+    \bool_if:nTF
+      {
+        \str_if_eq_p:en
+          { \ExplLoaderFileDate }
+          { #1 } ||
+        \str_compare_p:eNn
+          { \ExplLoaderFileDate }
+          >
+          { #1 }
+      }
+      { \prg_return_true: }
+      { \prg_return_false: }
+  }
+\prg_new_conditional:Nnn
+  \@@_if_expl_at_most:n
+  { p }
+  {
+    \bool_if:nTF
+      {
+        \str_if_eq_p:en
+          { \ExplLoaderFileDate }
+          { #1 } ||
+        \str_compare_p:eNn
+          { \ExplLoaderFileDate }
+          <
+          { #1 }
+      }
+      { \prg_return_true: }
+      { \prg_return_false: }
+  }
 \cs_generate_variant:Nn
   \clist_set:Nn
   { NV }
@@ -13355,6 +13415,10 @@ A PDF document named `document.pdf` should be produced and contain the text
   \str_if_eq:nn
   { en }
   { p, F }
+\prg_generate_conditional_variant:Nnn
+  \str_compare:nNn
+  { eNn }
+  { p }
 \msg_new:nnn
   { markdown }
   { malformed-name-for-clist-option }
@@ -13420,7 +13484,7 @@ a specific look and other high-level goals without low-level programming.
 % text *theme version* will be available in the macro
 % \mdef{markdownThemeVersion} when the theme is loaded. If `@`\meta{theme
 % version} is not specified, the macro \mref{markdownThemeVersion} will
-% contain the text `latest` [@novotny24].
+% contain the text `latest` [@starynovotny24].
 %
 % \end{markdown}
 % \iffalse
@@ -22647,7 +22711,7 @@ following text:
 % \begin{markdown}
 %
 % We define the function \mdef{@@_tl_set_from_cs:NNn}
-% [@starynovotny24]. The function takes a token list, a control sequence with
+% [@starynovotny24a]. The function takes a token list, a control sequence with
 % undelimited parameters, and the number of parameters the control sequence
 % accepts, and locally assigns the replacement text of the control sequence
 % to the token list.
@@ -22747,11 +22811,9 @@ following text:
 \regex_const:Nn
   \c_@@_prepending_or_appending_key_regex
   { [\^\$+]$ }
-\keys_define:nn
-  { markdown/options/renderers }
+\cs_new_protected:Nn
+  \@@_redefine_renderer:n
   {
-    unknown .value_required:n = { true },
-    unknown .code:n = {
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -22789,48 +22851,45 @@ following text:
 %
 % \end{markdown}
 %  \begin{macrocode}
-      % TODO: Use `\regex_if_match` in TeX Live 2025.
-      \regex_match:NVT
-        \c_@@_prepending_key_regex
-        \l_keys_key_str
-        {
-          \bool_gset_true:N
-            \g_@@_prepending_renderer_bool
-        }
-      % TODO: Use `\regex_if_match` in TeX Live 2025.
-      \regex_match:NVT
-        \c_@@_appending_key_regex
-        \l_keys_key_str
-        {
-          \bool_gset_true:N
-            \g_@@_appending_renderer_bool
-        }
-      % TODO: Use `\regex_if_match` in TeX Live 2025.
-      \regex_match:NVTF
-        \c_@@_prepending_or_appending_key_regex
-        \l_keys_key_str
-        {
-          \tl_set:NV
-            \l_tmpa_tl
-            \l_keys_key_str
-          \regex_replace_once:NnN
-            \c_@@_prepending_or_appending_key_regex
-            { }
-            \l_tmpa_tl
-          \tl_set:Nx
-            \l_tmpb_tl
-            { { \l_tmpa_tl } = }
-          \tl_put_right:Nn
-            \l_tmpb_tl
-            { { #1 } }
-          \keys_set:nV
-            { markdown/options/renderers }
-            \l_tmpb_tl
-          \bool_gset_false:N
-            \g_@@_prepending_renderer_bool
-          \bool_gset_false:N
-            \g_@@_appending_renderer_bool
-        }
+    \regex_if_match:NVT
+      \c_@@_prepending_key_regex
+      \l_keys_key_str
+      {
+        \bool_gset_true:N
+          \g_@@_prepending_renderer_bool
+      }
+    \regex_if_match:NVT
+      \c_@@_appending_key_regex
+      \l_keys_key_str
+      {
+        \bool_gset_true:N
+          \g_@@_appending_renderer_bool
+      }
+    \regex_if_match:NVTF
+      \c_@@_prepending_or_appending_key_regex
+      \l_keys_key_str
+      {
+        \tl_set:NV
+          \l_tmpa_tl
+          \l_keys_key_str
+        \regex_replace_once:NnN
+          \c_@@_prepending_or_appending_key_regex
+          { }
+          \l_tmpa_tl
+        \tl_set:Nx
+          \l_tmpb_tl
+          { { \l_tmpa_tl } = }
+        \tl_put_right:Nn
+          \l_tmpb_tl
+          { { #1 } }
+        \keys_set:nV
+          { markdown/options/renderers }
+          \l_tmpb_tl
+        \bool_gset_false:N
+          \g_@@_prepending_renderer_bool
+        \bool_gset_false:N
+          \g_@@_appending_renderer_bool
+      }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -22868,39 +22927,150 @@ following text:
 %
 % \end{markdown}
 %  \begin{macrocode}
-        {
-          \@@_glob_seq:VnN
-            \l_keys_key_str
-            { g_@@_renderers_seq }
-            \l_@@_renderer_glob_results_seq
-          \seq_if_empty:NTF
-            \l_@@_renderer_glob_results_seq
-            {
-              \msg_error:nnV
-                { markdown }
-                { undefined-renderer }
-                \l_keys_key_str
-            }
-            {
-              \tl_set:Nn
-                \l_@@_renderer_glob_definition_tl
-                { \exp_not:n { #1 } }
-              \seq_map_inline:Nn
-                \l_@@_renderer_glob_results_seq
-                {
-                  \tl_set:Nn
-                    \l_tmpa_tl
-                    { { ##1 } = }
-                  \tl_put_right:Nx
-                    \l_tmpa_tl
-                    { { \l_@@_renderer_glob_definition_tl } }
-                  \keys_set:nV
-                    { markdown/options/renderers }
-                    \l_tmpa_tl
-                }
-            }
-        }
+      {
+        \@@_glob_seq:VnN
+          \l_keys_key_str
+          { g_@@_renderers_seq }
+          \l_@@_renderer_glob_results_seq
+        \seq_if_empty:NTF
+          \l_@@_renderer_glob_results_seq
+          {
+            \msg_error:nnV
+              { markdown }
+              { undefined-renderer }
+              \l_keys_key_str
+          }
+          {
+            \tl_set:Nn
+              \l_@@_renderer_glob_definition_tl
+              { \exp_not:n { #1 } }
+            \seq_map_inline:Nn
+              \l_@@_renderer_glob_results_seq
+              {
+                \tl_set:Nn
+                  \l_tmpa_tl
+                  { { ##1 } = }
+                \tl_put_right:Nx
+                  \l_tmpa_tl
+                  { { \l_@@_renderer_glob_definition_tl } }
+                \keys_set:nV
+                  { markdown/options/renderers }
+                  \l_tmpa_tl
+              }
+          }
+      }
+  }
+\keys_define:nn
+  { markdown/options/renderers }
+  {
+    unknown .value_required:n = { true },
+    unknown .code:n = {
+      \@@_redefine_renderer:n
+        { #1 }
     },
+  }
+% TODO: Remove the condition in TeX Live 2027.
+\@@_if_expl_at_least:nT
+  { 2026-10-28 }
+  {
+    \keys_define:nn
+      { markdown/options/renderers }
+      {
+        unknown .append_method:n = {
+          \str_put_right:Nn
+            \l_keys_key_str
+            { + }
+          \@@_redefine_renderer:n
+            { #1 }
+        },
+      }
+  }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Fix `unknown` keys not supporting `.append_method:n` in some versions of
+% \LaTeX3. [@starynovotny26]
+%
+% \end{markdown}
+%  \begin{macrocode}
+\bool_if:nT
+  {
+    \@@_if_expl_at_least_p:n
+      { 2026-10-28 } &&
+    \@@_if_expl_at_most_p:n
+      { 2026-11-16 }
+  }
+  {
+    \cs_gset_protected:Npn \__keys_execute:NN #1#2
+      {
+        \cs_if_exist:cTF { #1 \l_keys_path_str #2 }
+          { \__keys_execute:Nn #1 { \l_keys_path_str #2 } }
+          {
+            \__keys_inherit:NNN #1 \__keys_execute:Nn #2
+            \str_if_empty:NT \l__keys_inherit_str
+              {
+                \bool_if:NTF \l__keys_only_known_bool
+                  { \__keys_store_unused: }
+                  {
+                    \str_if_eq:NNTF #1 \c__keys_code_root_str
+                      { \__keys_execute_unknown: }
+                      {
+                        \__keys_execute_unknown_aux:N
+                          \c__keys_append_root_str
+                      }
+                  }
+              }
+          }
+      }
+    \cs_gset_protected:Npn \__keys_execute_unknown:
+      {
+        \str_if_eq:VnTF \l__keys_aug_str { + }
+          { \__keys_execute:NN \c__keys_append_root_str \c_empty_str }
+          { \__keys_execute_unknown_aux:N \c__keys_code_root_str }
+      }
+    \cs_new_protected:Npn \__keys_execute_unknown_aux:N #1
+      {
+        \bool_if:NTF \l__keys_only_known_bool
+          { \__keys_store_unused: }
+          {
+            \cs_if_exist:cTF
+              { #1 \l__keys_module_str / unknown }
+              {
+                \bool_if:NT \l__keys_no_value_bool
+                  {
+                    \cs_if_exist:cT
+                      {
+                        \c__keys_default_root_str
+                        \l__keys_module_str
+                        / unknown
+                      }
+                      {
+                        \tl_set_eq:Nc
+                          \l_keys_value_tl
+                          {
+                            \c__keys_default_root_str
+                            \l__keys_module_str
+                            / unknown
+                          }
+                      }
+                  }
+                \__keys_execute:Nno #1
+                  { \l__keys_module_str / unknown } { \l_keys_value_tl }
+              }
+              {
+                \str_if_eq:NNTF #1 \c__keys_code_root_str
+                  {
+                    \msg_error:nnee { keys } { unknown }
+                      { \l_keys_path_str } { \l__keys_module_str }
+                  }
+                  {
+                    \msg_error:nnee { keys } { augmented-key-invalid }
+                      { \l_keys_key_str }
+                      { \exp_not:V \l_keys_value_tl }
+                  }
+              }
+          }
+      }
   }
 \msg_new:nnn
   { markdown }
@@ -22918,8 +23088,7 @@ following text:
   \msg_error:nnn
   { nnV }
 \prg_generate_conditional_variant:Nnn
-  % TODO: Use `\regex_if_match` in TeX Live 2025.
-  \regex_match:Nn  % noqa: w202
+  \regex_if_match:Nn
   { NV }
   { T, TF }
 \prop_new:N
@@ -22954,8 +23123,7 @@ following text:
         \seq_map_inline:cn
           { #2 }
           {
-            % TODO: Use `\regex_if_match` in TeX Live 2025.
-            \regex_match:NnT  % noqa: w202
+            \regex_if_match:NnT
               \l_tmpa_regex
               { ##1 }
               {
@@ -23553,11 +23721,9 @@ following text:
 %
 % \end{markdown}
 %  \begin{macrocode}
-\keys_define:nn
-  { markdown/options/renderer-prototypes }
+\cs_new_protected:Nn
+  \@@_redefine_renderer_prototype:n
   {
-    unknown .value_required:n = { true },
-    unknown .code:n = {
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -23595,48 +23761,45 @@ following text:
 %
 % \end{markdown}
 %  \begin{macrocode}
-      % TODO: Use `\regex_if_match` in TeX Live 2025.
-      \regex_match:NVT
-        \c_@@_prepending_key_regex
-        \l_keys_key_str
-        {
-          \bool_gset_true:N
-            \g_@@_prepending_renderer_prototype_bool
-        }
-      % TODO: Use `\regex_if_match` in TeX Live 2025.
-      \regex_match:NVT
-        \c_@@_appending_key_regex
-        \l_keys_key_str
-        {
-          \bool_gset_true:N
-            \g_@@_appending_renderer_prototype_bool
-        }
-      % TODO: Use `\regex_if_match` in TeX Live 2025.
-      \regex_match:NVTF
-        \c_@@_prepending_or_appending_key_regex
-        \l_keys_key_str
-        {
-          \tl_set:NV
-            \l_tmpa_tl
-            \l_keys_key_str
-          \regex_replace_once:NnN
-            \c_@@_prepending_or_appending_key_regex
-            { }
-            \l_tmpa_tl
-          \tl_set:Nx
-            \l_tmpb_tl
-            { { \l_tmpa_tl } = }
-          \tl_put_right:Nn
-            \l_tmpb_tl
-            { { #1 } }
-          \keys_set:nV
-            { markdown/options/renderer-prototypes }
-            \l_tmpb_tl
-          \bool_gset_false:N
-            \g_@@_prepending_renderer_prototype_bool
-          \bool_gset_false:N
-            \g_@@_appending_renderer_prototype_bool
-        }
+    \regex_if_match:NVT
+      \c_@@_prepending_key_regex
+      \l_keys_key_str
+      {
+        \bool_gset_true:N
+          \g_@@_prepending_renderer_prototype_bool
+      }
+    \regex_if_match:NVT
+      \c_@@_appending_key_regex
+      \l_keys_key_str
+      {
+        \bool_gset_true:N
+          \g_@@_appending_renderer_prototype_bool
+      }
+    \regex_if_match:NVTF
+      \c_@@_prepending_or_appending_key_regex
+      \l_keys_key_str
+      {
+        \tl_set:NV
+          \l_tmpa_tl
+          \l_keys_key_str
+        \regex_replace_once:NnN
+          \c_@@_prepending_or_appending_key_regex
+          { }
+          \l_tmpa_tl
+        \tl_set:Nx
+          \l_tmpb_tl
+          { { \l_tmpa_tl } = }
+        \tl_put_right:Nn
+          \l_tmpb_tl
+          { { #1 } }
+        \keys_set:nV
+          { markdown/options/renderer-prototypes }
+          \l_tmpb_tl
+        \bool_gset_false:N
+          \g_@@_prepending_renderer_prototype_bool
+        \bool_gset_false:N
+          \g_@@_appending_renderer_prototype_bool
+      }
 %    \end{macrocode}
 % \begin{markdown}
 %
@@ -23675,39 +23838,63 @@ following text:
 %
 % \end{markdown}
 %  \begin{macrocode}
-        {
-          \@@_glob_seq:VnN
-            \l_keys_key_str
-            { g_@@_renderers_seq }
-            \l_@@_renderer_glob_results_seq
-          \seq_if_empty:NTF
-            \l_@@_renderer_glob_results_seq
-            {
-              \msg_error:nnV
-                { markdown }
-                { undefined-renderer-prototype }
-                \l_keys_key_str
-            }
-            {
-              \tl_set:Nn
-                \l_@@_renderer_glob_definition_tl
-                { \exp_not:n { #1 } }
-              \seq_map_inline:Nn
-                \l_@@_renderer_glob_results_seq
-                {
-                  \tl_set:Nn
-                    \l_tmpa_tl
-                    { { ##1 } = }
-                  \tl_put_right:Nx
-                    \l_tmpa_tl
-                    { { \l_@@_renderer_glob_definition_tl } }
-                  \keys_set:nV
-                    { markdown/options/renderer-prototypes }
-                    \l_tmpa_tl
-                }
-            }
-        }
+      {
+        \@@_glob_seq:VnN
+          \l_keys_key_str
+          { g_@@_renderers_seq }
+          \l_@@_renderer_glob_results_seq
+        \seq_if_empty:NTF
+          \l_@@_renderer_glob_results_seq
+          {
+            \msg_error:nnV
+              { markdown }
+              { undefined-renderer-prototype }
+              \l_keys_key_str
+          }
+          {
+            \tl_set:Nn
+              \l_@@_renderer_glob_definition_tl
+              { \exp_not:n { #1 } }
+            \seq_map_inline:Nn
+              \l_@@_renderer_glob_results_seq
+              {
+                \tl_set:Nn
+                  \l_tmpa_tl
+                  { { ##1 } = }
+                \tl_put_right:Nx
+                  \l_tmpa_tl
+                  { { \l_@@_renderer_glob_definition_tl } }
+                \keys_set:nV
+                  { markdown/options/renderer-prototypes }
+                  \l_tmpa_tl
+              }
+          }
+      }
+  }
+\keys_define:nn
+  { markdown/options/renderer-prototypes }
+  {
+    unknown .value_required:n = { true },
+    unknown .code:n = {
+      \@@_redefine_renderer_prototype:n
+        { #1 }
     },
+  }
+% TODO: Remove the condition in TeX Live 2027.
+\@@_if_expl_at_least:nT
+  { 2026-10-28 }
+  {
+    \keys_define:nn
+      { markdown/options/renderer-prototypes }
+      {
+        unknown .append_method:n = {
+          \str_put_right:Nn
+            \l_keys_key_str
+            { + }
+          \@@_redefine_renderer_prototype:n
+            { #1 }
+        },
+      }
   }
 \msg_new:nnn
   { markdown }
