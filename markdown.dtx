@@ -13367,12 +13367,35 @@ A PDF document named `document.pdf` should be produced and contain the text
   }
 \prg_new_conditional:Nnn
   \@@_if_expl_at_least:n
-  { T, TF }
+  { p, T, TF }
   {
-    \str_compare:nNnTF
-      { \ExplLoaderFileDate }
-      <
-      { #1 }
+    \bool_if:nTF
+      {
+        \str_if_ex_p:nn
+          { \ExplLoaderFileDate }
+          { #1 } ||
+        \str_compare_p:nNn
+          { \ExplLoaderFileDate }
+          <
+          { #1 }
+      }
+      { \prg_return_true: }
+      { \prg_return_false: }
+  }
+\prg_new_conditional:Nnn
+  \@@_if_expl_at_most:n
+  { p }
+  {
+    \bool_if:nTF
+      {
+        \str_if_ex_p:nn
+          { \ExplLoaderFileDate }
+          { #1 } ||
+        \str_compare_p:nNn
+          { \ExplLoaderFileDate }
+          >
+          { #1 }
+      }
       { \prg_return_true: }
       { \prg_return_false: }
   }
