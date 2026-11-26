@@ -852,6 +852,12 @@ abbr {
   date       = {2024-10-13},
   urldate    = {2024-10-21},
   url        = {https://github.com/Witiko/markdown/discussions/514}}
+@online{starynovotny26,
+  author     = {Starý Novotný, Vít},
+  title      = {In l3keys, \textt{unknown} keys don't support \texttt{.append_method:n}},
+  date       = {2026-11-24},
+  url        = {https://github.com/latex3/latex3/issues/1997},
+  urldate    = {2026-11-26}}
 @online{latex25,
   author     = {{\LaTeX{} Project}},
   title      = {l3kernel},
@@ -22973,6 +22979,82 @@ following text:
           \@@_redefine_renderer:n
             { #1 }
         },
+      }
+  }
+%    \end{macrocode}
+% \begin{markdown}
+%
+% Fix `unknown` keys not supporting `.append_method:n` in some versions of
+% \LaTeX3. [@starynovotny26]
+%
+% \end{markdown}
+%  \begin{macrocode}
+\bool_if:nT
+  {
+    \@@_if_expl_at_least_p:n
+      { 2026-10-28 } &&
+    \@@_if_expl_at_most_p:n
+      { 2026-11-16 }
+  }
+  {
+    \cs_gset_protected:Npn \__keys_execute:NN #1#2
+      {
+        \cs_if_exist:cTF { #1 \l_keys_path_str #2 }
+          { \__keys_execute:Nn #1 { \l_keys_path_str #2 } }
+          {
+            \__keys_inherit:NNN #1 \__keys_execute:Nn #2
+            \str_if_empty:NT \l__keys_inherit_str
+              {
+                \bool_if:NTF \l__keys_only_known_bool
+                  { \__keys_store_unused: }
+                  {
+                    \str_if_eq:NNTF #1 \c__keys_code_root_str
+                      { \__keys_execute_unknown: }
+                      { \__keys_execute_unknown_aux:N \c__keys_append_root_str }
+                  }
+              }
+          }
+      }
+    \cs_gset_protected:Npn \__keys_execute_unknown:
+      {
+        \str_if_eq:VnTF \l__keys_aug_str { + }
+          { \__keys_execute:NN \c__keys_append_root_str \c_empty_str }
+          { \__keys_execute_unknown_aux:N \c__keys_code_root_str }
+      }
+    \cs_new_protected:Npn \__keys_execute_unknown_aux:N #1
+      {
+        \bool_if:NTF \l__keys_only_known_bool
+          { \__keys_store_unused: }
+          {
+            \cs_if_exist:cTF
+              { #1 \l__keys_module_str / unknown }
+              {
+                \bool_if:NT \l__keys_no_value_bool
+                  {
+                    \cs_if_exist:cT
+                      { \c__keys_default_root_str \l__keys_module_str / unknown }
+                      {
+                        \tl_set_eq:Nc
+                          \l_keys_value_tl
+                          { \c__keys_default_root_str \l__keys_module_str / unknown }
+                      }
+                  }
+                \__keys_execute:Nno #1
+                  { \l__keys_module_str / unknown } \l_keys_value_tl
+              }
+              {
+                \str_if_eq:NNTF #1 \c__keys_code_root_str
+                  {
+                    \msg_error:nnee { keys } { unknown }
+                      \l_keys_path_str \l__keys_module_str
+                  }
+                  {
+                    \msg_error:nnee { keys } { augmented-key-invalid }
+                      \l_keys_key_str
+                      { \exp_not:V \l_keys_value_tl }
+                  }
+              }
+          }
       }
   }
 \msg_new:nnn
