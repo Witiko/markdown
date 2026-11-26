@@ -13377,10 +13377,10 @@ A PDF document named `document.pdf` should be produced and contain the text
   {
     \bool_if:nTF
       {
-        \str_if_ex_p:nn
+        \str_if_eq_p:en
           { \ExplLoaderFileDate }
           { #1 } ||
-        \str_compare_p:nNn
+        \str_compare_p:eNn
           { \ExplLoaderFileDate }
           >
           { #1 }
@@ -13394,10 +13394,10 @@ A PDF document named `document.pdf` should be produced and contain the text
   {
     \bool_if:nTF
       {
-        \str_if_ex_p:nn
+        \str_if_eq_p:en
           { \ExplLoaderFileDate }
           { #1 } ||
-        \str_compare_p:nNn
+        \str_compare_p:eNn
           { \ExplLoaderFileDate }
           <
           { #1 }
@@ -13415,6 +13415,10 @@ A PDF document named `document.pdf` should be produced and contain the text
   \str_if_eq:nn
   { en }
   { p, F }
+\prg_generate_conditional_variant:Nnn
+  \str_compare:nNn
+  { eNn }
+  { p }
 \msg_new:nnn
   { markdown }
   { malformed-name-for-clist-option }
